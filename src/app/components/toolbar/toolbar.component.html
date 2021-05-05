@@ -1,0 +1,71 @@
+<div class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
+    <div class="navbar-header">
+        <ul class="nav navbar-nav flex-row">
+            <li class="nav-item mr-auto">
+                <a class="navbar-brand" href="html/ltr/vertical-menu-template/index.html">
+                    <img src="assets/images/logo.svg" width="160">
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="shadow-bottom"></div>
+    <div class="main-menu-content">
+        <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+            <li class=" nav-item {{menuIndex}} ">
+                <a class="d-flex align-items-center" href="/">
+                    <i data-feather="home"></i>
+                    <span class="menu-title text-truncate" data-i18n="Dashboards">Inicio</span>
+                </a>
+            </li>
+            <li class="navigation-header">Administración</li>
+            <li class=" nav-item {{menuUser}}">
+                <a class="d-flex align-items-center" href="/admin/user">
+                    <i data-feather="user"></i>
+                    <span class="menu-title text-truncate" data-i18n="User">Usuarios</span>
+                </a>
+            </li>
+            <li class=" nav-item">
+                <a class="d-flex align-items-center" href="rol-usuarios.html"><i data-feather="check-square"></i>
+                <span class="menu-title text-truncate" data-i18n="Todo">Rol de usuarios</span></a>
+            </li>
+            <li class=" nav-item">
+                <a class="d-flex align-items-center" href="parametrizaciones-admin.html">
+                    <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrizaciones</span></a>
+            </li>
+            <li class="navigation-header">Módulos de sistema</li>
+            <li class="nav-item">
+                <a class="d-flex align-items-center collapsed_menu_item">
+                    <i data-feather="file-text"></i>
+                    <span class="menu-title text-truncate" data-i18n="Invoice">MDM Master Data Managment</span></a>
+                <ul class="menu-content ">
+                    <li>
+                        <a class="d-flex align-items-center" href="parametrizaciones.html">
+                            <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrizaciones</span></a>
+                    </li>
+                    <li>
+                        <a class="d-flex align-items-center" href="#">
+                            <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Preview">Prospectos clientes</span></a>
+                        <ul class="menu-content">
+                            <li>
+                                <a class="d-flex align-items-center" href="admin-clientes.html" data-toggle="tooltip" data-placement="right" title="Admin prospectos clientes">
+                                    <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Admin Prospectos Clientes</span></a>
+                            </li>
+                            <li>
+                                <a class="d-flex align-items-center" href="cargar-clientes-xls.html" data-toggle="tooltip" data-placement="right" title="Carga de prospectos XLSX">
+                                    <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Preview">Carga de prospectos XLSX</span></a>
+                            </li>
+                            <li>
+                                <a class="d-flex align-items-center" href="cargar-clientes-csv.html" data-toggle="tooltip" data-placement="right" title="Carga de prospectos CSV">
+                                    <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Edit">Carga de prospectos CSV</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="d-flex align-items-center" href="#">
+                            <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Edit">Clientes</span></a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
