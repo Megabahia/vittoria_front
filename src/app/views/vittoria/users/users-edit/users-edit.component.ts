@@ -7,30 +7,41 @@ import { Usuario, UsersService } from 'src/app/services/admin/users.service';
 })
 export class UsersEditComponent implements OnInit {
   @Input() idUsuario;
+  @Input() roles;
+  @Input() paises;
+  @Input() estados;
   usuario:Usuario ={
     id:0,
-    nombre:'',
-    apellido:'',
+    nombres:'',
+    apellidos:'',
     compania:'',
     email:'',
-    estado:0,
+    estado:'',
     instagram:'',
-    nombreUsuario:'',
+    username:'',
     pais:'',
-    rol:0,
+    idRol:0,
     telefono:'',
     twitter:'',
-    wpp:''
+    whatsapp:'',
+    facebook:''
   };
   constructor(
     private usersService:UsersService
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     
   }
   async ngAfterViewInit(){
-    this.usuario = await this.usersService.obtenerUsuario(this.idUsuario).then();
-    console.log(this.usuario);
+    await this.usersService.obtenerUsuario(this.idUsuario).subscribe((result)=>{
+      this.usuario = result;
+    });
+  }
+  async actualizarUsuario()
+  {
+    await this.usersService.actualizarUsuario(this.usuario).subscribe(()=>{
+      window.location.href = '/admin/user';
+    });
   }
 }

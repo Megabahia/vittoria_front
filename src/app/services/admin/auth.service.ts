@@ -42,6 +42,7 @@ export class AuthService {
 
 
   signIn({ username, password }: UserLogin) {
+    console.log(apiUrl);
     let data = this.http.post<any>(`${apiUrl}/adm/auth/login/`, {
       username,
       password

@@ -8,6 +8,8 @@ export class ToolbarComponent implements OnInit {
   @Input('menu') menu;
   menuUser;
   menuIndex;
+  menuRoles;
+  menuParam;
   constructor() { }
 
   ngOnInit(): void {
@@ -15,6 +17,9 @@ export class ToolbarComponent implements OnInit {
   }
   initiateMenu(){
     this.menuUser="";
+    this.menuIndex="";
+    this.menuRoles="";
+    this.menuParam="";
   }
   selectMenu(){
     this.initiateMenu();
@@ -24,6 +29,12 @@ export class ToolbarComponent implements OnInit {
         break;
       case "user":
         this.menuUser="active";
+        break;
+      case "roles":
+        this.menuRoles="active";
+        break;
+      case "param":
+        this.menuParam="active";
         break;
     }
   }

@@ -10,6 +10,9 @@ import { UsersListComponent } from './users/users-list/users-list.component';
 // import { UsersComponent } from './users/users.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+import { RolesListComponent } from './roles/roles-list/roles-list.component';
+import { RolesAddComponent } from './roles/roles-add/roles-add.component';
+import { ParamsListComponent } from './params/params-list/params-list.component';
 
 
 @NgModule({
@@ -18,6 +21,10 @@ import { FormsModule } from '@angular/forms';
     ManagementComponent,
     UsersEditComponent,
     UsersListComponent,
+    RolesListComponent,
+    RolesAddComponent,
+    ParamsListComponent,
+    
   ],
   imports: [
     CommonModule,
