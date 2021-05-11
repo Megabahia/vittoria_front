@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../.././../environments/environment';
-const { apiUrl, roles } = environment;
-
+const  apiUrl:string = environment.apiUrl 
+const  roles:Rol  = environment.roles;
 export interface Rol {
 
   rol: {
