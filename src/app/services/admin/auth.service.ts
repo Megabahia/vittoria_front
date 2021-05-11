@@ -4,8 +4,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import * as moment from 'moment';
+const  apiUrl:string = environment.apiUrl;
 
-const { apiUrl } = environment
 export interface User {
   token: string,
   id: number,
