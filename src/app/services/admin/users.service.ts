@@ -30,7 +30,8 @@ export interface Usuario{
   twitter:string,
   instagram:string,
   whatsapp:string,
-  facebook:string
+  facebook:string,
+  imagen: FormData,
 }
 @Injectable()
 export class UsersService {
@@ -59,6 +60,10 @@ export class UsersService {
   insertarUsuario(usuario: nuevoUsuario){
   
     return this.http.post<any>(`${apiUrl}/adm/usuarios/create/`, usuario);
+  }
+  insertarImagen(id,imagen){
+
+    return this.http.post<any>(`${apiUrl}/adm/usuarios/update/imagen/${id}`, imagen);
   }
   obtenerUsuario(id){ 
     return this.http.get<any>(`${apiUrl}/adm/usuarios/listOne/${id}`);

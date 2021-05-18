@@ -19,8 +19,8 @@
                             </div>
                             <div class="col-md-4">
                                 <select class="select2 form-control form-control-sm" [(ngModel)]="tiposOpciones" (change)="obtenerListaParametros()">
-                            <option value="0"  selected>- Tipo de parámetro -</option>
-                            <option *ngFor="let tipo of tipos" value="{{tipo.id}}">{{tipo.nombre}}</option>
+                            <option value=""  selected>- Tipo de parámetro -</option>
+                            <option *ngFor="let tipo of tipos" value="{{tipo.valor}}">{{tipo.valor}}</option>
                          </select>
                             </div>
                         </div>
@@ -62,6 +62,8 @@
                                     <th>Parámetro</th>
                                     <th>Tipo</th>
                                     <th>Descripción</th>
+                                    <th>Valor</th>
+                                    <th>Tipo de dato</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -83,6 +85,8 @@
                                     </td>
                                     <td> {{parametro.tipo}} </td>
                                     <td> {{parametro.descripcion}}</td>
+                                    <td> {{parametro.valor}}</td>
+                                    <td> {{parametro.tipoVariable}}</td>
                                     <td>
                                         <a data-toggle="modal" data-target="#modals-slide-in" (click)="editarParametro(parametro.id, parametro.nombre,parametro.idTipo,parametro.desccripcion)">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-50">
@@ -137,9 +141,9 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label" for="basic-icon-default-uname">Tipo de parámetro:</label>
-                                    <select class="select2 form-control form-control-sm" [(ngModel)]="idTipo">
-                                        <option value="0"  selected>- Tipo de parámetro -</option>
-                                        <option *ngFor="let tipo of tipos" value="{{tipo.id}}">{{tipo.nombre}}</option>
+                                    <select class="select2 form-control form-control-sm" [(ngModel)]="nombreTipo">
+                                        <option value=""  selected>- Tipo de parámetro -</option>
+                                        <option *ngFor="let tipo of tipos" value="{{tipo.valor}}">{{tipo.valor}}</option>
                                      </select>
                                 </div>
                                 <div class="form-group">

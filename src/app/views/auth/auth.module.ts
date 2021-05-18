@@ -5,6 +5,7 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import {  ReactiveFormsModule } from '@angular/forms';
 import { AuthComponent } from './auth.component';
 import { FormsModule } from '@angular/forms';
+import { NgxCaptchaModule } from 'ngx-captcha';
 
 @NgModule({
   declarations: [AuthComponent,SignInComponent],
@@ -12,7 +13,8 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     AuthRoutingModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NgxCaptchaModule
   ]
 })
 export class AuthModule { }

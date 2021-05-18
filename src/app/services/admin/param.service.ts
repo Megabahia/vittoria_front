@@ -9,21 +9,21 @@ export class ParamService {
 
   constructor(private http: HttpClient) {   }
 
-  obtenerListaParametros(page,page_size,idTipo,nombre){
+  obtenerListaParametros(page,page_size,tipo,nombre){
     
     return this.http.post<any>(`${apiUrl}/adm/param/list/`, {
-      page,page_size,idTipo:Number(idTipo),nombre
+      page,page_size,tipo,nombre
      });
      
   }
   obtenerListaTipos(){
     return this.http.get<any>(`${apiUrl}/adm/param/list/tipo/`);
   }
-  insertarParametro(nombre, idTipo, descripcion){
-    return this.http.post<any>(`${apiUrl}/adm/param/create/`,{nombre, idTipo, descripcion});
+  insertarParametro(nombre, tipo, descripcion){
+    return this.http.post<any>(`${apiUrl}/adm/param/create/`,{nombre, tipo, descripcion});
   }
-  editarParametro(id,nombre, idTipo, descripcion){
-    return this.http.post<any>(`${apiUrl}/adm/param/update/${id}`,{nombre, idTipo, descripcion});
+  editarParametro(id,nombre, tipo, descripcion){
+    return this.http.post<any>(`${apiUrl}/adm/param/update/${id}`,{nombre, tipo, descripcion});
   }
   eliminarParametro(id){
  

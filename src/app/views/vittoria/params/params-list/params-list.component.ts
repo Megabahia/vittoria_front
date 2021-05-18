@@ -16,11 +16,11 @@ export class ParamsListComponent implements OnInit {
   maxSize;
   collectionSize;
   parametros;
-  tiposOpciones: number = 0;
+  tiposOpciones: string = "";
   tipos;
   nombreBuscar;
   nombre;
-  idTipo = 0;
+  nombreTipo = "";
   descripcion;
   funcion;
   idParametro;
@@ -39,6 +39,7 @@ export class ParamsListComponent implements OnInit {
   async iniciarPaginador() {
     await this.paramService.obtenerListaTipos().subscribe((result) => {
       this.tipos = result;
+      console.log(result);
     });
     this.paginator.pageChange.subscribe(() => {
       this.obtenerListaParametros();
@@ -57,23 +58,23 @@ export class ParamsListComponent implements OnInit {
     this.funcion = 'editar';
     await this.paramService.obtenerParametro(id).subscribe((result) => {
       this.nombre = result.nombre;
-      this.idTipo = result.idTipo;
+      this.nombreTipo = result.tipo;
       this.descripcion = result.descripcion;
     });
   }
   insertarParametro() {
     this.nombre = "";
-    this.idTipo = 0;
+    this.nombreTipo = "";
     this.descripcion = "";
     this.funcion = 'insertar';
   }
   async gestionarParametro() {
     if (this.funcion == "insertar") {
-      await this.paramService.insertarParametro(this.nombre, this.idTipo, this.descripcion).subscribe((result) => {
+      await this.paramService.insertarParametro(this.nombre, this.nombreTipo, this.descripcion).subscribe((result) => {
         this.obtenerListaParametros();
       });
     } else if (this.funcion = 'editar') {
-      await this.paramService.editarParametro(this.idParametro, this.nombre, this.idTipo, this.descripcion).subscribe((result) => {
+      await this.paramService.editarParametro(this.idParametro, this.nombre, this.nombreTipo, this.descripcion).subscribe((result) => {
         this.obtenerListaParametros();
       });
     }

@@ -24,11 +24,14 @@ export class UsersEditComponent implements OnInit {
     telefono:'',
     twitter:'',
     whatsapp:'',
-    facebook:''
+    facebook:'',
+    imagen : new FormData()
   };
   constructor(
     private usersService:UsersService
-  ) { }
+  ) { 
+    
+  }
 
   async ngOnInit() {
     
@@ -44,4 +47,12 @@ export class UsersEditComponent implements OnInit {
       window.location.href = '/admin/user';
     });
   }
+  async subirImagen(event){
+    let imagen = event.target.files[0];
+    this.usuario.imagen = new FormData();
+    this.usuario.imagen.append('imagen',imagen,imagen.name);
+    this.usersService.insertarImagen(this.usuario.id,this.usuario.imagen).subscribe((data)=>{
+      console.log(data);
+    });
+  } 
 }
