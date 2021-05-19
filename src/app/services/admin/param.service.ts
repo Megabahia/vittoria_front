@@ -19,17 +19,44 @@ export class ParamService {
   obtenerListaTipos(){
     return this.http.get<any>(`${apiUrl}/adm/param/list/tipo/`);
   }
-  insertarParametro(nombre, tipo, descripcion){
-    return this.http.post<any>(`${apiUrl}/adm/param/create/`,{nombre, tipo, descripcion});
+  insertarParametro(
+    nombre, 
+    tipo, 
+    descripcion,
+    tipoVariable,
+    valor,
+    idPadre
+    ){
+    return this.http.post<any>(`${apiUrl}/adm/param/create/`,{
+      nombre, 
+      tipo, 
+      descripcion,
+      tipoVariable,
+      valor,
+      idPadre});
   }
-  editarParametro(id,nombre, tipo, descripcion){
-    return this.http.post<any>(`${apiUrl}/adm/param/update/${id}`,{nombre, tipo, descripcion});
+  editarParametro(
+    id,
+    nombre, 
+    tipo, 
+    descripcion,
+    tipoVariable,
+    valor,
+    idPadre){
+    return this.http.post<any>(`${apiUrl}/adm/param/update/${id}`,{nombre, 
+      tipo, 
+      descripcion,
+      tipoVariable,
+      valor,
+      idPadre});
   }
   eliminarParametro(id){
- 
     return this.http.delete<any>(`${apiUrl}/adm/param/delete/${id}`,);
   }
   obtenerParametro(id){
     return this.http.get<any>(`${apiUrl}/adm/param/listOne/${id}`,);
+  }
+  obtenerListaPadres(tipo){
+    return this.http.post<any>(`${apiUrl}/adm/param/list/tipo/todos/`,{tipo});
   }
 }

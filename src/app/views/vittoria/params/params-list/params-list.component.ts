@@ -24,6 +24,11 @@ export class ParamsListComponent implements OnInit {
   descripcion;
   funcion;
   idParametro;
+  tipoPadre="";
+  idPadre=0;
+  tipoVariable;
+  valor; 
+  @ViewChild('padres') padres;
   constructor(
     private paramService: ParamService,
     private modalService: NgbModal
@@ -54,27 +59,56 @@ export class ParamsListComponent implements OnInit {
 
   }
   async editarParametro(id) {
+    
     this.idParametro = id;
     this.funcion = 'editar';
-    await this.paramService.obtenerParametro(id).subscribe((result) => {
-      this.nombre = result.nombre;
-      this.nombreTipo = result.tipo;
-      this.descripcion = result.descripcion;
+    
+    await this.paramService.obtenerParametro(id).subscribe(async (result) => {
+      if(result.idPadre){
+      await this.paramService.obtenerParametro(result.idPadre).subscribe(async(data)=>{
+      this.tipoPadre = data.tipo;
+        await this.paramService.obtenerListaPadres(data.tipo).subscribe((result)=>{
+          this.padres = result;
+         });
+      }); 
+      this.idPadre = result.idPadre;
+    }
+    this.nombre = result.nombre;
+    this.nombreTipo = result.tipo;
+    this.descripcion = result.descripcion;
+    this.tipoVariable = result.tipoVariable;
+    this.valor = result.valor;
     });
   }
   insertarParametro() {
     this.nombre = "";
     this.nombreTipo = "";
     this.descripcion = "";
+    this.tipoPadre = "";
+    this.idPadre = 0;
     this.funcion = 'insertar';
   }
   async gestionarParametro() {
     if (this.funcion == "insertar") {
-      await this.paramService.insertarParametro(this.nombre, this.nombreTipo, this.descripcion).subscribe((result) => {
+      await this.paramService.insertarParametro(
+        this.nombre, 
+        this.nombreTipo, 
+        this.descripcion,
+        this.tipoVariable,
+        this.valor,
+        this.idPadre
+        ).subscribe((result) => {
         this.obtenerListaParametros();
       });
     } else if (this.funcion = 'editar') {
-      await this.paramService.editarParametro(this.idParametro, this.nombre, this.nombreTipo, this.descripcion).subscribe((result) => {
+      await this.paramService.editarParametro(
+        this.idParametro, 
+        this.nombre, 
+        this.nombreTipo, 
+        this.descripcion,
+        this.tipoVariable,
+        this.valor,
+        this.idPadre).subscribe((result) => {
         this.obtenerListaParametros();
       });
     }
@@ -90,5 +124,9 @@ export class ParamsListComponent implements OnInit {
       this.obtenerListaParametros();
     });
   }
-
+  async buscarPadre(){
+    await this.paramService.obtenerListaPadres(this.tipoPadre).subscribe((result)=>{
+     this.padres = result;
+    });
+  }
 }

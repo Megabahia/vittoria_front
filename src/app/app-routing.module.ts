@@ -8,6 +8,9 @@ const routes: Routes = [{
 },
 {
   path:'auth', loadChildren:() => import('./views/auth/auth.module').then(m => m.AuthModule)
+},
+{
+  path:'mdm', loadChildren:() => import('./views/mdm/mdm.module').then(m => m.MdmModule)
 }];
 
 @NgModule({
