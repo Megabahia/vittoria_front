@@ -43,7 +43,10 @@ export class UsersListComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.menu='user';
+    this.menu={
+      modulo:"adm",
+      seccion: "user"
+    };
     this.pageSize=10;
     this.vista='lista';
   }

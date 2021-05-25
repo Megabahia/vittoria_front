@@ -1,0 +1,241 @@
+<app-toolbar [menu]="menu"></app-toolbar>
+<app-navbar></app-navbar>
+<div class="app-content content ">
+    <div class="content-overlay"></div>
+    <div class="header-navbar-shadow"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+        </div>
+        <div class="content-body">
+            <!-- users list start -->
+            <section class="app-user-list">
+                <!-- users filter start -->
+                <div class="card">
+                    <h5 class="card-header">Filtros de búsqueda</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <select class="select2 form-control form-control-sm">
+                              <option selected>- Canal -</option>
+                              <option value="AK"> Instagram</option>
+                              <option value="AK"> Facebook</option>
+                              <option value="AK"> Mercado Libre</option>
+                              <option value="AK"> OLX</option>
+                           </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" id="fp-default" class="form-control form-control-sm flatpickr-basic" placeholder="Fecha de creación" />
+                            </div>
+                            <div class="col-md-3">
+                                <select class="select2 form-control form-control-sm">
+                               <option selected>- Vendedor -</option>
+                               <option value="AK"> Jaime Paucar</option>
+                               <option value="AK"> David Mora</option>
+                               <option value="AK"> Jorge Pérez</option>
+                            </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="select2 form-control form-control-sm">
+                                <option selected>- Confirmación prospecto -</option>
+                                <option value="AK"> Contactado</option>
+                                <option value="AK"> No contesta</option>
+                                <option value="AK"> En espera</option>
+                                <option value="AK"> En venta</option>
+                             </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- users filter end -->
+                <!-- list section start -->
+                <div class="card">
+                    <div class="card-datatable table-responsive pt-0">
+                        <div class="row m-75">
+                            <div class="col-lg-12 col-xl-4">
+                                <label>Mostrar</label>
+                                <select class="form-control-sm">
+                              <option value="10">10</option>
+                              <option value="25">25</option>
+                              <option value="50">50</option>
+                              <option value="100">100</option>
+                            </select>
+
+                            </div>
+                            <div class="col-lg-12 col-xl-8 text-right">
+                                <button class="btn btn-success" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-toggle="modal" data-target="#modals-slide-in">
+                          Exportar a excel
+                        </button>
+                                <button class="btn btn-primary" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-toggle="modal" data-target="#modals-slide-in">
+                        Añadir prospecto
+                      </button>
+                            </div>
+                        </div>
+                        <table class="user-list-table table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck2" />
+                                            <label class="custom-control-label" for="customCheck2"></label>
+                                        </div>
+                                    </th>
+                                    <th>Fecha de creación</th>
+                                    <th>Nombres</th>
+                                    <th>Apellidos</th>
+                                    <th>WhatsApp</th>
+                                    <th>Correo</th>
+                                    <th>Ciudad</th>
+                                    <th>Código de producto</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck2" />
+                                            <label class="custom-control-label" for="customCheck2"></label>
+                                        </div>
+                                    </td>
+                                    <td> - </td>
+                                    <td>
+                                        <div class="d-flex justify-content-left align-items-center">
+                                            <a class="user-name text-truncate mb-0" href="app-user-edit.html">
+                                                <span class="font-weight-bold">Eleanor Aguilar</span></a>
+                                        </div>
+                                    </td>
+                                    <td> - </td>
+                                    <td> - </td>
+                                    <td> - </td>
+                                    <td> - </td>
+                                    <td> - </td>
+                                    <td>
+                                        <a href="admin-clientes-editar.html">
+                                            <i data-feather="edit"></i>
+                                        </a>
+                                        <a href="#">
+                                            <i data-feather="trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Modal to add new user starts-->
+                    <div class="modal modal-slide-in new-user-modal fade" id="modals-slide-in">
+                        <div class="modal-dialog">
+                            <div class="modal-content pt-0">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                                <div class="modal-header mb-1">
+                                    <h5 class="modal-title" id="exampleModalLabel">Nuevo prospecto</h5>
+                                </div>
+                                <div class="modal-body flex-grow-1">
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-fullname">Nombres:</label>
+                                        <input type="text" class="form-control dt-full-name" id="basic-icon-default-fullname" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-uname">Apellidos:</label>
+                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-uname">Teléfono:</label>
+                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Tipo de cliente:</label>
+                                        <select class="select2 form-control">
+                                      <option selected>- Seleccione -</option>
+                                      <option value="AK">Cliente por mayor</option>
+                                      <option value="AK">Consumidor final</option>
+                                   </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Número de WhatsApp:</label>
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Dirección Facebook:</label>
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Dirección Twitter:</label>
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Dirección Instagram:</label>
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Correo 1:</label>
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Correo 2:</label>
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Ciudad:</label>
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Canal:</label>
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Código de producto:</label>
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Nombre del producto de interés:</label>
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="customFile">Subir foto</label>
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="customFile" />
+                                            <label class="custom-file-label" for="customFile">Seleccionar foto</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Precio:</label>
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Tipo de precio:</label>
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Nombre del vendedor:</label>
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Confirmación del prospecto:</label>
+                                        <select class="select2 form-control form-control-lg">
+                                      <option selected>- Seleccione -</option>
+                                      <option value="AK">Opcion 1</option>
+                                      <option value="AK">Opcion 2</option>
+                                      <option value="AK">Opcion 3</option>
+                                   </select>
+                                    </div>
+
+                                    <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close">Guardar</button>
+                                    <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal to add new user Ends-->
+                </div>
+                <!-- list section end -->
+            </section>
+            <!-- users list ends -->
+        </div>
+    </div>
+</div>
+<!-- END: Content-->
+<div class="sidenav-overlay"></div>
+<div class="drag-target"></div>
+<app-footer></app-footer>

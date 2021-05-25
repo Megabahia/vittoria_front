@@ -24,7 +24,10 @@ export class RolesListComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.menu='roles';
+    this.menu={
+      modulo:"adm",
+      seccion: "roles"
+    }
     this.pageSize=10;
     this.vista = 'lista'; 
   }

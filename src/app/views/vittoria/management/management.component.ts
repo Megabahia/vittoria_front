@@ -9,7 +9,10 @@ export class ManagementComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.menu='index';
+    this.menu={
+      modulo:"adm",
+      seccion: "index"
+    };
   }
 
 }

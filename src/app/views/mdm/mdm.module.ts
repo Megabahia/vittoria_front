@@ -4,16 +4,48 @@ import { CommonModule } from '@angular/common';
 import { MdmRoutingModule } from './mdm-routing.module';
 import { MdmComponent } from './mdm.component';
 import { ParamsComponent } from './params/params.component';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
+import { PersonasListComponent } from './clientes/personas/personas-list/personas-list.component';
+import { PersonasEditComponent } from './clientes/personas/personas-edit/personas-edit.component';
+import { TransaccionesListComponent } from './clientes/personas/transacciones-list/transacciones-list.component';
+import { TransaccionesAddComponent } from './clientes/personas/transacciones-add/transacciones-add.component';
+import { TransaccionesLoadComponent } from './clientes/personas/transacciones-load/transacciones-load.component';
+import { PersonasLoadComponent } from './clientes/personas/personas-load/personas-load.component';
+import { NegociosListComponent } from './clientes/negocios/negocios-list/negocios-list.component';
+import { NegociosEditComponent } from './clientes/negocios/negocios-edit/negocios-edit.component';
+import { NegociosLoadComponent } from './clientes/negocios/negocios-load/negocios-load.component';
+import { ProspectosClientesListComponent } from './prospectos-clientes/prospectos-clientes-list/prospectos-clientes-list.component';
+import { ProspectosClientesAddCsvComponent } from './prospectos-clientes/prospectos-clientes-add-csv/prospectos-clientes-add-csv.component';
+import { ProspectosClientesAddXlsxComponent } from './prospectos-clientes/prospectos-clientes-add-xlsx/prospectos-clientes-add-xlsx.component';
+import { ProspectosClientesEditComponent } from './prospectos-clientes/prospectos-clientes-edit/prospectos-clientes-edit.component';
 
 
 @NgModule({
   declarations: [
     MdmComponent,
-    ParamsComponent
+    ParamsComponent,
+    PersonasListComponent,
+    PersonasEditComponent,
+    TransaccionesListComponent,
+    TransaccionesAddComponent,
+    TransaccionesLoadComponent,
+    PersonasLoadComponent,
+    NegociosListComponent,
+    NegociosEditComponent,
+    NegociosLoadComponent,
+    ProspectosClientesListComponent,
+    ProspectosClientesEditComponent,
+    ProspectosClientesAddCsvComponent,
+    ProspectosClientesAddXlsxComponent
   ],
   imports: [
     CommonModule,
-    MdmRoutingModule
+    MdmRoutingModule,
+    NgbModule,
+    SharedModule,
+    FormsModule,
   ]
 })
 export class MdmModule { }

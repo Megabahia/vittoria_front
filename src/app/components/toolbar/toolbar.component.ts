@@ -6,6 +6,19 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ToolbarComponent implements OnInit {
   @Input('menu') menu;
+  menuToolbar = {
+    adm: {
+      user: "",
+      index: "",
+      roles: "",
+      param: ""
+    },
+    mdm:{
+      param:"",
+      prospectosCli:"",
+      clientesList: ""
+    }
+  }
   menuUser;
   menuIndex;
   menuRoles;
@@ -15,27 +28,8 @@ export class ToolbarComponent implements OnInit {
   ngOnInit(): void {
     this.selectMenu();
   }
-  initiateMenu(){
-    this.menuUser="";
-    this.menuIndex="";
-    this.menuRoles="";
-    this.menuParam="";
-  }
-  selectMenu(){
-    this.initiateMenu();
-    switch(this.menu){
-      case "index":
-        this.menuIndex="active";
-        break;
-      case "user":
-        this.menuUser="active";
-        break;
-      case "roles":
-        this.menuRoles="active";
-        break;
-      case "param":
-        this.menuParam="active";
-        break;
-    }
+  selectMenu() {
+    this.menuToolbar[this.menu.modulo][this.menu.seccion] = "active";
+
   }
 }

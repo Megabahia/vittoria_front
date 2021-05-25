@@ -16,6 +16,7 @@ export class MdmComponent implements OnInit {
     body.classList.add('navbar-floating');
     body.classList.add('footer-static');
     body.classList.add('menu-expanded');
+    body.classList.add('pace-done');
   }
 
 }
