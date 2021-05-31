@@ -1,1 +1,176 @@
-<p>negocios-list works!</p>
+<app-toolbar [menu]="menu"></app-toolbar>
+<app-navbar></app-navbar>
+<div class="app-content content ">
+    <div class="content-overlay"></div>
+    <div class="header-navbar-shadow"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+        </div>
+        <div class="content-body">
+            <!-- users list start -->
+            <section class="app-user-list">
+                <!-- users filter start -->
+                <div class="card">
+                    <h5 class="card-header">Filtros de búsqueda</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <select class="select2 form-control form-control-sm">
+                            <option value="AK">- Seleccione cliente - </option>
+                            <option value="HI">Pablo Pérez</option>
+                            <option value="CA">Luis Mora</option>
+                            <option value="NV">Rosa Moreno</option>
+                            <option value="OR">Pedro Molina</option>
+                        </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" placeholder="Cédula/RUC">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control flatpickr-basic flatpickr-input" placeholder="- Fecha inicio -">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control flatpickr-basic flatpickr-input" placeholder="- Fecha fin -">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- users filter end -->
+                <!-- list section start -->
+                <div class="card">
+                    <div class="card-datatable table-responsive pt-0">
+                        <div class="row m-75">
+                            <div class="col-lg-12 col-xl-6">
+                                <label>Mostrar</label>
+                                <select class="form-control-sm">
+                          <option value="10">10</option>
+                          <option value="25">25</option>
+                          <option value="50">50</option>
+                          <option value="100">100</option>
+                        </select>
+
+                            </div>
+                            <div class="col-lg-12 col-xl-6 text-right">
+                                <button class="btn btn-success" type="button">
+                      Exportar a excel
+                    </button>
+                                <a href="clientes-crear2.html" class="btn btn-primary">
+                        Añadir negocio
+                      </a>
+                            </div>
+                        </div>
+                        <table class="user-list-table table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck2" />
+                                            <label class="custom-control-label" for="customCheck2"></label>
+                                        </div>
+                                    </th>
+                                    <th>Negocio</th>
+                                    <th>Correo</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck2" />
+                                            <label class="custom-control-label" for="customCheck2"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-left align-items-center">
+                                            <div class="avatar mr-1 bg-light-danger">
+                                                <span class="avatar-content">AM</span>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a class="user-name text-truncate mb-0" href="cliente-perfil.html">
+                                                    <span class="font-weight-bold">Adriana Molina</span></a>
+                                                <small class="text-truncate text-muted mb-0">@adriana</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>cliente@fiendhead.org</td>
+                                    <td>
+                                        <a href="clientes-crear.html">
+                                            <i data-feather='edit-2'></i>
+                                        </a>
+                                        <a href="#" data-target="#eliminar" data-toggle="modal">
+                                            <i data-feather="trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Modal to add new user starts-->
+                    <div class="modal modal-slide-in new-user-modal fade" id="modals-slide-in">
+                        <div class="modal-dialog">
+                            <div class="modal-content pt-0">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                                <div class="modal-header mb-1">
+                                    <h5 class="modal-title" id="exampleModalLabel">Nuevo usuario</h5>
+                                </div>
+                                <div class="modal-body flex-grow-1">
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-fullname">Nombres:</label>
+                                        <input type="text" class="form-control dt-full-name" id="basic-icon-default-fullname" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-uname">Apellidos:</label>
+                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-uname">Usuario:</label>
+                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Correo:</label>
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-uname">Compañía:</label>
+                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-uname">País:</label>
+                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-uname">Teléfono:</label>
+                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-uname">WhatsApp:</label>
+                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="user-role">Rol de usuario</label>
+                                        <select id="user-role" class="form-control">
+                                  <option value="subscriber">Suscriptor</option>
+                                  <option value="editor">Editor</option>
+                                  <option value="admin">Administrador</option>
+                               </select>
+                                    </div>
+                                    <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close">Guardar</button>
+                                    <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal to add new user Ends-->
+                </div>
+                <!-- list section end -->
+            </section>
+            <!-- users list ends -->
+        </div>
+    </div>
+</div>
+<!-- END: Content-->
+<div class="sidenav-overlay"></div>
+<div class="drag-target"></div>
+<app-footer></app-footer>

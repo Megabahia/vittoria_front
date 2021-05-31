@@ -16,7 +16,8 @@ export class ToolbarComponent implements OnInit {
     mdm:{
       param:"",
       prospectosCli:"",
-      clientesList: ""
+      clientesList: "",
+      clientesTransac:""
     }
   }
   menuUser;

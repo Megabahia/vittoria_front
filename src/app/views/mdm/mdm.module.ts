@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { MdmRoutingModule } from './mdm-routing.module';
 import { MdmComponent } from './mdm.component';
 import { ParamsComponent } from './params/params.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PersonasListComponent } from './clientes/personas/personas-list/personas-list.component';
 import { PersonasEditComponent } from './clientes/personas/personas-edit/personas-edit.component';
 import { TransaccionesListComponent } from './clientes/personas/transacciones-list/transacciones-list.component';
@@ -20,8 +19,8 @@ import { ProspectosClientesListComponent } from './prospectos-clientes/prospecto
 import { ProspectosClientesAddCsvComponent } from './prospectos-clientes/prospectos-clientes-add-csv/prospectos-clientes-add-csv.component';
 import { ProspectosClientesAddXlsxComponent } from './prospectos-clientes/prospectos-clientes-add-xlsx/prospectos-clientes-add-xlsx.component';
 import { ProspectosClientesEditComponent } from './prospectos-clientes/prospectos-clientes-edit/prospectos-clientes-edit.component';
-
-
+import { ChartsModule } from 'ng2-charts';
+import {FlatpickrModule} from 'angularx-flatpickr';
 @NgModule({
   declarations: [
     MdmComponent,
@@ -46,6 +45,9 @@ import { ProspectosClientesEditComponent } from './prospectos-clientes/prospecto
     NgbModule,
     SharedModule,
     FormsModule,
+    ChartsModule,
+    ReactiveFormsModule,
+    FlatpickrModule.forRoot()
   ]
 })
 export class MdmModule { }

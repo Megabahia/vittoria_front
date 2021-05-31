@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxCaptchaModule } from 'ngx-captcha';
 
+
 @NgModule({
   declarations: [
     FooterComponent,ToolbarComponent,NavbarComponent],
@@ -14,7 +15,8 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     CommonModule,
     FormsModule,
     NgbModule,
-    NgxCaptchaModule
+    NgxCaptchaModule,
+    
   ],
   exports:[FooterComponent,ToolbarComponent,NavbarComponent]
 })

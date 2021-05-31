@@ -1,1 +1,272 @@
-<p>transacciones-add works!</p>
+<app-toolbar [menu]="menu"></app-toolbar>
+<app-navbar></app-navbar>
+<div class="app-content content ">
+    <div class="content-overlay"></div>
+    <div class="header-navbar-shadow"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+        </div>
+        <div class="content-body">
+            <section class="invoice-add-wrapper">
+                <div class="row invoice-add">
+                    <!-- Invoice Add Left starts -->
+                    <div class="col-12">
+                        <div class="card invoice-preview-card">
+                            <!-- Header starts -->
+                            <div class="card-body invoice-padding pb-0">
+                                <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+                                    <div>
+                                        <div class="logo-wrapper">
+                                            <h3 class="text-primary invoice-logo">LOGO</h3>
+                                        </div>
+                                        <p class="card-text mb-25">Oficina 149, conoco pichincha</p>
+                                        <p class="card-text mb-25">Quito, Ecuador</p>
+                                        <p class="card-text mb-0">(876) 543 2198</p>
+                                    </div>
+                                    <div class="invoice-number-date mt-md-0 mt-2">
+                                        <div class="d-flex align-items-center justify-content-md-end mb-1">
+                                            <h4 class="invoice-title">Factura</h4>
+                                            <div class="input-group input-group-merge invoice-edit-input-group">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">
+                                                        <i data-feather="hash"></i>
+                                                    </div>
+                                                </div>
+                                                <input type="text" class="form-control invoice-edit-input" placeholder="53634" disabled />
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-1">
+                                            <span class="title">Fecha:</span>
+                                            <input class="form-control invoice-edit-input date-picker" mwlFlatpickr type="text">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Header ends -->
+
+                            <hr class="invoice-spacing" />
+
+                            <!-- Address and Contact starts -->
+                            <div class="card-body invoice-padding pt-0">
+                                <h4 class="invoice-title mb-2">Datos para la factura</h4>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label>Tipo de identificación</label>
+                                        <select class="form-control">
+                                   <option>- Seleccione -</option>
+                                   <option>Cédula</option>
+                                   <option>RUC</option>
+                                   <option>Pasaporte</option>
+                                 </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label>Identificación</label>
+                                        <input class="form-control" type="text">
+                                    </div>
+                                    <div class="col-4">
+                                        <label>Razón social</label>
+                                        <input class="form-control" type="text">
+                                    </div>
+                                    <div class="col-4">
+                                        <label>Dirección</label>
+                                        <input class="form-control" type="text">
+                                    </div>
+                                    <div class="col-4">
+                                        <label>Teléfono</label>
+                                        <input class="form-control" type="text">
+                                    </div>
+                                    <div class="col-4">
+                                        <label>Correo</label>
+                                        <input class="form-control" type="text" placeholder="tucorreo@empresa.com">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Address and Contact ends -->
+                            <hr class="invoice-spacing" />
+                            <!-- Product Details starts -->
+                            <div class="card-body invoice-padding">
+                                <form class="source-item">
+                                    <div data-repeater-list="group-a">
+                                        <div class="repeater-wrapper" data-repeater-item>
+                                            <div class="row">
+                                                <div class="col-12 d-flex product-details-border position-relative pr-0">
+                                                    <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                                        <div class="col-lg-5 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                            <p class="card-text col-title mb-md-50 mb-0">Artículo/Producto</p>
+                                                            <input class="form-control" type="text">
+                                                            <textarea class="form-control mt-2" rows="1">Información adicional</textarea>
+                                                        </div>
+                                                        <div class="col-lg-3 col-12 my-lg-0 my-2">
+                                                            <p class="card-text col-title mb-md-2 mb-0">Valor unitario</p>
+                                                            <input type="text" class="form-control" value="24" placeholder="24" />
+                                                            <div class="mt-2">
+                                                                <span>Descuento:</span>
+                                                                <span class="discount">0%</span>
+                                                                <span class="tax-1 ml-50" data-toggle="tooltip" data-placement="top" title="Tax 1">0%</span>
+                                                                <span class="tax-2 ml-50" data-toggle="tooltip" data-placement="top" title="Tax 2">0%</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                                            <p class="card-text col-title mb-md-2 mb-0">Cantidad</p>
+                                                            <input type="number" class="form-control" value="1" placeholder="1" />
+                                                        </div>
+                                                        <div class="col-lg-2 col-12 mt-lg-0 mt-2">
+                                                            <p class="card-text col-title mb-md-50 mb-0">Precio</p>
+                                                            <p class="card-text mb-0">$24.00</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
+                                                        <i data-feather="x" class="cursor-pointer font-medium-3" data-repeater-delete></i>
+                                                        <div class="dropdown">
+                                                            <i class="cursor-pointer more-options-dropdown mr-0" data-feather="settings" id="dropdownMenuButton" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                         </i>
+                                                            <div class="dropdown-menu dropdown-menu-right item-options-menu p-50" aria-labelledby="dropdownMenuButton">
+                                                                <div class="form-group">
+                                                                    <label for="discount-input" class="form-label">Discount(%)</label>
+                                                                    <input type="number" class="form-control" id="discount-input" />
+                                                                </div>
+                                                                <div class="form-row mt-50">
+                                                                    <div class="form-group col-md-12">
+                                                                        <label for="tax-1-input" class="form-label">Impuestos</label>
+                                                                        <select name="tax-1-input" id="tax-1-input" class="form-control tax-select">
+                                                                         <option value="10%" selected>12%</option>
+                                                                         <option value="0%">0%</option>
+                                                                     </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="dropdown-divider my-1"></div>
+                                                                <div class="d-flex justify-content-between">
+                                                                    <button type="button" class="btn btn-outline-primary btn-apply-changes">Aplicar</button>
+                                                                    <button type="button" class="btn btn-outline-secondary">Cancelar</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-12 px-0">
+                                            <button type="button" class="btn btn-primary btn-sm btn-add-new" data-repeater-create>
+                                             <i data-feather="plus" class="mr-25"></i>
+                                             <span class="align-middle">Añadir producto</span>
+                                         </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- Product Details ends -->
+                            <hr class="invoice-spacing" />
+                            <!-- Invoice Total starts -->
+                            <div class="card-body invoice-padding">
+                                <div class="row invoice-sales-total-wrapper">
+                                    <div class="col-md-6 order-md-1 order-2 mt-md-0 mt-3">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <label for="salesperson" class="form-label">Persona de ventas:</label>
+                                            <input type="text" class="form-control ml-50" id="salesperson" placeholder="Nombre vendedor" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 d-flex justify-content-end order-md-2 order-1">
+                                        <div class="invoice-total-wrapper">
+                                            <div class="invoice-total-item">
+                                                <p class="invoice-total-title">Subtotal:</p>
+                                                <p class="invoice-total-amount">$1800</p>
+                                            </div>
+                                            <div class="invoice-total-item">
+                                                <p class="invoice-total-title">Descuento:</p>
+                                                <p class="invoice-total-amount">$28</p>
+                                            </div>
+                                            <div class="invoice-total-item">
+                                                <p class="invoice-total-title">IVA 12%:</p>
+                                                <p class="invoice-total-amount">$21</p>
+                                            </div>
+                                            <hr class="my-50" />
+                                            <div class="invoice-total-item">
+                                                <p class="invoice-total-title">Total:</p>
+                                                <p class="invoice-total-amount">$1690</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Invoice Total ends -->
+
+                            <hr class="invoice-spacing mt-0" />
+
+                            <div class="row p-2">
+                                <div class="col-12">
+                                    <button class="btn btn-primary mr-1 waves-effect waves-float waves-light" type="button" data-toggle="modal" data-target="#confirmar">Guardar factura</button>
+                                    <button type="reset" class="btn btn-outline-secondary waves-effect">Cancelar</button>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Add New Customer Sidebar -->
+                <div class="modal modal-slide-in fade" id="add-new-customer-sidebar" aria-hidden="true">
+                    <div class="modal-dialog sidebar-lg">
+                        <div class="modal-content p-0">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                            <div class="modal-header mb-1">
+                                <h5 class="modal-title">
+                                    <span class="align-middle">Add Customer</span>
+                                </h5>
+                            </div>
+                            <div class="modal-body flex-grow-1">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="customer-name" class="form-label">Customer Name</label>
+                                        <input type="text" class="form-control" id="customer-name" placeholder="John Doe" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="customer-email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="customer-email" placeholder="example@domain.com" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="customer-address" class="form-label">Customer Address</label>
+                                        <textarea class="form-control" id="customer-address" cols="2" rows="2" placeholder="1307 Lady Bug Drive New York"></textarea>
+                                    </div>
+                                    <div class="form-group position-relative">
+                                        <label for="customer-country" class="form-label">Country</label>
+                                        <select class="form-control" id="customer-country" name="customer-country">
+                                         <option label="select country"></option>
+                                         <option value="Australia">Australia</option>
+                                         <option value="Canada">Canada</option>
+                                         <option value="Russia">Russia</option>
+                                         <option value="Saudi Arabia">Saudi Arabia</option>
+                                         <option value="Singapore">Singapore</option>
+                                         <option value="Sweden">Sweden</option>
+                                         <option value="Switzerland">Switzerland</option>
+                                         <option value="United Kingdom">United Kingdom</option>
+                                         <option value="United Arab Emirates">United Arab Emirates</option>
+                                         <option value="United States of America">United States of America</option>
+                                     </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="customer-contact" class="form-label">Contact</label>
+                                        <input type="number" class="form-control" id="customer-contact" placeholder="763-242-9206" />
+                                    </div>
+                                    <div class="form-group d-flex flex-wrap mt-2">
+                                        <button type="button" class="btn btn-primary mr-1" data-dismiss="modal">Add</button>
+                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Add New Customer Sidebar -->
+            </section>
+        </div>
+    </div>
+</div>
+<!-- END: Content-->
+<div class="sidenav-overlay"></div>
+<div class="drag-target"></div>
+<app-footer></app-footer>
