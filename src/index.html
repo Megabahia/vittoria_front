@@ -16,7 +16,6 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/images/ico/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600" rel="stylesheet">
-    <!-- BEGIN: Vendor CSS-->
     <link rel="stylesheet" type="text/css" href="assets/vendors/css/vendors.min.css">
     <link rel="stylesheet" type="text/css" href="assets/vendors/css/charts/apexcharts.css">
     <link rel="stylesheet" type="text/css" href="assets/vendors/css/extensions/toastr.min.css">
@@ -45,12 +44,14 @@
 
     <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
-    <!-- END: Custom CSS-->
+
 </head>
 
-<body data-open="click" data-menu="vertical-menu-modern" data-col="">
+<body style="" data-open="click" data-menu="vertical-menu-modern" data-col="">
+
 
     <script src="assets/vendors/js/vendors.min.js"></script>
+
     <script src="assets/vendors/js/charts/apexcharts.min.js"></script>
     <script src="assets/vendors/js/extensions/toastr.min.js"></script>
 
@@ -74,21 +75,11 @@
     <!-- BEGIN: Page JS-->
     <script src="assets/js/scripts/pages/page-auth-login.js"></script>
     <script src="assets/js/scripts/pages/app-user-list.js"></script>
+    <script src="assets/js/scripts/last.js"></script>
 
-    <!-- END: Page JS-->
-
-    <script>
-        $(window).on('load', function() {
-            if (feather) {
-                feather.replace({
-                    width: 14,
-                    height: 14
-                });
-            }
-        })
-    </script>
     <app-root>
     </app-root>
+
 </body>
 
 </html>

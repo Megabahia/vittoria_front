@@ -21,6 +21,7 @@
         "@angular/platform-browser-dynamic": "~11.2.3",
         "@angular/router": "~11.2.3",
         "@ng-bootstrap/ng-bootstrap": "^9.1.0",
+        "angular-feather": "^6.1.0",
         "angularx-flatpickr": "^6.5.2",
         "chart.js": "^2.9.3",
         "flatpickr": "^4.6.0",

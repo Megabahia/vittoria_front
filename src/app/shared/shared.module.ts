@@ -6,7 +6,8 @@ import { FooterComponent } from '../components/footer/footer.component';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxCaptchaModule } from 'ngx-captcha';
-
+import { allIcons } from 'angular-feather/icons';
+import { FeatherModule } from 'angular-feather';
 
 @NgModule({
   declarations: [
@@ -16,8 +17,8 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     FormsModule,
     NgbModule,
     NgxCaptchaModule,
-    
+    FeatherModule.pick(allIcons)
   ],
-  exports:[FooterComponent,ToolbarComponent,NavbarComponent]
+  exports:[FooterComponent,ToolbarComponent,NavbarComponent,FeatherModule]
 })
 export class SharedModule { }

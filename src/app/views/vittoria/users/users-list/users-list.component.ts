@@ -18,7 +18,6 @@ export class UsersListComponent implements OnInit {
   estados;
   usuarios;
   idUsuario;
-  // name = 'Angular';
   page = 1;
   pageSize:any;
   maxSize;

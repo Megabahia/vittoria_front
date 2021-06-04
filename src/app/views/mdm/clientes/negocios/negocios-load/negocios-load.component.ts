@@ -6,9 +6,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NegociosLoadComponent implements OnInit {
 
+  menu;
   constructor() { }
 
   ngOnInit(): void {
+    this.menu = {
+      modulo:"mdm",
+      seccion: "negociosLoad"
+    };
   }
-
 }

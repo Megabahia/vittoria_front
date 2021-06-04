@@ -15,33 +15,31 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3">
-                                <select class="select2 form-control form-control-sm">
-                              <option selected>- Canal -</option>
-                              <option value="AK"> Instagram</option>
-                              <option value="AK"> Facebook</option>
-                              <option value="AK"> Mercado Libre</option>
-                              <option value="AK"> OLX</option>
-                           </select>
-                            </div>
-                            <div class="col-md-3">
-                                <input type="text" id="fp-default" class="form-control form-control-sm flatpickr-basic" placeholder="Fecha de creación" />
-                            </div>
-                            <div class="col-md-3">
-                                <select class="select2 form-control form-control-sm">
-                               <option selected>- Vendedor -</option>
-                               <option value="AK"> Jaime Paucar</option>
-                               <option value="AK"> David Mora</option>
-                               <option value="AK"> Jorge Pérez</option>
+                                <select class="select2 form-control form-control-sm" [(ngModel)]="canalLista" (change)="obtenerListaProspectos()">
+                                    <option value="" selected>- Canal -</option>
+                                    <option value="{{canalOp.valor}}" *ngFor="let canalOp of canalOpciones">
+                                        {{canalOp.nombre}}
+                                      </option>
                             </select>
                             </div>
                             <div class="col-md-3">
-                                <select class="select2 form-control form-control-sm">
-                                <option selected>- Confirmación prospecto -</option>
-                                <option value="AK"> Contactado</option>
-                                <option value="AK"> No contesta</option>
-                                <option value="AK"> En espera</option>
-                                <option value="AK"> En venta</option>
-                             </select>
+                                <input type="text" mwlFlatpickr [(ngModel)]="fecha" (input)="obtenerListaProspectos()" [altInput]="true" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
+                            </div>
+                            <div class="col-md-3">
+                                <select class="select2 form-control form-control-sm" [(ngModel)]="vendedor" (change)="obtenerListaProspectos()">
+                                    <option value="" selected>- Vendedor -</option>
+                                    <option value="{{vend.id}}" *ngFor="let vend of vendedorOpciones">
+                                        {{vend.nombre}}
+                                      </option>
+                            </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="select2 form-control form-control-sm" [(ngModel)]="confirmProspectoLista" (change)="obtenerListaProspectos()">
+                                    <option value="" selected>- Confirmación prospecto -</option>
+                                    <option value="{{prospe.valor}}" *ngFor="let prospe of confirmProspectoOpciones">
+                                        {{prospe.nombre}}
+                                      </option>
+                            </select>
                             </div>
                         </div>
                     </div>
@@ -49,27 +47,28 @@
                 <!-- users filter end -->
                 <!-- list section start -->
                 <div class="card">
-                    <div class="card-datatable table-responsive pt-0">
-                        <div class="row m-75">
-                            <div class="col-lg-12 col-xl-4">
-                                <label>Mostrar</label>
-                                <select class="form-control-sm">
-                              <option value="10">10</option>
-                              <option value="25">25</option>
-                              <option value="50">50</option>
-                              <option value="100">100</option>
-                            </select>
+                    <div class="row m-75">
+                        <div class="col-lg-12 col-xl-4">
+                            <label>Mostrar</label>
+                            <select class="form-control-sm" [(ngModel)]="pageSize">
+                          <option value="10">10</option>
+                          <option value="25">25</option>
+                          <option value="50">50</option>
+                          <option value="100">100</option>
+                        </select>
 
-                            </div>
-                            <div class="col-lg-12 col-xl-8 text-right">
-                                <button class="btn btn-success" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-toggle="modal" data-target="#modals-slide-in">
-                          Exportar a excel
-                        </button>
-                                <button class="btn btn-primary" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-toggle="modal" data-target="#modals-slide-in">
-                        Añadir prospecto
-                      </button>
-                            </div>
                         </div>
+                        <div class="col-lg-12 col-xl-8 text-right">
+                            <button class="btn btn-success" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-toggle="modal" data-target="#modals-slide-in">
+                      Exportar a excel
+                    </button>
+                            <button class="btn btn-primary" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-toggle="modal" data-target="#modals-slide-in">
+                    Añadir prospecto
+                  </button>
+                        </div>
+                    </div>
+                    <div class="card-datatable table-responsive pt-0">
+
                         <table class="user-list-table table">
                             <thead class="thead-light">
                                 <tr>
@@ -90,37 +89,40 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr *ngFor="let elem of lista">
                                     <td>
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck2" />
-                                            <label class="custom-control-label" for="customCheck2"></label>
+                                            <input type="checkbox" class="custom-control-input" id="customCheck{{elem.id}}" />
+                                            <label class="custom-control-label" for="customCheck{{elem.id}}"></label>
                                         </div>
                                     </td>
-                                    <td> - </td>
+                                    <td> {{elem.created_at}}</td>
                                     <td>
                                         <div class="d-flex justify-content-left align-items-center">
                                             <a class="user-name text-truncate mb-0" href="app-user-edit.html">
-                                                <span class="font-weight-bold">Eleanor Aguilar</span></a>
+                                                <span class="font-weight-bold">{{elem.nombres}}</span></a>
                                         </div>
                                     </td>
-                                    <td> - </td>
-                                    <td> - </td>
-                                    <td> - </td>
-                                    <td> - </td>
-                                    <td> - </td>
+                                    <td> {{elem.apellidos}} </td>
+                                    <td> {{elem.whatsapp}}</td>
+                                    <td> {{elem.correo1 ? elem.correo1:elem.correo2}} </td>
+                                    <td> {{elem.ciudad}} </td>
+                                    <td> {{elem.codigoProducto}} </td>
                                     <td>
-                                        <a href="admin-clientes-editar.html">
-                                            <i data-feather="edit"></i>
+                                        <a>
+                                            <i-feather name="edit"></i-feather>
                                         </a>
-                                        <a href="#">
-                                            <i data-feather="trash"></i>
+                                        <a>
+                                            <i-feather name="trash"></i-feather>
                                         </a>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
+
                     </div>
+                    <ngb-pagination #paginator [collectionSize]="collectionSize " [(page)]="page " [(pageSize)]="pageSize " [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+
                     <!-- Modal to add new user starts-->
                     <div class="modal modal-slide-in new-user-modal fade" id="modals-slide-in">
                         <div class="modal-dialog">
@@ -132,95 +134,106 @@
                                 <div class="modal-body flex-grow-1">
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-fullname">Nombres:</label>
-                                        <input type="text" class="form-control dt-full-name" id="basic-icon-default-fullname" />
+                                        <input type="text" class="form-control dt-full-name" id="basic-icon-default-fullname" [(ngModel)]="nombres" />
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-uname">Apellidos:</label>
-                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" [(ngModel)]="apellidos" />
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-uname">Teléfono:</label>
-                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" [(ngModel)]="telefono" />
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-email">Tipo de cliente:</label>
-                                        <select class="select2 form-control">
-                                      <option selected>- Seleccione -</option>
-                                      <option value="AK">Cliente por mayor</option>
-                                      <option value="AK">Consumidor final</option>
+                                        <select class="select2 form-control" [(ngModel)]="tipoCliente">
+                                            <option value="" selected>- Tipo de cliente -</option>
+                                            <option value="{{tipoCli.valor}}" *ngFor="let tipoCli of tipoClienteOpciones">
+                                                {{tipoCli.nombre}}
+                                              </option>
                                    </select>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-email">Número de WhatsApp:</label>
-                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" [(ngModel)]="whatsapp" />
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-email">Dirección Facebook:</label>
-                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" [(ngModel)]="facebook" />
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-email">Dirección Twitter:</label>
-                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" [(ngModel)]="twitter" />
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-email">Dirección Instagram:</label>
-                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" [(ngModel)]="instagram" />
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-email">Correo 1:</label>
-                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" [(ngModel)]="correo1" />
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-email">Correo 2:</label>
-                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" [(ngModel)]="correo2" />
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-email">Ciudad:</label>
-                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" [(ngModel)]="ciudad" />
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-email">Canal:</label>
-                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                        <select class="select2 form-control form-control-sm" [(ngModel)]="canal">
+                                            <option value="" selected>- Canal -</option>
+                                            <option value="{{canalOp.valor}}" *ngFor="let canalOp of canalOpciones">
+                                                {{canalOp.nombre}}
+                                              </option>
+                                    </select>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-email">Código de producto:</label>
-                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" [(ngModel)]="codigoProducto" />
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-email">Nombre del producto de interés:</label>
-                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" [(ngModel)]="nombreProducto" />
                                     </div>
                                     <div class="form-group">
                                         <label for="customFile">Subir foto</label>
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="customFile" />
+                                            <input type="file" class="custom-file-input" id="customFile" (change)="guardarImagen($event)" />
                                             <label class="custom-file-label" for="customFile">Seleccionar foto</label>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-email">Precio:</label>
-                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" [(ngModel)]="precio" />
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-email">Tipo de precio:</label>
-                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                        <select class="select2 form-control form-control-lg" [(ngModel)]="tipoPrecio">
+                                            <option value="" selected>- Tipo de precio -</option>
+                                            <option value="{{tipoPre.valor}}" *ngFor="let tipoPre of tipoPrecioOpciones">
+                                                {{tipoPre.nombre}}
+                                              </option>
+                                   </select>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-email">Nombre del vendedor:</label>
-                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" [(ngModel)]="nombreVendedor" />
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-email">Confirmación del prospecto:</label>
-                                        <select class="select2 form-control form-control-lg">
-                                      <option selected>- Seleccione -</option>
-                                      <option value="AK">Opcion 1</option>
-                                      <option value="AK">Opcion 2</option>
-                                      <option value="AK">Opcion 3</option>
+                                        <select class="select2 form-control form-control-lg" [(ngModel)]="confirmacionProspecto">
+                                            <option value="" selected>- Confirmación prospecto -</option>
+                                            <option value="{{prospe.valor}}" *ngFor="let prospe of confirmProspectoOpciones">
+                                                {{prospe.nombre}}
+                                              </option>
                                    </select>
                                     </div>
 
-                                    <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close">Guardar</button>
+                                    <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close" (click)="crearProspecto()">Guardar</button>
                                     <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                                 </div>
                             </div>

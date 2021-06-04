@@ -11,6 +11,9 @@ import { PersonasEditComponent } from './clientes/personas/personas-edit/persona
 import { TransaccionesListComponent } from './clientes/personas/transacciones-list/transacciones-list.component';
 import { TransaccionesAddComponent } from './clientes/personas/transacciones-add/transacciones-add.component';
 import { TransaccionesLoadComponent } from './clientes/personas/transacciones-load/transacciones-load.component';
+import { TransaccionesListComponent as TransaccionesListNegocios  } from './clientes/negocios/transacciones-list/transacciones-list.component';
+import { TransaccionesAddComponent  as TransaccionesAddNegocios } from './clientes/negocios/transacciones-add/transacciones-add.component';
+import { TransaccionesLoadComponent as TransaccionesLoadNegocios } from './clientes/negocios/transacciones-load/transacciones-load.component';
 import { PersonasLoadComponent } from './clientes/personas/personas-load/personas-load.component';
 import { NegociosListComponent } from './clientes/negocios/negocios-list/negocios-list.component';
 import { NegociosEditComponent } from './clientes/negocios/negocios-edit/negocios-edit.component';
@@ -37,7 +40,10 @@ import {FlatpickrModule} from 'angularx-flatpickr';
     ProspectosClientesListComponent,
     ProspectosClientesEditComponent,
     ProspectosClientesAddCsvComponent,
-    ProspectosClientesAddXlsxComponent
+    ProspectosClientesAddXlsxComponent,
+    TransaccionesListNegocios,
+    TransaccionesAddNegocios,
+    TransaccionesLoadNegocios
   ],
   imports: [
     CommonModule,

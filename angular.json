@@ -28,9 +28,10 @@
                         ],
                         "styles": [
                             "src/styles.css",
-                            "node_modules/flatpickr/dist/flatpickr.css"
+                            "node_modules/flatpickr/dist/flatpickr.css",
+                            "src/assets/vendors/css/vendors.min.css"
                         ],
-                        "scripts": []
+                        "scripts": ["src/assets/vendors/js/vendors.min.js"]
                     },
                     "configurations": {
                         "production": {
@@ -90,7 +91,7 @@
                         "styles": [
                             "src/styles.css"
                         ],
-                        "scripts": []
+                        "scripts": ["src/assets/vendors/js/vendors.min.js"]
                     }
                 },
                 "lint": {

@@ -36,26 +36,27 @@
                 <!-- users filter end -->
                 <!-- list section start -->
                 <div class="card">
-                    <div class="card-datatable table-responsive pt-0">
-                        <div class="row m-75">
-                            <div class="col-lg-12 col-xl-6">
-                                <label>Mostrar</label>
-                                <select class="form-control-sm" [(ngModel)]="pageSize" (change)="obtenerListaUsuarios()">
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                            </div>
-                            <div class="col-lg-12 col-xl-6 text-right">
-                                <button class="btn btn-success" type="button">
-                                  Exportar a excel
-                                </button>
-                                <button class="btn btn-primary dt-buttons btn-group flex-wrap" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-toggle="modal" data-target="#modals-slide-in">
-                                Añadir usuario
-                              </button>
-                            </div>
+                    <div class="row m-75">
+                        <div class="col-lg-12 col-xl-6">
+                            <label>Mostrar</label>
+                            <select class="form-control-sm" [(ngModel)]="pageSize" (change)="obtenerListaUsuarios()">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
                         </div>
+                        <div class="col-lg-12 col-xl-6 text-right">
+                            <button class="btn btn-success" type="button">
+                              Exportar a excel
+                            </button>
+                            <button class="btn btn-primary dt-buttons btn-group flex-wrap" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-toggle="modal" data-target="#modals-slide-in">
+                            Añadir usuario
+                          </button>
+                        </div>
+                    </div>
+                    <div class="card-datatable table-responsive pt-0">
+
                         <table class="user-list-table datatable table">
                             <thead class="thead-light">
                                 <tr>
@@ -124,8 +125,9 @@
 
                             </tbody>
                         </table>
-                        <ngb-pagination #paginator [collectionSize]="collectionSize " [(page)]="page " [(pageSize)]="pageSize " [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
                     </div>
+                    <ngb-pagination #paginator [collectionSize]="collectionSize " [(page)]="page " [(pageSize)]="pageSize " [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+
                     <ng-template #contenido let-modal>
                         <div class="modal-header ">
                             <h4 class="modal-title ">Mensaje</h4>
