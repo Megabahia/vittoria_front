@@ -1,6 +1,6 @@
 <app-toolbar [menu]="menu"></app-toolbar>
 <app-navbar></app-navbar>
-<div class="app-content content ">
+<div class="app-content content" *ngIf="vista=='lista'">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
     <div class="content-wrapper">
@@ -109,10 +109,10 @@
                                     <td> {{elem.ciudad}} </td>
                                     <td> {{elem.codigoProducto}} </td>
                                     <td>
-                                        <a>
+                                        <a (click)="editarProspecto(elem.id)">
                                             <i-feather name="edit"></i-feather>
                                         </a>
-                                        <a>
+                                        <a (click)="eliminarProspecto(elem.id)">
                                             <i-feather name="trash"></i-feather>
                                         </a>
                                     </td>
@@ -248,6 +248,8 @@
         </div>
     </div>
 </div>
+<app-prospectos-clientes-edit *ngIf="vista=='editar'" [idUsuario]="idUsuario" [confirmProspectoOpciones]="confirmProspectoOpciones"></app-prospectos-clientes-edit>
+
 <!-- END: Content-->
 <div class="sidenav-overlay"></div>
 <div class="drag-target"></div>

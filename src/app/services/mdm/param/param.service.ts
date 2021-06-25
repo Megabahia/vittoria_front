@@ -59,5 +59,10 @@ export class ParamService {
   obtenerListaPadres(tipo){
     return this.http.post<any>(`${apiUrl}/mdm/param/list/tipo/todos/`,{tipo});
   }
-  
+  obtenerListaHijos(nombre,tipo){
+    return this.http.post<any>(`${apiUrl}/mdm/param/list/filtro/nombre`,{tipo,nombre});
+  }
+  obtenerParametroNombreTipo(nombre,tipo){
+    return this.http.post<any>(`${apiUrl}/mdm/param/list/listOne`,{nombre,tipo});
+  }
 }

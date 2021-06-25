@@ -1,6 +1,6 @@
 <app-toolbar [menu]="menu"></app-toolbar>
 <app-navbar></app-navbar>
-<div class="app-content content ">
+<div class="app-content content " *ngIf="vista=='lista'">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
     <div class="content-wrapper">
@@ -27,10 +27,12 @@
                                 <input type="text" class="form-control" placeholder="Cédula/RUC">
                             </div>
                             <div class="col-md-3">
-                                <input type="text" class="form-control flatpickr-basic flatpickr-input" placeholder="- Fecha inicio -">
+                                <input type="text" mwlFlatpickr [(ngModel)]="inicio" (input)="obtenerListaNegocios()" [altInput]="true" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
+
                             </div>
                             <div class="col-md-3">
-                                <input type="text" class="form-control flatpickr-basic flatpickr-input" placeholder="- Fecha fin -">
+                                <input type="text" mwlFlatpickr [(ngModel)]="fin" (input)="obtenerListaNegocios()" [altInput]="true" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
+
                             </div>
                         </div>
                     </div>
@@ -54,7 +56,7 @@
                                 <button class="btn btn-success" type="button">
                       Exportar a excel
                     </button>
-                                <a href="clientes-crear2.html" class="btn btn-primary">
+                                <a (click)="crearNegocio()" class="btn btn-primary">
                         Añadir negocio
                       </a>
                             </div>
@@ -69,12 +71,12 @@
                                         </div>
                                     </th>
                                     <th>Negocio</th>
-                                    <th>Correo</th>
+                                    <th>Razon social</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr *ngFor="let negocio of negocios">
                                     <td>
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="customCheck2" />
@@ -88,18 +90,18 @@
                                             </div>
                                             <div class="d-flex flex-column">
                                                 <a class="user-name text-truncate mb-0" href="cliente-perfil.html">
-                                                    <span class="font-weight-bold">Adriana Molina</span></a>
-                                                <small class="text-truncate text-muted mb-0">@adriana</small>
+                                                    <span class="font-weight-bold">{{negocio.nombreComercial}}</span></a>
+                                                <small class="text-truncate text-muted mb-0"></small>
                                             </div>
                                         </div>
                                     </td>
-                                    <td>cliente@fiendhead.org</td>
+                                    <td>{{negocio.razonSocial}}</td>
                                     <td>
-                                        <a href="clientes-crear.html">
-                                            <i data-feather='edit-2'></i>
+                                        <a (click)="editarNegocio(negocio.id)">
+                                            <i-feather name='edit-2'></i-feather>
                                         </a>
                                         <a href="#" data-target="#eliminar" data-toggle="modal">
-                                            <i data-feather="trash"></i>
+                                            <i-feather name="trash"></i-feather>
                                         </a>
                                     </td>
                                 </tr>
@@ -170,6 +172,7 @@
         </div>
     </div>
 </div>
+<app-negocios-edit *ngIf="vista=='editar'" [idNegocio]="idNegocio"></app-negocios-edit>
 <!-- END: Content-->
 <div class="sidenav-overlay"></div>
 <div class="drag-target"></div>

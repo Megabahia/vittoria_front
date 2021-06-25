@@ -4,6 +4,28 @@ import { environment } from 'src/environments/environment';
 
 const  apiUrl:string  = environment.apiUrl;
 
+
+export interface Prospecto {
+  nombres:string,
+  apellidos:string,
+  telefono:string,
+  tipoCliente:string,
+  whatsapp:string,
+  facebook:string,
+  twitter:string,
+  instagram:string,
+  correo1:string,
+  correo2:string,
+  ciudad:string,
+  canal:string,
+  codigoProducto:string,
+  nombreProducto:string,
+  precio:number,
+  tipoPrecio:string,
+  nombreVendedor:string,
+  confirmacionProspecto:string,
+  imagen:string,
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -21,5 +43,18 @@ export class ProspectosService {
   }
   crearProspectos(data){
     return this.http.post<any>(`${apiUrl}/mdm/prospectosClientes/create/`, data);
+  }
+  obtenerProspecto(id){
+    return this.http.get<any>(`${apiUrl}/mdm/prospectosClientes/listOne/${id}`);
+  }
+  insertarImagen(id,imagen){
+    return this.http.post<any>(`${apiUrl}/mdm/prospectosClientes/update/imagen/${id}`, imagen);
+  }
+
+  actualizarProspecto(id,confirmacionProspecto){
+    return this.http.post<any>(`${apiUrl}/mdm/prospectosClientes/update/${id}`, {confirmacionProspecto});
+  }
+  eliminarProspecto(id){
+    return this.http.delete<any>(`${apiUrl}/mdm/prospectosClientes/delete/${id}` );
   }
 }

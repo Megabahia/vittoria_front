@@ -45,6 +45,7 @@ export class ProspectosClientesListComponent implements OnInit {
   nombreVendedor;
   confirmacionProspecto="";
   imagen;
+  vista;
   constructor(
     private prospectosService:ProspectosService
   ) { }
@@ -54,6 +55,7 @@ export class ProspectosClientesListComponent implements OnInit {
       modulo:"mdm",
       seccion: "prospectosCli"
     };
+    this.vista = 'lista';
   }
   async ngAfterViewInit(){
     this.obtenerCanales();
@@ -132,10 +134,19 @@ export class ProspectosClientesListComponent implements OnInit {
     this.usuario.append('nombreVendedor',this.nombreVendedor);
     this.usuario.append('confirmacionProspecto',this.confirmacionProspecto);
     this.usuario.append('imagen',this.imagen,this.imagen.name);
-    this.prospectosService.crearProspectos(this.usuario).subscribe((data)=>{
-      console.log(data);
-    });
+    this.prospectosService.crearProspectos(this.usuario).subscribe();
   }
- 
+  
+  editarProspecto(id){
+    this.idUsuario = id;
+    this.vista = 'editar';
+  }
+  eliminarProspecto(id){
+    if(confirm('¿Desea eliminar a este cliente?')){
+      this.prospectosService.eliminarProspecto(id).subscribe((info)=>{
+        this.obtenerListaProspectos();
+      });
+    }
+  }
 
 }

@@ -24,6 +24,7 @@ import { ProspectosClientesAddXlsxComponent } from './prospectos-clientes/prospe
 import { ProspectosClientesEditComponent } from './prospectos-clientes/prospectos-clientes-edit/prospectos-clientes-edit.component';
 import { ChartsModule } from 'ng2-charts';
 import {FlatpickrModule} from 'angularx-flatpickr';
+import { PersonasParientesComponent } from './clientes/personas/personas-parientes/personas-parientes.component';
 @NgModule({
   declarations: [
     MdmComponent,
@@ -43,7 +44,8 @@ import {FlatpickrModule} from 'angularx-flatpickr';
     ProspectosClientesAddXlsxComponent,
     TransaccionesListNegocios,
     TransaccionesAddNegocios,
-    TransaccionesLoadNegocios
+    TransaccionesLoadNegocios,
+    PersonasParientesComponent
   ],
   imports: [
     CommonModule,
