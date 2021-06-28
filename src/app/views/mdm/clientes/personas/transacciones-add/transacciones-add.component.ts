@@ -14,11 +14,13 @@ export class TransaccionesAddComponent implements OnInit {
   transaccion: Transaccion;
   detallesForm;
   detalles: FormArray;
+  detallesTransac;
   public isCollapsed = [];
   tipoIdentificacionOpciones;
   iva;
   ultimaFactura=0;
   myDate = new Date();
+  canalOpciones;
   constructor(
     private formBuilder: FormBuilder,
     private clientesService:ClientesService,
@@ -52,6 +54,7 @@ export class TransaccionesAddComponent implements OnInit {
     this.obtenerTipoIdentificacionOpciones();
     this.obtenerIVA();
     this.obternerUltimaTransaccion();
+    this.obtenerCanales();
   }
   transformarFecha(fecha){
     let nuevaFecha = this.datePipe.transform(fecha, 'yyyy-MM-dd');
@@ -77,17 +80,19 @@ export class TransaccionesAddComponent implements OnInit {
     if(detalles){
       detalles.map((valor)=>{
         let valorUnitario = valor.valorUnitario ? valor.valorUnitario:0;
-        let cantidad = valor.cantidad ? valor.cantidad:0;
         let porcentDescuento = valor.descuento ? valor.descuento:0;
-        let precio  = cantidad * valorUnitario;
+        let cantidadProducto = valor.cantidad ? valor.cantidad:0;
+        let precio  = cantidadProducto * valorUnitario;
         valor.precio = precio;
+        valor.valorDescuento = precio * (porcentDescuento/100); 
         descuento += precio * (porcentDescuento/100);
         subtotal += precio;
-        cantidad += valor.cantidad;
+        cantidad += valor.cantidad ? valor.cantidad:0;
       });
     }
+
     this.transaccion.numeroProductosComprados = cantidad; 
-    this.transaccion.detalles = detalles;
+    this.detallesTransac= detalles;
     this.transaccion.subTotal = this.redondear(subtotal);
     this.transaccion.iva=  this.redondear(subtotal*this.iva.valor);
     this.transaccion.descuento = this.redondear(descuento);
@@ -116,13 +121,14 @@ export class TransaccionesAddComponent implements OnInit {
   }
   async obtenerIVA(){
     await this.paramService.obtenerParametroNombreTipo("ACTIVO","TIPO_IVA").subscribe((info)=>{
-      
         this.iva = info;
-      
     });
   }
   async guardarTransaccion(){
+    this.calcularSubtotal();
+    this.transaccion.detalles = this.detallesTransac;
     await this.clientesService.crearTransaccion(this.transaccion).subscribe(()=>{
+      window.location.href='/mdm/clientes/clientes/transacciones/list';
 
     });
   }
@@ -131,5 +137,18 @@ export class TransaccionesAddComponent implements OnInit {
       this.ultimaFactura = info.numeroFactura;
     });
   }
-  
+  async obtenerCliente(){
+    await this.clientesService.obtenerClientePorCedula({cedula:this.transaccion.identificacion}).subscribe((info)=>{
+      if(info){
+        this.transaccion.correo = info.correo;
+        this.transaccion.razonSocial = info.nombreCompleto;
+        this.transaccion.cliente = info.id;
+      }
+    });
+  }
+  async obtenerCanales(){
+    await this.paramService.obtenerListaPadres("CANAL").subscribe((info)=>{
+      this.canalOpciones = info;
+    });
+  }
 }

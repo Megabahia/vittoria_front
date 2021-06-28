@@ -70,6 +70,35 @@ export interface Direcciones {
   referencia;
   created_at;
 }
+export interface Transaccion {
+  canalCompra;
+  correo;
+  created_at;
+  descuento;
+  detalles;
+  direccion;
+  fecha;
+  id;
+  identificacion;
+  iva;
+  negocio;
+  nombreVendedor;
+  numeroFactura;
+  numeroProductosComprados;
+  razonSocial;
+  subTotal;
+  telefono;
+  tipoIdentificacion;
+  total;
+}
+export interface Detalle {
+  articulo;
+  valorUnitario;
+  cantidad;
+  precio;
+  informacionAdicional;
+  descuento;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -151,11 +180,47 @@ export class NegociosService {
       created_at: "",
     }
   }
+  inicializarTransaccion() {
+    return {
+      canalCompra: "",
+      correo: "",
+      created_at: "",
+      descuento: 0,
+      detalles: [],
+      direccion: "",
+      fecha: "",
+      id: "",
+      identificacion: "",
+      iva: 0,
+      negocio: 0,
+      nombreVendedor: "",
+      numeroFactura: 0,
+      numeroProductosComprados: 0,
+      razonSocial: "",
+      subTotal: 0,
+      telefono: "",
+      tipoIdentificacion: "",
+      total: 0
+    };
+  }
+  inicializarDetalle(){
+    return {
+      articulo:"",
+      valorUnitario:0,
+      cantidad:0,
+      precio:0,
+      informacionAdicional:"",
+      descuento:0
+    }
+  }
   obtenerListaNegocios(data) {
     return this.http.post<any>(`${apiUrl}/mdm/negocios/list/`, data);
   }
   obtenerNegocio(id){
     return this.http.get<any>(`${apiUrl}/mdm/negocios/listOne/${id}`);
+  }
+  eliminarNegocio(id){
+    return this.http.delete<any>(`${apiUrl}/mdm/negocios/delete/${id}`);
   }
   crearDatosBasicos(datos) {
     return this.http.post<any>(`${apiUrl}/mdm/negocios/create/`, datos);
@@ -192,5 +257,35 @@ export class NegociosService {
   }
   eliminarDireccion(id){
     return this.http.delete<any>(`${apiUrl}/mdm/negocios/direcciones/delete/${id}`, );
+  }
+  obtenerTransaccionesNegocios(id,datos){
+    return this.http.post<any>(`${apiUrl}/mdm/facturas/list/negocio/fecha/${id}`,datos);
+  }
+  obtenerGraficaTransaccionesNegocios(id,datos){
+    return this.http.post<any>(`${apiUrl}/mdm/facturas/list/negocio/fecha/grafica/${id}`,datos);
+  }
+  obtenerTransaccion(id) {
+    return this.http.get<any>(`${apiUrl}/mdm/facturas/listOne/${id}`);
+  }
+  obtenerTodasTrasacciones(datos) {
+    return this.http.post<any>(`${apiUrl}/mdm/facturas/list/negocio/`, datos);
+  }
+  crearTransaccion(datos){
+    return this.http.post<any>(`${apiUrl}/mdm/facturas/create/`, datos);
+  }
+  obtenerUltimaTransaccion(){
+    return this.http.get<any>(`${apiUrl}/mdm/facturas/listLatest/`);
+  }
+  obtenerTransaccionesNegocio(id,datos){
+    return this.http.post<any>(`${apiUrl}/mdm/facturas/list/negocio/fecha/${id}`,datos);
+  }
+  obtenerGraficaTransaccionesNegocio(id,datos){
+    return this.http.post<any>(`${apiUrl}/mdm/facturas/list/negocio/fecha/grafica/${id}`,datos);
+  }
+  obtenerGraficaTransaccionesGeneral(datos){
+    return this.http.post<any>(`${apiUrl}/mdm/facturas/list/negocio/grafica/`,datos);
+  }
+  obtenerNegocioPorRuc(ruc){
+    return this.http.post<any>(`${apiUrl}/mdm/negocios/listOne/ruc/`,ruc);
   }
 }

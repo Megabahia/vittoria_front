@@ -29,7 +29,6 @@ export class TransaccionesListComponent implements OnInit {
     id: 0,
     identificacion: "",
     iva: "",
-    negocio: "",
     nombreVendedor: "",
     numeroFactura: 0,
     numeroProductosComprados: "",

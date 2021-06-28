@@ -72,7 +72,6 @@ export interface Transaccion {
   id;
   identificacion;
   iva;
-  negocio;
   nombreVendedor;
   numeroFactura;
   numeroProductosComprados;
@@ -200,7 +199,7 @@ export class ClientesService {
   inicializarTransaccion() {
     return {
       canalCompra: "",
-      cliente: "",
+      cliente: 0,
       correo: "",
       created_at: "",
       descuento: 0,
@@ -210,7 +209,6 @@ export class ClientesService {
       id: "",
       identificacion: "",
       iva: 0,
-      negocio: "",
       nombreVendedor: "",
       numeroFactura: 0,
       numeroProductosComprados: 0,
@@ -282,9 +280,6 @@ export class ClientesService {
   eliminarDatosVirtuales(id) {
     return this.http.delete<any>(`${apiUrl}/mdm/clientes/datos-virtuales-cliente/delete/${id}`);
   }
-  obtenerTransacciones(datos) {
-    return this.http.post<any>(`${apiUrl}/mdm/facturas/list/`, datos);
-  }
   obtenerTransaccion(id) {
     return this.http.get<any>(`${apiUrl}/mdm/facturas/listOne/${id}`);
   }
@@ -321,5 +316,8 @@ export class ClientesService {
   }
   eliminarPariente(id){
     return this.http.delete<any>(`${apiUrl}/mdm/clientes/parientes-cliente/delete/${id}`);
+  }
+  obtenerClientePorCedula(cedula){
+    return this.http.post<any>(`${apiUrl}/mdm/clientes/listOne/cedula/`,cedula);
   }
 }

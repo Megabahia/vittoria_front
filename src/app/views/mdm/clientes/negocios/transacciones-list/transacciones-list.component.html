@@ -15,11 +15,10 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4">
-                                <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="basicDemoValue">
-
+                                <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="inicio" (input)="obtenerTransacciones()">
                             </div>
                             <div class="col-md-4">
-                                <input type="text" mwlFlatpickr class="form-control flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
+                                <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="fin" (input)="obtenerTransacciones()">
                             </div>
                         </div>
                     </div>
@@ -71,25 +70,27 @@
                             </thead>
 
                             <tbody>
-                                <tr>
+                                <tr *ngFor="let transaccion  of listaTransacciones">
                                     <td>
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="customCheck2" />
                                             <label class="custom-control-label" for="customCheck2"></label>
                                         </div>
                                     </td>
-                                    <td>17-03-2021</td>
-                                    <td>Valor calculado</td>
-                                    <td>Valor calculado</td>
-                                    <td>Valor calculado</td>
+                                    <td>{{transformarFecha(transaccion.created_at)}}</td>
+                                    <td>{{transaccion.canalCompra}} </td>
+                                    <td>{{transaccion.numeroProductosComprados}} </td>
+                                    <td> ${{transaccion.total}} </td>
                                     <td>
-                                        <a href="#" data-toggle="modal" data-target="#verfactura">factura998883</a>
+                                        <a (click)="obtenerTransaccion(transaccion.id)" data-toggle="modal" data-target="#verfactura">factura-{{transaccion.numeroFactura}}</a>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
 
                     </div>
+                    <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [(pageSize)]="pageSize" [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+
                     <div class="modal fade" id="verfactura" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
@@ -111,15 +112,15 @@
                                                     <div class="input-group input-group-merge invoice-edit-input-group">
                                                         <div class="input-group-prepend">
                                                             <div class="input-group-text">
-                                                                <i data-feather="hash"></i>
+                                                                <i-feather name="hash" class="edit-user"></i-feather>
                                                             </div>
                                                         </div>
-                                                        <input type="text" class="form-control invoice-edit-input" placeholder="53634" disabled />
+                                                        <input type="text" class="form-control invoice-edit-input" placeholder="{{transaccion.numeroFactura}}" disabled />
                                                     </div>
                                                 </div>
                                                 <div class="d-flex align-items-center mb-1">
                                                     <span class="title mr-1">Fecha:</span>
-                                                    <input type="text" class="form-control invoice-edit-input date-picker" value="12-04-2021" disabled />
+                                                    <input type="text" class="form-control invoice-edit-input date-picker" value="{{transformarFecha(transaccion.created_at)}}" disabled />
                                                 </div>
 
                                             </div>
@@ -135,32 +136,28 @@
                                         <div class="row">
                                             <div class="col-4">
                                                 <label>Tipo de identificación</label>
-                                                <select class="form-control" disabled>
-                                   <option>- Seleccione -</option>
-                                   <option>Cédula</option>
-                                   <option selected>RUC</option>
-                                   <option>Pasaporte</option>
-                                 </select>
+                                                <input class="form-control" type="text" value="{{transaccion.tipoIdentificacion}}" disabled>
+
                                             </div>
                                             <div class="col-4">
                                                 <label>Identificación</label>
-                                                <input class="form-control" type="text" value="1819451159001" disabled>
+                                                <input class="form-control" type="text" value="{{transaccion.identificacion}}" disabled>
                                             </div>
                                             <div class="col-4">
                                                 <label>Razón social</label>
-                                                <input class="form-control" type="text" value="Jaime Paucar" disabled>
+                                                <input class="form-control" type="text" value="{{transaccion.razonSocial}}" disabled>
                                             </div>
                                             <div class="col-4">
                                                 <label>Dirección</label>
-                                                <input class="form-control" type="text" value="Benalcazar y Pedro Avila" disabled>
+                                                <input class="form-control" type="text" value="{{transaccion.direccion}}" disabled>
                                             </div>
                                             <div class="col-4">
                                                 <label>Teléfono</label>
-                                                <input class="form-control" type="text" value="099238848" disabled>
+                                                <input class="form-control" type="text" value="{{transaccion.telefono}}" disabled>
                                             </div>
                                             <div class="col-4">
                                                 <label>Correo</label>
-                                                <input class="form-control" type="text" placeholder="tucorreo@empresa.com" value="jymjja@gmail.com" disabled>
+                                                <input class="form-control" type="text" value="{{transaccion.correo}}" disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -169,33 +166,31 @@
                                     <!-- Product Details starts -->
                                     <div class="card-body invoice-padding">
                                         <form class="source-item">
-                                            <div data-repeater-list="group-a">
+                                            <div data-repeater-list="group-a" *ngFor="let detalle of transaccion.detalles">
                                                 <div class="repeater-wrapper" data-repeater-item>
                                                     <div class="row">
                                                         <div class="col-12 d-flex product-details-border position-relative pr-0">
                                                             <div class="row w-100 pr-lg-0 pr-1 py-2">
                                                                 <div class="col-lg-5 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                                                     <p class="card-text col-title mb-md-50 mb-0">Artículo/Producto</p>
-                                                                    <input class="form-control" type="text" value="Mouse Inalambrico" disabled>
-                                                                    <textarea class="form-control mt-2" rows="2" disabled>Información adicional</textarea>
+                                                                    <input class="form-control" type="text" value="{{detalle.articulo}}" disabled>
+                                                                    <textarea class="form-control mt-2" rows="2" disabled>{{detalle.informacionAdicional}}</textarea>
                                                                 </div>
                                                                 <div class="col-lg-3 col-12 my-lg-0 my-2">
                                                                     <p class="card-text col-title mb-md-50 mb-0">Valor unitario</p>
-                                                                    <input type="text" class="form-control" value="24" placeholder="24" disabled />
+                                                                    <input type="text" class="form-control" value="{{detalle.valorUnitario}}" disabled />
                                                                     <div class="mt-2">
                                                                         <span>Descuento:</span>
-                                                                        <span class="discount">0%</span>
-                                                                        <span class="tax-1 ml-50" data-toggle="tooltip" data-placement="top" title="Tax 1">0%</span>
-                                                                        <span class="tax-2 ml-50" data-toggle="tooltip" data-placement="top" title="Tax 2">0%</span>
+                                                                        <span class="discount">{{detalle.descuento}}%</span>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-lg-2 col-12 my-lg-0 my-2">
                                                                     <p class="card-text col-title mb-md-50 mb-0">Cantidad</p>
-                                                                    <input type="number" class="form-control" value="1" placeholder="1" disabled />
+                                                                    <input type="number" class="form-control" value="{{detalle.cantidad}}" disabled />
                                                                 </div>
                                                                 <div class="col-lg-2 col-12 mt-lg-0 mt-2">
                                                                     <p class="card-text col-title mb-md-50 mb-0">Precio</p>
-                                                                    <input type="text" class="form-control" value="24" placeholder="24" disabled />
+                                                                    <input type="text" class="form-control" value="{{detalle.precio}}" placeholder="24" disabled />
                                                                 </div>
                                                             </div>
 
@@ -213,22 +208,22 @@
                                         <div class="row">
                                             <div class="col-md-7">
                                                 <label for="salesperson" class="form-label">Persona de ventas:</label>
-                                                <input type="text" class="form-control" id="salesperson" placeholder="Nombre vendedor" value="Jaime Paucar" disabled />
+                                                <input type="text" class="form-control" id="salesperson" placeholder="Nombre vendedor" value="{{transaccion.nombreVendedor}}" disabled />
                                             </div>
                                             <div class="col-md-5 text-right">
                                                 <div class="invoice-total-wrapper">
                                                     <div class="invoice-total-item">
-                                                        <p class="invoice-total-title">Subtotal: $1800</p>
+                                                        <p class="invoice-total-title">Subtotal: ${{transaccion.subTotal}}</p>
                                                     </div>
                                                     <div class="invoice-total-item">
-                                                        <p class="invoice-total-title">Descuento: $28</p>
+                                                        <p class="invoice-total-title">Descuento: ${{transaccion.descuento}}</p>
                                                     </div>
                                                     <div class="invoice-total-item">
-                                                        <p class="invoice-total-title">IVA 12%: $21</p>
+                                                        <p class="invoice-total-title">IVA 12%: ${{transaccion.iva}}</p>
                                                     </div>
                                                     <hr class="my-50" />
                                                     <div class="invoice-total-item">
-                                                        <p class="invoice-total-title text-primary font-weight-bold">Total: $1690</p>
+                                                        <p class="invoice-total-title text-primary font-weight-bold">Total: ${{transaccion.total}}</p>
                                                     </div>
                                                 </div>
                                             </div>

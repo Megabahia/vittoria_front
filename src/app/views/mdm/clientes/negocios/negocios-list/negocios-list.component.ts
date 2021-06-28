@@ -12,10 +12,11 @@ export class NegociosListComponent implements OnInit {
   page=1;
   pageSize=10;
   collectionSize;
+  negocio;
   negocios;
   inicio;
   fin;
-  
+  ruc;
   constructor(private negociosService:NegociosService) { }
 
   ngOnInit(): void {
@@ -28,6 +29,8 @@ export class NegociosListComponent implements OnInit {
   async obtenerListaNegocios(){
     this.negociosService.obtenerListaNegocios(
       {
+        nombreComercial: this.negocio,
+        cedula:this.ruc,
         inicio:this.inicio,
         fin:this.fin,
         page:this.page-1,
@@ -44,5 +47,9 @@ export class NegociosListComponent implements OnInit {
     this.idNegocio= id;
     this.vista= 'editar';
   }
-
+  eliminarNegocio(id){
+    this.negociosService.eliminarNegocio(id).subscribe(()=>{
+      this.obtenerListaNegocios();
+    });
+  }
 }

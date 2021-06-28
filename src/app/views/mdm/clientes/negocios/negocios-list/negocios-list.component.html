@@ -15,16 +15,12 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3">
-                                <select class="select2 form-control form-control-sm">
-                            <option value="AK">- Seleccione cliente - </option>
-                            <option value="HI">Pablo Pérez</option>
-                            <option value="CA">Luis Mora</option>
-                            <option value="NV">Rosa Moreno</option>
-                            <option value="OR">Pedro Molina</option>
-                        </select>
+                                <input type="text" class="form-control form-control-sm" [(ngModel)]="negocio" (change)="obtenerListaNegocios()">
+
                             </div>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" placeholder="Cédula/RUC">
+                                <input type="text" class="form-control form-control-sm" placeholder="Cédula" [(ngModel)]="ruc" (change)="obtenerListaNegocios()">
+
                             </div>
                             <div class="col-md-3">
                                 <input type="text" mwlFlatpickr [(ngModel)]="inicio" (input)="obtenerListaNegocios()" [altInput]="true" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
@@ -100,7 +96,7 @@
                                         <a (click)="editarNegocio(negocio.id)">
                                             <i-feather name='edit-2'></i-feather>
                                         </a>
-                                        <a href="#" data-target="#eliminar" data-toggle="modal">
+                                        <a (click)="eliminarNegocio(negocio.id)" data-target="#eliminar" data-toggle="modal">
                                             <i-feather name="trash"></i-feather>
                                         </a>
                                     </td>
