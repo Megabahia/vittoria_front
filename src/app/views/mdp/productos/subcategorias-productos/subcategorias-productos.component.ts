@@ -18,13 +18,16 @@ export class SubcategoriasProductosComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private subcategoriasService:SubcategoriasService
-  ) { }
+  ) {
+    this.subcategoria = subcategoriasService.inicializarSubcategoria();
+   }
 
   ngOnInit(): void {
     this.menu = {
       modulo:"mdp",
       seccion: "subCat"
     };
+    this.obtenerListaSubcategorias();
   }
   async obtenerListaSubcategorias(){
     await this.subcategoriasService.obtenerListaSubcategoria({
@@ -35,17 +38,17 @@ export class SubcategoriasProductosComponent implements OnInit {
       this.collectionSize = info.cont;
     });
   }
-  async crearCategoria(){
+  async crearSubcategoria(){
     this.subcategoria = this.subcategoriasService.inicializarSubcategoria();
   }
 
-  async editarCategoria(id){
+  async editarSubcategoria(id){
     await this.subcategoriasService.obtenerSubcategoria(id).subscribe((info)=>{
       this.subcategoria = info;
     });
   }
   
-  async guardarCategoria(){
+  async guardarSubcategoria(){
     if(this.subcategoria.id==0){
       await this.subcategoriasService.crearSubcategoria(this.subcategoria).subscribe(()=>{
         this.obtenerListaSubcategorias();

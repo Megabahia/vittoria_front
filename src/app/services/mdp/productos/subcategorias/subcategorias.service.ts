@@ -29,7 +29,7 @@ export class SubcategoriasService {
     }; 
   }
   obtenerListaSubcategoria(datos){
-    return this.http.post<any>(`${apiUrl}/mdp/subCategorias/list/`, datos);
+    return this.http.post<any>(`${apiUrl}/mdp/subCategorias/list/`, datos);;
   }
   obtenerSubcategoria(id){
     return this.http.get<any>(`${apiUrl}/mdp/subCategorias/listOne/${id}`);
