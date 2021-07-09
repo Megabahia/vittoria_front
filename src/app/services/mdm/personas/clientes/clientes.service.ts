@@ -229,8 +229,8 @@ export class ClientesService {
       descuento:0
     }
   }
-  obtenerListaClientes(data) {
-    return this.http.post<any>(`${apiUrl}/mdm/clientes/list/`, data);
+  obtenerListaClientes(datos) {
+    return this.http.post<any>(`${apiUrl}/mdm/clientes/list/`, datos);
   }
   obtenerClientesFiltro() {
     return this.http.get<any>(`${apiUrl}/mdm/clientes/list/`);

@@ -1,0 +1,203 @@
+<app-toolbar [menu]="menu"></app-toolbar>
+<app-navbar></app-navbar>
+<div class="app-content content ">
+    <div class="content-overlay"></div>
+    <div class="header-navbar-shadow"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+        </div>
+        <div class="content-body">
+            <div class="card">
+                <h5 class="card-header">Crear subcategorías</h5>
+            </div>
+            <div class="card">
+                <div class="row m-75">
+                    <div class="col-lg-12 col-xl-6">
+                        <label>Mostrar</label>
+                        <select class="form-control-sm">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select>
+
+                    </div>
+                    <div class="col-lg-12 col-xl-6 text-right">
+                        <button class="btn btn-icon btn-primary" type="button" data-toggle="modal" data-target="#addcampo">
+                    <i data-feather="plus" class="mr-25"></i>
+                    <span>Añadir</span>
+                </button>
+
+                    </div>
+                </div>
+                <div class="modal modal-slide-in new-user-modal fade" id="addcampo">
+                    <div class="modal-dialog">
+                        <div class="modal-content pt-0">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                            <div class="modal-header mb-1">
+                                <h5 class="modal-title" id="exampleModalLabel">Nueva subcategoría</h5>
+                            </div>
+                            <div class="modal-body flex-grow-1">
+
+                                <div class="form-group">
+                                    <label class="form-label">Seleccione categoría padre:</label>
+                                    <select class="form-control select2">
+                             <option>- Seleccione - </option>
+                             <option>Hogar</option>
+                             <option>Automotriz</option>
+                             <option>Electrónica</option>
+                             <option>Comida</option>
+                             <option>Ferretería</option>
+                           </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Nombre de subcategoría:</label>
+                                    <input type="text" class="form-control" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Código de subcategoría:</label>
+                                    <input type="text" class="form-control" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Descripción:</label>
+                                    <input type="text" class="form-control" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Estado:</label>
+                                    <select class="form-control">
+                             <option>- Seleccione - </option>
+                             <option>Activo</option>
+                             <option>Inactivo</option>
+                           </select>
+                                </div>
+
+                                <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close">Guardar</button>
+                                <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-datatable table-responsive pt-0">
+                    <table class="user-list-table table table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
+                                        <label class="custom-control-label" for="customCheck2"></label>
+                                    </div>
+                                </th>
+                                <th> Categoría padre</th>
+                                <th>Nombre subcategoría</th>
+                                <th>Código de subcategoría</th>
+                                <th>Descripción</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody data-repeater-list="invoice">
+                            <tr data-repeater-item *ngFor="let subcategoria of listaSubcategorias">
+                                <td>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
+                                        <label class="custom-control-label" for="customCheck2"></label>
+                                    </div>
+                                </td>
+                                <td>Hogar</td>
+                                <td>Línea blanca</td>
+                                <td>YT8881</td>
+                                <td> - </td>
+                                <td> <span class="text-capitalize badge badge-light-success badge-pill">activo</span> </td>
+                                <td>
+                                    <a href="#" data-toggle="modal" data-target="#addcampo">
+                                        <i data-feather='edit-2'></i>
+                                    </a>
+                                    <a href="#" data-repeater-delete>
+                                        <i data-feather='trash'></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr data-repeater-item>
+                                <td>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
+                                        <label class="custom-control-label" for="customCheck2"></label>
+                                    </div>
+                                </td>
+                                <td>Electrónica</td>
+                                <td>Oficina</td>
+                                <td>YT8881</td>
+                                <td> - </td>
+                                <td> <span class="text-capitalize badge badge-light-success badge-pill">activo</span> </td>
+                                <td>
+                                    <a href="#" data-toggle="modal" data-target="#addcampo">
+                                        <i data-feather='edit-2'></i>
+                                    </a>
+                                    <a href="#" data-repeater-delete>
+                                        <i data-feather='trash'></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr data-repeater-item>
+                                <td>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
+                                        <label class="custom-control-label" for="customCheck2"></label>
+                                    </div>
+                                </td>
+                                <td>Ferreteria</td>
+                                <td>Plomeria</td>
+                                <td>YT8881</td>
+                                <td> - </td>
+                                <td> <span class="text-capitalize badge badge-secondary badge-pill">Inactivo</span> </td>
+                                <td>
+                                    <a href="#" data-toggle="modal" data-target="#addcampo">
+                                        <i data-feather='edit-2'></i>
+                                    </a>
+                                    <a href="#" data-repeater-delete>
+                                        <i data-feather='trash'></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr data-repeater-item>
+                                <td>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
+                                        <label class="custom-control-label" for="customCheck2"></label>
+                                    </div>
+                                </td>
+                                <td>Automotriz</td>
+                                <td>Limpieza</td>
+                                <td>YT8881</td>
+                                <td> - </td>
+                                <td> <span class="text-capitalize badge badge-secondary badge-pill">Inactivo</span> </td>
+                                <td>
+                                    <a href="#" data-toggle="modal" data-target="#addcampo">
+                                        <i-feather name='edit-2'></i-feather>
+                                    </a>
+                                    <a href="#" data-repeater-delete>
+                                        <i-feather name='trash'></i-feather>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <hr/>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- END: Content-->
+
+<div class="sidenav-overlay"></div>
+<div class="drag-target"></div>
+<app-footer></app-footer>

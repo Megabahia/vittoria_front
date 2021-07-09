@@ -94,7 +94,7 @@
                                         <a (click)="editarCliente(cliente.id)">
                                             <i-feather name="edit"></i-feather>
                                         </a>
-                                        <a (click)="eliminarCliente(cliente.id)" data-target="#eliminar" data-toggle="modal">
+                                        <a (click)="abrirModal(contenido,cliente.id)" data-target="#eliminar" data-toggle="modal">
                                             <i-feather name="trash"></i-feather>
                                         </a>
                                     </td>
@@ -168,6 +168,20 @@
         </div>
     </div>
 </div>
+<ng-template #contenido let-modal>
+    <div class="modal-header ">
+        <h4 class="modal-title ">Mensaje</h4>
+        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
+        <span aria-hidden="true ">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body ">
+        <p>Confirma eliminar</p>
+    </div>
+    <div class="modal-footer ">
+        <button type="button " class="btn btn-light " (click)="cerrarModal()">SI</button>
+    </div>
+</ng-template>
 <app-personas-edit *ngIf="vista=='editar'" [idCliente]="idCliente"></app-personas-edit>
 <!-- END: Content-->
 <div class="sidenav-overlay"></div>

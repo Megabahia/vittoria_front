@@ -11,7 +11,11 @@ const routes: Routes = [{
 },
 {
   path:'mdm', loadChildren:() => import('./views/mdm/mdm.module').then(m => m.MdmModule)
-}];
+},
+{
+  path:'mdp', loadChildren:() => import('./views/mdp/mdp.module').then(m => m.MdpModule)
+}
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

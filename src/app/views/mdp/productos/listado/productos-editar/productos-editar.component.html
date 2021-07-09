@@ -1,0 +1,241 @@
+<div class="app-content content ">
+    <div class="content-overlay"></div>
+    <div class="header-navbar-shadow"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+        </div>
+        <div class="content-body">
+            <div class="card">
+                <h5 class="card-header">Crear producto</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Categoría</label>
+                                <select class="form-control select2">
+                             <option>- Seleccione -</option>
+                             <option>Opcion</option>
+                             <option>Opcion</option>
+                             <option>Opcion</option>
+                             <option>Opcion</option>
+                             <option>Opcion</option>
+                             <option>Opcion</option>
+                           </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Subcategoría</label>
+                                <select class="form-control select2">
+                             <option>- Seleccione -</option>
+                             <option>Opcion</option>
+                             <option>Opcion</option>
+                             <option>Opcion</option>
+                             <option>Opcion</option>
+                             <option>Opcion</option>
+                             <option>Opcion</option>
+                           </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Código de barras</label>
+                                <input type="text" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Stock</label>
+                                <input type="text" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Costo de compra</label>
+                                <input type="text" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Precio de venta A</label>
+                                <input type="text" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Precio de venta B</label>
+                                <input type="text" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Precio de venta C</label>
+                                <input type="text" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Precio de venta D</label>
+                                <input type="text" class="form-control">
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Nombre completo</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Descripción</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Refil</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" placeholder="valor numérico" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="basic-addon2">Días</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Caducidad</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" placeholder="valor numérico" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="basic-addon2">Días</span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label>Precio de venta E</label>
+                                <input type="text" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Precio de venta por bultos</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Alerta de abastecimiento</label>
+                                <select class="form-control">
+                            <option>- Seleccione - </option>
+                            <option>Cuando sea 5 días para Caducar</option>
+                            <option>	Cuando se mayor a 3 y menor a 10 en Stock</option>
+                            <option>	Cuando se mayor a 10 y menor a 20 en Stock</option>
+                            <option> Cuando se mayor a 20 y menor a 50 en Stock</option>
+                            <option>	Cuando se mayor a 50 Stock</option>
+                          </select>
+
+                            </div>
+                            <div class="form-group">
+                                <label>Estado</label>
+                                <select class="form-control">
+                            <option>- Seleccione - </option>
+                            <option>Activo</option>
+                            <option>Inactivo</option>
+                          </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4">
+                            <p class="card-text">
+                                Imágenes del producto
+                            </p>
+
+                            <ngx-dropzone class="dropzone dropzone-area" (change)="onSelect($event)">
+                                <ngx-dropzone-label class="dz-message">Drop it, baby!</ngx-dropzone-label>
+                                <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+                                    <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+                                </ngx-dropzone-preview>
+                            </ngx-dropzone>
+                            <button id="clear-dropzone" class="btn btn-secondary btn-sm mt-1">
+                            <i data-feather="trash" class="mr-25"></i>
+                            <span class="align-middle">Limpiar imágenes</span>
+                        </button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="card">
+                <div class="row m-75">
+                    <div class="col-lg-12 col-xl-6">
+                        <h5>Ficha técnica del producto</h5>
+                    </div>
+                    <div class="col-lg-12 col-xl-6 text-right">
+                        <button class="btn btn-icon btn-primary" type="button" data-toggle="modal" data-target="#addcampo">
+                        <i data-feather="plus" class="mr-25"></i>
+                        <span>Añadir</span>
+                    </button>
+
+                    </div>
+                </div>
+                <div class="modal modal-slide-in new-user-modal fade" id="addcampo">
+                    <div class="modal-dialog">
+                        <div class="modal-content pt-0">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                            <div class="modal-header mb-1">
+                                <h5 class="modal-title" id="exampleModalLabel">Nuevo campo</h5>
+                            </div>
+                            <div class="modal-body flex-grow-1">
+                                <div class="form-group">
+                                    <label class="form-label">Código:</label>
+                                    <input type="text" class="form-control" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Nombre del atributo:</label>
+                                    <input type="text" class="form-control" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Valor:</label>
+                                    <input type="text" class="form-control" />
+                                </div>
+
+
+                                <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close">Guardar</button>
+                                <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-datatable table-responsive pt-0">
+                    <table class="user-list-table table table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre del atributo</th>
+                                <th>Valor</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody data-repeater-list="invoice">
+                            <tr data-repeater-item>
+                                <td>TF0001</td>
+                                <td>Lata</td>
+                                <td>20 cm</td>
+                                <td>
+                                    <a href="#" data-toggle="modal" data-target="#addcampo">
+                                        <i data-feather='edit-2'></i>
+                                    </a>
+                                    <a href="#" data-repeater-delete>
+                                        <i data-feather='trash'></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <hr/>
+                <div class="row p-2">
+                    <div class="col-12">
+                        <a href="MDP-admin-productos.html" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar</a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

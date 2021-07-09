@@ -18,6 +18,19 @@ export class ToolbarComponent implements OnInit {
       prospectosCli:"",
       clientesList: "",
       clientesTransac:""
+    },
+    mdp:{
+      param:"",
+      cat:"",
+      subCat:"",
+      prodList:"",
+      prodBusq:"",
+      stockAct:"",
+      abastRep:"",
+      stockRep:"",
+      caduRep:"",
+      rotaRep:"",
+      refilRep:""
     }
   }
   menuUser;

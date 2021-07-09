@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ClientesService } from '../../../../../services/mdm/personas/clientes/clientes.service';
-import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPagination, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-personas-list',
@@ -22,7 +22,8 @@ export class PersonasListComponent implements OnInit {
   vista="lista";
   idCliente;
   constructor(
-    private clientesService:ClientesService
+    private clientesService:ClientesService,
+    private modalService: NgbModal
   ) { }
 
   ngOnInit(): void {
@@ -55,8 +56,18 @@ export class PersonasListComponent implements OnInit {
     this.vista= 'editar';
     this.idCliente= id;
   }
-  eliminarCliente(id){
-    this.clientesService.eliminarCliente(id).subscribe(()=>{
+  // eliminarCliente(id){
+  //   this.clientesService.eliminarCliente(id).subscribe(()=>{
+  //     this.obtenerListaClientes();
+  //   });
+  // }
+  abrirModal(modal,id){
+    this.idCliente=id;
+    this.modalService.open(modal)
+  }
+  cerrarModal(){
+    this.modalService.dismissAll();
+    this.clientesService.eliminarCliente(this.idCliente).subscribe(()=>{
       this.obtenerListaClientes();
     });
   }

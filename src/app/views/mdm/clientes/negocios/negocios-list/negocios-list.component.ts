@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NegociosService } from '../../../../../services/mdm/personas/negocios/negocios.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-negocios-list',
@@ -17,7 +18,11 @@ export class NegociosListComponent implements OnInit {
   inicio;
   fin;
   ruc;
-  constructor(private negociosService:NegociosService) { }
+  constructor(
+    private negociosService:NegociosService,
+    private modalService: NgbModal
+
+    ) { }
 
   ngOnInit(): void {
     this.menu = {
@@ -47,8 +52,18 @@ export class NegociosListComponent implements OnInit {
     this.idNegocio= id;
     this.vista= 'editar';
   }
-  eliminarNegocio(id){
-    this.negociosService.eliminarNegocio(id).subscribe(()=>{
+  // eliminarNegocio(id){
+  //   this.negociosService.eliminarNegocio(id).subscribe(()=>{
+  //     this.obtenerListaNegocios();
+  //   });
+  // }
+  abrirModal(modal,id){
+    this.idNegocio=id;
+    this.modalService.open(modal)
+  }
+  cerrarModal(){
+    this.modalService.dismissAll();
+    this.negociosService.eliminarNegocio(this.idNegocio).subscribe(()=>{
       this.obtenerListaNegocios();
     });
   }
