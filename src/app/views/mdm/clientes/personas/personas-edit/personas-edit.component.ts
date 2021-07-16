@@ -177,7 +177,6 @@ export class PersonasEditComponent implements OnInit {
       this.obtenerTransacciones();
       this.obtenerParientes();
       // this.obtenerGraficaTransacciones();
-
     }
   }
   async obtenerDatosBasicos(){

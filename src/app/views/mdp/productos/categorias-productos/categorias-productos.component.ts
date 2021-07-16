@@ -30,7 +30,7 @@ export class CategoriasProductosComponent implements OnInit {
     this.obtenerListaCategorias();
   }
   async obtenerListaCategorias(){
-    await this.categoriasService.obtenerListaCategoria({
+    await this.categoriasService.obtenerCategorias({
      page:this.page - 1, 
      page_size:this.pageSize
     }).subscribe((info)=>{

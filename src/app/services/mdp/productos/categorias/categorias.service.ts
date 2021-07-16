@@ -27,7 +27,7 @@ export class CategoriasService {
     }; 
   }
 
-  obtenerListaCategoria(datos){
+  obtenerCategorias(datos){
     return this.http.post<any>(`${apiUrl}/mdp/categorias/list/`, datos);
   }
   obtenerCategoria(id){
@@ -42,4 +42,8 @@ export class CategoriasService {
   eliminarCategoria(id){
     return this.http.delete<any>(`${apiUrl}/mdp/categorias/delete/${id}`);
   }
+  obtenerListaCategorias(){
+    return this.http.delete<any>(`${apiUrl}/mdp/categorias/list/`);
+  }
+  
 }

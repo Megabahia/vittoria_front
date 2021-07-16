@@ -12,61 +12,52 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Categoría</label>
-                                <select class="form-control select2">
-                             <option>- Seleccione -</option>
-                             <option>Opcion</option>
-                             <option>Opcion</option>
-                             <option>Opcion</option>
-                             <option>Opcion</option>
-                             <option>Opcion</option>
-                             <option>Opcion</option>
+                                <select class="form-control select2" [(ngModel)]="producto.categoria">
+                             <option value="">- Seleccione -</option>
+                             <option value="Ferreteria">Ferreteria</option>
                            </select>
                             </div>
                             <div class="form-group">
                                 <label>Subcategoría</label>
-                                <select class="form-control select2">
+                                <select class="form-control select2" [(ngModel)]="producto.subCategoria">
                              <option>- Seleccione -</option>
-                             <option>Opcion</option>
-                             <option>Opcion</option>
-                             <option>Opcion</option>
-                             <option>Opcion</option>
-                             <option>Opcion</option>
-                             <option>Opcion</option>
+                             <option value="">- Seleccione -</option>
+                             <option value="Plomeria">Plomeria</option>
                            </select>
                             </div>
                             <div class="form-group">
                                 <label>Código de barras</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" [(ngModel)]="producto.codigoBarras">
                             </div>
 
                             <div class="form-group">
                                 <label>Stock</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" [(ngModel)]="producto.stock">
                             </div>
 
                             <div class="form-group">
                                 <label>Costo de compra</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" [(ngModel)]="producto.costoCompra">
                             </div>
 
                             <div class="form-group">
                                 <label>Precio de venta A</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" [(ngModel)]="producto.precioVentaA">
                             </div>
 
                             <div class="form-group">
                                 <label>Precio de venta B</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" [(ngModel)]="producto.precioVentaB">
                             </div>
 
                             <div class="form-group">
                                 <label>Precio de venta C</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" [(ngModel)]="producto.precioVentaC">
                             </div>
 
                             <div class="form-group">
                                 <label>Precio de venta D</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" [(ngModel)]="producto.precioVentaD">
                             </div>
 
                         </div>
@@ -75,16 +66,16 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Nombre completo</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" [(ngModel)]="producto.nombre">
                             </div>
                             <div class="form-group">
                                 <label>Descripción</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" [(ngModel)]="producto.descripcion">
                             </div>
                             <div class="form-group">
                                 <label>Refil</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" placeholder="valor numérico" />
+                                    <input type="number" class="form-control" placeholder="valor numérico" [(ngModel)]="producto.refil" />
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">Días</span>
                                     </div>
@@ -94,7 +85,7 @@
                             <div class="form-group">
                                 <label>Caducidad</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" placeholder="valor numérico" />
+                                    <input type="number" class="form-control" placeholder="valor numérico" [(ngModel)]="producto.caducidad" />
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">Días</span>
                                     </div>
@@ -104,16 +95,16 @@
 
                             <div class="form-group">
                                 <label>Precio de venta E</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" [(ngModel)]="producto.precioVentaE">
                             </div>
 
                             <div class="form-group">
                                 <label>Precio de venta por bultos</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" [(ngModel)]="producto.precioVentaBultos">
                             </div>
                             <div class="form-group">
                                 <label>Alerta de abastecimiento</label>
-                                <select class="form-control">
+                                <select class="form-control" [(ngModel)]="producto.alertaAbastecimiento">
                             <option>- Seleccione - </option>
                             <option>Cuando sea 5 días para Caducar</option>
                             <option>	Cuando se mayor a 3 y menor a 10 en Stock</option>
@@ -124,11 +115,15 @@
 
                             </div>
                             <div class="form-group">
+                                <label>Variable de Refil</label>
+                                <input type="text" class="form-control" [(ngModel)]="producto.variableRefil">
+                            </div>
+                            <div class="form-group">
                                 <label>Estado</label>
-                                <select class="form-control">
-                            <option>- Seleccione - </option>
-                            <option>Activo</option>
-                            <option>Inactivo</option>
+                                <select class="form-control" [(ngModel)]="producto.estado">
+                            <option value="" >- Seleccione - </option>
+                            <option value="Activo">Activo</option>
+                            <option value="Inactivo">Inactivo</option>
                           </select>
 
                             </div>
@@ -140,14 +135,18 @@
                                 Imágenes del producto
                             </p>
 
-                            <ngx-dropzone class="dropzone dropzone-area" (change)="onSelect($event)">
-                                <ngx-dropzone-label class="dz-message">Drop it, baby!</ngx-dropzone-label>
-                                <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+                            <div class="dropzone" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
+                                <ngx-dropzone-label>
+                                    <div class="dz-message">
+                                        <h2>Cargar imágenes</h2>
+                                    </div>
+                                </ngx-dropzone-label>
+                                <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f" [removable]="true" (removed)="onRemove(f)">
                                     <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
-                                </ngx-dropzone-preview>
-                            </ngx-dropzone>
-                            <button id="clear-dropzone" class="btn btn-secondary btn-sm mt-1">
-                            <i data-feather="trash" class="mr-25"></i>
+                                </ngx-dropzone-image-preview>
+                            </div>
+                            <button id="clear-dropzone" class="btn btn-secondary btn-sm mt-1" (click)="removeAll()">
+                            <i-feather name="trash" class="edit-user"></i-feather>
                             <span class="align-middle">Limpiar imágenes</span>
                         </button>
                         </div>
@@ -162,8 +161,8 @@
                         <h5>Ficha técnica del producto</h5>
                     </div>
                     <div class="col-lg-12 col-xl-6 text-right">
-                        <button class="btn btn-icon btn-primary" type="button" data-toggle="modal" data-target="#addcampo">
-                        <i data-feather="plus" class="mr-25"></i>
+                        <button class="btn btn-icon btn-primary" type="button" data-toggle="modal" data-target="#addcampo" (click)="crearFichaTecnica()">
+                        <i-feather name="plus" class="mr-25 edit-user"></i-feather>
                         <span>Añadir</span>
                     </button>
 
@@ -179,21 +178,21 @@
                             <div class="modal-body flex-grow-1">
                                 <div class="form-group">
                                     <label class="form-label">Código:</label>
-                                    <input type="text" class="form-control" />
+                                    <input type="text" class="form-control" [(ngModel)]="fichaTecnica.codigo" />
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label">Nombre del atributo:</label>
-                                    <input type="text" class="form-control" />
+                                    <input type="text" class="form-control" [(ngModel)]="fichaTecnica.nombreAtributo" />
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label">Valor:</label>
-                                    <input type="text" class="form-control" />
+                                    <input type="text" class="form-control" [(ngModel)]="fichaTecnica.valor" />
                                 </div>
 
 
-                                <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close">Guardar</button>
+                                <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close" (click)="guardarFichaTecnica()">Guardar</button>
                                 <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                             </div>
                         </div>
@@ -211,16 +210,16 @@
                         </thead>
 
                         <tbody data-repeater-list="invoice">
-                            <tr data-repeater-item>
-                                <td>TF0001</td>
-                                <td>Lata</td>
-                                <td>20 cm</td>
+                            <tr data-repeater-item *ngFor="let ficha of fichaTecnicaLista">
+                                <td>{{ficha.codigo}}</td>
+                                <td>{{ficha.nombreAtributo}}</td>
+                                <td>{{ficha.valor}}</td>
                                 <td>
-                                    <a href="#" data-toggle="modal" data-target="#addcampo">
-                                        <i data-feather='edit-2'></i>
+                                    <a data-toggle="modal" data-target="#addcampo" (click)="editarFichaTecnica(ficha.id)">
+                                        <i-feather name='edit-2'></i-feather>
                                     </a>
-                                    <a href="#" data-repeater-delete>
-                                        <i data-feather='trash'></i>
+                                    <a data-repeater-delete (click)="abrirModal(contenido,ficha.id)">
+                                        <i-feather name='trash'></i-feather>
                                     </a>
                                 </td>
                             </tr>
@@ -230,7 +229,7 @@
                 <hr/>
                 <div class="row p-2">
                     <div class="col-12">
-                        <a href="MDP-admin-productos.html" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar</a>
+                        <a (click)="guardarProducto()" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar</a>
                     </div>
                 </div>
 
@@ -239,3 +238,17 @@
         </div>
     </div>
 </div>
+<ng-template #contenido let-modal>
+    <div class="modal-header ">
+        <h4 class="modal-title ">Mensaje</h4>
+        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
+        <span aria-hidden="true ">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body ">
+        <p>Confirma eliminar</p>
+    </div>
+    <div class="modal-footer ">
+        <button type="button " class="btn btn-light " (click)="cerrarModal()">SI</button>
+    </div>
+</ng-template>

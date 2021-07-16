@@ -7,7 +7,7 @@ const apiUrl: string = environment.apiUrl;
 export interface Subcategoria{
   id;
   nombre;
-  categoria;
+  categoria:number;
   codigoSubCategoria;
   descripcion;
   estado;
@@ -42,5 +42,8 @@ export class SubcategoriasService {
   }
   eliminarSubcategoria(id){
     return this.http.delete<any>(`${apiUrl}/mdp/subCategorias/delete/${id}`);
+  }
+  obtenerListaSubcategorias(){
+    return this.http.delete<any>(`${apiUrl}/mdp/categorias/list/`);
   }
 }

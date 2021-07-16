@@ -83,69 +83,25 @@
                         </thead>
 
                         <tbody data-repeater-list="invoice">
-                            <tr data-repeater-item>
+                            <tr data-repeater-item *ngFor="let producto of listaProductos">
                                 <td>
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="customCheck2" />
                                         <label class="custom-control-label" for="customCheck2"></label>
                                     </div>
                                 </td>
-                                <td>TF0001</td>
-                                <td>Pintura interiores</td>
-                                <td>Ferreteria</td>
-                                <td>Hogar</td>
-                                <td>20 (Unidades)</td>
-                                <td><span class="badge badge-pill badge-light-success">Activo</span></td>
+                                <td>{{producto.codigoBarras}}</td>
+                                <td>{{producto.nombre}}</td>
+                                <td>{{producto.categoria}}</td>
+                                <td>{{producto.subCategoria}}</td>
+                                <td>{{producto.stock}} (Unidades)</td>
+                                <td><span class="text-capitalize badge {{producto.estado=='Activo' ? 'badge-light-success': 'badge-secondary' }} badge-pill">{{producto.estado}}</span></td>
                                 <td>
-                                    <a href="MDP-admin-productos-crear.html">
-                                        <i data-feather='edit-2'></i>
+                                    <a (click)="editarProducto(producto.id)">
+                                        <i-feather name='edit-2'></i-feather>
                                     </a>
-                                    <a href="#" data-repeater-delete>
-                                        <i data-feather='trash'></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr data-repeater-item>
-                                <td>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
-                                        <label class="custom-control-label" for="customCheck2"></label>
-                                    </div>
-                                </td>
-                                <td>TF0001</td>
-                                <td>Laptop ACER</td>
-                                <td>Electrónica</td>
-                                <td>Oficina</td>
-                                <td>100 (Unidades)</td>
-                                <td><span class="badge badge-pill badge-light-success">Activo</span></td>
-                                <td>
-                                    <a href="MDP-admin-productos-crear.html">
-                                        <i data-feather='edit-2'></i>
-                                    </a>
-                                    <a href="#" data-repeater-delete>
-                                        <i data-feather='trash'></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr data-repeater-item>
-                                <td>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
-                                        <label class="custom-control-label" for="customCheck2"></label>
-                                    </div>
-                                </td>
-                                <td>TF0001</td>
-                                <td>Televisión</td>
-                                <td>Electrónica</td>
-                                <td>Linea hogar</td>
-                                <td>0 (Unidades)</td>
-                                <td><span class="badge badge-pill badge-secondary">Inactivo</span></td>
-                                <td>
-                                    <a href="MDP-admin-productos-crear.html">
-                                        <i data-feather='edit-2'></i>
-                                    </a>
-                                    <a href="#" data-repeater-delete>
-                                        <i data-feather='trash'></i>
+                                    <a (click)="abrirModal(contenido,producto.id)" data-repeater-delete>
+                                        <i-feather name='trash'></i-feather>
                                     </a>
                                 </td>
                             </tr>
@@ -160,7 +116,21 @@
         </div>
     </div>
 </div>
-<app-productos-editar *ngIf="vista=='editar'"></app-productos-editar>
+<ng-template #contenido let-modal>
+    <div class="modal-header ">
+        <h4 class="modal-title ">Mensaje</h4>
+        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
+        <span aria-hidden="true ">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body ">
+        <p>Confirma eliminar</p>
+    </div>
+    <div class="modal-footer ">
+        <button type="button " class="btn btn-light " (click)="cerrarModal()">SI</button>
+    </div>
+</ng-template>
+<app-productos-editar *ngIf="vista=='editar'" [idProducto]="idProducto"></app-productos-editar>
 <div class="sidenav-overlay"></div>
 <div class="drag-target"></div>
 <app-footer></app-footer>
