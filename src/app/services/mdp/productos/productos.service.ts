@@ -85,6 +85,12 @@ export class ProductosService {
   eliminarProducto(id){
     return this.http.delete<any>(`${apiUrl}/mdp/productos/delete/${id}` );
   }
+  buscarListaProductos(datos){
+    return this.http.post<any>(`${apiUrl}/mdp/productos/search/producto/`,datos );
+  }
+  obtenerListaRefil(datos){
+    return this.http.post<any>(`${apiUrl}/mdp/productos/refil/list/`,datos );
+  }
   obtenerFichasTecnicas(id){
     return this.http.get<any>(`${apiUrl}/mdp/fichaTecnicaProductos/list/${id}` );
   }
@@ -100,4 +106,5 @@ export class ProductosService {
   eliminarFichaTecnica(id){
     return this.http.delete<any>(`${apiUrl}/mdp/fichaTecnicaProductos/delete/${id}` );
   }
+
 }

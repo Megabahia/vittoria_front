@@ -71,6 +71,10 @@ export class ProductosEditarComponent implements OnInit {
         console.log(info);
       });
     }else{
+      let datos = new FormData();
+      this.files.forEach((info)=>{
+        
+      });
       this.productosService.crearProducto(this.producto).subscribe((info)=>{
         console.log(info);
       });
