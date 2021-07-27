@@ -20,9 +20,12 @@ export interface Producto {
   precioVentaD;
   precioVentaE;
   precioVentaBultos;
-  alertaAbastecimiento;
+  parametrizacion;
   estado;
   variableRefil;
+  imagenes;
+  fechaCaducidad;
+  fechaElaboracion;
 }
 export interface FichaTecnicaProducto {
   id;
@@ -56,9 +59,12 @@ export class ProductosService {
       precioVentaD: 0,
       precioVentaE: 0,
       precioVentaBultos: 0,
-      alertaAbastecimiento: "",
+      parametrizacion: 0,
       estado: "",
-      variableRefil:""
+      variableRefil: "",
+      imagenes: [],
+      fechaCaducidad: "",
+      fechaElaboracion: ""
     }
   }
   inicializarFichaTecnica() {
@@ -79,32 +85,36 @@ export class ProductosService {
   crearProducto(datos) {
     return this.http.post<any>(`${apiUrl}/mdp/productos/create/`, datos);
   }
-  actualizarProducto(datos) {
-    return this.http.post<any>(`${apiUrl}/mdp/productos/update/${datos.id}`, datos);
+  actualizarProducto(datos, id) {
+    return this.http.post<any>(`${apiUrl}/mdp/productos/update/${id}`, datos);
   }
-  eliminarProducto(id){
-    return this.http.delete<any>(`${apiUrl}/mdp/productos/delete/${id}` );
+  eliminarProducto(id) {
+    return this.http.delete<any>(`${apiUrl}/mdp/productos/delete/${id}`);
   }
-  buscarListaProductos(datos){
-    return this.http.post<any>(`${apiUrl}/mdp/productos/search/producto/`,datos );
+  cargarStock(datos) {
+    return this.http.post<any>(`${apiUrl}/mdp/productos/upload/excel/`, datos);
   }
-  obtenerListaRefil(datos){
-    return this.http.post<any>(`${apiUrl}/mdp/productos/refil/list/`,datos );
+  buscarListaProductos(datos) {
+    return this.http.post<any>(`${apiUrl}/mdp/productos/search/producto/`, datos);
   }
-  obtenerFichasTecnicas(id){
-    return this.http.get<any>(`${apiUrl}/mdp/fichaTecnicaProductos/list/${id}` );
+  obtenerListaRefil(datos) {
+    return this.http.post<any>(`${apiUrl}/mdp/productos/refil/list/`, datos);
   }
-  obtenerFichaTecnica(id){
-    return this.http.get<any>(`${apiUrl}/mdp/fichaTecnicaProductos/listOne/${id}` );
+
+  obtenerFichasTecnicas(id) {
+    return this.http.get<any>(`${apiUrl}/mdp/fichaTecnicaProductos/list/${id}`);
   }
-  crearFichaTecnica(datos){
-    return this.http.post<any>(`${apiUrl}/mdp/fichaTecnicaProductos/create/`,datos );
+  obtenerFichaTecnica(id) {
+    return this.http.get<any>(`${apiUrl}/mdp/fichaTecnicaProductos/listOne/${id}`);
   }
-  editarFichaTecnica(datos){
-    return this.http.post<any>(`${apiUrl}/mdp/fichaTecnicaProductos/update/${datos.id}`,datos );
+  crearFichaTecnica(datos) {
+    return this.http.post<any>(`${apiUrl}/mdp/fichaTecnicaProductos/create/`, datos);
   }
-  eliminarFichaTecnica(id){
-    return this.http.delete<any>(`${apiUrl}/mdp/fichaTecnicaProductos/delete/${id}` );
+  editarFichaTecnica(datos) {
+    return this.http.post<any>(`${apiUrl}/mdp/fichaTecnicaProductos/update/${datos.id}`, datos);
+  }
+  eliminarFichaTecnica(id) {
+    return this.http.delete<any>(`${apiUrl}/mdp/fichaTecnicaProductos/delete/${id}`);
   }
 
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ProductosService } from '../../../../services/mdp/productos/productos.service';
 
 @Component({
   selector: 'app-actualizar-stock',
@@ -6,7 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ActualizarStockComponent implements OnInit {
   menu;
-  constructor() { }
+  archivo: FormData = new FormData();
+
+  constructor(
+    private productosService: ProductosService,
+    
+  ) { }
 
   ngOnInit(): void {
     this.menu = {
@@ -14,5 +20,13 @@ export class ActualizarStockComponent implements OnInit {
       seccion: "stockAct"
     };
   }
-
+  cargarArchivo(event){
+    this.archivo = new FormData();
+    this.archivo.append('documento',event.target.files[0]);
+  }
+  cargarStock(){
+    this.productosService.cargarStock(this.archivo).subscribe((info)=>{
+      console.log(info);
+    });
+  }
 }

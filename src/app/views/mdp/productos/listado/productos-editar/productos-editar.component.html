@@ -20,7 +20,6 @@
                             <div class="form-group">
                                 <label>Subcategoría</label>
                                 <select class="form-control select2" [(ngModel)]="producto.subCategoria">
-                             <option>- Seleccione -</option>
                              <option value="">- Seleccione -</option>
                              <option value="Plomeria">Plomeria</option>
                            </select>
@@ -104,7 +103,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Alerta de abastecimiento</label>
-                                <select class="form-control" [(ngModel)]="producto.alertaAbastecimiento">
+                                <select class="form-control" [(ngModel)]="producto.parametrizacion">
                             <option>- Seleccione - </option>
                             <option>Cuando sea 5 días para Caducar</option>
                             <option>	Cuando se mayor a 3 y menor a 10 en Stock</option>
@@ -141,7 +140,7 @@
                                         <h2>Cargar imágenes</h2>
                                     </div>
                                 </ngx-dropzone-label>
-                                <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f" [removable]="true" (removed)="onRemove(f)">
+                                <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of producto.imagenes" [file]="f" [removable]="true" (removed)="onRemove(f)">
                                     <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
                                 </ngx-dropzone-image-preview>
                             </div>

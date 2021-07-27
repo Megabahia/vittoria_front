@@ -134,7 +134,9 @@ export class ProspectosClientesListComponent implements OnInit {
     this.usuario.append('nombreVendedor',this.nombreVendedor);
     this.usuario.append('confirmacionProspecto',this.confirmacionProspecto);
     this.usuario.append('imagen',this.imagen,this.imagen.name);
-    this.prospectosService.crearProspectos(this.usuario).subscribe();
+    this.prospectosService.crearProspectos(this.usuario).subscribe(()=>{
+      this.obtenerListaProspectos();
+    });
   }
   
   editarProspecto(id){

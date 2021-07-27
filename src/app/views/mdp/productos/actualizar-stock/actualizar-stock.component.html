@@ -16,11 +16,11 @@
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="inputGroupFile02">
+                                        <input type="file" class="custom-file-input" id="inputGroupFile02" (change)="cargarArchivo($event)">
                                         <label class="custom-file-label" for="inputGroupFile02">Seleccionar archivo XLSX</label>
                                     </div>
                                     <div class="input-group-append">
-                                        <span class="input-group-text" id=""><a href="cargar-clientes-xls-mensaje2.html">Cargar</a></span>
+                                        <span class="input-group-text"><a (click)="cargarStock()">Cargar</a></span>
                                     </div>
                                 </div>
                             </div>
