@@ -100,6 +100,18 @@ export class ProductosService {
   obtenerListaRefil(datos) {
     return this.http.post<any>(`${apiUrl}/mdp/productos/refil/list/`, datos);
   }
+  obtenerListaAbastecimiento(datos) {
+    return this.http.post<any>(`${apiUrl}/mdp/productos/abastecimiento/list/`, datos);
+  }
+  obtenerListaStock(datos) {
+    return this.http.post<any>(`${apiUrl}/mdp/productos/stock/list/`, datos);
+  }
+  obtenerListaCaducidad(datos) {
+    return this.http.post<any>(`${apiUrl}/mdp/productos/caducidad/list/`, datos);
+  }
+  obtenerListaRotacion(datos) {
+    return this.http.post<any>(`${apiUrl}/mdp/productos/rotacion/list/`, datos);
+  }
 
   obtenerFichasTecnicas(id) {
     return this.http.get<any>(`${apiUrl}/mdp/fichaTecnicaProductos/list/${id}`);

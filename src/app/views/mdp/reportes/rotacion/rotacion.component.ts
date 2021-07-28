@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ProductosService } from 'src/app/services/mdp/productos/productos.service';
 
 @Component({
   selector: 'app-rotacion',
@@ -6,7 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RotacionComponent implements OnInit {
   menu;
-  constructor() { }
+  constructor(
+    private productosService:ProductosService,
+    private modalService: NgbModal
+  ) { }
 
   ngOnInit(): void {
     this.menu = {

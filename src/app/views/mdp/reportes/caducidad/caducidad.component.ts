@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ProductosService } from 'src/app/services/mdp/productos/productos.service';
 
 @Component({
   selector: 'app-productos-caducidad',
@@ -6,7 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CaducidadComponent implements OnInit {
   menu;
-  constructor() { }
+  constructor(
+    private productosService:ProductosService,
+    private modalService: NgbModal
+
+  ) { }
 
   ngOnInit(): void {
     this.menu = {
