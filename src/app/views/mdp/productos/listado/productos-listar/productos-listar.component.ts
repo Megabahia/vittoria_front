@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProductosService } from '../../../../../services/mdp/productos/productos.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-productos-listar',
   templateUrl: './productos-listar.component.html'
 })
 export class ProductosListarComponent implements OnInit {
+  @ViewChild(NgbPagination) paginator: NgbPagination;
   menu;
   vista= "lista";
   page = 1;
@@ -25,7 +26,16 @@ export class ProductosListarComponent implements OnInit {
       modulo:"mdp",
       seccion: "prodList"
     };
+    
+  }
+  async ngAfterViewInit() {
+    this.iniciarPaginador();
     this.obtenerListaProductos();
+  }
+  async iniciarPaginador() {
+    this.paginator.pageChange.subscribe(() => {
+      this.obtenerListaProductos();
+    });
   }
   obtenerListaProductos(){
     this.productosService.obtenerListaProductos(

@@ -64,6 +64,8 @@
                                     <th>Tipo</th>
                                     <th>Descripción</th>
                                     <th>Valor</th>
+                                    <th>Minimo</th>
+                                    <th>Máximo</th>
                                     <th>Tipo de dato</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -87,6 +89,8 @@
                                     <td> {{parametro.tipo}} </td>
                                     <td> {{parametro.descripcion}}</td>
                                     <td> {{parametro.valor}}</td>
+                                    <td> {{parametro.maximo}}</td>
+                                    <td> {{parametro.minimo}}</td>
                                     <td> {{parametro.tipoVariable}}</td>
                                     <td>
                                         <a data-toggle="modal" data-target="#modals-slide-in" (click)="editarParametro(parametro.id, parametro.nombre,parametro.idTipo,parametro.desccripcion)">
@@ -159,6 +163,14 @@
                                         <option value="booleano">Booleano</option>
                                         <option value="fecha">Fecha</option>
                                      </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="basic-icon-default-email">Máximo:</label>
+                                    <input type="text" id="basic-icon-default-email" class="form-control dt-email" [(ngModel)]="maximo" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="basic-icon-default-email">Mínimo:</label>
+                                    <input type="text" id="basic-icon-default-email" class="form-control dt-email" [(ngModel)]="minimo" />
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label" for="basic-icon-default-email">Valor:</label>

@@ -18,35 +18,13 @@ export class ParamService {
     return this.http.get<any>(`${apiUrl}/mdp/param/list/tipo/`);
   }
   insertarParametro(
-    nombre, 
-    tipo, 
-    descripcion,
-    tipoVariable,
-    valor,
-    idPadre
+    datos
     ){
-    return this.http.post<any>(`${apiUrl}/mdp/param/create/`,{
-      nombre, 
-      tipo, 
-      descripcion,
-      tipoVariable,
-      valor,
-      idPadre});
+    return this.http.post<any>(`${apiUrl}/mdp/param/create/`,datos);
   }
   editarParametro(
-    id,
-    nombre, 
-    tipo, 
-    descripcion,
-    tipoVariable,
-    valor,
-    idPadre){
-    return this.http.post<any>(`${apiUrl}/mdp/param/update/${id}`,{nombre, 
-      tipo, 
-      descripcion,
-      tipoVariable,
-      valor,
-      idPadre});
+    datos){
+    return this.http.post<any>(`${apiUrl}/mdp/param/update/${datos.id}`,datos);
   }
   eliminarParametro(id){
     return this.http.delete<any>(`${apiUrl}/mdp/param/delete/${id}`,);

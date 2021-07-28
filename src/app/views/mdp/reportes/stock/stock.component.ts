@@ -1,16 +1,39 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgbModal, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { ProductosService } from 'src/app/services/mdp/productos/productos.service';
+import { ExportService } from '../../../../services/admin/export.service';
+import { DatePipe } from '@angular/common';
+import { CategoriasService } from '../../../../services/mdp/productos/categorias/categorias.service';
+import { SubcategoriasService } from '../../../../services/mdp/productos/subcategorias/subcategorias.service';
 
 @Component({
   selector: 'app-stock',
-  templateUrl: './stock.component.html'
+  templateUrl: './stock.component.html',
+  providers: [DatePipe]
 })
 export class StockComponent implements OnInit {
+  @ViewChild(NgbPagination) paginator: NgbPagination;
   menu;
+  inicio = "";
+  fin = "";
+  categoria = "";
+  categoriasOpciones;
+  subcategoria = "";
+  subcategoriasOpciones;
+  page = 1;
+  pageSize: any = 10;
+  maxSize;
+  collectionSize;
+  listaProductos;
+  infoExportar;
+
   constructor(
-    private productosService:ProductosService,
-    private modalService: NgbModal
+    private categoriasService: CategoriasService,
+    private subcategoriasService: SubcategoriasService,
+    private productosService: ProductosService,
+    private exportFile: ExportService,
+    private datePipe: DatePipe,
+
   ) { }
 
   ngOnInit(): void {
@@ -18,6 +41,54 @@ export class StockComponent implements OnInit {
       modulo: "mdp",
       seccion: "stockRep"
     };
+    this.obtenerListaProductos();
+  }
+  async ngAfterViewInit() {
+    this.iniciarPaginador();
+  }
+  async iniciarPaginador() {
+    this.paginator.pageChange.subscribe(() => {
+      this.obtenerListaProductos();
+    });
+  }
+  obtenerListaProductos() {
+    this.productosService.obtenerListaStock({
+      inicio: this.inicio,
+      fin: this.fin,
+      categoria: this.categoria,
+      subCategoria: this.subcategoria,
+      page: this.page - 1,
+      page_size: this.pageSize
+    }).subscribe((info) => {
+      this.listaProductos = info.info;
+      this.collectionSize = info.cont;
+    });
+  }
+  exportarExcel() {
+    this.infoExportar = [];
+    const headers = ['Código de Barras', 'Nombre', 'Categoría', 'Subcategoría', '# De días de refil', 'Estado'];
+    this.listaProductos.forEach((row: any) => {
+
+      const values = [];
+      values.push(row['codigoBarras']);
+      values.push(row['nombre']);
+      values.push(row['categoria']);
+      values.push(row['subCategoria']);
+      values.push(row['refil']);
+      values.push(row['variableRefil']);
+      this.infoExportar.push(values);
+    });
+    const reportData = {
+      title: 'Reporte de Refil',
+      data: this.infoExportar,
+      headers
+    };
+
+    this.exportFile.exportExcel(reportData);
+  }
+  transformarFecha(fecha) {
+    let nuevaFecha = this.datePipe.transform(fecha, 'yyyy-MM-dd');
+    return nuevaFecha;
   }
 
 }

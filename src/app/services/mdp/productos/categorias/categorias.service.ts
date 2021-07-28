@@ -43,7 +43,7 @@ export class CategoriasService {
     return this.http.delete<any>(`${apiUrl}/mdp/categorias/delete/${id}`);
   }
   obtenerListaCategorias(){
-    return this.http.delete<any>(`${apiUrl}/mdp/categorias/list/`);
+    return this.http.get<any>(`${apiUrl}/mdp/categorias/list/combo/`);
   }
   
 }

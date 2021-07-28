@@ -4,6 +4,7 @@ import { CategoriasService } from '../../../../../services/mdp/productos/categor
 import { Producto, ProductosService } from '../../../../../services/mdp/productos/productos.service';
 import { SubcategoriasService } from '../../../../../services/mdp/productos/subcategorias/subcategorias.service';
 import { map } from 'rxjs/operators';
+import { ParamService } from 'src/app/services/mdp/param/param.service';
 
 @Component({
   selector: 'app-productos-editar',
@@ -12,37 +13,46 @@ import { map } from 'rxjs/operators';
 export class ProductosEditarComponent implements OnInit {
   @Input() idProducto;
   @ViewChild(NgbPagination) paginator: NgbPagination;
-     producto: Producto;
+  producto: Producto;
   datosProducto: FormData = new FormData();
   categoriasOpciones;
   subcategoriasOpciones;
   fichaTecnica;
   fichaTecnicaLista;
   idFichaTecnica;
+  abastecimientoOpciones;
+  archivos:File[] = [];
   constructor(
     private categoriasService: CategoriasService,
     private subcategoriasService: SubcategoriasService,
     private productosService: ProductosService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private paramService: ParamService 
   ) {
     this.producto = this.productosService.inicializarProducto();
     this.fichaTecnica = this.productosService.inicializarFichaTecnica();
   }
 
   ngOnInit(): void {
+    this.obtenerAbastecimientoOpciones();
+    this.obtenerCategoriasOpciones();
     if (this.idProducto != 0) {
       this.obtenerProducto();
       this.obtenerFichasTecnicas();
-
     }
   }
   obtenerProducto() {
     this.productosService.obtenerProducto(this.idProducto).subscribe((info) => {
-      this.producto = info;
-      let keys = Object.keys(this.producto);
-      let valores = Object.values(this.producto);
-      console.log(keys);
-      console.log(valores);
+      let producto = info;
+      let imagenes = info.imagenes;
+      delete producto.imagenes; 
+      this.producto = producto;
+      this.obtenerListaSubcategorias();
+    });
+  }
+  async obtenerAbastecimientoOpciones() {
+    await this.paramService.obtenerListaPadres("ALERTA_ABASTECIMIENTO").subscribe((info) => {
+      this.abastecimientoOpciones = info;
     });
   }
   obtenerFichasTecnicas() {
@@ -56,28 +66,27 @@ export class ProductosEditarComponent implements OnInit {
     });
   }
   async obtenerListaSubcategorias() {
-    await this.subcategoriasService.obtenerListaSubcategorias().subscribe((info) => {
+    await this.subcategoriasService.obtenerListaSubcategoriasHijas(this.producto.categoria).subscribe((info) => {
       this.subcategoriasOpciones = info;
     });
   }
 
   onSelect(event) {
-    this.producto.imagenes.push(...event.addedFiles);
+    this.archivos.push(...event.addedFiles);
   }
 
   onRemove(event) {
-    this.producto.imagenes.splice(this.producto.imagenes.indexOf(event), 1);
+    this.archivos.splice(this.archivos.indexOf(event), 1);
   }
   removeAll() {
-    this.producto.imagenes = [];
+    this.archivos = [];
   }
   guardarProducto() {
     let llaves = Object.keys(this.producto);
     let valores = Object.values(this.producto);
 
     valores.map((valor, pos) => {
-      console.log(llaves[pos] + "=>" + valor);
-      this.datosProducto.append(llaves[pos], valor)
+        this.datosProducto.append(llaves[pos], valor)
     });
     // this.files.map((archivo, pos) => {
       
@@ -86,17 +95,21 @@ export class ProductosEditarComponent implements OnInit {
     //   console.log(info);
     // });
     if (this.idProducto != 0) {
-      this.producto.imagenes.map((valor, pos) => {
+      //   this.archivos.map((valor, pos) => {
+      //   this.datosProducto.append("imagenes[" + pos + "].id", valor.id);
+      //   this.datosProducto.append("imagenes[" + pos + "].imagen", valor.imagen);
+      //   this.datosProducto.append("imagenes[" + pos + "].producto", this.producto.id);
+      // });
+      console.log(this.archivos);
+      this.archivos.map((valor, pos) => {
         this.datosProducto.append("imagenes[" + pos + "].imagen", valor);
       });
       this.productosService.actualizarProducto(this.datosProducto, this.producto.id).subscribe((info) => {
         console.log(info);
       });
     } else {
-      this.producto.imagenes.map((valor, pos) => {
-        this.datosProducto.append("imagenes[" + pos + "].imagen", valor.id);
-        this.datosProducto.append("imagenes[" + pos + "].imagen", valor.imagen);
-        this.datosProducto.append("imagenes[" + pos + "].producto", this.producto.id);
+      this.archivos.map((valor, pos) => {
+        this.datosProducto.append("imagenes[" + pos + "].imagen", valor);
       });
       this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
         console.log(info);

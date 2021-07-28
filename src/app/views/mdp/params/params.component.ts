@@ -26,6 +26,8 @@ export class ParamsComponent implements OnInit {
   tipoPadre = "";
   idPadre = 0;
   tipoVariable;
+  minimo;
+  maximo;
   valor;
   @ViewChild('padres') padres;
 
@@ -36,7 +38,7 @@ export class ParamsComponent implements OnInit {
 
   ngOnInit(): void {
     this.menu = {
-      modulo:"mdp",
+      modulo: "mdp",
       seccion: "param"
     };
   }
@@ -47,15 +49,13 @@ export class ParamsComponent implements OnInit {
   async iniciarPaginador() {
     await this.paramService.obtenerListaTipos().subscribe((result) => {
       this.tipos = result;
-      console.log(result);
     });
     this.paginator.pageChange.subscribe(() => {
       this.obtenerListaParametros();
     });
-
   }
   async obtenerListaParametros() {
-    await this.paramService.obtenerListaParametros({page:this.page - 1, page_size:this.pageSize, tipo:this.tiposOpciones, nombre:this.nombreBuscar}).subscribe((result) => {
+    await this.paramService.obtenerListaParametros({ page: this.page - 1, page_size: this.pageSize, tipo: this.tiposOpciones, nombre: this.nombreBuscar }).subscribe((result) => {
       this.parametros = result.info;
       this.collectionSize = result.cont;
     });
@@ -75,8 +75,8 @@ export class ParamsComponent implements OnInit {
           });
         });
         this.idPadre = result.idPadre;
-      }else{
-        this.tipoPadre = ""; 
+      } else {
+        this.tipoPadre = "";
         this.idPadre = 0;
 
       }
@@ -85,6 +85,8 @@ export class ParamsComponent implements OnInit {
       this.descripcion = result.descripcion;
       this.tipoVariable = result.tipoVariable;
       this.valor = result.valor;
+      this.maximo = result.maximo;
+      this.minimo = result.minimo;
     });
   }
   insertarParametro() {
@@ -96,28 +98,36 @@ export class ParamsComponent implements OnInit {
     this.valor = "";
     this.idPadre = 0;
     this.funcion = 'insertar';
+    this.minimo = "";
+    this.maximo = "";
   }
   async gestionarParametro() {
     if (this.funcion == "insertar") {
-      await this.paramService.insertarParametro(
-        this.nombre,
-        this.nombreTipo,
-        this.descripcion,
-        this.tipoVariable,
-        this.valor,
-        this.idPadre
-      ).subscribe((result) => {
+      await this.paramService.insertarParametro({
+        nombre: this.nombre,
+        tipo:this.nombreTipo,
+        descripcion: this.descripcion,
+        tipoVariable: this.tipoVariable,
+        valor: this.valor,
+        idPadre: this.idPadre,
+        minimo: this.minimo,
+        maximo : this.maximo
+      }).subscribe((result) => {
         this.obtenerListaParametros();
       });
     } else if (this.funcion = 'editar') {
       await this.paramService.editarParametro(
-        this.idParametro,
-        this.nombre,
-        this.nombreTipo,
-        this.descripcion,
-        this.tipoVariable,
-        this.valor,
-        this.idPadre).subscribe((result) => {
+        {
+          id:this.idParametro,
+          nombre: this.nombre,
+          tipo:this.nombreTipo,
+          descripcion: this.descripcion,
+          tipoVariable: this.tipoVariable,
+          valor: this.valor,
+          idPadre: this.idPadre,
+          minimo: this.minimo,
+          maximo : this.maximo
+        }).subscribe((result) => {
           this.obtenerListaParametros();
         });
     }

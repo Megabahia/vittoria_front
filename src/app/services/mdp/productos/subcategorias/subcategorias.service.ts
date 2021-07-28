@@ -43,7 +43,7 @@ export class SubcategoriasService {
   eliminarSubcategoria(id){
     return this.http.delete<any>(`${apiUrl}/mdp/subCategorias/delete/${id}`);
   }
-  obtenerListaSubcategorias(){
-    return this.http.delete<any>(`${apiUrl}/mdp/categorias/list/`);
+  obtenerListaSubcategoriasHijas(id){
+    return this.http.get<any>(`${apiUrl}/mdp/subCategorias/list/${id}`,{});
   }
 }
