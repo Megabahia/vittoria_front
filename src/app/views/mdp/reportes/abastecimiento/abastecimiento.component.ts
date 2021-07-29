@@ -24,7 +24,7 @@ export class AbastecimientoComponent implements OnInit {
   categoriasOpciones;
   subcategoria = "";
   subcategoriasOpciones;
-  listaAbastecimiento;
+  listaProductos;
   constructor(
     private categoriasService: CategoriasService,
     private subcategoriasService: SubcategoriasService,
@@ -58,7 +58,8 @@ export class AbastecimientoComponent implements OnInit {
         page_size: this.pageSize
       }
     ).subscribe((info) => {
-      console.log(info);
+      this.listaProductos = info.info;
+      this.collectionSize = info.cont;
     });
   }
 
