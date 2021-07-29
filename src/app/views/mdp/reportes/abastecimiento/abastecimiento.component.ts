@@ -4,6 +4,7 @@ import { ProductosService } from 'src/app/services/mdp/productos/productos.servi
 import { SubcategoriasService } from '../../../../services/mdp/productos/subcategorias/subcategorias.service';
 import { CategoriasService } from '../../../../services/mdp/productos/categorias/categorias.service';
 import { DatePipe } from '@angular/common';
+import { ExportService } from '../../../../services/admin/export.service';
 
 @Component({
   selector: 'app-productos-abastecimiento',
@@ -25,11 +26,13 @@ export class AbastecimientoComponent implements OnInit {
   subcategoria = "";
   subcategoriasOpciones;
   listaProductos;
+  infoExportar;
   constructor(
     private categoriasService: CategoriasService,
     private subcategoriasService: SubcategoriasService,
     private productosService: ProductosService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private exportFile: ExportService,
   ) { }
 
   ngOnInit(): void {
@@ -63,7 +66,30 @@ export class AbastecimientoComponent implements OnInit {
     });
   }
 
+  exportarExcel() {
+    this.infoExportar = [];
+    const headers = ['Código de Barras', 'Nombre', 'Categoría', 'Subcategoría', 'Stock', 'Alerta de Abastecimiento' , 'Cantidad sugerida de Stock', 'Fecha máxima de stock'];
+    this.listaProductos.forEach((row: any) => {
 
+      const values = [];
+      values.push(row['codigoBarras']);
+      values.push(row['nombre']);
+      values.push(row['categoria']);
+      values.push(row['subCategoria']);
+      values.push(row['stock']);
+      values.push(row['alertaAbastecimiento']);
+      values.push(row['cantidadSugeridaStock']);
+      values.push(this.transformarFecha(row['fechaMaximaStock']));
+      this.infoExportar.push(values);
+    });
+    const reportData = {
+      title: 'Reporte de Abastecimiento',
+      data: this.infoExportar,
+      headers
+    };
+
+    this.exportFile.exportExcel(reportData);
+  }
   transformarFecha(fecha) {
     let nuevaFecha = this.datePipe.transform(fecha, 'yyyy-MM-dd');
     return nuevaFecha;

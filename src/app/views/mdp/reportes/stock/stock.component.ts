@@ -66,7 +66,7 @@ export class StockComponent implements OnInit {
   }
   exportarExcel() {
     this.infoExportar = [];
-    const headers = ['Código de Barras', 'Nombre', 'Categoría', 'Subcategoría', '# De días de refil', 'Estado'];
+    const headers = ['Código de Barras', 'Nombre', 'Categoría', 'Subcategoría', 'Stock', 'Ultima Fecha de Stock', 'Monto de Compra'];
     this.listaProductos.forEach((row: any) => {
 
       const values = [];
@@ -74,12 +74,13 @@ export class StockComponent implements OnInit {
       values.push(row['nombre']);
       values.push(row['categoria']);
       values.push(row['subCategoria']);
-      values.push(row['refil']);
-      values.push(row['variableRefil']);
+      values.push(row['stock']);
+      values.push(this.transformarFecha(row['fechaUltimaStock']));
+      values.push(row['montoCompra']);
       this.infoExportar.push(values);
     });
     const reportData = {
-      title: 'Reporte de Refil',
+      title: 'Reporte de Stock',
       data: this.infoExportar,
       headers
     };

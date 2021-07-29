@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbModal, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { ProductosService } from 'src/app/services/mdp/productos/productos.service';
+import { ExportService } from '../../../../services/admin/export.service';
 
 @Component({
   selector: 'app-rotacion',
@@ -25,7 +26,8 @@ export class RotacionComponent implements OnInit {
   infoExportar;
   constructor(
     private productosService:ProductosService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private exportFile: ExportService,
   ) { }
 
   ngOnInit(): void {
@@ -58,6 +60,29 @@ export class RotacionComponent implements OnInit {
     });
   }
 
+  exportarExcel() {
+    this.infoExportar = [];
+    const headers = ['Código de Barras', 'Nombre', 'Categoría', 'Subcategoría', 'Stock', 'Ultima Fecha de Stock', 'Monto de Compra'];
+    this.listaProductos.forEach((row: any) => {
+
+      const values = [];
+      values.push(row['codigoBarras']);
+      values.push(row['nombre']);
+      values.push(row['categoria']);
+      values.push(row['subCategoria']);
+      values.push(row['stock']);
+      values.push(this.transformarFecha(row['fechaUltimaStock']));
+      values.push(row['montoCompra']);
+      this.infoExportar.push(values);
+    });
+    const reportData = {
+      title: 'Reporte de Stock',
+      data: this.infoExportar,
+      headers
+    };
+
+    this.exportFile.exportExcel(reportData);
+  }
   transformarFecha(fecha) {
     let nuevaFecha = this.datePipe.transform(fecha, 'yyyy-MM-dd');
     return nuevaFecha;
