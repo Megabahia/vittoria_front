@@ -1,0 +1,287 @@
+<app-toolbar [menu]="menu"></app-toolbar>
+<app-navbar></app-navbar>
+<div class="app-content content ">
+    <div class="content-overlay"></div>
+    <div class="header-navbar-shadow"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+        </div>
+        <div class="content-body">
+            <!-- users list start -->
+            <section class="app-user-list">
+
+                <div class="card">
+                    <div class="row m-75">
+                        <div class="col-md-12 text-right">
+                            <button class="btn btn-success" tabindex="0" aria-controls="DataTables_Table_0" type="button">
+                     Exportar a Excel
+                   </button>
+                            <button class="btn btn-primary" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-toggle="modal" data-target="#modals-slide-in">
+                   Añadir oferta
+                 </button>
+                        </div>
+                    </div>
+                    <div class="card-datatable table-responsive pt-0">
+
+                        <table class="user-list-table table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck2" />
+                                            <label class="custom-control-label" for="customCheck2"></label>
+                                        </div>
+                                    </th>
+                                    <th>Código</th>
+                                    <th>Fecha de oferta</th>
+                                    <th>Nomnre</th>
+                                    <th>Apellido</th>
+                                    <th># contacto</th>
+                                    <th># Whats App</th>
+                                    <th># teléfono convencional</th>
+                                    <th>Correo</th>
+                                    <th>Indicador de cliente</th>
+                                    <th>Calificación de cliente</th>
+                                    <th>Vigencia de oferta (días)</th>
+                                    <th>Canal de ventas </th>
+                                    <th>Monto USD</th>
+                                    <th>Cantidad productos adquiridos</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck2" />
+                                            <label class="custom-control-label" for="customCheck2"></label>
+                                        </div>
+                                    </td>
+                                    <td>99495959</td>
+                                    <td>12-05-2021</td>
+                                    <td>Eleanor</td>
+                                    <td>Aguilar</td>
+                                    <td>0944757579</td>
+                                    <td>0944757579</td>
+                                    <td>022178994</td>
+                                    <td>jam322@gmail.com</td>
+                                    <td> - </td>
+                                    <td>8</td>
+                                    <td>20</td>
+                                    <td>web</td>
+                                    <td>$3000.00</td>
+                                    <td>
+                                        <a href="#" class="avatar bg-info" data-target="#productos-detail" data-toggle="modal">
+                                            <div class="avatar-content" data-toggle="tooltip" data-placement="top" title="Ver productos">
+                                                <i data-feather='shopping-bag'></i>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td class="d-flex">
+                                        <a href="#" class="avatar bg-primary mr-1" data-target="#modals-slide-in" data-toggle="modal">
+                                            <div class="avatar-content">
+                                                <i data-feather='edit-2'></i>
+                                            </div>
+                                        </a>
+
+                                        <a href="#" class="avatar bg-danger mr-1" data-target="#eliminar" data-toggle="modal">
+                                            <div class="avatar-content">
+                                                <i data-feather="trash"></i>
+                                            </div>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Modal to add new user starts-->
+                    <div class="modal modal-slide-in new-user-modal fade" id="modals-slide-in">
+                        <div class="modal-dialog modal-slide-xl">
+                            <div class="modal-content pt-0">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                                <div class="modal-header mb-1">
+                                    <h5 class="modal-title" id="exampleModalLabel">Nueva oferta</h5>
+                                </div>
+                                <div class="modal-body flex-grow-1">
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label" for="basic-icon-default-fullname">Fecha de creación de la oferta:</label>
+                                            <input type="text" class="form-control dt-full-name" value="27/07/2021" disabled />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label" for="basic-icon-default-fullname">Cédula cliente:</label>
+                                            <select class="form-control select2">
+                                  <option>- Buscar -</option>
+                                  <option>1719451149</option>
+                                  <option>1810051149</option>
+                                  <option>1019331149</option>
+                                  <option>1719451149</option>
+                                </select>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label">Teléfono Celular:</label>
+                                            <select class="form-control select2">
+                                  <option>- Buscar -</option>
+                                  <option>0992482447</option>
+                                  <option>0985687568</option>
+                                  <option>0992482447</option>
+                                  <option>0992482447</option>
+                                </select>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label">Nombre:</label>
+                                            <input class="form-control" value="Jaime" disabled>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label">Apellido:</label>
+                                            <input class="form-control" value="Paucar" disabled>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label">Cédula:</label>
+                                            <input class="form-control" value="1719271128" disabled>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label">Teléfono celular:</label>
+                                            <input class="form-control" value="0992345687" disabled>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label">Email:</label>
+                                            <input class="form-control" value="jymas22@gmail.com" disabled>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-group mt-2 border p-2 border-info rounded">
+                                        <h5>Productos:</h5>
+                                        <form class="source-item">
+                                            <div data-repeater-list="group-a">
+                                                <div class="repeater-wrapper" data-repeater-item>
+                                                    <div class="row">
+                                                        <div class="col-12 d-flex product-details-border position-relative pr-0">
+                                                            <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                                                <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                                    <p class="card-text col-title">Código</p>
+                                                                    <select class="form-control select2-size-sm">
+                                                              <option>- Seleccione -</option>
+                                                              <option>099233</option>
+                                                              <option>882893</option>
+                                                              <option>243434</option>
+                                                              <option>325411</option>
+                                                            </select>
+                                                                </div>
+
+                                                                <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                                    <p class="card-text col-title">Producto</p>
+                                                                    <select class="form-control select2-size-sm">
+                                                              <option>- Seleccione -</option>
+                                                              <option>Apple watch</option>
+                                                              <option>iPhone 11</option>
+                                                              <option>Macbook Pro</option>
+                                                            </select>
+                                                                </div>
+
+                                                                <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                                    <p class="card-text col-title">Precio</p>
+                                                                    <select class="form-control select2-size-sm">
+                                                              <option>- Seleccione -</option>
+                                                              <option>Precio A: $300.00</option>
+                                                              <option>Precio B: $300.00</option>
+                                                              <option>Precio C: $300.00</option>
+                                                              <option>Precio D: $300.00</option>
+                                                              <option>Precio E: $300.00</option>
+                                                            </select>
+                                                                </div>
+
+                                                                <div class="col-md-2 my-lg-0 my-2">
+                                                                    <p class="card-text col-title">% descuento</p>
+                                                                    <input type="number" class="form-control form-control-sm" />
+                                                                </div>
+                                                                <div class="col-md-2 my-lg-0 my-2">
+                                                                    <p><b>Total</b></p>
+                                                                    <h5><b>$300.00</b></h5>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <img src="app-assets/images/elements/apple-watch.png" width="60">
+                                                                </div>
+                                                            </div>
+                                                            <div class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
+                                                                <i data-feather="x" class="cursor-pointer font-medium-3" data-repeater-delete></i>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="row mt-1">
+                                                <div class="col-8 text-right">
+                                                    <h4 class="text-primary">Total</h4>
+                                                </div>
+                                                <div class="col-2">
+                                                    <h4 class="text-primary"><b>$300.00</b></h4>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="button" class="btn btn-info btn-sm btn-add-new" data-repeater-create>
+                                                <i data-feather="plus" class="mr-25"></i>
+                                                <span class="align-middle">Añadir producto</span>
+                                            </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label" for="basic-icon-default-uname">Vigencia de la oferta (días):</label>
+                                            <input type="text" class="form-control dt-uname" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label" for="basic-icon-default-fullname">Canal de ventas:</label>
+                                            <select class="form-control select2">
+                                     <option>- Seleccione -</option>
+                                     <option>Web</option>
+                                     <option>Físico</option>
+                                     <option>Local</option>
+                                   </select>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label" for="basic-icon-default-uname">Calificación del cliente:</label>
+                                            <input type="text" class="form-control" value="valor" disabled />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label" for="basic-icon-default-uname">Indicador de cliente:</label>
+                                            <input type="text" class="form-control" value="valor" disabled />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label" for="basic-icon-default-fullname">Persona que genera la oferta:</label>
+                                            <input class="form-control" value="Edgar Flores" disabled>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-uname">Descripción de la oferta:</label>
+                                        <textarea class="form-control" rows="3" placeholder="Escribir..."></textarea>
+                                    </div>
+                                    <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close">Guardar</button>
+                                    <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal to add new user Ends-->
+                </div>
+                <!-- list section end -->
+            </section>
+            <!-- users list ends -->
+        </div>
+    </div>
+</div>
+<!-- END: Content-->
+<div class="sidenav-overlay"></div>
+<div class="drag-target"></div>
+<app-footer></app-footer>

@@ -31,6 +31,13 @@ export class ToolbarComponent implements OnInit {
       caduRep:"",
       rotaRep:"",
       refilRep:""
+    },
+    mdo:{
+      param:"",
+      predCross:"",
+      predRefil:"",
+      predNueProd:"",
+      genOferta:""
     }
   }
   menuUser;
