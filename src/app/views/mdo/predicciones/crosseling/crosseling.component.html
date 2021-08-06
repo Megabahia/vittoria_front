@@ -96,14 +96,14 @@
                                     <td>{{transformarFecha(prediccion.fechaPredicciones)}}</td>
                                     <td>$350.00</td>
                                     <td>
-                                        <a class="avatar bg-info" data-target="#productos-detail" data-toggle="modal">
+                                        <a (click)="obtenerUltimosProductos(prediccion.id) " class="avatar bg-info" data-target="#productos-detail" data-toggle="modal">
                                             <div class="avatar-content" data-toggle="tooltip" data-placement="top" title="Ver productos">
                                                 <i-feather name='shopping-bag'></i-feather>
                                             </div>
                                         </a>
                                     </td>
                                     <td>
-                                        <a class="avatar bg-primary" data-target="#client-detail" data-toggle="modal">
+                                        <a (click)="obtenerProductosPrediccion(prediccion.id)" class="avatar bg-primary" data-target="#client-detail" data-toggle="modal">
                                             <div class="avatar-content" data-toggle="tooltip" data-placement="top" title="Ver predicciones">
                                                 <i-feather name='eye'></i-feather>
                                             </div>
@@ -127,12 +127,12 @@
                                         <div class="col-xl-6 col-lg-12 d-flex flex-column justify-content-between border-container-lg">
                                             <div class="user-avatar-section">
                                                 <div class="d-flex justify-content-start">
-                                                    <img class="img-fluid rounded" src="app-assets/images/avatars/7.png" width="80" />
+                                                    <img class="img-fluid rounded" src="{{prediccion.cliente.imagen}}" width="80" />
                                                     <div class="d-flex flex-column ml-1">
                                                         <div class="user-info mb-1">
-                                                            <h4 class="mb-0">Eleanor Aguilar</h4>
-                                                            <span class="card-text d-block">Correo: eleanor.aguilar@gmail.com</span>
-                                                            <span class="card-text d-block">Identificación: 1718452367</span>
+                                                            <h4 class="mb-0">{{prediccion.cliente.nombreCompleto}}</h4>
+                                                            <span class="card-text d-block">Correo: {{prediccion.cliente.correo}}</span>
+                                                            <span class="card-text d-block">Identificación: {{prediccion.cliente.cedula}}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -153,14 +153,14 @@
                                                         <i data-feather="check"></i>
                                                         <span class="card-text user-info-title font-weight-bold mb-0">Estado: </span>
                                                     </div>
-                                                    <p class="card-text mb-0 text-success ml-1"> Activo</p>
+                                                    <p class="card-text mb-0 {{prediccion.cliente.estado =='Inactivo'? 'text-danger' : 'text-success' }} ml-1"> {{prediccion.cliente.estado}}</p>
                                                 </div>
                                                 <div class="d-flex flex-wrap my-50">
                                                     <div class="user-info-title">
                                                         <i data-feather="flag"></i>
                                                         <span class="card-text user-info-title font-weight-bold mb-0">País: </span>
                                                     </div>
-                                                    <p class="card-text mb-0 ml-1"> Ecuador</p>
+                                                    <p class="card-text mb-0 ml-1"> {{prediccion.cliente.paisNacimiento}}</p>
                                                 </div>
                                                 <div class="d-flex flex-wrap my-50">
                                                     <div class="user-info-title">
@@ -215,25 +215,24 @@
                                         </div>
                                     </div>
 
-                                    <div class="row p-2">
+                                    <div class="row p-2" *ngFor="let producto of prediccion.productos; let i = index">
                                         <div class="col-md-12">
-                                            <h5 class="mb-2">Producto 1 comprado</h5>
+                                            <h5 class="mb-2">Producto {{i+1}} comprado</h5>
                                             <div class="card plan-card border-primary">
                                                 <div class="card-body">
                                                     <div class="item-heading">
-                                                        <h6 class="text-truncate mb-0 text-info">Apple Watch 6 series</h6>
-                                                        <small class="text-body d-block">by Apple</small>
+                                                        <h6 class="text-truncate mb-0 text-info">{{producto.articulo}}</h6>
+                                                        <!-- <small class="text-body d-block">by Apple</small> -->
 
                                                     </div>
                                                     <div class="img-container w-50 mx-auto py-50">
-                                                        <img src="app-assets/images/elements/apple-watch.png" class="img-fluid" alt="image" />
+                                                        <img src="{{producto.imagen}}" class="img-fluid" alt="image" />
                                                     </div>
                                                     <div class="item-meta">
-                                                        <p class="card-text mb-0">Código: 9974784848</p>
-                                                        <p class="card-text mb-0">Cantidad: 1</p>
-                                                        <p class="card-text mb-0">Fecha de compra: 23-04-2021</p>
-                                                        <p class="card-text mb-0">Categoría de producto: Electrónica</p>
-                                                        <p class="card-text text-info mb-0 font-weight-bold">Total: $600.00</p>
+                                                        <p class="card-text mb-0">Código: {{producto.codigo}}</p>
+                                                        <p class="card-text mb-0">Cantidad: {{producto.cantidad}}</p>
+                                                        <p class="card-text mb-0">Categoría de producto: {{producto.categoria}}</p>
+                                                        <p class="card-text text-info mb-0 font-weight-bold">Total: ${{producto.precio}}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -241,160 +240,32 @@
                                         <div class="col-md-12">
                                             <h5 class="mb-2">Productos que ofrecer</h5>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-4" *ngFor="let prediccion of producto.predicciones">
                                             <div class="card plan-card border-secondary">
                                                 <div class="card-body">
                                                     <div class="item-heading">
-                                                        <h6 class="text-truncate mb-0">Apple MacBook Pro - Silver</h6>
-                                                        <small class="text-body">by Apple</small>
+                                                        <h6 class="text-truncate mb-0">{{prediccion.nombre}}</h6>
+                                                        <!-- <small class="text-body">by Apple</small> -->
                                                     </div>
                                                     <div class="img-container w-50 mx-auto py-50">
-                                                        <img src="app-assets/images/elements/macbook-pro.png" class="img-fluid" alt="image" />
+                                                        <img src="{{prediccion.imagen}}" class="img-fluid" alt="image" />
                                                     </div>
                                                     <hr/>
                                                     <div class="item-meta">
-                                                        <small class="card-text mb-0 text-primary">Código: 3213</small>
-                                                        <p class="card-text mb-0">Precio normal: $2449.49</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: $2100.00</p>
+                                                        <small class="card-text mb-0 text-primary">Código: {{prediccion.codigoBarras}}</small>
+                                                        <p class="card-text mb-0">Precio normal: ${{prediccion.precioVentaA}}</p>
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaA}}</p>
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaB}}</p>
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaC}}</p>
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaD}}</p>
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaE}}</p>
                                                     </div>
                                                 </div>
                                             </div>
 
 
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="card plan-card border-secondary">
-                                                <div class="card-body">
-                                                    <div class="item-heading">
-                                                        <h6 class="text-truncate mb-0">Magic Mouse 2 Black</h6>
-                                                        <small class="text-body">by Apple</small>
-                                                    </div>
-                                                    <div class="img-container w-50 mx-auto py-50">
-                                                        <img src="app-assets/images/elements/magic-mouse.png" class="img-fluid" alt="image" />
-                                                    </div>
-                                                    <hr/>
-                                                    <div class="item-meta">
-                                                        <small class="card-text mb-0 text-primary">Código: 44545</small>
-                                                        <p class="card-text mb-0">Precio normal: $90.49</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: $70.00</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="card plan-card border-secondary">
-                                                <div class="card-body">
-                                                    <div class="item-heading">
-                                                        <h6 class="text-truncate mb-0">iphone 12 Pro</h6>
-                                                        <small class="text-body">by Apple</small>
-                                                    </div>
-                                                    <div class="img-container w-50 mx-auto py-50">
-                                                        <img src="app-assets/images/elements/iphone-x.png" class="img-fluid" alt="image" />
-                                                    </div>
-                                                    <hr/>
-                                                    <div class="item-meta">
-                                                        <small class="card-text mb-0 text-primary">Código: 84884</small>
-                                                        <p class="card-text mb-0">Precio normal: $1200.00</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: $1100.00</p>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
-
-                                    <hr/>
-
-                                    <div class="row p-2">
-                                        <div class="col-md-12">
-                                            <h5 class="mb-2">Producto 2 comprado</h5>
-                                            <div class="card plan-card border-primary">
-                                                <div class="card-body">
-                                                    <div class="item-heading">
-                                                        <h6 class="text-truncate mb-0 text-info">Apple Watch 6 series</h6>
-                                                        <small class="text-body d-block">by Apple</small>
-
-                                                    </div>
-                                                    <div class="img-container w-50 mx-auto py-50">
-                                                        <img src="app-assets/images/elements/apple-watch.png" class="img-fluid" alt="image" />
-                                                    </div>
-                                                    <div class="item-meta">
-                                                        <p class="card-text mb-0">Código: 9974784848</p>
-                                                        <p class="card-text mb-0">Cantidad: 1</p>
-                                                        <p class="card-text mb-0">Fecha de compra: 23-04-2021</p>
-                                                        <p class="card-text mb-0">Categoría de producto: Electrónica</p>
-                                                        <p class="card-text text-info mb-0 font-weight-bold">Total: $600.00</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <h5 class="mb-2">Productos que ofrecer</h5>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="card plan-card border-secondary">
-                                                <div class="card-body">
-                                                    <div class="item-heading">
-                                                        <h6 class="text-truncate mb-0">Apple MacBook Pro - Silver</h6>
-                                                        <small class="text-body">by Apple</small>
-                                                    </div>
-                                                    <div class="img-container w-50 mx-auto py-50">
-                                                        <img src="app-assets/images/elements/macbook-pro.png" class="img-fluid" alt="image" />
-                                                    </div>
-                                                    <hr/>
-                                                    <div class="item-meta">
-                                                        <small class="card-text mb-0 text-primary">Código: 3213</small>
-                                                        <p class="card-text mb-0">Precio normal: $2449.49</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: $2100.00</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="card plan-card border-secondary">
-                                                <div class="card-body">
-                                                    <div class="item-heading">
-                                                        <h6 class="text-truncate mb-0">Magic Mouse 2 Black</h6>
-                                                        <small class="text-body">by Apple</small>
-                                                    </div>
-                                                    <div class="img-container w-50 mx-auto py-50">
-                                                        <img src="app-assets/images/elements/magic-mouse.png" class="img-fluid" alt="image" />
-                                                    </div>
-                                                    <hr/>
-                                                    <div class="item-meta">
-                                                        <small class="card-text mb-0 text-primary">Código: 6643</small>
-                                                        <p class="card-text mb-0">Precio normal: $90.49</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: $70.00</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="card plan-card border-secondary">
-                                                <div class="card-body">
-                                                    <div class="item-heading">
-                                                        <h6 class="text-truncate mb-0">iphone 12 Pro</h6>
-                                                        <small class="text-body">by Apple</small>
-                                                    </div>
-                                                    <div class="img-container w-50 mx-auto py-50">
-                                                        <img src="app-assets/images/elements/iphone-x.png" class="img-fluid" alt="image" />
-                                                    </div>
-                                                    <hr/>
-                                                    <div class="item-meta">
-                                                        <small class="card-text mb-0 text-primary">Código: 2344</small>
-                                                        <p class="card-text mb-0">Precio normal: $1200.49</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: $1100.00</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
 
                                 </div>
                             </div>
@@ -417,27 +288,26 @@
                                         <div class="col-md-12 mb-1">
                                             <h5 class="text-info">Fecha de compra: 12/06/2021</h5>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-4" *ngFor="let producto of ultimosProductos">
                                             <div class="card plan-card border-secondary">
                                                 <div class="card-body">
                                                     <div class="item-heading">
-                                                        <h6 class="text-truncate mb-0">iphone 12 Pro</h6>
-                                                        <small class="text-body">by Apple</small>
+                                                        <h6 class="text-truncate mb-0">{{producto.articulo}}</h6>
                                                     </div>
                                                     <div class="img-container w-50 mx-auto py-50">
-                                                        <img src="app-assets/images/elements/iphone-x.png" class="img-fluid" alt="image" />
+                                                        <img src="{{producto.imagen}}" class="img-fluid" alt="image" />
                                                     </div>
                                                     <hr/>
                                                     <div class="item-meta">
-                                                        <p class="card-text mb-0">Código: 889999</p>
-                                                        <p class="card-text mb-0">Cantidad: 3</p>
-                                                        <p class="card-text text-primary mb-0 font-weight-bold">Total: $1559.49</p>
+                                                        <p class="card-text mb-0">Código: {{producto.codigo}}</p>
+                                                        <p class="card-text mb-0">Cantidad: {{producto.cantidad}}</p>
+                                                        <p class="card-text text-primary mb-0 font-weight-bold">Total: ${{producto.precio}}</p>
                                                     </div>
                                                 </div>
                                             </div>
 
                                         </div>
-                                        <div class="col-md-4">
+                                        <!-- <div class="col-md-4">
                                             <div class="card plan-card border-secondary">
                                                 <div class="card-body">
                                                     <div class="item-heading">
@@ -474,7 +344,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>

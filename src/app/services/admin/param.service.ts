@@ -59,4 +59,7 @@ export class ParamService {
   obtenerListaPadres(tipo){
     return this.http.post<any>(`${apiUrl}/adm/param/list/tipo/todos/`,{tipo});
   }
+  obtenerURL(url){
+    return `${apiUrl}${url}`;
+  }
 }
