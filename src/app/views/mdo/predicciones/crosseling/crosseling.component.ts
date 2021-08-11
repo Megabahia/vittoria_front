@@ -3,6 +3,7 @@ import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { CrossService, PrediccionesCross, Prediccion } from '../../../../services/mdo/predicciones/cross/cross.service';
 import { DatePipe } from '@angular/common';
 import { ParamService } from 'src/app/services/admin/param.service';
+import { ExportService } from '../../../../services/admin/export.service';
 
 @Component({
   selector: 'app-crosseling',
@@ -21,14 +22,20 @@ export class CrosselingComponent implements OnInit {
   inicio = "";
   fin = "";
   ultimosProductos;
-  prediccion: Prediccion;
+  prediccion;
   cliente;
+  tipoCliente = "";
+  tipoClienteModal = "";
+  identificacion;
+  infoExportar = [];
+
   constructor(
     private crossService: CrossService,
     private datePipe: DatePipe,
-    private globalParam: ParamService
+    private globalParam: ParamService,
+    private exportFile: ExportService
   ) {
-    this.prediccion = crossService.inicializarPrediccion();
+    // this.prediccion = crossService.inicializarPrediccion();
   }
 
   ngOnInit(): void {
@@ -50,13 +57,19 @@ export class CrosselingComponent implements OnInit {
     let fecha = this.fecha.split(' to ');
     this.inicio = fecha[0] ? fecha[0] : "";
     this.fin = fecha[1] ? fecha[1] : "";
+    let busqueda: any = {
+      page: this.page - 1,
+      page_size: this.pageSize,
+      inicio: this.inicio,
+      fin: this.fin
+    };
+    if (this.tipoCliente == 'negocio') {
+      busqueda = { ...busqueda, negocio: 1, identificacion: this.identificacion }
+    } else if (this.tipoCliente == 'cliente') {
+      busqueda = { ...busqueda, cliente: 1, identificacion: this.identificacion }
+    }
     this.crossService.obtenerListaPredicciones(
-      {
-        page: this.page - 1,
-        page_size: this.pageSize,
-        inicio: this.inicio,
-        fin: this.fin
-      }
+      busqueda
     ).subscribe((info) => {
       this.listaPredicciones = info.info;
       this.collectionSize = info.cont;
@@ -78,8 +91,15 @@ export class CrosselingComponent implements OnInit {
     });
   }
   obtenerProductosPrediccion(id) {
-    return this.crossService.obtenerProductosPrediccion(id).subscribe((info) => {
-      info.cliente.imagen = this.obtenerURLImagen(info.cliente.imagen);
+    this.crossService.obtenerProductosPrediccion(id).subscribe((info) => {
+      if ('negocio' in info) {
+        this.tipoClienteModal = "negocio";
+        info.negocio.imagen = this.obtenerURLImagen(info.negocio.imagen);
+      } else {
+        this.tipoClienteModal = "cliente";
+        info.cliente.imagen = this.obtenerURLImagen(info.cliente.imagen);
+      }
+
       info.productos.map((prod) => {
         prod.imagen = this.obtenerURLImagen(prod.imagen);
         prod.predicciones.map((pred) => {
@@ -88,5 +108,30 @@ export class CrosselingComponent implements OnInit {
       });
       this.prediccion = info;
     });
+  }
+  exportarExcel() {
+    this.infoExportar = [];
+    const headers = ['Código', 'Fecha de predicción', 'Nombre Cliente', 'Apellido Cliente', 'Identificación', '#Contacto', 'Correo', 'Fecha última compra', 'Monto última compra'];
+    let objetoExportar = Object.create(this.listaPredicciones);
+    objetoExportar.forEach((row: any) => {
+      const values = [];
+      values.push(row['id']);
+      values.push(this.transformarFecha(row['fechaPredicciones']));
+      values.push(row['nombres']);
+      values.push(row['apellidos']);
+      values.push(row['identificacion']);
+      values.push(row['telefono']);
+      values.push(row['correo']);
+      values.push(this.transformarFecha(row['created_at']));
+      values.push(row['total']);
+      this.infoExportar.push(values);
+    });
+    const reportData = {
+      title: 'Reporte de Predicciones de Crosseling',
+      data: this.infoExportar,
+      headers
+    };
+
+    this.exportFile.exportExcel(reportData);
   }
 }
