@@ -29,10 +29,10 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <select class="form-control form-control-sm" [(ngModel)]="tipoCliente">
-                                        <option value="" selected>- Tipo de cliente - </option>
-                                        <option value="cliente">Cliente</option>
-                                        <option value="negocio">Negocio</option>
-                                      </select>
+                    <option value="" selected>- Tipo de cliente - </option>
+                    <option value="cliente">Cliente</option>
+                    <option value="negocio">Negocio</option>
+                  </select>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -41,7 +41,9 @@
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <button class="btn btn-primary" (click)="obtenerListaPredicciones()"><i-feather name='search' class="edit-user" ></i-feather></button>
+                                <button class="btn btn-primary" (click)="obtenerListaPredicciones()">
+                  <i-feather name='search' class="edit-user"></i-feather>
+                </button>
                             </div>
 
                         </div>
@@ -51,8 +53,8 @@
                     <div class="row m-75">
                         <div class="col-md-12 text-right">
                             <button class="btn btn-success waves-effect waves-float waves-light" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-toggle="modal" data-target="#modals-slide-in" (click)="exportarExcel()">
-                     Exportar a Excel
-                   </button>
+                Exportar a Excel
+              </button>
                         </div>
                     </div>
                     <div class="card-datatable table-responsive pt-0">
@@ -131,19 +133,13 @@
                                         </div>
                                         <div class="col-xl-6 col-lg-12 mt-2 mt-xl-0">
                                             <div class="user-info-wrapper">
-                                                <!--div class="d-flex flex-wrap my-50">
-                                  <div class="user-info-title">
-                                      <i name="check"></i>
-                                      <span class="card-text user-info-title font-weight-bold mb-0">Código de barras: </span>
-                                  </div>
-                                  <p class="card-text mb-0 text-info ml-1"> 000098746464</p>
-                              </div-->
                                                 <div class="d-flex flex-wrap my-50">
                                                     <div class="user-info-title">
                                                         <i-feather name="check" class="edit-user"></i-feather>
                                                         <span class="card-text user-info-title font-weight-bold mb-0">Estado: </span>
                                                     </div>
-                                                    <p class="card-text mb-0 {{prediccion.cliente.estado =='Inactivo'? 'text-danger' : 'text-success' }} ml-1"> {{prediccion.cliente.estado}}</p>
+                                                    <p class="card-text mb-0 {{prediccion.cliente.estado =='Inactivo'? 'text-danger' : 'text-success' }} ml-1">
+                                                        {{prediccion.cliente.estado}}</p>
                                                 </div>
                                                 <div class="d-flex flex-wrap my-50">
                                                     <div class="user-info-title">
@@ -171,7 +167,7 @@
                                                 </div>
                                                 <div class="ml-1">
                                                     <small>Valor de últmos productos comprados</small>
-                                                    <h5 class="mb-0">1200.00</h5>
+                                                    <h5 class="mb-0">${{prediccion.ultimoTotal}}</h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -182,7 +178,7 @@
                                                 </div>
                                                 <div class="ml-1">
                                                     <small>Compras mensuales</small>
-                                                    <h5 class="mb-0">600.00</h5>
+                                                    <h5 class="mb-0">${{prediccion.comprasMensuales}}</h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -193,7 +189,7 @@
                                                 </div>
                                                 <div class="ml-1">
                                                     <small>Promedio anual de compras</small>
-                                                    <h5 class="mb-0">$1250.00</h5>
+                                                    <h5 class="mb-0">${{prediccion.comprasAnuales}}</h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -234,15 +230,20 @@
                                                     <div class="img-container w-50 mx-auto py-50">
                                                         <img src="{{prediccion.imagen}}" class="img-fluid" alt="image" />
                                                     </div>
-                                                    <hr/>
+                                                    <hr />
                                                     <div class="item-meta">
                                                         <small class="card-text mb-0 text-primary">Código: {{prediccion.codigoBarras}}</small>
                                                         <p class="card-text mb-0">Precio normal: ${{prediccion.precioVentaA}}</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaA}}</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaB}}</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaC}}</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaD}}</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaE}}</p>
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaA}}
+                                                        </p>
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaB}}
+                                                        </p>
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaC}}
+                                                        </p>
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaD}}
+                                                        </p>
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaE}}
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -271,19 +272,14 @@
                                         </div>
                                         <div class="col-xl-6 col-lg-12 mt-2 mt-xl-0">
                                             <div class="user-info-wrapper">
-                                                <!--div class="d-flex flex-wrap my-50">
-                                  <div class="user-info-title">
-                                      <i name="check"></i>
-                                      <span class="card-text user-info-title font-weight-bold mb-0">Código de barras: </span>
-                                  </div>
-                                  <p class="card-text mb-0 text-info ml-1"> 000098746464</p>
-                              </div-->
+
                                                 <div class="d-flex flex-wrap my-50">
                                                     <div class="user-info-title">
                                                         <i-feather name="check" class="edit-user"></i-feather>
                                                         <span class="card-text user-info-title font-weight-bold mb-0">Estado: </span>
                                                     </div>
-                                                    <p class="card-text mb-0 {{prediccion.negocio.estado =='Inactivo'? 'text-danger' : 'text-success' }} ml-1"> {{prediccion.negocio.estado}}</p>
+                                                    <p class="card-text mb-0 {{prediccion.negocio.estado =='Inactivo'? 'text-danger' : 'text-success' }} ml-1">
+                                                        {{prediccion.negocio.estado}}</p>
                                                 </div>
                                                 <div class="d-flex flex-wrap my-50">
                                                     <div class="user-info-title">
@@ -306,11 +302,11 @@
                                         <div class="col-md-4">
                                             <div class="d-flex">
                                                 <div class="color-box bg-light-primary">
-                                                    <i-feather name="dollar-sign" class="text-info edit-user"></i-feather>
+                                                    <i-feather name="dollar-sign" class="edit-user"></i-feather>
                                                 </div>
                                                 <div class="ml-1">
                                                     <small>Valor de últmos productos comprados</small>
-                                                    <h5 class="mb-0">1200.00</h5>
+                                                    <h5 class="mb-0">${{prediccion.ultimoTotal}}</h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -321,7 +317,7 @@
                                                 </div>
                                                 <div class="ml-1">
                                                     <small>Compras mensuales</small>
-                                                    <h5 class="mb-0">600.00</h5>
+                                                    <h5 class="mb-0">${{prediccion.comprasMensuales}}</h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -332,7 +328,7 @@
                                                 </div>
                                                 <div class="ml-1">
                                                     <small>Promedio anual de compras</small>
-                                                    <h5 class="mb-0">$1250.00</h5>
+                                                    <h5 class="mb-0">${{prediccion.comprasAnuales}}</h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -373,15 +369,20 @@
                                                     <div class="img-container w-50 mx-auto py-50">
                                                         <img src="{{prediccion.imagen}}" class="img-fluid" alt="image" />
                                                     </div>
-                                                    <hr/>
+                                                    <hr />
                                                     <div class="item-meta">
                                                         <small class="card-text mb-0 text-primary">Código: {{prediccion.codigoBarras}}</small>
                                                         <p class="card-text mb-0">Precio normal: ${{prediccion.precioVentaA}}</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaA}}</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaB}}</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaC}}</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaD}}</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaE}}</p>
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaA}}
+                                                        </p>
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaB}}
+                                                        </p>
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaC}}
+                                                        </p>
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaD}}
+                                                        </p>
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaE}}
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -420,7 +421,7 @@
                                                     <div class="img-container w-50 mx-auto py-50">
                                                         <img src="{{producto.imagen}}" class="img-fluid" alt="image" />
                                                     </div>
-                                                    <hr/>
+                                                    <hr />
                                                     <div class="item-meta">
                                                         <p class="card-text mb-0">Código: {{producto.codigo}}</p>
                                                         <p class="card-text mb-0">Cantidad: {{producto.cantidad}}</p>
@@ -475,7 +476,7 @@
                     </div>
 
 
-                    <hr/>
+                    <hr />
                 </div>
             </section>
             <!-- users list ends -->

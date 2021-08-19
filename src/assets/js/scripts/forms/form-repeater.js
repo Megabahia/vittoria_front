@@ -21,7 +21,7 @@ $(function () {
       }
     },
     hide: function (deleteElement) {
-      if (confirm('Are you sure you want to delete this element?')) {
+      if (confirm('¿Esta seguro que desea eliminar este elemento?')) {
         $(this).slideUp(deleteElement);
       }
     }

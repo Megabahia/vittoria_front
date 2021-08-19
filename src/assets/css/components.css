@@ -1103,7 +1103,6 @@ footer.footer-border {
   background-color : #C3C3C3;
   border-radius : 50%;
   position : relative;
-  cursor : pointer;
   color : #FFFFFF;
   display : inline-flex;
   font-size : 1rem;
@@ -3611,3 +3610,26 @@ tr.group {
     left: 50%;
     transform: translatex(-50%);
 }
+
+.img-xs {
+  width:40px;
+}
+
+.modal-slide-l {
+  width: 54% !important;
+}
+
+.modal-slide-xl {
+  width: 900px !important;
+}
+
+.table-badge {
+  font-size: 8px;
+  position: relative;
+  right: -5px;
+  top: -27px;
+  float: right;
+}
+
+
+.width
