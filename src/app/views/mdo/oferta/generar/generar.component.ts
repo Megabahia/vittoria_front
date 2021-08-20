@@ -2,11 +2,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { DatePipe } from '@angular/common';
 import { ParamService } from 'src/app/services/admin/param.service';
+import { ParamService as ParamServiceMDO } from 'src/app/services/mdo/param/param.service';
 import { ExportService } from '../../../../services/admin/export.service';
 import { GenerarService, Oferta } from '../../../../services/mdo/ofertas/generar/generar.service';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { ClientesService } from '../../../../services/mdm/personas/clientes/clientes.service';
 import { NegociosService } from '../../../../services/mdm/personas/negocios/negocios.service';
+import { ProductosService } from '../../../../services/mdp/productos/productos.service';
 
 @Component({
   selector: 'app-generar',
@@ -32,15 +34,23 @@ export class GenerarComponent implements OnInit {
   infoExportar = [];
   listaOfertas;
 
+  fechaActual = new Date();
+  identificacionOfertaBusq;
+  telefonoOfertaBusq;
   oferta: Oferta;
   tipoClienteOferta = "";
+  iva;
 
+  habilitarIdentificacion;
+  habilitarTelefono;
+  habalitarBusqueda;
 
   detallesForm;
   detalles: FormArray;
   detallesTransac;
   public isCollapsed = [];
 
+  tipoCanalOpciones;
   constructor(
     private formBuilder: FormBuilder,
     private generarService: GenerarService,
@@ -48,7 +58,9 @@ export class GenerarComponent implements OnInit {
     private globalParam: ParamService,
     private exportFile: ExportService,
     private clientesService: ClientesService,
-    private negociosService: NegociosService
+    private negociosService: NegociosService,
+    private paramService:ParamServiceMDO,
+    private productosService:ProductosService
   ) {
     this.oferta = this.generarService.inicializarOferta();
   }
@@ -63,6 +75,8 @@ export class GenerarComponent implements OnInit {
     this.detallesForm = this.formBuilder.group({
       detalles: new FormArray([this.crearDetalle()])
     });
+    this.detalles = this.detallesForm.get('detalles') as FormArray;
+    this.obtenerTipoIdentificacionOpciones();
   }
 
   async ngAfterViewInit() {
@@ -112,19 +126,110 @@ export class GenerarComponent implements OnInit {
     this.isCollapsed.push(false);
   }
   removeItem(i): void {
+    console.log(this.detalles)
     this.isCollapsed.splice(i, 1);
     this.detalles.removeAt(i);
   }
+
+  calcularSubtotal() {
+    let detalles = this.detallesForm.value.detalles;
+    let subtotal = 0;
+    let descuento = 0;
+    let cantidad = 0;
+    if (detalles) {
+      detalles.map((valor) => {
+        let valorUnitario = valor.valorUnitario ? valor.valorUnitario : 0;
+        let porcentDescuento = valor.descuento ? valor.descuento : 0;
+        let cantidadProducto = valor.cantidad ? valor.cantidad : 0;
+        let precio = cantidadProducto * valorUnitario;
+        valor.precio = precio;
+        valor.valorDescuento = precio * (porcentDescuento / 100);
+        descuento += precio * (porcentDescuento / 100);
+        subtotal += precio;
+        cantidad += valor.cantidad ? valor.cantidad : 0;
+      });
+    }
+
+    this.detallesTransac = detalles;
+    let iva = this.redondear(subtotal * this.iva);
+    descuento = this.redondear(descuento);
+    this.oferta.total = this.redondear(subtotal + iva - descuento);
+  }
+  redondear(num, decimales = 2) {
+    var signo = (num >= 0 ? 1 : -1);
+    num = num * signo;
+    if (decimales === 0) //con 0 decimales
+      return signo * Math.round(num);
+    // round(x * 10 ^ decimales)
+    num = num.toString().split('e');
+    num = Math.round(+(num[0] + 'e' + (num[1] ? (+num[1] + decimales) : decimales)));
+    // x * 10 ^ (-decimales)
+    num = num.toString().split('e');
+    let valor = signo * (Number)(num[0] + 'e' + (num[1] ? (+num[1] - decimales) : -decimales));
+    return valor;
+  }
+  verificarBusqueda() {
+    if (!this.identificacionOfertaBusq && !this.telefonoOfertaBusq) {
+      this.habilitarIdentificacion = false;
+      this.habilitarTelefono = false;
+    } else if (this.identificacionOfertaBusq) {
+      this.habilitarIdentificacion = false;
+      this.habilitarTelefono = true;
+    } else if (this.telefonoOfertaBusq) {
+      this.habilitarIdentificacion = true;
+      this.habilitarTelefono = false;
+    }
+  }
   obtenerCliente() {
     if (this.tipoClienteOferta == "cliente") {
-      this.clientesService.obtenerClientePorCedula({ cedula: this.oferta.identificacion }).subscribe((info) => {
-        console.log(info);
-      });
+      this.clientesService.obtenerClientePorCedula({ cedula: this.identificacionOfertaBusq }).subscribe((info) => {
+        if (info) {
+          this.oferta.nombres = info.nombres;
+          this.oferta.apellidos = info.apellidos;
+          this.oferta.identificacion = info.cedula;
+          this.oferta.telefono = info.telefono;
+          this.oferta.correo = info.correo;
+        }
+      },
+        (error) => {
+
+        });
     } else if (this.tipoClienteOferta == "negocio") {
-      this.negociosService.obtenerNegocioPorRuc({ ruc: this.oferta.identificacion }).subscribe((info) => {
-        console.log(info);
+      this.negociosService.obtenerNegocioPorRuc({ ruc: this.identificacionOfertaBusq }).subscribe((info) => {
+        if (info) {
+          this.oferta.nombres = info.razonSocial;
+          this.oferta.apellidos = info.nombreComercial;
+          this.oferta.identificacion = info.ruc;
+          this.oferta.telefono = info.telefonoOficina;
+          this.oferta.correo = info.correoOficina;
+        }
       })
     }
+  }
+  crearOferta() {
+    this.oferta = this.generarService.inicializarOferta();
+    this.oferta.created_at = this.transformarFecha(this.fechaActual);
+  }
+
+  guardarOferta() {
+    if (this.oferta.id == 0) {
+
+    }
+  }
+  obtenerProducto(i) {
+    let detalles = this.detallesForm.get('detalles')['controls'];
+    this.productosService.obtenerProductoPorCodigo({
+      codigoBarras: detalles[i].codigo
+    }).subscribe((info)=>{
+      console.log(info);
+    });
+    console.log(detalles[i].codigo);
+    this.detallesForm.get('detalles')['controls'][i].articulo = "entregado"
+  }
+  async obtenerTipoIdentificacionOpciones() {
+    await this.paramService.obtenerListaPadres("CANAL_VENTA").subscribe((info) => {
+      this.tipoCanalOpciones = info;
+    });
   }
   // obtenerUltimosProductos(id) {
   //   return this.generarService.obtenerUltimasOfertas(id).subscribe((info) => {

@@ -19,7 +19,7 @@ export class TransaccionesAddComponent implements OnInit {
   detallesTransac;
   iva;
   ultimaFactura=0;
-  myDate = new Date();
+  fechaActual = new Date();
   canalOpciones;
   constructor(
     private formBuilder: FormBuilder,
@@ -40,7 +40,7 @@ export class TransaccionesAddComponent implements OnInit {
       updated_at: "",
       valor: ""
     };
-    this.transaccion.fecha = this.transformarFecha(this.myDate);
+    this.transaccion.fecha = this.transformarFecha(this.fechaActual);
    }
 
   ngOnInit(): void {

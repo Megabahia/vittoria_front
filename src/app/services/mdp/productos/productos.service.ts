@@ -82,6 +82,9 @@ export class ProductosService {
   obtenerProducto(id) {
     return this.http.get<any>(`${apiUrl}/mdp/productos/listOne/${id}`);
   }
+  obtenerProductoPorCodigo(codigo) {
+    return this.http.post<any>(`${apiUrl}/mdp/productos/search/producto/codigo/`,codigo);
+  }
   crearProducto(datos) {
     return this.http.post<any>(`${apiUrl}/mdp/productos/create/`, datos);
   }

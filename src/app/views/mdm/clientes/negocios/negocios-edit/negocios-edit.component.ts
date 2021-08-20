@@ -73,7 +73,7 @@ export class NegociosEditComponent implements OnInit {
   provinciasDireccionOpciones;
   ciudadesDireccionOpciones;
 
-  myDate = new Date();
+  fechaActual = new Date();
 
   transaccion:Transaccion;
 
@@ -105,7 +105,7 @@ export class NegociosEditComponent implements OnInit {
     this.obtenerTipoNegocioOpciones();
     this.obtenerTipoDireccionOpciones();
     if (this.idNegocio == 0) {
-      this.datosBasicos.created_at = this.transformarFecha(this.myDate);
+      this.datosBasicos.created_at = this.transformarFecha(this.fechaActual);
     } else {
       this.obtenerDatosBasicos();
       this.obtenerPersonalEmpresa();
@@ -226,7 +226,7 @@ export class NegociosEditComponent implements OnInit {
   }
   crearPersonal() {
     this.datosPersonal = this.negociosService.inicializarPersonal();
-    this.datosPersonal.created_at = this.transformarFecha(this.myDate);
+    this.datosPersonal.created_at = this.transformarFecha(this.fechaActual);
     this.datosPersonal.negocio = this.idNegocio;
   }
   async editarPersonal(id) {
@@ -254,7 +254,7 @@ export class NegociosEditComponent implements OnInit {
   }
   crearDireccion() {
     this.datosDirecciones = this.negociosService.inicializarDireccion();
-    this.datosDirecciones.created_at = this.transformarFecha(this.myDate);
+    this.datosDirecciones.created_at = this.transformarFecha(this.fechaActual);
     this.datosDirecciones.negocio = this.idNegocio;
   }
   async editarDireccion(id) {

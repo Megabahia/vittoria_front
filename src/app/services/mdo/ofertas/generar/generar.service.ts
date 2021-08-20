@@ -65,4 +65,7 @@ export class GenerarService {
   obtenerListaOfertas(datos) {
     return this.http.post<any>(`${apiUrl}/mdo/generarOferta/list/`, datos);
   }
+  crearOferta(datos){
+    return this.http.post<any>(`${apiUrl}/mdo/generarOferta/create/`, datos);
+  }
 }

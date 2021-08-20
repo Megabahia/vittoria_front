@@ -137,7 +137,7 @@ export class PersonasEditComponent implements OnInit {
   ciudadDatosFisicosOpciones;
   tipoContactoOpciones;
   iconosDatosVirtualOpciones;
-  myDate = new Date();
+  fechaActual = new Date();
   parientesForm;
   parientesVista='lista';
   idPariente=0;
@@ -169,7 +169,7 @@ export class PersonasEditComponent implements OnInit {
     this.obtenerTiposContacto();
     this.obtenerIconosDatosVirtuales();
     if(this.idCliente==0){
-      this.datosBasicos.created_at =  this.transformarFecha(this.myDate);
+      this.datosBasicos.created_at =  this.transformarFecha(this.fechaActual);
     }else{
       this.obtenerDatosBasicos();
       this.obtenerDatosFisicos();
@@ -332,7 +332,7 @@ export class PersonasEditComponent implements OnInit {
   async crearDatoFisico(){
     this.datosFisicos = {
       id:0,
-      created_at:this.transformarFecha(this.myDate),
+      created_at:this.transformarFecha(this.fechaActual),
       tipoDireccion:"",
       pais:"",
       provincia:"",
@@ -376,7 +376,7 @@ export class PersonasEditComponent implements OnInit {
       tipoContacto:"",
       icono:"",
       informacion:"",
-      created_at:this.transformarFecha(this.myDate),
+      created_at:this.transformarFecha(this.fechaActual),
       cliente:this.idCliente
     } 
   }
