@@ -198,27 +198,27 @@
 
                                     <div class="form-group mt-2 border p-2 border-info rounded">
                                         <h5>Productos:</h5>
-                                        <form [formGroup]="detallesForm">
-                                            <div formArrayName="detalles" *ngFor="let detalle of detallesForm.get('detalles')['controls']; let i = index;">
-                                                <div [formGroupName]="i">
+                                        <form>
+                                            <div *ngFor="let detalle of detalles; let i = index;">
+                                                <div>
                                                     <div class="row">
                                                         <div class="col-12 d-flex product-details-border position-relative pr-0">
                                                             <div class="row w-100 pr-lg-0 pr-1 py-2">
                                                                 <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                                                     <p class="card-text col-title">Código</p>
-                                                                    <input class="form-control form-control-sm" type="text" formControlName="codigo" [(ngModel)]="detalle.codigo" (change)="obtenerProducto(i)">
+                                                                    <input class="form-control form-control-sm" type="text" [(ngModel)]="detalle.codigo" (change)="obtenerProducto(i)" [ngModelOptions]="{standalone: true}">
 
                                                                 </div>
 
                                                                 <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                                                     <p class="card-text col-title">Producto</p>
-                                                                    <input class="form-control form-control-sm" type="text" formControlName="articulo" [(ngModel)]="detalle.articulo">
+                                                                    <input class="form-control form-control-sm" type="text" [(ngModel)]="detalle.articulo" [ngModelOptions]="{standalone: true}">
 
                                                                 </div>
 
                                                                 <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                                                     <p class="card-text col-title">Precio</p>
-                                                                    <select class="form-control form-control-sm" [(ngModel)]="precios[i]" (change)="asignarPrecio(i)">
+                                                                    <select class="form-control form-control-sm" [(ngModel)]="detalle.valorUnitario" (change)="calcularSubtotal()" [ngModelOptions]="{standalone: true}">
                                                                         <option value="0">- Seleccione -</option>
                                                                         <option value="{{listaPrecios[i].precioVentaA}}" >
                                                                             Precio de venta A: {{listaPrecios[i].precioVentaA}}
@@ -238,18 +238,22 @@
                                                                         
                                                                     </select>
                                                                 </div>
-
                                                                 <div class="col-md-2 my-lg-0 my-2">
-                                                                    <p class="card-text col-title">Precio</p>
-                                                                    <input type="number" class="form-control form-control-sm" value="0" placeholder="0" formControlName="precio" [(ngModel)]="detalles.precio" (change)="calcularSubtotal()" disabled/>
+                                                                    <p class="card-text col-title">Cantidad</p>
+                                                                    <input type="number" class="form-control form-control-sm" value="0" placeholder="0" [(ngModel)]="detalle.cantidad" (change)="calcularSubtotal()" [ngModelOptions]="{standalone: true}" />
 
                                                                 </div>
+                                                                <!-- <div class="col-md-2 my-lg-0 my-2">
+                                                                    <p class="card-text col-title">Precio</p>
+                                                                    <input type="number" class="form-control form-control-sm" value="0" placeholder="0" [(ngModel)]="detalle.precio" (change)="calcularSubtotal(i)" disabled [ngModelOptions]="{standalone: true}" />
+
+                                                                </div> -->
                                                                 <div class="col-md-2 my-lg-0 my-2">
                                                                     <p><b>Total</b></p>
-                                                                    <h5><b>${{detalle.total}}</b></h5>
+                                                                    <h5><b>${{detalle.precio}}</b></h5>
                                                                 </div>
                                                                 <div class="col-md-2">
-                                                                    <img src="app-assets/images/elements/apple-watch.png" width="60">
+                                                                    <img src="{{detalle.imagen}}" width="60">
                                                                 </div>
                                                             </div>
                                                             <div class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
@@ -262,12 +266,12 @@
                                                             <div class="row w-100 pr-lg-0 pr-1 py-2 ">
                                                                 <div class="col-md-5 mb-lg-0 mb-2 mt-lg-0 ">
                                                                     <p class="card-text col-title">Información Adicional</p>
-                                                                    <textarea class="form-control " rows="1 " formControlName="informacionAdicional" [(ngModel)]="detalle.informacionAdicional " placeholder="Información adicional "></textarea>
+                                                                    <textarea class="form-control " rows="1 " [(ngModel)]="detalle.informacionAdicional " placeholder="Información adicional " [ngModelOptions]="{standalone: true}"></textarea>
 
                                                                 </div>
                                                                 <div class="col-md-2 my-lg-0 my-2">
                                                                     <p class="card-text col-title">% descuento</p>
-                                                                    <input type="number" class="form-control form-control-sm" value="0" placeholder="0" formControlName="descuento" [(ngModel)]="detalle.descuento" (change)="calcularSubtotal()" />
+                                                                    <input type="number" class="form-control form-control-sm" value="0" placeholder="0" [(ngModel)]="detalle.descuento" (change)="calcularSubtotal()" [ngModelOptions]="{standalone: true}" />
 
                                                                 </div>
                                                             </div>

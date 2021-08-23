@@ -4,7 +4,7 @@ import { DatePipe } from '@angular/common';
 import { ParamService } from 'src/app/services/admin/param.service';
 import { ParamService as ParamServiceMDO } from 'src/app/services/mdo/param/param.service';
 import { ExportService } from '../../../../services/admin/export.service';
-import { GenerarService, Oferta } from '../../../../services/mdo/ofertas/generar/generar.service';
+import { GenerarService, Oferta, Detalles } from '../../../../services/mdo/ofertas/generar/generar.service';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { ClientesService } from '../../../../services/mdm/personas/clientes/clientes.service';
 import { NegociosService } from '../../../../services/mdm/personas/negocios/negocios.service';
@@ -46,11 +46,11 @@ export class GenerarComponent implements OnInit {
   habalitarBusqueda;
 
   detallesForm;
-  detalles: FormArray;
+  detalles: Detalles[] = [];
   detallesTransac;
   public isCollapsed = [];
   listaPrecios = [];
-  precios=[];
+  precios = [];
   tipoCanalOpciones;
 
   constructor(
@@ -74,22 +74,26 @@ export class GenerarComponent implements OnInit {
       modulo: "mdo",
       seccion: "genOferta"
     };
-    this.inicializarDetallesOferta();
     this.obtenerTipoIdentificacionOpciones();
   }
   inicializarDetallesOferta() {
-    this.detallesForm = this.formBuilder.group({
-      detalles: new FormArray([this.crearDetalle()])
-    });
-    this.detalles = this.detallesForm.get('detalles') as FormArray;
+    this.detalles = [];
+    this.detalles.push(this.generarService.inicializarDetalle());
+    console.log(this.detalles);
+    // this.detallesForm = this.formBuilder.group({
+    //   detalles: new FormArray([this.crearDetalle()])
+    // });
+    // this.detalles = this.detallesForm.get('detalles') as FormArray;
     this.listaPrecios.push(
       this.generarService.inicializarPrecios()
     );
-    this.precios.push(0);
+    // this.precios = [];
+    // this.precios.push(0);
   }
   async ngAfterViewInit() {
     this.iniciarPaginador();
     this.obtenerListaOfertas();
+
   }
   async iniciarPaginador() {
     this.paginator.pageChange.subscribe(() => {
@@ -129,45 +133,49 @@ export class GenerarComponent implements OnInit {
     return this.formBuilder.group(this.generarService.inicializarDetalle());
   }
   addItem(): void {
-    this.detalles = this.detallesForm.get('detalles') as FormArray;
-    this.detalles.push(this.crearDetalle());
-    this.isCollapsed.push(false);
+    // this.detalles = this.detallesForm.get('detalles') as FormArray;
+    // this.detalles.push(this.crearDetalle());
+    // this.isCollapsed.push(false);
+    this.detalles.push(this.generarService.inicializarDetalle());
     this.listaPrecios.push(
       this.generarService.inicializarPrecios()
     );
-    this.precios.push(0);
+    // this.precios.push(0);
+    // console.log(this.precios);
   }
   removeItem(i): void {
-    console.log(this.detalles)
-    this.isCollapsed.splice(i, 1);
-    this.detalles.removeAt(i);
+    // console.log(this.detalles)
+    // this.isCollapsed.splice(i, 1);
+
+    this.detalles.splice(i, 1);
     this.listaPrecios.splice(i, 1);
     this.precios.splice(i, 1);
+    this.calcularSubtotal()
   }
 
   calcularSubtotal() {
-    let detalles = this.detallesForm.value.detalles;
+    let detalles = this.detalles;
     let subtotal = 0;
     let descuento = 0;
     let cantidad = 0;
     if (detalles) {
       detalles.map((valor) => {
-        let valorUnitario = valor.valorUnitario ? valor.valorUnitario : 0;
+        let valorUnitario = Number(valor.valorUnitario) ? Number(valor.valorUnitario) : 0;
         let porcentDescuento = valor.descuento ? valor.descuento : 0;
         let cantidadProducto = valor.cantidad ? valor.cantidad : 0;
         let precio = cantidadProducto * valorUnitario;
-        valor.precio = precio;
-        
+
         valor.valorDescuento = precio * (porcentDescuento / 100);
         descuento += precio * (porcentDescuento / 100);
         subtotal += precio;
         cantidad += valor.cantidad ? valor.cantidad : 0;
+        valor.precio = precio - valor.valorDescuento
       });
     }
-    this.detallesTransac = detalles;
+    // this.detallesTransac = detalles;
     let iva = this.redondear(subtotal * this.iva);
     descuento = this.redondear(descuento);
-    this.oferta.total = this.redondear(subtotal + iva - descuento);
+    this.oferta.total = this.redondear(subtotal + 0 - descuento);
   }
   redondear(num, decimales = 2) {
     var signo = (num >= 0 ? 1 : -1);
@@ -224,23 +232,22 @@ export class GenerarComponent implements OnInit {
     this.oferta = this.generarService.inicializarOferta();
     this.oferta.created_at = this.transformarFecha(this.fechaActual);
     this.inicializarDetallesOferta();
-  }
-  asignarPrecio(i){
-    this.detallesForm.get('detalles')['controls'][i].precio = this.precios[i];
 
   }
+
   guardarOferta() {
     if (this.oferta.id == 0) {
 
     }
   }
   obtenerProducto(i) {
-    let detalles = this.detallesForm.get('detalles')['controls'];
+    // let detalles = this.detallesForm.get('detalles')['controls'];
     this.productosService.obtenerProductoPorCodigo({
-      codigoBarras: detalles[i].codigo
+      codigoBarras: this.detalles[i].codigo
     }).subscribe((info) => {
       if (info.codigoBarras) {
-        this.detallesForm.get('detalles')['controls'][i].articulo = info.nombre;
+        this.detalles[i].articulo = info.nombre;
+        this.detalles[i].imagen = this.obtenerURLImagen(info.imagen);
         this.listaPrecios[i].precioVentaA = info.precioVentaA;
         this.listaPrecios[i].precioVentaB = info.precioVentaB;
         this.listaPrecios[i].precioVentaC = info.precioVentaC;

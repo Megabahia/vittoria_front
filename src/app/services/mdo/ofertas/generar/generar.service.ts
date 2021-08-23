@@ -3,6 +3,18 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 const apiUrl: string = environment.apiUrl;
 
+export interface Detalles {
+  id;
+  codigo;
+  articulo;
+  valorUnitario;
+  cantidad;
+  precio;
+  informacionAdicional;
+  descuento;
+  valorDescuento;
+  imagen;
+}
 export interface Oferta {
   id;
   negocio;
@@ -29,7 +41,7 @@ export interface Oferta {
 export class GenerarService {
 
   constructor(private http: HttpClient) { }
-  inicializarPrecios(){
+  inicializarPrecios() {
     return {
       "precioVentaA": 0,
       "precioVentaB": 0,
@@ -40,20 +52,16 @@ export class GenerarService {
   }
   inicializarDetalle() {
     return {
+      id:0,
       codigo: "",
       articulo: "",
       valorUnitario: 0,
       cantidad: 0,
-      precios: {
-        "precioVentaA":0,
-        "precioVentaB":0,
-        "precioVentaC":0,
-      
-      }
-      ,
-      precio:0,
+      precio: 0,
       informacionAdicional: "",
-      descuento: 0
+      descuento: 0,
+      valorDescuento:0,
+      imagen:""
     }
   }
   inicializarOferta() {
@@ -81,7 +89,7 @@ export class GenerarService {
   obtenerListaOfertas(datos) {
     return this.http.post<any>(`${apiUrl}/mdo/generarOferta/list/`, datos);
   }
-  crearOferta(datos){
+  crearOferta(datos) {
     return this.http.post<any>(`${apiUrl}/mdo/generarOferta/create/`, datos);
   }
 }
