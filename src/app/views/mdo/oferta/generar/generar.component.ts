@@ -49,8 +49,10 @@ export class GenerarComponent implements OnInit {
   detalles: FormArray;
   detallesTransac;
   public isCollapsed = [];
-
+  listaPrecios = [];
+  precios=[];
   tipoCanalOpciones;
+
   constructor(
     private formBuilder: FormBuilder,
     private generarService: GenerarService,
@@ -59,8 +61,8 @@ export class GenerarComponent implements OnInit {
     private exportFile: ExportService,
     private clientesService: ClientesService,
     private negociosService: NegociosService,
-    private paramService:ParamServiceMDO,
-    private productosService:ProductosService
+    private paramService: ParamServiceMDO,
+    private productosService: ProductosService
   ) {
     this.oferta = this.generarService.inicializarOferta();
   }
@@ -72,13 +74,19 @@ export class GenerarComponent implements OnInit {
       modulo: "mdo",
       seccion: "genOferta"
     };
+    this.inicializarDetallesOferta();
+    this.obtenerTipoIdentificacionOpciones();
+  }
+  inicializarDetallesOferta() {
     this.detallesForm = this.formBuilder.group({
       detalles: new FormArray([this.crearDetalle()])
     });
     this.detalles = this.detallesForm.get('detalles') as FormArray;
-    this.obtenerTipoIdentificacionOpciones();
+    this.listaPrecios.push(
+      this.generarService.inicializarPrecios()
+    );
+    this.precios.push(0);
   }
-
   async ngAfterViewInit() {
     this.iniciarPaginador();
     this.obtenerListaOfertas();
@@ -124,11 +132,17 @@ export class GenerarComponent implements OnInit {
     this.detalles = this.detallesForm.get('detalles') as FormArray;
     this.detalles.push(this.crearDetalle());
     this.isCollapsed.push(false);
+    this.listaPrecios.push(
+      this.generarService.inicializarPrecios()
+    );
+    this.precios.push(0);
   }
   removeItem(i): void {
     console.log(this.detalles)
     this.isCollapsed.splice(i, 1);
     this.detalles.removeAt(i);
+    this.listaPrecios.splice(i, 1);
+    this.precios.splice(i, 1);
   }
 
   calcularSubtotal() {
@@ -143,13 +157,13 @@ export class GenerarComponent implements OnInit {
         let cantidadProducto = valor.cantidad ? valor.cantidad : 0;
         let precio = cantidadProducto * valorUnitario;
         valor.precio = precio;
+        
         valor.valorDescuento = precio * (porcentDescuento / 100);
         descuento += precio * (porcentDescuento / 100);
         subtotal += precio;
         cantidad += valor.cantidad ? valor.cantidad : 0;
       });
     }
-
     this.detallesTransac = detalles;
     let iva = this.redondear(subtotal * this.iva);
     descuento = this.redondear(descuento);
@@ -209,8 +223,12 @@ export class GenerarComponent implements OnInit {
   crearOferta() {
     this.oferta = this.generarService.inicializarOferta();
     this.oferta.created_at = this.transformarFecha(this.fechaActual);
+    this.inicializarDetallesOferta();
   }
+  asignarPrecio(i){
+    this.detallesForm.get('detalles')['controls'][i].precio = this.precios[i];
 
+  }
   guardarOferta() {
     if (this.oferta.id == 0) {
 
@@ -220,11 +238,16 @@ export class GenerarComponent implements OnInit {
     let detalles = this.detallesForm.get('detalles')['controls'];
     this.productosService.obtenerProductoPorCodigo({
       codigoBarras: detalles[i].codigo
-    }).subscribe((info)=>{
-      console.log(info);
+    }).subscribe((info) => {
+      if (info.codigoBarras) {
+        this.detallesForm.get('detalles')['controls'][i].articulo = info.nombre;
+        this.listaPrecios[i].precioVentaA = info.precioVentaA;
+        this.listaPrecios[i].precioVentaB = info.precioVentaB;
+        this.listaPrecios[i].precioVentaC = info.precioVentaC;
+        this.listaPrecios[i].precioVentaD = info.precioVentaD;
+        this.listaPrecios[i].precioVentaE = info.precioVentaE;
+      }
     });
-    console.log(detalles[i].codigo);
-    this.detallesForm.get('detalles')['controls'][i].articulo = "entregado"
   }
   async obtenerTipoIdentificacionOpciones() {
     await this.paramService.obtenerListaPadres("CANAL_VENTA").subscribe((info) => {

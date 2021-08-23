@@ -218,19 +218,30 @@
 
                                                                 <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                                                     <p class="card-text col-title">Precio</p>
-                                                                    <select class="form-control form-control-sm" formControlName="precio" [(ngModel)]="detalle.precio">
-                                                                        <option>- Seleccione -</option>
-                                                                        <option>Precio A: $300.00</option>
-                                                                        <option>Precio B: $300.00</option>
-                                                                        <option>Precio C: $300.00</option>
-                                                                        <option>Precio D: $300.00</option>
-                                                                        <option>Precio E: $300.00</option>
+                                                                    <select class="form-control form-control-sm" [(ngModel)]="precios[i]" (change)="asignarPrecio(i)">
+                                                                        <option value="0">- Seleccione -</option>
+                                                                        <option value="{{listaPrecios[i].precioVentaA}}" >
+                                                                            Precio de venta A: {{listaPrecios[i].precioVentaA}}
+                                                                          </option>
+                                                                        <option value="{{listaPrecios[i].precioVentaB}}" >
+                                                                            Precio de venta B: {{listaPrecios[i].precioVentaB}}
+                                                                          </option>
+                                                                        <option value="{{listaPrecios[i].precioVentaC}}" >
+                                                                            Precio de venta C: {{listaPrecios[i].precioVentaC}}
+                                                                          </option>
+                                                                        <option value="{{listaPrecios[i].precioVentaD}}" >
+                                                                            Precio de venta D: {{listaPrecios[i].precioVentaD}}
+                                                                          </option>
+                                                                        <option value="{{listaPrecios[i].precioVentaE}}" >
+                                                                            Precio de venta E: {{listaPrecios[i].precioVentaE}}
+                                                                          </option>
+                                                                        
                                                                     </select>
                                                                 </div>
 
                                                                 <div class="col-md-2 my-lg-0 my-2">
-                                                                    <p class="card-text col-title">% descuento</p>
-                                                                    <input type="number" class="form-control form-control-sm" value="0" placeholder="0" formControlName="descuento" [(ngModel)]="detalle.descuento" />
+                                                                    <p class="card-text col-title">Precio</p>
+                                                                    <input type="number" class="form-control form-control-sm" value="0" placeholder="0" formControlName="precio" [(ngModel)]="detalles.precio" (change)="calcularSubtotal()" disabled/>
 
                                                                 </div>
                                                                 <div class="col-md-2 my-lg-0 my-2">
@@ -250,7 +261,13 @@
                                                         <div class="col-12 d-flex product-details-border position-relative pr-0 ">
                                                             <div class="row w-100 pr-lg-0 pr-1 py-2 ">
                                                                 <div class="col-md-5 mb-lg-0 mb-2 mt-lg-0 ">
+                                                                    <p class="card-text col-title">Información Adicional</p>
                                                                     <textarea class="form-control " rows="1 " formControlName="informacionAdicional" [(ngModel)]="detalle.informacionAdicional " placeholder="Información adicional "></textarea>
+
+                                                                </div>
+                                                                <div class="col-md-2 my-lg-0 my-2">
+                                                                    <p class="card-text col-title">% descuento</p>
+                                                                    <input type="number" class="form-control form-control-sm" value="0" placeholder="0" formControlName="descuento" [(ngModel)]="detalle.descuento" (change)="calcularSubtotal()" />
 
                                                                 </div>
                                                             </div>

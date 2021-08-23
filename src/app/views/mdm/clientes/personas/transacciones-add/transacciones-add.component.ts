@@ -111,7 +111,9 @@ export class TransaccionesAddComponent implements OnInit {
     let valor = signo * (Number)(num[0] + 'e' + (num[1] ? (+num[1] - decimales) : -decimales));
     return valor;
   }
-
+  redondeoValor(valor){
+    return isNaN(valor) ? valor : parseFloat(valor).toFixed(2);
+  }
   async obtenerTipoIdentificacionOpciones() {
     await this.paramService.obtenerListaPadres("TIPO_IDENTIFICACION").subscribe((info) => {
       this.tipoIdentificacionOpciones = info;

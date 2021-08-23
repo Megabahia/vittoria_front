@@ -29,13 +29,29 @@ export interface Oferta {
 export class GenerarService {
 
   constructor(private http: HttpClient) { }
+  inicializarPrecios(){
+    return {
+      "precioVentaA": 0,
+      "precioVentaB": 0,
+      "precioVentaC": 0,
+      "precioVentaD": 0,
+      "precioVentaE": 0
+    };
+  }
   inicializarDetalle() {
     return {
       codigo: "",
       articulo: "",
       valorUnitario: 0,
       cantidad: 0,
-      precio: 0,
+      precios: {
+        "precioVentaA":0,
+        "precioVentaB":0,
+        "precioVentaC":0,
+      
+      }
+      ,
+      precio:0,
       informacionAdicional: "",
       descuento: 0
     }
