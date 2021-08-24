@@ -75,6 +75,7 @@ export class GenerarComponent implements OnInit {
       seccion: "genOferta"
     };
     this.obtenerTipoIdentificacionOpciones();
+    this.obtenerIVA(); 
   }
   inicializarDetallesOferta() {
     this.detalles = [];
@@ -165,16 +166,17 @@ export class GenerarComponent implements OnInit {
         let cantidadProducto = valor.cantidad ? valor.cantidad : 0;
         let precio = cantidadProducto * valorUnitario;
 
-        valor.valorDescuento = precio * (porcentDescuento / 100);
+        valor.valorDescuento = this.redondeoValor(precio * (porcentDescuento / 100));
         descuento += precio * (porcentDescuento / 100);
         subtotal += precio;
         cantidad += valor.cantidad ? valor.cantidad : 0;
-        valor.precio = precio - valor.valorDescuento
+        valor.precio = this.redondear(precio);
       });
     }
     // this.detallesTransac = detalles;
-    let iva = this.redondear(subtotal * this.iva);
-    descuento = this.redondear(descuento);
+    let iva = this.redondear(subtotal * this.iva.valor);
+    this.oferta.iva = iva;
+    this.oferta.descuento =  this.redondear(descuento);
     this.oferta.total = this.redondear(subtotal + 0 - descuento);
   }
   redondear(num, decimales = 2) {
@@ -189,6 +191,9 @@ export class GenerarComponent implements OnInit {
     num = num.toString().split('e');
     let valor = signo * (Number)(num[0] + 'e' + (num[1] ? (+num[1] - decimales) : -decimales));
     return valor;
+  }
+  redondeoValor(valor){
+    return isNaN(valor) ? valor : parseFloat(valor).toFixed(2);
   }
   verificarBusqueda() {
     if (!this.identificacionOfertaBusq && !this.telefonoOfertaBusq) {
@@ -234,7 +239,11 @@ export class GenerarComponent implements OnInit {
     this.inicializarDetallesOferta();
 
   }
-
+  async obtenerIVA() {
+    await this.paramService.obtenerParametroNombreTipo("ACTIVO", "TIPO_IVA").subscribe((info) => {
+      this.iva = info;
+    });
+  }
   guardarOferta() {
     if (this.oferta.id == 0) {
 

@@ -9,6 +9,10 @@
     height: auto !important;
 }
 
+.img-detalle {
+    width: 100%
+}
+
 .dropzone {
     min-height: 250px !important;
     border: 2px dashed #7367f0 !important;

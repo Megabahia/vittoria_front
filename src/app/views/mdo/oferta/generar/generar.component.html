@@ -1,6 +1,6 @@
 <app-toolbar [menu]="menu"></app-toolbar>
 <app-navbar></app-navbar>
-<div class="app-content content ">
+<div class="app-content content">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
     <div class="content-wrapper">
@@ -128,7 +128,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <ngb-pagination #paginator [collectionSize]="collectionSize " [(page)]="page " [(pageSize)]="pageSize " [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+                    <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [(pageSize)]="pageSize" [maxSize]="5" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
 
                     <!-- Modal to add new user starts-->
                     <div class="modal modal-slide-in new-user-modal fade" id="modals-slide-in">
@@ -253,7 +253,7 @@
                                                                     <h5><b>${{detalle.precio}}</b></h5>
                                                                 </div>
                                                                 <div class="col-md-2">
-                                                                    <img src="{{detalle.imagen}}" width="60">
+                                                                    <img class="img-detalle" src="{{detalle.imagen}}">
                                                                 </div>
                                                             </div>
                                                             <div class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
@@ -261,17 +261,24 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class=" row ">
-                                                        <div class="col-12 d-flex product-details-border position-relative pr-0 ">
-                                                            <div class="row w-100 pr-lg-0 pr-1 py-2 ">
-                                                                <div class="col-md-5 mb-lg-0 mb-2 mt-lg-0 ">
+                                                    <div class=" row">
+                                                        <div class="col-12 d-flex product-details-border position-relative pr-0">
+                                                            <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                                                <div class="col-md-4 mb-lg-0 mb-2 mt-lg-0">
                                                                     <p class="card-text col-title">Información Adicional</p>
-                                                                    <textarea class="form-control " rows="1 " [(ngModel)]="detalle.informacionAdicional " placeholder="Información adicional " [ngModelOptions]="{standalone: true}"></textarea>
+                                                                    <textarea class="form-control" rows="1" [(ngModel)]="detalle.informacionAdicional" placeholder="Información adicional" [ngModelOptions]="{standalone: true}"></textarea>
 
                                                                 </div>
                                                                 <div class="col-md-2 my-lg-0 my-2">
                                                                     <p class="card-text col-title">% descuento</p>
-                                                                    <input type="number" class="form-control form-control-sm" value="0" placeholder="0" [(ngModel)]="detalle.descuento" (change)="calcularSubtotal()" [ngModelOptions]="{standalone: true}" />
+                                                                    <input type="number" class="form-control form-control-sm" value="0" placeholder="0" [(ngModel)]="detalle.descuento" (change)="calcularSubtotal()" [ngModelOptions]="{standalone:
+                                                                        true}" />
+
+                                                                </div>
+                                                                <div class="col-md-2 my-lg-0 my-2">
+                                                                    <p class="card-text col-title">$ descuento:</p>
+                                                                    <input type="number" class="form-control form-control-sm" value="0" placeholder="0" [(ngModel)]="detalle.valorDescuento" disabled [ngModelOptions]="{standalone:
+                                                                        true}" />
 
                                                                 </div>
                                                             </div>
@@ -281,58 +288,87 @@
                                                 </div>
                                             </div>
                                             <hr />
-                                            <div class="row mt-1 ">
-                                                <div class="col-8 text-right ">
-                                                    <h4 class="text-primary ">Total</h4>
+
+                                            <div class="row">
+                                                <div class=" col-8 text-right">
+                                                    <p class="text-primary">Subtotal:</p>
                                                 </div>
-                                                <div class="col-2 ">
-                                                    <h4 class="text-primary "><b>${{oferta.total}}</b></h4>
+
+                                                <div class="col-2">
+                                                    <p class="text-primary"><b>${{oferta.subtotal}}</b></p>
                                                 </div>
-                                                <div class="col-12 ">
-                                                    <button type="button " (click)="addItem()" class="btn btn-info btn-sm btn-add-new " data-repeater-create>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class=" col-8 text-right">
+                                                    <p class="text-primary">{{iva ? iva.descripcion:"No existen registros de iva"}}:</p>
+                                                </div>
+
+                                                <div class="col-2">
+                                                    <p class="text-primary"><b>${{oferta.iva}}</b></p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class=" col-8 text-right">
+                                                    <p class="text-primary">Descuento:</p>
+                                                </div>
+
+                                                <div class="col-2">
+                                                    <p class="text-primary"><b>${{oferta.descuento}}</b></p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-8 text-right">
+                                                    <h4 class="text-primary">Total</h4>
+                                                </div>
+                                                <div class="col-2">
+                                                    <h4 class="text-primary"><b>${{oferta.total}}</b></h4>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="button" (click)="addItem()" class="btn btn-info btn-sm btn-add-new" data-repeater-create>
                             <i-feather name="plus"  class="mr-25 edit-user"></i-feather>
-                            <span class="align-middle ">Añadir producto</span>
+                            <span class="align-middle">Añadir producto</span>
                           </button>
                                                 </div>
                                             </div>
                                         </form>
                                     </div>
-                                    <div class="row ">
-                                        <div class="form-group col-md-4 ">
-                                            <label class="form-label " for="basic-icon-default-uname ">Vigencia de la oferta (días):</label>
-                                            <input type="text " class="form-control dt-uname" [(ngModel)]="oferta.vigenciaOferta" />
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label" for="basic-icon-default-uname">Vigencia de la oferta (días):</label>
+                                            <input type="text" class="form-control dt-uname" [(ngModel)]="oferta.vigenciaOferta" />
                                         </div>
-                                        <div class="form-group col-md-4 ">
-                                            <label class="form-label " for="basic-icon-default-fullname ">Canal de ventas:</label>
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label" for="basic-icon-default-fullname">Canal de ventas:</label>
 
-                                            <select class="form-control select2 " [(ngModel)]="oferta.canalVentas">
+                                            <select class="form-control select2" [(ngModel)]="oferta.canalVentas">
                         <option value="">- Seleccione -</option>
                         <option value="{{tipoCanalOp.valor}}" *ngFor="let tipoCanalOp of tipoCanalOpciones">
                             {{tipoCanalOp.nombre}}
                           </option>
                           </select>
                                         </div>
-                                        <div class="form-group col-md-4 ">
-                                            <label class="form-label " for="basic-icon-default-uname ">Calificación del cliente:</label>
-                                            <input type="text " class="form-control " [(ngModel)]="oferta.calificacionCliente" disabled />
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label" for="basic-icon-default-uname">Calificación del cliente:</label>
+                                            <input type="text" class="form-control" [(ngModel)]="oferta.calificacionCliente" disabled />
                                         </div>
-                                        <div class="form-group col-md-4 ">
-                                            <label class="form-label " for="basic-icon-default-uname ">Indicador de cliente:</label>
-                                            <input type="text " class="form-control " [(ngModel)]="oferta.indicadorCliente" value="valor " disabled />
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label" for="basic-icon-default-uname">Indicador de cliente:</label>
+                                            <input type="text" class="form-control" [(ngModel)]="oferta.indicadorCliente" value="valor" disabled />
                                         </div>
-                                        <div class="form-group col-md-4 ">
-                                            <label class="form-label " for="basic-icon-default-fullname ">Persona que genera la oferta:</label>
-                                            <input class="form-control " [(ngModel)]="oferta.personaGenera" disabled>
+                                        <div class="form-group col-md-4">
+                                            <label class="form-label" for="basic-icon-default-fullname">Persona que genera la oferta:</label>
+                                            <input class="form-control" [(ngModel)]="oferta.personaGenera" disabled>
                                         </div>
                                     </div>
 
 
-                                    <div class="form-group ">
-                                        <label class="form-label " for="basic-icon-default-uname ">Descripción de la oferta:</label>
-                                        <textarea class="form-control " rows="3 " placeholder="Escribir... " [(ngModel)]="oferta.descripcion"></textarea>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-uname">Descripción de la oferta:</label>
+                                        <textarea class="form-control" rows="3" placeholder="Escribir..." [(ngModel)]="oferta.descripcion"></textarea>
                                     </div>
-                                    <button class="btn btn-primary mr-1 " data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close">Guardar</button>
-                                    <button type="reset " class="btn btn-outline-secondary " data-dismiss="modal ">Cancelar</button>
+                                    <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close">Guardar</button>
+                                    <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                                 </div>
                             </div>
                         </div>
@@ -347,6 +383,6 @@
     </div>
 </div>
 <!-- END: Content-->
-<div class="sidenav-overlay "></div>
-<div class="drag-target "></div>
+<div class="sidenav-overlay"></div>
+<div class="drag-target"></div>
 <app-footer></app-footer>

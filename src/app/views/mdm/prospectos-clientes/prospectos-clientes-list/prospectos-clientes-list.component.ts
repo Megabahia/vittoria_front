@@ -2,10 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProspectosService } from '../../../../services/mdm/prospectosCli/prospectos.service';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-prospectos-clientes-list',
-  templateUrl: './prospectos-clientes-list.component.html'
+  templateUrl: './prospectos-clientes-list.component.html',
+  providers: [DatePipe]
 })
 export class ProspectosClientesListComponent implements OnInit {
   @ViewChild(NgbPagination)paginator:NgbPagination;
@@ -47,7 +49,8 @@ export class ProspectosClientesListComponent implements OnInit {
   imagen;
   vista;
   constructor(
-    private prospectosService:ProspectosService
+    private prospectosService:ProspectosService,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit(): void {
@@ -70,6 +73,10 @@ export class ProspectosClientesListComponent implements OnInit {
     this.paginator.pageChange.subscribe(()=>{
     this.obtenerListaProspectos();
     });
+  }
+  transformarFecha(fecha) {
+    let nuevaFecha = this.datePipe.transform(fecha, 'yyyy-MM-dd');
+    return nuevaFecha;
   }
   async obtenerListaProspectos(){
      await this.prospectosService.obtenerLista(

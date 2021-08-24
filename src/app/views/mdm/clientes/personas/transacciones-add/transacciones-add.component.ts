@@ -122,6 +122,9 @@ export class TransaccionesAddComponent implements OnInit {
   async obtenerIVA() {
     await this.paramService.obtenerParametroNombreTipo("ACTIVO", "TIPO_IVA").subscribe((info) => {
       this.iva = info;
+    },
+    (error)=>{
+      
     });
   }
   async guardarTransaccion() {
