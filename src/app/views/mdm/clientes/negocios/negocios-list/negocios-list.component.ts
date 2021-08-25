@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NegociosService } from '../../../../../services/mdm/personas/negocios/negocios.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-negocios-list',
   templateUrl: './negocios-list.component.html',
 })
 export class NegociosListComponent implements OnInit {
+  @ViewChild(NgbPagination)paginator:NgbPagination;
   menu;
   vista="lista";
   idNegocio;

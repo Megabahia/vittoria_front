@@ -21,7 +21,7 @@
                             <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
                                 <!-- users edit media object start -->
                                 <div class="media mb-2">
-                                    <img src="assets/images/avatars/7.png" alt="users avatar" class="user-avatar users-avatar-shadow rounded mr-2 my-25 cursor-pointer" height="90" width="90" />
+                                    <img src="{{urlImagen}}" alt="users avatar" class="user-avatar users-avatar-shadow rounded mr-2 my-25 cursor-pointer" height="90" width="90" />
                                     <div class="media-body mt-50">
                                         <h4>Eleanor Aguilar</h4>
                                         <div class="col-12 d-flex mt-1 px-0">
@@ -32,10 +32,7 @@
                                                     <i-feather class="mr-0 edit-user" name="edit"></i-feather>
                                                 </span>
                                             </label>
-                                            <button class="btn btn-outline-secondary d-none d-sm-block">Remover</button>
-                                            <button class="btn btn-outline-secondary d-block d-sm-none">
-                                                <i-feather class="mr-0 edit-user" name="trash-2"></i-feather>
-                                            </button>
+                                            <button class="btn btn-outline-secondary d-none d-sm-block" (click)="eliminarImagen()">Remover</button>
                                         </div>
                                     </div>
                                 </div>
@@ -150,7 +147,7 @@
 
                                         <div class="col-12 d-flex flex-sm-row flex-column mt-2">
                                             <a (click)="actualizarProspecto()" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1">Guardar cambios</a>
-                                            <button type="reset" class="btn btn-outline-secondary">Resetear</button>
+                                            <button (click)="eliminarProspecto()" class="btn btn-outline-secondary">Eliminar</button>
                                         </div>
                                     </div>
                                 </form>

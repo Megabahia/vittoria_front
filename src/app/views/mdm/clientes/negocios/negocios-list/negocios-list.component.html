@@ -1,6 +1,6 @@
 <app-toolbar [menu]="menu"></app-toolbar>
 <app-navbar></app-navbar>
-<div class="app-content content " *ngIf="vista=='lista'">
+<div class="app-content content" *ngIf="vista=='lista'">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
     <div class="content-wrapper">
@@ -104,6 +104,8 @@
                             </tbody>
                         </table>
                     </div>
+                    <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [(pageSize)]="pageSize" [maxSize]="5" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+
                     <!-- Modal to add new user starts-->
                     <div class="modal modal-slide-in new-user-modal fade" id="modals-slide-in">
                         <div class="modal-dialog">
@@ -169,17 +171,17 @@
     </div>
 </div>
 <ng-template #contenido let-modal>
-    <div class="modal-header ">
-        <h4 class="modal-title ">Mensaje</h4>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-        <span aria-hidden="true ">&times;</span>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <div class="modal-body ">
+    <div class="modal-body">
         <p>Confirma eliminar</p>
     </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-light " (click)="cerrarModal()">SI</button>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="cerrarModal()">SI</button>
     </div>
 </ng-template>
 <app-negocios-edit *ngIf="vista=='editar'" [idNegocio]="idNegocio"></app-negocios-edit>

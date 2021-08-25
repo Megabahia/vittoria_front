@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ClientesService, DatosBasicos, DatosFisicos, DatosVirtuales, Transaccion, Pariente } from '../../../../../services/mdm/personas/clientes/clientes.service';
 import { ParamService } from '../../../../../services/mdm/param/param.service';
+import { ParamService as ParamServiceADM } from '../../../../../services/admin/param.service';
 import * as moment from 'moment';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
@@ -141,10 +142,12 @@ export class PersonasEditComponent implements OnInit {
   parientesForm;
   parientesVista='lista';
   idPariente=0;
+  urlImagen;
   constructor(
     private datePipe: DatePipe,
     private clientesService:ClientesService,
     private paramService:ParamService,
+    private globalParam:ParamServiceADM
     ) {
       this.datosFisicos.cliente= this.idCliente;
       this.datosVirtuales.cliente= this.idCliente;
@@ -179,10 +182,14 @@ export class PersonasEditComponent implements OnInit {
       // this.obtenerGraficaTransacciones();
     }
   }
+  obtenerURLImagen(url) {
+    return this.globalParam.obtenerURL(url);
+  }
   async obtenerDatosBasicos(){
     this.clientesService.obtenerCliente(this.idCliente).subscribe((info)=>{
       this.datosBasicos = info;
       this.estadoOpcion = info.estado=='Activo' ? 1:0;
+      this.urlImagen = this.obtenerURLImagen(info.imagen);
       this.datosBasicos.estado = info.estado;
       this.datosBasicos.created_at = this.transformarFecha(info.created_at);
       this.datosBasicos.fechaNacimiento = this.transformarFecha(info.fechaNacimiento);
@@ -317,7 +324,7 @@ export class PersonasEditComponent implements OnInit {
     imagen.append('imagen',nuevaImagen,nuevaImagen.name);
     if(this.idCliente!=0){
       this.clientesService.editarImagen(this.idCliente,imagen).subscribe((info)=>{
-       
+        this.urlImagen = this.obtenerURLImagen(info.imagen);
       });
     }
   }

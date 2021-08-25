@@ -56,6 +56,10 @@ export class PersonasListComponent implements OnInit {
     this.vista= 'editar';
     this.idCliente= id;
   }
+  primeraLetra(nombre,apellido){
+    let iniciales = nombre.charAt(0) + apellido.charAt(0);
+    return iniciales;
+  }
   // eliminarCliente(id){
   //   this.clientesService.eliminarCliente(id).subscribe(()=>{
   //     this.obtenerListaClientes();

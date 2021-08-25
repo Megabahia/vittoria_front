@@ -15,18 +15,23 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3">
-                                <input type="text" class="form-control form-control-sm" placeholder="Cliente" [(ngModel)]="cliente" (change)="obtenerListaClientes()">
+                                <input type="text" class="form-control form-control-sm" placeholder="Cliente" [(ngModel)]="cliente">
 
                             </div>
                             <div class="col-md-3">
-                                <input type="text" class="form-control form-control-sm" placeholder="Cédula" [(ngModel)]="cedula" (change)="obtenerListaClientes()">
+                                <input type="text" class="form-control form-control-sm" placeholder="Cédula" [(ngModel)]="cedula">
                             </div>
-                            <div class="col-md-3">
-                                <input type="text" mwlFlatpickr [(ngModel)]="inicio" (input)="obtenerListaClientes()" [altInput]="true" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
+                            <div class="col-md-2">
+                                <input type="text" mwlFlatpickr [(ngModel)]="inicio" [altInput]="true" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
                             </div>
-                            <div class="col-md-3">
-                                <input type="text" mwlFlatpickr [(ngModel)]="fin" (input)="obtenerListaClientes()" [altInput]="true" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
+                            <div class="col-md-2">
+                                <input type="text" mwlFlatpickr [(ngModel)]="fin" [altInput]="true" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
 
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary" (click)="obtenerListaClientes()">
+                  <i-feather name='search' class="edit-user"></i-feather>
+                </button>
                             </div>
                         </div>
                     </div>
@@ -80,12 +85,12 @@
                                     <td>
                                         <div class="d-flex justify-content-left align-items-center">
                                             <div class="avatar mr-1 bg-light-danger">
-                                                <span class="avatar-content">AM</span>
+                                                <span class="avatar-content">{{primeraLetra(cliente.nombres,cliente.apellidos)}}</span>
                                             </div>
                                             <div class="d-flex flex-column">
-                                                <a class="user-name text-truncate mb-0" href="cliente-perfil.html">
+                                                <a class="user-name text-truncate mb-0">
                                                     <span class="font-weight-bold">{{cliente.nombres}} {{ cliente.apellidos}}</span></a>
-                                                <small class="text-truncate text-muted mb-0">@adriana</small>
+
                                             </div>
                                         </div>
                                     </td>
