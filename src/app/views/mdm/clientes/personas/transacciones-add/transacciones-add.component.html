@@ -1,6 +1,6 @@
 <app-toolbar [menu]="menu"></app-toolbar>
 <app-navbar></app-navbar>
-<div class="app-content content ">
+<div class="app-content content">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
     <div class="content-wrapper">
@@ -93,9 +93,79 @@
                             </div>
                             <!-- Address and Contact ends -->
                             <hr class="invoice-spacing" />
+                            <form>
+                                <div *ngFor="let detalle of detalles; let i = index;">
+                                    <div class="card-body invoice-padding">
+                                        <div class="row">
+                                            <div class="col-12 pt-2 d-flex product-details-border position-relative pr-0">
+                                                <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                                    <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                        <p class="card-text col-title">Código</p>
+                                                        <input class="form-control" type="text" [(ngModel)]="detalle.codigo" (change)="obtenerProducto(i)" [ngModelOptions]="{standalone: true}">
+
+                                                    </div>
+
+                                                    <div class="col-md-3 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                        <p class="card-text col-title">Producto</p>
+                                                        <input class="form-control" type="text" [(ngModel)]="detalle.articulo" [ngModelOptions]="{standalone: true}">
+
+                                                    </div>
+
+                                                    <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                        <p class="card-text col-title">Precio</p>
+                                                        <input class="form-control" type="text" [(ngModel)]="detalle.valorUnitario" [ngModelOptions]=" {standalone: true}" disabled>
+                                                    </div>
+                                                    <div class="col-md-1 my-lg-0 my-2">
+                                                        <p class="card-text col-title">Cantidad</p>
+                                                        <input type="number" class="form-control" value="0" placeholder="0" [(ngModel)]="detalle.cantidad" (change)="calcularSubtotal()" [ngModelOptions]="{standalone: true}" />
+
+                                                    </div>
+
+                                                    <div class="col-md-2 my-lg-0 my-2">
+                                                        <p class="card-text col-title"><b>Total:</b></p>
+                                                        <h5><b>${{detalle.precio}}</b></h5>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <img class="img-detalle" src="{{detalle.imagen}}">
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
+                                                    <i-feather name="x" class="cursor-pointer font-medium-3" data-repeater-delete (click)="removerItem(i)"></i-feather>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class=" row">
+                                            <div class="col-12 pt-2">
+                                                <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                                    <div class="col-md-4 mb-lg-0 mb-2 mt-lg-0">
+                                                        <p class="card-text col-title">Información Adicional</p>
+                                                        <textarea class="form-control" rows="1" [(ngModel)]="detalle.informacionAdicional" placeholder="Información adicional" [ngModelOptions]="{standalone: true}"></textarea>
+
+                                                    </div>
+                                                    <div class="col-md-2 my-lg-0 my-2">
+                                                        <p class="card-text col-title">% descuento</p>
+                                                        <input type="number" class="form-control" value="0" placeholder="0" [(ngModel)]="detalle.descuento" (change)="calcularSubtotal()" [ngModelOptions]="{standalone: true}" />
+
+                                                    </div>
+                                                    <div class="col-md-2 my-lg-0 my-2">
+                                                        <p class="card-text col-title">$ descuento:</p>
+                                                        <input type="number" class="form-control" value="0" placeholder="0" [(ngModel)]="detalle.valorDescuento" disabled [ngModelOptions]="{standalone: true}" />
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+
+                            </form>
                             <!-- Product Details starts -->
-                            <form [formGroup]="detallesForm">
-                                <div formArrayName="detalles" *ngFor="let detalle of detallesForm.get('detalles')['controls']; let i = index;">
+                            <!-- <form [formGroup]="detallesForm">
+                                <div formArrayName="detalles" *ngFor="let detalle of detallesForm.get( 'detalles')[ 'controls']; let i=i ndex;">
                                     <div class="card-body invoice-padding">
 
                                         <div [formGroupName]="i">
@@ -129,7 +199,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
-                                                        <i-feather name="x" class="cursor-pointer font-medium-3" data-repeater-delete (click)="removeItem(i)"></i-feather>
+                                                        <i-feather name="x" class="cursor-pointer font-medium-3" data-repeater-delete (click)="removerItem(i)"></i-feather>
                                                         <div class="dropdown edit-user">
                                                             <i-feather class="cursor-pointer more-options-dropdown mr-0 edit-user" name="settings" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed[i]" aria-controls="collapseExample">
                                                             </i-feather>
@@ -143,13 +213,13 @@
 
                                 </div>
 
-                            </form>
+                            </form> -->
                             <div class="card-body invoice-padding">
                                 <div class="row mt-1">
                                     <div class="col-12 px-0">
                                         <button type="button" class="btn btn-primary btn-sm btn-add-new" data-repeater-create>
                                          <i-feather name="plus" class="mr-25 edit-user"></i-feather>
-                                         <span class="align-middle" (click)="addItem()">Añadir producto</span>
+                                         <span class="align-middle" (click)="agregarItem()">Añadir producto</span>
                                      </button>
                                     </div>
                                 </div>
@@ -198,7 +268,7 @@
                             <div class="row p-2">
                                 <div class="col-12">
                                     <button class="btn btn-primary mr-1 waves-effect waves-float waves-light" type="button" data-toggle="modal" data-target="#confirmar" (click)="guardarTransaccion()">Guardar factura</button>
-                                    <button type=" reset " class="btn btn-outline-secondary waves-effect ">Cancelar</button>
+                                    <button type=" reset" class="btn btn-outline-secondary waves-effect">Cancelar</button>
                                 </div>
                             </div>
 
@@ -216,6 +286,6 @@
     </div>
 </div>
 <!-- END: Content-->
-<div class="sidenav-overlay "></div>
-<div class="drag-target "></div>
+<div class="sidenav-overlay"></div>
+<div class="drag-target"></div>
 <app-footer></app-footer>

@@ -131,12 +131,16 @@ export interface Pariente {
   estado;
 }
 export interface Detalle {
+  id;
+  codigo;
   articulo;
   valorUnitario;
   cantidad;
   precio;
   informacionAdicional;
   descuento;
+  valorDescuento;
+  imagen;
 }
 @Injectable({
   providedIn: 'root'
@@ -219,14 +223,18 @@ export class ClientesService {
       total: 0
     };
   }
-  inicializarDetalle(){
+  inicializarDetalle() {
     return {
-      articulo:"",
-      valorUnitario:0,
-      cantidad:0,
-      precio:0,
-      informacionAdicional:"",
-      descuento:0
+      id: 0,
+      codigo: "",
+      articulo: "",
+      valorUnitario: 0,
+      cantidad: 0,
+      precio: 0,
+      informacionAdicional: "",
+      descuento: 0,
+      valorDescuento: 0,
+      imagen: ""
     }
   }
   obtenerListaClientes(datos) {
@@ -238,7 +246,7 @@ export class ClientesService {
   obtenerCliente(id) {
     return this.http.get<any>(`${apiUrl}/mdm/clientes/listOne/${id}`);
   }
-  eliminarCliente(id){
+  eliminarCliente(id) {
     return this.http.delete<any>(`${apiUrl}/mdm/clientes/delete/${id}`);
   }
   crearDatosBasicos(datos) {
@@ -286,38 +294,38 @@ export class ClientesService {
   obtenerTodasTrasacciones(datos) {
     return this.http.post<any>(`${apiUrl}/mdm/facturas/list/cliente/`, datos);
   }
-  crearTransaccion(datos){
+  crearTransaccion(datos) {
     return this.http.post<any>(`${apiUrl}/mdm/facturas/create/`, datos);
   }
-  obtenerUltimaTransaccion(){
+  obtenerUltimaTransaccion() {
     return this.http.get<any>(`${apiUrl}/mdm/facturas/listLatest/`);
   }
-  obtenerTransaccionesCliente(id,datos){
-    return this.http.post<any>(`${apiUrl}/mdm/facturas/list/cliente/fecha/${id}`,datos);
+  obtenerTransaccionesCliente(id, datos) {
+    return this.http.post<any>(`${apiUrl}/mdm/facturas/list/cliente/fecha/${id}`, datos);
   }
-  obtenerGraficaTransaccionesCliente(id,datos){
-    return this.http.post<any>(`${apiUrl}/mdm/facturas/list/cliente/fecha/grafica/${id}`,datos);
+  obtenerGraficaTransaccionesCliente(id, datos) {
+    return this.http.post<any>(`${apiUrl}/mdm/facturas/list/cliente/fecha/grafica/${id}`, datos);
   }
-  obtenerGraficaTransaccionesGeneral(datos){
-    return this.http.post<any>(`${apiUrl}/mdm/facturas/list/cliente/grafica/`,datos);
+  obtenerGraficaTransaccionesGeneral(datos) {
+    return this.http.post<any>(`${apiUrl}/mdm/facturas/list/cliente/grafica/`, datos);
   }
-  obtenerParientes(id,datos){
-    return this.http.post<any>(`${apiUrl}/mdm/clientes/parientes-cliente/list/${id}`,datos);
+  obtenerParientes(id, datos) {
+    return this.http.post<any>(`${apiUrl}/mdm/clientes/parientes-cliente/list/${id}`, datos);
   }
-  obtenerPariente(id){
+  obtenerPariente(id) {
     return this.http.get<any>(`${apiUrl}/mdm/clientes/parientes-cliente/findOne/${id}`);
   }
-  crearPariente(datos){
-    return this.http.post<any>(`${apiUrl}/mdm/clientes/parientes-cliente/create/`,datos);
+  crearPariente(datos) {
+    return this.http.post<any>(`${apiUrl}/mdm/clientes/parientes-cliente/create/`, datos);
 
   }
-  actualizarPariente(id,datos){
-    return this.http.post<any>(`${apiUrl}/mdm/clientes/parientes-cliente/update/${id}`,datos);
+  actualizarPariente(id, datos) {
+    return this.http.post<any>(`${apiUrl}/mdm/clientes/parientes-cliente/update/${id}`, datos);
   }
-  eliminarPariente(id){
+  eliminarPariente(id) {
     return this.http.delete<any>(`${apiUrl}/mdm/clientes/parientes-cliente/delete/${id}`);
   }
-  obtenerClientePorCedula(cedula){
-    return this.http.post<any>(`${apiUrl}/mdm/clientes/listOne/cedula/`,cedula);
+  obtenerClientePorCedula(cedula) {
+    return this.http.post<any>(`${apiUrl}/mdm/clientes/listOne/cedula/`, cedula);
   }
 }

@@ -80,7 +80,6 @@ export class GenerarComponent implements OnInit {
   inicializarDetallesOferta() {
     this.detalles = [];
     this.detalles.push(this.generarService.inicializarDetalle());
-    console.log(this.detalles);
     // this.detallesForm = this.formBuilder.group({
     //   detalles: new FormArray([this.crearDetalle()])
     // });
@@ -133,7 +132,7 @@ export class GenerarComponent implements OnInit {
   crearDetalle() {
     return this.formBuilder.group(this.generarService.inicializarDetalle());
   }
-  addItem(): void {
+  agregarItem(): void {
     // this.detalles = this.detallesForm.get('detalles') as FormArray;
     // this.detalles.push(this.crearDetalle());
     // this.isCollapsed.push(false);
@@ -144,7 +143,7 @@ export class GenerarComponent implements OnInit {
     // this.precios.push(0);
     // console.log(this.precios);
   }
-  removeItem(i): void {
+  removerItem(i): void {
     // console.log(this.detalles)
     // this.isCollapsed.splice(i, 1);
 

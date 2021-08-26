@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Transaccion, ClientesService } from '../../../../../services/mdm/personas/clientes/clientes.service';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { ParamService } from '../../../../../services/mdm/param/param.service';
+import { ParamService as ParamServiceADM } from '../../../../../services/admin/param.service';
 import { DatePipe } from '@angular/common';
+import { ProductosService } from '../../../../../services/mdp/productos/productos.service';
 
 @Component({
   selector: 'app-transacciones-add',
@@ -13,7 +15,8 @@ export class TransaccionesAddComponent implements OnInit {
   menu;
   transaccion: Transaccion;
   detallesForm;
-  detalles: FormArray;
+  // detalles: FormArray;
+  detalles = [];
   detallesTransac;
   public isCollapsed = [];
   tipoIdentificacionOpciones;
@@ -25,7 +28,10 @@ export class TransaccionesAddComponent implements OnInit {
     private formBuilder: FormBuilder,
     private clientesService: ClientesService,
     private paramService: ParamService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private productosService:ProductosService,
+    private globalParam:ParamServiceADM
+
   ) {
     this.transaccion = clientesService.inicializarTransaccion();
     this.iva = {
@@ -41,6 +47,7 @@ export class TransaccionesAddComponent implements OnInit {
       valor: ""
     };
     this.transaccion.fecha = this.transformarFecha(this.fechaActual);
+    
   }
 
   ngOnInit(): void {
@@ -55,6 +62,11 @@ export class TransaccionesAddComponent implements OnInit {
     this.obtenerIVA();
     this.obternerUltimaTransaccion();
     this.obtenerCanales();
+    this.inicializarDetallesOferta();
+  }
+  inicializarDetallesOferta() {
+    this.detalles = [];
+    this.detalles.push(this.clientesService.inicializarDetalle());
   }
   transformarFecha(fecha) {
     let nuevaFecha = this.datePipe.transform(fecha, 'yyyy-MM-dd');
@@ -63,31 +75,46 @@ export class TransaccionesAddComponent implements OnInit {
   crearDetalle() {
     return this.formBuilder.group(this.clientesService.inicializarDetalle());
   }
-  addItem(): void {
-    this.detalles = this.detallesForm.get('detalles') as FormArray;
-    this.detalles.push(this.crearDetalle());
-    this.isCollapsed.push(false);
+  agregarItem(): void {
+    this.detalles.push(this.clientesService.inicializarDetalle());
   }
-  removeItem(i): void {
-    this.isCollapsed.splice(i, 1);
-    this.detalles.removeAt(i);
+  removerItem(i): void {
+    this.detalles.splice(i, 1);
+    this.calcularSubtotal();
+    // this.isCollapsed.splice(i, 1);
+    // this.detalles.removeAt(i);
+  }
+  obtenerProducto(i){
+    this.productosService.obtenerProductoPorCodigo({
+      codigoBarras: this.detalles[i].codigo
+    }).subscribe((info) => {
+      if (info.codigoBarras) {
+        this.detalles[i].articulo = info.nombre;
+        this.detalles[i].imagen = this.obtenerURLImagen(info.imagen);
+        this.detalles[i].valorUnitario = info.precioVentaA;
+      }
+    });
+  }
+  obtenerURLImagen(url) {
+    return this.globalParam.obtenerURL(url);
   }
   calcularSubtotal() {
-    let detalles = this.detallesForm.value.detalles;
+    let detalles = this.detalles;
     let subtotal = 0;
     let descuento = 0;
     let cantidad = 0;
     if (detalles) {
       detalles.map((valor) => {
-        let valorUnitario = valor.valorUnitario ? valor.valorUnitario : 0;
+        let valorUnitario = Number(valor.valorUnitario) ? Number(valor.valorUnitario) : 0;
         let porcentDescuento = valor.descuento ? valor.descuento : 0;
         let cantidadProducto = valor.cantidad ? valor.cantidad : 0;
         let precio = cantidadProducto * valorUnitario;
-        valor.precio = precio;
-        valor.valorDescuento = precio * (porcentDescuento / 100);
+
+        valor.valorDescuento = this.redondeoValor(precio * (porcentDescuento / 100));
         descuento += precio * (porcentDescuento / 100);
         subtotal += precio;
         cantidad += valor.cantidad ? valor.cantidad : 0;
+        valor.precio = this.redondear(precio);
       });
     }
 
