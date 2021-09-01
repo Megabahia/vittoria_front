@@ -75,7 +75,7 @@ export class GenerarComponent implements OnInit {
       seccion: "genOferta"
     };
     this.obtenerTipoIdentificacionOpciones();
-    this.obtenerIVA(); 
+    this.obtenerIVA();
   }
   inicializarDetallesOferta() {
     this.detalles = [];
@@ -172,11 +172,13 @@ export class GenerarComponent implements OnInit {
         valor.precio = this.redondear(precio);
       });
     }
-    // this.detallesTransac = detalles;
-    let iva = this.redondear(subtotal * this.iva.valor);
-    this.oferta.iva = iva;
-    this.oferta.descuento =  this.redondear(descuento);
-    this.oferta.total = this.redondear(subtotal + 0 - descuento);
+
+    this.oferta.numeroProductosComprados = cantidad;
+    this.detallesTransac = detalles;
+    this.oferta.subTotal = this.redondear(subtotal);
+    this.oferta.iva = this.redondear((subtotal-descuento) * this.iva.valor);
+    this.oferta.descuento = this.redondear(descuento);
+    this.oferta.total = this.redondear((subtotal-descuento) + this.oferta.iva );
   }
   redondear(num, decimales = 2) {
     var signo = (num >= 0 ? 1 : -1);
@@ -191,7 +193,7 @@ export class GenerarComponent implements OnInit {
     let valor = signo * (Number)(num[0] + 'e' + (num[1] ? (+num[1] - decimales) : -decimales));
     return valor;
   }
-  redondeoValor(valor){
+  redondeoValor(valor) {
     return isNaN(valor) ? valor : parseFloat(valor).toFixed(2);
   }
   verificarBusqueda() {
@@ -207,30 +209,58 @@ export class GenerarComponent implements OnInit {
     }
   }
   obtenerCliente() {
-    if (this.tipoClienteOferta == "cliente") {
-      this.clientesService.obtenerClientePorCedula({ cedula: this.identificacionOfertaBusq }).subscribe((info) => {
-        if (info) {
-          this.oferta.nombres = info.nombres;
-          this.oferta.apellidos = info.apellidos;
-          this.oferta.identificacion = info.cedula;
-          this.oferta.telefono = info.telefono;
-          this.oferta.correo = info.correo;
-        }
-      },
-        (error) => {
+    if (this.identificacionOfertaBusq) {
+      if (this.tipoClienteOferta == "cliente") {
+        this.clientesService.obtenerClientePorCedula({ cedula: this.identificacionOfertaBusq }).subscribe((info) => {
+          if (info) {
+            this.oferta.nombres = info.nombres;
+            this.oferta.apellidos = info.apellidos;
+            this.oferta.identificacion = info.cedula;
+            this.oferta.telefono = info.telefono;
+            this.oferta.correo = info.correo;
+          }
+        },
+          (error) => {
 
-        });
-    } else if (this.tipoClienteOferta == "negocio") {
-      this.negociosService.obtenerNegocioPorRuc({ ruc: this.identificacionOfertaBusq }).subscribe((info) => {
-        if (info) {
-          this.oferta.nombres = info.razonSocial;
-          this.oferta.apellidos = info.nombreComercial;
-          this.oferta.identificacion = info.ruc;
-          this.oferta.telefono = info.telefonoOficina;
-          this.oferta.correo = info.correoOficina;
-        }
-      })
+          });
+      } else if (this.tipoClienteOferta == "negocio") {
+        this.negociosService.obtenerNegocioPorRuc({ ruc: this.identificacionOfertaBusq }).subscribe((info) => {
+          if (info) {
+            this.oferta.nombres = info.razonSocial;
+            this.oferta.apellidos = info.nombreComercial;
+            this.oferta.identificacion = info.ruc;
+            this.oferta.telefono = info.telefonoOficina;
+            this.oferta.correo = info.correoOficina;
+          }
+        })
+      }
+    } else if (this.telefonoOfertaBusq) {
+      if (this.tipoClienteOferta == "cliente") {
+        this.clientesService.obtenerClientePorTelefono({ telefono: this.telefonoOfertaBusq }).subscribe((info) => {
+          if (info) {
+            this.oferta.nombres = info.nombres;
+            this.oferta.apellidos = info.apellidos;
+            this.oferta.identificacion = info.cedula;
+            this.oferta.telefono = info.telefono;
+            this.oferta.correo = info.correo;
+          }
+        },
+          (error) => {
+
+          });
+      } else if (this.tipoClienteOferta == "negocio") {
+        this.negociosService.obtenerNegocioPorTelefono({ telefonoOficina: this.telefonoOfertaBusq }).subscribe((info) => {
+          if (info) {
+            this.oferta.nombres = info.razonSocial;
+            this.oferta.apellidos = info.nombreComercial;
+            this.oferta.identificacion = info.ruc;
+            this.oferta.telefono = info.telefonoOficina;
+            this.oferta.correo = info.correoOficina;
+          }
+        })
+      }
     }
+
   }
   crearOferta() {
     this.oferta = this.generarService.inicializarOferta();
@@ -243,9 +273,13 @@ export class GenerarComponent implements OnInit {
       this.iva = info;
     });
   }
-  guardarOferta() {
+  async guardarOferta() {
     if (this.oferta.id == 0) {
-
+      this.calcularSubtotal();
+      this.oferta.detalles = this.detallesTransac;
+      await this.generarService.crearOferta(this.oferta).subscribe((info) => {
+        console.log(info);
+      });
     }
   }
   obtenerProducto(i) {

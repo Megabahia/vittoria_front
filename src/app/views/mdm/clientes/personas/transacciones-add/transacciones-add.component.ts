@@ -55,16 +55,14 @@ export class TransaccionesAddComponent implements OnInit {
       modulo: "mdm",
       seccion: "clientesTransacAdd"
     };
-    this.detallesForm = this.formBuilder.group({
-      detalles: new FormArray([this.crearDetalle()])
-    });
+
     this.obtenerTipoIdentificacionOpciones();
     this.obtenerIVA();
     this.obternerUltimaTransaccion();
     this.obtenerCanales();
-    this.inicializarDetallesOferta();
+    this.inicializarDetalles();
   }
-  inicializarDetallesOferta() {
+  inicializarDetalles() {
     this.detalles = [];
     this.detalles.push(this.clientesService.inicializarDetalle());
   }
@@ -72,9 +70,7 @@ export class TransaccionesAddComponent implements OnInit {
     let nuevaFecha = this.datePipe.transform(fecha, 'yyyy-MM-dd');
     return nuevaFecha;
   }
-  crearDetalle() {
-    return this.formBuilder.group(this.clientesService.inicializarDetalle());
-  }
+
   agregarItem(): void {
     this.detalles.push(this.clientesService.inicializarDetalle());
   }
@@ -121,9 +117,9 @@ export class TransaccionesAddComponent implements OnInit {
     this.transaccion.numeroProductosComprados = cantidad;
     this.detallesTransac = detalles;
     this.transaccion.subTotal = this.redondear(subtotal);
-    this.transaccion.iva = this.redondear(subtotal * this.iva.valor);
+    this.transaccion.iva = this.redondear((subtotal-descuento) * this.iva.valor);
     this.transaccion.descuento = this.redondear(descuento);
-    this.transaccion.total = this.redondear(subtotal + this.transaccion.iva - descuento);
+    this.transaccion.total = this.redondear((subtotal-descuento) + this.transaccion.iva );
   }
   redondear(num, decimales = 2) {
     var signo = (num >= 0 ? 1 : -1);
@@ -158,7 +154,7 @@ export class TransaccionesAddComponent implements OnInit {
     this.calcularSubtotal();
     this.transaccion.detalles = this.detallesTransac;
     await this.clientesService.crearTransaccion(this.transaccion).subscribe(() => {
-      window.location.href = '/mdm/clientes/clientes/transacciones/list';
+      window.location.href = '/mdm/clientes/personas/transacciones/list';
 
     });
   }

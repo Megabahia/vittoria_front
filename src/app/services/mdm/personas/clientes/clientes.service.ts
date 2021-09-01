@@ -328,4 +328,8 @@ export class ClientesService {
   obtenerClientePorCedula(cedula) {
     return this.http.post<any>(`${apiUrl}/mdm/clientes/listOne/cedula/`, cedula);
   }
+  obtenerClientePorTelefono(telefono){
+    return this.http.post<any>(`${apiUrl}/mdm/clientes/listOne/telefono/`, telefono);
+
+  }
 }

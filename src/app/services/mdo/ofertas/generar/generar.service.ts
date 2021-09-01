@@ -35,8 +35,10 @@ export interface Oferta {
   total;
   iva;
   descuento;
-  subtotal;
+  subTotal;
   created_at;
+  detalles;
+  numeroProductosComprados;
 }
 @Injectable({
   providedIn: 'root'
@@ -89,7 +91,9 @@ export class GenerarService {
       created_at: "",
       iva:0,
       descuento:0,
-      subtotal:0
+      subTotal:0,
+      detalles:[],
+      numeroProductosComprados:0
     }
   }
   obtenerListaOfertas(datos) {

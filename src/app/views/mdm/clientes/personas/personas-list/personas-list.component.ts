@@ -33,8 +33,13 @@ export class PersonasListComponent implements OnInit {
     };
     this.obtenerListaClientes();
   }
-  async ngAfterViewInit(){
-
+  async ngAfterViewInit() {
+    this.iniciarPaginador();
+  }
+  async iniciarPaginador() {
+    this.paginator.pageChange.subscribe(() => {
+      this.obtenerListaClientes();
+    });
   }
   async obtenerListaClientes(){
     this.clientesService.obtenerListaClientes(

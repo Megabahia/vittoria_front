@@ -32,6 +32,14 @@ export class NegociosListComponent implements OnInit {
     };
     this.obtenerListaNegocios();
   }
+  async ngAfterViewInit() {
+    this.iniciarPaginador();
+  }
+  async iniciarPaginador() {
+    this.paginator.pageChange.subscribe(() => {
+      this.obtenerListaNegocios();
+    });
+  }
   async obtenerListaNegocios(){
     this.negociosService.obtenerListaNegocios(
       {

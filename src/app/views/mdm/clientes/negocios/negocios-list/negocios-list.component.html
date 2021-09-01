@@ -15,20 +15,24 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3">
-                                <input type="text" class="form-control form-control-sm" [(ngModel)]="negocio" (change)="obtenerListaNegocios()">
+                                <input type="text" class="form-control form-control-sm" [(ngModel)]="negocio">
 
                             </div>
                             <div class="col-md-3">
-                                <input type="text" class="form-control form-control-sm" placeholder="Cédula" [(ngModel)]="ruc" (change)="obtenerListaNegocios()">
+                                <input type="text" class="form-control form-control-sm" placeholder="Ruc" [(ngModel)]="ruc">
 
                             </div>
-                            <div class="col-md-3">
-                                <input type="text" mwlFlatpickr [(ngModel)]="inicio" (input)="obtenerListaNegocios()" [altInput]="true" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
+                            <div class="col-md-2">
+                                <input type="text" mwlFlatpickr [(ngModel)]="inicio" [altInput]="true" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="text" mwlFlatpickr [(ngModel)]="fin" [altInput]="true" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
 
                             </div>
-                            <div class="col-md-3">
-                                <input type="text" mwlFlatpickr [(ngModel)]="fin" (input)="obtenerListaNegocios()" [altInput]="true" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
-
+                            <div class="col-md-2">
+                                <button class="btn btn-primary" (click)="obtenerListaNegocios()">
+                  <i-feather name='search' class="edit-user"></i-feather>
+                </button>
                             </div>
                         </div>
                     </div>

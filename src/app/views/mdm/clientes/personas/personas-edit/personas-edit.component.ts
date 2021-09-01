@@ -182,6 +182,24 @@ export class PersonasEditComponent implements OnInit {
       // this.obtenerGraficaTransacciones();
     }
   }
+  async ngAfterViewInit(){
+    this.iniciarPaginador();
+  }
+  async iniciarPaginador() {
+    this.paginatorDF.pageChange.subscribe(() => {
+      this.obtenerDatosFisicos();
+    });
+    this.paginatorDV.pageChange.subscribe(() => {
+      this.obtenerDatosVirtuales();
+    });
+    this.paginatorPA.pageChange.subscribe(() => {
+      this.obtenerParientes();
+    });
+    this.paginatorTA.pageChange.subscribe(() => {
+      this.obtenerTransacciones();
+    });
+    
+  }
   obtenerURLImagen(url) {
     return this.globalParam.obtenerURL(url);
   }

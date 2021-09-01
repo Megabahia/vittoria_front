@@ -17,7 +17,7 @@
                                 <!-- profile picture -->
                                 <div class="profile-img-container d-flex align-items-center">
                                     <div class="profile-img">
-                                        <img src="assets/images/portrait/small/avatar-s-2.jpg" class="rounded img-fluid" alt="Card image" />
+                                        <img style="width: 100%; height: 100%;" src="{{urlImagen}}" class="rounded img-fluid" alt="Card image" />
                                     </div>
                                     <!-- profile title -->
                                     <div class="profile-title ml-3">
@@ -25,7 +25,7 @@
                                         <div class="col-12 d-flex px-0">
                                             <label class="btn btn-primary btn-sm mr-75" for="change-picture">
                                                 <span class="d-none d-sm-block">Cambiar foto</span>
-                                                <input class="form-control" type="file" id="change-picture" hidden accept="image/png, image/jpeg, image/jpg" />
+                                                <input class="form-control" type="file" id="change-picture" hidden accept="image/png, image/jpeg, image/jpg" (change)="guardarImagen($event)"  />
                                             </label>
                                         </div>
                                     </div>

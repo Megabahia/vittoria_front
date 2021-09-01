@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NegociosService, DatosBasicos, Personal, Direcciones, Transaccion } from '../../../../../services/mdm/personas/negocios/negocios.service';
 import { DatePipe } from '@angular/common';
 import { ParamService } from '../../../../../services/mdm/param/param.service';
+import { ParamService as ParamServiceADM } from '../../../../../services/admin/param.service';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label, Color } from 'ng2-charts';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
@@ -78,10 +79,12 @@ export class NegociosEditComponent implements OnInit {
   transaccion:Transaccion;
 
   estadoOpcion;
+  urlImagen;
   constructor(
     private datePipe: DatePipe,
     private negociosService: NegociosService,
     private paramService: ParamService,
+    private globalParam: ParamServiceADM
   ) {
     this.datosBasicos = negociosService.inicializarDatosBasicos();
     this.datosPersonal = negociosService.inicializarPersonal();
@@ -113,10 +116,25 @@ export class NegociosEditComponent implements OnInit {
       this.obtenerTransacciones();
     }
   }
+  async ngAfterViewInit(){
+    this.iniciarPaginador();
+  }
+  obtenerURLImagen(url) {
+    return this.globalParam.obtenerURL(url);
+  }
+  async iniciarPaginador() {
+    this.paginatorDE.pageChange.subscribe(() => {
+      this.obtenerDireccionesEmpresa();
+    });
+    this.paginatorPE.pageChange.subscribe(() => {
+      this.obtenerPersonalEmpresa();
+    });
+  }
   async obtenerDatosBasicos() {
     this.negociosService.obtenerNegocio(this.idNegocio).subscribe((info) => {
       this.datosBasicos = info;
       this.estadoOpcion = info.estado == 'Activo' ? 1 : 0;
+      this.urlImagen = this.obtenerURLImagen(info.imagen);
       this.datosBasicos.estado = info.estado;
       this.datosBasicos.created_at = this.transformarFecha(info.created_at);
       this.datosBasicos.fechaCreacionNegocio = this.transformarFecha(info.fechaCreacionNegocio);
@@ -124,6 +142,17 @@ export class NegociosEditComponent implements OnInit {
       this.obtenerCiudadResidencia();
     });
   }
+  async guardarImagen(event){
+    let nuevaImagen = event.target.files[0];
+    let imagen = new FormData();
+    imagen.append('imagen',nuevaImagen,nuevaImagen.name);
+    if(this.idNegocio!=0){
+      this.negociosService.editarImagen(this.idNegocio,imagen).subscribe((info)=>{
+        this.urlImagen = this.obtenerURLImagen(info.imagen);
+      });
+    }
+  }
+
   obtenerPersonalEmpresa() {
     this.negociosService.obtenerPersonal(this.idNegocio, {
       page: this.pagePE - 1,

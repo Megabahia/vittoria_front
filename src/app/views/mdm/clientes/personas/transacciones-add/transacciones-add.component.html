@@ -51,7 +51,7 @@
                             <div class="card-body invoice-padding pt-0">
                                 <h4 class="invoice-title mb-2">Datos para la factura</h4>
                                 <div class="row">
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <label>Tipo de identificación</label>
                                         <select id="user-role" class="form-control" [(ngModel)]="transaccion.tipoIdentificacion">
                                             <option value="" selected >- Seleccionar -</option>
@@ -60,13 +60,19 @@
                                               </option>
                                         </select>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <label>Identificación</label>
-                                        <input class="form-control" type="text" [(ngModel)]="transaccion.identificacion" (change)="obtenerCliente()">
+                                        <input class="form-control" type="text" [(ngModel)]="transaccion.identificacion">
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <label>Razón social</label>
                                         <input class="form-control" type="text" [(ngModel)]="transaccion.razonSocial">
+                                    </div>
+                                    <div class="col-2">
+                                        <label>Buscar:</label>
+                                        <button class="form-control btn btn-primary" (click)="obtenerCliente()">
+                          <i-feather name='search' class="edit-user"></i-feather>
+                        </button>
                                     </div>
                                     <div class="col-4">
                                         <label>Dirección</label>

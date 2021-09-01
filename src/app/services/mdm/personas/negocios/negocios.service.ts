@@ -205,12 +205,16 @@ export class NegociosService {
   }
   inicializarDetalle(){
     return {
-      articulo:"",
-      valorUnitario:0,
-      cantidad:0,
-      precio:0,
-      informacionAdicional:"",
-      descuento:0
+      id: 0,
+      codigo: "",
+      articulo: "",
+      valorUnitario: 0,
+      cantidad: 0,
+      precio: 0,
+      informacionAdicional: "",
+      descuento: 0,
+      valorDescuento: 0,
+      imagen: ""
     }
   }
   obtenerListaNegocios(data) {
@@ -230,6 +234,9 @@ export class NegociosService {
   }
   obtenerPersonal(id,datos){
     return this.http.post<any>(`${apiUrl}/mdm/negocios/personal/list/${id}`,datos);
+  }
+  editarImagen(id, imagen) {
+    return this.http.post<any>(`${apiUrl}/mdm/negocios/update/imagen/${id}`, imagen);
   }
   crearPersonal(datos) {
     return this.http.post<any>(`${apiUrl}/mdm/negocios/personal/create/`, datos);
@@ -287,5 +294,8 @@ export class NegociosService {
   }
   obtenerNegocioPorRuc(ruc){
     return this.http.post<any>(`${apiUrl}/mdm/negocios/listOne/ruc/`,ruc);
+  }
+  obtenerNegocioPorTelefono(telefono){
+    return this.http.post<any>(`${apiUrl}/mdm/negocios/listOne/telefonoOficina/`,telefono);
   }
 }
