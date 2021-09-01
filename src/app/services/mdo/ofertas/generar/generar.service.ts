@@ -20,14 +20,14 @@ export interface Oferta {
   negocio;
   cliente;
   codigoOferta;
-  fechaOferta;
+  fecha;
   nombres;
   apellidos;
   identificacion;
   telefono;
   correo;
   vigenciaOferta;
-  canalVentas;
+  canal;
   calificacionCliente;
   indicadorCliente;
   personaGenera;
@@ -75,16 +75,16 @@ export class GenerarService {
       negocio: null,
       cliente: null,
       codigoOferta: "",
-      fechaOferta: "",
+      fecha: "",
       nombres: "",
       apellidos: "",
       identificacion: "",
       telefono: "",
       correo: "",
       vigenciaOferta: 0,
-      canalVentas: "",
+      canal: "",
       calificacionCliente: 0,
-      indicadorCliente: 0,
+      indicadorCliente: "",
       personaGenera: "",
       descripcion: "",
       total: 0,
@@ -101,5 +101,14 @@ export class GenerarService {
   }
   crearOferta(datos) {
     return this.http.post<any>(`${apiUrl}/mdo/generarOferta/create/`, datos);
+  }
+  actualizarOferta(datos) {
+    return this.http.post<any>(`${apiUrl}/mdo/generarOferta/update/${datos.id}`, datos);
+  }
+  obtenerProductosAdquiridos(id){
+    return this.http.get<any>(`${apiUrl}/mdo/generarOferta/productosImagenes/${id}`);
+  }
+  obtenerOferta(id){
+    return this.http.get<any>(`${apiUrl}/mdo/generarOferta/listOne/${id}`);
   }
 }

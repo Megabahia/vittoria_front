@@ -53,6 +53,7 @@ export class GenerarComponent implements OnInit {
   precios = [];
   tipoCanalOpciones;
 
+
   constructor(
     private formBuilder: FormBuilder,
     private generarService: GenerarService,
@@ -80,15 +81,9 @@ export class GenerarComponent implements OnInit {
   inicializarDetallesOferta() {
     this.detalles = [];
     this.detalles.push(this.generarService.inicializarDetalle());
-    // this.detallesForm = this.formBuilder.group({
-    //   detalles: new FormArray([this.crearDetalle()])
-    // });
-    // this.detalles = this.detallesForm.get('detalles') as FormArray;
     this.listaPrecios.push(
       this.generarService.inicializarPrecios()
     );
-    // this.precios = [];
-    // this.precios.push(0);
   }
   async ngAfterViewInit() {
     this.iniciarPaginador();
@@ -133,19 +128,13 @@ export class GenerarComponent implements OnInit {
     return this.formBuilder.group(this.generarService.inicializarDetalle());
   }
   agregarItem(): void {
-    // this.detalles = this.detallesForm.get('detalles') as FormArray;
-    // this.detalles.push(this.crearDetalle());
-    // this.isCollapsed.push(false);
     this.detalles.push(this.generarService.inicializarDetalle());
     this.listaPrecios.push(
       this.generarService.inicializarPrecios()
     );
-    // this.precios.push(0);
-    // console.log(this.precios);
+
   }
   removerItem(i): void {
-    // console.log(this.detalles)
-    // this.isCollapsed.splice(i, 1);
 
     this.detalles.splice(i, 1);
     this.listaPrecios.splice(i, 1);
@@ -176,9 +165,9 @@ export class GenerarComponent implements OnInit {
     this.oferta.numeroProductosComprados = cantidad;
     this.detallesTransac = detalles;
     this.oferta.subTotal = this.redondear(subtotal);
-    this.oferta.iva = this.redondear((subtotal-descuento) * this.iva.valor);
+    this.oferta.iva = this.redondear((subtotal - descuento) * this.iva.valor);
     this.oferta.descuento = this.redondear(descuento);
-    this.oferta.total = this.redondear((subtotal-descuento) + this.oferta.iva );
+    this.oferta.total = this.redondear((subtotal - descuento) + this.oferta.iva);
   }
   redondear(num, decimales = 2) {
     var signo = (num >= 0 ? 1 : -1);
@@ -218,6 +207,9 @@ export class GenerarComponent implements OnInit {
             this.oferta.identificacion = info.cedula;
             this.oferta.telefono = info.telefono;
             this.oferta.correo = info.correo;
+            this.oferta.cliente = info.id;
+            this.oferta.negocio = null;
+            this.oferta.indicadorCliente = "C-" + info.id;
           }
         },
           (error) => {
@@ -231,6 +223,9 @@ export class GenerarComponent implements OnInit {
             this.oferta.identificacion = info.ruc;
             this.oferta.telefono = info.telefonoOficina;
             this.oferta.correo = info.correoOficina;
+            this.oferta.negocio = info.id;
+            this.oferta.cliente = null;
+            this.oferta.indicadorCliente = "N-" + info.id;
           }
         })
       }
@@ -243,6 +238,9 @@ export class GenerarComponent implements OnInit {
             this.oferta.identificacion = info.cedula;
             this.oferta.telefono = info.telefono;
             this.oferta.correo = info.correo;
+            this.oferta.cliente = info.id;
+            this.oferta.negocio = null;
+            this.oferta.indicadorCliente = "C-" + info.id;
           }
         },
           (error) => {
@@ -256,17 +254,20 @@ export class GenerarComponent implements OnInit {
             this.oferta.identificacion = info.ruc;
             this.oferta.telefono = info.telefonoOficina;
             this.oferta.correo = info.correoOficina;
+            this.oferta.negocio = info.id;
+            this.oferta.cliente = null;
+            this.oferta.indicadorCliente = "N-" + info.id;
           }
         })
       }
     }
-
   }
+
   crearOferta() {
     this.oferta = this.generarService.inicializarOferta();
     this.oferta.created_at = this.transformarFecha(this.fechaActual);
+    this.oferta.fecha = this.transformarFecha(this.fechaActual);
     this.inicializarDetallesOferta();
-
   }
   async obtenerIVA() {
     await this.paramService.obtenerParametroNombreTipo("ACTIVO", "TIPO_IVA").subscribe((info) => {
@@ -274,16 +275,20 @@ export class GenerarComponent implements OnInit {
     });
   }
   async guardarOferta() {
+    this.calcularSubtotal();
+    this.oferta.fecha = this.transformarFecha(this.fechaActual);
+    this.oferta.detalles = this.detallesTransac;
     if (this.oferta.id == 0) {
-      this.calcularSubtotal();
-      this.oferta.detalles = this.detallesTransac;
       await this.generarService.crearOferta(this.oferta).subscribe((info) => {
-        console.log(info);
+        this.obtenerListaOfertas();
+      });
+    } else {
+      await this.generarService.actualizarOferta(this.oferta).subscribe((info) => {
+        this.obtenerListaOfertas();
       });
     }
   }
   obtenerProducto(i) {
-    // let detalles = this.detallesForm.get('detalles')['controls'];
     this.productosService.obtenerProductoPorCodigo({
       codigoBarras: this.detalles[i].codigo
     }).subscribe((info) => {
@@ -303,13 +308,22 @@ export class GenerarComponent implements OnInit {
       this.tipoCanalOpciones = info;
     });
   }
-  // obtenerUltimosProductos(id) {
-  //   return this.generarService.obtenerUltimasOfertas(id).subscribe((info) => {
-  //     info.map((prod) => {
-  //       prod.imagen = this.obtenerURLImagen(prod.imagen);
-  //     });
-  //     this.ultimosProductos = info;
-  //   });
-  // }
+  obtenerUltimosProductos(id) {
+    this.generarService.obtenerProductosAdquiridos(id).subscribe((info) => {
+      info.map((prod) => {
+        prod.imagen = this.obtenerURLImagen(prod.imagen);
+      });
+      this.ultimosProductos = info;
+    });
+  }
+  obtenerOferta(id) {
+    this.generarService.obtenerOferta(id).subscribe((info) => {
+      this.oferta = info;
+      this.detalles = info.detalles;
+      for (let i = 0; i < info.detalles.length; i++) {
+        this.obtenerProducto(i);
+      }
+    });
+  }
 
 }
