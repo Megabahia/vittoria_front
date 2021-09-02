@@ -111,4 +111,7 @@ export class GenerarService {
   obtenerOferta(id){
     return this.http.get<any>(`${apiUrl}/mdo/generarOferta/listOne/${id}`);
   }
+  eliminarOferta(id){
+    return this.http.delete<any>(`${apiUrl}/mdo/generarOferta/delete/${id}`);
+  }
 }

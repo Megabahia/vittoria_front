@@ -1,1 +1,572 @@
-<p>gestion-oferta works!</p>
+<app-toolbar [menu]="menu"></app-toolbar>
+<app-navbar></app-navbar>
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="header-navbar-shadow"></div>
+    <div class="content-wrapper">
+
+        <div class="content-body">
+            <!-- users list start -->
+            <section class="app-user-list">
+                <!-- users filter start -->
+                <div class="card">
+                    <h5 class="card-header">Filtros de búsqueda</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i data-feather='calendar'></i></span>
+                                        </div>
+                                        <input type="text" mwlFlatpickr mode="range" [(ngModel)]="fecha" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
+                                        <!-- <input type="text" class="form-control form-control-sm flatpickr-range flatpickr-input" placeholder="- Rango de fechas"> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <select class="form-control form-control-sm" [(ngModel)]="tipoCliente">
+                                        <option value="" selected>- Tipo de cliente - </option>
+                                        <option value="cliente">Cliente</option>
+                                        <option value="negocio">Negocio</option>
+                                      </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-sm" placeholder="Identificación" [(ngModel)]="identificacion">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary" (click)="obtenerListaGestionOferta()">
+                  <i-feather name='search' class="edit-user"></i-feather>
+                </button>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="row m-75">
+                        <div class="col-md-12 text-right">
+                            <button class="btn btn-success waves-effect waves-float waves-light" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-toggle="modal" data-target="#modals-slide-in">
+                     Exportar a Excel
+                   </button>
+                        </div>
+                    </div>
+                    <div class="card-datatable table-responsive pt-0 pb-2">
+                        <table class="table table-bordered table-striped">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th rowspan="2">Código</th>
+                                    <th rowspan="2">Fecha de oferta</th>
+                                    <th rowspan="2">Cliente</th>
+                                    <th rowspan="2">Identificación</th>
+                                    <th rowspan="2"># contacto</th>
+                                    <th rowspan="2"># Whats App</th>
+                                    <th rowspan="2"># teléfono convencional</th>
+                                    <th rowspan="2">Correo</th>
+                                    <th rowspan="2">Indicador de cliente</th>
+                                    <th rowspan="2">Fecha compra</th>
+                                    <th class="text-center" rowspan="2">Productos adquiridos</th>
+                                    <th colspan="2" class="text-center border-left">Comunicación de la oferta</th>
+                                    <th colspan="2" class="text-center border-left border-right">Confirmación de la oferta</th>
+                                    <th rowspan="2">Calificación de la oferta</th>
+                                    <th rowspan="2">Vigencia de la oferta</th>
+                                    <th rowspan="2">Canal de ventas</th>
+                                    <th rowspan="2">Monto USD</th>
+                                    <th rowspan="2">Estado</th>
+                                    <th rowspan="2">Acciones</th>
+                                </tr>
+                                <tr>
+                                    <th class="border-left">¿Se comunicó la oferta?</th>
+                                    <th class="border-left">Fecha de comunicación</th>
+                                    <th class="border-left">¿Aceptó la oferta?</th>
+                                    <th class="border-left border-right">Fecha de aceptación</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td>664788 </td>
+                                    <td>12-05-2021</td>
+                                    <td>
+                                        <div class="d-flex justify-content-left align-items-center">
+                                            <div class="avatar mr-1 bg-light-danger">
+                                                <span class="avatar-content">EA</span>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a class="user-name text-truncate mb-0" href="#" data-target="#client-detail" data-toggle="modal">
+                                                    <span class="font-weight-bold">Eleanor Aguilar</span></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>1719461129 </td>
+                                    <td>0992266779 </td>
+                                    <td> 0992266779</td>
+                                    <td>21987745 </td>
+                                    <td>jymjam44@gmail.com </td>
+                                    <td> </td>
+                                    <td>29-04-2021</td>
+                                    <td>
+                                        <a href="#" class="avatar bg-info" data-target="#productos-detail" data-toggle="modal">
+                                            <div class="avatar-content" data-toggle="tooltip" data-placement="top" title="Ver productos">
+                                                <i data-feather='shopping-bag'></i>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td>SI</td>
+                                    <td>12/06/2021</td>
+                                    <td>SI</td>
+                                    <td>22/06/2021</td>
+                                    <td>8</td>
+                                    <td>30 días</td>
+                                    <td>Web</td>
+                                    <td>$300.00</td>
+                                    <td>
+                                        <span class="text-capitalize badge badge-light-success badge-pill">venta concretada</span>
+                                    </td>
+                                    <td>
+                                        <a href="#" class="avatar bg-primary mr-1" data-target="#add-registro" data-toggle="modal">
+                                            <div class="avatar-content" data-toggle="tooltip" data-placement="bottom" title="Gestionar">
+                                                <i data-feather='edit-2'></i>
+                                            </div>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>664788 </td>
+                                    <td>12-05-2021</td>
+                                    <td>
+                                        <div class="d-flex justify-content-left align-items-center">
+                                            <div class="avatar mr-1 bg-light-danger">
+                                                <span class="avatar-content">EA</span>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a class="user-name text-truncate mb-0" href="#" data-target="#client-detail" data-toggle="modal">
+                                                    <span class="font-weight-bold">Eleanor Aguilar</span></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>1719461129 </td>
+                                    <td>0992266779 </td>
+                                    <td> 0992266779</td>
+                                    <td>21987745 </td>
+                                    <td>jymjam44@gmail.com </td>
+                                    <td> </td>
+                                    <td>29-04-2021</td>
+                                    <td>
+                                        <a href="#" class="avatar bg-info" data-target="#productos-detail" data-toggle="modal">
+                                            <div class="avatar-content" data-toggle="tooltip" data-placement="top" title="Ver productos">
+                                                <i data-feather='shopping-bag'></i>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td>SI</td>
+                                    <td>12/06/2021</td>
+                                    <td>NO</td>
+                                    <td>22/06/2021</td>
+                                    <td>8</td>
+                                    <td>30 días</td>
+                                    <td>Web</td>
+                                    <td>$300.00</td>
+                                    <td>
+                                        <span class="text-capitalize badge badge-light-danger badge-pill">venta fallida</span>
+                                    </td>
+                                    <td>
+                                        <a href="#" class="avatar bg-primary mr-1" data-target="#add-registro" data-toggle="modal">
+                                            <div class="avatar-content" data-toggle="tooltip" data-placement="bottom" title="Gestionar">
+                                                <i data-feather='edit-2'></i>
+                                            </div>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal" tabindex="-1" role="dialog" id="client-detail" aria-labelledby="myLargeModalLabel">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Detalle de venta</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row p-2">
+                                        <div class="col-xl-6 col-lg-12 d-flex flex-column justify-content-between border-container-lg">
+                                            <div class="user-avatar-section">
+                                                <div class="d-flex justify-content-start">
+                                                    <img class="img-fluid rounded" src="app-assets/images/avatars/7.png" width="80" />
+                                                    <div class="d-flex flex-column ml-1">
+                                                        <div class="user-info mb-1">
+                                                            <h4 class="mb-0">Eleanor Aguilar</h4>
+                                                            <span class="card-text">eleanor.aguilar@gmail.com</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-xl-6 col-lg-12 mt-2 mt-xl-0">
+                                            <div class="user-info-wrapper">
+                                                <div class="d-flex flex-wrap my-50">
+                                                    <div class="user-info-title">
+                                                        <i data-feather="check"></i>
+                                                        <span class="card-text user-info-title font-weight-bold mb-0">Estado: </span>
+                                                    </div>
+                                                    <p class="card-text mb-0 text-success ml-1"> Activo</p>
+                                                </div>
+                                                <div class="d-flex flex-wrap my-50">
+                                                    <div class="user-info-title">
+                                                        <i data-feather="flag"></i>
+                                                        <span class="card-text user-info-title font-weight-bold mb-0">País: </span>
+                                                    </div>
+                                                    <p class="card-text mb-0 ml-1"> Ecuador</p>
+                                                </div>
+                                                <div class="d-flex flex-wrap">
+                                                    <div class="user-info-title">
+                                                        <i data-feather="phone"></i>
+                                                        <span class="card-text user-info-title font-weight-bold mb-0">Contacto: </span>
+                                                    </div>
+                                                    <p class="card-text mb-0 ml-1"> (123) 456-7890</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row bg-light p-2 mt-1 mb-1">
+                                        <div class="col-md-6">
+                                            <div class="d-flex">
+                                                <div class="color-box bg-light-primary">
+                                                    <i data-feather="dollar-sign" class="text-primary"></i>
+                                                </div>
+                                                <div class="ml-1">
+                                                    <h5 class="mb-0">600.00</h5>
+                                                    <small>Compras en el periodo</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="d-flex">
+                                                <div class="color-box bg-light-success">
+                                                    <i data-feather="trending-up" class="text-success"></i>
+                                                </div>
+                                                <div class="ml-1">
+                                                    <h5 class="mb-0">$1250.00</h5>
+                                                    <small>Promedio anual de compras</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row p-2">
+                                        <div class="col-md-8">
+                                            <h5 class="mb-2">Último producto comprado</h5>
+                                            <div class="card plan-card border-primary">
+                                                <div class="card-body">
+                                                    <div class="item-heading">
+                                                        <h6 class="text-truncate mb-0 text-info">Apple Watch 6 series</h6>
+                                                        <small class="text-body d-block">by Apple</small>
+
+                                                    </div>
+                                                    <div class="img-container w-50 mx-auto py-50">
+                                                        <img src="app-assets/images/elements/apple-watch.png" class="img-fluid" alt="image" />
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <div class="card plan-card border-secondary">
+                                                <div class="card-body">
+                                                    <div class="item-meta">
+                                                        <p class="card-text mb-0">Costo: <span class="text-info">$600.00</span></p>
+                                                        <p class="card-text mb-0">Fecha de compra: 23-04-2021</p>
+                                                        <p class="card-text mb-0">Categoría de producto: Electrónica</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal modal-slide-in new-user-modal fade" id="add-registro">
+                        <div class="modal-dialog">
+                            <div class="modal-content pt-0">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                                <div class="modal-header mb-1">
+                                    <h5 class="modal-title" id="exampleModalLabel">Gestión de oferta</h5>
+                                </div>
+                                <div class="modal-body flex-grow-1">
+                                    <div class="form-group">
+                                        <label>¿Se comunicó la oferta?</label>
+                                        <select class="form-control">
+                           <option>- Seleccione -</option>
+                           <option>SI</option>
+                           <option>NO</option>
+                         </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Fecha de comunicación</label>
+                                        <input type="text" class="form-control flatpickr-basic" placeholder="AA/MM/DD" />
+                                    </div>
+                                    <hr/>
+                                    <div class="form-group">
+                                        <label>¿Aceptó la oferta?</label>
+                                        <select class="form-control">
+                           <option>- Seleccione -</option>
+                           <option>SI</option>
+                           <option>NO</option>
+                         </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Fecha de aceptación</label>
+                                        <input type="text" class="form-control flatpickr-basic" placeholder="AA/MM/DD" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Calificación de la oferta</label>
+                                        <select class="form-control">
+                           <option>- Seleccione -</option>
+                           <option>01</option>
+                           <option>02</option>
+                           <option>03</option>
+                           <option>04</option>
+                           <option>05</option>
+                           <option>06</option>
+                           <option>07</option>
+                           <option>08</option>
+                           <option>09</option>
+                           <option>10</option>
+                         </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Estado</label>
+                                        <select class="form-control">
+                           <option>- Seleccione -</option>
+                           <option>Venta concretada</option>
+                           <option>Venta fallida</option>
+                         </select>
+                                    </div>
+                                    <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close">Guardar</button>
+                                    <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal modal-slide-in new-user-modal fade" id="actividad">
+                        <div class="modal-dialog modal-slide-l">
+                            <div class="modal-content pt-0">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                                <div class="modal-header mb-1">
+                                    <h5 class="modal-title" id="exampleModalLabel">Registro de actividad</h5>
+                                </div>
+                                <div class="modal-body flex-grow-1">
+                                    <div class="dropdown-menu dropdown-menu-right file-dropdown">
+                                        <a class="dropdown-item" href="#">
+                                            <i data-feather="eye" class="align-middle mr-50"></i>
+                                            <span class="align-middle">Ver</span>
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="javascript:void(0);">
+                                            <i data-feather="trash" class="align-middle mr-50"></i>
+                                            <span class="align-middle">Borrar</span>
+                                        </a>
+                                    </div>
+                                    <section id="accordion">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div id="accordionWrapa1" role="tablist" aria-multiselectable="true">
+                                                    <div class="card collapse-icon">
+                                                        <div class="collapse-default">
+                                                            <div class="card">
+                                                                <div id="heading1" class="card-header" data-toggle="collapse" role="button" data-target="#accordion1" aria-expanded="false" aria-controls="accordion1">
+
+                                                                    <div class="media align-items-center">
+                                                                        <div class="avatar">
+                                                                            <img src="app-assets/images/avatars/12-small.png" alt="avatar" height="38" width="38" />
+                                                                        </div>
+                                                                        <div class="media-body ml-50">
+                                                                            <h6 class="mb-0">Daniel Proaño</h6>
+                                                                            <span>Vendedor</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1 mr-1">
+                                                                        <small class="timeline-event-time">hace 45 min.</small>
+                                                                    </div>
+                                                                </div>
+                                                                <div id="accordion1" role="tabpanel" data-parent="#accordionWrapa1" aria-labelledby="heading1" class="collapse">
+                                                                    <div class="card-body">
+                                                                        Se llamo al cliente para ofrecer un nuevo producto complementario al adquirido semanas atras para lo cual se le brindó información tanto por teléfono como por correo electrónico.
+                                                                    </div>
+                                                                    <div class="row p-1">
+                                                                        <div class="file-manager-item file">
+                                                                            <div class="card-img-top file-logo-wrapper">
+                                                                                <div class="dropdown float-right">
+                                                                                    <i data-feather="more-vertical" class="toggle-dropdown mt-n25"></i>
+                                                                                </div>
+                                                                                <div class="d-flex align-items-center justify-content-center w-100">
+                                                                                    <img src="app-assets/images/icons/jpg.png" alt="file-icon" height="35" />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="card-body">
+                                                                                <div class="content-wrapper">
+                                                                                    <p class="card-text file-name mb-0">nombre-archivo.jpg</p>
+                                                                                    <p class="card-text file-size mb-0">12.6mb</p>
+                                                                                    <p class="card-text file-date">23 may 2021</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card">
+                                                                <div id="heading2" class="card-header" data-toggle="collapse" role="button" data-target="#accordion2" aria-expanded="false" aria-controls="accordion2">
+                                                                    <div class="media align-items-center">
+                                                                        <div class="avatar">
+                                                                            <img src="app-assets/images/avatars/12-small.png" alt="avatar" height="38" width="38" />
+                                                                        </div>
+                                                                        <div class="media-body ml-50">
+                                                                            <h6 class="mb-0">Daniel Proaño</h6>
+                                                                            <span>Vendedor</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1 mr-1">
+                                                                        <small class="timeline-event-time">hace 12 horas.</small>
+                                                                    </div>
+                                                                </div>
+                                                                <div id="accordion2" role="tabpanel" data-parent="#accordionWrapa1" aria-labelledby="heading2" class="collapse" aria-expanded="false">
+                                                                    <div class="card-body">
+                                                                        Se llamo al cliente para ofrecer un nuevo producto complementario al adquirido semanas atras para lo cual se le brindó información tanto por teléfono como por correo electrónico.
+                                                                    </div>
+                                                                    <div class="row p-1">
+                                                                        <div class="file-manager-item file">
+                                                                            <div class="card-img-top file-logo-wrapper">
+                                                                                <div class="dropdown float-right">
+                                                                                    <i data-feather="more-vertical" class="toggle-dropdown mt-n25"></i>
+                                                                                </div>
+                                                                                <div class="d-flex align-items-center justify-content-center w-100">
+                                                                                    <img src="app-assets/images/icons/jpg.png" alt="file-icon" height="35" />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="card-body">
+                                                                                <div class="content-wrapper">
+                                                                                    <p class="card-text file-name mb-0">nombre-archivo.jpg</p>
+                                                                                    <p class="card-text file-size mb-0">12.6mb</p>
+                                                                                    <p class="card-text file-date">23 may 2021</p>
+                                                                                </div>
+                                                                                <small class="file-accessed text-muted">Subido hace: 3 horas</small>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card">
+                                                                <div id="heading3" class="card-header" data-toggle="collapse" role="button" data-target="#accordion3" aria-expanded="false" aria-controls="accordion3">
+                                                                    <div class="media align-items-center">
+                                                                        <div class="avatar">
+                                                                            <img src="app-assets/images/avatars/12-small.png" alt="avatar" height="38" width="38" />
+                                                                        </div>
+                                                                        <div class="media-body ml-50">
+                                                                            <h6 class="mb-0">Daniel Proaño</h6>
+                                                                            <span>Vendedor</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1 mr-1">
+                                                                        <small class="timeline-event-time">15/mayo/2021.</small>
+                                                                    </div>
+                                                                </div>
+                                                                <div id="accordion3" role="tabpanel" data-parent="#accordionWrapa1" aria-labelledby="heading3" class="collapse" aria-expanded="false">
+                                                                    <div class="card-body">
+                                                                        Se llamo al cliente para ofrecer un nuevo producto complementario al adquirido semanas atras para lo cual se le brindó información tanto por teléfono como por correo electrónico.
+                                                                    </div>
+                                                                    <div class="row p-1">
+                                                                        <div class="file-manager-item file">
+                                                                            <div class="card-img-top file-logo-wrapper">
+                                                                                <div class="dropdown float-right">
+                                                                                    <i data-feather="more-vertical" class="toggle-dropdown mt-n25"></i>
+                                                                                </div>
+                                                                                <div class="d-flex align-items-center justify-content-center w-100">
+                                                                                    <img src="app-assets/images/icons/jpg.png" alt="file-icon" height="35" />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="card-body">
+                                                                                <div class="content-wrapper">
+                                                                                    <p class="card-text file-name mb-0">nombre-archivo.jpg</p>
+                                                                                    <p class="card-text file-size mb-0">12.6mb</p>
+                                                                                    <p class="card-text file-date">23 may 2021</p>
+                                                                                </div>
+                                                                                <small class="file-accessed text-muted">Subido hace: 3 horas</small>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card">
+                                                                <div id="heading4" class="card-header" data-toggle="collapse" role="button" data-target="#accordion4" aria-expanded="false" aria-controls="accordion4">
+                                                                    <div class="media align-items-center">
+                                                                        <div class="avatar">
+                                                                            <img src="app-assets/images/avatars/12-small.png" alt="avatar" height="38" width="38" />
+                                                                        </div>
+                                                                        <div class="media-body ml-50">
+                                                                            <h6 class="mb-0">Daniel Proaño</h6>
+                                                                            <span>Vendedor</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1 mr-1">
+                                                                        <small class="timeline-event-time">12/mayo/2021.</small>
+                                                                    </div>
+                                                                </div>
+                                                                <div id="accordion4" role="tabpanel" data-parent="#accordionWrapa1" aria-labelledby="heading4" class="collapse" aria-expanded="false">
+                                                                    <div class="card-body">
+                                                                        Se llamo al cliente para ofrecer un nuevo producto complementario al adquirido semanas atras para lo cual se le brindó información tanto por teléfono como por correo electrónico.
+                                                                    </div>
+                                                                    <div class="row p-1">
+                                                                        <div class="file-manager-item file">
+                                                                            <div class="card-img-top file-logo-wrapper">
+                                                                                <div class="dropdown float-right">
+                                                                                    <i data-feather="more-vertical" class="toggle-dropdown mt-n25"></i>
+                                                                                </div>
+                                                                                <div class="d-flex align-items-center justify-content-center w-100">
+                                                                                    <img src="app-assets/images/icons/jpg.png" alt="file-icon" height="35" />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="card-body">
+                                                                                <div class="content-wrapper">
+                                                                                    <p class="card-text file-name mb-0">nombre-archivo.jpg</p>
+                                                                                    <p class="card-text file-size mb-0">12.6mb</p>
+                                                                                    <p class="card-text file-date">23 may 2021</p>
+                                                                                </div>
+                                                                                <small class="file-accessed text-muted">Subido hace: 3 horas</small>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+            <!-- users list ends -->
+        </div>
+    </div>
+</div>
+<div class="sidenav-overlay "></div>
+<div class="drag-target "></div>
+<app-footer></app-footer>

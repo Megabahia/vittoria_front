@@ -3,10 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from 'src/app/guard/auth.guard';
 import { ParamsComponent } from '../gde/params/params.component';
 import { GestionEntregaComponent } from './gestion-entrega/gestion-entrega.component';
+import { GdeComponent } from './gde.component';
 
 const routes: Routes = [
   {
-    path: '', component: ParamsComponent, children: [
+    path: '', component: GdeComponent, children: [
       { path: '', redirectTo: 'parametrizaciones', pathMatch: 'full' },
       {
         path: 'parametrizaciones', children: [

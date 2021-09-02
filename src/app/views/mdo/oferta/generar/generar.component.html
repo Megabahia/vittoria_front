@@ -105,20 +105,20 @@
                                     <td>{{oferta.canal}}</td>
                                     <td>{{oferta.total}}</td>
                                     <td>
-                                        <a class="avatar bg-info" data-target="#productos-detail" data-toggle="modal">
+                                        <a class="avatar bg-info" data-target="#productos-detail" data-toggle="modal" (click)="obtenerUltimosProductos(oferta.id)">
                                             <div class="avatar-content" data-toggle="tooltip" data-placement="top" title="Ver productos">
-                                                <i-feather name='shopping-bag' class="edit-user" (click)="obtenerUltimosProductos(oferta.id)"></i-feather>
+                                                <i-feather name='shopping-bag' class="edit-user"></i-feather>
                                             </div>
                                         </a>
                                     </td>
                                     <td class="d-flex">
-                                        <a class="avatar bg-primary mr-1" data-target="#modals-slide-in" data-toggle="modal">
+                                        <a class="avatar bg-primary mr-1" data-target="#modals-slide-in" data-toggle="modal" (click)="obtenerOferta(oferta.id)">
                                             <div class="avatar-content">
-                                                <i-feather name='edit-2' class="edit-user" (click)="obtenerOferta(oferta.id)"></i-feather>
+                                                <i-feather name='edit-2' class="edit-user"></i-feather>
                                             </div>
                                         </a>
 
-                                        <a class="avatar bg-danger mr-1" data-target="#eliminar" data-toggle="modal">
+                                        <a class="avatar bg-danger mr-1" data-target="#eliminar" data-toggle="modal" (click)="abrirModal(contenido,oferta.id)">
                                             <div class="avatar-content">
                                                 <i-feather name="trash" class="edit-user"></i-feather>
                                             </div>
@@ -220,20 +220,20 @@
                                                                     <p class="card-text col-title">Precio</p>
                                                                     <select class="form-control form-control-sm" [(ngModel)]="detalle.valorUnitario" (change)="calcularSubtotal()" [ngModelOptions]="{standalone: true}">
                                                                         <option value="0">- Seleccione -</option>
-                                                                        <option value="{{listaPrecios[i].precioVentaA ? listaPrecios[i].precioVentaA : 0}}" >
-                                                                            Precio de venta A: {{listaPrecios[i].precioVentaA ? listaPrecios[i].precioVentaA : 0}}
+                                                                        <option value="{{listaPrecios[i] ? listaPrecios[i].precioVentaA : 0}}" >
+                                                                            Precio de venta A: {{listaPrecios[i] ? listaPrecios[i].precioVentaA : 0}}
                                                                           </option>
-                                                                        <option value="{{listaPrecios[i].precioVentaB ? listaPrecios[i].precioVentaB:0}}" >
-                                                                            Precio de venta B: {{listaPrecios[i].precioVentaB ? listaPrecios[i].precioVentaB:0}}
+                                                                        <option value="{{listaPrecios[i] ? listaPrecios[i].precioVentaB:0}}" >
+                                                                            Precio de venta B: {{listaPrecios[i] ? listaPrecios[i].precioVentaB:0}}
                                                                           </option>
-                                                                        <option value="{{listaPrecios[i].precioVentaC ? listaPrecios[i].precioVentaC:0}}" >
-                                                                            Precio de venta C: {{listaPrecios[i].precioVentaC ? listaPrecios[i].precioVentaC:0}}
+                                                                        <option value="{{listaPrecios[i] ? listaPrecios[i].precioVentaC:0}}" >
+                                                                            Precio de venta C: {{listaPrecios[i] ? listaPrecios[i].precioVentaC:0}}
                                                                           </option>
-                                                                        <option value="{{listaPrecios[i].precioVentaD ? listaPrecios[i].precioVentaD:0}}" >
-                                                                            Precio de venta D: {{listaPrecios[i].precioVentaB ? listaPrecios[i].precioVentaD:0}}
+                                                                        <option value="{{listaPrecios[i] ? listaPrecios[i].precioVentaD:0}}" >
+                                                                            Precio de venta D: {{listaPrecios[i] ? listaPrecios[i].precioVentaD:0}}
                                                                           </option>
-                                                                        <option value="{{listaPrecios[i].precioVentaE ? listaPrecios[i].precioVentaE:0}}" >
-                                                                            Precio de venta E: {{listaPrecios[i].precioVentaE ? listaPrecios[i].precioVentaE:0}}
+                                                                        <option value="{{listaPrecios[i] ? listaPrecios[i].precioVentaE:0}}" >
+                                                                            Precio de venta E: {{listaPrecios[i] ? listaPrecios[i].precioVentaE:0}}
                                                                           </option>
                                                                         
                                                                     </select>
@@ -412,6 +412,20 @@
         </div>
     </div>
 </div>
+<ng-template #contenido let-modal>
+    <div class="modal-header ">
+        <h4 class="modal-title ">Mensaje</h4>
+        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
+        <span aria-hidden="true ">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body ">
+        <p>Confirma eliminar</p>
+    </div>
+    <div class="modal-footer ">
+        <button type="button " class="btn btn-light " (click)="cerrarModal()">SI</button>
+    </div>
+</ng-template>
 <!-- END: Content-->
 <div class="sidenav-overlay"></div>
 <div class="drag-target"></div>

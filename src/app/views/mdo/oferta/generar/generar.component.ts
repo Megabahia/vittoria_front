@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPagination, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DatePipe } from '@angular/common';
 import { ParamService } from 'src/app/services/admin/param.service';
 import { ParamService as ParamServiceMDO } from 'src/app/services/mdo/param/param.service';
@@ -53,7 +53,7 @@ export class GenerarComponent implements OnInit {
   precios = [];
   tipoCanalOpciones;
 
-
+  ofertaId;
   constructor(
     private formBuilder: FormBuilder,
     private generarService: GenerarService,
@@ -63,7 +63,8 @@ export class GenerarComponent implements OnInit {
     private clientesService: ClientesService,
     private negociosService: NegociosService,
     private paramService: ParamServiceMDO,
-    private productosService: ProductosService
+    private productosService: ProductosService,
+    private modalService: NgbModal
   ) {
     this.oferta = this.generarService.inicializarOferta();
   }
@@ -268,6 +269,7 @@ export class GenerarComponent implements OnInit {
     this.oferta.created_at = this.transformarFecha(this.fechaActual);
     this.oferta.fecha = this.transformarFecha(this.fechaActual);
     this.inicializarDetallesOferta();
+    this.listaPrecios= [];
   }
   async obtenerIVA() {
     await this.paramService.obtenerParametroNombreTipo("ACTIVO", "TIPO_IVA").subscribe((info) => {
@@ -320,9 +322,24 @@ export class GenerarComponent implements OnInit {
     this.generarService.obtenerOferta(id).subscribe((info) => {
       this.oferta = info;
       this.detalles = info.detalles;
+      this.listaPrecios= [];
       for (let i = 0; i < info.detalles.length; i++) {
+        this.listaPrecios.push(
+          this.generarService.inicializarPrecios()
+        );
         this.obtenerProducto(i);
       }
+    });
+  }
+
+  abrirModal(modal,id){
+    this.ofertaId=id;
+    this.modalService.open(modal)
+  }
+  cerrarModal(){
+    this.modalService.dismissAll();
+    this.generarService.eliminarOferta(this.ofertaId).subscribe(()=>{
+      this.obtenerListaOfertas();
     });
   }
 
