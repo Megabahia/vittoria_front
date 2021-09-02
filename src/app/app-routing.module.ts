@@ -17,6 +17,12 @@ const routes: Routes = [{
 },
 {
   path:'mdo', loadChildren:() => import('./views/mdo/mdo.module').then(m => m.MdoModule)
+},
+{
+  path:'gdo', loadChildren:() => import('./views/gdo/gdo.module').then(m => m.GdoModule)
+},
+{
+  path:'gde', loadChildren:() => import('./views/gde/gde.module').then(m => m.GdeModule)
 }
 ];
 

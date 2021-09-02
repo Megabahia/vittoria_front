@@ -38,6 +38,14 @@ export class ToolbarComponent implements OnInit {
       predRefil:"",
       predNueProd:"",
       genOferta:""
+    },
+    gde:{
+      param:"",
+      gestEntrega:""
+    },
+    gdo:{
+      param:"",
+      gestOferta:""
     }
   }
   menuUser;
