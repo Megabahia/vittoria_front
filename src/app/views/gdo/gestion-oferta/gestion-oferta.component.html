@@ -66,8 +66,6 @@
                                     <th rowspan="2">Cliente</th>
                                     <th rowspan="2">Identificación</th>
                                     <th rowspan="2"># contacto</th>
-                                    <th rowspan="2"># Whats App</th>
-                                    <th rowspan="2"># teléfono convencional</th>
                                     <th rowspan="2">Correo</th>
                                     <th rowspan="2">Indicador de cliente</th>
                                     <th rowspan="2">Fecha compra</th>
@@ -90,96 +88,47 @@
                             </thead>
 
                             <tbody>
-                                <tr>
-                                    <td>664788 </td>
-                                    <td>12-05-2021</td>
+                                <tr *ngFor="let oferta of listaOfertas">
+                                    <td>{{oferta.codigoOferta}} </td>
+                                    <td>{{transformarFecha(oferta.fechaOferta)}}</td>
                                     <td>
                                         <div class="d-flex justify-content-left align-items-center">
                                             <div class="avatar mr-1 bg-light-danger">
-                                                <span class="avatar-content">EA</span>
+                                                <span class="avatar-content">{{primeraLetra(oferta.nombres,oferta.apellidos)}}</span>
                                             </div>
                                             <div class="d-flex flex-column">
                                                 <a class="user-name text-truncate mb-0" href="#" data-target="#client-detail" data-toggle="modal">
-                                                    <span class="font-weight-bold">Eleanor Aguilar</span></a>
+                                                    <span class="font-weight-bold">{{oferta.nombres}} {{oferta.apellidos}}</span></a>
                                             </div>
                                         </div>
                                     </td>
-                                    <td>1719461129 </td>
-                                    <td>0992266779 </td>
-                                    <td> 0992266779</td>
-                                    <td>21987745 </td>
-                                    <td>jymjam44@gmail.com </td>
-                                    <td> </td>
-                                    <td>29-04-2021</td>
+                                    <td></td>
+                                    <td>{{oferta.telefono}}</td>
+                                    <td>{{oferta.correo}} </td>
+                                    <td>{{oferta.indicadorCliente}}</td>
+                                    <td>{{transformarFecha(oferta.fechaCompra)}}</td>
                                     <td>
-                                        <a href="#" class="avatar bg-info" data-target="#productos-detail" data-toggle="modal">
-                                            <div class="avatar-content" data-toggle="tooltip" data-placement="top" title="Ver productos">
-                                                <i data-feather='shopping-bag'></i>
+                                        <a class="avatar bg-info" data-target="#productos-detail" data-toggle="modal">
+                                            <div class="avatar-content" data-toggle="tooltip" data-placement="top" title="Ver productos" (click)="obtenerUltimosProductos(oferta.id) ">
+                                                <i-feather class="edit-user" name='shopping-bag'></i-feather>
                                             </div>
                                         </a>
                                     </td>
-                                    <td>SI</td>
-                                    <td>12/06/2021</td>
-                                    <td>SI</td>
-                                    <td>22/06/2021</td>
-                                    <td>8</td>
-                                    <td>30 días</td>
-                                    <td>Web</td>
-                                    <td>$300.00</td>
+                                    <td>{{oferta.comunicoOferta}}</td>
+                                    <td>{{transformarFecha(oferta.fechaComunicacion)}}</td>
+                                    <td>{{oferta.aceptoOferta}}</td>
+                                    <td>{{transformarFecha(oferta.fechaAceptacion)}}</td>
+                                    <td>{{oferta.calificacionOferta}}</td>
+                                    <td>{{oferta.vigenciaOferta}} días</td>
+                                    <td>{{oferta.canalVentas}}</td>
+                                    <td>${{oferta.total}}</td>
                                     <td>
-                                        <span class="text-capitalize badge badge-light-success badge-pill">venta concretada</span>
+                                        <span class="text-capitalize badge {{oferta.estado == 'Venta concretada' ? 'badge-light-success': 'badge-light-danger'}} badge-pill">{{oferta.estado}}</span>
                                     </td>
                                     <td>
-                                        <a href="#" class="avatar bg-primary mr-1" data-target="#add-registro" data-toggle="modal">
+                                        <a class="avatar bg-primary mr-1" data-target="#add-registro" data-toggle="modal" (click)="obternerGestionOferta(oferta.id)">
                                             <div class="avatar-content" data-toggle="tooltip" data-placement="bottom" title="Gestionar">
-                                                <i data-feather='edit-2'></i>
-                                            </div>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>664788 </td>
-                                    <td>12-05-2021</td>
-                                    <td>
-                                        <div class="d-flex justify-content-left align-items-center">
-                                            <div class="avatar mr-1 bg-light-danger">
-                                                <span class="avatar-content">EA</span>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <a class="user-name text-truncate mb-0" href="#" data-target="#client-detail" data-toggle="modal">
-                                                    <span class="font-weight-bold">Eleanor Aguilar</span></a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>1719461129 </td>
-                                    <td>0992266779 </td>
-                                    <td> 0992266779</td>
-                                    <td>21987745 </td>
-                                    <td>jymjam44@gmail.com </td>
-                                    <td> </td>
-                                    <td>29-04-2021</td>
-                                    <td>
-                                        <a href="#" class="avatar bg-info" data-target="#productos-detail" data-toggle="modal">
-                                            <div class="avatar-content" data-toggle="tooltip" data-placement="top" title="Ver productos">
-                                                <i data-feather='shopping-bag'></i>
-                                            </div>
-                                        </a>
-                                    </td>
-                                    <td>SI</td>
-                                    <td>12/06/2021</td>
-                                    <td>NO</td>
-                                    <td>22/06/2021</td>
-                                    <td>8</td>
-                                    <td>30 días</td>
-                                    <td>Web</td>
-                                    <td>$300.00</td>
-                                    <td>
-                                        <span class="text-capitalize badge badge-light-danger badge-pill">venta fallida</span>
-                                    </td>
-                                    <td>
-                                        <a href="#" class="avatar bg-primary mr-1" data-target="#add-registro" data-toggle="modal">
-                                            <div class="avatar-content" data-toggle="tooltip" data-placement="bottom" title="Gestionar">
-                                                <i data-feather='edit-2'></i>
+                                                <i-feather class="edit-user" name='truck'></i-feather>
                                             </div>
                                         </a>
                                     </td>
@@ -305,62 +254,101 @@
                                 <div class="modal-body flex-grow-1">
                                     <div class="form-group">
                                         <label>¿Se comunicó la oferta?</label>
-                                        <select class="form-control">
-                           <option>- Seleccione -</option>
-                           <option>SI</option>
-                           <option>NO</option>
+                                        <select class="form-control" [(ngModel)]="oferta.comunicoOferta">
+                           <option value="">- Seleccione -</option>
+                           <option value="SI">SI</option>
+                           <option value="NO">NO</option>
                          </select>
                                     </div>
 
                                     <div class="form-group">
                                         <label>Fecha de comunicación</label>
-                                        <input type="text" class="form-control flatpickr-basic" placeholder="AA/MM/DD" />
+                                        <input type="text" mwlFlatpickr [(ngModel)]="oferta.fechaComunicacion" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Fecha de Comunicación-">
                                     </div>
                                     <hr/>
                                     <div class="form-group">
                                         <label>¿Aceptó la oferta?</label>
-                                        <select class="form-control">
-                           <option>- Seleccione -</option>
-                           <option>SI</option>
-                           <option>NO</option>
+                                        <select class="form-control" [(ngModel)]="oferta.aceptoOferta">
+                           <option value="">- Seleccione -</option>
+                           <option value="SI">SI</option>
+                           <option value="NO">NO</option>
                          </select>
                                     </div>
 
                                     <div class="form-group">
                                         <label>Fecha de aceptación</label>
-                                        <input type="text" class="form-control flatpickr-basic" placeholder="AA/MM/DD" />
+                                        <input type="text" mwlFlatpickr [(ngModel)]="oferta.fechaAceptacion" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Fecha de Comunicación-">
+
                                     </div>
                                     <div class="form-group">
                                         <label>Calificación de la oferta</label>
-                                        <select class="form-control">
-                           <option>- Seleccione -</option>
-                           <option>01</option>
-                           <option>02</option>
-                           <option>03</option>
-                           <option>04</option>
-                           <option>05</option>
-                           <option>06</option>
-                           <option>07</option>
-                           <option>08</option>
-                           <option>09</option>
-                           <option>10</option>
+                                        <select class="form-control" [(ngModel)]="oferta.calificacionOferta">
+                           <option value="0">- Seleccione -</option>
+                           <option value="1">1</option>
+                           <option value="2">2</option>
+                           <option value="3">3</option>
+                           <option value="4">4</option>
+                           <option value="5">5</option>
+                           <option value="6">6</option>
+                           <option value="7">7</option>
+                           <option value="8">8</option>
+                           <option value="9">9</option>
+                           <option value="10">10</option>
                          </select>
                                     </div>
                                     <div class="form-group">
                                         <label>Estado</label>
-                                        <select class="form-control">
-                           <option>- Seleccione -</option>
-                           <option>Venta concretada</option>
-                           <option>Venta fallida</option>
+                                        <select class="form-control" [(ngModel)]="oferta.estado">
+                           <option value="">- Seleccione -</option>
+                           <option value="Venta concretada">Venta concretada</option>
+                           <option value="Venta fallida">Venta fallida</option>
                          </select>
                                     </div>
-                                    <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close">Guardar</button>
+                                    <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close" (click)="actualizarGestionOferta()">Guardar</button>
                                     <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="modal" tabindex="-1" role="dialog" id="productos-detail" aria-labelledby="myLargeModalLabel">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Productos comprados</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                                </div>
+                                <div class="modal-body">
 
+
+                                    <div class="row p-2">
+                                        <div class="col-md-12 mb-1">
+                                            <h5 class="text-info">Fecha de compra: 12/06/2021</h5>
+                                        </div>
+                                        <div class="col-md-4" *ngFor="let producto of ultimosProductos">
+                                            <div class="card plan-card border-secondary">
+                                                <div class="card-body">
+                                                    <div class="item-heading">
+                                                        <h6 class="text-truncate mb-0">{{producto.articulo}}</h6>
+                                                    </div>
+                                                    <div class="img-container w-50 mx-auto py-50">
+                                                        <img src="{{producto.imagen}}" class="img-fluid" alt="image" />
+                                                    </div>
+                                                    <hr />
+                                                    <div class="item-meta">
+                                                        <p class="card-text mb-0">Código: {{producto.codigo}}</p>
+                                                        <p class="card-text mb-0">Cantidad: {{producto.cantidad}}</p>
+                                                        <p class="card-text text-primary mb-0 font-weight-bold">Total: ${{producto.precio}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="modal modal-slide-in new-user-modal fade" id="actividad">
                         <div class="modal-dialog modal-slide-l">
                             <div class="modal-content pt-0">

@@ -377,28 +377,36 @@
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Detalle productos comprados</h5>
+                                    <h5 class="modal-title">Productos comprados</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                                 </div>
                                 <div class="modal-body">
+
+
                                     <div class="row p-2">
-                                        <div class="col-md-4">
+                                        <div class="col-md-12 mb-1">
+                                            <h5 class="text-info">Fecha de compra: 12/06/2021</h5>
+                                        </div>
+                                        <div class="col-md-4" *ngFor="let producto of ultimosProductos">
                                             <div class="card plan-card border-secondary">
                                                 <div class="card-body">
                                                     <div class="item-heading">
-                                                        <h6 class="text-truncate mb-0">iphone 12 Pro</h6>
-                                                        <small class="text-body">by Apple</small>
+                                                        <h6 class="text-truncate mb-0">{{producto.articulo}}</h6>
                                                     </div>
                                                     <div class="img-container w-50 mx-auto py-50">
-                                                        <img src="assets/images/elements/iphone-x.png" class="img-fluid" alt="image" />
+                                                        <img src="{{producto.imagen}}" class="img-fluid" alt="image" />
                                                     </div>
+                                                    <hr />
                                                     <div class="item-meta">
-                                                        <p class="card-text text-primary mb-0">$1559.49</p>
+                                                        <p class="card-text mb-0">Código: {{producto.codigo}}</p>
+                                                        <p class="card-text mb-0">Cantidad: {{producto.cantidad}}</p>
+                                                        <p class="card-text text-primary mb-0 font-weight-bold">Total: ${{producto.precio}}</p>
                                                     </div>
                                                 </div>
                                             </div>
 
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
