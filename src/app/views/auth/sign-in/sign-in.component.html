@@ -41,13 +41,13 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="d-flex justify-content-center">
-                                        <ngx-recaptcha2 #captchaElem [siteKey]="siteKey" (success)="captchaValidado($event)">
+                                        <ngx-recaptcha2 [(ngModel)]="captcha" [ngModelOptions]="{standalone: true}" [siteKey]=" siteKey " (success)="captchaValidado($event) ">
                                         </ngx-recaptcha2>
                                     </div>
                                 </div>
 
 
-                                <a class="btn btn-primary btn-block" tabindex="4" (click)="signIn()">Iniciar sesión</a>
+                                <a class="btn btn-primary btn-block " tabindex="4 " (click)="signIn() ">Iniciar sesión</a>
                             </form>
 
 
@@ -60,3 +60,17 @@
         </div>
     </div>
 </div>
+<ng-template #errorAuth let-modal>
+    <div class="modal-header ">
+        <h4 class="modal-title ">Error</h4>
+        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
+        <span aria-hidden="true ">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body ">
+        <p>No se ha podido llevar a cabo la autenticación</p>
+    </div>
+    <div class="modal-footer ">
+        <button type="button " class="btn btn-light " (click)="cerrarModal()">Cerrar</button>
+    </div>
+</ng-template>

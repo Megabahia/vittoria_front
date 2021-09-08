@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/services/admin/auth.service';
 // import Swal from 'sweetalert2';
 import { ReCaptchaV3Service } from 'ngx-captcha';
 // import { AuthService } from '../../../services/auth.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-sign-in',
@@ -14,12 +15,14 @@ import { ReCaptchaV3Service } from 'ngx-captcha';
 
 })
 export class SignInComponent implements OnInit {
-
+  @ViewChild('errorAuth') errorAuth;
+  @ViewChild('captchaElem') captchaElem
   captcha:boolean;
   username: '';
   password: '';
   siteKey:string;
   constructor(
+    private modalService: NgbModal,
     private authService: AuthService,
     private router: Router,
     private reCaptchaV3Service: ReCaptchaV3Service,
@@ -46,7 +49,7 @@ export class SignInComponent implements OnInit {
          window.location.href='/admin/management';
       
       },(error)=>{
-   
+        this.abrirModal(this.errorAuth);
       });
     }else{
       
@@ -54,5 +57,10 @@ export class SignInComponent implements OnInit {
    
   
   }
-
+  abrirModal(modal) {
+    this.modalService.open(modal)
+  }
+  cerrarModal(){
+    this.modalService.dismissAll();
+  }
 }
