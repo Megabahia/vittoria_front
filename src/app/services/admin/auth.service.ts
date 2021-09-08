@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import * as moment from 'moment';
-const  apiUrl:string = environment.apiUrl;
+const apiUrl: string = environment.apiUrl;
 
 export interface User {
   token: string,
@@ -25,7 +25,7 @@ export class AuthService {
   public currentUser: Observable<User>;
   constructor(
     private http: HttpClient
-  ) { 
+  ) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -42,7 +42,6 @@ export class AuthService {
 
 
   signIn({ username, password }: UserLogin) {
-    console.log(apiUrl);
     let data = this.http.post<any>(`${apiUrl}/adm/auth/login/`, {
       username,
       password
@@ -50,7 +49,7 @@ export class AuthService {
     ).pipe(map(
       user => {
         if (user && user.token) {
-          const expiresAt = moment().add(user.tokenExpiracion,'seconds');
+          const expiresAt = moment().add(user.tokenExpiracion, 'seconds');
           localStorage.setItem('currentUser', JSON.stringify(user));
           localStorage.setItem('expiresAt', JSON.stringify(expiresAt.valueOf()));
           this.currentUserSubject.next(user);
@@ -65,5 +64,8 @@ export class AuthService {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('expiresAt');
     this.currentUserSubject.next(null);
+  }
+  enviarCorreoCambioClave(datos){
+    return this.http.post<any>(`${apiUrl}/adm/auth/password_reset/`,datos);
   }
 }

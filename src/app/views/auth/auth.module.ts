@@ -9,9 +9,11 @@ import { NgxCaptchaModule } from 'ngx-captcha';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '../../shared/shared.module';
 import { ChartsModule } from 'ng2-charts';
+import { MailPasswordComponent } from './mail-password/mail-password.component';
+import { PasswordResetComponent } from './password-reset/password-reset.component';
 
 @NgModule({
-  declarations: [AuthComponent, SignInComponent],
+  declarations: [AuthComponent, SignInComponent, MailPasswordComponent, PasswordResetComponent],
   imports: [
     NgbModule,
     SharedModule,
