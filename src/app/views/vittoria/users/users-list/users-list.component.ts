@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgbPagination,NgbModal  } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPagination, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { nuevoUsuario, UsersService } from 'src/app/services/admin/users.service';
 @Component({
   selector: 'app-users-list',
@@ -8,95 +8,102 @@ import { nuevoUsuario, UsersService } from 'src/app/services/admin/users.service
 
 })
 export class UsersListComponent implements OnInit {
-  @ViewChild(NgbPagination)paginator:NgbPagination;
+  @ViewChild(NgbPagination) paginator: NgbPagination;
   menu;
   paises;
   paisesOpciones;
   rolesOpciones: number = 0;
   roles;
-  estadosOpciones:string  = '';
+  estadosOpciones: string = '';
   estados;
   usuarios;
   idUsuario;
   page = 1;
-  pageSize:any;
+  pageSize: any;
   maxSize;
   collectionSize;
   vista;
-  nuevoUsuario: nuevoUsuario= {
-    nombres:'',
-    apellidos:'',
-    username:'',
-    email:'',
-    compania:'',
-    pais:'',
-    telefono:'',
-    whatsapp:'',
-    idRol:0,
-    estado:'ACTIVO'
+  nuevoUsuario: nuevoUsuario = {
+    nombres: '',
+    apellidos: '',
+    username: '',
+    email: '',
+    compania: '',
+    pais: '',
+    telefono: '',
+    whatsapp: '',
+    idRol: 0,
+    estado: 'ACTIVO'
   };
-  constructor( 
+  constructor(
     private servicioUsuarios: UsersService,
     private modalService: NgbModal
   ) {
-   }
+  }
 
   ngOnInit(): void {
-    this.menu={
-      modulo:"adm",
+    this.menu = {
+      modulo: "adm",
       seccion: "user"
     };
-    this.pageSize=10;
-    this.vista='lista';
+    this.pageSize = 10;
+    this.vista = 'lista';
   }
- async ngAfterViewInit(){
-     await this.servicioUsuarios.obtenerListaRoles().subscribe((result)=>{
+  async ngAfterViewInit() {
+    await this.servicioUsuarios.obtenerListaRoles().subscribe((result) => {
       this.roles = result;
 
     });
-    await this.servicioUsuarios.obtenerListaEstados().subscribe((result)=>{
+    await this.servicioUsuarios.obtenerListaEstados().subscribe((result) => {
       this.estados = result;
     });
-    await this.servicioUsuarios.obtenerListaPaises().subscribe((result)=>{
+    await this.servicioUsuarios.obtenerListaPaises().subscribe((result) => {
       this.paises = result;
     });
     this.iniciarPaginador();
     this.obtenerListaUsuarios();
   }
-  async iniciarPaginador(){
-    this.paginator.pageChange.subscribe(()=>{
-    this.obtenerListaUsuarios();
-    });
-  }
-  async obtenerListaUsuarios()
-  { 
-    
-     await this.servicioUsuarios.obtenerListaUsuarios(this.page,this.pageSize,this.rolesOpciones,this.estadosOpciones)
-    .subscribe((result)=>{
-      this.collectionSize = result.cont;
-      this.usuarios = result.info;
-    });
-  }
-  primeraLetra(nombre,apellido){
-    let iniciales = nombre.charAt(0) + apellido.charAt(0);
-    return iniciales;
-  }
- async guardarUsuario(){
-    await this.servicioUsuarios.insertarUsuario(this.nuevoUsuario).subscribe(()=>{
+  async iniciarPaginador() {
+    this.paginator.pageChange.subscribe(() => {
       this.obtenerListaUsuarios();
     });
   }
-  editarUsuario(id){
-    this.vista='editar';
-    this.idUsuario= id;
+  async obtenerListaUsuarios() {
+
+    await this.servicioUsuarios.obtenerListaUsuarios(this.page, this.pageSize, this.rolesOpciones, this.estadosOpciones)
+      .subscribe((result) => {
+        this.collectionSize = result.cont;
+        this.usuarios = result.info;
+      });
   }
-  abrirModal(modal,id){
-    this.idUsuario=id;
+  primeraLetra(nombre, apellido) {
+    let iniciales = nombre.charAt(0) + apellido.charAt(0);
+    return iniciales;
+  }
+  async guardarUsuario() {
+    if (
+      this.nuevoUsuario.email &&
+      this.nuevoUsuario.idRol &&
+      this.nuevoUsuario.username
+    ) {
+      await this.servicioUsuarios.insertarUsuario(this.nuevoUsuario).subscribe(() => {
+        this.obtenerListaUsuarios();
+        this.modalService.dismissAll();
+      });
+    }
+  }
+  editarUsuario(id) {
+    this.vista = 'editar';
+    this.idUsuario = id;
+  }
+  abrirModal(modal, id) {
+    this.idUsuario = id;
     this.modalService.open(modal)
   }
-  cerrarModal(){
+  cerrarModal() {
     this.modalService.dismissAll();
-    this.servicioUsuarios.eliminarUsuario(this.idUsuario);
-    this.obtenerListaUsuarios();
+    this.servicioUsuarios.eliminarUsuario(this.idUsuario).subscribe(info => {
+      this.obtenerListaUsuarios();
+    });
   }
-} 
+}

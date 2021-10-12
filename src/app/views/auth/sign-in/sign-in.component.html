@@ -20,6 +20,9 @@
                                 <div class="form-group">
                                     <label for="login-email" class="form-label">Usuario</label>
                                     <input type="text" class="form-control" id="login-email" name="login-email" [(ngModel)]="username" placeholder="nombre@ejemplo.com" aria-describedby="login-email" tabindex="1" autofocus />
+                                    <div *ngIf="submitted && !username" style="display: block;" class="invalid-feedback">
+                                        <div>Usuario requerido</div>
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
@@ -35,14 +38,21 @@
                                         <div class="input-group-append">
                                             <span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
                                         </div>
-                                    </div>
 
+                                    </div>
+                                    <div *ngIf="submitted && !password" style="display: block;" class="invalid-feedback">
+                                        <div>Contraseña requerida</div>
+                                    </div>
 
                                 </div>
                                 <div class="form-group">
                                     <div class="d-flex justify-content-center">
                                         <ngx-recaptcha2 [(ngModel)]="captcha" [ngModelOptions]="{standalone: true}" [siteKey]=" siteKey " (success)="captchaValidado($event) ">
                                         </ngx-recaptcha2>
+
+                                    </div>
+                                    <div *ngIf="submitted && !captcha" style="display: block;" class="invalid-feedback">
+                                        <div>Captcha requerido</div>
                                     </div>
                                 </div>
 
