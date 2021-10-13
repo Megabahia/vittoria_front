@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbModal, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { ParamService } from 'src/app/services/mdp/param/param.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-params',
@@ -8,6 +9,9 @@ import { ParamService } from 'src/app/services/mdp/param/param.service';
 })
 export class ParamsComponent implements OnInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
+  @ViewChild('dismissModal') dismissModal;
+  paramForm: FormGroup;
+  submitted;
   menu;
   vista;
   page = 1;
@@ -29,16 +33,27 @@ export class ParamsComponent implements OnInit {
   minimo;
   maximo;
   valor;
-  @ViewChild('padres') padres;
-
+  padres;
+  // @ViewChild('padres') padres;
   constructor(
+    private paramService: ParamService,
     private modalService: NgbModal,
-    private paramService: ParamService
-  ) { }
+    private _formBuilder: FormBuilder,
 
+  ) { }
+  get f() {
+    return this.paramForm.controls;
+  }
   ngOnInit(): void {
+    this.paramForm = this._formBuilder.group({
+      nombre: ['', [Validators.required]],
+      nombreTipo: ['', [Validators.required]],
+      descripcion: ['', [Validators.required]],
+      tipoVariable: ['', [Validators.required]],
+      valor: ['', [Validators.required]]
+    });
     this.menu = {
-      modulo: "mdp",
+      modulo: "adm",
       seccion: "param"
     };
   }
@@ -53,13 +68,14 @@ export class ParamsComponent implements OnInit {
     this.paginator.pageChange.subscribe(() => {
       this.obtenerListaParametros();
     });
+
   }
   async obtenerListaParametros() {
     await this.paramService.obtenerListaParametros({ page: this.page - 1, page_size: this.pageSize, tipo: this.tiposOpciones, nombre: this.nombreBuscar }).subscribe((result) => {
       this.parametros = result.info;
       this.collectionSize = result.cont;
     });
-
+    
   }
   async editarParametro(id) {
 
@@ -97,11 +113,18 @@ export class ParamsComponent implements OnInit {
     this.tipoVariable = "";
     this.valor = "";
     this.idPadre = 0;
+    this.submitted = false;
+
     this.funcion = 'insertar';
     this.minimo = "";
     this.maximo = "";
   }
   async gestionarParametro() {
+
+    this.submitted = true;
+    if (this.paramForm.invalid) {
+      return;
+    }
     if (this.funcion == "insertar") {
       await this.paramService.insertarParametro({
         nombre: this.nombre,
@@ -114,21 +137,26 @@ export class ParamsComponent implements OnInit {
         maximo : this.maximo
       }).subscribe((result) => {
         this.obtenerListaParametros();
+        this.dismissModal.nativeElement.click();
+        this.submitted = false;
+
       });
     } else if (this.funcion = 'editar') {
       await this.paramService.editarParametro(
         {
-          id:this.idParametro,
-          nombre: this.nombre,
-          tipo:this.nombreTipo,
-          descripcion: this.descripcion,
-          tipoVariable: this.tipoVariable,
-          valor: this.valor,
-          idPadre: this.idPadre,
-          minimo: this.minimo,
-          maximo : this.maximo
-        }).subscribe((result) => {
+            id:this.idParametro,
+            nombre: this.nombre,
+            tipo:this.nombreTipo,
+            descripcion: this.descripcion,
+            tipoVariable: this.tipoVariable,
+            valor: this.valor,
+            idPadre: this.idPadre,
+            minimo: this.minimo,
+            maximo : this.maximo
+          }).subscribe((result) => {
           this.obtenerListaParametros();
+          this.dismissModal.nativeElement.click();
+          this.submitted = false;
         });
     }
   }
@@ -148,5 +176,4 @@ export class ParamsComponent implements OnInit {
       this.padres = result;
     });
   }
-
 }

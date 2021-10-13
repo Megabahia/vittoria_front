@@ -2,6 +2,7 @@ import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbPagination, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ParamService } from 'src/app/services/admin/param.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-params-list',
@@ -10,6 +11,8 @@ import { ParamService } from 'src/app/services/admin/param.service';
 export class ParamsListComponent implements OnInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @ViewChild('dismissModal') dismissModal;
+  paramForm: FormGroup;
+  submitted;
   menu;
   vista;
   page = 1;
@@ -29,15 +32,27 @@ export class ParamsListComponent implements OnInit {
   idPadre = 0;
   tipoVariable;
   valor;
-  @ViewChild('padres') padres;
+  padres;
+  // @ViewChild('padres') padres;
   constructor(
     private paramService: ParamService,
-    private modalService: NgbModal
-  ) { }
+    private modalService: NgbModal,
+    private _formBuilder: FormBuilder,
 
+  ) { }
+  get f() {
+    return this.paramForm.controls;
+  }
   ngOnInit(): void {
-    this.menu={
-      modulo:"adm",
+    this.paramForm = this._formBuilder.group({
+      nombre: ['', [Validators.required]],
+      nombreTipo: ['', [Validators.required]],
+      descripcion: ['', [Validators.required]],
+      tipoVariable: ['', [Validators.required]],
+      valor: ['', [Validators.required]]
+    });
+    this.menu = {
+      modulo: "adm",
       seccion: "param"
     };
   }
@@ -48,7 +63,6 @@ export class ParamsListComponent implements OnInit {
   async iniciarPaginador() {
     await this.paramService.obtenerListaTipos().subscribe((result) => {
       this.tipos = result;
-      console.log(result);
     });
     this.paginator.pageChange.subscribe(() => {
       this.obtenerListaParametros();
@@ -76,8 +90,8 @@ export class ParamsListComponent implements OnInit {
           });
         });
         this.idPadre = result.idPadre;
-      }else{
-        this.tipoPadre = ""; 
+      } else {
+        this.tipoPadre = "";
         this.idPadre = 0;
 
       }
@@ -96,11 +110,16 @@ export class ParamsListComponent implements OnInit {
     this.tipoVariable = "";
     this.valor = "";
     this.idPadre = 0;
+    this.submitted = false;
+
     this.funcion = 'insertar';
   }
   async gestionarParametro() {
 
-    
+    this.submitted = true;
+    if (this.paramForm.invalid) {
+      return;
+    }
     if (this.funcion == "insertar") {
       await this.paramService.insertarParametro(
         this.nombre,
@@ -112,6 +131,8 @@ export class ParamsListComponent implements OnInit {
       ).subscribe((result) => {
         this.obtenerListaParametros();
         this.dismissModal.nativeElement.click();
+        this.submitted = false;
+
       });
     } else if (this.funcion = 'editar') {
       await this.paramService.editarParametro(
@@ -123,6 +144,8 @@ export class ParamsListComponent implements OnInit {
         this.valor,
         this.idPadre).subscribe((result) => {
           this.obtenerListaParametros();
+          this.dismissModal.nativeElement.click();
+          this.submitted = false;
         });
     }
   }

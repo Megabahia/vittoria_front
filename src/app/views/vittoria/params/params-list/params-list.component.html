@@ -135,53 +135,70 @@
                                 <h5 class="modal-title" id="exampleModalLabel">Nuevo parámetro</h5>
                             </div>
                             <div class="modal-body flex-grow-1">
-                                <div class="form-group">
-                                    <label class="form-label" for="basic-icon-default-fullname">Nombre parámetro:</label>
-                                    <input type="text" class="form-control dt-full-name" id="basic-icon-default-fullname" [(ngModel)]="nombre" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="basic-icon-default-uname">Tipo de parámetro:</label>
-                                    <input type="text" class="form-control dt-full-name" id="basic-icon-default-fullname" [(ngModel)]="nombreTipo" />
-
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="basic-icon-default-email">Descripción:</label>
-                                    <input type="text" id="basic-icon-default-email" class="form-control dt-email" [(ngModel)]="descripcion" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="basic-icon-default-email">Tipo de variable:</label>
-                                    <select class="select2 form-control form-control-sm" [(ngModel)]="tipoVariable">
+                                <form class="auth-login-form mt-2" [formGroup]="paramForm">
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-fullname">Nombre parámetro:</label>
+                                        <input type="text" class="form-control dt-full-name" id="basic-icon-default-fullname" name="nombre" formControlName="nombre" [(ngModel)]="nombre" />
+                                        <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="f.nombre.errors.required">Nombre del parámetro es requerido</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-uname">Tipo de parámetro:</label>
+                                        <input type="text" class="form-control dt-full-name" id="basic-icon-default-fullname" name="nombreTipo" formControlName="nombreTipo" [(ngModel)]="nombreTipo" />
+                                        <div *ngIf="submitted && f.nombreTipo.errors" class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="f.nombreTipo.errors.required">Tipo del parámetro es requerido</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Descripción:</label>
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" name="descripcion" formControlName="descripcion" [(ngModel)]="descripcion" />
+                                        <div *ngIf="submitted && f.descripcion.errors" class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="f.descripcion.errors.required">Descripción del parámetro es requerida</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Tipo de variable:</label>
+                                        <select class="select2 form-control form-control-sm" name="tipoVariable" formControlName="tipoVariable" [(ngModel)]="tipoVariable">
                                         <option value=""  selected>- Tipo de parámetro -</option>
                                         <option value="entero">Entero</option>
                                         <option value="texto">Texto</option>
                                         <option value="booleano">Booleano</option>
                                         <option value="fecha">Fecha</option>
                                      </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="basic-icon-default-email">Valor:</label>
-                                    <input type="text" id="basic-icon-default-email" class="form-control dt-email" [(ngModel)]="valor" />
-                                </div>
+                                        <div *ngIf="submitted && f.tipoVariable.errors" class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="f.tipoVariable.errors.required">Selección del tipo de variable es requerida</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Valor:</label>
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" name="valor" formControlName="valor" [(ngModel)]="valor" />
+                                        <div *ngIf="submitted && f.valor.errors" class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="f.valor.errors.required">Valor es requerido</div>
+                                        </div>
+                                    </div>
+                                </form>
                                 <div class="form-group">
                                     <label class="form-label" for="">Padre:</label>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label" for="basic-icon-default-email">Tipo Padre:</label>
-                                    <select class="select2 form-control form-control-sm" [(ngModel)]="tipoPadre" (change)="buscarPadre()">
+                                    <select class="select2 form-control form-control-sm" name="tipoPadre" [(ngModel)]="tipoPadre" (change)="buscarPadre()" [ngModelOptions]="{standalone: true}">
                                         <option value=""  selected>- Tipo de parámetro -</option>
                                         <option *ngFor="let tipo of tipos" value="{{tipo.valor}}">{{tipo.valor}}</option>
                                      </select>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label" for="basic-icon-default-email">Padre:</label>
-                                    <select class="select2 form-control form-control-sm" [(ngModel)]="idPadre">
+                                    <select class="select2 form-control form-control-sm" name="idPadre" [(ngModel)]="idPadre">
                                         <option value="0"  selected>- Padre -</option>
-                                        <option  *ngFor="let padre of padres" value="{{padre.id}}">{{padre.valor}}</option>
+                                        <option  *ngFor="let padre of padres" [ngValue]="padre.id">{{padre.valor}}</option>
                                     </select>
                                 </div>
                                 <button class="btn btn-primary mr-1" aria-label="Close" (click)="gestionarParametro()">Guardar</button>
-                                <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal"></button>
+                                <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
                                 <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+
                             </div>
                         </div>
                     </div>

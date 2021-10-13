@@ -8,7 +8,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { UsersEditComponent } from './users/users-edit/users-edit.component';
 import { UsersListComponent } from './users/users-list/users-list.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RolesListComponent } from './roles/roles-list/roles-list.component';
 import { RolesAddComponent } from './roles/roles-add/roles-add.component';
 import { ParamsListComponent } from './params/params-list/params-list.component';
@@ -32,6 +32,7 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     SharedModule,
     NgbModule,
     FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class AdminModule { }
