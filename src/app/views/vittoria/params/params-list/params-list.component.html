@@ -1,6 +1,6 @@
 <app-toolbar [menu]="menu"></app-toolbar>
 <app-navbar></app-navbar>
-<div class="app-content content ">
+<div class="app-content content">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
     <div class="content-wrapper">
@@ -96,34 +96,34 @@
                                              </svg>
                                         </a>
                                         <a (click)="abrirModal(contenido,parametro.id)">
-                                            <svg xmlns="http://www.w3.org/2000/svg " width="14 " height="14 " viewBox="0 0 24 24 " fill="none " stroke="currentColor " stroke-width="2 " stroke-linecap="round " stroke-linejoin="round " class="mr-50 ">
-                                                <polyline points="3 6 5 6 21 6 "></polyline>
-                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 "></path>
-                                                <line x1="10 " y1="11 " x2="10 " y2="17 "></line>
-                                                <line x1="14 " y1="11 " x2="14 " y2="17 "></line>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-50">
+                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                <line x1="10" y1="11" x2="10" y2="17"></line>
+                                                <line x1="14" y1="11" x2="14" y2="17"></line>
                                              </svg>
                                         </a>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
-                        <ngb-pagination #paginator [collectionSize]="collectionSize " [(page)]="page " [(pageSize)]="pageSize " [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+                        <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [(pageSize)]="pageSize" [maxSize]="5" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
 
                     </div>
                 </div>
                 <!-- list section end -->
                 <ng-template #contenido let-modal>
-                    <div class="modal-header ">
-                        <h4 class="modal-title ">Mensaje</h4>
-                        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-                        <span aria-hidden="true ">&times;</span>
+                    <div class="modal-header">
+                        <h4 class="modal-title">Mensaje</h4>
+                        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+                        <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
-                    <div class="modal-body ">
+                    <div class="modal-body">
                         <p>Confirma eliminar</p>
                     </div>
-                    <div class="modal-footer ">
-                        <button type="button " class="btn btn-light " (click)="cerrarModal()">SI</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" (click)="cerrarModal()">SI</button>
                     </div>
                 </ng-template>
                 <!-- Modal to add new user starts-->
@@ -179,7 +179,8 @@
                                         <option  *ngFor="let padre of padres" value="{{padre.id}}">{{padre.valor}}</option>
                                     </select>
                                 </div>
-                                <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close" (click)="gestionarParametro()">Guardar</button>
+                                <button class="btn btn-primary mr-1" aria-label="Close" (click)="gestionarParametro()">Guardar</button>
+                                <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal"></button>
                                 <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                             </div>
                         </div>
@@ -193,6 +194,6 @@
     </div>
 </div>
 
-<div class="sidenav-overlay "></div>
-<div class="drag-target "></div>
+<div class="sidenav-overlay"></div>
+<div class="drag-target"></div>
 <app-footer></app-footer>

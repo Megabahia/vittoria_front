@@ -87,7 +87,7 @@
                                                 <span class="avatar-content">{{primeraLetra(usuario.nombres, usuario.apellidos)}}</span>
                                             </div>
                                             <div class="d-flex flex-column">
-                                                <a class="user-name text-truncate mb-0" href="app-user-edit.html">
+                                                <a class="user-name text-truncate mb-0">
                                                     <span class="font-weight-bold">{{usuario.nombres +"" + usuario.apellidos}}</span></a>
                                             </div>
                                         </div>
@@ -162,10 +162,16 @@
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-uname">Usuario:</label>
                                         <input type="text" [(ngModel)]="nuevoUsuario.username" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                        <div *ngIf="submitted && !nuevoUsuario.username" style="display: block;" class="invalid-feedback">
+                                            <div>Nombre de usuario requerido</div>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-email">Correo:</label>
                                         <input type="text" [(ngModel)]="nuevoUsuario.email" id="basic-icon-default-email" class="form-control dt-email" />
+                                        <div *ngIf="submitted && !nuevoUsuario.email" style="display: block;" class="invalid-feedback">
+                                            <div>Correo requerido</div>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-uname">Compañía:</label>
@@ -196,8 +202,12 @@
                                                 {{rol.nombre}}
                                               </option>
                                     </select>
+                                        <div *ngIf="submitted && nuevoUsuario.idRol==0" style="display: block;" class="invalid-feedback">
+                                            <div>Correo requerido</div>
+                                        </div>
                                     </div>
-                                    <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close" (click)="guardarUsuario()">Guardar</button>
+                                    <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarUsuario()">Guardar</button>
+                                    <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
                                     <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                                 </div>
                             </div>

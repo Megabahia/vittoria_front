@@ -9,6 +9,7 @@ import { ParamService } from 'src/app/services/admin/param.service';
 })
 export class ParamsListComponent implements OnInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
+  @ViewChild('dismissModal') dismissModal;
   menu;
   vista;
   page = 1;
@@ -98,6 +99,8 @@ export class ParamsListComponent implements OnInit {
     this.funcion = 'insertar';
   }
   async gestionarParametro() {
+
+    
     if (this.funcion == "insertar") {
       await this.paramService.insertarParametro(
         this.nombre,
@@ -108,6 +111,7 @@ export class ParamsListComponent implements OnInit {
         this.idPadre
       ).subscribe((result) => {
         this.obtenerListaParametros();
+        this.dismissModal.nativeElement.click();
       });
     } else if (this.funcion = 'editar') {
       await this.paramService.editarParametro(

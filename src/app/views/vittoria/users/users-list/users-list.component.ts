@@ -9,6 +9,8 @@ import { nuevoUsuario, UsersService } from 'src/app/services/admin/users.service
 })
 export class UsersListComponent implements OnInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
+  @ViewChild('dismissModal') dismissModal;
+  submitted = false;
   menu;
   paises;
   paisesOpciones;
@@ -81,6 +83,9 @@ export class UsersListComponent implements OnInit {
     return iniciales;
   }
   async guardarUsuario() {
+
+    this.submitted = true;
+
     if (
       this.nuevoUsuario.email &&
       this.nuevoUsuario.idRol &&
@@ -88,7 +93,7 @@ export class UsersListComponent implements OnInit {
     ) {
       await this.servicioUsuarios.insertarUsuario(this.nuevoUsuario).subscribe(() => {
         this.obtenerListaUsuarios();
-        this.modalService.dismissAll();
+        this.dismissModal.nativeElement.click();
       });
     }
   }
