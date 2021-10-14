@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProspectosService } from '../../../../services/mdm/prospectosCli/prospectos.service';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -27,6 +27,7 @@ export class ProspectosClientesListComponent implements OnInit {
   collectionSize;
   lista;
   usuario: FormData = new FormData();
+  pospectoForm: FormGroup;
   idUsuario;
   nombres;
   apellidos;
@@ -50,10 +51,18 @@ export class ProspectosClientesListComponent implements OnInit {
   vista;
   constructor(
     private prospectosService: ProspectosService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private _formBuilder: FormBuilder,
   ) { }
 
   ngOnInit(): void {
+    this.pospectoForm = this._formBuilder.group({
+      nombre: ['', [Validators.required]],
+      nombreTipo: ['', [Validators.required]],
+      descripcion: ['', [Validators.required]],
+      tipoVariable: ['', [Validators.required]],
+      valor: ['', [Validators.required]]
+    });
     this.menu = {
       modulo: "mdm",
       seccion: "prospectosCli"

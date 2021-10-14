@@ -26,7 +26,7 @@
                             <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
                                 <!-- users edit media object start -->
                                 <div class="media mb-2">
-                                    <img [src]="obtenerURLImagen(imagen)" alt="users avatar" class="user-avatar users-avatar-shadow rounded mr-2 my-25 cursor-pointer" height="90" width="90" />
+                                    <img src="{{ imagenTemp ? imagenTemp:obtenerURLImagen(imagen)}}" alt="users avatar" class="user-avatar users-avatar-shadow rounded mr-2 my-25 cursor-pointer" height="90" width="90" />
                                     <div class="media-body mt-50">
                                         <h4>{{usuario.nombres + " "+ usuario.apellidos}}</h4>
                                         <div class="col-12 d-flex mt-1 px-0">

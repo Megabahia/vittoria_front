@@ -12,6 +12,7 @@ export class UsersEditComponent implements OnInit {
   @Input() paises;
   @Input() estados;
   imagen;
+  imagenTemp;
   usuario: Usuario = {
     id: 0,
     nombres: '',
@@ -64,7 +65,7 @@ export class UsersEditComponent implements OnInit {
       let reader = new FileReader();
 
       reader.onload = (event: any) => {
-        this.imagen = event.target.result;
+        this.imagenTemp = event.target.result;
       };
 
       reader.readAsDataURL(event.target.files[0]);
