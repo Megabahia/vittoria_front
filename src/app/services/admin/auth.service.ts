@@ -68,4 +68,7 @@ export class AuthService {
   enviarCorreoCambioClave(datos){
     return this.http.post<any>(`${apiUrl}/adm/auth/password_reset/`,datos);
   }
+  enviarClaveNueva(datos){
+    return this.http.post<any>(`${apiUrl}/adm/auth/password_reset/confirm/`,datos);
+  }
 }

@@ -12,12 +12,12 @@
                         <ul class="nav nav-pills" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center active" id="account-tab" data-toggle="tab" href="#account" aria-controls="account" role="tab" aria-selected="true">
-                                    <i data-feather="user"></i><span class="d-none d-sm-block">Cuenta</span>
+                                    <i-feather name="user" class="edit-user"></i-feather><span class="d-none d-sm-block">Cuenta</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center" id="social-tab" data-toggle="tab" href="#social" aria-controls="social" role="tab" aria-selected="false">
-                                    <i data-feather="share-2"></i><span class="d-none d-sm-block">Redes sociales</span>
+                                    <i-feather name="share-2" class="edit-user"></i-feather><span class="d-none d-sm-block">Redes sociales</span>
                                 </a>
                             </li>
                         </ul>
@@ -26,7 +26,7 @@
                             <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
                                 <!-- users edit media object start -->
                                 <div class="media mb-2">
-                                    <img src="assets/images/avatars/7.png" alt="users avatar" class="user-avatar users-avatar-shadow rounded mr-2 my-25 cursor-pointer" height="90" width="90" />
+                                    <img [src]="obtenerURLImagen(imagen)" alt="users avatar" class="user-avatar users-avatar-shadow rounded mr-2 my-25 cursor-pointer" height="90" width="90" />
                                     <div class="media-body mt-50">
                                         <h4>{{usuario.nombres + " "+ usuario.apellidos}}</h4>
                                         <div class="col-12 d-flex mt-1 px-0">

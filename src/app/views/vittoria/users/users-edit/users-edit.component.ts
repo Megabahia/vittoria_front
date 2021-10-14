@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Usuario, UsersService } from 'src/app/services/admin/users.service';
+import { ParamService as ParamServiceADM } from 'src/app/services/admin/param.service';
 
 @Component({
   selector: 'app-users-edit',
@@ -10,49 +11,67 @@ export class UsersEditComponent implements OnInit {
   @Input() roles;
   @Input() paises;
   @Input() estados;
-  usuario:Usuario ={
-    id:0,
-    nombres:'',
-    apellidos:'',
-    compania:'',
-    email:'',
-    estado:'',
-    instagram:'',
-    username:'',
-    pais:'',
-    idRol:0,
-    telefono:'',
-    twitter:'',
-    whatsapp:'',
-    facebook:'',
-    imagen : new FormData()
+  imagen;
+  usuario: Usuario = {
+    id: 0,
+    nombres: '',
+    apellidos: '',
+    compania: '',
+    email: '',
+    estado: '',
+    instagram: '',
+    username: '',
+    pais: '',
+    idRol: 0,
+    telefono: '',
+    twitter: '',
+    whatsapp: '',
+    facebook: '',
+    imagen: new FormData()
   };
   constructor(
-    private usersService:UsersService
-  ) { 
-    
+    private usersService: UsersService,
+    private globalParam: ParamServiceADM
+
+  ) {
+
   }
 
   async ngOnInit() {
-    
+
   }
-  async ngAfterViewInit(){
-    await this.usersService.obtenerUsuario(this.idUsuario).subscribe((result)=>{
+  async ngAfterViewInit() {
+    await this.usersService.obtenerUsuario(this.idUsuario).subscribe((result) => {
       this.usuario = result;
+      this.imagen = this.usuario.imagen;
     });
   }
-  async actualizarUsuario()
-  {
-    await this.usersService.actualizarUsuario(this.usuario).subscribe(()=>{
+  async actualizarUsuario() {
+    await this.usersService.actualizarUsuario(this.usuario).subscribe(() => {
       window.location.href = '/admin/user';
     });
   }
-  async subirImagen(event){
-    let imagen = event.target.files[0];
-    this.usuario.imagen = new FormData();
-    this.usuario.imagen.append('imagen',imagen,imagen.name);
-    this.usersService.insertarImagen(this.usuario.id,this.usuario.imagen).subscribe((data)=>{
-      console.log(data);
-    });
-  } 
+  obtenerURLImagen(url) {
+    return this.globalParam.obtenerURL(url);
+  }
+  async subirImagen(event) {
+
+    if (event.target.files && event.target.files[0]) {
+      let imagen = event.target.files[0];
+      this.usuario.imagen = new FormData();
+      this.usuario.imagen.append('imagen', imagen, imagen.name);
+
+      let reader = new FileReader();
+
+      reader.onload = (event: any) => {
+        this.imagen = event.target.result;
+      };
+
+      reader.readAsDataURL(event.target.files[0]);
+      this.usersService.insertarImagen(this.usuario.id, this.usuario.imagen).subscribe((data) => {
+        console.log(data);
+      });
+    }
+  }
+
 }

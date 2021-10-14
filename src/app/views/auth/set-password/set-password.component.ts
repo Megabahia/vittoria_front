@@ -1,14 +1,63 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../../services/admin/auth.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-set-password',
   templateUrl: './set-password.component.html'
 })
 export class SetPasswordComponent implements OnInit {
-
-  constructor() { }
+  @ViewChild('errorAuth') errorAuth;
+  token;
+  password;
+  email;
+  confirmPassword;
+  confirmar = true;
+  submitted = false;
+  constructor(
+    private modalService: NgbModal,
+    private route: ActivatedRoute,
+    private authService: AuthService,
+  ) { }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.token = params['token'];
+      this.email = params['email'];
+    });
+  }
+  verificarPassword() {
+
+    if (this.password == this.confirmPassword) {
+      this.confirmar = true;
+    } else {
+      this.confirmar = false;
+    }
   }
 
+  enviarPassword() {
+    this.submitted = true;
+
+    if (this.confirmar && this.password) {
+      this.authService.enviarClaveNueva(
+        {
+          token: this.token,
+          password: this.password,
+          email: this.email
+        }
+      ).subscribe(info => {
+        window.location.href = '/auth/signin';
+      }, error => {
+        this.abrirModal(this.errorAuth);
+
+      });
+    }
+  }
+  abrirModal(modal) {
+    this.modalService.open(modal)
+  }
+  cerrarModal() {
+    this.modalService.dismissAll();
+  }
 }

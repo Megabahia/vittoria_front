@@ -20,7 +20,6 @@ export class MailPasswordComponent implements OnInit {
     }).subscribe((info)=>{
       console.log(info);
     },(error)=>{
-      console.log('entra');
     })
   }
 }
