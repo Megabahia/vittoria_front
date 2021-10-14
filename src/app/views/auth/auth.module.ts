@@ -11,9 +11,15 @@ import { SharedModule } from '../../shared/shared.module';
 import { ChartsModule } from 'ng2-charts';
 import { MailPasswordComponent } from './mail-password/mail-password.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
+import { SetPasswordComponent } from './set-password/set-password.component';
 
 @NgModule({
-  declarations: [AuthComponent, SignInComponent, MailPasswordComponent, PasswordResetComponent],
+  declarations: [
+    AuthComponent, 
+    SignInComponent, 
+    MailPasswordComponent, 
+    PasswordResetComponent, 
+    SetPasswordComponent],
   imports: [
     NgbModule,
     SharedModule,

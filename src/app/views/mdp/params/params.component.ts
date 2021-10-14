@@ -53,7 +53,7 @@ export class ParamsComponent implements OnInit {
       valor: ['', [Validators.required]]
     });
     this.menu = {
-      modulo: "adm",
+      modulo: "mdp",
       seccion: "param"
     };
   }

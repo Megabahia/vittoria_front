@@ -5,6 +5,7 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { AuthComponent } from './auth.component';
 import { MailPasswordComponent } from './mail-password/mail-password.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
+import { SetPasswordComponent } from './set-password/set-password.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,9 @@ const routes: Routes = [
         path: 'usuario', children: [
           { path: '', redirectTo: 'reseteoPassword', pathMatch: 'full' }, {
             path: 'reseteoPassword', component: PasswordResetComponent 
+          },
+          {
+            path: 'asignacionPassword', component: SetPasswordComponent
           }
         ]
       }
