@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Usuario, UsersService } from 'src/app/services/admin/users.service';
 import { ParamService as ParamServiceADM } from 'src/app/services/admin/param.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-users-edit',
@@ -11,6 +12,11 @@ export class UsersEditComponent implements OnInit {
   @Input() roles;
   @Input() paises;
   @Input() estados;
+  @ViewChild('mensajeModal') mensajeModal;
+
+  submitted = false;
+  usuarioForm: FormGroup;
+
   imagen;
   imagenTemp;
   usuario: Usuario = {
@@ -32,14 +38,30 @@ export class UsersEditComponent implements OnInit {
   };
   constructor(
     private usersService: UsersService,
-    private globalParam: ParamServiceADM
-
+    private globalParam: ParamServiceADM,
+    private _formBuilder: FormBuilder,
   ) {
 
   }
-
+  get f() {
+    return this.usuarioForm.controls;
+  }
   async ngOnInit() {
-
+    this.usuarioForm = this._formBuilder.group({
+      nombres: ['', [Validators.required]],
+      apellidos: ['', [Validators.required]],
+      username: ['', [Validators.required]],
+      email: ['', [Validators.required]],
+      compania: ['', [Validators.required]],
+      pais: ['', [Validators.required]],
+      telefono: ['', [Validators.required]],
+      estado: ['', [Validators.required]],
+      whatsapp: ['', [Validators.required]],
+      idRol: [0, [Validators.min(1)]],
+      twitter: ['', [Validators.required]],
+      facebook: ['', [Validators.required]],
+      instagram: ['', [Validators.required]]
+    });
   }
   async ngAfterViewInit() {
     await this.usersService.obtenerUsuario(this.idUsuario).subscribe((result) => {
@@ -48,6 +70,11 @@ export class UsersEditComponent implements OnInit {
     });
   }
   async actualizarUsuario() {
+    this.submitted = true;
+
+    if (this.usuarioForm.invalid) {
+      return;
+    }
     await this.usersService.actualizarUsuario(this.usuario).subscribe(() => {
       window.location.href = '/admin/user';
     });
@@ -70,7 +97,7 @@ export class UsersEditComponent implements OnInit {
 
       reader.readAsDataURL(event.target.files[0]);
       this.usersService.insertarImagen(this.usuario.id, this.usuario.imagen).subscribe((data) => {
-        
+
       });
     }
   }

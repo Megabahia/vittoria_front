@@ -12,11 +12,16 @@
             <section class="app-user-list">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <input class="form-control" placeholder="Nombre de rol" [(ngModel)]="roles.rol.nombre">
+                        <form class="auth-login-form mt-2" [formGroup]="rolesForm">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input class="form-control" name="nombre" formControlName="nombre" placeholder="Nombre de rol" [(ngModel)]="roles.rol.nombre">
+                                    <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback" style="display: block;">
+                                        <div *ngIf="f.nombre.errors.required">Nombre es requerido</div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
                 <div class="card">

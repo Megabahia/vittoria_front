@@ -112,7 +112,7 @@
                                   <line x1="10" y1="12" x2="14" y2="12"></line>
                                </svg>
                                         </a>
-                                        <a (click)="abrirModal(contenido,usuario.id)">
+                                        <a (click)="comprobarEliminar(contenido,usuario.id)">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-50">
                                   <polyline points="3 6 5 6 21 6"></polyline>
                                   <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -139,7 +139,7 @@
                             <p>Confirma eliminar</p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-light" (click)="cerrarModal()">SI</button>
+                            <button type="button" class="btn btn-light" (click)="eliminar()">SI</button>
                         </div>
                     </ng-template>
                     <!-- Modal to add new user starts-->
@@ -150,66 +150,86 @@
                                 <div class="modal-header mb-1">
                                     <h5 class="modal-title" id="exampleModalLabel">Nuevo usuario</h5>
                                 </div>
-                                <div class="modal-body flex-grow-1">
-                                    <div class="form-group">
-                                        <label class="form-label" for="basic-icon-default-fullname">Nombres:</label>
-                                        <input type="text" [(ngModel)]="nuevoUsuario.nombres" class="form-control dt-full-name" id="basic-icon-default-fullname" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="basic-icon-default-uname">Apellidos:</label>
-                                        <input type="text" [(ngModel)]="nuevoUsuario.apellidos" id="basic-icon-default-uname" class="form-control dt-uname" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="basic-icon-default-uname">Usuario:</label>
-                                        <input type="text" [(ngModel)]="nuevoUsuario.username" id="basic-icon-default-uname" class="form-control dt-uname" />
-                                        <div *ngIf="submitted && !nuevoUsuario.username" style="display: block;" class="invalid-feedback">
-                                            <div>Nombre de usuario requerido</div>
+                                <form class="auth-login-form mt-2" [formGroup]="usuarioForm">
+                                    <div class="modal-body flex-grow-1">
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-fullname">Nombres:</label>
+                                            <input type="text" name="nombres" formControlName="nombres" [(ngModel)]="nuevoUsuario.nombres" class="form-control dt-full-name" id="basic-icon-default-fullname" />
+                                            <div *ngIf="submitted && f.nombres.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="f.nombres.errors.required">Nombres son requeridos</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="basic-icon-default-email">Correo:</label>
-                                        <input type="text" [(ngModel)]="nuevoUsuario.email" id="basic-icon-default-email" class="form-control dt-email" />
-                                        <div *ngIf="submitted && !nuevoUsuario.email" style="display: block;" class="invalid-feedback">
-                                            <div>Correo requerido</div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-uname">Apellidos:</label>
+                                            <input type="text" name="apellidos" formControlName="apellidos" [(ngModel)]="nuevoUsuario.apellidos" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                            <div *ngIf="submitted && f.apellidos.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="f.apellidos.errors.required">Apellidos son requeridos</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="basic-icon-default-uname">Compañía:</label>
-                                        <input type="text" [(ngModel)]="nuevoUsuario.compania" id="basic-icon-default-uname" class="form-control dt-uname" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="basic-icon-default-uname">País:</label>
-                                        <select class="select2 form-control form-control-lg" [(ngModel)]="nuevoUsuario.pais">
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-uname">Usuario:</label>
+                                            <input type="text" name="username" formControlName="username" [(ngModel)]="nuevoUsuario.username" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                            <div *ngIf="submitted && f.username.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="f.username.errors.required">Nombre de usuario es requerido</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-email">Correo:</label>
+                                            <input type="text" name="email" formControlName="email" [(ngModel)]="nuevoUsuario.email" id="basic-icon-default-email" class="form-control dt-email" />
+                                            <div *ngIf="submitted && f.email.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="f.email.errors.required">Email es requerido</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-uname">Compañía:</label>
+                                            <input type="text" name="compania" formControlName="compania" [(ngModel)]="nuevoUsuario.compania" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                            <div *ngIf="submitted && f.compania.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="f.compania.errors.required">Compañia es requerida</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-uname">País:</label>
+                                            <select class="select2 form-control form-control-lg" name="pais" formControlName="pais" [(ngModel)]="nuevoUsuario.pais">
                                             <option value="" selected>- Seleccione país -</option>
                                             <option value="{{pais.nombre}}" *ngFor="let pais of paises">
                                                 {{pais.nombre}}
                                               </option>
                                  </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="basic-icon-default-uname">Teléfono:</label>
-                                        <input type="text" [(ngModel)]="nuevoUsuario.telefono" id="basic-icon-default-uname" class="form-control dt-uname" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="basic-icon-default-uname">WhatsApp:</label>
-                                        <input type="text" [(ngModel)]="nuevoUsuario.whatsapp" id="basic-icon-default-uname" class="form-control dt-uname" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="user-role">Rol de usuario</label>
-                                        <select class="select2 form-control form-control-lg" [(ngModel)]="nuevoUsuario.idRol">
+                                            <div *ngIf="submitted && f.pais.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="f.pais.errors.required">País es requerido</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-uname">Teléfono:</label>
+                                            <input type="number" name="telefono" formControlName="telefono" [(ngModel)]="nuevoUsuario.telefono" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                            <div *ngIf="submitted && f.telefono.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="f.telefono.errors.required">Teléfono es requerido</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-uname">WhatsApp:</label>
+                                            <input type="number" name="whatsapp" formControlName="whatsapp" [(ngModel)]="nuevoUsuario.whatsapp" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                            <div *ngIf="submitted && f.whatsapp.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="f.whatsapp.errors.required">Whatsapp es requerido</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="user-role">Rol de usuario</label>
+                                            <select class="select2 form-control form-control-lg" name="idRol" formControlName="idRol" [(ngModel)]="nuevoUsuario.idRol">
                                             <option value="0" selected>- Seleccione rol -</option>
                                             <option value="{{rol.id}}" *ngFor="let rol of roles">
                                                 {{rol.nombre}}
                                               </option>
                                     </select>
-                                        <div *ngIf="submitted && nuevoUsuario.idRol==0" style="display: block;" class="invalid-feedback">
-                                            <div>Rol requerido</div>
+                                            <div *ngIf="submitted && f.idRol.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="f.idRol.errors">Rol es requerido</div>
+                                            </div>
                                         </div>
+                                        <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarUsuario()">Guardar</button>
+                                        <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
+                                        <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                                     </div>
-                                    <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarUsuario()">Guardar</button>
-                                    <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
-                                    <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -228,3 +248,18 @@
 <div class="sidenav-overlay"></div>
 <div class="drag-target"></div>
 <app-footer></app-footer>
+
+<ng-template #mensajeModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div [innerHTML]="mensaje"></div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="cerrarModal()">Cerrar</button>
+    </div>
+</ng-template>
