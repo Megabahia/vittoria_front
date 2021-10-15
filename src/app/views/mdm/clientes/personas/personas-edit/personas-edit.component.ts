@@ -20,7 +20,10 @@ export class PersonasEditComponent implements OnInit {
   @ViewChild(NgbPagination) paginatorTA: NgbPagination;
   @ViewChild(NgbPagination) paginatorPA: NgbPagination;
   basicDemoValue = '2017-01-01';
+
   datosBasicosForm: FormGroup;
+  submittedDatosBasicosForm = false;
+
   public barChartOptions: ChartOptions = {
     responsive: true,
     aspectRatio: 1
@@ -206,12 +209,11 @@ export class PersonasEditComponent implements OnInit {
       ciudadTrabajo: ['', [Validators.required]],
       paisTrabajo: ['', [Validators.required]],
       lugarTrabajo: ['', [Validators.required]],
-      ubicacionTrabajo: ['', [Validators.required]],
       mesesUltimoTrabajo: [0, [Validators.required]],
       mesesTotalTrabajo: [0, [Validators.required]],
       ingresosPromedioMensual: [0, [Validators.required]],
       gastosPromedioMensual: [0, [Validators.required]],
-      estado: [0, [Validators.required]]
+      estado: [0]
     });
   }
   async ngAfterViewInit() {
@@ -239,7 +241,7 @@ export class PersonasEditComponent implements OnInit {
     this.clientesService.obtenerCliente(this.idCliente).subscribe((info) => {
       this.datosBasicos = info;
       this.estadoOpcion = info.estado == 'Activo' ? 1 : 0;
-      this.urlImagen = this.obtenerURLImagen(info.imagen);
+      this.urlImagen = info.imagen;
       this.datosBasicos.estado = info.estado;
       this.datosBasicos.created_at = this.transformarFecha(info.created_at);
       this.datosBasicos.fechaNacimiento = this.transformarFecha(info.fechaNacimiento);
@@ -356,7 +358,21 @@ export class PersonasEditComponent implements OnInit {
   async cambiarEstado() {
     this.datosBasicos.estado = this.estadoOpcion == 1 ? 'Activo' : 'Inactivo'
   }
+
+  get fdb() {
+    return this.datosBasicosForm.controls;
+  }
+
   async guardarDatosBasicos() {
+
+    this.submittedDatosBasicosForm = true;
+
+    if (this.datosBasicosForm.invalid) {
+      console.log(this.datosBasicosForm);
+      console.log('entra');
+      return;
+    }
+
     if (this.idCliente != 0) {
       this.clientesService.editarDatosBasicos(this.idCliente, this.datosBasicos).subscribe((info) => {
       });
@@ -374,7 +390,7 @@ export class PersonasEditComponent implements OnInit {
     imagen.append('imagen', nuevaImagen, nuevaImagen.name);
     if (this.idCliente != 0) {
       this.clientesService.editarImagen(this.idCliente, imagen).subscribe((info) => {
-        this.urlImagen = this.obtenerURLImagen(info.imagen);
+        this.urlImagen = info.imagen;
       });
     }
   }
