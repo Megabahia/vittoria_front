@@ -70,7 +70,7 @@ export class UsersEditComponent implements OnInit {
 
       reader.readAsDataURL(event.target.files[0]);
       this.usersService.insertarImagen(this.usuario.id, this.usuario.imagen).subscribe((data) => {
-        console.log(data);
+        
       });
     }
   }

@@ -39,7 +39,7 @@ export class ProspectosClientesEditComponent implements OnInit {
   ngOnInit(): void {
     this.prospectosService.obtenerProspecto(this.idUsuario).subscribe((info) => {
       this.prospecto = info;
-      this.urlImagen = this.obtenerURLImagen(info.imagen);
+      this.urlImagen = info.imagen;
     });
   }
   obtenerURLImagen(url) {
@@ -60,8 +60,8 @@ export class ProspectosClientesEditComponent implements OnInit {
   }
   eliminarImagen() {
     if (confirm('¿Desea eliminar la imagen?')) {
-      this.prospectosService.insertarImagen(this.idUsuario,{imagen:null}).subscribe((data) => {
-        this.urlImagen = this.obtenerURLImagen(data.imagen);
+      this.prospectosService.insertarImagen(this.idUsuario, { imagen: null }).subscribe((data) => {
+        this.urlImagen = data.imagen;
       });
     }
   }
@@ -78,5 +78,5 @@ export class ProspectosClientesEditComponent implements OnInit {
       });
     }
   }
-  
+
 }
