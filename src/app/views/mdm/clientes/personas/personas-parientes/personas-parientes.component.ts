@@ -1,7 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ClientesService, Pariente } from '../../../../../services/mdm/personas/clientes/clientes.service';
 import { ParamService } from '../../../../../services/mdm/param/param.service';
 import * as moment from 'moment';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-personas-parientes',
@@ -9,9 +11,19 @@ import * as moment from 'moment';
 })
 export class PersonasParientesComponent implements OnInit {
   @Output() volver = new EventEmitter<string>();
+  @ViewChild('mensajeModal') mensajeModal;
   @Input() idPariente;
-  @Input() idCliente; 
+  @Input() idCliente;
   pariente: Pariente;
+  submitted = false;
+  //FORMS
+  datosParientesForm: FormGroup;
+  //--------------------------------------
+  numRegex = /^-?\d*[.,]?\d{0,2}$/;
+
+  //mensaje modal
+  mensaje = "";
+
   tipoParientesOpciones;
   generoOpciones;
   nacionalidadOpciones;
@@ -27,16 +39,69 @@ export class PersonasParientesComponent implements OnInit {
   estadoCivilOpciones;
   estadoOpcion;
   constructor(
-    private clientesService:ClientesService,
-    private paramService:ParamService
+    private clientesService: ClientesService,
+    private paramService: ParamService,
+    private _formBuilder: FormBuilder,
+    private modalService: NgbModal,
   ) {
     this.pariente = clientesService.inicializarPariente();
-   }
+  }
 
   async ngOnInit() {
-    
+    this.datosParientesForm = this._formBuilder.group({
+      tipoPariente: ['', [Validators.required]],
+      cedula: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      nombres: ['', [Validators.required]],
+      apellidos: ['', [Validators.required]],
+      genero: ['', [Validators.required]],
+      nacionalidad: ['', [Validators.required]],
+      fechaNacimiento: ['', [Validators.required]],
+      edad: ['', [Validators.required]],
+      paisNacimiento: ['', [Validators.required]],
+      provinciaNacimiento: ['', [Validators.required]],
+      ciudadNacimiento: ['', [Validators.required]],
+      estadoCivil: ['', [Validators.required]],
+      paisResidencia: ['', [Validators.required]],
+      provinciaResidencia: ['', [Validators.required]],
+      ciudadResidencia: ['', [Validators.required]],
+      callePrincipal: ['', [Validators.required]],
+      numero: ['', [Validators.required]],
+      calleSecundaria: ['', [Validators.required]],
+      edificio: ['', [Validators.required]],
+      piso: ['', [Validators.required]],
+      departamento: ['', [Validators.required]],
+      telefonoDomicilio: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      telefonoOficina: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      celularPersonal: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      celularOficina: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      whatsappPersonal: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      whatsappSecundario: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      correoPersonal: ['', [Validators.required]],
+      correoTrabajo: ['', [Validators.required]],
+      googlePlus: ['', [Validators.required]],
+      twitter: ['', [Validators.required]],
+      facebook: ['', [Validators.required]],
+      instagram: ['', [Validators.required]],
+      nivelEstudios: ['', [Validators.required]],
+      profesion: ['', [Validators.required]],
+      lugarTrabajo: ['', [Validators.required]],
+      paisTrabajo: ['', [Validators.required]],
+      provinciaTrabajo: ['', [Validators.required]],
+      ciudadTrabajo: ['', [Validators.required]],
+      mesesUltimoTrabajo: [0, [Validators.required, Validators.pattern(this.numRegex)]],
+      mesesTotalTrabajo: [0, [Validators.required, Validators.pattern(this.numRegex)]],
+      ingresosPromedioMensual: [0, [Validators.required, Validators.pattern(this.numRegex)]],
+      gastosPromedioMensual: [0, [Validators.required, Validators.pattern(this.numRegex)]]
+    });
   }
-  async ngAfterViewInit(){
+
+  //GETS-------
+  get f() {
+    return this.datosParientesForm.controls;
+  }
+  //------------
+
+  async ngAfterViewInit() {
     this.obtenerTipoParientesOpciones();
     this.obtenerGeneroOpciones();
     this.obtenerNacionalidadOpciones();
@@ -44,10 +109,10 @@ export class PersonasParientesComponent implements OnInit {
     this.obtenerNivelEstudiosOpciones();
     this.obtenerNivelProfesionOpciones();
     this.obtenerEstadoCivilOpciones();
-    if(this.idPariente!=0){
-      await this.clientesService.obtenerPariente(this.idPariente).subscribe((info)=>{
-        this.pariente= info;
-        this.estadoOpcion = info.estado=='Activo' ? 1:0;
+    if (this.idPariente != 0) {
+      await this.clientesService.obtenerPariente(this.idPariente).subscribe((info) => {
+        this.pariente = info;
+        this.estadoOpcion = info.estado == 'Activo' ? 1 : 0;
         this.pariente.estado = info.estado;
         this.obtenerProvinciasNacimiento();
         this.obtenerCiudadNacimiento();
@@ -56,95 +121,123 @@ export class PersonasParientesComponent implements OnInit {
         this.obtenerProvinciasTrabajo();
         this.obtenerCiudadTrabajo();
       });
-    }else{
-      this.pariente= this.clientesService.inicializarPariente();
+    } else {
+      this.pariente = this.clientesService.inicializarPariente();
     }
     this.pariente.cliente = this.idCliente;
   }
-  async obtenerTipoParientesOpciones(){
-    await this.paramService.obtenerListaPadres("TIPO_PARIENTE").subscribe((info)=>{
+  async obtenerTipoParientesOpciones() {
+    await this.paramService.obtenerListaPadres("TIPO_PARIENTE").subscribe((info) => {
       this.tipoParientesOpciones = info;
     });
   }
-  async obtenerGeneroOpciones(){
-    await this.paramService.obtenerListaPadres("GENERO").subscribe((info)=>{
+  async obtenerGeneroOpciones() {
+    await this.paramService.obtenerListaPadres("GENERO").subscribe((info) => {
       this.generoOpciones = info;
     });
   }
-  async obtenerNacionalidadOpciones(){
-    await this.paramService.obtenerListaPadres("NACIONALIDAD").subscribe((info)=>{
+  async obtenerNacionalidadOpciones() {
+    await this.paramService.obtenerListaPadres("NACIONALIDAD").subscribe((info) => {
       this.nacionalidadOpciones = info;
     });
   }
-  async obtenerPaisOpciones(){
-    await this.paramService.obtenerListaPadres("PAIS").subscribe((info)=>{
+  async obtenerPaisOpciones() {
+    await this.paramService.obtenerListaPadres("PAIS").subscribe((info) => {
       this.paisesOpciones = info;
     });
   }
-  async obtenerProvinciasNacimiento(){
-    await this.paramService.obtenerListaHijos(this.pariente.paisNacimiento,"PAIS").subscribe((info)=>{
+  async obtenerProvinciasNacimiento() {
+    await this.paramService.obtenerListaHijos(this.pariente.paisNacimiento, "PAIS").subscribe((info) => {
       this.provinciaNacimientoOpciones = info;
     });
   }
-  async obtenerCiudadNacimiento(){
-    await this.paramService.obtenerListaHijos(this.pariente.provinciaNacimiento,"PROVINCIA").subscribe((info)=>{
+  async obtenerCiudadNacimiento() {
+    await this.paramService.obtenerListaHijos(this.pariente.provinciaNacimiento, "PROVINCIA").subscribe((info) => {
       this.ciudadNacimientoOpciones = info;
     });
   }
-  async obtenerProvinciasResidencia(){
-    await this.paramService.obtenerListaHijos(this.pariente.paisResidencia,"PAIS").subscribe((info)=>{
+  async obtenerProvinciasResidencia() {
+    await this.paramService.obtenerListaHijos(this.pariente.paisResidencia, "PAIS").subscribe((info) => {
       this.provinciaResidenciaOpciones = info;
     });
   }
-  async obtenerCiudadResidencia(){
-    await this.paramService.obtenerListaHijos(this.pariente.provinciaResidencia,"PROVINCIA").subscribe((info)=>{
+  async obtenerCiudadResidencia() {
+    await this.paramService.obtenerListaHijos(this.pariente.provinciaResidencia, "PROVINCIA").subscribe((info) => {
       this.ciudadResidenciaOpciones = info;
     });
   }
-  async obtenerNivelEstudiosOpciones(){
-    await this.paramService.obtenerListaPadres("NIVEL_ESTUDIOS").subscribe((info)=>{
+  async obtenerNivelEstudiosOpciones() {
+    await this.paramService.obtenerListaPadres("NIVEL_ESTUDIOS").subscribe((info) => {
       this.nivelEstudiosOpciones = info;
     });
   }
-  async obtenerNivelProfesionOpciones(){
-    await this.paramService.obtenerListaPadres("PROFESION").subscribe((info)=>{
+  async obtenerNivelProfesionOpciones() {
+    await this.paramService.obtenerListaPadres("PROFESION").subscribe((info) => {
       this.profesionOpciones = info;
     });
   }
-  async obtenerProvinciasTrabajo(){
-    await this.paramService.obtenerListaHijos(this.pariente.paisTrabajo,"PAIS").subscribe((info)=>{
+  async obtenerProvinciasTrabajo() {
+    await this.paramService.obtenerListaHijos(this.pariente.paisTrabajo, "PAIS").subscribe((info) => {
       this.provinciaTrabajoOpciones = info;
     });
   }
-  async obtenerCiudadTrabajo(){
-    await this.paramService.obtenerListaHijos(this.pariente.provinciaTrabajo,"PROVINCIA").subscribe((info)=>{
+  async obtenerCiudadTrabajo() {
+    await this.paramService.obtenerListaHijos(this.pariente.provinciaTrabajo, "PROVINCIA").subscribe((info) => {
       this.ciudadTrabajoOpciones = info;
     });
   }
-  async obtenerEstadoCivilOpciones(){
-    await this.paramService.obtenerListaPadres("ESTADO_CIVIL").subscribe((info)=>{
+  async obtenerEstadoCivilOpciones() {
+    await this.paramService.obtenerListaPadres("ESTADO_CIVIL").subscribe((info) => {
       this.estadoCivilOpciones = info;
     });
   }
-  async calcularEdad(){
+  async calcularEdad() {
     this.pariente.edad = moment().diff(this.pariente.fechaNacimiento, 'years');
   }
   regresar() {
     this.volver.emit();
   }
-  async cambiarEstado(){
-    this.pariente.estado= this.estadoOpcion == 1 ? 'Activo':'Inactivo'
+  async cambiarEstado() {
+    this.pariente.estado = this.estadoOpcion == 1 ? 'Activo' : 'Inactivo'
   }
-  async guardarPariente(){
-    if(this.idPariente!=0){
-      await this.clientesService.actualizarPariente(this.idPariente,this.pariente).subscribe((info)=>{
-        console.log(info);
-      });
-    }else{
-      await this.clientesService.crearPariente(this.pariente).subscribe((info)=>{
-        console.log(info);
-      });
+  async guardarPariente() {
+    this.submitted = true;
+    if (this.datosParientesForm.invalid) {
+      return;
     }
-    
+    if (this.idPariente != 0) {
+      await this.clientesService.actualizarPariente(this.idPariente, this.pariente).subscribe((info) => {
+
+      },
+        (error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = "";
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          });
+          this.abrirModal(this.mensajeModal);
+        });
+    } else {
+      await this.clientesService.crearPariente(this.pariente).subscribe((info) => {
+
+      },
+        (error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = "";
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          });
+          this.abrirModal(this.mensajeModal);
+        });
+    }
+
+  }
+  abrirModal(modal) {
+    this.modalService.open(modal)
+  }
+  cerrarModal() {
+    this.modalService.dismissAll();
   }
 }

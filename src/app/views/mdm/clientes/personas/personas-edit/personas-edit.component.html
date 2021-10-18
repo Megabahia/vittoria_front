@@ -444,7 +444,7 @@
                                                 <div class="form-group">
                                                     <label for="username">Estado del cliente</label>
                                                     <div class="custom-control custom-switch">
-                                                        <input type="checkbox" class="custom-control-input" id="customSwitches" name="estado" formControlName="estado" [(ngModel)]="estadoOpcion" (change)="cambiarEstado()">
+                                                        <input type="checkbox" class="custom-control-input" id="customSwitches" name="estado" [(ngModel)]="estadoOpcion" (change)="cambiarEstado()" [ngModelOptions]="{standalone: true}">
                                                         <label class="custom-control-label" for="customSwitches"><b><span class="yellow">Activo</span> / <span class="grain">Inactivo</span></b></label>
                                                     </div>
                                                 </div>
@@ -783,7 +783,7 @@
                                                 <td> {{datoFisico.oficina}}</td>
                                                 <td> {{datoFisico.referencia}} </td>
                                                 <td>
-                                                    <a (click)="editarDatoFisico(datoFisico.id)" data-toggle="modal" data-target="#adddatofisico">
+                                                    <a (click)="editarDatoFisico(datoFisico.id)">
                                                         <i-feather name='edit-2'></i-feather>
                                                     </a>
                                                     <a (click)="eliminarDatoFisico(datoFisico.id)" data-repeater-delete>
@@ -916,7 +916,7 @@
                                                 </td>
                                                 <td> {{datoVirtual.informacion}} </td>
                                                 <td>
-                                                    <a (click)="editarDatoVirtual(datoVirtual.id)" data-toggle="modal" data-target="#addvirtual">
+                                                    <a (click)="editarDatoVirtual(datoVirtual.id)">
                                                         <i-feather name='edit-2'></i-feather>
                                                     </a>
                                                     <a (click)="eliminarDatoVirtual(datoVirtual.id)" data-repeater-delete>
@@ -1122,7 +1122,7 @@
                                                 <td> {{pariente.correoPersonal}} </td>
                                                 <td> {{pariente.celularPersonal}} </td>
                                                 <td>
-                                                    <a (click)="editarPariente(pariente.id)" data-toggle="modal" data-target="#addvirtual">
+                                                    <a (click)="editarPariente(pariente.id)">
                                                         <i-feather name='edit-2'></i-feather>
                                                     </a>
                                                     <a (click)="eliminarPariente(pariente.id)" data-repeater-delete>

@@ -29,7 +29,7 @@ export class PersonasEditComponent implements OnInit {
   //forms
   datosBasicosForm: FormGroup;
   datosVirtualesForm: FormGroup;
-  datosFisicossForm: FormGroup;
+  datosFisicosForm: FormGroup;
   //------------------------
   //subbmiteds
   submittedDatosBasicosForm = false;
@@ -223,18 +223,25 @@ export class PersonasEditComponent implements OnInit {
       mesesUltimoTrabajo: [0, [Validators.required]],
       mesesTotalTrabajo: [0, [Validators.required]],
       ingresosPromedioMensual: [0, [Validators.required]],
-      gastosPromedioMensual: [0, [Validators.required]],
-      estado: [0]
+      gastosPromedioMensual: [0, [Validators.required]]
     });
     this.datosVirtualesForm = this._formBuilder.group({
       tipoContacto: ['', [Validators.required]],
       icono: ['', [Validators.required]],
       informacion: ['', [Validators.required]],
     });
-    this.datosFisicossForm = this._formBuilder.group({
-      tipoContacto: ['', [Validators.required]],
-      icono: ['', [Validators.required]],
-      informacion: ['', [Validators.required]],
+    this.datosFisicosForm = this._formBuilder.group({
+      tipoDireccion: ['', [Validators.required]],
+      pais: ['', [Validators.required]],
+      provincia: ['', [Validators.required]],
+      ciudad: ['', [Validators.required]],
+      callePrincipal: ['', [Validators.required]],
+      numero: ['', [Validators.required]],
+      calleSecundaria: ['', [Validators.required]],
+      edificio: ['', [Validators.required]],
+      piso: ['', [Validators.required]],
+      oficina: ['', [Validators.required]],
+      referencia: ['', [Validators.required]]
     });
   }
   async ngAfterViewInit() {
@@ -380,13 +387,14 @@ export class PersonasEditComponent implements OnInit {
     this.datosBasicos.estado = this.estadoOpcion == 1 ? 'Activo' : 'Inactivo'
   }
 
+  //gets
   get fdb() {
     return this.datosBasicosForm.controls;
   }
   get dvForm() {
     return this.datosVirtualesForm.controls;
   }
-
+  //------------------
   async guardarDatosBasicos() {
 
     this.submittedDatosBasicosForm = true;
