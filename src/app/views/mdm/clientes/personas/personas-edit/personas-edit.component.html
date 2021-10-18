@@ -1,4 +1,4 @@
-<div class="app-content content ">
+<div class="app-content content">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
     <div class="content-wrapper">
@@ -45,9 +45,33 @@
                                         <div class="d-flex justify-content-between flex-wrap mt-1 mt-md-0">
                                             <ul class="nav nav-pills mb-0" role="tablist">
                                                 <li class="nav-item">
-                                                    <a class="nav-link font-weight-bold active" data-toggle="tab" href="#tab1" aria-controls="account" role="tab" aria-selected="true">
+                                                    <a class="nav-link font-weight-bold active" #tab1 data-toggle="tab" href="#tab1" aria-controls="account" role="tab" aria-selected="true">
                                                         <span class="d-none d-md-block">Datos básicos</span>
                                                         <i-feather name="info" class="d-block d-md-none"></i-feather>
+                                                    </a>
+                                                </li>
+
+
+                                                <li class="nav-item">
+                                                    <a class="nav-link font-weight-bold" #tab2 data-toggle="tab" href="#tab4" aria-controls="account" role="tab" aria-selected="true">
+                                                        <span class="d-none d-md-block">Datos físicos</span>
+                                                        <i-feather name="image" class="d-block d-md-none edit-user"></i-feather>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a class="nav-link font-weight-bold" #tab3 data-toggle="tab" href="#tab5" aria-controls="account" role="tab" aria-selected="true">
+                                                        <span class="d-none d-md-block">Datos virtuales</span>
+                                                        <i-feather name="image" class="d-block d-md-none edit-user"></i-feather>
+                                                    </a>
+                                                </li>
+
+
+
+                                                <li class="nav-item">
+                                                    <a class="nav-link font-weight-bold" #tab4 data-toggle="tab" href="#tab7" aria-controls="account" role="tab" aria-selected="true">
+                                                        <span class="d-none d-md-block">Parientes</span>
+                                                        <i-feather name="image" class="d-block d-md-none edit-user"></i-feather>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
@@ -62,35 +86,12 @@
                                                         <i-feather name="image" class="d-block d-md-none edit-user"></i-feather>
                                                     </a>
                                                 </li>
-
-                                                <li class="nav-item">
-                                                    <a class="nav-link font-weight-bold" data-toggle="tab" href="#tab4" aria-controls="account" role="tab" aria-selected="true">
-                                                        <span class="d-none d-md-block">Datos físicos</span>
-                                                        <i-feather name="image" class="d-block d-md-none edit-user"></i-feather>
-                                                    </a>
-                                                </li>
-
-                                                <li class="nav-item">
-                                                    <a class="nav-link font-weight-bold" data-toggle="tab" href="#tab5" aria-controls="account" role="tab" aria-selected="true">
-                                                        <span class="d-none d-md-block">Datos virtuales</span>
-                                                        <i-feather name="image" class="d-block d-md-none edit-user"></i-feather>
-                                                    </a>
-                                                </li>
-
                                                 <li class="nav-item">
                                                     <a class="nav-link font-weight-bold" data-toggle="tab" href="#tab6" aria-controls="account" role="tab" aria-selected="true">
                                                         <span class="d-none d-md-block">Transacciones</span>
                                                         <i-feather name="image" class="d-block d-md-none edit-user"></i-feather>
                                                     </a>
                                                 </li>
-
-                                                <li class="nav-item">
-                                                    <a class="nav-link font-weight-bold" data-toggle="tab" href="#tab7" aria-controls="account" role="tab" aria-selected="true">
-                                                        <span class="d-none d-md-block">Parientes</span>
-                                                        <i-feather name="image" class="d-block d-md-none edit-user"></i-feather>
-                                                    </a>
-                                                </li>
-
 
                                             </ul>
 
@@ -451,7 +452,7 @@
 
 
                                             <div class="col-12 d-flex flex-sm-row flex-column mt-2">
-                                                <a (click)="guardarDatosBasicos()" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar</a>
+                                                <a (click)="guardarDatosBasicos()" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar y continuar</a>
                                                 <button type="reset" class="btn btn-outline-info mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Borrar</button>
                                             </div>
                                         </div>
@@ -613,7 +614,7 @@
                                 <hr/>
                                 <div class="row">
                                     <div class="col-12 m-2">
-                                        <a href="clientes-listado.html" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar</a>
+                                        <a class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar y continuar</a>
                                     </div>
                                 </div>
                             </div>
@@ -793,12 +794,12 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <ngb-pagination #paginatorDF [collectionSize]="collectionSizeDF" [(page)]="pageDF" [(pageSize)]="pageSizeDF" [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+                                <ngb-pagination #paginatorDF [collectionSize]="collectionSizeDF" [(page)]="pageDF" [(pageSize)]="pageSizeDF" [maxSize]="5" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
 
                                 <hr/>
                                 <div class="row">
                                     <div class="col-12 m-2">
-                                        <a class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar</a>
+                                        <a class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light" (click)="cambiarTab(3)">Guardar y continuar</a>
                                     </div>
                                 </div>
                             </div>
@@ -833,38 +834,51 @@
                                                 <h5 class="modal-title" id="exampleModalLabel">Nuevo contacto virtual</h5>
                                             </div>
                                             <div class="modal-body flex-grow-1">
-                                                <div class="form-group">
-                                                    <label class="form-label">Fecha de registro:</label>
-                                                    <input type="text" class="form-control dt-full-name" [(ngModel)]="datosVirtuales.created_at" disabled />
-                                                </div>
+                                                <form class="auth-login-form mt-2" [formGroup]="datosVirtualesForm">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Fecha de registro:</label>
+                                                        <input type="text" class="form-control dt-full-name" name="created_at" [(ngModel)]="datosVirtuales.created_at" [ngModelOptions]="{standalone: true}" disabled />
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Tipo de contacto:</label>
-                                                    <select id="user-role" class="form-control" [(ngModel)]="datosVirtuales.tipoContacto">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Tipo de contacto:</label>
+                                                        <select id="user-role" class="form-control" name="tipoContacto" formControlName="tipoContacto" [(ngModel)]="datosVirtuales.tipoContacto">
                                                         <option value="" selected >- Seleccionar -</option>
                                                         <option value="{{tipoContactoOp.valor}}" *ngFor="let tipoContactoOp of tipoContactoOpciones">
                                                             {{tipoContactoOp.nombre}}
                                                           </option>
                                                     </select>
-                                                </div>
+                                                        <div *ngIf="submittedDatosVirtualesForm && dvForm.tipoContacto.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dvForm.tipoContacto.errors.required">Tipo contacto es requerido</div>
+                                                        </div>
+                                                    </div>
 
 
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Información:</label>
-                                                    <textarea class="form-control" rows="2" [(ngModel)]="datosVirtuales.informacion"></textarea>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="form-label">Icono:</label>
-                                                    <select id="user-role" class="form-control" [(ngModel)]="datosVirtuales.icono">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Información:</label>
+                                                        <textarea class="form-control" rows="2" name="informacion" formControlName="informacion" [(ngModel)]="datosVirtuales.informacion"></textarea>
+                                                        <div *ngIf="submittedDatosVirtualesForm && dvForm.informacion.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dvForm.informacion.errors.required">Información es requerida</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Icono:</label>
+                                                        <select id="user-role" class="form-control" name="icono" formControlName="icono" [(ngModel)]="datosVirtuales.icono">
                                                         <option value="" selected >- Seleccionar -</option>
                                                         <option value="{{iconosDatosVirtualOp.valor}}" *ngFor="let iconosDatosVirtualOp of iconosDatosVirtualOpciones">
                                                             {{iconosDatosVirtualOp.nombre}}
                                                           </option>
                                               </select>
-                                                </div>
-                                                <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close" (click)="guardarDatosVirtuales()">Guardar</button>
-                                                <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                                        <div *ngIf="submittedDatosVirtualesForm && dvForm.icono.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dvForm.icono.errors.required">Ícono es requerido</div>
+                                                        </div>
+                                                    </div>
+                                                    <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarDatosVirtuales()">Guardar</button>
+                                                    <button #dismissModalDV data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
+
+                                                    <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -913,12 +927,12 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <ngb-pagination #paginatorDV [collectionSize]="collectionSizeDV" [(page)]="pageDV" [(pageSize)]="pageSizeDV" [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+                                <ngb-pagination #paginatorDV [collectionSize]="collectionSizeDV" [(page)]="pageDV" [(pageSize)]="pageSizeDV" [maxSize]="5" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
 
                                 <hr/>
                                 <div class="row">
                                     <div class="col-12 m-2">
-                                        <a class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar</a>
+                                        <a class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light" (click)="cambiarTab(4)">Guardar y continuar</a>
                                     </div>
                                 </div>
                             </div>
@@ -949,7 +963,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <canvas baseChart height="70vh" [colors]="barChartColors " [datasets]="barChartData " [labels]="barChartLabels " [options]="barChartOptions " [plugins]="barChartPlugins " [legend]="barChartLegend " [chartType]="barChartType ">
+                                    <canvas baseChart height="70vh" [colors]="barChartColors" [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
                                     </canvas>
                                 </div>
                             </div>
@@ -1048,14 +1062,14 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <ngb-pagination #paginatorTA [collectionSize]="collectionSizeTA" [(page)]="pageTA" [(pageSize)]="pageSizeTA" [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+                                <ngb-pagination #paginatorTA [collectionSize]="collectionSizeTA" [(page)]="pageTA" [(pageSize)]="pageSizeTA" [maxSize]="5" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
                             </div>
                         </div>
 
-                        <div class="tab-pane " id="tab7" aria-labelledby="account-tab " role="tabpanel ">
+                        <div class="tab-pane" id="tab7" aria-labelledby="account-tab" role="tabpanel">
                             <div class="card invoice-repeater" *ngIf="parientesVista=='lista'">
-                                <div class="row m-75 ">
-                                    <div class="col-lg-12 col-xl-6 ">
+                                <div class="row m-75">
+                                    <div class="col-lg-12 col-xl-6">
                                         <label>Mostrar</label>
                                         <select class="form-control-sm" [(ngModel)]="pageSizePA">
                                        <option value="10">10</option>
@@ -1073,14 +1087,14 @@
                                     </div>
                                 </div>
 
-                                <div class="card-datatable table-responsive pt-0 ">
-                                    <table class="user-list-table table ">
-                                        <thead class="thead-light ">
+                                <div class="card-datatable table-responsive pt-0">
+                                    <table class="user-list-table table">
+                                        <thead class="thead-light">
                                             <tr>
                                                 <th>
-                                                    <div class="custom-control custom-checkbox ">
-                                                        <input type="checkbox " class="custom-control-input " id="customCheck2 " />
-                                                        <label class="custom-control-label " for="customCheck2 "></label>
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
+                                                        <label class="custom-control-label" for="customCheck2"></label>
                                                     </div>
                                                 </th>
                                                 <th>Fecha registro</th>
@@ -1093,25 +1107,25 @@
                                             </tr>
                                         </thead>
 
-                                        <tbody data-repeater-list="invoice ">
-                                            <tr data-repeater-item *ngFor="let pariente of listaParientes ">
+                                        <tbody data-repeater-list="invoice">
+                                            <tr data-repeater-item *ngFor="let pariente of listaParientes">
                                                 <td>
-                                                    <div class="custom-control custom-checkbox ">
-                                                        <input type="checkbox " class="custom-control-input " id="customCheck2 " />
-                                                        <label class="custom-control-label " for="customCheck2 "></label>
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
+                                                        <label class="custom-control-label" for="customCheck2"></label>
                                                     </div>
                                                 </td>
                                                 <td>{{transformarFecha(pariente.created_at)}}</td>
-                                                <td>{{pariente.nombres + " " + pariente.apellidos}}</td>
+                                                <td>{{pariente.nombres +"" + pariente.apellidos}}</td>
                                                 <td> {{pariente.tipoPariente}} </td>
                                                 <td> {{pariente.edad}} </td>
                                                 <td> {{pariente.correoPersonal}} </td>
                                                 <td> {{pariente.celularPersonal}} </td>
                                                 <td>
-                                                    <a (click)="editarPariente(pariente.id) " data-toggle="modal " data-target="#addvirtual ">
+                                                    <a (click)="editarPariente(pariente.id)" data-toggle="modal" data-target="#addvirtual">
                                                         <i-feather name='edit-2'></i-feather>
                                                     </a>
-                                                    <a (click)="eliminarPariente(pariente.id) " data-repeater-delete>
+                                                    <a (click)="eliminarPariente(pariente.id)" data-repeater-delete>
                                                         <i-feather name='trash'></i-feather>
                                                     </a>
                                                 </td>
@@ -1119,7 +1133,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <ngb-pagination #paginatorPA [collectionSize]="collectionSizePA" [(page)]="pagePA" [(pageSize)]="pageSizePA" [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+                                <ngb-pagination #paginatorPA [collectionSize]="collectionSizePA" [(page)]="pagePA" [(pageSize)]="pageSizePA" [maxSize]="5" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
                             </div>
                             <app-personas-parientes *ngIf="parientesVista=='editar'" [idPariente]="idPariente" [idCliente]="idCliente" (volver)="volver()"></app-personas-parientes>
                         </div>
@@ -1216,27 +1230,27 @@
                                             <div class="col-lg-5 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                                 <p class="card-text col-title mb-md-50 mb-0">Artículo/Producto</p>
                                                 <input class="form-control" type="text" value="{{detalle.articulo}}" disabled>
-                                                <textarea class="form-control mt-2 " rows="2 " disabled>{{detalle.informacionAdicional}}</textarea>
+                                                <textarea class="form-control mt-2" rows="2" disabled>{{detalle.informacionAdicional}}</textarea>
                                             </div>
-                                            <div class="col-lg-3 col-12 my-lg-0 my-2 ">
-                                                <p class="card-text col-title mb-md-50 mb-0 ">Valor unitario</p>
-                                                <input type="text " class="form-control " value="{{detalle.valorUnitario}} " disabled />
-                                                <div class="mt-2 ">
+                                            <div class="col-lg-3 col-12 my-lg-0 my-2">
+                                                <p class="card-text col-title mb-md-50 mb-0">Valor unitario</p>
+                                                <input type="text" class="form-control" value="{{detalle.valorUnitario}}" disabled />
+                                                <div class="mt-2">
                                                     <span>Descuento:</span><span>%</span>
-                                                    <input type="number " class="form-control " value="{{detalle.descuento}}" placeholder="0 " disabled/>
+                                                    <input type="number" class="form-control" value="{{detalle.descuento}}" placeholder="0" disabled/>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-2 col-12 my-lg-0 my-2 ">
-                                                <p class="card-text col-title mb-md-50 mb-0 ">Cantidad</p>
-                                                <input type="number " class="form-control " value="{{detalle.cantidad}}" placeholder="1 " disabled />
-                                                <div class="mt-2 ">
+                                            <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                                <p class="card-text col-title mb-md-50 mb-0">Cantidad</p>
+                                                <input type="number" class="form-control" value="{{detalle.cantidad}}" placeholder="1" disabled />
+                                                <div class="mt-2">
                                                     <span>Valor descuento:</span>
-                                                    <input type="number " class="form-control " placeholder="0 " disabled />
+                                                    <input type="number" class="form-control" placeholder="0" disabled />
                                                 </div>
                                             </div>
-                                            <div class="col-lg-2 col-12 mt-lg-0 mt-2 ">
-                                                <p class="card-text col-title mb-md-50 mb-0 ">Precio</p>
-                                                <input type="text " class="form-control " value="{{detalle.precio}}" placeholder="24 " disabled />
+                                            <div class="col-lg-2 col-12 mt-lg-0 mt-2">
+                                                <p class="card-text col-title mb-md-50 mb-0">Precio</p>
+                                                <input type="text" class="form-control" value="{{detalle.precio}}" placeholder="24" disabled />
                                             </div>
                                         </div>
 
@@ -1248,28 +1262,28 @@
                     </form>
                 </div>
                 <!-- Product Details ends -->
-                <hr class="invoice-spacing " />
+                <hr class="invoice-spacing" />
                 <!-- Invoice Total starts -->
-                <div class="card-body invoice-padding ">
-                    <div class="row ">
-                        <div class="col-md-7 ">
-                            <label for="salesperson " class="form-label ">Persona de ventas:</label>
-                            <input type="text " class="form-control " value="{{transaccion.nombreVendedor}}" disabled />
+                <div class="card-body invoice-padding">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <label for="salesperson" class="form-label">Persona de ventas:</label>
+                            <input type="text" class="form-control" value="{{transaccion.nombreVendedor}}" disabled />
                         </div>
-                        <div class="col-md-5 text-right ">
-                            <div class="invoice-total-wrapper ">
-                                <div class="invoice-total-item ">
-                                    <p class="invoice-total-title ">Subtotal: ${{transaccion.subTotal}}</p>
+                        <div class="col-md-5 text-right">
+                            <div class="invoice-total-wrapper">
+                                <div class="invoice-total-item">
+                                    <p class="invoice-total-title">Subtotal: ${{transaccion.subTotal}}</p>
                                 </div>
-                                <div class="invoice-total-item ">
-                                    <p class="invoice-total-title ">Descuento: ${{transaccion.descuento}}</p>
+                                <div class="invoice-total-item">
+                                    <p class="invoice-total-title">Descuento: ${{transaccion.descuento}}</p>
                                 </div>
-                                <div class="invoice-total-item ">
-                                    <p class="invoice-total-title ">IVA 12%: ${{transaccion.iva}}</p>
+                                <div class="invoice-total-item">
+                                    <p class="invoice-total-title">IVA 12%: ${{transaccion.iva}}</p>
                                 </div>
-                                <hr class="my-50 " />
-                                <div class="invoice-total-item ">
-                                    <p class="invoice-total-title text-primary font-weight-bold ">Total: ${{transaccion.total}}</p>
+                                <hr class="my-50" />
+                                <div class="invoice-total-item">
+                                    <p class="invoice-total-title text-primary font-weight-bold">Total: ${{transaccion.total}}</p>
                                 </div>
                             </div>
                         </div>
@@ -1277,11 +1291,11 @@
                 </div>
                 <!-- Invoice Total ends -->
 
-                <hr class="invoice-spacing mt-0 " />
+                <hr class="invoice-spacing mt-0" />
 
-                <div class="row p-2 ">
-                    <div class="col-12 ">
-                        <button type="button" class="btn btn-outline-secondary waves-effect " data-dismiss="modal">Cerrar</button>
+                <div class="row p-2">
+                    <div class="col-12">
+                        <button type="button" class="btn btn-outline-secondary waves-effect" data-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
 

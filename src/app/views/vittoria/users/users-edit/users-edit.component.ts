@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Usuario, UsersService } from 'src/app/services/admin/users.service';
 import { ParamService as ParamServiceADM } from 'src/app/services/admin/param.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-users-edit',
@@ -16,7 +17,8 @@ export class UsersEditComponent implements OnInit {
 
   submitted = false;
   usuarioForm: FormGroup;
-
+  redesForm: FormGroup;
+  mensaje;
   imagen;
   imagenTemp;
   usuario: Usuario = {
@@ -40,11 +42,16 @@ export class UsersEditComponent implements OnInit {
     private usersService: UsersService,
     private globalParam: ParamServiceADM,
     private _formBuilder: FormBuilder,
+    private modalService: NgbModal,
+
   ) {
 
   }
   get f() {
     return this.usuarioForm.controls;
+  }
+  get fRedes() {
+    return this.redesForm.controls;
   }
   async ngOnInit() {
     this.usuarioForm = this._formBuilder.group({
@@ -57,7 +64,9 @@ export class UsersEditComponent implements OnInit {
       telefono: ['', [Validators.required]],
       estado: ['', [Validators.required]],
       whatsapp: ['', [Validators.required]],
-      idRol: [0, [Validators.min(1)]],
+      idRol: [0, [Validators.min(1)]]
+    });
+    this.redesForm = this._formBuilder.group({
       twitter: ['', [Validators.required]],
       facebook: ['', [Validators.required]],
       instagram: ['', [Validators.required]]
@@ -75,12 +84,23 @@ export class UsersEditComponent implements OnInit {
     if (this.usuarioForm.invalid) {
       return;
     }
+    if (this.redesForm.invalid) {
+      this.mensaje = "Faltan llenar campos en la sección de redes sociales";
+      this.abrirModal(this.mensajeModal);
+      return;
+    }
     await this.usersService.actualizarUsuario(this.usuario).subscribe(() => {
       window.location.href = '/admin/user';
     });
   }
   obtenerURLImagen(url) {
     return this.globalParam.obtenerURL(url);
+  }
+  abrirModal(modal) {
+    this.modalService.open(modal)
+  }
+  cerrarModal() {
+    this.modalService.dismissAll();
   }
   async subirImagen(event) {
 

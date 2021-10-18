@@ -19,11 +19,22 @@ export class PersonasEditComponent implements OnInit {
   @ViewChild(NgbPagination) paginatorDV: NgbPagination;
   @ViewChild(NgbPagination) paginatorTA: NgbPagination;
   @ViewChild(NgbPagination) paginatorPA: NgbPagination;
+  @ViewChild('tab1') tab1;
+  @ViewChild('tab2') tab2;
+  @ViewChild('tab3') tab3;
+  @ViewChild('tab4') tab4;
+  @ViewChild('dismissModalDV') dismissModalDV;
   basicDemoValue = '2017-01-01';
-
+  tabs = 0;
+  //forms
   datosBasicosForm: FormGroup;
+  datosVirtualesForm: FormGroup;
+  datosFisicossForm: FormGroup;
+  //------------------------
+  //subbmiteds
   submittedDatosBasicosForm = false;
-
+  submittedDatosVirtualesForm = false;
+  //------------------------
   public barChartOptions: ChartOptions = {
     responsive: true,
     aspectRatio: 1
@@ -215,6 +226,16 @@ export class PersonasEditComponent implements OnInit {
       gastosPromedioMensual: [0, [Validators.required]],
       estado: [0]
     });
+    this.datosVirtualesForm = this._formBuilder.group({
+      tipoContacto: ['', [Validators.required]],
+      icono: ['', [Validators.required]],
+      informacion: ['', [Validators.required]],
+    });
+    this.datosFisicossForm = this._formBuilder.group({
+      tipoContacto: ['', [Validators.required]],
+      icono: ['', [Validators.required]],
+      informacion: ['', [Validators.required]],
+    });
   }
   async ngAfterViewInit() {
     this.iniciarPaginador();
@@ -362,26 +383,45 @@ export class PersonasEditComponent implements OnInit {
   get fdb() {
     return this.datosBasicosForm.controls;
   }
+  get dvForm() {
+    return this.datosVirtualesForm.controls;
+  }
 
   async guardarDatosBasicos() {
 
     this.submittedDatosBasicosForm = true;
 
     if (this.datosBasicosForm.invalid) {
-      console.log(this.datosBasicosForm);
-      console.log('entra');
       return;
     }
 
     if (this.idCliente != 0) {
       this.clientesService.editarDatosBasicos(this.idCliente, this.datosBasicos).subscribe((info) => {
+        this.tab2.nativeElement.click();
       });
     } else {
       this.clientesService.crearDatosBasicos(this.datosBasicos).subscribe((info) => {
         this.idCliente = info.id;
         this.datosFisicos.cliente = this.idCliente;
         this.datosVirtuales.cliente = this.idCliente;
+        this.tab2.nativeElement.click();
       });
+    }
+  }
+  cambiarTab(numero) {
+    switch (numero) {
+      case 1:
+        this.tab1.nativeElement.click();
+        break;
+      case 2:
+        this.tab2.nativeElement.click();
+        break;
+      case 3:
+        this.tab3.nativeElement.click();
+        break;
+      case 4:
+        this.tab4.nativeElement.click();
+        break;
     }
   }
   async guardarImagen(event) {
@@ -472,14 +512,20 @@ export class PersonasEditComponent implements OnInit {
     });
   }
   async guardarDatosVirtuales() {
+    this.submittedDatosVirtualesForm = true;
+    if (this.datosVirtualesForm.invalid) {
+      return;
+    }
     if (this.idCliente != 0) {
       if (this.datosVirtuales.id == 0) {
         this.clientesService.crearDatosVirtuales(this.datosVirtuales).subscribe((info) => {
-          this.obtenerDatosVirtuales()
+          this.obtenerDatosVirtuales();
+          this.dismissModalDV.nativeElement.click();
         });
       } else {
         this.clientesService.editarDatosVirtuales(this.datosVirtuales).subscribe((info) => {
-          this.obtenerDatosVirtuales()
+          this.obtenerDatosVirtuales();
+          this.dismissModalDV.nativeElement.click();
         });
       }
     }
