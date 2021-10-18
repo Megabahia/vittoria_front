@@ -54,7 +54,7 @@ export class ProspectosClientesEditComponent implements OnInit {
     imagenForm.append('imagen', imagen, imagen.name);
     if (confirm('¿Desea cambiar la imagen?')) {
       this.prospectosService.insertarImagen(this.idUsuario, imagenForm).subscribe((data) => {
-        this.urlImagen = this.obtenerURLImagen(data.imagen);
+        this.urlImagen = data.imagen;
       });
     }
   }

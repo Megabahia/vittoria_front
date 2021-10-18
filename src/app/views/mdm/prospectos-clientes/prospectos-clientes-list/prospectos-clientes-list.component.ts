@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProspectosService } from '../../../../services/mdm/prospectosCli/prospectos.service';
-import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 
@@ -11,6 +11,10 @@ import { DatePipe } from '@angular/common';
 })
 export class ProspectosClientesListComponent implements OnInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
+  @ViewChild('dismissModal') dismissModal;
+  @ViewChild('mensajeModal') mensajeModal;
+  public mensaje = "";
+  submitted = false;
   menu;
   canalOpciones;
   canalLista = "";
@@ -53,15 +57,29 @@ export class ProspectosClientesListComponent implements OnInit {
     private prospectosService: ProspectosService,
     private datePipe: DatePipe,
     private _formBuilder: FormBuilder,
+    private modalService: NgbModal,
   ) { }
 
   ngOnInit(): void {
     this.pospectoForm = this._formBuilder.group({
-      nombre: ['', [Validators.required]],
-      nombreTipo: ['', [Validators.required]],
-      descripcion: ['', [Validators.required]],
-      tipoVariable: ['', [Validators.required]],
-      valor: ['', [Validators.required]]
+      nombres: ['', [Validators.required]],
+      apellidos: ['', [Validators.required]],
+      telefono: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      tipoCliente: ['', [Validators.required]],
+      whatsapp: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      facebook: ['', [Validators.required]],
+      twitter: ['', [Validators.required]],
+      instagram: ['', [Validators.required]],
+      correo1: ['', [Validators.required]],
+      correo2: ['', [Validators.required]],
+      ciudad: ['', [Validators.required]],
+      canal: ['', [Validators.required]],
+      codigoProducto: ['', [Validators.required]],
+      nombreProducto: ['', [Validators.required]],
+      precio: ['', [Validators.required]],
+      tipoPrecio: ['', [Validators.required]],
+      nombreVendedor: ['', [Validators.required]],
+      confirmacionProspecto: ['', [Validators.required]]
     });
     this.menu = {
       modulo: "mdm",
@@ -86,6 +104,9 @@ export class ProspectosClientesListComponent implements OnInit {
   transformarFecha(fecha) {
     let nuevaFecha = this.datePipe.transform(fecha, 'yyyy-MM-dd');
     return nuevaFecha;
+  }
+  get f() {
+    return this.pospectoForm.controls;
   }
   async obtenerListaProspectos() {
     await this.prospectosService.obtenerLista(
@@ -134,9 +155,12 @@ export class ProspectosClientesListComponent implements OnInit {
   }
   async guardarImagen(event) {
     this.imagen = event.target.files[0];
-    console.log(this.imagen);
   }
   async crearProspecto() {
+    this.submitted = true;
+    if (this.pospectoForm.invalid || !this.imagen) {
+      return;
+    }
     this.usuario.append('nombres', this.nombres);
     this.usuario.append('apellidos', this.apellidos);
     this.usuario.append('telefono', this.telefono);
@@ -158,9 +182,25 @@ export class ProspectosClientesListComponent implements OnInit {
     this.usuario.append('imagen', this.imagen, this.imagen.name);
     this.prospectosService.crearProspectos(this.usuario).subscribe(() => {
       this.obtenerListaProspectos();
-    });
+      this.dismissModal.nativeElement.click();
+      this.submitted = false;
+    },
+      (error) => {
+        let errores = Object.values(error);
+        this.mensaje = "";
+        errores.map(infoErrores => {
+          this.mensaje += infoErrores + "<br>";
+        });
+        this.abrirModal(this.mensajeModal);
+      }
+    );
   }
-
+  abrirModal(modal) {
+    this.modalService.open(modal)
+  }
+  cerrarModal() {
+    this.modalService.dismissAll();
+  }
   editarProspecto(id) {
     this.idUsuario = id;
     this.vista = 'editar';

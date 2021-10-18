@@ -125,7 +125,6 @@ export class UsersListComponent implements OnInit {
         errores.map(infoErrores => {
           this.mensaje += infoErrores + "<br>";
         });
-        console.log(this.mensaje);
         this.abrirModal(this.mensajeModal);
 
       });
