@@ -207,7 +207,7 @@ export class PersonasParientesComponent implements OnInit {
     }
     if (this.idPariente != 0) {
       await this.clientesService.actualizarPariente(this.idPariente, this.pariente).subscribe((info) => {
-
+        this.regresar();
       },
         (error) => {
           let errores = Object.values(error);
@@ -217,10 +217,11 @@ export class PersonasParientesComponent implements OnInit {
             this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
           });
           this.abrirModal(this.mensajeModal);
-        });
+        }
+      );
     } else {
       await this.clientesService.crearPariente(this.pariente).subscribe((info) => {
-
+        this.regresar();
       },
         (error) => {
           let errores = Object.values(error);

@@ -4,7 +4,7 @@ import { ClientesService, DatosBasicos, DatosFisicos, DatosVirtuales, Transaccio
 import { ParamService } from '../../../../../services/mdm/param/param.service';
 import { ParamService as ParamServiceADM } from '../../../../../services/admin/param.service';
 import * as moment from 'moment';
-import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label, Color } from 'ng2-charts';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -24,6 +24,8 @@ export class PersonasEditComponent implements OnInit {
   @ViewChild('tab3') tab3;
   @ViewChild('tab4') tab4;
   @ViewChild('dismissModalDV') dismissModalDV;
+  @ViewChild('dismissModalDF') dismissModalDF;
+  @ViewChild('mensajeModal') mensajeModal;
   basicDemoValue = '2017-01-01';
   tabs = 0;
   //forms
@@ -34,7 +36,12 @@ export class PersonasEditComponent implements OnInit {
   //subbmiteds
   submittedDatosBasicosForm = false;
   submittedDatosVirtualesForm = false;
+  submittedDatosFisicosForm = false;
   //------------------------
+  //Mensaje
+  mensaje = "";
+  //-------------
+
   public barChartOptions: ChartOptions = {
     responsive: true,
     aspectRatio: 1
@@ -163,6 +170,8 @@ export class PersonasEditComponent implements OnInit {
     private paramService: ParamService,
     private globalParam: ParamServiceADM,
     private _formBuilder: FormBuilder,
+    private modalService: NgbModal,
+
   ) {
     this.datosFisicos.cliente = this.idCliente;
     this.datosVirtuales.cliente = this.idCliente;
@@ -394,6 +403,9 @@ export class PersonasEditComponent implements OnInit {
   get dvForm() {
     return this.datosVirtualesForm.controls;
   }
+  get dfForm() {
+    return this.datosFisicosForm.controls;
+  }
   //------------------
   async guardarDatosBasicos() {
 
@@ -473,18 +485,41 @@ export class PersonasEditComponent implements OnInit {
     return nuevaFecha;
   }
   async guardarDatosFisicos() {
+    this.submittedDatosFisicosForm = true;
+    if (this.datosFisicosForm.invalid) {
+      return;
+    }
     if (this.idCliente != 0) {
       if (this.datosFisicos.id == 0) {
         this.clientesService.crearDatosFisicos(this.datosFisicos).subscribe((info) => {
-          this.obtenerDatosFisicos()
-        });
+          this.obtenerDatosFisicos();
+          this.dismissModalDF.nativeElement.click();
+        },
+          (error) => {
+            let errores = Object.values(error);
+            let llaves = Object.keys(error);
+            this.mensaje = "";
+            errores.map((infoErrores, index) => {
+              this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            });
+            this.abrirModal(this.mensajeModal);
+          });
       } else {
         this.clientesService.editarDatosFisicos(this.datosFisicos).subscribe((info) => {
-          this.obtenerDatosFisicos()
-        });
+          this.obtenerDatosFisicos();
+          this.dismissModalDF.nativeElement.click();
+        },
+          (error) => {
+            let errores = Object.values(error);
+            let llaves = Object.keys(error);
+            this.mensaje = "";
+            errores.map((infoErrores, index) => {
+              this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            });
+            this.abrirModal(this.mensajeModal);
+          });
       }
     }
-
   }
   async eliminarDatoFisico(id) {
     this.clientesService.eliminarDatosFisicos(id).subscribe((info) => {
@@ -529,12 +564,30 @@ export class PersonasEditComponent implements OnInit {
         this.clientesService.crearDatosVirtuales(this.datosVirtuales).subscribe((info) => {
           this.obtenerDatosVirtuales();
           this.dismissModalDV.nativeElement.click();
-        });
+        },
+          (error) => {
+            let errores = Object.values(error);
+            let llaves = Object.keys(error);
+            this.mensaje = "";
+            errores.map((infoErrores, index) => {
+              this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            });
+            this.abrirModal(this.mensajeModal);
+          });
       } else {
         this.clientesService.editarDatosVirtuales(this.datosVirtuales).subscribe((info) => {
           this.obtenerDatosVirtuales();
           this.dismissModalDV.nativeElement.click();
-        });
+        },
+          (error) => {
+            let errores = Object.values(error);
+            let llaves = Object.keys(error);
+            this.mensaje = "";
+            errores.map((infoErrores, index) => {
+              this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            });
+            this.abrirModal(this.mensajeModal);
+          });
       }
     }
 
@@ -604,6 +657,7 @@ export class PersonasEditComponent implements OnInit {
   }
   volver() {
     this.parientesVista = "lista";
+    this.obtenerParientes();
   }
   async obtenerParientes() {
     this.clientesService.obtenerParientes(this.idCliente, {
@@ -619,5 +673,11 @@ export class PersonasEditComponent implements OnInit {
       this.idPariente = id;
       this.parientesVista = "editar";
     }
+  }
+  abrirModal(modal) {
+    this.modalService.open(modal)
+  }
+  cerrarModal() {
+    this.modalService.dismissAll();
   }
 }

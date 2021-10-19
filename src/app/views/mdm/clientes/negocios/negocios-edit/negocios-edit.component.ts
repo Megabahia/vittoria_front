@@ -7,6 +7,7 @@ import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label, Color } from 'ng2-charts';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-negocios-edit',
@@ -17,6 +18,24 @@ export class NegociosEditComponent implements OnInit {
   @Input() idNegocio;
   @ViewChild(NgbPagination) paginatorPE: NgbPagination;
   @ViewChild(NgbPagination) paginatorDE: NgbPagination;
+  @ViewChild('tab1') tab1;
+  @ViewChild('tab2') tab2;
+  @ViewChild('tab3') tab3;
+
+  //forms
+  datosBasicosForm: FormGroup;
+  datosPersonalForm: FormGroup;
+  datosFisicosForm: FormGroup;
+  //------------------------
+  //subbmiteds
+  submittedDatosBasicosForm = false;
+  submittedDatosVirtualesForm = false;
+  submittedDatosFisicosForm = false;
+  //------------------------
+  //Mensaje
+  mensaje = "";
+  //-------------
+
   public barChartOptions: ChartOptions = {
     responsive: true,
     aspectRatio: 1
@@ -47,8 +66,8 @@ export class NegociosEditComponent implements OnInit {
   pageSizeTA = 10;
   collectionSizeTA;
 
-  fechaInicioTransac= new Date();
-  fechaFinTransac= new Date();
+  fechaInicioTransac = new Date();
+  fechaFinTransac = new Date();
 
   datosBasicos: DatosBasicos;
   datosPersonal: Personal;
@@ -76,7 +95,7 @@ export class NegociosEditComponent implements OnInit {
 
   fechaActual = new Date();
 
-  transaccion:Transaccion;
+  transaccion: Transaccion;
 
   estadoOpcion;
   urlImagen;
@@ -84,7 +103,9 @@ export class NegociosEditComponent implements OnInit {
     private datePipe: DatePipe,
     private negociosService: NegociosService,
     private paramService: ParamService,
-    private globalParam: ParamServiceADM
+    private globalParam: ParamServiceADM,
+    private _formBuilder: FormBuilder,
+
   ) {
     this.datosBasicos = negociosService.inicializarDatosBasicos();
     this.datosPersonal = negociosService.inicializarPersonal();
@@ -95,8 +116,56 @@ export class NegociosEditComponent implements OnInit {
     this.transaccion = this.negociosService.inicializarTransaccion();
   }
 
+  //gets
+  get dbForm() {
+    return this.datosBasicosForm.controls;
+  }
+  get dpForm() {
+    return this.datosPersonalForm.controls;
+  }
+  get dfForm() {
+    return this.datosFisicosForm.controls;
+  }
+  //------------------
+
   ngOnInit(): void {
-    this.barChartData=[this.datosTransferencias];
+
+    this.datosBasicosForm = this._formBuilder.group({
+      tipoCliente: ['', [Validators.required]],
+      tipoNegocio: ['', [Validators.required]],
+      ruc: ['', [Validators.required]],
+      razonSocial: ['', [Validators.required]],
+      nombreComercial: ['', [Validators.required]],
+      nacionalidad: ['', [Validators.required]],
+      fechaCreacionNegocio: ['', [Validators.required]],
+      edadNegocio: ['', [Validators.required]],
+      paisOrigen: ['', [Validators.required]],
+      paisResidencia: ['', [Validators.required]],
+      provinciaResidencia: ['', [Validators.required]],
+      ciudadResidencia: ['', [Validators.required]],
+      numeroEmpleados: [0, [Validators.required]],
+      segmentoActividadEconomica: ['', [Validators.required]],
+      profesion: ['', [Validators.required]],
+      actividadEconomica: ['', [Validators.required]],
+      llevarContabilidad: ['', [Validators.required]],
+      ingresosPromedioMensual: ['', [Validators.required]],
+      gastosPromedioMensual: ['', [Validators.required]],
+      numeroEstablecimientos: [0, [Validators.required]],
+      telefonoOficina: ['', [Validators.required]],
+      celularOficina: ['', [Validators.required]],
+      celularPersonal: ['', [Validators.required]],
+      whatsappPersonal: ['', [Validators.required]],
+      whatsappSecundario: ['', [Validators.required]],
+      correoPersonal: ['', [Validators.required]],
+      correoOficina: ['', [Validators.required]],
+      googlePlus: ['', [Validators.required]],
+      twitter: ['', [Validators.required]],
+      facebook: ['', [Validators.required]],
+      instagram: ['', [Validators.required]]
+    });
+
+
+    this.barChartData = [this.datosTransferencias];
     this.barChartLabels = [
     ]
     this.obtenerActividadEconomicaOpciones();
@@ -116,7 +185,7 @@ export class NegociosEditComponent implements OnInit {
       this.obtenerTransacciones();
     }
   }
-  async ngAfterViewInit(){
+  async ngAfterViewInit() {
     this.iniciarPaginador();
   }
   obtenerURLImagen(url) {
@@ -134,7 +203,7 @@ export class NegociosEditComponent implements OnInit {
     this.negociosService.obtenerNegocio(this.idNegocio).subscribe((info) => {
       this.datosBasicos = info;
       this.estadoOpcion = info.estado == 'Activo' ? 1 : 0;
-      this.urlImagen = this.obtenerURLImagen(info.imagen);
+      this.urlImagen = info.imagen;
       this.datosBasicos.estado = info.estado;
       this.datosBasicos.created_at = this.transformarFecha(info.created_at);
       this.datosBasicos.fechaCreacionNegocio = this.transformarFecha(info.fechaCreacionNegocio);
@@ -142,13 +211,13 @@ export class NegociosEditComponent implements OnInit {
       this.obtenerCiudadResidencia();
     });
   }
-  async guardarImagen(event){
+  async guardarImagen(event) {
     let nuevaImagen = event.target.files[0];
     let imagen = new FormData();
-    imagen.append('imagen',nuevaImagen,nuevaImagen.name);
-    if(this.idNegocio!=0){
-      this.negociosService.editarImagen(this.idNegocio,imagen).subscribe((info)=>{
-        this.urlImagen = this.obtenerURLImagen(info.imagen);
+    imagen.append('imagen', nuevaImagen, nuevaImagen.name);
+    if (this.idNegocio != 0) {
+      this.negociosService.editarImagen(this.idNegocio, imagen).subscribe((info) => {
+        this.urlImagen = info.imagen;
       });
     }
   }
@@ -172,6 +241,10 @@ export class NegociosEditComponent implements OnInit {
     });
   }
   async guardarDatosBasicos() {
+    this.submittedDatosBasicosForm = true;
+    if (this.datosBasicosForm.invalid) {
+      return;
+    }
     if (this.idNegocio != 0) {
       this.negociosService.editarDatosBasicos(this.idNegocio, this.datosBasicos).subscribe((info) => {
       });
@@ -326,31 +399,31 @@ export class NegociosEditComponent implements OnInit {
       });
   }
 
-  async obtenerGraficos(){
-    this.negociosService.obtenerGraficaTransaccionesNegocios(this.idNegocio,{
-      page:this.pageTA-1,
-        page_size:this.pageSizeTA,
-        inicio:this.fechaInicioTransac,
-        fin:this.fechaFinTransac
+  async obtenerGraficos() {
+    this.negociosService.obtenerGraficaTransaccionesNegocios(this.idNegocio, {
+      page: this.pageTA - 1,
+      page_size: this.pageSizeTA,
+      inicio: this.fechaInicioTransac,
+      fin: this.fechaFinTransac
     }
-      ).subscribe((info)=>{
-        let etiquetas =[];
-        let valores =[];
-        
-        info.map((datos)=>{
-          etiquetas.push(datos.anio + "-"+datos.mes);
-          valores.push(datos.cantidad);
-        });
-        this.datosTransferencias= {
-          data: valores, label: 'Series A',fill: false,borderColor: 'rgb(75, 192, 192)'
-        }
-        this.barChartData=[this.datosTransferencias];
-        this.barChartLabels = etiquetas;
+    ).subscribe((info) => {
+      let etiquetas = [];
+      let valores = [];
+
+      info.map((datos) => {
+        etiquetas.push(datos.anio + "-" + datos.mes);
+        valores.push(datos.cantidad);
+      });
+      this.datosTransferencias = {
+        data: valores, label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)'
+      }
+      this.barChartData = [this.datosTransferencias];
+      this.barChartLabels = etiquetas;
     });
   }
-  async obtenerTransaccion(id){
-    this.negociosService.obtenerTransaccion(id).subscribe((info)=>{
-      this.transaccion= info;
+  async obtenerTransaccion(id) {
+    this.negociosService.obtenerTransaccion(id).subscribe((info) => {
+      this.transaccion = info;
       this.transaccion.created_at = this.transformarFecha(info.created_at);
     });
   }
