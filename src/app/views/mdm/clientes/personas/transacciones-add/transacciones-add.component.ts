@@ -18,10 +18,11 @@ export class TransaccionesAddComponent implements OnInit {
   // detalles: FormArray;
   detalles = [];
   detallesTransac;
-
+  numRegex = /^-?\d*[.,]?\d{0,2}$/;
   //forms
-  datosBasicosForm: FormGroup;
+  transaccionForm: FormGroup;
   //----------------
+  submittedTransaccionForm = false;
 
   public isCollapsed = [];
   tipoIdentificacionOpciones;
@@ -57,29 +58,19 @@ export class TransaccionesAddComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.datosBasicosForm = this._formBuilder.group({
+    this.transaccionForm = this._formBuilder.group({
       canalCompra: ['', [Validators.required]],
-      cliente: [0, [Validators.required]],
       correo: ['', [Validators.required]],
-      created_at: ['', [Validators.required]],
-      descuento: [0, [Validators.required]],
       detalles: this._formBuilder.array([
-        {
-          codigo: [0, [Validators.required]],
-        }
+        this.crearDetalleGrupo()
       ]),
       direccion: ['', [Validators.required]],
       fecha: ['', [Validators.required]],
       identificacion: ['', [Validators.required]],
-      iva: [0, [Validators.required]],
       nombreVendedor: ['', [Validators.required]],
-      numeroFactura: [0, [Validators.required]],
-      numeroProductosComprados: [0, [Validators.required]],
       razonSocial: ['', [Validators.required]],
-      subTotal: [0, [Validators.required]],
       telefono: ['', [Validators.required]],
       tipoIdentificacion: ['', [Validators.required]],
-      total: [0, [Validators.required]],
     });
     this.menu = {
       modulo: "mdm",
@@ -92,6 +83,20 @@ export class TransaccionesAddComponent implements OnInit {
     this.obtenerCanales();
     this.inicializarDetalles();
   }
+
+  crearDetalleGrupo() {
+    return this._formBuilder.group({
+      codigo: ['', [Validators.required]],
+      articulo: ['', [Validators.required]],
+      valorUnitario: [0, [Validators.required]],
+      cantidad: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
+      precio: [0, [Validators.required]],
+      informacionAdicional: ['', [Validators.required]],
+      descuento: [0, [Validators.required, Validators.pattern(this.numRegex)]],
+      valorDescuento: [0, [Validators.required]]
+    });
+  }
+
   inicializarDetalles() {
     this.detalles = [];
     this.detalles.push(this.clientesService.inicializarDetalle());
@@ -101,12 +106,21 @@ export class TransaccionesAddComponent implements OnInit {
     return nuevaFecha;
   }
 
+  get detallesArray(): FormArray {
+    return this.transaccionForm.get('detalles') as FormArray;
+  }
+  get tForm() {
+    return this.transaccionForm.controls;
+  }
   agregarItem(): void {
     this.detalles.push(this.clientesService.inicializarDetalle());
+    let detGrupo = this.crearDetalleGrupo();
+    this.detallesArray.push(detGrupo);
   }
   removerItem(i): void {
     this.detalles.splice(i, 1);
     this.calcularSubtotal();
+    this.detallesArray.removeAt(i);
     // this.isCollapsed.splice(i, 1);
     // this.detalles.removeAt(i);
   }
@@ -181,6 +195,10 @@ export class TransaccionesAddComponent implements OnInit {
       });
   }
   async guardarTransaccion() {
+    this.submittedTransaccionForm = true;
+    if (this.transaccionForm.invalid) {
+      return;
+    }
     this.calcularSubtotal();
     this.transaccion.detalles = this.detallesTransac;
     await this.clientesService.crearTransaccion(this.transaccion).subscribe(() => {
