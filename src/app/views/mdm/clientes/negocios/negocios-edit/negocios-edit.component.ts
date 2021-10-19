@@ -131,7 +131,6 @@ export class NegociosEditComponent implements OnInit {
   ngOnInit(): void {
 
     this.datosBasicosForm = this._formBuilder.group({
-      tipoCliente: ['', [Validators.required]],
       tipoNegocio: ['', [Validators.required]],
       ruc: ['', [Validators.required]],
       razonSocial: ['', [Validators.required]],
@@ -242,6 +241,7 @@ export class NegociosEditComponent implements OnInit {
   }
   async guardarDatosBasicos() {
     this.submittedDatosBasicosForm = true;
+
     if (this.datosBasicosForm.invalid) {
       return;
     }

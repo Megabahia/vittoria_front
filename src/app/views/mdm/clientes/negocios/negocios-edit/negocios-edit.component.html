@@ -10,16 +10,14 @@
                     <div class="col-12">
                         <div class="card profile-header mb-2">
                             <!-- profile cover photo -->
-                            <img class="card-img-top" src="assets/images/default-head-profile.jpg"
-                                alt="User Profile Image" />
+                            <img class="card-img-top" src="assets/images/default-head-profile.jpg" alt="User Profile Image" />
                             <!--/ profile cover photo -->
 
                             <div class="position-relative">
                                 <!-- profile picture -->
                                 <div class="profile-img-container d-flex align-items-center">
                                     <div class="profile-img">
-                                        <img style="width: 100%; height: 100%;" src="{{urlImagen}}"
-                                            class="rounded img-fluid" alt="Card image" />
+                                        <img style="width: 100%; height: 100%;" src="{{urlImagen}}" class="rounded img-fluid" alt="Card image" />
                                     </div>
                                     <!-- profile title -->
                                     <div class="profile-title ml-3">
@@ -39,11 +37,8 @@
                             <!-- tabs pill -->
                             <div class="profile-header-nav">
                                 <!-- navbar -->
-                                <nav
-                                    class="navbar navbar-expand-md navbar-light justify-content-end justify-content-md-between w-100">
-                                    <button class="btn btn-icon navbar-toggler" type="button" data-toggle="collapse"
-                                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                                        aria-expanded="false" aria-label="Toggle navigation">
+                                <nav class="navbar navbar-expand-md navbar-light justify-content-end justify-content-md-between w-100">
+                                    <button class="btn btn-icon navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                                         <i-feather name="align-justify" class="font-medium-5 edit-user"></i-feather>
                                     </button>
 
@@ -52,18 +47,14 @@
                                         <div class="d-flex justify-content-between flex-wrap mt-1 mt-md-0">
                                             <ul class="nav nav-pills mb-0" role="tablist">
                                                 <li class="nav-item">
-                                                    <a class="nav-link font-weight-bold active" #tab1 data-toggle="tab"
-                                                        href="#tab1" aria-controls="account" role="tab"
-                                                        aria-selected="true">
+                                                    <a class="nav-link font-weight-bold active" #tab1 data-toggle="tab" href="#tab1" aria-controls="account" role="tab" aria-selected="true">
                                                         <span class="d-none d-md-block">Datos básicos</span>
                                                         <i-feather name="info" class="d-block d-md-none edit-user">
                                                         </i-feather>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link font-weight-bold" #tab2 data-toggle="tab"
-                                                        href="#tab4" aria-controls="account" role="tab"
-                                                        aria-selected="true">
+                                                    <a class="nav-link font-weight-bold" #tab2 data-toggle="tab" href="#tab4" aria-controls="account" role="tab" aria-selected="true">
                                                         <span class="d-none d-md-block">Personal de la empresa</span>
                                                         <i-feather name="image" class="d-block d-md-none edit-user">
                                                         </i-feather>
@@ -71,9 +62,7 @@
                                                 </li>
 
                                                 <li class="nav-item">
-                                                    <a class="nav-link font-weight-bold" #tab3 data-toggle="tab"
-                                                        href="#tab5" aria-controls="account" role="tab"
-                                                        aria-selected="true">
+                                                    <a class="nav-link font-weight-bold" #tab3 data-toggle="tab" href="#tab5" aria-controls="account" role="tab" aria-selected="true">
                                                         <span class="d-none d-md-block">Dirección
                                                             establecimientos</span>
                                                         <i-feather name="image" class="d-block d-md-none edit-user">
@@ -81,16 +70,14 @@
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link font-weight-bold" data-toggle="tab" href="#tab2"
-                                                        aria-controls="account" role="tab" aria-selected="true">
+                                                    <a class="nav-link font-weight-bold" data-toggle="tab" href="#tab2" aria-controls="account" role="tab" aria-selected="true">
                                                         <span class="d-none d-md-block">Calificaciones</span>
                                                         <i-feather name="users" class="d-block d-md-none edit-user">
                                                         </i-feather>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link font-weight-bold" data-toggle="tab" href="#tab3"
-                                                        aria-controls="account" role="tab" aria-selected="true">
+                                                    <a class="nav-link font-weight-bold" data-toggle="tab" href="#tab3" aria-controls="account" role="tab" aria-selected="true">
                                                         <span class="d-none d-md-block">Indicadores</span>
                                                         <i-feather name="image" class="d-block d-md-none edit-user">
                                                         </i-feather>
@@ -101,8 +88,7 @@
 
 
                                                 <li class="nav-item">
-                                                    <a class="nav-link font-weight-bold" data-toggle="tab" href="#tab6"
-                                                        aria-controls="account" role="tab" aria-selected="true">
+                                                    <a class="nav-link font-weight-bold" data-toggle="tab" href="#tab6" aria-controls="account" role="tab" aria-selected="true">
                                                         <span class="d-none d-md-block">Transacciones</span>
                                                         <i-feather name="image" class="d-block d-md-none edit-user">
                                                         </i-feather>
@@ -138,39 +124,32 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Tipo de negocio</label>
-                                                    <select class="form-control" id="status" name="tipoNegocio"
-                                                        formControlName="tipoNegocio"
-                                                        [(ngModel)]="datosBasicos.tipoNegocio">
+                                                    <select class="form-control" id="status" name="tipoNegocio" formControlName="tipoNegocio" [(ngModel)]="datosBasicos.tipoNegocio">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{tipoNegocioOp.valor}}"
                                                             *ngFor="let tipoNegocioOp of tipoNegocioOpciones">
                                                             {{tipoNegocioOp.nombre}}
                                                         </option>
                                                     </select>
-                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.tipoNegocio.errors"
-                                                        class="invalid-feedback" style="display: block;">
-                                                        <div *ngIf="dbForm.tipoNegocio.errors.required">Tipo de Negocio
-                                                            requerido</div>
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.tipoNegocio.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.tipoNegocio.errors.required">Tipo de Negocio requerido
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Fecha de creación</label>
-                                                    <input type="text" class="form-control" disabled
-                                                        [ngModelOptions]="{standalone: true}"
-                                                        [(ngModel)]="datosBasicos.created_at">
+                                                    <input type="text" class="form-control" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="datosBasicos.created_at">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">RUC</label>
-                                                    <input type="text" class="form-control" name="ruc"
-                                                        formControlName="ruc" [(ngModel)]="datosBasicos.ruc">
-                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.ruc.errors"
-                                                        class="invalid-feedback" style="display: block;">
-                                                        <div *ngIf="dbForm.ruc.errors.required">Ruc
-                                                            requerido</div>
+                                                    <input type="text" class="form-control" name="ruc" formControlName="ruc" [(ngModel)]="datosBasicos.ruc">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.ruc.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.ruc.errors.required">Ruc requerido
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -178,13 +157,10 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Razón social</label>
-                                                    <input type="text" class="form-control" name="razonSocial"
-                                                        formControlName="razonSocial"
-                                                        [(ngModel)]="datosBasicos.razonSocial">
-                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.razonSocial.errors"
-                                                        class="invalid-feedback" style="display: block;">
-                                                        <div *ngIf="dbForm.razonSocial.errors.required">Razon Social
-                                                            requerida</div>
+                                                    <input type="text" class="form-control" name="razonSocial" formControlName="razonSocial" [(ngModel)]="datosBasicos.razonSocial">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.razonSocial.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.razonSocial.errors.required">Razon Social requerida
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -192,14 +168,10 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Nombre comercial</label>
-                                                    <input type="text" class="form-control" name="nombreComercial"
-                                                        formControlName="nombreComercial"
-                                                        [(ngModel)]="datosBasicos.nombreComercial">
-                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.nombreComercial.errors"
-                                                        class="invalid-feedback" style="display: block;">
-                                                        <div *ngIf="dbForm.nombreComercial.errors.required">Nombre
-                                                            Comercial
-                                                            requerida</div>
+                                                    <input type="text" class="form-control" name="nombreComercial" formControlName="nombreComercial" [(ngModel)]="datosBasicos.nombreComercial">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.nombreComercial.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.nombreComercial.errors.required">Nombre Comercial requerida
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -208,19 +180,16 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Nacionalidad</label>
-                                                    <select class="form-control select2" name="nacionalidad"
-                                                        formControlName="nacionalidad"
-                                                        [(ngModel)]="datosBasicos.nacionalidad">
+                                                    <select class="form-control select2" name="nacionalidad" formControlName="nacionalidad" [(ngModel)]="datosBasicos.nacionalidad">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{nacionalidadOp.valor}}"
                                                             *ngFor="let nacionalidadOp of nacionalidadOpciones">
                                                             {{nacionalidadOp.nombre}}
                                                         </option>
                                                     </select>
-                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.nacionalidad.errors"
-                                                        class="invalid-feedback" style="display: block;">
-                                                        <div *ngIf="dbForm.nacionalidad.errors.required">Nacionalidad
-                                                            requerida</div>
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.nacionalidad.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.nacionalidad.errors.required">Nacionalidad requerida
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -228,17 +197,10 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Fecha de creación negocio</label>
-                                                    <input type="text" mwlFlatpickr name="fechaCreacionNegocio"
-                                                        formControlName="fechaCreacionNegocio"
-                                                        [(ngModel)]="datosBasicos.fechaCreacionNegocio"
-                                                        (input)="calcularEdadNegocio()"
-                                                        class="form-control form-control-sm flatpickr-basic flatpickr-input"
-                                                        placeholder="- Periodo de finalización -">
-                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.fechaCreacionNegocio.errors"
-                                                        class="invalid-feedback" style="display: block;">
-                                                        <div *ngIf="dbForm.fechaCreacionNegocio.errors.required">Fecha
-                                                            de creación
-                                                            requerida</div>
+                                                    <input type="text" mwlFlatpickr name="fechaCreacionNegocio" formControlName="fechaCreacionNegocio" [(ngModel)]="datosBasicos.fechaCreacionNegocio" (input)="calcularEdadNegocio()" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.fechaCreacionNegocio.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.fechaCreacionNegocio.errors.required">Fecha de creación requerida
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -246,13 +208,10 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Edad de negocio</label>
-                                                    <input type="text" class="form-control" disabled name="edadNegocio"
-                                                        formControlName="edadNegocio"
-                                                        [(ngModel)]="datosBasicos.edadNegocio">
-                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.edadNegocio.errors"
-                                                        class="invalid-feedback" style="display: block;">
-                                                        <div *ngIf="dbForm.edadNegocio.errors.required">Edad de Negocio
-                                                            requerido</div>
+                                                    <input type="text" class="form-control" disabled name="edadNegocio" formControlName="edadNegocio" [(ngModel)]="datosBasicos.edadNegocio">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.edadNegocio.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.edadNegocio.errors.required">Edad de Negocio requerido
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -260,77 +219,60 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">País de origen</label>
-                                                    <select class="form-control select2" name="paisOrigen"
-                                                        formControlName="paisOrigen"
-                                                        [(ngModel)]="datosBasicos.paisOrigen">
+                                                    <select class="form-control select2" name="paisOrigen" formControlName="paisOrigen" [(ngModel)]="datosBasicos.paisOrigen">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{paisesOp.valor}}"
                                                             *ngFor="let paisesOp of paisesOpciones">
                                                             {{paisesOp.nombre}}
                                                         </option>
                                                     </select>
-                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.paisOrigen.errors"
-                                                        class="invalid-feedback" style="display: block;">
-                                                        <div *ngIf="dbForm.paisOrigen.errors.required">Pais de origen
-                                                            requerido</div>
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.paisOrigen.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.paisOrigen.errors.required">Pais de origen requerido
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">País de residencia del negocio</label>
-                                                    <select class="form-control select2" name="paisResidencia"
-                                                        formControlName="paisResidencia"
-                                                        [(ngModel)]="datosBasicos.paisResidencia"
-                                                        (change)="obtenerProvinciasResidencia()">
+                                                    <select class="form-control select2" name="paisResidencia" formControlName="paisResidencia" [(ngModel)]="datosBasicos.paisResidencia" (change)="obtenerProvinciasResidencia()">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{paisesOp.valor}}"
                                                             *ngFor="let paisesOp of paisesOpciones">
                                                             {{paisesOp.nombre}}
                                                         </option>
                                                     </select>
-                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.paisResidencia.errors"
-                                                        class="invalid-feedback" style="display: block;">
-                                                        <div *ngIf="dbForm.paisResidencia.errors.required">Pais de
-                                                            residencia
-                                                            requerido</div>
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.paisResidencia.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.paisResidencia.errors.required">Pais de residencia requerido
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="username">Lugar recidencia negocio</label>
                                                 <div class="input-group">
-                                                    <select class="custom-select" name="provinciaResidencia"
-                                                        formControlName="provinciaResidencia"
-                                                        [(ngModel)]="datosBasicos.provinciaResidencia"
-                                                        (change)="obtenerCiudadResidencia()">
+                                                    <select class="custom-select" name="provinciaResidencia" formControlName="provinciaResidencia" [(ngModel)]="datosBasicos.provinciaResidencia" (change)="obtenerCiudadResidencia()">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{provinciasResidenciaOp.valor}}"
                                                             *ngFor="let provinciasResidenciaOp of provinciasResidenciaOpciones">
                                                             {{provinciasResidenciaOp.nombre}}
                                                         </option>
                                                     </select>
-                                                    <select class="custom-select" name="ciudadResidencia"
-                                                        formControlName="ciudadResidencia"
-                                                        [(ngModel)]="datosBasicos.ciudadResidencia">
+                                                    <select class="custom-select" name="ciudadResidencia" formControlName="ciudadResidencia" [(ngModel)]="datosBasicos.ciudadResidencia">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{ciudadesResidenciaOp.valor}}"
                                                             *ngFor="let ciudadesResidenciaOp of ciudadesResidenciaOpciones">
                                                             {{ciudadesResidenciaOp.nombre}}
                                                         </option>
                                                     </select>
-                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.provinciaResidencia.errors"
-                                                        class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.provinciaResidencia.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="dbForm.provinciaResidencia.errors.required">
-                                                            Provincia de
-                                                            residencia
-                                                            requerida</div>
+                                                            Provincia de residencia requerida
+                                                        </div>
                                                     </div>
-                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.ciudadResidencia.errors"
-                                                        class="invalid-feedback" style="display: block;">
-                                                        <div *ngIf="dbForm.ciudadResidencia.errors.required">Ciudad de
-                                                            residencia
-                                                            requerida</div>
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.ciudadResidencia.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.ciudadResidencia.errors.required">Ciudad de residencia requerida
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -338,13 +280,9 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Número de empleados</label>
-                                                    <input type="text" class="form-control" name="numeroEmpleados"
-                                                        formControlName="numeroEmpleados"
-                                                        [(ngModel)]="datosBasicos.numeroEmpleados">
-                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.numeroEmpleados.errors"
-                                                        class="invalid-feedback" style="display: block;">
-                                                        <div *ngIf="dbForm.numeroEmpleados.errors.required"> Nro de
-                                                            empleados requerido</div>
+                                                    <input type="text" class="form-control" name="numeroEmpleados" formControlName="numeroEmpleados" [(ngModel)]="datosBasicos.numeroEmpleados">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.numeroEmpleados.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.numeroEmpleados.errors.required"> Nro de empleados requerido</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -354,86 +292,91 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Segmento de actividad económica</label>
-                                                    <select class="form-control" name="segmentoActividadEconomica"
-                                                        formControlName="segmentoActividadEconomica"
-                                                        [(ngModel)]="datosBasicos.segmentoActividadEconomica">
+                                                    <select class="form-control" name="segmentoActividadEconomica" formControlName="segmentoActividadEconomica" [(ngModel)]="datosBasicos.segmentoActividadEconomica">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{segmentoActividadEconomicaOp.valor}}"
                                                             *ngFor="let segmentoActividadEconomicaOp of segmentoActividadEconomicaOpciones">
                                                             {{segmentoActividadEconomicaOp.nombre}}
                                                         </option>
                                                     </select>
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.segmentoActividadEconomica.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.segmentoActividadEconomica.errors.required"> Segmento de actividad económica requerido</div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Profesión</label>
-                                                    <select class="form-control select2" name="profesion"
-                                                        formControlName="profesion"
-                                                        [(ngModel)]="datosBasicos.profesion">
+                                                    <select class="form-control select2" name="profesion" formControlName="profesion" [(ngModel)]="datosBasicos.profesion">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{profesionOp.valor}}"
                                                             *ngFor="let profesionOp of profesionOpciones">
                                                             {{profesionOp.nombre}}
                                                         </option>
                                                     </select>
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.profesion.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.profesion.errors.required"> Profesión requerida</div>
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Actividad económica</label>
-                                                    <select class="form-control select2" name="actividadEconomica"
-                                                        formControlName="actividadEconomica"
-                                                        [(ngModel)]="datosBasicos.actividadEconomica">
+                                                    <select class="form-control select2" name="actividadEconomica" formControlName="actividadEconomica" [(ngModel)]="datosBasicos.actividadEconomica">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{actividadEconomicaOp.valor}}"
                                                             *ngFor="let actividadEconomicaOp of actividadEconomicaOpciones">
                                                             {{actividadEconomicaOp.nombre}}
                                                         </option>
                                                     </select>
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.actividadEconomica.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.actividadEconomica.errors.required"> Actividad económica requerida</div>
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Obligado a llevar contabilidad</label>
-                                                    <select class="form-control select2" name="llevarContabilidad"
-                                                        formControlName="llevarContabilidad"
-                                                        [(ngModel)]="datosBasicos.llevarContabilidad">
+                                                    <select class="form-control select2" name="llevarContabilidad" formControlName="llevarContabilidad" [(ngModel)]="datosBasicos.llevarContabilidad">
                                                         <option value="">- Seleccionar - </option>
                                                         <option value="1">SI</option>
                                                         <option value="0">NO</option>
                                                     </select>
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.llevarContabilidad.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.llevarContabilidad.errors.required"> Llevar contabilidad requerida</div>
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Ingresos promedio mensual</label>
-                                                    <input type="text" class="form-control"
-                                                        name="ingresosPromedioMensual"
-                                                        formControlName="ingresosPromedioMensual"
-                                                        [(ngModel)]="datosBasicos.ingresosPromedioMensual">
+                                                    <input type="text" class="form-control" name="ingresosPromedioMensual" formControlName="ingresosPromedioMensual" [(ngModel)]="datosBasicos.ingresosPromedioMensual">
+                                                </div>
+                                                <div *ngIf="submittedDatosBasicosForm && dbForm.ingresosPromedioMensual.errors" class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="dbForm.ingresosPromedioMensual.errors.required"> Ingresos mensuales requeridos</div>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Gastos promedio mensual</label>
-                                                    <input type="text" class="form-control" name="gastosPromedioMensual"
-                                                        formControlName="gastosPromedioMensual"
-                                                        [(ngModel)]="datosBasicos.gastosPromedioMensual">
+                                                    <input type="text" class="form-control" name="gastosPromedioMensual" formControlName="gastosPromedioMensual" [(ngModel)]="datosBasicos.gastosPromedioMensual">
+                                                </div>
+                                                <div *ngIf="submittedDatosBasicosForm && dbForm.gastosPromedioMensual.errors" class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="dbForm.gastosPromedioMensual.errors.required"> Gastos mensuales requeridos</div>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username"># de establecimientos en el país</label>
-                                                    <input type="text" class="form-control"
-                                                        name="numeroEstablecimientos"
-                                                        formControlName="numeroEstablecimientos"
-                                                        [(ngModel)]="datosBasicos.numeroEstablecimientos">
+                                                    <input type="text" class="form-control" name="numeroEstablecimientos" formControlName="numeroEstablecimientos" [(ngModel)]="datosBasicos.numeroEstablecimientos">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.numeroEstablecimientos.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.numeroEstablecimientos.errors.required"> # de establecimientos en el país requerido</div>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -444,92 +387,105 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Teléfono oficina</label>
-                                                    <input type="text" class="form-control" name="telefonoOficina"
-                                                        formControlName="telefonoOficina"
-                                                        [(ngModel)]="datosBasicos.telefonoOficina">
+                                                    <input type="text" class="form-control" name="telefonoOficina" formControlName="telefonoOficina" [(ngModel)]="datosBasicos.telefonoOficina">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.telefonoOficina.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.telefonoOficina.errors.required"> Teléfono de oficina requerido</div>
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Celular oficina</label>
-                                                    <input type="text" class="form-control" name="celularOficina"
-                                                        formControlName="celularOficina"
-                                                        [(ngModel)]="datosBasicos.celularOficina">
+                                                    <input type="text" class="form-control" name="celularOficina" formControlName="celularOficina" [(ngModel)]="datosBasicos.celularOficina">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.celularOficina.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.celularOficina.errors.required"> Celular de oficina requerido</div>
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Celular personal</label>
-                                                    <input type="text" class="form-control" name="celularPersonal"
-                                                        formControlName="celularPersonal"
-                                                        [(ngModel)]="datosBasicos.celularPersonal">
+                                                    <input type="text" class="form-control" name="celularPersonal" formControlName="celularPersonal" [(ngModel)]="datosBasicos.celularPersonal">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.celularPersonal.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.celularPersonal.errors.required"> Celular personal requerido</div>
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">WhatsApp personal</label>
-                                                    <input type="text" class="form-control" name="whatsappPersonal"
-                                                        formControlName="whatsappPersonal"
-                                                        [(ngModel)]="datosBasicos.whatsappPersonal">
+                                                    <input type="text" class="form-control" name="whatsappPersonal" formControlName="whatsappPersonal" [(ngModel)]="datosBasicos.whatsappPersonal">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.whatsappPersonal.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.whatsappPersonal.errors.required"> WhatsApp personal requerido</div>
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">WhatsApp secundario </label>
-                                                    <input type="text" class="form-control" name="whatsappSecundario"
-                                                        formControlName="whatsappSecundario"
-                                                        [(ngModel)]="datosBasicos.whatsappSecundario">
+                                                    <input type="text" class="form-control" name="whatsappSecundario" formControlName="whatsappSecundario" [(ngModel)]="datosBasicos.whatsappSecundario">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.whatsappSecundario.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.whatsappSecundario.errors.required"> WhatsApp secundario requerido</div>
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Correo personal</label>
-                                                    <input type="text" class="form-control" name="correoPersonal"
-                                                        formControlName="correoPersonal"
-                                                        [(ngModel)]="datosBasicos.correoPersonal">
+                                                    <input type="text" class="form-control" name="correoPersonal" formControlName="correoPersonal" [(ngModel)]="datosBasicos.correoPersonal">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.correoPersonal.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.correoPersonal.errors.required"> Correo personal requerido</div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Correo oficina</label>
-                                                    <input type="text" class="form-control" name="correoOficina"
-                                                        formControlName="correoOficina"
-                                                        [(ngModel)]="datosBasicos.correoOficina">
+                                                    <input type="text" class="form-control" name="correoOficina" formControlName="correoOficina" [(ngModel)]="datosBasicos.correoOficina">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.correoOficina.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.correoOficina.errors.required"> Correo oficina requerido</div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Dirección google plus</label>
-                                                    <input type="text" class="form-control" name="googlePlus"
-                                                        formControlName="googlePlus"
-                                                        [(ngModel)]="datosBasicos.googlePlus">
+                                                    <input type="text" class="form-control" name="googlePlus" formControlName="googlePlus" [(ngModel)]="datosBasicos.googlePlus">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.googlePlus.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.googlePlus.errors.required"> Google plus requerido</div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Twitter</label>
-                                                    <input type="text" class="form-control" name="twitter"
-                                                        formControlName="twitter" [(ngModel)]="datosBasicos.twitter">
+                                                    <input type="text" class="form-control" name="twitter" formControlName="twitter" [(ngModel)]="datosBasicos.twitter">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.twitter.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.twitter.errors.required"> Twitter requerido</div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Facebook</label>
-                                                    <input type="text" class="form-control" name="facebook"
-                                                        formControlName="facebook" [(ngModel)]="datosBasicos.facebook">
+                                                    <input type="text" class="form-control" name="facebook" formControlName="facebook" [(ngModel)]="datosBasicos.facebook">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.facebook.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.facebook.errors.required"> Facebook requerido</div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Instagram</label>
-                                                    <input type="text" class="form-control" name="instagram"
-                                                        formControlName="instagram"
-                                                        [(ngModel)]="datosBasicos.instagram">
+                                                    <input type="text" class="form-control" name="instagram" formControlName="instagram" [(ngModel)]="datosBasicos.instagram">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.instagram.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.instagram.errors.required"> Instagram requerido</div>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -537,12 +493,8 @@
                                                 <div class="form-group">
                                                     <label for="username">Estado del cliente</label>
                                                     <div class="custom-control custom-switch">
-                                                        <input type="checkbox" class="custom-control-input"
-                                                            id="estadoNegocio" [(ngModel)]="estadoOpcion"
-                                                            (change)="cambiarEstado()"
-                                                            [ngModelOptions]="{standalone: true}">
-                                                        <label class=" custom-control-label"
-                                                            for="estadoNegocio"><b><span class="yellow">Activo</span> /
+                                                        <input type="checkbox" class="custom-control-input" id="estadoNegocio" [(ngModel)]="estadoOpcion" (change)="cambiarEstado()" [ngModelOptions]="{standalone: true}">
+                                                        <label class=" custom-control-label" for="estadoNegocio"><b><span class="yellow">Activo</span> /
                                                                 <span class="grain">Inactivo</span></b></label>
                                                     </div>
                                                 </div>
@@ -550,10 +502,8 @@
 
 
                                             <div class="col-12 d-flex flex-sm-row flex-column mt-2">
-                                                <a class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light"
-                                                    (click)="guardarDatosBasicos()">Guardar</a>
-                                                <button type="reset"
-                                                    class="btn btn-outline-info mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Borrar</button>
+                                                <a class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light" (click)="guardarDatosBasicos()">Guardar</a>
+                                                <button type="reset" class="btn btn-outline-info mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Borrar</button>
                                             </div>
                                         </div>
                                     </form>
@@ -585,8 +535,7 @@
                                         <div class="card-body text-center">
                                             <div class="avatar bg-light-success p-50 mb-1">
                                                 <div class="avatar-content">
-                                                    <i-feather name="check"
-                                                        class="avatar-icon font-medium-3 edit-user edit-user">
+                                                    <i-feather name="check" class="avatar-icon font-medium-3 edit-user edit-user">
                                                     </i-feather>
 
                                                 </div>
@@ -646,12 +595,10 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <input type="text" class="form-control flatpickr-basic flatpickr-input"
-                                                placeholder="- Periodo de inicio -">
+                                            <input type="text" class="form-control flatpickr-basic flatpickr-input" placeholder="- Periodo de inicio -">
                                         </div>
                                         <div class="col-md-4">
-                                            <input type="text" class="form-control flatpickr-basic flatpickr-input"
-                                                placeholder="- Periodo de finalización -">
+                                            <input type="text" class="form-control flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
                                         </div>
                                     </div>
                                 </div>
@@ -677,8 +624,7 @@
                                             <tr>
                                                 <th>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input"
-                                                            id="customCheck2" />
+                                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
                                                         <label class="custom-control-label" for="customCheck2"></label>
                                                     </div>
                                                 </th>
@@ -694,8 +640,7 @@
                                             <tr data-repeater-item>
                                                 <td>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input"
-                                                            id="customCheck2" />
+                                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
                                                         <label class="custom-control-label" for="customCheck2"></label>
                                                     </div>
                                                 </td>
@@ -720,8 +665,7 @@
                                 <hr />
                                 <div class="row">
                                     <div class="col-12 m-2">
-                                        <a href="clientes-listado2.html"
-                                            class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar</a>
+                                        <a href="clientes-listado2.html" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar</a>
                                     </div>
                                 </div>
                             </div>
@@ -742,8 +686,7 @@
 
                                     </div>
                                     <div class="col-lg-12 col-xl-6 text-right">
-                                        <button class="btn btn-icon btn-primary" type="button" data-toggle="modal"
-                                            data-target="#addempleado" (click)="crearPersonal()">
+                                        <button class="btn btn-icon btn-primary" type="button" data-toggle="modal" data-target="#addempleado" (click)="crearPersonal()">
                                             <i-feather name="plus" class="mr-25 edit-user"></i-feather>
                                             <span>Añadir</span>
                                         </button>
@@ -753,23 +696,19 @@
                                 <div class="modal modal-slide-in new-user-modal fade" id="addempleado">
                                     <div class="modal-dialog">
                                         <div class="modal-content pt-0">
-                                            <button type="button" class="close" data-dismiss="modal"
-                                                aria-label="Close">×</button>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                                             <div class="modal-header mb-1">
                                                 <h5 class="modal-title" id="exampleModalLabel">Nuevo empleado</h5>
                                             </div>
                                             <div class="modal-body flex-grow-1">
                                                 <div class="form-group">
                                                     <label class="form-label">Fecha de registro:</label>
-                                                    <input type="text" class="form-control dt-full-name"
-                                                        value="21-04-2021" disabled
-                                                        [(ngModel)]="datosPersonal.created_at" />
+                                                    <input type="text" class="form-control dt-full-name" value="21-04-2021" disabled [(ngModel)]="datosPersonal.created_at" />
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="form-label">Tipo de contacto:</label>
-                                                    <select id="user-role" class="form-control"
-                                                        [(ngModel)]="datosPersonal.tipoContacto">
+                                                    <select id="user-role" class="form-control" [(ngModel)]="datosPersonal.tipoContacto">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{tipoContactoOp.valor}}"
                                                             *ngFor="let tipoContactoOp of tipoContactoOpciones">
@@ -779,67 +718,56 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="form-label">Cédula:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosPersonal.cedula" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.cedula" />
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="form-label">Nombres:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosPersonal.nombres" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.nombres" />
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="form-label">Apellidos:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosPersonal.apellidos" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.apellidos" />
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="form-label">Teléfono fijo:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosPersonal.telefonoFijo" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.telefonoFijo" />
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="form-label">Extensión:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosPersonal.extension" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.extension" />
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="form-label">Celular empresa:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosPersonal.celularEmpresa" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.celularEmpresa" />
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="form-label">WhatsApp empresa:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosPersonal.whatsappEmpresa" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.whatsappEmpresa" />
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="form-label">Celular personal:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosPersonal.celularPersonal" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.celularPersonal" />
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="form-label">WhatsApp personal:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosPersonal.whatsappPersonal" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.whatsappPersonal" />
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="form-label">Correo empresa:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosPersonal.correoEmpresa" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.correoEmpresa" />
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="form-label">Correo personal:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosPersonal.correoPersonal" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.correoPersonal" />
                                                 </div>
 
 
@@ -853,11 +781,8 @@
                                                 </div>
 
 
-                                                <button class="btn btn-primary mr-1" data-toggle="modal"
-                                                    data-target="#exito" data-dismiss="modal" aria-label="Close"
-                                                    (click)="guardarPersonal()">Guardar</button>
-                                                <button type="reset" class="btn btn-outline-secondary"
-                                                    data-dismiss="modal">Cancelar</button>
+                                                <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close" (click)="guardarPersonal()">Guardar</button>
+                                                <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                                             </div>
                                         </div>
                                     </div>
@@ -868,8 +793,7 @@
                                             <tr>
                                                 <th>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input"
-                                                            id="customCheck2" />
+                                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
                                                         <label class="custom-control-label" for="customCheck2"></label>
                                                     </div>
                                                 </th>
@@ -895,8 +819,7 @@
                                             <tr data-repeater-item *ngFor="let personal of listaPersonal">
                                                 <td>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input"
-                                                            id="customCheck2" />
+                                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
                                                         <label class="custom-control-label" for="customCheck2"></label>
                                                     </div>
                                                 </td>
@@ -915,8 +838,7 @@
                                                 <td> {{personal.correoPersonal}}</td>
                                                 <td><span class="text-info"> {{personal.estado}} </span></td>
                                                 <td>
-                                                    <a (click)="editarPersonal(personal.id)" data-toggle="modal"
-                                                        data-target="#addempleado">
+                                                    <a (click)="editarPersonal(personal.id)" data-toggle="modal" data-target="#addempleado">
                                                         <i-feather name='edit-2'></i-feather>
                                                     </a>
                                                     <a (click)="eliminarPersonal(personal.id)" data-repeater-delete>
@@ -927,9 +849,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <ngb-pagination #paginatorPE [collectionSize]="collectionSizePE" [(page)]="pagePE"
-                                    [(pageSize)]="pageSizePE" [maxSize]="5 " [ellipses]="false "
-                                    [boundaryLinks]="true "></ngb-pagination>
+                                <ngb-pagination #paginatorPE [collectionSize]="collectionSizePE" [(page)]="pagePE" [(pageSize)]="pageSizePE" [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
                             </div>
                         </div>
 
@@ -947,8 +867,7 @@
 
                                     </div>
                                     <div class="col-lg-12 col-xl-6 text-right">
-                                        <button class="btn btn-icon btn-primary" type="button" data-toggle="modal"
-                                            data-target="#addfisico" (click)="crearDireccion()">
+                                        <button class="btn btn-icon btn-primary" type="button" data-toggle="modal" data-target="#addfisico" (click)="crearDireccion()">
                                             <i-feather name="plus" class="mr-25 edit-user"></i-feather>
                                             <span>Añadir</span>
                                         </button>
@@ -958,23 +877,19 @@
                                 <div class="modal modal-slide-in new-user-modal fade" id="addfisico">
                                     <div class="modal-dialog">
                                         <div class="modal-content pt-0">
-                                            <button type="button" class="close" data-dismiss="modal"
-                                                aria-label="Close">×</button>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                                             <div class="modal-header mb-1">
                                                 <h5 class="modal-title" id="exampleModalLabel">Nueva dirección</h5>
                                             </div>
                                             <div class="modal-body flex-grow-1">
                                                 <div class="form-group">
                                                     <label class="form-label">Fecha de registro:</label>
-                                                    <input type="text" class="form-control dt-full-name"
-                                                        value="21-04-2021" disabled
-                                                        [(ngModel)]="datosDirecciones.created_at" />
+                                                    <input type="text" class="form-control dt-full-name" value="21-04-2021" disabled [(ngModel)]="datosDirecciones.created_at" />
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="form-label">Tipo de dirección:</label>
-                                                    <select id="user-role" class="form-control"
-                                                        [(ngModel)]="datosDirecciones.tipoDireccion">
+                                                    <select id="user-role" class="form-control" [(ngModel)]="datosDirecciones.tipoDireccion">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{tipoDireccionOp.valor}}"
                                                             *ngFor="let tipoDireccionOp of tipoDireccionOpciones">
@@ -985,9 +900,7 @@
 
                                                 <div class="form-group">
                                                     <label class="form-label">País:</label>
-                                                    <select class="form-control select2"
-                                                        (change)="obtenerProvinciasDirecciones()"
-                                                        [(ngModel)]="datosDirecciones.pais">
+                                                    <select class="form-control select2" (change)="obtenerProvinciasDirecciones()" [(ngModel)]="datosDirecciones.pais">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{paisesOp.valor}}"
                                                             *ngFor="let paisesOp of paisesOpciones">
@@ -998,9 +911,7 @@
 
                                                 <div class="form-group">
                                                     <label class="form-label">Provincia:</label>
-                                                    <select class="form-control select2"
-                                                        (change)="obtenerCiudadDirecciones()"
-                                                        [(ngModel)]="datosDirecciones.provincia">
+                                                    <select class="form-control select2" (change)="obtenerCiudadDirecciones()" [(ngModel)]="datosDirecciones.provincia">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{provinciasDireccionOp.valor}}"
                                                             *ngFor="let provinciasDireccionOp of provinciasDireccionOpciones">
@@ -1012,8 +923,7 @@
 
                                                 <div class="form-group">
                                                     <label class="form-label">Ciudad:</label>
-                                                    <select class="form-control select2"
-                                                        [(ngModel)]="datosDirecciones.ciudad">
+                                                    <select class="form-control select2" [(ngModel)]="datosDirecciones.ciudad">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{ciudadesDireccionOp.valor}}"
                                                             *ngFor="let ciudadesDireccionOp of ciudadesDireccionOpciones">
@@ -1024,51 +934,41 @@
 
                                                 <div class="form-group">
                                                     <label class="form-label">Calle principal:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosDirecciones.callePrincipal" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosDirecciones.callePrincipal" />
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="form-label">Número:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosDirecciones.numero" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosDirecciones.numero" />
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="form-label">Calle secundaria:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosDirecciones.calleSecundaria" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosDirecciones.calleSecundaria" />
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="form-label">Edificio:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosDirecciones.edificio" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosDirecciones.edificio" />
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="form-label">Piso:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosDirecciones.piso" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosDirecciones.piso" />
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="form-label">Oficina/Departamento:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosDirecciones.oficina" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosDirecciones.oficina" />
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="form-label">Referencia:</label>
-                                                    <input type="text" class="form-control"
-                                                        [(ngModel)]="datosDirecciones.referencia" />
+                                                    <input type="text" class="form-control" [(ngModel)]="datosDirecciones.referencia" />
                                                 </div>
 
-                                                <button class="btn btn-primary mr-1" data-toggle="modal"
-                                                    data-target="#exito" data-dismiss="modal" aria-label="Close"
-                                                    (click)="guardarDireccion()">Guardar</button>
-                                                <button type="reset" class="btn btn-outline-secondary"
-                                                    data-dismiss="modal">Cancelar</button>
+                                                <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close" (click)="guardarDireccion()">Guardar</button>
+                                                <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                                             </div>
                                         </div>
                                     </div>
@@ -1079,8 +979,7 @@
                                             <tr>
                                                 <th>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input"
-                                                            id="customCheck2" />
+                                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
                                                         <label class="custom-control-label" for="customCheck2"></label>
                                                     </div>
                                                 </th>
@@ -1104,8 +1003,7 @@
                                             <tr data-repeater-item *ngFor="let direccion of listaDirecciones">
                                                 <td>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input"
-                                                            id="customCheck2" />
+                                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
                                                         <label class="custom-control-label" for="customCheck2"></label>
                                                     </div>
                                                 </td>
@@ -1122,8 +1020,7 @@
                                                 <td> {{direccion.oficina}} </td>
                                                 <td> {{direccion.referencia}} </td>
                                                 <td>
-                                                    <a (click)="editarDireccion(direccion.id)" data-toggle="modal"
-                                                        data-target="#addfisico">
+                                                    <a (click)="editarDireccion(direccion.id)" data-toggle="modal" data-target="#addfisico">
                                                         <i-feather name='edit-2'></i-feather>
                                                     </a>
                                                     <a (click)="eliminarDireccion(direccion.id)" data-repeater-delete>
@@ -1134,15 +1031,12 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <ngb-pagination #paginatorDE [collectionSize]="collectionSizeDE" [(page)]="pageDE"
-                                    [(pageSize)]="pageSizeDE" [maxSize]="5 " [ellipses]="false "
-                                    [boundaryLinks]="true "></ngb-pagination>
+                                <ngb-pagination #paginatorDE [collectionSize]="collectionSizeDE" [(page)]="pageDE" [(pageSize)]="pageSizeDE" [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
 
                                 <hr />
                                 <div class="row">
                                     <div class="col-12 m-2">
-                                        <a href="clientes-listado2.html"
-                                            class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar</a>
+                                        <a href="clientes-listado2.html" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar</a>
                                     </div>
                                 </div>
                             </div>
@@ -1159,19 +1053,16 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <input class="form-control" mwlFlatpickr type="text"
-                                                [(ngModel)]="fechaInicioTransac" (input)="obtenerTransacciones()">
+                                            <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="fechaInicioTransac" (input)="obtenerTransacciones()">
                                         </div>
                                         <div class="col-md-4">
-                                            <input class="form-control" mwlFlatpickr type="text"
-                                                [(ngModel)]="fechaFinTransac" (input)="obtenerTransacciones()">
+                                            <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="fechaFinTransac" (input)="obtenerTransacciones()">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="card">
-                                <div
-                                    class="card-header d-flex justify-content-between align-items-sm-center align-items-start flex-sm-row flex-column">
+                                <div class="card-header d-flex justify-content-between align-items-sm-center align-items-start flex-sm-row flex-column">
                                     <div class="header-left">
                                         <h5>Gráfica de transacciones</h5>
                                     </div>
@@ -1183,10 +1074,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <canvas baseChart height="70vh" [colors]="barChartColors "
-                                        [datasets]="barChartData " [labels]="barChartLabels "
-                                        [options]="barChartOptions " [plugins]="barChartPlugins "
-                                        [legend]="barChartLegend " [chartType]="barChartType ">
+                                    <canvas baseChart height="70vh" [colors]="barChartColors " [datasets]="barChartData " [labels]="barChartLabels " [options]="barChartOptions " [plugins]="barChartPlugins " [legend]="barChartLegend " [chartType]="barChartType ">
                                     </canvas>
                                 </div>
                             </div>
@@ -1207,16 +1095,14 @@
                                 <div class="modal modal-slide-in new-user-modal fade" id="addtransaccion">
                                     <div class="modal-dialog">
                                         <div class="modal-content pt-0">
-                                            <button type="button" class="close" data-dismiss="modal"
-                                                aria-label="Close">×</button>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                                             <div class="modal-header mb-1">
                                                 <h5 class="modal-title" id="exampleModalLabel">Nueva transacción</h5>
                                             </div>
                                             <div class="modal-body flex-grow-1">
                                                 <div class="form-group">
                                                     <label class="form-label">Fecha de compra:</label>
-                                                    <input type="text"
-                                                        class="form-control flatpickr-basic flatpickr-input" />
+                                                    <input type="text" class="form-control flatpickr-basic flatpickr-input" />
                                                 </div>
 
                                                 <div class="form-group">
@@ -1244,11 +1130,8 @@
                                                     </div>
                                                 </div>
 
-                                                <button class="btn btn-primary mr-1" data-toggle="modal"
-                                                    data-target="#exito" data-dismiss="modal"
-                                                    aria-label="Close">Guardar</button>
-                                                <button type="reset" class="btn btn-outline-secondary"
-                                                    data-dismiss="modal">Cancelar</button>
+                                                <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close">Guardar</button>
+                                                <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                                             </div>
                                         </div>
                                     </div>
@@ -1259,8 +1142,7 @@
                                             <tr>
                                                 <th>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input"
-                                                            id="customCheck2" />
+                                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
                                                         <label class="custom-control-label" for="customCheck2"></label>
                                                     </div>
                                                 </th>
@@ -1276,8 +1158,7 @@
                                             <tr data-repeater-item *ngFor="let transaccion of listaTransacciones">
                                                 <td>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input"
-                                                            id="customCheck2" />
+                                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
                                                         <label class="custom-control-label" for="customCheck2"></label>
                                                     </div>
                                                 </td>
@@ -1286,8 +1167,7 @@
                                                 <td>{{transaccion.numeroProductosComprados}} </td>
                                                 <td> ${{transaccion.total}} </td>
                                                 <td>
-                                                    <a (click)="obtenerTransaccion(transaccion.id)" data-toggle="modal"
-                                                        data-target="#verfactura">factura-{{transaccion.numeroFactura}}</a>
+                                                    <a (click)="obtenerTransaccion(transaccion.id)" data-toggle="modal" data-target="#verfactura">factura-{{transaccion.numeroFactura}}</a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -1296,13 +1176,10 @@
                                 <hr />
                                 <div class="row">
                                     <div class="col-12 m-2">
-                                        <a href="clientes-listado2.html"
-                                            class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar</a>
+                                        <a href="clientes-listado2.html" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar</a>
                                     </div>
                                 </div>
-                                <ngb-pagination #paginatorTA [collectionSize]="collectionSizeTA" [(page)]="pageTA"
-                                    [(pageSize)]="pageSizeTA" [maxSize]="5 " [ellipses]="false "
-                                    [boundaryLinks]="true "></ngb-pagination>
+                                <ngb-pagination #paginatorTA [collectionSize]="collectionSizeTA" [(page)]="pageTA" [(pageSize)]="pageSizeTA" [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
 
                             </div>
                         </div>
@@ -1316,8 +1193,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="verfactura" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="verfactura" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="card invoice-preview-card">
@@ -1341,14 +1217,12 @@
                                             <i-feather name="hash"></i-feather>
                                         </div>
                                     </div>
-                                    <input type="text" class="form-control invoice-edit-input"
-                                        [(ngModel)]="transaccion.numeroFactura" disabled />
+                                    <input type="text" class="form-control invoice-edit-input" [(ngModel)]="transaccion.numeroFactura" disabled />
                                 </div>
                             </div>
                             <div class="d-flex align-items-center mb-1">
                                 <span class="title mr-1">Fecha:</span>
-                                <input type="text" class="form-control invoice-edit-input date-picker"
-                                    [(ngModel)]="transaccion.created_at" disabled />
+                                <input type="text" class="form-control invoice-edit-input date-picker" [(ngModel)]="transaccion.created_at" disabled />
                             </div>
 
                         </div>
@@ -1404,35 +1278,28 @@
                                         <div class="row w-100 pr-lg-0 pr-1 py-2">
                                             <div class="col-lg-5 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                                 <p class="card-text col-title mb-md-50 mb-0">Artículo/Producto</p>
-                                                <input class="form-control" type="text" value="{{detalle.articulo}}"
-                                                    disabled>
-                                                <textarea class="form-control mt-2 " rows="2 "
-                                                    disabled>{{detalle.informacionAdicional}}</textarea>
+                                                <input class="form-control" type="text" value="{{detalle.articulo}}" disabled>
+                                                <textarea class="form-control mt-2 " rows="2 " disabled>{{detalle.informacionAdicional}}</textarea>
                                             </div>
                                             <div class="col-lg-3 col-12 my-lg-0 my-2 ">
                                                 <p class="card-text col-title mb-md-50 mb-0 ">Valor unitario</p>
-                                                <input type="text " class="form-control "
-                                                    value="{{detalle.valorUnitario}} " disabled />
+                                                <input type="text " class="form-control " value="{{detalle.valorUnitario}} " disabled />
                                                 <div class="mt-2 ">
                                                     <span>Descuento:</span><span>%</span>
-                                                    <input type="number " class="form-control "
-                                                        value="{{detalle.descuento}}" placeholder="0 " disabled />
+                                                    <input type="number " class="form-control " value="{{detalle.descuento}}" placeholder="0 " disabled />
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-12 my-lg-0 my-2 ">
                                                 <p class="card-text col-title mb-md-50 mb-0 ">Cantidad</p>
-                                                <input type="number " class="form-control " value="{{detalle.cantidad}}"
-                                                    placeholder="1 " disabled />
+                                                <input type="number " class="form-control " value="{{detalle.cantidad}}" placeholder="1 " disabled />
                                                 <div class="mt-2 ">
                                                     <span>Valor descuento:</span>
-                                                    <input type="number " class="form-control " placeholder="0 "
-                                                        disabled />
+                                                    <input type="number " class="form-control " placeholder="0 " disabled />
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-12 mt-lg-0 mt-2 ">
                                                 <p class="card-text col-title mb-md-50 mb-0 ">Precio</p>
-                                                <input type="text " class="form-control " value="{{detalle.precio}}"
-                                                    placeholder="24 " disabled />
+                                                <input type="text " class="form-control " value="{{detalle.precio}}" placeholder="24 " disabled />
                                             </div>
                                         </div>
 
@@ -1465,8 +1332,8 @@
                                 </div>
                                 <hr class="my-50 " />
                                 <div class="invoice-total-item ">
-                                    <p class="invoice-total-title text-primary font-weight-bold ">Total:
-                                        ${{transaccion.total}}</p>
+                                    <p class="invoice-total-title text-primary font-weight-bold ">Total: ${{transaccion.total}}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -1478,8 +1345,7 @@
 
                 <div class="row p-2 ">
                     <div class="col-12 ">
-                        <button type="button" class="btn btn-outline-secondary waves-effect "
-                            data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-outline-secondary waves-effect " data-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
 

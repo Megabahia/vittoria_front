@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Transaccion, ClientesService } from '../../../../../services/mdm/personas/clientes/clientes.service';
-import { FormArray, FormBuilder } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ParamService } from '../../../../../services/mdm/param/param.service';
 import { ParamService as ParamServiceADM } from '../../../../../services/admin/param.service';
 import { DatePipe } from '@angular/common';
@@ -18,6 +18,11 @@ export class TransaccionesAddComponent implements OnInit {
   // detalles: FormArray;
   detalles = [];
   detallesTransac;
+
+  //forms
+  datosBasicosForm: FormGroup;
+  //----------------
+
   public isCollapsed = [];
   tipoIdentificacionOpciones;
   iva;
@@ -25,12 +30,12 @@ export class TransaccionesAddComponent implements OnInit {
   fechaActual = new Date();
   canalOpciones;
   constructor(
-    private formBuilder: FormBuilder,
+    private _formBuilder: FormBuilder,
     private clientesService: ClientesService,
     private paramService: ParamService,
     private datePipe: DatePipe,
-    private productosService:ProductosService,
-    private globalParam:ParamServiceADM
+    private productosService: ProductosService,
+    private globalParam: ParamServiceADM
 
   ) {
     this.transaccion = clientesService.inicializarTransaccion();
@@ -47,10 +52,35 @@ export class TransaccionesAddComponent implements OnInit {
       valor: ""
     };
     this.transaccion.fecha = this.transformarFecha(this.fechaActual);
-    
+
   }
 
   ngOnInit(): void {
+
+    this.datosBasicosForm = this._formBuilder.group({
+      canalCompra: ['', [Validators.required]],
+      cliente: [0, [Validators.required]],
+      correo: ['', [Validators.required]],
+      created_at: ['', [Validators.required]],
+      descuento: [0, [Validators.required]],
+      detalles: this._formBuilder.array([
+        {
+          codigo: [0, [Validators.required]],
+        }
+      ]),
+      direccion: ['', [Validators.required]],
+      fecha: ['', [Validators.required]],
+      identificacion: ['', [Validators.required]],
+      iva: [0, [Validators.required]],
+      nombreVendedor: ['', [Validators.required]],
+      numeroFactura: [0, [Validators.required]],
+      numeroProductosComprados: [0, [Validators.required]],
+      razonSocial: ['', [Validators.required]],
+      subTotal: [0, [Validators.required]],
+      telefono: ['', [Validators.required]],
+      tipoIdentificacion: ['', [Validators.required]],
+      total: [0, [Validators.required]],
+    });
     this.menu = {
       modulo: "mdm",
       seccion: "clientesTransacAdd"
@@ -80,7 +110,7 @@ export class TransaccionesAddComponent implements OnInit {
     // this.isCollapsed.splice(i, 1);
     // this.detalles.removeAt(i);
   }
-  obtenerProducto(i){
+  obtenerProducto(i) {
     this.productosService.obtenerProductoPorCodigo({
       codigoBarras: this.detalles[i].codigo
     }).subscribe((info) => {
@@ -117,9 +147,9 @@ export class TransaccionesAddComponent implements OnInit {
     this.transaccion.numeroProductosComprados = cantidad;
     this.detallesTransac = detalles;
     this.transaccion.subTotal = this.redondear(subtotal);
-    this.transaccion.iva = this.redondear((subtotal-descuento) * this.iva.valor);
+    this.transaccion.iva = this.redondear((subtotal - descuento) * this.iva.valor);
     this.transaccion.descuento = this.redondear(descuento);
-    this.transaccion.total = this.redondear((subtotal-descuento) + this.transaccion.iva );
+    this.transaccion.total = this.redondear((subtotal - descuento) + this.transaccion.iva);
   }
   redondear(num, decimales = 2) {
     var signo = (num >= 0 ? 1 : -1);
@@ -134,7 +164,7 @@ export class TransaccionesAddComponent implements OnInit {
     let valor = signo * (Number)(num[0] + 'e' + (num[1] ? (+num[1] - decimales) : -decimales));
     return valor;
   }
-  redondeoValor(valor){
+  redondeoValor(valor) {
     return isNaN(valor) ? valor : parseFloat(valor).toFixed(2);
   }
   async obtenerTipoIdentificacionOpciones() {
@@ -146,9 +176,9 @@ export class TransaccionesAddComponent implements OnInit {
     await this.paramService.obtenerParametroNombreTipo("ACTIVO", "TIPO_IVA").subscribe((info) => {
       this.iva = info;
     },
-    (error)=>{
-      
-    });
+      (error) => {
+
+      });
   }
   async guardarTransaccion() {
     this.calcularSubtotal();
