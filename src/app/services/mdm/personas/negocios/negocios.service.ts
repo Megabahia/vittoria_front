@@ -158,7 +158,7 @@ export class NegociosService {
       whatsappPersonal: "",
       correoEmpresa: "",
       correoPersonal: "",
-      estado: 0,
+      estado: "",
       created_at: ""
     }
   }

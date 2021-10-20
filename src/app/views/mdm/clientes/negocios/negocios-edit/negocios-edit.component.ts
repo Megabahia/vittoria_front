@@ -5,7 +5,7 @@ import { ParamService } from '../../../../../services/mdm/param/param.service';
 import { ParamService as ParamServiceADM } from '../../../../../services/admin/param.service';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label, Color } from 'ng2-charts';
-import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPagination, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -21,6 +21,8 @@ export class NegociosEditComponent implements OnInit {
   @ViewChild('tab1') tab1;
   @ViewChild('tab2') tab2;
   @ViewChild('tab3') tab3;
+  @ViewChild('dismissModalDP') dismissModalDP;
+  @ViewChild('mensajeModal') mensajeModal;
 
   //forms
   datosBasicosForm: FormGroup;
@@ -105,7 +107,7 @@ export class NegociosEditComponent implements OnInit {
     private paramService: ParamService,
     private globalParam: ParamServiceADM,
     private _formBuilder: FormBuilder,
-
+    private modalService: NgbModal,
   ) {
     this.datosBasicos = negociosService.inicializarDatosBasicos();
     this.datosPersonal = negociosService.inicializarPersonal();
@@ -180,13 +182,14 @@ export class NegociosEditComponent implements OnInit {
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
       telefonoFijo: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
-      extension: ['', [Validators.required]],
+      extension: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
       celularEmpresa: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
       whatsappEmpresa: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
       celularPersonal: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
       whatsappPersonal: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
       correoEmpresa: ['', [Validators.required]],
       correoPersonal: ['', [Validators.required]],
+      estado: ['', [Validators.required]],
     });
 
 
@@ -378,10 +381,21 @@ export class NegociosEditComponent implements OnInit {
     }
     if (this.datosPersonal.id == 0) {
       await this.negociosService.crearPersonal(this.datosPersonal).subscribe((info) => {
+        this.dismissModalDP.nativeElement.click();
         this.obtenerPersonalEmpresa();
+      },
+      (error) => {
+        let errores = Object.values(error);
+        let llaves = Object.keys(error);
+        this.mensaje = "";
+        errores.map((infoErrores, index) => {
+          this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+        });
+        this.abrirModal(this.mensajeModal);
       });
     } else {
       await this.negociosService.editarPersonal(this.datosPersonal).subscribe((info) => {
+        this.dismissModalDP.nativeElement.click();
         this.obtenerPersonalEmpresa();
       });
     }
@@ -458,5 +472,11 @@ export class NegociosEditComponent implements OnInit {
       this.transaccion = info;
       this.transaccion.created_at = this.transformarFecha(info.created_at);
     });
+  }
+  abrirModal(modal) {
+    this.modalService.open(modal)
+  }
+  cerrarModal() {
+    this.modalService.dismissAll();
   }
 }

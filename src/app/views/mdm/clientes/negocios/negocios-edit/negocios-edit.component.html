@@ -717,77 +717,139 @@
                                                         </option>
                                                     </select>
                                                         <div *ngIf="submittedDatosPersonalForm && dpForm.tipoContacto.errors" class="invalid-feedback" style="display: block;">
-                                                            <div *ngIf="dpForm.tipoContacto.errors.required">Dirección requerida
+                                                            <div *ngIf="dpForm.tipoContacto.errors.required">Tipo de contacto requerido
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="form-label">Cédula:</label>
                                                         <input type="text" class="form-control" name="cedula" formControlName="cedula" [(ngModel)]="datosPersonal.cedula" />
+                                                        <div *ngIf="submittedDatosPersonalForm && dpForm.cedula.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dpForm.cedula.errors.required">Cédula requerida
+                                                            </div>
+                                                            <div *ngIf="dpForm.cedula.errors.pattern">Solo se aceptan números
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label class="form-label">Nombres:</label>
                                                         <input type="text" class="form-control" name="nombres" formControlName="nombres" [(ngModel)]="datosPersonal.nombres" />
+                                                        <div *ngIf="submittedDatosPersonalForm && dpForm.nombres.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dpForm.nombres.errors.required">Nombres requeridos
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label class="form-label">Apellidos:</label>
                                                         <input type="text" class="form-control" name="apellidos" formControlName="apellidos" [(ngModel)]="datosPersonal.apellidos" />
+                                                        <div *ngIf="submittedDatosPersonalForm && dpForm.apellidos.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dpForm.apellidos.errors.required">Apellidos requeridos
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label class="form-label">Teléfono fijo:</label>
                                                         <input type="text" class="form-control" name="telefonoFijo" formControlName="telefonoFijo" [(ngModel)]="datosPersonal.telefonoFijo" />
+                                                        <div *ngIf="submittedDatosPersonalForm && dpForm.telefonoFijo.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dpForm.telefonoFijo.errors.required">Teléfono fijo requerido
+                                                            </div>
+                                                            <div *ngIf="dpForm.telefonoFijo.errors.pattern">Solo se aceptan números
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label class="form-label">Extensión:</label>
                                                         <input type="text" class="form-control" name="extension" formControlName="extension" [(ngModel)]="datosPersonal.extension" />
+                                                        <div *ngIf="submittedDatosPersonalForm && dpForm.extension.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dpForm.extension.errors.required">Extensión requerida
+                                                            </div>
+                                                            <div *ngIf="dpForm.extension.errors.pattern">Solo se aceptan números
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label class="form-label">Celular empresa:</label>
                                                         <input type="text" class="form-control" name="celularEmpresa" formControlName="celularEmpresa" [(ngModel)]="datosPersonal.celularEmpresa" />
+                                                        <div *ngIf="submittedDatosPersonalForm && dpForm.celularEmpresa.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dpForm.celularEmpresa.errors.required">Celular empresa requerido
+                                                            </div>
+                                                            <div *ngIf="dpForm.celularEmpresa.errors.pattern">Solo se aceptan números
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label class="form-label">WhatsApp empresa:</label>
                                                         <input type="text" class="form-control" name="whatsappEmpresa" formControlName="whatsappEmpresa" [(ngModel)]="datosPersonal.whatsappEmpresa" />
+                                                        <div *ngIf="submittedDatosPersonalForm && dpForm.whatsappEmpresa.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dpForm.whatsappEmpresa.errors.required">Celular empresa requerido
+                                                            </div>
+                                                            <div *ngIf="dpForm.whatsappEmpresa.errors.pattern">Solo se aceptan números
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="form-label">Celular personal:</label>
                                                         <input type="text" class="form-control" name="celularPersonal" formControlName="celularPersonal" [(ngModel)]="datosPersonal.celularPersonal" />
+                                                        <div *ngIf="submittedDatosPersonalForm && dpForm.celularPersonal.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dpForm.celularPersonal.errors.required">Celular empresa requerido
+                                                            </div>
+                                                            <div *ngIf="dpForm.celularPersonal.errors.pattern">Solo se aceptan números
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label class="form-label">WhatsApp personal:</label>
                                                         <input type="text" class="form-control" name="whatsappPersonal" formControlName="whatsappPersonal" [(ngModel)]="datosPersonal.whatsappPersonal" />
+                                                        <div *ngIf="submittedDatosPersonalForm && dpForm.whatsappPersonal.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dpForm.whatsappPersonal.errors.required">Whatsapp personal requerido
+                                                            </div>
+                                                            <div *ngIf="dpForm.whatsappPersonal.errors.pattern">Solo se aceptan números
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label class="form-label">Correo empresa:</label>
                                                         <input type="text" class="form-control" name="correoEmpresa" formControlName="correoEmpresa" [(ngModel)]="datosPersonal.correoEmpresa" />
+                                                        <div *ngIf="submittedDatosPersonalForm && dpForm.correoEmpresa.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dpForm.correoEmpresa.errors.required">Correo de empresa requerido
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label class="form-label">Correo personal:</label>
                                                         <input type="text" class="form-control" name="correoPersonal" formControlName="correoPersonal" [(ngModel)]="datosPersonal.correoPersonal" />
+                                                        <div *ngIf="submittedDatosPersonalForm && dpForm.correoPersonal.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dpForm.correoPersonal.errors.required">Correo personal requerido
+                                                            </div>
+                                                        </div>
                                                     </div>
 
 
                                                     <div class="form-group">
                                                         <label class="form-label">Estado:</label>
-                                                        <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="datosPersonal.estado">
-                                                        <option>- Seleccionar - </option>
-                                                        <option>Activo</option>
-                                                        <option>Inactivo</option>
+                                                        <select class="form-control" name="estado" formControlName="estado" [(ngModel)]="datosPersonal.estado">
+                                                        <option value="">- Seleccionar - </option>
+                                                        <option value="Activo">Activo</option>
+                                                        <option value="Inactivo">Inactivo</option>
                                                     </select>
+                                                        <div *ngIf="submittedDatosPersonalForm && dpForm.estado.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dpForm.estado.errors.required">Estado requerido
+                                                            </div>
+                                                        </div>
                                                     </div>
 
 
                                                     <button class="btn btn-primary mr-1" (click)="guardarPersonal()">Guardar</button>
-                                                    <button data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close"></button>
+                                                    <button #dismissModalDP data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
                                                     <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                                                 </form>
                                             </div>
@@ -835,7 +897,7 @@
                                                 <td>{{personal.cedula}}</td>
                                                 <td>{{personal.nombres}}</td>
                                                 <td>{{personal.apellidos}}</td>
-                                                <td>{{personal.telefonoFijo}} </td>
+                                                <td>{{personal.extension}} </td>
                                                 <td> {{personal.extension}} </td>
                                                 <td> {{personal.celularEmpresa}} </td>
                                                 <td> {{personal.whatsappEmpresa}} </td>
@@ -1361,3 +1423,17 @@
         </div>
     </div>
 </div>
+<ng-template #mensajeModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+    </div>
+    <div class="modal-body">
+        <div [innerHTML]="mensaje"></div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="cerrarModal()">Cerrar</button>
+    </div>
+</ng-template>
