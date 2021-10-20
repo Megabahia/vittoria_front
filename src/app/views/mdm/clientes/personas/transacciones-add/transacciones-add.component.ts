@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Transaccion, ClientesService } from '../../../../../services/mdm/personas/clientes/clientes.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ParamService } from '../../../../../services/mdm/param/param.service';
 import { ParamService as ParamServiceADM } from '../../../../../services/admin/param.service';
 import { DatePipe } from '@angular/common';
 import { ProductosService } from '../../../../../services/mdp/productos/productos.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-transacciones-add',
@@ -12,15 +13,20 @@ import { ProductosService } from '../../../../../services/mdp/productos/producto
   providers: [DatePipe]
 })
 export class TransaccionesAddComponent implements OnInit {
+  @ViewChild('mensajeModal') mensajeModal;
+  public usuario;
   menu;
   transaccion: Transaccion;
   detallesForm;
+  mensaje = "";
+
   // detalles: FormArray;
   detalles = [];
   detallesTransac;
   numRegex = /^-?\d*[.,]?\d{0,2}$/;
   //forms
   transaccionForm: FormGroup;
+  comprobarProductos: Boolean[];
   //----------------
   submittedTransaccionForm = false;
 
@@ -36,7 +42,8 @@ export class TransaccionesAddComponent implements OnInit {
     private paramService: ParamService,
     private datePipe: DatePipe,
     private productosService: ProductosService,
-    private globalParam: ParamServiceADM
+    private globalParam: ParamServiceADM,
+    private modalService: NgbModal
 
   ) {
     this.transaccion = clientesService.inicializarTransaccion();
@@ -53,6 +60,8 @@ export class TransaccionesAddComponent implements OnInit {
       valor: ""
     };
     this.transaccion.fecha = this.transformarFecha(this.fechaActual);
+    this.comprobarProductos = [];
+    this.usuario = JSON.parse(localStorage.getItem('currentUser'));
 
   }
 
@@ -76,7 +85,7 @@ export class TransaccionesAddComponent implements OnInit {
       modulo: "mdm",
       seccion: "clientesTransacAdd"
     };
-
+    this.transaccion.nombreVendedor = this.usuario.usuario.nombres + " " + this.usuario.usuario.apellidos;
     this.obtenerTipoIdentificacionOpciones();
     this.obtenerIVA();
     this.obternerUltimaTransaccion();
@@ -116,11 +125,13 @@ export class TransaccionesAddComponent implements OnInit {
     this.detalles.push(this.clientesService.inicializarDetalle());
     let detGrupo = this.crearDetalleGrupo();
     this.detallesArray.push(detGrupo);
+    this.comprobarProductos.push(false);
   }
   removerItem(i): void {
     this.detalles.splice(i, 1);
     this.calcularSubtotal();
     this.detallesArray.removeAt(i);
+    this.comprobarProductos.splice(i, 1);
     // this.isCollapsed.splice(i, 1);
     // this.detalles.removeAt(i);
   }
@@ -129,10 +140,17 @@ export class TransaccionesAddComponent implements OnInit {
       codigoBarras: this.detalles[i].codigo
     }).subscribe((info) => {
       if (info.codigoBarras) {
+        this.comprobarProductos[i] = true;
         this.detalles[i].articulo = info.nombre;
         this.detalles[i].imagen = this.obtenerURLImagen(info.imagen);
         this.detalles[i].valorUnitario = info.precioVentaA;
+      } else {
+        this.comprobarProductos[i] = false;
+        this.mensaje = "No existe el producto a buscar";
+        this.abrirModal(this.mensajeModal);
       }
+    }, (error) => {
+
     });
   }
   obtenerURLImagen(url) {
@@ -191,14 +209,33 @@ export class TransaccionesAddComponent implements OnInit {
       this.iva = info;
     },
       (error) => {
-
-      });
+        this.mensaje = "Iva no configurado";
+        this.abrirModal(this.mensajeModal);
+      }
+    );
   }
   async guardarTransaccion() {
     this.submittedTransaccionForm = true;
+    if (!this.iva) {
+      this.mensaje = "El iva debe ser configurado";
+      this.abrirModal(this.mensajeModal);
+      return;
+    }
+    if (!this.transaccion.cliente) {
+      this.mensaje = "Es necesario asignar al cliente";
+      this.abrirModal(this.mensajeModal);
+      return;
+    }
     if (this.transaccionForm.invalid) {
       return;
     }
+    this.comprobarProductos.map(compProd => {
+      if (!compProd) {
+        this.mensaje = "No se han ingresado productos correctamente";
+        this.abrirModal(this.mensajeModal);
+        return;
+      }
+    });
     this.calcularSubtotal();
     this.transaccion.detalles = this.detallesTransac;
     await this.clientesService.crearTransaccion(this.transaccion).subscribe(() => {
@@ -218,11 +255,22 @@ export class TransaccionesAddComponent implements OnInit {
         this.transaccion.razonSocial = info.nombreCompleto;
         this.transaccion.cliente = info.id;
       }
-    });
+    },
+      (error) => {
+        this.mensaje = "Cliente no encontrado";
+        this.abrirModal(this.mensajeModal);
+        return;
+      });
   }
   async obtenerCanales() {
     await this.paramService.obtenerListaPadres("CANAL").subscribe((info) => {
       this.canalOpciones = info;
     });
+  }
+  abrirModal(modal) {
+    this.modalService.open(modal)
+  }
+  cerrarModal() {
+    this.modalService.dismissAll();
   }
 }

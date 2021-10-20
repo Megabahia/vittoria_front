@@ -502,7 +502,7 @@
 
 
                                             <div class="col-12 d-flex flex-sm-row flex-column mt-2">
-                                                <a class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light" (click)="guardarDatosBasicos()">Guardar</a>
+                                                <a class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light" (click)="guardarDatosBasicos()">Guardar y continuar</a>
                                                 <button type="reset" class="btn btn-outline-info mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Borrar</button>
                                             </div>
                                         </div>
@@ -701,88 +701,95 @@
                                                 <h5 class="modal-title" id="exampleModalLabel">Nuevo empleado</h5>
                                             </div>
                                             <div class="modal-body flex-grow-1">
-                                                <div class="form-group">
-                                                    <label class="form-label">Fecha de registro:</label>
-                                                    <input type="text" class="form-control dt-full-name" value="21-04-2021" disabled [(ngModel)]="datosPersonal.created_at" />
-                                                </div>
+                                                <form class="auth-login-form mt-2" [formGroup]="datosPersonalForm">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Fecha de registro:</label>
+                                                        <input type="text" class="form-control dt-full-name" value="21-04-2021" [ngModelOptions]="{standalone: true}" disabled [(ngModel)]="datosPersonal.created_at" />
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Tipo de contacto:</label>
-                                                    <select id="user-role" class="form-control" [(ngModel)]="datosPersonal.tipoContacto">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Tipo de contacto:</label>
+                                                        <select id="user-role" class="form-control" name="tipoContacto" formControlName="tipoContacto" [(ngModel)]="datosPersonal.tipoContacto">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{tipoContactoOp.valor}}"
                                                             *ngFor="let tipoContactoOp of tipoContactoOpciones">
                                                             {{tipoContactoOp.nombre}}
                                                         </option>
                                                     </select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="form-label">Cédula:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.cedula" />
-                                                </div>
+                                                        <div *ngIf="submittedDatosPersonalForm && dpForm.tipoContacto.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dpForm.tipoContacto.errors.required">Dirección requerida
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Cédula:</label>
+                                                        <input type="text" class="form-control" name="cedula" formControlName="cedula" [(ngModel)]="datosPersonal.cedula" />
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Nombres:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.nombres" />
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Nombres:</label>
+                                                        <input type="text" class="form-control" name="nombres" formControlName="nombres" [(ngModel)]="datosPersonal.nombres" />
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Apellidos:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.apellidos" />
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Apellidos:</label>
+                                                        <input type="text" class="form-control" name="apellidos" formControlName="apellidos" [(ngModel)]="datosPersonal.apellidos" />
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Teléfono fijo:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.telefonoFijo" />
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Teléfono fijo:</label>
+                                                        <input type="text" class="form-control" name="telefonoFijo" formControlName="telefonoFijo" [(ngModel)]="datosPersonal.telefonoFijo" />
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Extensión:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.extension" />
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Extensión:</label>
+                                                        <input type="text" class="form-control" name="extension" formControlName="extension" [(ngModel)]="datosPersonal.extension" />
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Celular empresa:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.celularEmpresa" />
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Celular empresa:</label>
+                                                        <input type="text" class="form-control" name="celularEmpresa" formControlName="celularEmpresa" [(ngModel)]="datosPersonal.celularEmpresa" />
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">WhatsApp empresa:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.whatsappEmpresa" />
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="form-label">Celular personal:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.celularPersonal" />
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">WhatsApp empresa:</label>
+                                                        <input type="text" class="form-control" name="whatsappEmpresa" formControlName="whatsappEmpresa" [(ngModel)]="datosPersonal.whatsappEmpresa" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Celular personal:</label>
+                                                        <input type="text" class="form-control" name="celularPersonal" formControlName="celularPersonal" [(ngModel)]="datosPersonal.celularPersonal" />
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">WhatsApp personal:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.whatsappPersonal" />
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">WhatsApp personal:</label>
+                                                        <input type="text" class="form-control" name="whatsappPersonal" formControlName="whatsappPersonal" [(ngModel)]="datosPersonal.whatsappPersonal" />
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Correo empresa:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.correoEmpresa" />
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Correo empresa:</label>
+                                                        <input type="text" class="form-control" name="correoEmpresa" formControlName="correoEmpresa" [(ngModel)]="datosPersonal.correoEmpresa" />
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Correo personal:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosPersonal.correoPersonal" />
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Correo personal:</label>
+                                                        <input type="text" class="form-control" name="correoPersonal" formControlName="correoPersonal" [(ngModel)]="datosPersonal.correoPersonal" />
+                                                    </div>
 
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Estado:</label>
-                                                    <select class="form-control" [(ngModel)]="datosPersonal.estado">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Estado:</label>
+                                                        <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="datosPersonal.estado">
                                                         <option>- Seleccionar - </option>
                                                         <option>Activo</option>
                                                         <option>Inactivo</option>
                                                     </select>
-                                                </div>
+                                                    </div>
 
 
-                                                <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close" (click)="guardarPersonal()">Guardar</button>
-                                                <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                                    <button class="btn btn-primary mr-1" (click)="guardarPersonal()">Guardar</button>
+                                                    <button data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close"></button>
+                                                    <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>

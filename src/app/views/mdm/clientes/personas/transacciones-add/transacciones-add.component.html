@@ -74,10 +74,10 @@
                                             </div>
                                         </div>
                                         <div class="col-3">
-                                            <label>Razón social</label>
+                                            <label>Nombres completos</label>
                                             <input class="form-control" type="text" name="razonSocial" formControlName="razonSocial" [(ngModel)]="transaccion.razonSocial">
-                                            <div *ngIf="submittedTransaccionForm && tForm.identificacion.errors" class="invalid-feedback" style="display: block;">
-                                                <div *ngIf="tForm.identificacion.errors.required">Identificación requerido
+                                            <div *ngIf="submittedTransaccionForm && tForm.razonSocial.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="tForm.razonSocial.errors.required">Nombres completos requeridos
                                                 </div>
                                             </div>
                                         </div>
@@ -145,7 +145,7 @@
 
                                                         <div class="col-md-3 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                                             <p class="card-text col-title">Producto</p>
-                                                            <input class="form-control" type="text" name="articulo" formControlName="articulo" [(ngModel)]="detalle.articulo">
+                                                            <input class="form-control" type="text" name="articulo" formControlName="articulo" [(ngModel)]="detalle.articulo" disabled>
                                                             <div *ngIf="submittedTransaccionForm && tForm.detalles.controls[i].controls.articulo.errors" class="invalid-feedback" style="display: block;">
                                                                 <div *ngIf="tForm.detalles.controls[i].controls.articulo.errors.required">Requerido
                                                                 </div>
@@ -296,7 +296,7 @@
                                         <div class="col-md-6 order-md-1 order-2 mt-md-0 mt-3">
                                             <div class="d-flex align-items-center mb-1">
                                                 <label for="salesperson" class="form-label">Persona de ventas:</label>
-                                                <input type="text" class="form-control ml-50" id="salesperson" placeholder="Nombre vendedor" name="nombreVendedor" formControlName="nombreVendedor" [(ngModel)]="transaccion.nombreVendedor" />
+                                                <input type="text" class="form-control ml-50" id="salesperson" placeholder="Nombre vendedor" name="nombreVendedor" formControlName="nombreVendedor" [(ngModel)]="transaccion.nombreVendedor" disabled />
                                             </div>
                                         </div>
                                         <div class="col-md-6 d-flex justify-content-end order-md-2 order-1">
@@ -350,3 +350,17 @@
 <div class="sidenav-overlay"></div>
 <div class="drag-target"></div>
 <app-footer></app-footer>
+<ng-template #mensajeModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div [innerHTML]="mensaje"></div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="cerrarModal()">Cerrar</button>
+    </div>
+</ng-template>

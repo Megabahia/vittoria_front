@@ -6,13 +6,16 @@ import { AuthService } from '../../services/admin/auth.service';
   templateUrl: './navbar.component.html',
 })
 export class NavbarComponent implements OnInit {
+  usuario;
+  constructor(private authService: AuthService,) {
+    this.usuario = JSON.parse(localStorage.getItem('currentUser'));
 
-  constructor(private authService: AuthService,) { }
+  }
 
   ngOnInit(): void {
   }
   cerrarSesion() {
     this.authService.signOut();
-    window.location.href='/auth/signin';
+    window.location.href = '/auth/signin';
   }
 }

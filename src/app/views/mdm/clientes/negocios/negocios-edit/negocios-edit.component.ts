@@ -29,7 +29,7 @@ export class NegociosEditComponent implements OnInit {
   //------------------------
   //subbmiteds
   submittedDatosBasicosForm = false;
-  submittedDatosVirtualesForm = false;
+  submittedDatosPersonalForm = false;
   submittedDatosFisicosForm = false;
   //------------------------
   //Mensaje
@@ -127,7 +127,19 @@ export class NegociosEditComponent implements OnInit {
     return this.datosFisicosForm.controls;
   }
   //------------------
-
+  cambiarTab(numero) {
+    switch (numero) {
+      case 1:
+        this.tab1.nativeElement.click();
+        break;
+      case 2:
+        this.tab2.nativeElement.click();
+        break;
+      case 3:
+        this.tab3.nativeElement.click();
+        break;
+    }
+  }
   ngOnInit(): void {
 
     this.datosBasicosForm = this._formBuilder.group({
@@ -161,6 +173,20 @@ export class NegociosEditComponent implements OnInit {
       twitter: ['', [Validators.required]],
       facebook: ['', [Validators.required]],
       instagram: ['', [Validators.required]]
+    });
+    this.datosPersonalForm = this._formBuilder.group({
+      tipoContacto: ['', [Validators.required]],
+      cedula: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
+      nombres: ['', [Validators.required]],
+      apellidos: ['', [Validators.required]],
+      telefonoFijo: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
+      extension: ['', [Validators.required]],
+      celularEmpresa: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
+      whatsappEmpresa: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
+      celularPersonal: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
+      whatsappPersonal: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
+      correoEmpresa: ['', [Validators.required]],
+      correoPersonal: ['', [Validators.required]],
     });
 
 
@@ -247,12 +273,14 @@ export class NegociosEditComponent implements OnInit {
     }
     if (this.idNegocio != 0) {
       this.negociosService.editarDatosBasicos(this.idNegocio, this.datosBasicos).subscribe((info) => {
+        this.tab2.nativeElement.click();
       });
     } else {
       this.negociosService.crearDatosBasicos(this.datosBasicos).subscribe((info) => {
         this.idNegocio = info.id;
         this.datosPersonal.negocio = this.idNegocio;
         this.datosDirecciones.negocio = this.idNegocio;
+        this.tab2.nativeElement.click();
       });
     }
   }
@@ -343,7 +371,11 @@ export class NegociosEditComponent implements OnInit {
   }
 
   async guardarPersonal() {
-    console.log(this.datosPersonal);
+    this.submittedDatosPersonalForm = true;
+
+    if (this.datosPersonalForm.invalid) {
+      return;
+    }
     if (this.datosPersonal.id == 0) {
       await this.negociosService.crearPersonal(this.datosPersonal).subscribe((info) => {
         this.obtenerPersonalEmpresa();
