@@ -919,7 +919,14 @@
                                     </table>
                                 </div>
                                 <ngb-pagination #paginatorPE [collectionSize]="collectionSizePE" [(page)]="pagePE" [(pageSize)]="pageSizePE" [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+                                <hr />
+                                <div class="row">
+                                    <div class="col-12 m-2">
+                                        <a (click)="cambiarTab(3)" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar y continuar</a>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
 
                         <div class="tab-pane" id="tab5" aria-labelledby="account-tab" role="tabpanel">
@@ -951,93 +958,140 @@
                                                 <h5 class="modal-title" id="exampleModalLabel">Nueva dirección</h5>
                                             </div>
                                             <div class="modal-body flex-grow-1">
-                                                <div class="form-group">
-                                                    <label class="form-label">Fecha de registro:</label>
-                                                    <input type="text" class="form-control dt-full-name" value="21-04-2021" disabled [(ngModel)]="datosDirecciones.created_at" />
-                                                </div>
+                                                <form class="auth-login-form mt-2" [formGroup]="datosFisicosForm">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Fecha de registro:</label>
+                                                        <input type="text" class="form-control dt-full-name" value="21-04-2021" [ngModelOptions]="{standalone: true}" disabled [(ngModel)]="datosDirecciones.created_at" />
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Tipo de dirección:</label>
-                                                    <select id="user-role" class="form-control" [(ngModel)]="datosDirecciones.tipoDireccion">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Tipo de dirección:</label>
+                                                        <select id="user-role" class="form-control" name="tipoDireccion" formControlName="tipoDireccion" [(ngModel)]="datosDirecciones.tipoDireccion">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{tipoDireccionOp.valor}}"
                                                             *ngFor="let tipoDireccionOp of tipoDireccionOpciones">
                                                             {{tipoDireccionOp.nombre}}
                                                         </option>
                                                     </select>
-                                                </div>
+                                                        <div *ngIf="submittedDatosFisicosForm && dfForm.tipoDireccion.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dfForm.tipoDireccion.errors.required">Tipo de Dirección requerido
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">País:</label>
-                                                    <select class="form-control select2" (change)="obtenerProvinciasDirecciones()" [(ngModel)]="datosDirecciones.pais">
+                                                    <div class="form-group">
+                                                        <label class="form-label">País:</label>
+                                                        <select class="form-control select2" (change)="obtenerProvinciasDirecciones()" name="pais" formControlName="pais" [(ngModel)]="datosDirecciones.pais">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{paisesOp.valor}}"
                                                             *ngFor="let paisesOp of paisesOpciones">
                                                             {{paisesOp.nombre}}
                                                         </option>
                                                     </select>
-                                                </div>
+                                                        <div *ngIf="submittedDatosFisicosForm && dfForm.pais.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dfForm.pais.errors.required">País requerido
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Provincia:</label>
-                                                    <select class="form-control select2" (change)="obtenerCiudadDirecciones()" [(ngModel)]="datosDirecciones.provincia">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Provincia:</label>
+                                                        <select class="form-control select2" (change)="obtenerCiudadDirecciones()" name="provincia" formControlName="provincia" [(ngModel)]="datosDirecciones.provincia">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{provinciasDireccionOp.valor}}"
                                                             *ngFor="let provinciasDireccionOp of provinciasDireccionOpciones">
                                                             {{provinciasDireccionOp.nombre}}
                                                         </option>
                                                     </select>
+                                                        <div *ngIf="submittedDatosFisicosForm && dfForm.provincia.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dfForm.provincia.errors.required">Provincia requerida
+                                                            </div>
+                                                        </div>
 
-                                                </div>
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Ciudad:</label>
-                                                    <select class="form-control select2" [(ngModel)]="datosDirecciones.ciudad">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Ciudad:</label>
+                                                        <select class="form-control select2" name="ciudad" formControlName="ciudad" [(ngModel)]="datosDirecciones.ciudad">
                                                         <option value="" selected>- Seleccionar -</option>
                                                         <option value="{{ciudadesDireccionOp.valor}}"
                                                             *ngFor="let ciudadesDireccionOp of ciudadesDireccionOpciones">
                                                             {{ciudadesDireccionOp.nombre}}
                                                         </option>
                                                     </select>
-                                                </div>
+                                                        <div *ngIf="submittedDatosFisicosForm && dfForm.ciudad.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dfForm.ciudad.errors.required">Ciudad requerida
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Calle principal:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosDirecciones.callePrincipal" />
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Calle principal:</label>
+                                                        <input type="text" class="form-control" name="callePrincipal" formControlName="callePrincipal" [(ngModel)]="datosDirecciones.callePrincipal" />
+                                                        <div *ngIf="submittedDatosFisicosForm && dfForm.callePrincipal.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dfForm.callePrincipal.errors.required">Calle principal requerida
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Número:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosDirecciones.numero" />
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Número:</label>
+                                                        <input type="text" class="form-control" name="numero" formControlName="numero" [(ngModel)]="datosDirecciones.numero" />
+                                                        <div *ngIf="submittedDatosFisicosForm && dfForm.numero.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dfForm.numero.errors.required">Número requerido
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Calle secundaria:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosDirecciones.calleSecundaria" />
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Calle secundaria:</label>
+                                                        <input type="text" class="form-control" name="calleSecundaria" formControlName="calleSecundaria" [(ngModel)]="datosDirecciones.calleSecundaria" />
+                                                        <div *ngIf="submittedDatosFisicosForm && dfForm.calleSecundaria.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dfForm.calleSecundaria.errors.required">Calle secundaria requerida
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Edificio:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosDirecciones.edificio" />
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Edificio:</label>
+                                                        <input type="text" class="form-control" name="edificio" formControlName="edificio" [(ngModel)]="datosDirecciones.edificio" />
+                                                        <div *ngIf="submittedDatosFisicosForm && dfForm.edificio.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dfForm.edificio.errors.required">Edificio requerido
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Piso:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosDirecciones.piso" />
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Piso:</label>
+                                                        <input type="text" class="form-control" name="piso" formControlName="piso" [(ngModel)]="datosDirecciones.piso" />
+                                                        <div *ngIf="submittedDatosFisicosForm && dfForm.piso.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dfForm.piso.errors.required">Piso requerido
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Oficina/Departamento:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosDirecciones.oficina" />
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Oficina/Departamento:</label>
+                                                        <input type="text" class="form-control" name="oficina" formControlName="oficina" [(ngModel)]="datosDirecciones.oficina" />
+                                                        <div *ngIf="submittedDatosFisicosForm && dfForm.oficina.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dfForm.oficina.errors.required">Oficina requerida
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label class="form-label">Referencia:</label>
-                                                    <input type="text" class="form-control" [(ngModel)]="datosDirecciones.referencia" />
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Referencia:</label>
+                                                        <input type="text" class="form-control" name="referencia" formControlName="referencia" [(ngModel)]="datosDirecciones.referencia" />
+                                                        <div *ngIf="submittedDatosFisicosForm && dfForm.referencia.errors" class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="dfForm.referencia.errors.required">Referencia requerida
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                                <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close" (click)="guardarDireccion()">Guardar</button>
-                                                <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                                    <button class="btn btn-primary mr-1" (click)="guardarDireccion()">Guardar</button>
+                                                    <button #dismissModalDF data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
+                                                    <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -1101,13 +1155,6 @@
                                     </table>
                                 </div>
                                 <ngb-pagination #paginatorDE [collectionSize]="collectionSizeDE" [(page)]="pageDE" [(pageSize)]="pageSizeDE" [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
-
-                                <hr />
-                                <div class="row">
-                                    <div class="col-12 m-2">
-                                        <a href="clientes-listado2.html" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar</a>
-                                    </div>
-                                </div>
                             </div>
 
                         </div>

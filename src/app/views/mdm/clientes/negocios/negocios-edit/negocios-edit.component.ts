@@ -22,6 +22,7 @@ export class NegociosEditComponent implements OnInit {
   @ViewChild('tab2') tab2;
   @ViewChild('tab3') tab3;
   @ViewChild('dismissModalDP') dismissModalDP;
+  @ViewChild('dismissModalDF') dismissModalDF;
   @ViewChild('mensajeModal') mensajeModal;
 
   //forms
@@ -190,6 +191,19 @@ export class NegociosEditComponent implements OnInit {
       correoEmpresa: ['', [Validators.required]],
       correoPersonal: ['', [Validators.required]],
       estado: ['', [Validators.required]],
+    });
+    this.datosFisicosForm = this._formBuilder.group({
+      tipoDireccion: ['', [Validators.required]],
+      pais: ['', [Validators.required]],
+      provincia: ['', [Validators.required]],
+      ciudad: ['', [Validators.required]],
+      callePrincipal: ['', [Validators.required]],
+      numero: ['', [Validators.required]],
+      calleSecundaria: ['', [Validators.required]],
+      edificio: ['', [Validators.required]],
+      piso: ['', [Validators.required]],
+      oficina: ['', [Validators.required]],
+      referencia: ['', [Validators.required]],
     });
 
 
@@ -384,15 +398,15 @@ export class NegociosEditComponent implements OnInit {
         this.dismissModalDP.nativeElement.click();
         this.obtenerPersonalEmpresa();
       },
-      (error) => {
-        let errores = Object.values(error);
-        let llaves = Object.keys(error);
-        this.mensaje = "";
-        errores.map((infoErrores, index) => {
-          this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+        (error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = "";
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          });
+          this.abrirModal(this.mensajeModal);
         });
-        this.abrirModal(this.mensajeModal);
-      });
     } else {
       await this.negociosService.editarPersonal(this.datosPersonal).subscribe((info) => {
         this.dismissModalDP.nativeElement.click();
@@ -420,12 +434,20 @@ export class NegociosEditComponent implements OnInit {
   }
 
   async guardarDireccion() {
+    this.submittedDatosFisicosForm = true;
+
+    if (this.datosFisicosForm.invalid) {
+      return;
+    }
     if (this.datosDirecciones.id == 0) {
       await this.negociosService.crearDireccion(this.datosDirecciones).subscribe((info) => {
+        this.dismissModalDF.nativeElement.click();
+
         this.obtenerDireccionesEmpresa();
       });
     } else {
       await this.negociosService.editarDireccion(this.datosDirecciones).subscribe((info) => {
+        this.dismissModalDF.nativeElement.click();
         this.obtenerDireccionesEmpresa();
       });
     }

@@ -1,35 +1,49 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ParamService } from '../../../../../services/mdm/param/param.service';
 import { DatePipe } from '@angular/common';
 import { NegociosService, Transaccion } from '../../../../../services/mdm/personas/negocios/negocios.service';
 import { ProductosService } from 'src/app/services/mdp/productos/productos.service';
 import { ParamService as ParamServiceADM } from 'src/app/services/admin/param.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-transacciones-add',
   templateUrl: './transacciones-add.component.html',
   providers: [DatePipe]
 })
 export class TransaccionesAddComponent implements OnInit {
+  @ViewChild('mensajeModal') mensajeModal;
+  public usuario;
   menu;
   transaccion: Transaccion;
   detallesForm;
+  mensaje = "";
+
   // detalles: FormArray;
   detalles = [];
+  detallesTransac;
+  numRegex = /^-?\d*[.,]?\d{0,2}$/;
+  //forms
+  transaccionForm: FormGroup;
+  comprobarProductos: Boolean[];
+  //----------------
+  submittedTransaccionForm = false;
+
   public isCollapsed = [];
   tipoIdentificacionOpciones;
-  detallesTransac;
   iva;
   ultimaFactura = 0;
   fechaActual = new Date();
   canalOpciones;
   constructor(
-    private formBuilder: FormBuilder,
+    private _formBuilder: FormBuilder,
     private negociosService: NegociosService,
     private paramService: ParamService,
     private datePipe: DatePipe,
-    private productosService:ProductosService,
-    private globalParam:ParamServiceADM
+    private productosService: ProductosService,
+    private globalParam: ParamServiceADM,
+    private modalService: NgbModal
+
   ) {
     this.transaccion = negociosService.inicializarTransaccion();
     this.iva = {
@@ -45,20 +59,52 @@ export class TransaccionesAddComponent implements OnInit {
       valor: ""
     };
     this.transaccion.fecha = this.transformarFecha(this.fechaActual);
+    this.comprobarProductos = [];
+    this.usuario = JSON.parse(localStorage.getItem('currentUser'));
+
   }
 
   ngOnInit(): void {
+
+    this.transaccionForm = this._formBuilder.group({
+      canalCompra: ['', [Validators.required]],
+      correo: ['', [Validators.required]],
+      detalles: this._formBuilder.array([
+        this.crearDetalleGrupo()
+      ]),
+      direccion: ['', [Validators.required]],
+      fecha: ['', [Validators.required]],
+      identificacion: ['', [Validators.required]],
+      nombreVendedor: ['', [Validators.required]],
+      razonSocial: ['', [Validators.required]],
+      telefono: ['', [Validators.required]],
+      tipoIdentificacion: ['', [Validators.required]],
+    });
     this.menu = {
       modulo: "mdm",
       seccion: "negociosTransacAdd"
     };
-
+    this.transaccion.nombreVendedor = this.usuario.usuario.nombres + " " + this.usuario.usuario.apellidos;
     this.obtenerTipoIdentificacionOpciones();
     this.obtenerIVA();
     this.obternerUltimaTransaccion();
     this.obtenerCanales();
     this.inicializarDetalles();
   }
+
+  crearDetalleGrupo() {
+    return this._formBuilder.group({
+      codigo: ['', [Validators.required]],
+      articulo: ['', [Validators.required]],
+      valorUnitario: [0, [Validators.required]],
+      cantidad: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
+      precio: [0, [Validators.required]],
+      informacionAdicional: ['', [Validators.required]],
+      descuento: [0, [Validators.required, Validators.pattern(this.numRegex)]],
+      valorDescuento: [0, [Validators.required]]
+    });
+  }
+
   inicializarDetalles() {
     this.detalles = [];
     this.detalles.push(this.negociosService.inicializarDetalle());
@@ -68,14 +114,46 @@ export class TransaccionesAddComponent implements OnInit {
     return nuevaFecha;
   }
 
+  get detallesArray(): FormArray {
+    return this.transaccionForm.get('detalles') as FormArray;
+  }
+  get tForm() {
+    return this.transaccionForm.controls;
+  }
   agregarItem(): void {
     this.detalles.push(this.negociosService.inicializarDetalle());
+    let detGrupo = this.crearDetalleGrupo();
+    this.detallesArray.push(detGrupo);
+    this.comprobarProductos.push(false);
   }
   removerItem(i): void {
     this.detalles.splice(i, 1);
     this.calcularSubtotal();
+    this.detallesArray.removeAt(i);
+    this.comprobarProductos.splice(i, 1);
     // this.isCollapsed.splice(i, 1);
     // this.detalles.removeAt(i);
+  }
+  obtenerProducto(i) {
+    this.productosService.obtenerProductoPorCodigo({
+      codigoBarras: this.detalles[i].codigo
+    }).subscribe((info) => {
+      if (info.codigoBarras) {
+        this.comprobarProductos[i] = true;
+        this.detalles[i].articulo = info.nombre;
+        this.detalles[i].imagen = this.obtenerURLImagen(info.imagen);
+        this.detalles[i].valorUnitario = info.precioVentaA;
+      } else {
+        this.comprobarProductos[i] = false;
+        this.mensaje = "No existe el producto a buscar";
+        this.abrirModal(this.mensajeModal);
+      }
+    }, (error) => {
+
+    });
+  }
+  obtenerURLImagen(url) {
+    return this.globalParam.obtenerURL(url);
   }
   calcularSubtotal() {
     let detalles = this.detalles;
@@ -128,28 +206,41 @@ export class TransaccionesAddComponent implements OnInit {
   async obtenerIVA() {
     await this.paramService.obtenerParametroNombreTipo("ACTIVO", "TIPO_IVA").subscribe((info) => {
       this.iva = info;
-    });
+    },
+      (error) => {
+        this.mensaje = "Iva no configurado";
+        this.abrirModal(this.mensajeModal);
+      }
+    );
   }
   async guardarTransaccion() {
+    this.submittedTransaccionForm = true;
+    if (!this.iva) {
+      this.mensaje = "El iva debe ser configurado";
+      this.abrirModal(this.mensajeModal);
+      return;
+    }
+    if (!this.transaccion.negocio) {
+      this.mensaje = "Es necesario asignar al cliente";
+      this.abrirModal(this.mensajeModal);
+      return;
+    }
+    if (this.transaccionForm.invalid) {
+      return;
+    }
+    this.comprobarProductos.map(compProd => {
+      if (!compProd) {
+        this.mensaje = "No se han ingresado productos correctamente";
+        this.abrirModal(this.mensajeModal);
+        return;
+      }
+    });
     this.calcularSubtotal();
     this.transaccion.detalles = this.detallesTransac;
     await this.negociosService.crearTransaccion(this.transaccion).subscribe(() => {
       window.location.href = '/mdm/clientes/negocios/transacciones/list';
+
     });
-  }
-  obtenerProducto(i){
-    this.productosService.obtenerProductoPorCodigo({
-      codigoBarras: this.detalles[i].codigo
-    }).subscribe((info) => {
-      if (info.codigoBarras) {
-        this.detalles[i].articulo = info.nombre;
-        this.detalles[i].imagen = this.obtenerURLImagen(info.imagen);
-        this.detalles[i].valorUnitario = info.precioVentaA;
-      }
-    });
-  }
-  obtenerURLImagen(url) {
-    return this.globalParam.obtenerURL(url);
   }
   async obternerUltimaTransaccion() {
     await this.negociosService.obtenerUltimaTransaccion().subscribe((info) => {
@@ -162,14 +253,23 @@ export class TransaccionesAddComponent implements OnInit {
         this.transaccion.correo = info.correoOficina;
         this.transaccion.razonSocial = info.razonSocial;
         this.transaccion.telefono = info.telefonoOficina;
-        this.transaccion.negocio = info.id;
-      }
-
-    });
+        this.transaccion.negocio = info.id;      }
+    },
+      (error) => {
+        this.mensaje = "Negocio no encontrado";
+        this.abrirModal(this.mensajeModal);
+        return;
+      });
   }
   async obtenerCanales() {
     await this.paramService.obtenerListaPadres("CANAL").subscribe((info) => {
       this.canalOpciones = info;
     });
+  }
+  abrirModal(modal) {
+    this.modalService.open(modal)
+  }
+  cerrarModal() {
+    this.modalService.dismissAll();
   }
 }
