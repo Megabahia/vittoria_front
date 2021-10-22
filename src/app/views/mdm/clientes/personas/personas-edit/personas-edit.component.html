@@ -143,29 +143,31 @@
                                                 <div class="form-group">
                                                     <label for="username">Fecha de creación</label>
                                                     <input type="text" id="fp-default" class="form-control flatpickr-basic" placeholder="" name="created_at" formControlName="created_at" [(ngModel)]="datosBasicos.created_at" disabled />
+
                                                 </div>
-                                                <div *ngIf="submittedDatosBasicosForm && fdb.created_at.errors" class="invalid-feedback" style="display: block;">
-                                                    <div *ngIf="fdb.created_at.errors.required">Tipo de cliente es requerido
-                                                    </div>
-                                                </div>
+
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Número de cédula</label>
                                                     <input type="text" class="form-control" name="cedula" formControlName="cedula" [(ngModel)]="datosBasicos.cedula">
+                                                    <div *ngIf="submittedDatosBasicosForm && fdb.cedula.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="fdb.cedula.errors.required">Cédula es requerida
+                                                        </div>
+                                                        <div *ngIf="fdb.cedula.errors.pattern">Solo se aceptan números
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div *ngIf="submittedDatosBasicosForm && fdb.cedula.errors" class="invalid-feedback" style="display: block;">
-                                                    <div *ngIf="fdb.cedula.errors.required">Cédula es requerida</div>
-                                                </div>
+
                                             </div>
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Nombres</label>
                                                     <input type="text" class="form-control" name="nombres" formControlName="nombres" [(ngModel)]="datosBasicos.nombres">
-                                                </div>
-                                                <div *ngIf="submittedDatosBasicosForm && fdb.nombres.errors" class="invalid-feedback" style="display: block;">
-                                                    <div *ngIf="fdb.nombres.errors.required">Nombres son requeridos
+                                                    <div *ngIf="submittedDatosBasicosForm && fdb.nombres.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="fdb.nombres.errors.required">Nombres son requeridos
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -174,9 +176,9 @@
                                                 <div class="form-group">
                                                     <label for="username">Apellidos</label>
                                                     <input type="text" class="form-control" name="apellidos" formControlName="apellidos" [(ngModel)]="datosBasicos.apellidos">
-                                                </div>
-                                                <div *ngIf="submittedDatosBasicosForm && fdb.nombres.errors" class="invalid-feedback" style="display: block;">
-                                                    <div *ngIf="fdb.nombres.errors.required">Apellidos son requeridos
+                                                    <div *ngIf="submittedDatosBasicosForm && fdb.apellidos.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="fdb.apellidos.errors.required">Apellidos son requeridos
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -184,23 +186,36 @@
                                                 <div class="form-group">
                                                     <label for="username">Correo</label>
                                                     <input type="text" class="form-control" name="correo" formControlName="correo" [(ngModel)]="datosBasicos.correo">
+                                                    <div *ngIf="submittedDatosBasicosForm && fdb.correo.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="fdb.correo.errors.required">Correo es requerido</div>
+                                                    </div>
                                                 </div>
-                                                <div *ngIf="submittedDatosBasicosForm && fdb.nombres.errors" class="invalid-feedback" style="display: block;">
-                                                    <div *ngIf="fdb.nombres.errors.required">Correo es requerido</div>
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="username">Teléfono</label>
+                                                    <input type="text" class="form-control" name="telefono" formControlName="telefono" [(ngModel)]="datosBasicos.telefono">
+                                                    <div *ngIf="submittedDatosBasicosForm && fdb.telefono.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="fdb.telefono.errors.required">Teléfono es requerido</div>
+                                                        <div *ngIf="fdb.telefono.errors.pattern">Solo se aceptan números
+                                                        </div>
+                                                    </div>
                                                 </div>
+
                                             </div>
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Género</label>
                                                     <select class="form-control" id="status" name="genero" formControlName="genero" [(ngModel)]="datosBasicos.genero">
-                            <option value="" selected>- Seleccionar -</option>
-                            <option value="{{generoOp.valor}}" *ngFor="let generoOp of generoOpciones">
-                              {{generoOp.nombre}}
-                            </option>
-                          </select>
+                                                      <option value="" selected>- Seleccionar -</option>
+                                                      <option value="{{generoOp.valor}}" *ngFor="let generoOp of generoOpciones">
+                                                          {{generoOp.nombre}}
+                                                      </option>
+                                                    </select>
                                                     <div *ngIf="submittedDatosBasicosForm && fdb.genero.errors" class="invalid-feedback" style="display: block;">
-                                                        <div *ngIf="fdb.genero.errors.required">Correo es requerido
+                                                        <div *ngIf="fdb.genero.errors.required">Género es requerido
                                                         </div>
                                                     </div>
                                                 </div>
@@ -227,21 +242,23 @@
                                                 <div class="form-group">
                                                     <label for="username">Fecha de nacimiento</label>
                                                     <input type="text" mwlFlatpickr class="form-control flatpickr-basic flatpickr-input" name="fechaNacimiento" formControlName="fechaNacimiento" [(ngModel)]="datosBasicos.fechaNacimiento" (input)="calcularEdad()">
-                                                </div>
-                                                <div *ngIf="submittedDatosBasicosForm && fdb.fechaNacimiento.errors" class="invalid-feedback" style="display: block;">
-                                                    <div *ngIf="fdb.nacionalidad.errors.required">Fecha de nacimiento es requerida
+                                                    <div *ngIf="submittedDatosBasicosForm && fdb.fechaNacimiento.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="fdb.fechaNacimiento.errors.required">Fecha de nacimiento es requerida
+                                                        </div>
                                                     </div>
                                                 </div>
+
                                             </div>
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Edad</label>
                                                     <input type="text" class="form-control" name="edad" formControlName="edad" [(ngModel)]="datosBasicos.edad" disabled>
+                                                    <div *ngIf="submittedDatosBasicosForm && fdb.edad.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="fdb.edad.errors.required">Edad es requerida</div>
+                                                    </div>
                                                 </div>
-                                                <div *ngIf="submittedDatosBasicosForm && fdb.edad.errors" class="invalid-feedback" style="display: block;">
-                                                    <div *ngIf="fdb.edad.errors.required">Edad es requerida</div>
-                                                </div>
+
                                             </div>
 
                                             <div class="col-md-4">
@@ -278,7 +295,8 @@
                             </option>
                           </select>
                                                     <div *ngIf="submittedDatosBasicosForm && fdb.provinciaNacimiento.errors" class="invalid-feedback" style="display: block;">
-                                                        <div *ngIf="fdb.provinciaNacimiento.errors.required">Provincia de nacimiento es requerida</div>
+                                                        <div *ngIf="fdb.provinciaNacimiento.errors.required">Provincia de nacimiento es requerida
+                                                        </div>
                                                     </div>
                                                     <div *ngIf="submittedDatosBasicosForm && fdb.ciudadNacimiento.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="fdb.ciudadNacimiento.errors.required">Ciudad de nacimiento es requerida</div>
@@ -333,10 +351,11 @@
                             </option>
                           </select>
                                                     <div *ngIf="submittedDatosBasicosForm && fdb.provinciaResidencia.errors" class="invalid-feedback" style="display: block;">
-                                                        <div *ngIf="fdb.provinciaResidencia.errors.required">Provincia de residencia es requerida</div>
+                                                        <div *ngIf="fdb.provinciaResidencia.errors.required">Provincia de residencia es requerida
+                                                        </div>
                                                     </div>
                                                     <div *ngIf="submittedDatosBasicosForm && fdb.ciudadResidencia.errors" class="invalid-feedback" style="display: block;">
-                                                        <div *ngIf="fdb.ciudadResidencia.errors.required">Provincia de residencia es requerida</div>
+                                                        <div *ngIf="fdb.ciudadResidencia.errors.required">Cuidad de residencia es requerida</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -430,7 +449,10 @@
                                                     <input type="text" class="form-control" name="mesesUltimoTrabajo" formControlName="mesesUltimoTrabajo" [(ngModel)]="datosBasicos.mesesUltimoTrabajo">
                                                     <div *ngIf="submittedDatosBasicosForm && fdb.mesesUltimoTrabajo.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="fdb.mesesUltimoTrabajo.errors.required">Antigüedad de trabajo es requerida</div>
+                                                        <div *ngIf="fdb.mesesUltimoTrabajo.errors.pattern">Solo se aceptan números
+                                                        </div>
                                                     </div>
+
                                                 </div>
 
                                             </div>
@@ -441,6 +463,8 @@
                                                     <input type="text" class="form-control" name="mesesTotalTrabajo" formControlName="mesesTotalTrabajo" [(ngModel)]="datosBasicos.mesesTotalTrabajo">
                                                     <div *ngIf="submittedDatosBasicosForm && fdb.mesesTotalTrabajo.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="fdb.mesesTotalTrabajo.errors.required">Meses de trabajo son requeridos</div>
+                                                        <div *ngIf="fdb.mesesTotalTrabajo.errors.pattern">Solo se aceptan números
+                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -451,8 +475,12 @@
                                                     <label for="username">Ingresos Promedio Mensual</label>
                                                     <input type="text" class="form-control" name="ingresosPromedioMensual" formControlName="ingresosPromedioMensual" [(ngModel)]="datosBasicos.ingresosPromedioMensual">
                                                     <div *ngIf="submittedDatosBasicosForm && fdb.ingresosPromedioMensual.errors" class="invalid-feedback" style="display: block;">
-                                                        <div *ngIf="fdb.ingresosPromedioMensual.errors.required">Meses de trabajo son requeridos</div>
+                                                        <div *ngIf="fdb.ingresosPromedioMensual.errors.required">Meses de trabajo son requeridos
+                                                        </div>
+                                                        <div *ngIf="fdb.ingresosPromedioMensual.errors.pattern">Solo se aceptan números decimales
+                                                        </div>
                                                     </div>
+
                                                 </div>
                                             </div>
 
@@ -461,7 +489,10 @@
                                                     <label for="username">Gasto Promedio Mensual</label>
                                                     <input type="text" class="form-control" name="gastosPromedioMensual" formControlName="gastosPromedioMensual" [(ngModel)]="datosBasicos.gastosPromedioMensual">
                                                     <div *ngIf="submittedDatosBasicosForm && fdb.gastosPromedioMensual.errors" class="invalid-feedback" style="display: block;">
-                                                        <div *ngIf="fdb.gastosPromedioMensual.errors.required">Promedio mensual de gastos es requerido</div>
+                                                        <div *ngIf="fdb.gastosPromedioMensual.errors.required">Promedio mensual de gastos es requerido
+                                                        </div>
+                                                        <div *ngIf="fdb.gastosPromedioMensual.errors.pattern">Solo se aceptan números decimales
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -709,7 +740,8 @@
                               </option>
                             </select>
                                                         <div *ngIf="submittedDatosFisicosForm && dfForm.pais.errors" class="invalid-feedback" style="display: block;">
-                                                            <div *ngIf="dfForm.pais.errors.required">País es requerido</div>
+                                                            <div *ngIf="dfForm.pais.errors.required">País es requerido
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -723,7 +755,8 @@
                               </option>
                             </select>
                                                         <div *ngIf="submittedDatosFisicosForm && dfForm.provincia.errors" class="invalid-feedback" style="display: block;">
-                                                            <div *ngIf="dfForm.provincia.errors.required">Provincia es requerida</div>
+                                                            <div *ngIf="dfForm.provincia.errors.required">Provincia es requerida
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -737,7 +770,8 @@
                               </option>
                             </select>
                                                         <div *ngIf="submittedDatosFisicosForm && dfForm.ciudad.errors" class="invalid-feedback" style="display: block;">
-                                                            <div *ngIf="dfForm.ciudad.errors.required">Ciudad es requerida</div>
+                                                            <div *ngIf="dfForm.ciudad.errors.required">Ciudad es requerida
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -753,7 +787,8 @@
                                                         <label class="form-label">Número:</label>
                                                         <input type="text" class="form-control" name="numero" formControlName="numero" [(ngModel)]="datosFisicos.numero" />
                                                         <div *ngIf="submittedDatosFisicosForm && dfForm.numero.errors" class="invalid-feedback" style="display: block;">
-                                                            <div *ngIf="dfForm.numero.errors.required">Número es requerido</div>
+                                                            <div *ngIf="dfForm.numero.errors.required">Número es requerido
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -769,7 +804,8 @@
                                                         <label class="form-label">Edificio:</label>
                                                         <input type="text" class="form-control" name="edificio" formControlName="edificio" [(ngModel)]="datosFisicos.edificio" />
                                                         <div *ngIf="submittedDatosFisicosForm && dfForm.edificio.errors" class="invalid-feedback" style="display: block;">
-                                                            <div *ngIf="dfForm.edificio.errors.required">Edificio es requerido</div>
+                                                            <div *ngIf="dfForm.edificio.errors.required">Edificio es requerido
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -777,7 +813,8 @@
                                                         <label class="form-label">Piso:</label>
                                                         <input type="text" class="form-control" name="piso" formControlName="piso" [(ngModel)]="datosFisicos.piso" />
                                                         <div *ngIf="submittedDatosFisicosForm && dfForm.piso.errors" class="invalid-feedback" style="display: block;">
-                                                            <div *ngIf="dfForm.piso.errors.required">Piso es requerido</div>
+                                                            <div *ngIf="dfForm.piso.errors.required">Piso es requerido
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -785,7 +822,8 @@
                                                         <label class="form-label">Oficina/Departamento:</label>
                                                         <input type="text" class="form-control" name="oficina" formControlName="oficina" [(ngModel)]="datosFisicos.oficina" />
                                                         <div *ngIf="submittedDatosFisicosForm && dfForm.oficina.errors" class="invalid-feedback" style="display: block;">
-                                                            <div *ngIf="dfForm.oficina.errors.required">Oficina es requerida</div>
+                                                            <div *ngIf="dfForm.oficina.errors.required">Oficina es requerida
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -793,7 +831,8 @@
                                                         <label class="form-label">Referencia:</label>
                                                         <input type="text" class="form-control" name="referencia" formControlName="referencia" [(ngModel)]="datosFisicos.referencia" />
                                                         <div *ngIf="submittedDatosFisicosForm && dfForm.referencia.errors" class="invalid-feedback" style="display: block;">
-                                                            <div *ngIf="dfForm.referencia.errors.required">Referencia es requerida</div>
+                                                            <div *ngIf="dfForm.referencia.errors.required">Referencia es requerida
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -849,10 +888,10 @@
                                                 <td>{{datoFisico.calleSecundaria}}</td>
                                                 <td>{{datoFisico.edificio}}</td>
                                                 <td>{{datoFisico.piso}} </td>
-                                                <td> {{datoFisico.oficina}}</td>
-                                                <td> {{datoFisico.referencia}} </td>
+                                                <td>{{datoFisico.oficina}}</td>
+                                                <td>{{datoFisico.referencia}} </td>
                                                 <td>
-                                                    <a (click)="editarDatoFisico(datoFisico.id)">
+                                                    <a data-toggle="modal" data-target="#adddatofisico" (click)="editarDatoFisico(datoFisico.id)">
                                                         <i-feather name='edit-2'></i-feather>
                                                     </a>
                                                     <a (click)="eliminarDatoFisico(datoFisico.id)" data-repeater-delete>
@@ -990,7 +1029,7 @@
                                                 </td>
                                                 <td> {{datoVirtual.informacion}} </td>
                                                 <td>
-                                                    <a (click)="editarDatoVirtual(datoVirtual.id)">
+                                                    <a data-toggle="modal" data-target="#addvirtual" (click)="editarDatoVirtual(datoVirtual.id)">
                                                         <i-feather name='edit-2'></i-feather>
                                                     </a>
                                                     <a (click)="eliminarDatoVirtual(datoVirtual.id)" data-repeater-delete>
@@ -1129,7 +1168,7 @@
                                                     </div>
                                                 </td>
                                                 <td>{{transformarFecha(transaccion.created_at)}}</td>
-                                                <td>{{transaccion.canalCompra}} </td>
+                                                <td>{{transaccion.canal}} </td>
                                                 <td>{{transaccion.numeroProductosComprados}} </td>
                                                 <td> ${{transaccion.total}} </td>
                                                 <td>
@@ -1293,7 +1332,7 @@
                         </div>
                         <div class="col-4">
                             <label>Canal de compra</label>
-                            <input class="form-control" type="text" value="{{transaccion.canalCompra}}" disabled>
+                            <input class="form-control" type="text" value="{{transaccion.canal}}" disabled>
                         </div>
                     </div>
                 </div>
@@ -1379,8 +1418,6 @@
                         <button type="button" class="btn btn-outline-secondary waves-effect" data-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>

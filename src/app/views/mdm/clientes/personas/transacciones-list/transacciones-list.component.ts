@@ -18,7 +18,7 @@ export class TransaccionesListComponent implements OnInit {
   inicio = new Date();
   fin = new Date();
   transaccion: Transaccion = {
-    canalCompra: "",
+    canal: "",
     cliente: "",
     correo: "",
     created_at: "",

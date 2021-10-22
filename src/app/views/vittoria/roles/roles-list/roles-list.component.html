@@ -112,7 +112,7 @@
         </div>
     </div>
 </div>
-<app-roles-add *ngIf="vista=='editar'" [funcion]="funcion" [idRol]="idRol"></app-roles-add>
+<app-roles-add *ngIf="vista=='editar'" [funcion]="funcion" [idRol]="idRol" (volver)="volver()"></app-roles-add>
 <div class="sidenav-overlay "></div>
 <div class="drag-target "></div>
 <app-footer></app-footer>

@@ -213,7 +213,7 @@
                     <div class="row p-20">
                         <div class="col-12">
                             <a (click)="guardarRol()" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar cambios</a>
-                            <button type="reset" class="btn btn-outline-secondary waves-effect">Resetear</button>
+                            <button (click)="regresar()" class="btn btn-outline-secondary waves-effect">Volver</button>
                         </div>
                     </div>
 
@@ -224,3 +224,17 @@
         </div>
     </div>
 </div>
+<ng-template #mensajeModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+        <div [innerHTML]="mensaje"></div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="cerrarModal()">Cerrar</button>
+    </div>
+</ng-template>

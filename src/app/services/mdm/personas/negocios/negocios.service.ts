@@ -71,7 +71,7 @@ export interface Direcciones {
   created_at;
 }
 export interface Transaccion {
-  canalCompra;
+  canal;
   correo;
   created_at;
   descuento;
@@ -182,7 +182,7 @@ export class NegociosService {
   }
   inicializarTransaccion() {
     return {
-      canalCompra: "",
+      canal: "",
       correo: "",
       created_at: "",
       descuento: 0,

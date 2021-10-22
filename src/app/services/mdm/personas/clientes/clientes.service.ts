@@ -7,6 +7,7 @@ export interface DatosBasicos {
   tipoCliente;
   created_at;
   cedula;
+  telefono;
   nombres;
   apellidos;
   genero;
@@ -61,7 +62,7 @@ export interface DatosVirtuales {
   cliente;
 }
 export interface Transaccion {
-  canalCompra;
+  canal;
   cliente;
   correo;
   created_at;
@@ -202,7 +203,7 @@ export class ClientesService {
   }
   inicializarTransaccion() {
     return {
-      canalCompra: "",
+      canal: "",
       cliente: 0,
       correo: "",
       created_at: "",

@@ -225,7 +225,9 @@
                                                 <div *ngIf="f.idRol.errors">Rol es requerido</div>
                                             </div>
                                         </div>
-                                        <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarUsuario()">Guardar</button>
+                                        <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarUsuario()">
+                                            <span *ngIf="cargando" class="spinner-border spinner-border-sm"></span>
+                                            Guardar</button>
                                         <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
                                         <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                                     </div>
@@ -244,7 +246,7 @@
 
 </div>
 <!-- END: Content-->
-<app-users-edit *ngIf="vista=='editar'" [idUsuario]="idUsuario" [roles]="roles" [paises]="paises" [estados]="estados"></app-users-edit>
+<app-users-edit *ngIf="vista=='editar'" [idUsuario]="idUsuario" [roles]="roles" [paises]="paises" [estados]="estados" (volver)="volver()"></app-users-edit>
 <div class="sidenav-overlay"></div>
 <div class="drag-target"></div>
 <app-footer></app-footer>

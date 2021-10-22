@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Usuario, UsersService } from 'src/app/services/admin/users.service';
 import { ParamService as ParamServiceADM } from 'src/app/services/admin/param.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -9,6 +9,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './users-edit.component.html'
 })
 export class UsersEditComponent implements OnInit {
+  @Output() volver = new EventEmitter<string>();
   @Input() idUsuario;
   @Input() roles;
   @Input() paises;
@@ -78,6 +79,9 @@ export class UsersEditComponent implements OnInit {
       this.imagen = this.usuario.imagen;
     });
   }
+  regresar() {
+    this.volver.emit();
+  }
   async actualizarUsuario() {
     this.submitted = true;
 
@@ -91,7 +95,16 @@ export class UsersEditComponent implements OnInit {
     }
     await this.usersService.actualizarUsuario(this.usuario).subscribe(() => {
       window.location.href = '/admin/user';
-    });
+    },
+      (error) => {
+        let errores = Object.values(error);
+        let llaves = Object.keys(error);
+        this.mensaje = "";
+        errores.map((infoErrores, index) => {
+          this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+        });
+        this.abrirModal(this.mensajeModal);
+      });
   }
   obtenerURLImagen(url) {
     return this.globalParam.obtenerURL(url);

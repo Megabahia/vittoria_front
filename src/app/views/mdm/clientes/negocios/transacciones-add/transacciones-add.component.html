@@ -113,14 +113,14 @@
                                         </div>
                                         <div class="col-4">
                                             <label>Canal de compra</label>
-                                            <select class="select2 form-control" name="canalCompra" formControlName="canalCompra" [(ngModel)]="transaccion.canalCompra">
+                                            <select class="select2 form-control" name="canal" formControlName="canal" [(ngModel)]="transaccion.canal">
                                             <option value="" selected>- Canal -</option>
                                             <option value="{{canalOp.valor}}" *ngFor="let canalOp of canalOpciones">
                                                 {{canalOp.nombre}}
                                               </option>
                                     </select>
-                                            <div *ngIf="submittedTransaccionForm && tForm.canalCompra.errors" class="invalid-feedback" style="display: block;">
-                                                <div *ngIf="tForm.canalCompra.errors.required">Canal de compra requerida
+                                            <div *ngIf="submittedTransaccionForm && tForm.canal.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="tForm.canal.errors.required">Canal de compra requerida
                                                 </div>
                                             </div>
                                         </div>

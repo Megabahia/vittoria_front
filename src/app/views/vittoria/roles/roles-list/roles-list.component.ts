@@ -56,6 +56,9 @@ export class RolesListComponent implements OnInit {
     this.funcion = 'editar';
     this.idRol= id;
   }
+  volver(){
+    this.vista = 'lista';
+  }
   abrirModal(modal,id){
     this.idRol=id;
     this.modalService.open(modal)

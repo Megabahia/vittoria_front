@@ -17,6 +17,8 @@ export class UsersListComponent implements OnInit {
   submitted = false;
   usuarioForm: FormGroup;
 
+  cargando = false;
+
   menu;
   paises;
   paisesOpciones;
@@ -41,7 +43,7 @@ export class UsersListComponent implements OnInit {
     telefono: '',
     whatsapp: '',
     idRol: 0,
-    estado: 'ACTIVO'
+    estado: 'Activo'
   };
   constructor(
     private servicioUsuarios: UsersService,
@@ -102,6 +104,9 @@ export class UsersListComponent implements OnInit {
         this.usuarios = result.info;
       });
   }
+  volver(){
+    this.vista = 'lista';
+  }
   primeraLetra(nombre, apellido) {
     let iniciales = nombre.charAt(0) + apellido.charAt(0);
     return iniciales;
@@ -113,13 +118,16 @@ export class UsersListComponent implements OnInit {
     if (this.usuarioForm.invalid) {
       return;
     }
+    this.cargando = true;
     await this.servicioUsuarios.insertarUsuario(this.nuevoUsuario).subscribe(() => {
+      this.cargando = false;
       this.obtenerListaUsuarios();
       this.mensaje = "Usuario creado exitosamente"
       this.abrirModal(this.mensajeModal);
       this.dismissModal.nativeElement.click();
     },
       (error) => {
+        this.cargando = false;
         let errores = Object.values(error);
         this.mensaje = "";
         errores.map(infoErrores => {

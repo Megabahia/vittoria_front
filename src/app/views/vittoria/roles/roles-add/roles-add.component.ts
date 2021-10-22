@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Rol, RolesService } from 'src/app/services/admin/roles.service';
 import { transform } from 'typescript';
@@ -9,6 +9,9 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
   templateUrl: './roles-add.component.html'
 })
 export class RolesAddComponent implements OnInit {
+  @Output() volver = new EventEmitter<string>();
+  @ViewChild('mensajeModal') mensajeModal;
+
   @Input() idRol;
   @Input() funcion;
   rolesForm: FormGroup;
@@ -46,6 +49,9 @@ export class RolesAddComponent implements OnInit {
   }
   async ngAfterViewInit() {
 
+  }
+  regresar() {
+    this.volver.emit();
   }
   async guardarRol() {
     this.submitted = true;

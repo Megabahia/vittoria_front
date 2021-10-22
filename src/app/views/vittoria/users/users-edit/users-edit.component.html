@@ -35,12 +35,12 @@
                                                 <span class="d-none d-sm-block">Cambiar</span>
                                                 <input class="form-control" type="file" id="change-picture" (change)="subirImagen($event)" hidden accept="image/png, image/jpeg, image/jpg" />
                                                 <span class="d-block d-sm-none">
-                                                    <i class="mr-0" data-feather="edit"></i>
+                                                    <i-feather class="mr-0 edit-user" name="edit"></i-feather>
                                                 </span>
                                             </label>
                                             <button class="btn btn-outline-secondary d-none d-sm-block">Remover</button>
                                             <button class="btn btn-outline-secondary d-block d-sm-none">
-                                                <i class="mr-0" data-feather="trash-2"></i>
+                                                <i-feather class="mr-0 edit-user" name="trash-2"></i-feather>
                                             </button>
                                         </div>
                                     </div>
@@ -158,7 +158,7 @@
 
                                         <div class="col-12 d-flex flex-sm-row flex-column mt-2">
                                             <a class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1" (click)="actualizarUsuario()">Guardar cambios</a>
-                                            <button type="reset" class="btn btn-outline-secondary">Resetear</button>
+                                            <button (click)="regresar()" class="btn btn-outline-secondary">Volver</button>
                                         </div>
                                     </div>
                                 </form>
@@ -180,7 +180,7 @@
                                             <div class="input-group input-group-merge">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text" id="basic-addon3">
-                                                        <i data-feather="twitter" class="font-medium-2"></i>
+                                                        <i-feather name="twitter" class="font-medium-2 edit-user"></i-feather>
                                                     </span>
                                                 </div>
                                                 <input id="twitter-input" type="text" class="form-control" [(ngModel)]="usuario.twitter" name="twitter" formControlName="twitter" placeholder="https://www.twitter.com/" aria-describedby="basic-addon3" />
@@ -194,7 +194,7 @@
                                             <div class="input-group input-group-merge">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text" id="basic-addon4">
-                                                        <i data-feather="facebook" class="font-medium-2"></i>
+                                                        <i-feather name="facebook" class="font-medium-2 edit-user"></i-feather>
                                                     </span>
                                                 </div>
                                                 <input id="facebook-input" type="text" class="form-control" [(ngModel)]="usuario.facebook" name="facebook" formControlName="facebook" placeholder="https://www.facebook.com/" aria-describedby="basic-addon4" />
@@ -208,7 +208,7 @@
                                             <div class="input-group input-group-merge">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text" id="basic-addon5">
-                                                        <i data-feather="instagram" class="font-medium-2"></i>
+                                                        <i-feather name="instagram" class="font-medium-2 edit-user"></i-feather>
                                                     </span>
                                                 </div>
                                                 <input id="instagram-input" type="text" class="form-control" [(ngModel)]="usuario.instagram" name="instagram" formControlName="instagram" placeholder="https://www.instagram.com/" aria-describedby="basic-addon5" />
@@ -222,7 +222,7 @@
 
                                         <div class="col-12 d-flex flex-sm-row flex-column mt-2">
                                             <a class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1" (click)="actualizarUsuario()">Guardar cambios</a>
-                                            <button type="reset" class="btn btn-outline-secondary">Resetear</button>
+                                            <button (click)="regresar()" class="btn btn-outline-secondary">Volver</button>
                                         </div>
                                     </div>
                                     <!-- </form> -->

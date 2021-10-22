@@ -11,6 +11,10 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 export class ParamsListComponent implements OnInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @ViewChild('dismissModal') dismissModal;
+  @ViewChild('mensajeModal') mensajeModal;
+
+  cargando = false;
+  mensaje = "";
   paramForm: FormGroup;
   submitted;
   menu;
@@ -120,6 +124,7 @@ export class ParamsListComponent implements OnInit {
     if (this.paramForm.invalid) {
       return;
     }
+    this.cargando = true;
     if (this.funcion == "insertar") {
       await this.paramService.insertarParametro(
         this.nombre,
@@ -132,8 +137,20 @@ export class ParamsListComponent implements OnInit {
         this.obtenerListaParametros();
         this.dismissModal.nativeElement.click();
         this.submitted = false;
+        this.cargando = false;
+        this.mensaje = "Parámetro guardado";
+        this.abrirModalMensaje(this.mensajeModal);
 
-      });
+      },
+        (error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = "";
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          });
+          this.abrirModalMensaje(this.mensajeModal);
+        });
     } else if (this.funcion = 'editar') {
       await this.paramService.editarParametro(
         this.idParametro,
@@ -146,7 +163,19 @@ export class ParamsListComponent implements OnInit {
           this.obtenerListaParametros();
           this.dismissModal.nativeElement.click();
           this.submitted = false;
-        });
+          this.cargando = false;
+          this.mensaje = "Parámetro guardado";
+          this.abrirModalMensaje(this.mensajeModal);
+        },
+          (error) => {
+            let errores = Object.values(error);
+            let llaves = Object.keys(error);
+            this.mensaje = "";
+            errores.map((infoErrores, index) => {
+              this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            });
+            this.abrirModalMensaje(this.mensajeModal);
+          });
     }
   }
 
@@ -164,5 +193,11 @@ export class ParamsListComponent implements OnInit {
     await this.paramService.obtenerListaPadres(this.tipoPadre).subscribe((result) => {
       this.padres = result;
     });
+  }
+  abrirModalMensaje(modal) {
+    this.modalService.open(modal)
+  }
+  cerrarModalMensaje() {
+    this.modalService.dismissAll();
   }
 }

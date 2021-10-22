@@ -81,7 +81,6 @@ export class TransaccionesListComponent implements OnInit {
   async obtenerTransaccion(id) {
     this.negociosService.obtenerTransaccion(id).subscribe((info) => {
       this.transaccion = info;
-      console.log(info);
     });
   }
   async obtenerGraficos(){

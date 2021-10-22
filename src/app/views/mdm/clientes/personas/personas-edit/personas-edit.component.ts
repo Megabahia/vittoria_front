@@ -41,6 +41,7 @@ export class PersonasEditComponent implements OnInit {
   //Mensaje
   mensaje = "";
   //-------------
+  numRegex = /^-?\d*[.,]?\d{0,2}$/;
 
   public barChartOptions: ChartOptions = {
     responsive: true,
@@ -79,6 +80,7 @@ export class PersonasEditComponent implements OnInit {
     tipoCliente: "",
     created_at: "",
     cedula: "",
+    telefono: "",
     nombres: "",
     apellidos: "",
     genero: "",
@@ -208,7 +210,8 @@ export class PersonasEditComponent implements OnInit {
     this.datosBasicosForm = this._formBuilder.group({
       tipoCliente: ['', [Validators.required]],
       created_at: ['', [Validators.required]],
-      cedula: ['', [Validators.required]],
+      cedula: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      telefono: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
       genero: ['', [Validators.required]],
@@ -229,10 +232,10 @@ export class PersonasEditComponent implements OnInit {
       ciudadTrabajo: ['', [Validators.required]],
       paisTrabajo: ['', [Validators.required]],
       lugarTrabajo: ['', [Validators.required]],
-      mesesUltimoTrabajo: [0, [Validators.required]],
-      mesesTotalTrabajo: [0, [Validators.required]],
-      ingresosPromedioMensual: [0, [Validators.required]],
-      gastosPromedioMensual: [0, [Validators.required]]
+      mesesUltimoTrabajo: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
+      mesesTotalTrabajo: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
+      ingresosPromedioMensual: [0, [Validators.required, Validators.pattern(this.numRegex)]],
+      gastosPromedioMensual: [0, [Validators.required, Validators.pattern(this.numRegex)]]
     });
     this.datosVirtualesForm = this._formBuilder.group({
       tipoContacto: ['', [Validators.required]],
@@ -418,14 +421,33 @@ export class PersonasEditComponent implements OnInit {
     if (this.idCliente != 0) {
       this.clientesService.editarDatosBasicos(this.idCliente, this.datosBasicos).subscribe((info) => {
         this.tab2.nativeElement.click();
-      });
+      },
+        (error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = "";
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          });
+          this.abrirModal(this.mensajeModal);
+        }
+      );
     } else {
       this.clientesService.crearDatosBasicos(this.datosBasicos).subscribe((info) => {
         this.idCliente = info.id;
         this.datosFisicos.cliente = this.idCliente;
         this.datosVirtuales.cliente = this.idCliente;
         this.tab2.nativeElement.click();
-      });
+      },
+        (error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = "";
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          });
+          this.abrirModal(this.mensajeModal);
+        });
     }
   }
   cambiarTab(numero) {
@@ -445,13 +467,18 @@ export class PersonasEditComponent implements OnInit {
     }
   }
   async guardarImagen(event) {
-    let nuevaImagen = event.target.files[0];
-    let imagen = new FormData();
-    imagen.append('imagen', nuevaImagen, nuevaImagen.name);
+
     if (this.idCliente != 0) {
+      let nuevaImagen = event.target.files[0];
+      let imagen = new FormData();
+      imagen.append('imagen', nuevaImagen, nuevaImagen.name);
       this.clientesService.editarImagen(this.idCliente, imagen).subscribe((info) => {
         this.urlImagen = info.imagen;
       });
+    }
+    else {
+      this.mensaje = "Es necesario que primero ingrese sus datos básicos"
+      this.abrirModal(this.mensajeModal);
     }
   }
   async editarDatoFisico(id) {
@@ -519,6 +546,9 @@ export class PersonasEditComponent implements OnInit {
             this.abrirModal(this.mensajeModal);
           });
       }
+    } else {
+      this.mensaje = "Es necesario que primero ingrese sus datos básicos"
+      this.abrirModal(this.mensajeModal);
     }
   }
   async eliminarDatoFisico(id) {
@@ -589,6 +619,9 @@ export class PersonasEditComponent implements OnInit {
             this.abrirModal(this.mensajeModal);
           });
       }
+    } else {
+      this.mensaje = "Es necesario que primero ingrese sus datos básicos"
+      this.abrirModal(this.mensajeModal);
     }
 
   }
@@ -652,6 +685,9 @@ export class PersonasEditComponent implements OnInit {
     if (this.idCliente != 0) {
       this.idPariente = 0;
       this.parientesVista = "editar";
+    } else {
+      this.mensaje = "Es necesario que primero ingrese sus datos básicos"
+      this.abrirModal(this.mensajeModal);
     }
 
   }

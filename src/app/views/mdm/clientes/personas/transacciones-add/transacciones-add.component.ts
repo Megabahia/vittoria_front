@@ -68,7 +68,7 @@ export class TransaccionesAddComponent implements OnInit {
   ngOnInit(): void {
 
     this.transaccionForm = this._formBuilder.group({
-      canalCompra: ['', [Validators.required]],
+      canal: ['', [Validators.required]],
       correo: ['', [Validators.required]],
       detalles: this._formBuilder.array([
         this.crearDetalleGrupo()
@@ -254,6 +254,7 @@ export class TransaccionesAddComponent implements OnInit {
         this.transaccion.correo = info.correo;
         this.transaccion.razonSocial = info.nombreCompleto;
         this.transaccion.cliente = info.id;
+        this.transaccion.telefono = info.telefono;
       }
     },
       (error) => {
