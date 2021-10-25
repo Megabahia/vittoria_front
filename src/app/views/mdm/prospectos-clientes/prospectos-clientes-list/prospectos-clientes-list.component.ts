@@ -13,7 +13,13 @@ export class ProspectosClientesListComponent implements OnInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @ViewChild('dismissModal') dismissModal;
   @ViewChild('mensajeModal') mensajeModal;
+  @ViewChild('eliminarProspectoMdl') eliminarProspectoMdl;
   public mensaje = "";
+
+  numRegex = /^-?\d*[.,]?\d{0,2}$/;
+
+  cargando = false;
+  idProspecto = 0;
   submitted = false;
   menu;
   canalOpciones;
@@ -76,7 +82,7 @@ export class ProspectosClientesListComponent implements OnInit {
       canal: ['', [Validators.required]],
       codigoProducto: ['', [Validators.required]],
       nombreProducto: ['', [Validators.required]],
-      precio: ['', [Validators.required]],
+      precio: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       tipoPrecio: ['', [Validators.required]],
       nombreVendedor: ['', [Validators.required]],
       confirmacionProspecto: ['', [Validators.required]]
@@ -161,6 +167,7 @@ export class ProspectosClientesListComponent implements OnInit {
     if (this.pospectoForm.invalid || !this.imagen) {
       return;
     }
+    this.cargando = true;
     this.usuario.append('nombres', this.nombres);
     this.usuario.append('apellidos', this.apellidos);
     this.usuario.append('telefono', this.telefono);
@@ -184,14 +191,21 @@ export class ProspectosClientesListComponent implements OnInit {
       this.obtenerListaProspectos();
       this.dismissModal.nativeElement.click();
       this.submitted = false;
+      this.cargando = false;
+      this.mensaje = "Prospecto creado exitosamente";
+      this.abrirModal(this.mensajeModal);
+
     },
       (error) => {
         let errores = Object.values(error);
+        let llaves = Object.keys(error);
         this.mensaje = "";
-        errores.map(infoErrores => {
-          this.mensaje += infoErrores + "<br>";
+        errores.map((infoErrores, index) => {
+          this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
         });
         this.abrirModal(this.mensajeModal);
+        this.cargando = false;
+
       }
     );
   }
@@ -206,11 +220,15 @@ export class ProspectosClientesListComponent implements OnInit {
     this.vista = 'editar';
   }
   eliminarProspecto(id) {
-    if (confirm('¿Desea eliminar a este cliente?')) {
-      this.prospectosService.eliminarProspecto(id).subscribe((info) => {
-        this.obtenerListaProspectos();
-      });
-    }
+    this.idProspecto = id;
+    this.abrirModal(this.eliminarProspectoMdl);
+  }
+  eliminarProspectoModal() {
+    this.prospectosService.eliminarProspecto(this.idProspecto).subscribe((info) => {
+      this.obtenerListaProspectos();
+      this.cerrarModal();
+    });
+
   }
 
 }

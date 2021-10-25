@@ -88,8 +88,8 @@ export class PersonasParientesComponent implements OnInit {
       paisTrabajo: ['', [Validators.required]],
       provinciaTrabajo: ['', [Validators.required]],
       ciudadTrabajo: ['', [Validators.required]],
-      mesesUltimoTrabajo: [0, [Validators.required, Validators.pattern(this.numRegex)]],
-      mesesTotalTrabajo: [0, [Validators.required, Validators.pattern(this.numRegex)]],
+      mesesUltimoTrabajo: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
+      mesesTotalTrabajo: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
       ingresosPromedioMensual: [0, [Validators.required, Validators.pattern(this.numRegex)]],
       gastosPromedioMensual: [0, [Validators.required, Validators.pattern(this.numRegex)]]
     });

@@ -479,8 +479,8 @@
                         <label for="username">Antiguedad último trabajo <small>(meses)</small></label>
                         <input type="text" class="form-control" name="mesesUltimoTrabajo" formControlName="mesesUltimoTrabajo" [(ngModel)]="pariente.mesesUltimoTrabajo">
                         <div *ngIf="submitted && f.mesesUltimoTrabajo.errors" class="invalid-feedback" style="display: block;">
-                            <div *ngIf="f.mesesUltimoTrabajo.errors.required">Meses de último trabajo requerida</div>
-                            <div *ngIf="f.mesesUltimoTrabajo.errors.pattern">Solo se aceptan números decimales
+                            <div *ngIf="f.mesesUltimoTrabajo.errors.required">Antigüedad en último trabajo requerida</div>
+                            <div *ngIf="f.mesesUltimoTrabajo.errors.pattern">Solo se aceptan números
                             </div>
                         </div>
                     </div>
@@ -488,11 +488,11 @@
 
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="username">Mese total de trabajo</label>
+                        <label for="username">Meses total de trabajo</label>
                         <input type="text" class="form-control" name="mesesTotalTrabajo" formControlName="mesesTotalTrabajo" [(ngModel)]="pariente.mesesTotalTrabajo">
                         <div *ngIf="submitted && f.mesesTotalTrabajo.errors" class="invalid-feedback" style="display: block;">
-                            <div *ngIf="f.mesesTotalTrabajo.errors.required">Meses totales de trabajo requerida</div>
-                            <div *ngIf="f.mesesTotalTrabajo.errors.pattern">Solo se aceptan números decimales
+                            <div *ngIf="f.mesesTotalTrabajo.errors.required">Meses totales de trabajo requeridos</div>
+                            <div *ngIf="f.mesesTotalTrabajo.errors.pattern">Solo se aceptan números
                             </div>
                         </div>
                     </div>

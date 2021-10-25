@@ -1,12 +1,15 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ParamService } from 'src/app/services/admin/param.service';
 import { ProspectosService, Prospecto } from '../../../../services/mdm/prospectosCli/prospectos.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-prospectos-clientes-edit',
   templateUrl: './prospectos-clientes-edit.component.html',
 })
 export class ProspectosClientesEditComponent implements OnInit {
+  @ViewChild('eliminarImagenMdl') eliminarImagenMdl;
+  @ViewChild('eliminarProspectoMdl') eliminarProspectoMdl;
   @Input() idUsuario;
   @Input() confirmProspectoOpciones;
   prospecto: Prospecto = {
@@ -33,7 +36,9 @@ export class ProspectosClientesEditComponent implements OnInit {
   urlImagen;
   constructor(
     private prospectosService: ProspectosService,
-    private globalParam: ParamService
+    private globalParam: ParamService,
+    private modalService: NgbModal,
+
   ) { }
 
   ngOnInit(): void {
@@ -52,18 +57,23 @@ export class ProspectosClientesEditComponent implements OnInit {
     let imagen = event.target.files[0];
     let imagenForm = new FormData();
     imagenForm.append('imagen', imagen, imagen.name);
-    if (confirm('¿Desea cambiar la imagen?')) {
-      this.prospectosService.insertarImagen(this.idUsuario, imagenForm).subscribe((data) => {
-        this.urlImagen = data.imagen;
-      });
-    }
+    this.prospectosService.insertarImagen(this.idUsuario, imagenForm).subscribe((data) => {
+      this.urlImagen = data.imagen;
+    });
+
+  }
+  abrirModalEliminarImagen() {
+    this.abrirModal(this.eliminarImagenMdl);
+  }
+  abrirModalEliminarProspecto() {
+    this.abrirModal(this.eliminarProspectoMdl);
+
   }
   eliminarImagen() {
-    if (confirm('¿Desea eliminar la imagen?')) {
-      this.prospectosService.insertarImagen(this.idUsuario, { imagen: null }).subscribe((data) => {
-        this.urlImagen = data.imagen;
-      });
-    }
+    this.prospectosService.insertarImagen(this.idUsuario, { imagen: null }).subscribe((data) => {
+      this.urlImagen = data.imagen;
+      this.cerrarModal();
+    });
   }
 
   async actualizarProspecto() {
@@ -72,11 +82,17 @@ export class ProspectosClientesEditComponent implements OnInit {
     });
   }
   eliminarProspecto() {
-    if (confirm('¿Desea eliminar a este cliente?')) {
-      this.prospectosService.eliminarProspecto(this.idUsuario).subscribe((info) => {
-        window.location.href = '/mdm/prospectosClientes/list';
-      });
-    }
+
+    this.prospectosService.eliminarProspecto(this.idUsuario).subscribe((info) => {
+      window.location.href = '/mdm/prospectosClientes/list';
+    });
+
+  }
+  abrirModal(modal) {
+    this.modalService.open(modal)
+  }
+  cerrarModal() {
+    this.modalService.dismissAll();
   }
 
 }

@@ -21,7 +21,7 @@
                             <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
                                 <!-- users edit media object start -->
                                 <div class="media mb-2">
-                                    <img src="{{urlImagen}}" alt="users avatar" class="user-avatar users-avatar-shadow rounded mr-2 my-25 cursor-pointer" height="90" width="90" />
+                                    <img src="{{urlImagen ? urlImagen : '/assets/images/avatars/avatar.png'}}" alt="users avatar" class="user-avatar users-avatar-shadow rounded mr-2 my-25 cursor-pointer" height="90" width="90" />
                                     <div class="media-body mt-50">
                                         <h4>Eleanor Aguilar</h4>
                                         <div class="col-12 d-flex mt-1 px-0">
@@ -32,7 +32,7 @@
                                                     <i-feather class="mr-0 edit-user" name="edit"></i-feather>
                                                 </span>
                                             </label>
-                                            <button class="btn btn-outline-secondary d-none d-sm-block" (click)="eliminarImagen()">Remover</button>
+                                            <button class="btn btn-outline-secondary d-none d-sm-block" (click)="abrirModalEliminarImagen()">Remover</button>
                                         </div>
                                     </div>
                                 </div>
@@ -147,7 +147,7 @@
 
                                         <div class="col-12 d-flex flex-sm-row flex-column mt-2">
                                             <a (click)="actualizarProspecto()" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1">Guardar cambios</a>
-                                            <button (click)="eliminarProspecto()" class="btn btn-outline-secondary">Eliminar</button>
+                                            <button (click)="abrirModalEliminarProspecto()" class="btn btn-outline-secondary">Eliminar</button>
                                         </div>
                                     </div>
                                 </form>
@@ -221,3 +221,31 @@
 <!-- END: Content-->
 <div class="sidenav-overlay"></div>
 <div class="drag-target"></div>
+<ng-template #eliminarImagenMdl let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div>¿Desea eliminar esta imagen?</div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="eliminarImagen()">Si</button>
+    </div>
+</ng-template>
+<ng-template #eliminarProspectoMdl let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div>¿Desea eliminar este cliente?</div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="eliminarProspecto()">Si</button>
+    </div>
+</ng-template>

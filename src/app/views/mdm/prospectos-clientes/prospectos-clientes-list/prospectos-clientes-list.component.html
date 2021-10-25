@@ -99,7 +99,7 @@
                                     <td> {{transformarFecha(elem.created_at)}}</td>
                                     <td>
                                         <div class="d-flex justify-content-left align-items-center">
-                                            <a class="user-name text-truncate mb-0" href="app-user-edit.html">
+                                            <a class="user-name text-truncate mb-0">
                                                 <span class="font-weight-bold">{{elem.nombres}}</span></a>
                                         </div>
                                     </td>
@@ -287,6 +287,8 @@
                                             <div *ngIf="submitted && f.precio.errors" class="invalid-feedback" style="display: block;">
                                                 <div *ngIf="f.precio.errors.required">Precio del producto requerido
                                                 </div>
+                                                <div *ngIf="f.precio.errors.pattern">Solo se aceptan números decimales
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -329,7 +331,8 @@
                                             </div>
                                         </div>
 
-                                        <button class="btn btn-primary mr-1" data-toggle="modal" aria-label="Close" (click)="crearProspecto()">Guardar</button>
+                                        <button class="btn btn-primary mr-1" data-toggle="modal" aria-label="Close" (click)="crearProspecto()">
+                                            <span *ngIf="cargando" class="spinner-border spinner-border-sm"></span>Guardar</button>
                                         <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
 
                                         <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
@@ -365,5 +368,19 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" (click)="cerrarModal()">Cerrar</button>
+    </div>
+</ng-template>
+<ng-template #eliminarProspectoMdl let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div>¿Desea eliminar este prospecto?</div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="eliminarProspectoModal()">Si</button>
     </div>
 </ng-template>
