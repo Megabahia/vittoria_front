@@ -354,20 +354,26 @@
                                                 <div class="form-group">
                                                     <label for="username">Ingresos promedio mensual</label>
                                                     <input type="text" class="form-control" name="ingresosPromedioMensual" formControlName="ingresosPromedioMensual" [(ngModel)]="datosBasicos.ingresosPromedioMensual">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.ingresosPromedioMensual.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.ingresosPromedioMensual.errors.required"> Ingresos mensuales requeridos</div>
+                                                        <div *ngIf="dbForm.gastosPromedioMensual.errors.pattern">Solo se aceptan números decimales
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div *ngIf="submittedDatosBasicosForm && dbForm.ingresosPromedioMensual.errors" class="invalid-feedback" style="display: block;">
-                                                    <div *ngIf="dbForm.ingresosPromedioMensual.errors.required"> Ingresos mensuales requeridos</div>
-                                                </div>
+
                                             </div>
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="username">Gastos promedio mensual</label>
                                                     <input type="text" class="form-control" name="gastosPromedioMensual" formControlName="gastosPromedioMensual" [(ngModel)]="datosBasicos.gastosPromedioMensual">
+                                                    <div *ngIf="submittedDatosBasicosForm && dbForm.gastosPromedioMensual.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="dbForm.gastosPromedioMensual.errors.required"> Gastos mensuales requeridos</div>
+                                                        <div *ngIf="dbForm.gastosPromedioMensual.errors.pattern">Solo se aceptan números decimales
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div *ngIf="submittedDatosBasicosForm && dbForm.gastosPromedioMensual.errors" class="invalid-feedback" style="display: block;">
-                                                    <div *ngIf="dbForm.gastosPromedioMensual.errors.required"> Gastos mensuales requeridos</div>
-                                                </div>
+
                                             </div>
 
                                             <div class="col-md-4">
@@ -390,6 +396,8 @@
                                                     <input type="text" class="form-control" name="telefonoOficina" formControlName="telefonoOficina" [(ngModel)]="datosBasicos.telefonoOficina">
                                                     <div *ngIf="submittedDatosBasicosForm && dbForm.telefonoOficina.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="dbForm.telefonoOficina.errors.required"> Teléfono de oficina requerido</div>
+                                                        <div *ngIf="dbForm.telefonoOficina.errors.pattern">Solo se aceptan números
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -400,6 +408,8 @@
                                                     <input type="text" class="form-control" name="celularOficina" formControlName="celularOficina" [(ngModel)]="datosBasicos.celularOficina">
                                                     <div *ngIf="submittedDatosBasicosForm && dbForm.celularOficina.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="dbForm.celularOficina.errors.required"> Celular de oficina requerido</div>
+                                                        <div *ngIf="dbForm.celularOficina.errors.pattern">Solo se aceptan números
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -410,6 +420,8 @@
                                                     <input type="text" class="form-control" name="celularPersonal" formControlName="celularPersonal" [(ngModel)]="datosBasicos.celularPersonal">
                                                     <div *ngIf="submittedDatosBasicosForm && dbForm.celularPersonal.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="dbForm.celularPersonal.errors.required"> Celular personal requerido</div>
+                                                        <div *ngIf="dbForm.celularPersonal.errors.pattern">Solo se aceptan números
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -420,6 +432,8 @@
                                                     <input type="text" class="form-control" name="whatsappPersonal" formControlName="whatsappPersonal" [(ngModel)]="datosBasicos.whatsappPersonal">
                                                     <div *ngIf="submittedDatosBasicosForm && dbForm.whatsappPersonal.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="dbForm.whatsappPersonal.errors.required"> WhatsApp personal requerido</div>
+                                                        <div *ngIf="dbForm.whatsappPersonal.errors.pattern">Solo se aceptan números
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -430,6 +444,8 @@
                                                     <input type="text" class="form-control" name="whatsappSecundario" formControlName="whatsappSecundario" [(ngModel)]="datosBasicos.whatsappSecundario">
                                                     <div *ngIf="submittedDatosBasicosForm && dbForm.whatsappSecundario.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="dbForm.whatsappSecundario.errors.required"> WhatsApp secundario requerido</div>
+                                                        <div *ngIf="dbForm.whatsappSecundario.errors.pattern">Solo se aceptan números
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

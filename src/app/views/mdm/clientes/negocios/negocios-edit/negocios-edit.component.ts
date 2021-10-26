@@ -26,6 +26,7 @@ export class NegociosEditComponent implements OnInit {
   @ViewChild('mensajeModal') mensajeModal;
   @ViewChild('eliminarPersonalMdl') eliminarPersonalMdl;
   @ViewChild('eliminarDireccionMdl') eliminarDireccionMdl;
+  numRegex = /^-?\d*[.,]?\d{0,2}$/;
 
   //forms
   datosBasicosForm: FormGroup;
@@ -168,14 +169,14 @@ export class NegociosEditComponent implements OnInit {
       profesion: ['', [Validators.required]],
       actividadEconomica: ['', [Validators.required]],
       llevarContabilidad: ['', [Validators.required]],
-      ingresosPromedioMensual: ['', [Validators.required]],
-      gastosPromedioMensual: ['', [Validators.required]],
-      numeroEstablecimientos: [0, [Validators.required]],
-      telefonoOficina: ['', [Validators.required]],
-      celularOficina: ['', [Validators.required]],
-      celularPersonal: ['', [Validators.required]],
-      whatsappPersonal: ['', [Validators.required]],
-      whatsappSecundario: ['', [Validators.required]],
+      ingresosPromedioMensual: ['', [Validators.required, Validators.pattern(this.numRegex)]],
+      gastosPromedioMensual: ['', [Validators.required, Validators.pattern(this.numRegex)]],
+      numeroEstablecimientos: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
+      telefonoOficina: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      celularOficina: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      celularPersonal: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      whatsappPersonal: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      whatsappSecundario: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
       correoPersonal: ['', [Validators.required]],
       correoOficina: ['', [Validators.required]],
       googlePlus: ['', [Validators.required]],
