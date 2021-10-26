@@ -452,6 +452,15 @@ export class NegociosEditComponent implements OnInit {
         await this.negociosService.editarPersonal(this.datosPersonal).subscribe((info) => {
           this.dismissModalDP.nativeElement.click();
           this.obtenerPersonalEmpresa();
+        },
+        (error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = "";
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          });
+          this.abrirModal(this.mensajeModal);
         });
       }
     } else {
@@ -481,18 +490,41 @@ export class NegociosEditComponent implements OnInit {
     if (this.datosFisicosForm.invalid) {
       return;
     }
-    if (this.datosDirecciones.id == 0) {
-      await this.negociosService.crearDireccion(this.datosDirecciones).subscribe((info) => {
-        this.dismissModalDF.nativeElement.click();
-
-        this.obtenerDireccionesEmpresa();
-      });
-    } else {
-      await this.negociosService.editarDireccion(this.datosDirecciones).subscribe((info) => {
-        this.dismissModalDF.nativeElement.click();
-        this.obtenerDireccionesEmpresa();
-      });
+    if(this.idNegocio !=0){
+      if (this.datosDirecciones.id == 0) {
+        await this.negociosService.crearDireccion(this.datosDirecciones).subscribe((info) => {
+          this.dismissModalDF.nativeElement.click();
+  
+          this.obtenerDireccionesEmpresa();
+        },(error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = "";
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          });
+          this.abrirModal(this.mensajeModal);
+        });
+      } else {
+        await this.negociosService.editarDireccion(this.datosDirecciones).subscribe((info) => {
+          this.dismissModalDF.nativeElement.click();
+          this.obtenerDireccionesEmpresa();
+        },
+        (error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = "";
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          });
+          this.abrirModal(this.mensajeModal);
+        });
+      }
+    }else{
+      this.mensaje = "Es necesario que primero ingrese sus datos básicos"
+      this.abrirModal(this.mensajeModal);
     }
+    
   }
 
   obtenerTransacciones() {
