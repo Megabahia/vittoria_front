@@ -297,6 +297,15 @@ export class NegociosEditComponent implements OnInit {
     if (this.idNegocio != 0) {
       this.negociosService.editarDatosBasicos(this.idNegocio, this.datosBasicos).subscribe((info) => {
         this.tab2.nativeElement.click();
+      },
+      (error) => {
+        let errores = Object.values(error);
+        let llaves = Object.keys(error);
+        this.mensaje = "";
+        errores.map((infoErrores, index) => {
+          this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+        });
+        this.abrirModal(this.mensajeModal);
       });
     } else {
       this.negociosService.crearDatosBasicos(this.datosBasicos).subscribe((info) => {
@@ -304,6 +313,15 @@ export class NegociosEditComponent implements OnInit {
         this.datosPersonal.negocio = this.idNegocio;
         this.datosDirecciones.negocio = this.idNegocio;
         this.tab2.nativeElement.click();
+      },
+      (error) => {
+        let errores = Object.values(error);
+        let llaves = Object.keys(error);
+        this.mensaje = "";
+        errores.map((infoErrores, index) => {
+          this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+        });
+        this.abrirModal(this.mensajeModal);
       });
     }
   }
