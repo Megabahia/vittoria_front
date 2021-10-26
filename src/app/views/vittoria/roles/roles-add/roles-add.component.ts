@@ -3,6 +3,7 @@ import { map } from 'rxjs/operators';
 import { Rol, RolesService } from 'src/app/services/admin/roles.service';
 import { transform } from 'typescript';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-roles-add',
@@ -20,9 +21,12 @@ export class RolesAddComponent implements OnInit {
   permisosRol;
   accionesRol;
   roles: Rol;
+  mensaje;
   constructor(
     private servicioRoles: RolesService,
-    private _formBuilder: FormBuilder
+    private _formBuilder: FormBuilder,
+    private modalService: NgbModal
+
 
   ) {
     this.roles = this.servicioRoles.obtenerNuevoRol();
@@ -42,7 +46,8 @@ export class RolesAddComponent implements OnInit {
     if (this.funcion == 'editar') {
       await this.servicioRoles.obtenerRol(this.idRol).subscribe(async (result: Rol) => {
         this.roles = result;
-      });
+      },
+      );
     } else {
       this.roles = this.servicioRoles.obtenerNuevoRol();
     }
@@ -60,10 +65,39 @@ export class RolesAddComponent implements OnInit {
     }
     if (this.funcion == 'editar') {
       await this.servicioRoles.editarRol(this.roles).subscribe((result) => {
-      });
+        this.mensaje = "Rol editado con éxito";
+        this.abrirModal(this.mensajeModal);
+
+      },
+        (error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = "";
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          });
+          this.abrirModal(this.mensajeModal);
+        });
     } else if (this.funcion == 'insertar') {
       await this.servicioRoles.insertarRol(this.roles).subscribe((result) => {
-      });
+        this.mensaje = "Rol creado con éxito";
+        this.abrirModal(this.mensajeModal);
+      },
+        (error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = "";
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          });
+          this.abrirModal(this.mensajeModal);
+        });
     }
+  }
+  abrirModal(modal) {
+    this.modalService.open(modal)
+  }
+  cerrarModal() {
+    this.modalService.dismissAll();
   }
 }

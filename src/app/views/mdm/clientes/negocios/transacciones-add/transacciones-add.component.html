@@ -171,6 +171,8 @@
                                                                 </div>
                                                                 <div *ngIf="tForm.detalles.controls[i].controls.cantidad.errors.pattern">Solo números
                                                                 </div>
+                                                                <div *ngIf="tForm.detalles.controls[i].controls.cantidad.errors.min">Debe ser mayor a 0
+                                                                </div>
                                                             </div>
                                                         </div>
 

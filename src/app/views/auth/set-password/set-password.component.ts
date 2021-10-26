@@ -15,6 +15,7 @@ export class SetPasswordComponent implements OnInit {
   confirmPassword;
   confirmar = true;
   submitted = false;
+  mensaje= "";
   constructor(
     private modalService: NgbModal,
     private route: ActivatedRoute,
@@ -49,6 +50,12 @@ export class SetPasswordComponent implements OnInit {
       ).subscribe(info => {
         window.location.href = '/auth/signin';
       }, error => {
+        let errores = Object.values(error);
+        let llaves = Object.keys(error);
+        this.mensaje = "";
+        errores.map((infoErrores, index) => {
+          this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+        });
         this.abrirModal(this.errorAuth);
 
       });

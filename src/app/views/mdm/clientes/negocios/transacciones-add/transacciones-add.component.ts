@@ -74,7 +74,7 @@ export class TransaccionesAddComponent implements OnInit {
       ]),
       direccion: ['', [Validators.required]],
       fecha: ['', [Validators.required]],
-      identificacion: ['', [Validators.required , Validators.pattern("^[0-9]*$")]],
+      identificacion: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
       nombreVendedor: ['', [Validators.required]],
       razonSocial: ['', [Validators.required]],
       telefono: ['', [Validators.required]],
@@ -97,7 +97,7 @@ export class TransaccionesAddComponent implements OnInit {
       codigo: ['', [Validators.required]],
       articulo: ['', [Validators.required]],
       valorUnitario: [0, [Validators.required]],
-      cantidad: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
+      cantidad: [0, [Validators.required, Validators.pattern("^[0-9]*$"), Validators.min(1)]],
       precio: [0, [Validators.required]],
       informacionAdicional: ['', [Validators.required]],
       descuento: [0, [Validators.required, Validators.pattern(this.numRegex)]],
@@ -235,6 +235,11 @@ export class TransaccionesAddComponent implements OnInit {
         return;
       }
     });
+    if (this.detalles.length == 0) {
+      this.mensaje = "No se han ingresado productos";
+        this.abrirModal(this.mensajeModal);
+      return; 
+    }
     this.calcularSubtotal();
     this.transaccion.detalles = this.detallesTransac;
     await this.negociosService.crearTransaccion(this.transaccion).subscribe(() => {
@@ -253,7 +258,7 @@ export class TransaccionesAddComponent implements OnInit {
         this.transaccion.correo = info.correoOficina;
         this.transaccion.razonSocial = info.razonSocial;
         this.transaccion.telefono = info.telefonoOficina;
-        this.transaccion.negocio = info.id;      
+        this.transaccion.negocio = info.id;
       }
     },
       (error) => {
