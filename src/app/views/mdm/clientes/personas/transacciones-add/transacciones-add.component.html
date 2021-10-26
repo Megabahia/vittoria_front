@@ -71,6 +71,8 @@
                                             <div *ngIf="submittedTransaccionForm && tForm.identificacion.errors" class="invalid-feedback" style="display: block;">
                                                 <div *ngIf="tForm.identificacion.errors.required">Identificación requerido
                                                 </div>
+                                                <div *ngIf="tForm.identificacion.errors.pattern">Solo números
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-3">

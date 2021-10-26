@@ -75,7 +75,7 @@ export class TransaccionesAddComponent implements OnInit {
       ]),
       direccion: ['', [Validators.required]],
       fecha: ['', [Validators.required]],
-      identificacion: ['', [Validators.required]],
+      identificacion: ['', [Validators.required , Validators.pattern("^[0-9]*$")]],
       nombreVendedor: ['', [Validators.required]],
       razonSocial: ['', [Validators.required]],
       telefono: ['', [Validators.required]],

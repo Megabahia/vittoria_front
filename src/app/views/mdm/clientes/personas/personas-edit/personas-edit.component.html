@@ -17,7 +17,7 @@
                                 <!-- profile picture -->
                                 <div class="profile-img-container d-flex align-items-center">
                                     <div class="profile-img">
-                                        <img style="width: 100%; height: 100%;" src="{{urlImagen}}" class="rounded img-fluid" alt="Card image" />
+                                        <img style="width: 100%; height: 100%;" src="{{urlImagen ? urlImagen : '/assets/images/avatars/avatar.png'}}" class="rounded img-fluid" alt="Card image" />
                                     </div>
                                     <!-- profile title -->
                                     <div class="profile-title ml-3">
@@ -894,7 +894,7 @@
                                                     <a data-toggle="modal" data-target="#adddatofisico" (click)="editarDatoFisico(datoFisico.id)">
                                                         <i-feather name='edit-2'></i-feather>
                                                     </a>
-                                                    <a (click)="eliminarDatoFisico(datoFisico.id)" data-repeater-delete>
+                                                    <a (click)="eliminarDatoFisicoModal(datoFisico.id)" data-repeater-delete>
                                                         <i-feather name='trash'></i-feather>
                                                     </a>
                                                 </td>
@@ -1032,7 +1032,7 @@
                                                     <a data-toggle="modal" data-target="#addvirtual" (click)="editarDatoVirtual(datoVirtual.id)">
                                                         <i-feather name='edit-2'></i-feather>
                                                     </a>
-                                                    <a (click)="eliminarDatoVirtual(datoVirtual.id)" data-repeater-delete>
+                                                    <a (click)="eliminarDatoVirtualModal(datoVirtual.id)" data-repeater-delete>
                                                         <i-feather name='trash'></i-feather>
                                                     </a>
                                                 </td>
@@ -1243,7 +1243,7 @@
                                                     <a (click)="editarPariente(pariente.id)">
                                                         <i-feather name='edit-2'></i-feather>
                                                     </a>
-                                                    <a (click)="eliminarPariente(pariente.id)" data-repeater-delete>
+                                                    <a (click)="eliminarParienteModal(pariente.id)" data-repeater-delete>
                                                         <i-feather name='trash'></i-feather>
                                                     </a>
                                                 </td>
@@ -1434,5 +1434,47 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" (click)="cerrarModal()">Cerrar</button>
+    </div>
+</ng-template>
+<ng-template #eliminarDatosVirtMdl let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <p>Confirma eliminar</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="eliminarDatoVirtual()">SI</button>
+    </div>
+</ng-template>
+<ng-template #eliminarDatosFisiMdl let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <p>Confirma eliminar</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="eliminarDatoFisico()">SI</button>
+    </div>
+</ng-template>
+<ng-template #eliminarParienteMdl let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <p>Confirma eliminar</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="eliminarPariente()">SI</button>
     </div>
 </ng-template>

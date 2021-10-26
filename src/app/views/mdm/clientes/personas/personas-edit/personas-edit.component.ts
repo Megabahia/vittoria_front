@@ -23,9 +23,14 @@ export class PersonasEditComponent implements OnInit {
   @ViewChild('tab2') tab2;
   @ViewChild('tab3') tab3;
   @ViewChild('tab4') tab4;
+  //Modals
   @ViewChild('dismissModalDV') dismissModalDV;
   @ViewChild('dismissModalDF') dismissModalDF;
   @ViewChild('mensajeModal') mensajeModal;
+  @ViewChild('eliminarDatosVirtMdl') eliminarDatosVirtMdl;
+  @ViewChild('eliminarDatosFisiMdl') eliminarDatosFisiMdl;
+  @ViewChild('eliminarParienteMdl') eliminarParienteMdl;
+  //------------------------------------
   basicDemoValue = '2017-01-01';
   tabs = 0;
   //forms
@@ -41,6 +46,10 @@ export class PersonasEditComponent implements OnInit {
   //Mensaje
   mensaje = "";
   //-------------
+  //ids Datos
+  idDatoVirtual = 0;
+  idDatoFisico = 0;
+  //---------------
   numRegex = /^-?\d*[.,]?\d{0,2}$/;
 
   public barChartOptions: ChartOptions = {
@@ -551,9 +560,14 @@ export class PersonasEditComponent implements OnInit {
       this.abrirModal(this.mensajeModal);
     }
   }
-  async eliminarDatoFisico(id) {
-    this.clientesService.eliminarDatosFisicos(id).subscribe((info) => {
-      this.obtenerDatosFisicos()
+  async eliminarDatoFisicoModal(id) {
+    this.idDatoFisico = id;
+    this.abrirModal(this.eliminarDatosFisiMdl);
+  }
+  eliminarDatoFisico() {
+    this.clientesService.eliminarDatosFisicos(this.idDatoFisico).subscribe((info) => {
+      this.obtenerDatosFisicos();
+      this.cerrarModal();
     });
   }
   async crearDatoVirtual() {
@@ -625,9 +639,14 @@ export class PersonasEditComponent implements OnInit {
     }
 
   }
-  async eliminarDatoVirtual(id) {
-    this.clientesService.eliminarDatosVirtuales(id).subscribe((info) => {
-      this.obtenerDatosVirtuales()
+  async eliminarDatoVirtualModal(id) {
+    this.idDatoVirtual = id;
+    this.abrirModal(this.eliminarDatosVirtMdl);
+  }
+  async eliminarDatoVirtual() {
+    this.clientesService.eliminarDatosVirtuales(this.idDatoVirtual).subscribe((info) => {
+      this.obtenerDatosVirtuales();
+      this.cerrarModal();
     });
   }
   // async obtenerTransacciones(){
@@ -709,6 +728,17 @@ export class PersonasEditComponent implements OnInit {
       this.idPariente = id;
       this.parientesVista = "editar";
     }
+  }
+
+  async eliminarParienteModal(id) {
+    this.idPariente = id;
+    this.abrirModal(this.eliminarParienteMdl);
+  }
+  async eliminarPariente() {
+    this.clientesService.eliminarPariente(this.idPariente).subscribe((info) => {
+      this.obtenerParientes();
+      this.cerrarModal();
+    });
   }
   abrirModal(modal) {
     this.modalService.open(modal)

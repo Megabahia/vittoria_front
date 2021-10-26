@@ -63,6 +63,7 @@
                                             <div *ngIf="submittedTransaccionForm && tForm.tipoIdentificacion.errors" class="invalid-feedback" style="display: block;">
                                                 <div *ngIf="tForm.tipoIdentificacion.errors.required">Tipo de identificación requerido
                                                 </div>
+
                                             </div>
                                         </div>
                                         <div class="col-3">
@@ -70,6 +71,8 @@
                                             <input class="form-control" type="text" name="identificacion" formControlName="identificacion" [(ngModel)]="transaccion.identificacion">
                                             <div *ngIf="submittedTransaccionForm && tForm.identificacion.errors" class="invalid-feedback" style="display: block;">
                                                 <div *ngIf="tForm.identificacion.errors.required">Identificación requerido
+                                                </div>
+                                                <div *ngIf="tForm.identificacion.errors.pattern">Solo números
                                                 </div>
                                             </div>
                                         </div>

@@ -24,6 +24,8 @@ export class NegociosEditComponent implements OnInit {
   @ViewChild('dismissModalDP') dismissModalDP;
   @ViewChild('dismissModalDF') dismissModalDF;
   @ViewChild('mensajeModal') mensajeModal;
+  @ViewChild('eliminarPersonalMdl') eliminarPersonalMdl;
+  @ViewChild('eliminarDireccionMdl') eliminarDireccionMdl;
 
   //forms
   datosBasicosForm: FormGroup;
@@ -38,6 +40,10 @@ export class NegociosEditComponent implements OnInit {
   //Mensaje
   mensaje = "";
   //-------------
+  //ids
+  idPersonal = 0;
+  idDireccion = 0;
+  //------------------
 
   public barChartOptions: ChartOptions = {
     responsive: true,
@@ -381,38 +387,59 @@ export class NegociosEditComponent implements OnInit {
       this.datosPersonal = info;
     });
   }
-  async eliminarPersonal(id) {
-    await this.negociosService.eliminarPersonal(id).subscribe(() => {
+  async eliminarPersonalModal(id) {
+    this.idPersonal = id;
+    this.abrirModal(this.eliminarPersonalMdl);
+  }
+  eliminarPersonal() {
+    this.negociosService.eliminarPersonal(this.idPersonal).subscribe(() => {
       this.obtenerPersonalEmpresa();
+      this.cerrarModal();
     });
   }
 
+  async eliminarDireccionModal(id) {
+    this.idDireccion = id;
+    this.abrirModal(this.eliminarDireccionMdl);
+  }
+  eliminarDireccion() {
+    this.negociosService.eliminarDireccion(this.idDireccion).subscribe(() => {
+      this.obtenerDireccionesEmpresa();
+      this.cerrarModal();
+    });
+  }
   async guardarPersonal() {
     this.submittedDatosPersonalForm = true;
 
     if (this.datosPersonalForm.invalid) {
       return;
     }
-    if (this.datosPersonal.id == 0) {
-      await this.negociosService.crearPersonal(this.datosPersonal).subscribe((info) => {
-        this.dismissModalDP.nativeElement.click();
-        this.obtenerPersonalEmpresa();
-      },
-        (error) => {
-          let errores = Object.values(error);
-          let llaves = Object.keys(error);
-          this.mensaje = "";
-          errores.map((infoErrores, index) => {
-            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+    if (this.idNegocio != 0) {
+      if (this.datosPersonal.id == 0) {
+        await this.negociosService.crearPersonal(this.datosPersonal).subscribe((info) => {
+          this.dismissModalDP.nativeElement.click();
+          this.obtenerPersonalEmpresa();
+        },
+          (error) => {
+            let errores = Object.values(error);
+            let llaves = Object.keys(error);
+            this.mensaje = "";
+            errores.map((infoErrores, index) => {
+              this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            });
+            this.abrirModal(this.mensajeModal);
           });
-          this.abrirModal(this.mensajeModal);
+      } else {
+        await this.negociosService.editarPersonal(this.datosPersonal).subscribe((info) => {
+          this.dismissModalDP.nativeElement.click();
+          this.obtenerPersonalEmpresa();
         });
+      }
     } else {
-      await this.negociosService.editarPersonal(this.datosPersonal).subscribe((info) => {
-        this.dismissModalDP.nativeElement.click();
-        this.obtenerPersonalEmpresa();
-      });
+      this.mensaje = "Es necesario que primero ingrese sus datos básicos"
+      this.abrirModal(this.mensajeModal);
     }
+
   }
   crearDireccion() {
     this.datosDirecciones = this.negociosService.inicializarDireccion();
@@ -427,11 +454,7 @@ export class NegociosEditComponent implements OnInit {
       this.obtenerCiudadDirecciones();
     });
   }
-  async eliminarDireccion(id) {
-    await this.negociosService.eliminarDireccion(id).subscribe(() => {
-      this.obtenerDireccionesEmpresa();
-    });
-  }
+ 
 
   async guardarDireccion() {
     this.submittedDatosFisicosForm = true;
