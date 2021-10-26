@@ -14,7 +14,7 @@
                         <div class="row m-75">
                             <div class="col-lg-12 col-xl-6">
                                 <label>Mostrar</label>
-                                <select class="form-control-sm">
+                                <select class="form-control-sm" [(ngModel)]="pageSize" (change)="obtenerListaRoles()">
                           <option value="10">10</option>
                           <option value="25">25</option>
                           <option value="50">50</option>

@@ -27,7 +27,7 @@
                             <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
                                 <!-- users edit media object start -->
                                 <div class="media mb-2">
-                                    <img src="{{imagenTemp ? imagenTemp: imagen}}" alt="users avatar" class="user-avatar users-avatar-shadow rounded mr-2 my-25 cursor-pointer" height="90" width="90" />
+                                    <img src="{{imagenTemp ? imagenTemp: imagen ? imagen: '/assets/images/avatars/avatar.png' }}" alt="users avatar" class="user-avatar users-avatar-shadow rounded mr-2 my-25 cursor-pointer" height="90" width="90" />
                                     <div class="media-body mt-50">
                                         <h4>{{usuario.nombres + " "+ usuario.apellidos}}</h4>
                                         <div class="col-12 d-flex mt-1 px-0">
@@ -38,7 +38,6 @@
                                                     <i-feather class="mr-0 edit-user" name="edit"></i-feather>
                                                 </span>
                                             </label>
-                                            <button class="btn btn-outline-secondary d-none d-sm-block">Remover</button>
                                             <button class="btn btn-outline-secondary d-block d-sm-none">
                                                 <i-feather class="mr-0 edit-user" name="trash-2"></i-feather>
                                             </button>

@@ -70,6 +70,13 @@
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
+                                                    <a class="nav-link font-weight-bold" data-toggle="tab" href="#tab6" aria-controls="account" role="tab" aria-selected="true">
+                                                        <span class="d-none d-md-block">Transacciones</span>
+                                                        <i-feather name="image" class="d-block d-md-none edit-user">
+                                                        </i-feather>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
                                                     <a class="nav-link font-weight-bold" data-toggle="tab" href="#tab2" aria-controls="account" role="tab" aria-selected="true">
                                                         <span class="d-none d-md-block">Calificaciones</span>
                                                         <i-feather name="users" class="d-block d-md-none edit-user">
@@ -87,13 +94,7 @@
 
 
 
-                                                <li class="nav-item">
-                                                    <a class="nav-link font-weight-bold" data-toggle="tab" href="#tab6" aria-controls="account" role="tab" aria-selected="true">
-                                                        <span class="d-none d-md-block">Transacciones</span>
-                                                        <i-feather name="image" class="d-block d-md-none edit-user">
-                                                        </i-feather>
-                                                    </a>
-                                                </li>
+
 
 
 
@@ -693,7 +694,7 @@
                                 <div class="row m-75">
                                     <div class="col-lg-12 col-xl-6">
                                         <label>Mostrar</label>
-                                        <select class="form-control-sm">
+                                        <select class="form-control-sm" [(ngModel)]="pageSizePE" (change)="obtenerPersonalEmpresa()">
                                             <option value="10">10</option>
                                             <option value="25">25</option>
                                             <option value="50">50</option>
@@ -950,7 +951,7 @@
                                 <div class="row m-75">
                                     <div class="col-lg-12 col-xl-6">
                                         <label>Mostrar</label>
-                                        <select class="form-control-sm">
+                                        <select class="form-control-sm" [(ngModel)]="pageSizeDE" (change)="obtenerDireccionesEmpresa()">
                                             <option value="10">10</option>
                                             <option value="25">25</option>
                                             <option value="50">50</option>
@@ -1214,7 +1215,7 @@
                                 <div class="row m-75">
                                     <div class="col-lg-12 col-xl-6">
                                         <label>Mostrar</label>
-                                        <select class="form-control-sm">
+                                        <select class="form-control-sm" [(ngModel)]="pageSizeTA" (click)="obtenerTransacciones()">
                                             <option value="10">10</option>
                                             <option value="25">25</option>
                                             <option value="50">50</option>

@@ -50,7 +50,7 @@
                     <div class="row m-75">
                         <div class="col-lg-12 col-xl-4">
                             <label>Mostrar</label>
-                            <select class="form-control-sm" [(ngModel)]="pageSize">
+                            <select class="form-control-sm" [(ngModel)]="pageSize" (change)="obtenerListaProspectos()">
                                 <option value="10">10</option>
                                 <option value="25">25</option>
                                 <option value="50">50</option>
@@ -121,7 +121,7 @@
                         </table>
 
                     </div>
-                    <ngb-pagination #paginator [collectionSize]="collectionSize " [(page)]="page " [(pageSize)]="pageSize " [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true ">
+                    <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [(pageSize)]="pageSize" [maxSize]="5" [ellipses]="false" [boundaryLinks]="true">
                     </ngb-pagination>
 
                     <!-- Modal to add new user starts-->

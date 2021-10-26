@@ -687,7 +687,7 @@
                                 <div class="row m-75">
                                     <div class="col-lg-12 col-xl-6">
                                         <label>Mostrar</label>
-                                        <select class="form-control-sm" [(ngModel)]="pageSizeDF">
+                                        <select class="form-control-sm" [(ngModel)]="pageSizeDF" (change)="obtenerDatosFisicos()">
                       <option value="10">10</option>
                       <option value="25">25</option>
                       <option value="50">50</option>
@@ -919,7 +919,7 @@
                                 <div class="row m-75">
                                     <div class="col-lg-12 col-xl-6">
                                         <label>Mostrar</label>
-                                        <select class="form-control-sm" [(ngModel)]="pageSizeDV">
+                                        <select class="form-control-sm" [(ngModel)]="pageSizeDV" (change)="obtenerDatosVirtuales()">
                       <option value="10">10</option>
                       <option value="25">25</option>
                       <option value="50">50</option>
@@ -1087,7 +1087,7 @@
                                 <div class="row m-75">
                                     <div class="col-lg-12 col-xl-6">
                                         <label>Mostrar</label>
-                                        <select class="form-control-sm">
+                                        <select class="form-control-sm" [(ngModel)]="pageSizeTA" (change)="obtenerTransacciones()">
                       <option value="10">10</option>
                       <option value="25">25</option>
                       <option value="50">50</option>
@@ -1189,7 +1189,7 @@
                                 <div class="row m-75">
                                     <div class="col-lg-12 col-xl-6">
                                         <label>Mostrar</label>
-                                        <select class="form-control-sm" [(ngModel)]="pageSizePA">
+                                        <select class="form-control-sm" [(ngModel)]="pageSizePA" (change)="obtenerParientes()">
                       <option value="10">10</option>
                       <option value="25">25</option>
                       <option value="50">50</option>
