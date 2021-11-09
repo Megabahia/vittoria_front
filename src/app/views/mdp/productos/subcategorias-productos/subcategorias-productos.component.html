@@ -38,40 +38,51 @@
                                 <h5 class="modal-title" id="exampleModalLabel">Nueva subcategoría</h5>
                             </div>
                             <div class="modal-body flex-grow-1">
-
-                                <div class="form-group">
-                                    <label class="form-label">Seleccione categoría padre:</label>
-                                    <select class="form-control select2" [(ngModel)]="subcategoria.categoria">
-                                        <option value=0>- Seleccione - </option>
-                                        <option value=1>Hogar</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="form-label">Nombre de subcategoría:</label>
-                                    <input type="text" class="form-control" [(ngModel)]="subcategoria.nombre" />
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="form-label">Código de subcategoría:</label>
-                                    <input type="text" class="form-control" [(ngModel)]="subcategoria.codigoSubCategoria" />
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="form-label">Descripción:</label>
-                                    <input type="text" class="form-control" [(ngModel)]="subcategoria.descripcion" />
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="form-label">Estado:</label>
-                                    <select class="form-control" [(ngModel)]="subcategoria.estado">
-                             <option value="">- Seleccione - </option>
-                             <option value="Activo">Activo</option>
-                             <option value="Inactivo">Inactivo</option>
-                           </select>
-                                </div>
-
-                                <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close" (click)="guardarSubcategoria()">Guardar</button>
+                                <form class="auth-login-form mt-2" [formGroup]="paramForm">
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Seleccione categoría padre:</label>
+                                        <select class="select2 form-control form-control-sm" name="categoria" formControlName="categoria" [(ngModel)]="subcategoria.categoria">
+                                            <option value="" selected>- Seleccione categoría padre </option>
+                                            <option *ngFor="let padre of categoriasPadre" value="{{padre.id}}">{{padre.nombre}}</option>
+                                        </select>
+                                        <div *ngIf="submitted && f.categoria.errors" class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="f.categoria.errors.required">Selección del estado de la categoría es requerida</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-fullname">Nombre de subcategoría:</label>
+                                        <input type="text" class="form-control dt-full-name" id="basic-icon-default-fullname" name="nombre" formControlName="nombre" [(ngModel)]="subcategoria.nombre" />
+                                        <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="f.nombre.errors.required">Nombre de la subcategoría es requerida</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-fullname">Código de la subcategoría:</label>
+                                        <input type="text" class="form-control dt-full-name" id="basic-icon-default-fullname" name="codigoSubCategoria" formControlName="codigoSubCategoria" [(ngModel)]="subcategoria.codigoSubCategoria" />
+                                        <div *ngIf="submitted && f.codigoSubCategoria.errors" class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="f.codigoSubCategoria.errors.required">Código de la subcategoría es requerida</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-fullname">Descripción:</label>
+                                        <input type="text" class="form-control dt-full-name" id="basic-icon-default-fullname" name="descripcion" formControlName="descripcion" [(ngModel)]="subcategoria.descripcion" />
+                                        <div *ngIf="submitted && f.descripcion.errors" class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="f.descripcion.errors.required">La descripción es requerida</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="basic-icon-default-email">Estado:</label>
+                                        <select class="select2 form-control form-control-sm" name="estado" formControlName="estado" [(ngModel)]="subcategoria.estado">
+                                            <option value="" selected>- Seleccione - </option>
+                                            <option *ngFor="let estado of estados" value="{{estado.valor}}">{{estado.valor}}</option>
+                                        </select>
+                                        <div *ngIf="submitted && f.estado.errors" class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="f.estado.errors.required">Selección del estado de la categoría es requerida</div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarSubcategoria()">Guardar</button>
+                                <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
                                 <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                             </div>
                         </div>
@@ -89,6 +100,20 @@
                     </div>
                     <div class="modal-footer ">
                         <button type="button " class="btn btn-light " (click)="cerrarModal()">SI</button>
+                    </div>
+                </ng-template>
+                <ng-template #aviso let-modal>
+                    <div class="modal-header ">
+                        <h4 class="modal-title ">Mensaje</h4>
+                        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
+                        <span aria-hidden="true ">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <div [innerHTML]="mensaje"></div>
+                    </div>
+                    <div class="modal-footer ">
+                        <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Aceptar</button>
                     </div>
                 </ng-template>
                 <div class="card-datatable table-responsive pt-0">

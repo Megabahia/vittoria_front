@@ -7,7 +7,7 @@ const apiUrl: string = environment.apiUrl;
 export interface Subcategoria{
   id;
   nombre;
-  categoria:number;
+  categoria;
   codigoSubCategoria;
   descripcion;
   estado;
@@ -22,7 +22,7 @@ export class SubcategoriasService {
     return {
       id:0,
       nombre:"",
-      categoria:0,
+      categoria:"",
       codigoSubCategoria:"",
       descripcion:"",
       estado:""

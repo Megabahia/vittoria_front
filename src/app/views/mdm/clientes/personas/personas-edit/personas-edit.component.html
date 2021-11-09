@@ -225,12 +225,12 @@
                                                 <div class="form-group">
                                                     <label for="username">Nacionalidad</label>
                                                     <select class="form-control select2" name="nacionalidad" formControlName="nacionalidad" [(ngModel)]="datosBasicos.nacionalidad">
-                            <option value="" selected>- Seleccionar -</option>
-                            <option value="{{nacionalidadOp.valor}}"
-                              *ngFor="let nacionalidadOp of nacionalidadOpciones">
-                              {{nacionalidadOp.nombre}}
-                            </option>
-                          </select>
+                                                        <option value="" selected>- Seleccionar -</option>
+                                                        <option value="{{nacionalidadOp.valor}}"
+                                                        *ngFor="let nacionalidadOp of nacionalidadOpciones">
+                                                        {{nacionalidadOp.nombre}}
+                                                        </option>
+                                                    </select>
                                                     <div *ngIf="submittedDatosBasicosForm && fdb.nacionalidad.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="fdb.nacionalidad.errors.required">Nacionalidad es requerida
                                                         </div>
