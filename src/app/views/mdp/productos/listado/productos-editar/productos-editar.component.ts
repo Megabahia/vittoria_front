@@ -13,6 +13,10 @@ import { ParamService } from 'src/app/services/mdp/param/param.service';
 export class ProductosEditarComponent implements OnInit {
   @Input() idProducto;
   @ViewChild(NgbPagination) paginator: NgbPagination;
+  @ViewChild('eliminarImagenMdl') eliminarImagenMdl;
+  idImagen = 0;
+  imagenes;
+  cantImagenes = 0;
   producto: Producto;
   datosProducto: FormData = new FormData();
   categoriasOpciones;
@@ -21,13 +25,13 @@ export class ProductosEditarComponent implements OnInit {
   fichaTecnicaLista;
   idFichaTecnica;
   abastecimientoOpciones;
-  archivos:File[] = [];
+  archivos: File[] = [];
   constructor(
     private categoriasService: CategoriasService,
     private subcategoriasService: SubcategoriasService,
     private productosService: ProductosService,
     private modalService: NgbModal,
-    private paramService: ParamService 
+    private paramService: ParamService
   ) {
     this.producto = this.productosService.inicializarProducto();
     this.fichaTecnica = this.productosService.inicializarFichaTecnica();
@@ -44,8 +48,8 @@ export class ProductosEditarComponent implements OnInit {
   obtenerProducto() {
     this.productosService.obtenerProducto(this.idProducto).subscribe((info) => {
       let producto = info;
-      let imagenes = info.imagenes;
-      delete producto.imagenes; 
+      this.imagenes = info.imagenes;
+      delete producto.imagenes;
       this.producto = producto;
       this.obtenerListaSubcategorias();
     });
@@ -72,6 +76,10 @@ export class ProductosEditarComponent implements OnInit {
   }
 
   onSelect(event) {
+    console.log(this.archivos.length - this.imagenes.length );
+    if (this.archivos && this.archivos.length - this.imagenes.length > 0) {
+      this.onRemove(this.archivos[0]);
+    }
     this.archivos.push(...event.addedFiles);
   }
 
@@ -86,37 +94,35 @@ export class ProductosEditarComponent implements OnInit {
     let valores = Object.values(this.producto);
 
     valores.map((valor, pos) => {
-        this.datosProducto.append(llaves[pos], valor)
+      this.datosProducto.append(llaves[pos], valor)
     });
-    // this.files.map((archivo, pos) => {
-      
 
-    // this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
-    //   console.log(info);
-    // });
     if (this.idProducto != 0) {
-      //   this.archivos.map((valor, pos) => {
-      //   this.datosProducto.append("imagenes[" + pos + "].id", valor.id);
-      //   this.datosProducto.append("imagenes[" + pos + "].imagen", valor.imagen);
-      //   this.datosProducto.append("imagenes[" + pos + "].producto", this.producto.id);
-      // });
-      console.log(this.archivos);
+
       this.archivos.map((valor, pos) => {
         this.datosProducto.append("imagenes[" + pos + "].imagen", valor);
       });
       this.productosService.actualizarProducto(this.datosProducto, this.producto.id).subscribe((info) => {
-        console.log(info);
       });
     } else {
       this.archivos.map((valor, pos) => {
         this.datosProducto.append("imagenes[" + pos + "].imagen", valor);
       });
       this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
-        console.log(info);
       });
     }
   }
+  eliminarImagenModal(id) {
+    this.idImagen = id;
+    this.modalService.open(this.eliminarImagenMdl);
+  }
+  eliminarImagen() {
+    this.productosService.eliminarImagen(this.idImagen).subscribe((info) => {
+      this.obtenerProducto();
+      this.modalService.dismissAll();
 
+    });
+  }
   crearFichaTecnica() {
     this.fichaTecnica = this.productosService.inicializarFichaTecnica();
     this.fichaTecnica.producto = this.idProducto;
@@ -143,12 +149,15 @@ export class ProductosEditarComponent implements OnInit {
   }
   abrirModal(modal, id) {
     this.idFichaTecnica = id;
-    this.modalService.open(modal)
+    this.modalService.open(modal);
   }
   cerrarModal() {
     this.modalService.dismissAll();
     this.productosService.eliminarFichaTecnica(this.idFichaTecnica).subscribe(() => {
       this.obtenerFichasTecnicas();
     });
+  }
+  cerrarModalEliminar() {
+    this.modalService.dismissAll();
   }
 }

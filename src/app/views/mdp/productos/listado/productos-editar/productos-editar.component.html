@@ -132,6 +132,7 @@
                             </p>
 
                             <div class="dropzone" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
+
                                 <ngx-dropzone-label>
                                     <div class="dz-message">
                                         <h2>Cargar imágenes</h2>
@@ -145,6 +146,13 @@
                             <i-feather name="trash" class="edit-user"></i-feather>
                             <span class="align-middle">Limpiar imágenes</span>
                         </button>
+                            <div *ngFor="let img of imagenes" class="div-imagenes-productos">
+                                <a (click)="eliminarImagenModal(img.id)">
+                                    <img class="eliminar-imagen" width="100%" height="200px" [src]="img.imagen">
+                                    <img class="fondo-eliminar-imagen" width="100%" height="200px" src="/assets/images/borrar_imagen.png">
+                                </a>
+                                <hr>
+                            </div>
                         </div>
 
                     </div>
@@ -246,5 +254,19 @@
     </div>
     <div class="modal-footer ">
         <button type="button " class="btn btn-light " (click)="cerrarModal()">SI</button>
+    </div>
+</ng-template>
+<ng-template #eliminarImagenMdl let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <p>Confirma eliminar</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="eliminarImagen()">SI</button>
     </div>
 </ng-template>

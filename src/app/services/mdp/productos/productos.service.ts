@@ -115,7 +115,9 @@ export class ProductosService {
   obtenerListaRotacion(datos) {
     return this.http.post<any>(`${apiUrl}/mdp/productos/rotacion/list/`, datos);
   }
-
+  eliminarImagen(id){
+    return this.http.delete<any>(`${apiUrl}/mdp/productos/imagen/delete/${id}`);
+  }
   obtenerFichasTecnicas(id) {
     return this.http.get<any>(`${apiUrl}/mdp/fichaTecnicaProductos/list/${id}`);
   }
@@ -131,5 +133,5 @@ export class ProductosService {
   eliminarFichaTecnica(id) {
     return this.http.delete<any>(`${apiUrl}/mdp/fichaTecnicaProductos/delete/${id}`);
   }
-
+  
 }
