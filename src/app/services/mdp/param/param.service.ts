@@ -41,4 +41,7 @@ export class ParamService {
   obtenerParametroNombreTipo(nombre,tipo){
     return this.http.post<any>(`${apiUrl}/mdp/param/list/listOne`,{nombre,tipo});
   }
+  obtenerListaEstado(){
+    return this.http.get<any>(`${apiUrl}/mdp/param/list/estado/`);
+  }
 }
