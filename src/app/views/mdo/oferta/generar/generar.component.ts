@@ -5,7 +5,7 @@ import { ParamService } from 'src/app/services/admin/param.service';
 import { ParamService as ParamServiceMDO } from 'src/app/services/mdo/param/param.service';
 import { ExportService } from '../../../../services/admin/export.service';
 import { GenerarService, Oferta, Detalles } from '../../../../services/mdo/ofertas/generar/generar.service';
-import { FormArray, FormBuilder } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClientesService } from '../../../../services/mdm/personas/clientes/clientes.service';
 import { NegociosService } from '../../../../services/mdm/personas/negocios/negocios.service';
 import { ProductosService } from '../../../../services/mdp/productos/productos.service';
@@ -17,6 +17,17 @@ import { ProductosService } from '../../../../services/mdp/productos/productos.s
 })
 export class GenerarComponent implements OnInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
+  @ViewChild('ofertaGuardar') ofertaGuardar;
+  @ViewChild('mensajeModal') mensajeModal;
+
+  numRegex = /^-?\d*[.,]?\d{0,2}$/;
+
+  //forms
+  ofertaForm: FormGroup;
+
+  //----------------------
+  submittedTransaccionForm = false;
+
   menu;
   page = 1;
   pageSize: any = 10;
@@ -55,7 +66,7 @@ export class GenerarComponent implements OnInit {
 
   ofertaId;
   constructor(
-    private formBuilder: FormBuilder,
+    private _formBuilder: FormBuilder,
     private generarService: GenerarService,
     private datePipe: DatePipe,
     private globalParam: ParamService,
@@ -69,15 +80,36 @@ export class GenerarComponent implements OnInit {
     this.oferta = this.generarService.inicializarOferta();
   }
 
-  ngOnInit(
-
-  ): void {
+  ngOnInit(): void {
+    this.ofertaForm = this._formBuilder.group({
+      detalles: this._formBuilder.array([
+        this.crearDetalleGrupo()
+      ]),
+      codigoOferta: ['', [Validators.required]],
+      fecha: ['', [Validators.required]],
+      nombres: ['', [Validators.required]],
+      apellidos: ['', [Validators.required]],
+      identificacion: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      telefono: ['', [Validators.required]],
+      correo: ['', [Validators.required]],
+      vigenciaOferta: ['', [Validators.required]],
+      canal: ['', [Validators.required]],
+      calificacionCliente: ['', [Validators.required]],
+      indicadorCliente: ['', [Validators.required]],
+      personaGenera: ['', [Validators.required]],
+      descripcion: ['', [Validators.required]],
+      numeroProductosComprados: ['', [Validators.required]],
+      direccion: ['', [Validators.required]],
+    });
     this.menu = {
       modulo: "mdo",
       seccion: "genOferta"
     };
     this.obtenerTipoIdentificacionOpciones();
     this.obtenerIVA();
+  }
+  get oForm() {
+    return this.ofertaForm.controls;
   }
   inicializarDetallesOferta() {
     this.detalles = [];
@@ -125,15 +157,31 @@ export class GenerarComponent implements OnInit {
   obtenerURLImagen(url) {
     return this.globalParam.obtenerURL(url);
   }
+  crearDetalleGrupo() {
+    return this._formBuilder.group({
+      codigo: ['', [Validators.required]],
+      articulo: ['', [Validators.required]],
+      valorUnitario: [0, [Validators.required]],
+      cantidad: [0, [Validators.required, Validators.pattern("^[0-9]*$"), Validators.min(1)]],
+      precio: [0, [Validators.required, Validators.min(1)]],
+      informacionAdicional: ['', [Validators.required]],
+      descuento: [0, [Validators.required, Validators.pattern(this.numRegex)]],
+      valorDescuento: [0, [Validators.required]]
+    });
+  }
+  get detallesArray(): FormArray {
+    return this.ofertaForm.get('detalles') as FormArray;
+  }
   crearDetalle() {
-    return this.formBuilder.group(this.generarService.inicializarDetalle());
+    return this._formBuilder.group(this.generarService.inicializarDetalle());
   }
   agregarItem(): void {
     this.detalles.push(this.generarService.inicializarDetalle());
     this.listaPrecios.push(
       this.generarService.inicializarPrecios()
     );
-
+    let detGrupo = this.crearDetalleGrupo();
+    this.detallesArray.push(detGrupo);
   }
   removerItem(i): void {
 
@@ -269,7 +317,7 @@ export class GenerarComponent implements OnInit {
     this.oferta.created_at = this.transformarFecha(this.fechaActual);
     this.oferta.fecha = this.transformarFecha(this.fechaActual);
     this.inicializarDetallesOferta();
-    this.listaPrecios= [];
+    this.listaPrecios = [];
   }
   async obtenerIVA() {
     await this.paramService.obtenerParametroNombreTipo("ACTIVO", "TIPO_IVA").subscribe((info) => {
@@ -277,6 +325,10 @@ export class GenerarComponent implements OnInit {
     });
   }
   async guardarOferta() {
+    this.submittedTransaccionForm = true;
+    if (this.ofertaForm.invalid) {
+      return;
+    }
     this.calcularSubtotal();
     this.oferta.fecha = this.transformarFecha(this.fechaActual);
     this.oferta.detalles = this.detallesTransac;
@@ -322,7 +374,7 @@ export class GenerarComponent implements OnInit {
     this.generarService.obtenerOferta(id).subscribe((info) => {
       this.oferta = info;
       this.detalles = info.detalles;
-      this.listaPrecios= [];
+      this.listaPrecios = [];
       for (let i = 0; i < info.detalles.length; i++) {
         this.listaPrecios.push(
           this.generarService.inicializarPrecios()
@@ -332,13 +384,13 @@ export class GenerarComponent implements OnInit {
     });
   }
 
-  abrirModal(modal,id){
-    this.ofertaId=id;
+  abrirModal(modal, id) {
+    this.ofertaId = id;
     this.modalService.open(modal)
   }
-  cerrarModal(){
+  cerrarModal() {
     this.modalService.dismissAll();
-    this.generarService.eliminarOferta(this.ofertaId).subscribe(()=>{
+    this.generarService.eliminarOferta(this.ofertaId).subscribe(() => {
       this.obtenerListaOfertas();
     });
   }

@@ -12,7 +12,6 @@ export interface Producto {
   codigoBarras;
   refil;
   stock;
-  caducidad;
   costoCompra;
   precioVentaA;
   precioVentaB;

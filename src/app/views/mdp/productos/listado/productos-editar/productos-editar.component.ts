@@ -74,7 +74,6 @@ export class ProductosEditarComponent implements OnInit {
       precioVentaE: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       precioVentaBultos: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       estado: ['', [Validators.required]],
-      caducidad: ['', [Validators.required]],
       variableRefil: ['', [Validators.required]],
       fechaCaducidad: ['', [Validators.required]],
       fechaElaboracion: ['', [Validators.required]],
@@ -146,9 +145,9 @@ export class ProductosEditarComponent implements OnInit {
     // this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
     //   console.log(info);
     // });
-
+    console.log(this.productoForm);
     this.submittedProductoForm = true;
-    if (this.fichaTecnicaForm.invalid) {
+    if (this.productoForm.invalid) {
       return;
     }
     if (this.idProducto != 0) {

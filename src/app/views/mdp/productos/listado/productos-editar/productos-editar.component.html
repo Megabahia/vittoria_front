@@ -1,4 +1,4 @@
-<div class="app-content content ">
+<div class="app-content content">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
     <div class="content-wrapper">
@@ -192,37 +192,37 @@
                                 </div>
 
                             </div>
+                            <div class="col-md-4">
+                                <p class="card-text">
+                                    Imágenes del producto
+                                </p>
 
-                        </div>
+                                <div class="dropzone" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
 
-                        <div class="col-md-4">
-                            <p class="card-text">
-                                Imágenes del producto
-                            </p>
-
-                            <div class="dropzone" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
-
-                                <ngx-dropzone-label>
-                                    <div class="dz-message">
-                                        <h2>Cargar imágenes</h2>
-                                    </div>
-                                </ngx-dropzone-label>
-                                <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of archivos" [file]="f" [removable]="true" (removed)="onRemove(f)">
-                                    <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
-                                </ngx-dropzone-image-preview>
-                            </div>
-                            <button id="clear-dropzone" class="btn btn-secondary btn-sm mt-1" (click)="removeAll()">
-                            <i-feather name="trash" class="edit-user"></i-feather>
-                            <span class="align-middle">Limpiar imágenes</span>
-                        </button>
-                            <div *ngFor="let img of imagenes" class="div-imagenes-productos">
-                                <a (click)="eliminarImagenModal(img.id)">
-                                    <img class="eliminar-imagen" width="100%" height="200px" [src]="img.imagen">
-                                    <img class="fondo-eliminar-imagen" width="100%" height="200px" src="/assets/images/borrar_imagen.png">
-                                </a>
-                                <hr>
+                                    <ngx-dropzone-label>
+                                        <div class="dz-message">
+                                            <h2>Cargar imágenes</h2>
+                                        </div>
+                                    </ngx-dropzone-label>
+                                    <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of archivos" [file]="f" [removable]="true" (removed)="onRemove(f)">
+                                        <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+                                    </ngx-dropzone-image-preview>
+                                </div>
+                                <button id="clear-dropzone" class="btn btn-secondary btn-sm mt-1" (click)="removeAll()">
+                                <i-feather name="trash" class="edit-user"></i-feather>
+                                <span class="align-middle">Limpiar imágenes</span>
+                            </button>
+                                <div *ngFor="let img of imagenes" class="div-imagenes-productos">
+                                    <a (click)="eliminarImagenModal(img.id)">
+                                        <img class="eliminar-imagen" width="100%" height="200px" [src]="img.imagen">
+                                        <img class="fondo-eliminar-imagen" width="100%" height="200px" src="/assets/images/borrar_imagen.png">
+                                    </a>
+                                    <hr>
+                                </div>
                             </div>
                         </div>
+
+
                     </form>
                 </div>
             </div>
@@ -325,17 +325,17 @@
     </div>
 </div>
 <ng-template #contenido let-modal>
-    <div class="modal-header ">
-        <h4 class="modal-title ">Mensaje</h4>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-        <span aria-hidden="true ">&times;</span>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <div class="modal-body ">
+    <div class="modal-body">
         <p>Confirma eliminar</p>
     </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-light " (click)="cerrarModal()">SI</button>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="cerrarModal()">SI</button>
     </div>
 </ng-template>
 <ng-template #eliminarImagenMdl let-modal>
@@ -351,16 +351,16 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-light" (click)="eliminarImagen()">SI</button>
         <ng-template #aviso let-modal>
-            <div class="modal-header ">
-                <h4 class="modal-title ">Mensaje</h4>
-                <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-        <span aria-hidden="true ">&times;</span>
+            <div class="modal-header">
+                <h4 class="modal-title">Mensaje</h4>
+                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
       </button>
             </div>
             <div class="modal-body">
                 <div [innerHTML]="mensaje"></div>
             </div>
-            <div class="modal-footer ">
+            <div class="modal-footer">
                 <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Aceptar</button>
             </div>
         </ng-template>

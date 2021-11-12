@@ -139,86 +139,114 @@
                                     <h5 class="modal-title" id="exampleModalLabel">Nueva oferta</h5>
                                 </div>
                                 <div class="modal-body flex-grow-1">
-                                    <div class="row">
-                                        <div class="form-group col-md-3">
-                                            <label class="form-label" for="basic-icon-default-fullname">Fecha de creación de la
+                                    <form class="auth-login-form mt-2" [formGroup]="ofertaForm">
+
+                                        <div class="row">
+                                            <div class="form-group col-md-3">
+                                                <label class="form-label" for="basic-icon-default-fullname">Fecha de creación de la
                         oferta:</label>
-                                            <input type="text" class="form-control dt-full-name" [(ngModel)]="oferta.fecha" disabled />
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <label class="form-label" for="basic-icon-default-fullname">Cédula cliente:</label>
-                                            <select class="form-control" [(ngModel)]="tipoClienteOferta">
+                                                <input type="text" class="form-control dt-full-name" [(ngModel)]="oferta.fecha" [ngModelOptions]="{standalone: true}" disabled />
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label class="form-label" for="basic-icon-default-fullname">Cédula cliente:</label>
+                                                <select class="form-control" [(ngModel)]="tipoClienteOferta" [ngModelOptions]="{standalone: true}"> 
                                                 <option value="" selected>- Tipo de cliente - </option>
                                                 <option value="cliente">Cliente</option>
                                                 <option value="negocio">Negocio</option>
                                               </select>
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <label class="form-label" for="basic-icon-default-fullname">Identificación:</label>
-                                            <input type="text" class="form-control" value="" [(ngModel)]="identificacionOfertaBusq" (change)="verificarBusqueda()" [disabled]="habilitarIdentificacion" />
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label class="form-label">Teléfono Celular:</label>
-                                            <input type="text" class="form-control" value="" [(ngModel)]="telefonoOfertaBusq" (change)="verificarBusqueda()" [disabled]="habilitarTelefono" />
-                                        </div>
-                                        <div class="form-group col-md-1">
-                                            <label class="form-label" for="basic-icon-default-fullname"></label>
-                                            <button class="btn btn-primary" (click)="obtenerCliente()">
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label class="form-label" for="basic-icon-default-fullname">Identificación:</label>
+                                                <input type="text" class="form-control" value="" [(ngModel)]="identificacionOfertaBusq" [ngModelOptions]="{standalone: true}" (change)="verificarBusqueda()" [disabled]="habilitarIdentificacion" />
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label class="form-label">Teléfono Celular:</label>
+                                                <input type="text" class="form-control" value="" [(ngModel)]="telefonoOfertaBusq" [ngModelOptions]="{standalone: true}" (change)="verificarBusqueda()" [disabled]="habilitarTelefono" />
+                                            </div>
+                                            <div class="form-group col-md-1">
+                                                <label class="form-label" for="basic-icon-default-fullname"></label>
+                                                <button class="btn btn-primary" (click)="obtenerCliente()">
                                                 <i-feather name='search' class="edit-user"></i-feather>
                                               </button>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label class="form-label">Nombre:</label>
+                                                <input class="form-control" name="nombres" formControlName="nombres" [(ngModel)]="oferta.nombres" disabled>
+                                                <div *ngIf="submittedTransaccionForm && oForm.nombres.errors" class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="oForm.nombres.errors.required">Nombres completos requeridos
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="form-label">Apellido:</label>
+                                                <input class="form-control" name="apellidos" formControlName="apellidos" [(ngModel)]="oferta.apellidos" disabled>
+                                                <div *ngIf="submittedTransaccionForm && oForm.apellidos.errors" class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="oForm.apellidos.errors.required">Apellidos completos requeridos
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label class="form-label">Cédula:</label>
+                                                <input class="form-control" name="identificacion" formControlName="identificacion" [(ngModel)]="oferta.identificacion" disabled>
+                                                <div *ngIf="submittedTransaccionForm && oForm.identificacion.errors" class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="oForm.identificacion.errors.required">Identificación requeridos
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label class="form-label">Teléfono celular:</label>
+                                                <input class="form-control" name="telefono" formControlName="telefono" [(ngModel)]="oferta.telefono" disabled>
+                                                <div *ngIf="submittedTransaccionForm && oForm.telefono.errors" class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="oForm.telefono.errors.required">Teléfono requeridos
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label class="form-label">Email:</label>
+                                                <input class="form-control" name="correo" formControlName="correo" [(ngModel)]="oferta.correo" disabled>
+                                                <div *ngIf="submittedTransaccionForm && oForm.correo.errors" class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="oForm.correo.errors.required">Correo requeridos
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
 
-                                        <div class="form-group col-md-4">
-                                            <label class="form-label">Nombre:</label>
-                                            <input class="form-control" [(ngModel)]="oferta.nombres" disabled>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="form-label">Apellido:</label>
-                                            <input class="form-control" [(ngModel)]="oferta.apellidos" disabled>
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <label class="form-label">Cédula:</label>
-                                            <input class="form-control" [(ngModel)]="oferta.identificacion" disabled>
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <label class="form-label">Teléfono celular:</label>
-                                            <input class="form-control" [(ngModel)]="oferta.telefono" disabled>
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <label class="form-label">Email:</label>
-                                            <input class="form-control" [(ngModel)]="oferta.correo" disabled>
-                                        </div>
-
-                                    </div>
 
 
+                                        <div class="form-group mt-2 border p-2 border-info rounded">
+                                            <h5>Productos:</h5>
+                                            <div formArrayName="detalles">
+                                                <div *ngFor="let detalle of detalles; let i = index;" [formGroupName]="i">
+                                                    <div>
+                                                        <div class="row">
+                                                            <div class="col-12 d-flex product-details-border position-relative pr-0">
+                                                                <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                                                    <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                                        <p class="card-text col-title">Código</p>
+                                                                        <input class="form-control form-control-sm" type="text" name="codigo" formControlName="codigo" [(ngModel)]="detalle.codigo" (change)="obtenerProducto(i)">
+                                                                        <div *ngIf="submittedTransaccionForm && oForm.detalles.controls[i].controls.codigo.errors" class="invalid-feedback" style="display: block;">
+                                                                            <div *ngIf="oForm.detalles.controls[i].controls.codigo.errors.required">Requerido
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
 
-                                    <div class="form-group mt-2 border p-2 border-info rounded">
-                                        <h5>Productos:</h5>
-                                        <form>
-                                            <div *ngFor="let detalle of detalles; let i = index;">
-                                                <div>
-                                                    <div class="row">
-                                                        <div class="col-12 d-flex product-details-border position-relative pr-0">
-                                                            <div class="row w-100 pr-lg-0 pr-1 py-2">
-                                                                <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
-                                                                    <p class="card-text col-title">Código</p>
-                                                                    <input class="form-control form-control-sm" type="text" [(ngModel)]="detalle.codigo" (change)="obtenerProducto(i)" [ngModelOptions]="{standalone: true}">
+                                                                    <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                                        <p class="card-text col-title">Producto</p>
+                                                                        <input class="form-control form-control-sm" type="text" name="articulo" formControlName="articulo" [(ngModel)]="detalle.articulo">
+                                                                        <div *ngIf="submittedTransaccionForm && oForm.detalles.controls[i].controls.articulo.errors" class="invalid-feedback" style="display: block;">
+                                                                            <div *ngIf="oForm.detalles.controls[i].controls.articulo.errors.required">Requerido
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
 
-                                                                </div>
-
-                                                                <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
-                                                                    <p class="card-text col-title">Producto</p>
-                                                                    <input class="form-control form-control-sm" type="text" [(ngModel)]="detalle.articulo" [ngModelOptions]="{standalone: true}">
-
-                                                                </div>
-
-                                                                <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
-                                                                    <p class="card-text col-title">Precio</p>
-                                                                    <select class="form-control form-control-sm" [(ngModel)]="detalle.valorUnitario" (change)="calcularSubtotal()" [ngModelOptions]="{standalone: true}">
+                                                                    <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                                        <p class="card-text col-title">Precio</p>
+                                                                        <select class="form-control form-control-sm" type="text" name="valorUnitario" formControlName="valorUnitario" [(ngModel)]="detalle.valorUnitario" (change)="calcularSubtotal()">
                                                                         <option value="0">- Seleccione -</option>
                                                                         <option value="{{listaPrecios[i] ? listaPrecios[i].precioVentaA : 0}}" >
                                                                             Precio de venta A: {{listaPrecios[i] ? listaPrecios[i].precioVentaA : 0}}
@@ -237,138 +265,154 @@
                                                                           </option>
                                                                         
                                                                     </select>
-                                                                </div>
-                                                                <div class="col-md-2 my-lg-0 my-2">
-                                                                    <p class="card-text col-title">Cantidad</p>
-                                                                    <input type="number" class="form-control form-control-sm" value="0" placeholder="0" [(ngModel)]="detalle.cantidad" (change)="calcularSubtotal()" [ngModelOptions]="{standalone: true}" />
-
-                                                                </div>
-                                                                <!-- <div class="col-md-2 my-lg-0 my-2">
+                                                                        <div *ngIf="submittedTransaccionForm && oForm.detalles.controls[i].controls.precio.errors" class="invalid-feedback" style="display: block;">
+                                                                            <div *ngIf="oForm.detalles.controls[i].controls.precio.errors.min">Valores > 0
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-2 my-lg-0 my-2">
+                                                                        <p class="card-text col-title">Cantidad</p>
+                                                                        <input type="number" class="form-control form-control-sm" name="cantidad" formControlName="cantidad" value="0" placeholder="0" [(ngModel)]="detalle.cantidad" (change)="calcularSubtotal()" />
+                                                                        <div *ngIf="submittedTransaccionForm && oForm.detalles.controls[i].controls.cantidad.errors" class="invalid-feedback" style="display: block;">
+                                                                            <div *ngIf="oForm.detalles.controls[i].controls.cantidad.errors.min">Valores > 0
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- <div class="col-md-2 my-lg-0 my-2">
                                                                     <p class="card-text col-title">Precio</p>
                                                                     <input type="number" class="form-control form-control-sm" value="0" placeholder="0" [(ngModel)]="detalle.precio" (change)="calcularSubtotal(i)" disabled [ngModelOptions]="{standalone: true}" />
 
                                                                 </div> -->
-                                                                <div class="col-md-2 my-lg-0 my-2">
-                                                                    <p><b>Total</b></p>
-                                                                    <h5><b>${{detalle.precio}}</b></h5>
+                                                                    <div class="col-md-2 my-lg-0 my-2">
+                                                                        <p><b>Total</b></p>
+                                                                        <h5><b>${{detalle.precio}}</b></h5>
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        <img class="img-detalle" src="{{detalle.imagen}}">
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-2">
-                                                                    <img class="img-detalle" src="{{detalle.imagen}}">
+                                                                <div class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
+                                                                    <i-feather name="x" class="cursor-pointer font-medium-3 edit-user" (click)="removerItem(i)"></i-feather>
                                                                 </div>
                                                             </div>
-                                                            <div class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
-                                                                <i-feather name="x" class="cursor-pointer font-medium-3 edit-user" (click)="removerItem(i)"></i-feather>
+                                                        </div>
+                                                        <div class=" row">
+                                                            <div class="col-12 d-flex product-details-border position-relative pr-0">
+                                                                <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                                                    <div class="col-md-4 mb-lg-0 mb-2 mt-lg-0">
+                                                                        <p class="card-text col-title">Información Adicional</p>
+                                                                        <textarea class="form-control" rows="1" name="informacionAdicional" formControlName="informacionAdicional" [(ngModel)]="detalle.informacionAdicional" placeholder="Información adicional"></textarea>
+                                                                        <div *ngIf="submittedTransaccionForm && oForm.detalles.controls[i].controls.informacionAdicional.errors" class="invalid-feedback" style="display: block;">
+                                                                            <div *ngIf="oForm.detalles.controls[i].controls.informacionAdicional.errors.min">Requerido
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-2 my-lg-0 my-2">
+                                                                        <p class="card-text col-title">% descuento</p>
+                                                                        <input type="number" class="form-control form-control-sm" name="descuento" formControlName="descuento" value="0" placeholder="0" [(ngModel)]="detalle.descuento" (change)="calcularSubtotal()" />
+                                                                        <div *ngIf="submittedTransaccionForm && oForm.detalles.controls[i].controls.descuento.errors" class="invalid-feedback" style="display: block;">
+                                                                            <div *ngIf="oForm.detalles.controls[i].controls.descuento.errors.min">Requerido
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-2 my-lg-0 my-2">
+                                                                        <p class="card-text col-title">$ descuento:</p>
+                                                                        <input type="number" class="form-control form-control-sm" name="valorDescuento" formControlName="valorDescuento" value="0" placeholder="0" [(ngModel)]="detalle.valorDescuento" disabled />
+                                                                        <div *ngIf="submittedTransaccionForm && oForm.detalles.controls[i].controls.valorDescuento.errors" class="invalid-feedback" style="display: block;">
+                                                                            <div *ngIf="oForm.detalles.controls[i].controls.valorDescuento.errors.min">Requerido
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class=" row">
-                                                        <div class="col-12 d-flex product-details-border position-relative pr-0">
-                                                            <div class="row w-100 pr-lg-0 pr-1 py-2">
-                                                                <div class="col-md-4 mb-lg-0 mb-2 mt-lg-0">
-                                                                    <p class="card-text col-title">Información Adicional</p>
-                                                                    <textarea class="form-control" rows="1" [(ngModel)]="detalle.informacionAdicional" placeholder="Información adicional" [ngModelOptions]="{standalone: true}"></textarea>
+                                                </div>
+                                                <hr />
 
-                                                                </div>
-                                                                <div class="col-md-2 my-lg-0 my-2">
-                                                                    <p class="card-text col-title">% descuento</p>
-                                                                    <input type="number" class="form-control form-control-sm" value="0" placeholder="0" [(ngModel)]="detalle.descuento" (change)="calcularSubtotal()" [ngModelOptions]="{standalone:
-                                                                        true}" />
+                                                <div class="row">
+                                                    <div class=" col-8 text-right">
+                                                        <p class="text-primary">Subtotal:</p>
+                                                    </div>
 
-                                                                </div>
-                                                                <div class="col-md-2 my-lg-0 my-2">
-                                                                    <p class="card-text col-title">$ descuento:</p>
-                                                                    <input type="number" class="form-control form-control-sm" value="0" placeholder="0" [(ngModel)]="detalle.valorDescuento" disabled [ngModelOptions]="{standalone:
-                                                                        true}" />
-
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
+                                                    <div class="col-2">
+                                                        <p class="text-primary"><b>${{oferta.subTotal}}</b></p>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <hr />
 
-                                            <div class="row">
-                                                <div class=" col-8 text-right">
-                                                    <p class="text-primary">Subtotal:</p>
-                                                </div>
+                                                <div class="row">
+                                                    <div class=" col-8 text-right">
+                                                        <p class="text-primary">{{iva ? iva.descripcion:"No existen registros de iva"}}:</p>
+                                                    </div>
 
-                                                <div class="col-2">
-                                                    <p class="text-primary"><b>${{oferta.subTotal}}</b></p>
+                                                    <div class="col-2">
+                                                        <p class="text-primary"><b>${{oferta.iva}}</b></p>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                                <div class="row">
+                                                    <div class=" col-8 text-right">
+                                                        <p class="text-primary">Descuento:</p>
+                                                    </div>
 
-                                            <div class="row">
-                                                <div class=" col-8 text-right">
-                                                    <p class="text-primary">{{iva ? iva.descripcion:"No existen registros de iva"}}:</p>
+                                                    <div class="col-2">
+                                                        <p class="text-primary"><b>${{oferta.descuento}}</b></p>
+                                                    </div>
                                                 </div>
-
-                                                <div class="col-2">
-                                                    <p class="text-primary"><b>${{oferta.iva}}</b></p>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class=" col-8 text-right">
-                                                    <p class="text-primary">Descuento:</p>
-                                                </div>
-
-                                                <div class="col-2">
-                                                    <p class="text-primary"><b>${{oferta.descuento}}</b></p>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-8 text-right">
-                                                    <h4 class="text-primary">Total</h4>
-                                                </div>
-                                                <div class="col-2">
-                                                    <h4 class="text-primary"><b>${{oferta.total}}</b></h4>
-                                                </div>
-                                                <div class="col-12">
-                                                    <button type="button" (click)="agregarItem()" class="btn btn-info btn-sm btn-add-new" data-repeater-create>
+                                                <div class="row">
+                                                    <div class="col-8 text-right">
+                                                        <h4 class="text-primary">Total</h4>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <h4 class="text-primary"><b>${{oferta.total}}</b></h4>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <button type="button" (click)="agregarItem()" class="btn btn-info btn-sm btn-add-new" data-repeater-create>
                             <i-feather name="plus"  class="mr-25 edit-user"></i-feather>
                             <span class="align-middle">Añadir producto</span>
                           </button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </form>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label class="form-label" for="basic-icon-default-uname">Vigencia de la oferta (días):</label>
-                                            <input type="text" class="form-control dt-uname" [(ngModel)]="oferta.vigenciaOferta" />
                                         </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="form-label" for="basic-icon-default-fullname">Canal de ventas:</label>
+                                        <div class="row">
+                                            <div class="form-group col-md-4">
+                                                <label class="form-label" for="basic-icon-default-uname">Vigencia de la oferta (días):</label>
+                                                <input type="text" class="form-control dt-uname" name="vigenciaOferta" formControlName="vigenciaOferta" [(ngModel)]="oferta.vigenciaOferta" />
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="form-label" for="basic-icon-default-fullname">Canal de ventas:</label>
 
-                                            <select class="form-control select2" [(ngModel)]="oferta.canal">
+                                                <select class="form-control select2" name="canal" formControlName="canal" [(ngModel)]="oferta.canal">
                         <option value="">- Seleccione -</option>
                         <option value="{{tipoCanalOp.valor}}" *ngFor="let tipoCanalOp of tipoCanalOpciones">
                             {{tipoCanalOp.nombre}}
                           </option>
                           </select>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="form-label" for="basic-icon-default-uname">Calificación del cliente:</label>
+                                                <input type="text" class="form-control" name="calificacionCliente" formControlName="calificacionCliente" [(ngModel)]="oferta.calificacionCliente" disabled />
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="form-label" for="basic-icon-default-uname">Indicador de cliente:</label>
+                                                <input type="text" class="form-control" name="indicadorCliente" formControlName="indicadorCliente" [(ngModel)]="oferta.indicadorCliente" value="valor" disabled />
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="form-label" for="basic-icon-default-fullname">Persona que genera la oferta:</label>
+                                                <input class="form-control" name="personaGenera" formControlName="personaGenera" [(ngModel)]="oferta.personaGenera" disabled>
+                                            </div>
                                         </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="form-label" for="basic-icon-default-uname">Calificación del cliente:</label>
-                                            <input type="text" class="form-control" [(ngModel)]="oferta.calificacionCliente" disabled />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="form-label" for="basic-icon-default-uname">Indicador de cliente:</label>
-                                            <input type="text" class="form-control" [(ngModel)]="oferta.indicadorCliente" value="valor" disabled />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="form-label" for="basic-icon-default-fullname">Persona que genera la oferta:</label>
-                                            <input class="form-control" [(ngModel)]="oferta.personaGenera" disabled>
-                                        </div>
-                                    </div>
 
 
-                                    <div class="form-group">
-                                        <label class="form-label" for="basic-icon-default-uname">Descripción de la oferta:</label>
-                                        <textarea class="form-control" rows="3" placeholder="Escribir..." [(ngModel)]="oferta.descripcion"></textarea>
-                                    </div>
-                                    <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close" (click)="guardarOferta()">Guardar</button>
-                                    <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-uname">Descripción de la oferta:</label>
+                                            <textarea class="form-control" rows="3" name="descripcion" formControlName="descripcion" placeholder="Escribir..." [(ngModel)]="oferta.descripcion"></textarea>
+                                        </div>
+                                        <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarOferta()">Guardar</button>
+                                        <button #ofertaGuardar data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
+                                        <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
