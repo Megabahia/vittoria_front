@@ -155,7 +155,7 @@
                                                         </div>
 
                                                         <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
-                                                            <p class="card-text col-title">Precio</p>
+                                                            <p class="card-text col-title">Valor Unitario</p>
                                                             <input class="form-control" type="text" name="valorUnitario" formControlName="valorUnitario" [(ngModel)]="detalle.valorUnitario" disabled>
                                                             <div *ngIf="submittedTransaccionForm && tForm.detalles.controls[i].controls.valorUnitario.errors" class="invalid-feedback" style="display: block;">
                                                                 <div *ngIf="tForm.detalles.controls[i].controls.valorUnitario.errors.required">Requerido
@@ -176,7 +176,7 @@
                                                         </div>
 
                                                         <div class="col-md-2 my-lg-0 my-2">
-                                                            <p class="card-text col-title"><b>Total:</b></p>
+                                                            <p class="card-text col-title"><b>Precio:</b></p>
                                                             <h5><b>${{detalle.precio}}</b></h5>
                                                         </div>
                                                         <div class="col-md-2">

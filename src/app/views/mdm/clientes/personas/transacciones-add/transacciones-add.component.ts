@@ -27,6 +27,7 @@ export class TransaccionesAddComponent implements OnInit {
   //forms
   transaccionForm: FormGroup;
   comprobarProductos: Boolean[];
+  checkProductos = true;
   //----------------
   submittedTransaccionForm = false;
 
@@ -232,11 +233,15 @@ export class TransaccionesAddComponent implements OnInit {
 
     this.comprobarProductos.map(compProd => {
       if (!compProd) {
-        this.mensaje = "No se han ingresado productos correctamente";
-        this.abrirModal(this.mensajeModal);
+        this.checkProductos = false;
         return;
       }
     });
+    if (!this.checkProductos) {
+      this.mensaje = "No se han ingresado productos correctamente";
+      this.abrirModal(this.mensajeModal);
+      return;
+    }
     if (this.detalles.length == 0) {
       this.mensaje = "No se han ingresado productos";
       this.abrirModal(this.mensajeModal);

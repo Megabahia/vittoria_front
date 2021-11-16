@@ -145,7 +145,7 @@
                                             <div class="form-group col-md-3">
                                                 <label class="form-label" for="basic-icon-default-fullname">Fecha de creación de la
                         oferta:</label>
-                                                <input type="text" class="form-control dt-full-name" [(ngModel)]="oferta.fecha" [ngModelOptions]="{standalone: true}" disabled />
+                                                <input type="text" class="form-control dt-full-name" name="fecha" formControlName="fecha" [(ngModel)]="oferta.fecha" disabled />
                                             </div>
                                             <div class="form-group col-md-3">
                                                 <label class="form-label" for="basic-icon-default-fullname">Cédula cliente:</label>
@@ -191,7 +191,7 @@
                                                 <label class="form-label">Cédula:</label>
                                                 <input class="form-control" name="identificacion" formControlName="identificacion" [(ngModel)]="oferta.identificacion" disabled>
                                                 <div *ngIf="submittedTransaccionForm && oForm.identificacion.errors" class="invalid-feedback" style="display: block;">
-                                                    <div *ngIf="oForm.identificacion.errors.required">Identificación requeridos
+                                                    <div *ngIf="oForm.identificacion.errors.required">Identificación requerida
                                                     </div>
                                                 </div>
                                             </div>
@@ -200,7 +200,7 @@
                                                 <label class="form-label">Teléfono celular:</label>
                                                 <input class="form-control" name="telefono" formControlName="telefono" [(ngModel)]="oferta.telefono" disabled>
                                                 <div *ngIf="submittedTransaccionForm && oForm.telefono.errors" class="invalid-feedback" style="display: block;">
-                                                    <div *ngIf="oForm.telefono.errors.required">Teléfono requeridos
+                                                    <div *ngIf="oForm.telefono.errors.required">Teléfono requerido
                                                     </div>
                                                 </div>
                                             </div>
@@ -209,7 +209,15 @@
                                                 <label class="form-label">Email:</label>
                                                 <input class="form-control" name="correo" formControlName="correo" [(ngModel)]="oferta.correo" disabled>
                                                 <div *ngIf="submittedTransaccionForm && oForm.correo.errors" class="invalid-feedback" style="display: block;">
-                                                    <div *ngIf="oForm.correo.errors.required">Correo requeridos
+                                                    <div *ngIf="oForm.correo.errors.required">Correo requerido
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="form-label">Dirección:</label>
+                                                <input class="form-control" name="direccion" formControlName="direccion" [(ngModel)]="oferta.direccion">
+                                                <div *ngIf="submittedTransaccionForm && oForm.direccion.errors" class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="oForm.direccion.errors.required">Dirección requerida
                                                     </div>
                                                 </div>
                                             </div>
@@ -265,8 +273,8 @@
                                                                           </option>
                                                                         
                                                                     </select>
-                                                                        <div *ngIf="submittedTransaccionForm && oForm.detalles.controls[i].controls.precio.errors" class="invalid-feedback" style="display: block;">
-                                                                            <div *ngIf="oForm.detalles.controls[i].controls.precio.errors.min">Valores > 0
+                                                                        <div *ngIf="submittedTransaccionForm && oForm.detalles.controls[i].controls.valorUnitario.errors" class="invalid-feedback" style="display: block;">
+                                                                            <div *ngIf="oForm.detalles.controls[i].controls.valorUnitario.errors.min">Valores > 0
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -303,7 +311,7 @@
                                                                         <p class="card-text col-title">Información Adicional</p>
                                                                         <textarea class="form-control" rows="1" name="informacionAdicional" formControlName="informacionAdicional" [(ngModel)]="detalle.informacionAdicional" placeholder="Información adicional"></textarea>
                                                                         <div *ngIf="submittedTransaccionForm && oForm.detalles.controls[i].controls.informacionAdicional.errors" class="invalid-feedback" style="display: block;">
-                                                                            <div *ngIf="oForm.detalles.controls[i].controls.informacionAdicional.errors.min">Requerido
+                                                                            <div *ngIf="oForm.detalles.controls[i].controls.informacionAdicional.errors.required">Requerido
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -311,7 +319,7 @@
                                                                         <p class="card-text col-title">% descuento</p>
                                                                         <input type="number" class="form-control form-control-sm" name="descuento" formControlName="descuento" value="0" placeholder="0" [(ngModel)]="detalle.descuento" (change)="calcularSubtotal()" />
                                                                         <div *ngIf="submittedTransaccionForm && oForm.detalles.controls[i].controls.descuento.errors" class="invalid-feedback" style="display: block;">
-                                                                            <div *ngIf="oForm.detalles.controls[i].controls.descuento.errors.min">Requerido
+                                                                            <div *ngIf="oForm.detalles.controls[i].controls.descuento.errors.required">Requerido
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -378,7 +386,11 @@
                                         <div class="row">
                                             <div class="form-group col-md-4">
                                                 <label class="form-label" for="basic-icon-default-uname">Vigencia de la oferta (días):</label>
-                                                <input type="text" class="form-control dt-uname" name="vigenciaOferta" formControlName="vigenciaOferta" [(ngModel)]="oferta.vigenciaOferta" />
+                                                <input type="number" class="form-control dt-uname" name="vigenciaOferta" formControlName="vigenciaOferta" [(ngModel)]="oferta.vigenciaOferta" />
+                                                <div *ngIf="submittedTransaccionForm && oForm.vigenciaOferta.errors" class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="oForm.vigenciaOferta.errors.required">Vigencia de la oferta requerida
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label class="form-label" for="basic-icon-default-fullname">Canal de ventas:</label>
@@ -389,18 +401,26 @@
                             {{tipoCanalOp.nombre}}
                           </option>
                           </select>
+                                                <div *ngIf="submittedTransaccionForm && oForm.canal.errors" class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="oForm.canal.errors.required">Canal de ventas requerido
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label class="form-label" for="basic-icon-default-uname">Calificación del cliente:</label>
-                                                <input type="text" class="form-control" name="calificacionCliente" formControlName="calificacionCliente" [(ngModel)]="oferta.calificacionCliente" disabled />
+                                                <input type="text" class="form-control" [(ngModel)]="oferta.calificacionCliente" [ngModelOptions]="{standalone: true}" disabled />
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label class="form-label" for="basic-icon-default-uname">Indicador de cliente:</label>
-                                                <input type="text" class="form-control" name="indicadorCliente" formControlName="indicadorCliente" [(ngModel)]="oferta.indicadorCliente" value="valor" disabled />
+                                                <input type="text" class="form-control" [(ngModel)]="oferta.indicadorCliente" [ngModelOptions]="{standalone: true}" value="valor" disabled />
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label class="form-label" for="basic-icon-default-fullname">Persona que genera la oferta:</label>
                                                 <input class="form-control" name="personaGenera" formControlName="personaGenera" [(ngModel)]="oferta.personaGenera" disabled>
+                                                <div *ngIf="submittedTransaccionForm && oForm.personaGenera.errors" class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="oForm.personaGenera.errors.required">Persona que genera la oferta requerida
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -408,6 +428,10 @@
                                         <div class="form-group">
                                             <label class="form-label" for="basic-icon-default-uname">Descripción de la oferta:</label>
                                             <textarea class="form-control" rows="3" name="descripcion" formControlName="descripcion" placeholder="Escribir..." [(ngModel)]="oferta.descripcion"></textarea>
+                                            <div *ngIf="submittedTransaccionForm && oForm.descripcion.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="oForm.descripcion.errors.required">Descripción de la oferta requerida
+                                                </div>
+                                            </div>
                                         </div>
                                         <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarOferta()">Guardar</button>
                                         <button #ofertaGuardar data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
@@ -465,17 +489,31 @@
     </div>
 </div>
 <ng-template #contenido let-modal>
-    <div class="modal-header ">
-        <h4 class="modal-title ">Mensaje</h4>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-        <span aria-hidden="true ">&times;</span>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <div class="modal-body ">
+    <div class="modal-body">
         <p>Confirma eliminar</p>
     </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-light " (click)="cerrarModal()">SI</button>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="cerrarModal()">SI</button>
+    </div>
+</ng-template>
+<ng-template #mensajeModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div [innerHTML]="mensaje"></div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="cerrarModalMensaje()">Cerrar</button>
     </div>
 </ng-template>
 <!-- END: Content-->

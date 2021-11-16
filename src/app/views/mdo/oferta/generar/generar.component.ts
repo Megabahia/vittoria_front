@@ -19,7 +19,9 @@ export class GenerarComponent implements OnInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @ViewChild('ofertaGuardar') ofertaGuardar;
   @ViewChild('mensajeModal') mensajeModal;
+  public usuario;
 
+  mensaje = "";
   numRegex = /^-?\d*[.,]?\d{0,2}$/;
 
   //forms
@@ -51,7 +53,8 @@ export class GenerarComponent implements OnInit {
   oferta: Oferta;
   tipoClienteOferta = "";
   iva;
-
+  comprobarProductos: Boolean[];
+  checkProductos = true;
   habilitarIdentificacion;
   habilitarTelefono;
   habalitarBusqueda;
@@ -78,6 +81,9 @@ export class GenerarComponent implements OnInit {
     private modalService: NgbModal
   ) {
     this.oferta = this.generarService.inicializarOferta();
+    this.comprobarProductos = [];
+    this.usuario = JSON.parse(localStorage.getItem('currentUser'));
+
   }
 
   ngOnInit(): void {
@@ -85,20 +91,16 @@ export class GenerarComponent implements OnInit {
       detalles: this._formBuilder.array([
         this.crearDetalleGrupo()
       ]),
-      codigoOferta: ['', [Validators.required]],
       fecha: ['', [Validators.required]],
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
       identificacion: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
       telefono: ['', [Validators.required]],
       correo: ['', [Validators.required]],
-      vigenciaOferta: ['', [Validators.required]],
+      vigenciaOferta: [0, [Validators.required]],
       canal: ['', [Validators.required]],
-      calificacionCliente: ['', [Validators.required]],
-      indicadorCliente: ['', [Validators.required]],
       personaGenera: ['', [Validators.required]],
       descripcion: ['', [Validators.required]],
-      numeroProductosComprados: ['', [Validators.required]],
       direccion: ['', [Validators.required]],
     });
     this.menu = {
@@ -107,6 +109,7 @@ export class GenerarComponent implements OnInit {
     };
     this.obtenerTipoIdentificacionOpciones();
     this.obtenerIVA();
+    this.agregarPrecios();
   }
   get oForm() {
     return this.ofertaForm.controls;
@@ -161,9 +164,8 @@ export class GenerarComponent implements OnInit {
     return this._formBuilder.group({
       codigo: ['', [Validators.required]],
       articulo: ['', [Validators.required]],
-      valorUnitario: [0, [Validators.required]],
+      valorUnitario: [0, [Validators.required, Validators.min(1)]],
       cantidad: [0, [Validators.required, Validators.pattern("^[0-9]*$"), Validators.min(1)]],
-      precio: [0, [Validators.required, Validators.min(1)]],
       informacionAdicional: ['', [Validators.required]],
       descuento: [0, [Validators.required, Validators.pattern(this.numRegex)]],
       valorDescuento: [0, [Validators.required]]
@@ -177,17 +179,23 @@ export class GenerarComponent implements OnInit {
   }
   agregarItem(): void {
     this.detalles.push(this.generarService.inicializarDetalle());
+    this.agregarPrecios();
+    let detGrupo = this.crearDetalleGrupo();
+    this.comprobarProductos.push(false);
+    this.detallesArray.push(detGrupo);
+  }
+  agregarPrecios() {
     this.listaPrecios.push(
       this.generarService.inicializarPrecios()
     );
-    let detGrupo = this.crearDetalleGrupo();
-    this.detallesArray.push(detGrupo);
   }
   removerItem(i): void {
 
     this.detalles.splice(i, 1);
     this.listaPrecios.splice(i, 1);
     this.precios.splice(i, 1);
+    this.comprobarProductos.splice(i, 1);
+
     this.calcularSubtotal()
   }
 
@@ -313,33 +321,90 @@ export class GenerarComponent implements OnInit {
   }
 
   crearOferta() {
+    if (!this.iva) {
+      this.mensaje = "Error en la obtención del iva, verifique su configuración";
+      this.abrirModalMensaje(this.mensajeModal);
+    }
+    this.checkProductos = true;
+
     this.oferta = this.generarService.inicializarOferta();
+    this.oferta.personaGenera = this.usuario.usuario.nombres + " " + this.usuario.usuario.apellidos;
+    this.oferta.nombreVendedor = this.usuario.usuario.nombres + " " + this.usuario.usuario.apellidos;
     this.oferta.created_at = this.transformarFecha(this.fechaActual);
     this.oferta.fecha = this.transformarFecha(this.fechaActual);
     this.inicializarDetallesOferta();
     this.listaPrecios = [];
+    this.agregarPrecios();
   }
   async obtenerIVA() {
     await this.paramService.obtenerParametroNombreTipo("ACTIVO", "TIPO_IVA").subscribe((info) => {
       this.iva = info;
-    });
+    },
+      (error) => {
+        this.mensaje = "Error en la obtención del iva, verifique su configuración";
+        this.abrirModalMensaje(this.mensajeModal);
+      });
   }
   async guardarOferta() {
+    if (!this.iva) {
+      this.mensaje = "Error en la obtención del iva, verifique su configuración";
+      this.abrirModalMensaje(this.mensajeModal);
+      return;
+    }
     this.submittedTransaccionForm = true;
     if (this.ofertaForm.invalid) {
+      return;
+    }
+    this.comprobarProductos.map(compProd => {
+      if (!compProd) {
+        this.checkProductos = false;
+        return;
+      }
+    });
+    if (!this.checkProductos) {
+      this.mensaje = "No se han ingresado productos correctamente";
+      this.abrirModalMensaje(this.mensajeModal);
       return;
     }
     this.calcularSubtotal();
     this.oferta.fecha = this.transformarFecha(this.fechaActual);
     this.oferta.detalles = this.detallesTransac;
     if (this.oferta.id == 0) {
+      console.log(this.oferta);
       await this.generarService.crearOferta(this.oferta).subscribe((info) => {
         this.obtenerListaOfertas();
-      });
+        this.mensaje = "Oferta creada con éxito";
+        this.abrirModalMensaje(this.mensajeModal);
+        this.ofertaGuardar.nativeElement.click();
+      },
+        (error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = "";
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          });
+          this.abrirModalMensaje(this.mensajeModal);
+          this.ofertaGuardar.nativeElement.click();
+
+        });
     } else {
       await this.generarService.actualizarOferta(this.oferta).subscribe((info) => {
         this.obtenerListaOfertas();
-      });
+        this.mensaje = "Oferta actualizada con éxito";
+        this.abrirModalMensaje(this.mensajeModal);
+        this.ofertaGuardar.nativeElement.click();
+
+      },
+        (error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = "";
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          });
+          this.abrirModalMensaje(this.mensajeModal);
+        });
     }
   }
   obtenerProducto(i) {
@@ -347,6 +412,8 @@ export class GenerarComponent implements OnInit {
       codigoBarras: this.detalles[i].codigo
     }).subscribe((info) => {
       if (info.codigoBarras) {
+        this.comprobarProductos[i] = true;
+
         this.detalles[i].articulo = info.nombre;
         this.detalles[i].imagen = this.obtenerURLImagen(info.imagen);
         this.listaPrecios[i].precioVentaA = info.precioVentaA;
@@ -354,6 +421,11 @@ export class GenerarComponent implements OnInit {
         this.listaPrecios[i].precioVentaC = info.precioVentaC;
         this.listaPrecios[i].precioVentaD = info.precioVentaD;
         this.listaPrecios[i].precioVentaE = info.precioVentaE;
+      }
+      else {
+        this.comprobarProductos[i] = false;
+        this.mensaje = "No existe el producto a buscar";
+        this.abrirModalMensaje(this.mensajeModal);
       }
     });
   }
@@ -373,7 +445,11 @@ export class GenerarComponent implements OnInit {
   obtenerOferta(id) {
     this.generarService.obtenerOferta(id).subscribe((info) => {
       this.oferta = info;
+      this.oferta.nombreVendedor = info.nombreVendedor;
+      this.oferta.personaGenera = info.nombreVendedor;
       this.detalles = info.detalles;
+      this.checkProductos = true;
+
       this.listaPrecios = [];
       for (let i = 0; i < info.detalles.length; i++) {
         this.listaPrecios.push(
@@ -386,7 +462,13 @@ export class GenerarComponent implements OnInit {
 
   abrirModal(modal, id) {
     this.ofertaId = id;
-    this.modalService.open(modal)
+    this.modalService.open(modal);
+  }
+  abrirModalMensaje(modal) {
+    this.modalService.open(modal);
+  }
+  cerrarModalMensaje() {
+    this.modalService.dismissAll();
   }
   cerrarModal() {
     this.modalService.dismissAll();

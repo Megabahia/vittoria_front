@@ -31,6 +31,7 @@ export interface Oferta {
   calificacionCliente;
   indicadorCliente;
   personaGenera;
+  nombreVendedor;
   descripcion;
   total;
   iva;
@@ -39,6 +40,7 @@ export interface Oferta {
   created_at;
   detalles;
   numeroProductosComprados;
+  direccion;
 }
 @Injectable({
   providedIn: 'root'
@@ -87,6 +89,8 @@ export class GenerarService {
       indicadorCliente: "",
       personaGenera: "",
       descripcion: "",
+      nombreVendedor: "",
+      direccion: "",
       total: 0,
       created_at: "",
       iva:0,
