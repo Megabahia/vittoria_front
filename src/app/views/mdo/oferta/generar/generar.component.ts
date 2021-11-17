@@ -193,10 +193,12 @@ export class GenerarComponent implements OnInit {
 
     this.detalles.splice(i, 1);
     this.listaPrecios.splice(i, 1);
-    this.precios.splice(i, 1);
+    this.detallesArray.removeAt(i);
+
     this.comprobarProductos.splice(i, 1);
 
-    this.calcularSubtotal()
+    this.calcularSubtotal();
+
   }
 
   calcularSubtotal() {
@@ -270,7 +272,10 @@ export class GenerarComponent implements OnInit {
           }
         },
           (error) => {
-
+            if (error.error == 'No existe') {
+              this.mensaje = "Cliente no existe";
+              this.abrirModalMensaje(this.mensajeModal);
+            }
           });
       } else if (this.tipoClienteOferta == "negocio") {
         this.negociosService.obtenerNegocioPorRuc({ ruc: this.identificacionOfertaBusq }).subscribe((info) => {
@@ -283,6 +288,11 @@ export class GenerarComponent implements OnInit {
             this.oferta.negocio = info.id;
             this.oferta.cliente = null;
             this.oferta.indicadorCliente = "N-" + info.id;
+          }
+        }, (error)=>{
+          if (error.error == 'No existe') {
+            this.mensaje = "Negocio no existe";
+            this.abrirModalMensaje(this.mensajeModal);
           }
         })
       }
@@ -301,7 +311,10 @@ export class GenerarComponent implements OnInit {
           }
         },
           (error) => {
-
+            if (error.error == 'No existe') {
+              this.mensaje = "Cliente no existe";
+              this.abrirModalMensaje(this.mensajeModal);
+            }
           });
       } else if (this.tipoClienteOferta == "negocio") {
         this.negociosService.obtenerNegocioPorTelefono({ telefonoOficina: this.telefonoOfertaBusq }).subscribe((info) => {
@@ -314,6 +327,11 @@ export class GenerarComponent implements OnInit {
             this.oferta.negocio = info.id;
             this.oferta.cliente = null;
             this.oferta.indicadorCliente = "N-" + info.id;
+          }
+        }, (error)=> {
+          if (error.error == 'No existe') {
+            this.mensaje = "Negocio no existe";
+            this.abrirModalMensaje(this.mensajeModal);
           }
         })
       }
@@ -352,25 +370,37 @@ export class GenerarComponent implements OnInit {
       return;
     }
     this.submittedTransaccionForm = true;
-    if (this.ofertaForm.invalid) {
-      return;
-    }
+    console.log(this.ofertaForm);
+    
     this.comprobarProductos.map(compProd => {
       if (!compProd) {
         this.checkProductos = false;
         return;
       }
     });
+
+    if (!this.oferta.cliente && !this.oferta.negocio) {
+      this.mensaje = "Es necesario asignar al cliente o negocio";
+      this.abrirModalMensaje(this.mensajeModal);
+      return;
+    }
     if (!this.checkProductos) {
       this.mensaje = "No se han ingresado productos correctamente";
       this.abrirModalMensaje(this.mensajeModal);
+      return;
+    }
+    if (this.detalles.length == 0) {
+      this.mensaje = "No se han ingresado productos";
+      this.abrirModalMensaje(this.mensajeModal);
+      return;
+    }
+    if (this.ofertaForm.invalid) {
       return;
     }
     this.calcularSubtotal();
     this.oferta.fecha = this.transformarFecha(this.fechaActual);
     this.oferta.detalles = this.detallesTransac;
     if (this.oferta.id == 0) {
-      console.log(this.oferta);
       await this.generarService.crearOferta(this.oferta).subscribe((info) => {
         this.obtenerListaOfertas();
         this.mensaje = "Oferta creada con éxito";

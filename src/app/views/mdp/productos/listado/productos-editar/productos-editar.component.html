@@ -168,6 +168,7 @@
                                     </select>
                                     <div *ngIf="submittedProductoForm && fp.parametrizacion.errors" class="invalid-feedback" style="display: block;">
                                         <div *ngIf="fp.parametrizacion.errors.required">Alerta de abastecimiento es requerida</div>
+                                        <div *ngIf="fp.parametrizacion.errors.min">Alerta de abastecimiento es requerida</div>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -252,7 +253,7 @@
                                         <label class="form-label">Código:</label>
                                         <input type="text" class="form-control" name="codigo" formControlName="codigo" [(ngModel)]="fichaTecnica.codigo" />
                                         <div *ngIf="submittedFichaTecnicaForm && fft.codigo.errors" class="invalid-feedback" style="display: block;">
-                                            <div *ngIf="fft.codigo.errors.required">Nombres son requeridos
+                                            <div *ngIf="fft.codigo.errors.required">Código es requerido
                                             </div>
                                         </div>
                                     </div>
@@ -270,9 +271,8 @@
                                         <label class="form-label">Valor:</label>
                                         <input type="text" class="form-control" formControlName="valor" [(ngModel)]="fichaTecnica.valor" />
                                         <div *ngIf="submittedFichaTecnicaForm && fft.valor.errors" class="invalid-feedback" style="display: block;">
-                                            <div *ngIf="fft.valor.errors.required">Nombres son requeridos
+                                            <div *ngIf="fft.valor.errors.required">Valor es requerido
                                             </div>
-                                            <div *ngIf="fft.valor.errors.pattern">Solo se aceptan números decimales</div>
                                         </div>
                                     </div>
                                     <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarFichaTecnica()">Guardar</button>
@@ -350,17 +350,19 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" (click)="eliminarImagen()">SI</button>
-        <ng-template #aviso let-modal>
-            <div class="modal-header">
-                <h4 class="modal-title">Mensaje</h4>
-                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+    </div>
+</ng-template>
+<ng-template #aviso let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
-            </div>
-            <div class="modal-body">
-                <div [innerHTML]="mensaje"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Aceptar</button>
-            </div>
-        </ng-template>
+    </div>
+    <div class="modal-body">
+        <div [innerHTML]="mensaje"></div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="cerrarModalMensaje()">Cerrar</button>
+    </div>
+</ng-template>

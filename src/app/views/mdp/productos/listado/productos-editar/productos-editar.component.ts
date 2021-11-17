@@ -6,6 +6,7 @@ import { SubcategoriasService } from '../../../../../services/mdp/productos/subc
 import { map } from 'rxjs/operators';
 import { ParamService } from 'src/app/services/mdp/param/param.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-productos-editar',
@@ -22,9 +23,9 @@ export class ProductosEditarComponent implements OnInit {
   @ViewChild('aviso') aviso;
   producto: Producto;
   datosProducto: FormData = new FormData();
-  productoForm: FormGroup; 
-  fichaTecnicaForm: FormGroup; 
-  submittedProductoForm:boolean = false;
+  productoForm: FormGroup;
+  fichaTecnicaForm: FormGroup;
+  submittedProductoForm: boolean = false;
   submittedFichaTecnicaForm: boolean = false;
   opcion;
   categoriasOpciones;
@@ -33,7 +34,7 @@ export class ProductosEditarComponent implements OnInit {
   fichaTecnicaLista;
   idFichaTecnica;
   abastecimientoOpciones;
-  archivos:File[] = [];
+  archivos: File[] = [];
   mensaje: string;
   numRegex = /^-?\d*[.,]?\d{0,2}$/;
 
@@ -65,7 +66,7 @@ export class ProductosEditarComponent implements OnInit {
       codigoBarras: ['', [Validators.required]],
       refil: ['', [Validators.required]],
       stock: ['', [Validators.required]],
-      parametrizacion: ['', [Validators.required]],
+      parametrizacion: [0, [Validators.required, Validators.min(1)]],
       costoCompra: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       precioVentaA: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       precioVentaB: ['', [Validators.required, Validators.pattern(this.numRegex)]],
@@ -81,7 +82,7 @@ export class ProductosEditarComponent implements OnInit {
     this.fichaTecnicaForm = this._formBuilder.group({
       codigo: ['', [Validators.required]],
       nombreAtributo: ['', [Validators.required]],
-      valor: ['', [Validators.required, Validators.pattern(this.numRegex)]]
+      valor: ['', [Validators.required]]
     })
     this.obtenerAbastecimientoOpciones();
     this.obtenerCategoriasOpciones();
@@ -121,7 +122,7 @@ export class ProductosEditarComponent implements OnInit {
   }
 
   onSelect(event) {
-    console.log(this.archivos.length - this.imagenes.length );
+    console.log(this.archivos.length - this.imagenes.length);
     if (this.archivos && this.archivos.length - this.imagenes.length > 0) {
       this.onRemove(this.archivos[0]);
     }
@@ -137,6 +138,7 @@ export class ProductosEditarComponent implements OnInit {
   guardarProducto() {
     let llaves = Object.keys(this.producto);
     let valores = Object.values(this.producto);
+    this.datosProducto = new FormData();
 
     valores.map((valor, pos) => {
       this.datosProducto.append(llaves[pos], valor)
@@ -145,9 +147,22 @@ export class ProductosEditarComponent implements OnInit {
     // this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
     //   console.log(info);
     // });
-    console.log(this.productoForm);
     this.submittedProductoForm = true;
     if (this.productoForm.invalid) {
+      return;
+    }
+    let fechaCaducidad = moment(this.producto.fechaCaducidad, 'YYYY-MM-DD');
+    let fechaElaboracion = moment(this.producto.fechaElaboracion, 'YYYY-MM-DD');
+    let diferenciaDiasElabCad = fechaCaducidad.diff(fechaElaboracion, 'days');
+    let diferenciaDiasHoyCad = fechaCaducidad.diff(moment(), 'days');
+    if (diferenciaDiasElabCad < 0) {
+      this.mensaje = "La fecha de caducidad debe ser mayor a la de elaboración"
+      this.abrirModal(this.aviso);
+      return;
+    }
+    if (diferenciaDiasHoyCad < 0) {
+      this.mensaje = "La fecha de caducidad debe ser mayor a la fecha actual"
+      this.abrirModal(this.aviso);
       return;
     }
     if (this.idProducto != 0) {
@@ -162,6 +177,7 @@ export class ProductosEditarComponent implements OnInit {
         this.datosProducto.append("imagenes[" + pos + "].imagen", valor);
       });
       this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
+        this.idProducto = info.id;
       });
     }
   }
@@ -181,6 +197,8 @@ export class ProductosEditarComponent implements OnInit {
     this.opcion = "insertar";
     this.submittedFichaTecnicaForm = false;
     this.fichaTecnica.producto = this.idProducto;
+
+
   }
   editarFichaTecnica(id) {
     this.productosService.obtenerFichaTecnica(id).subscribe((info) => {
@@ -199,14 +217,19 @@ export class ProductosEditarComponent implements OnInit {
       return;
     }
     if (this.opcion === "insertar") {
-      this.productosService.crearFichaTecnica(this.fichaTecnica).subscribe((info) => {
-        this.obtenerFichasTecnicas();
-        this.dismissModal.nativeElement.click();
-        this.submittedFichaTecnicaForm = false;
-        this.mensaje = "Ficha técnica guardada";
+      if (this.idProducto != 0) {
+        this.productosService.crearFichaTecnica(this.fichaTecnica).subscribe((info) => {
+          this.obtenerFichasTecnicas();
+          this.dismissModal.nativeElement.click();
+          this.submittedFichaTecnicaForm = false;
+          this.mensaje = "Ficha técnica guardada";
+          this.abrirModal(this.aviso);
+        });
+      } else {
+        this.mensaje = "Es necesario ingresar un producto primero";
         this.abrirModal(this.aviso);
-      });
-    } else if (this.opcion === "editar"){
+      }
+    } else if (this.opcion === "editar") {
       this.productosService.editarFichaTecnica(this.fichaTecnica).subscribe((info) => {
         this.obtenerFichasTecnicas();
         this.dismissModal.nativeElement.click();
@@ -218,6 +241,12 @@ export class ProductosEditarComponent implements OnInit {
   }
   abrirModal(modal, id = null) {
     this.idFichaTecnica = id;
+    this.modalService.open(modal);
+  }
+  cerrarModalMensaje() {
+    this.modalService.dismissAll();
+  }
+  abrirModalMensaje(modal) {
     this.modalService.open(modal);
   }
   cerrarModal() {

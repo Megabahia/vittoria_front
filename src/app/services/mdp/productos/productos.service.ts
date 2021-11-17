@@ -50,7 +50,6 @@ export class ProductosService {
       codigoBarras: "",
       refil: 0,
       stock: 0,
-      caducidad: "",
       costoCompra: 0,
       precioVentaA: 0,
       precioVentaB: 0,
