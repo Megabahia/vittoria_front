@@ -122,7 +122,6 @@ export class ProductosEditarComponent implements OnInit {
   }
 
   onSelect(event) {
-    console.log(this.archivos.length - this.imagenes.length);
     if (this.archivos && this.archivos.length - this.imagenes.length > 0) {
       this.onRemove(this.archivos[0]);
     }

@@ -89,7 +89,7 @@
 
                             <tbody>
                                 <tr *ngFor="let oferta of listaOfertas">
-                                    <td>{{oferta.codigoOferta}} </td>
+                                    <td>{{oferta.codigo}} </td>
                                     <td>{{transformarFecha(oferta.fechaOferta)}}</td>
                                     <td>
                                         <div class="d-flex justify-content-left align-items-center">
@@ -102,7 +102,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td></td>
+                                    <td>{{oferta.identificacion}}</td>
                                     <td>{{oferta.telefono}}</td>
                                     <td>{{oferta.correo}} </td>
                                     <td>{{oferta.indicadorCliente}}</td>
@@ -120,7 +120,7 @@
                                     <td>{{transformarFecha(oferta.fechaAceptacion)}}</td>
                                     <td>{{oferta.calificacionOferta}}</td>
                                     <td>{{oferta.vigenciaOferta}} días</td>
-                                    <td>{{oferta.canalVentas}}</td>
+                                    <td>{{oferta.canal}}</td>
                                     <td>${{oferta.total}}</td>
                                     <td>
                                         <span class="text-capitalize badge {{oferta.estado == 'Venta concretada' ? 'badge-light-success': 'badge-light-danger'}} badge-pill">{{oferta.estado}}</span>
@@ -252,37 +252,54 @@
                                     <h5 class="modal-title" id="exampleModalLabel">Gestión de oferta</h5>
                                 </div>
                                 <div class="modal-body flex-grow-1">
-                                    <div class="form-group">
-                                        <label>¿Se comunicó la oferta?</label>
-                                        <select class="form-control" [(ngModel)]="oferta.comunicoOferta">
+                                    <form class="auth-login-form mt-2" [formGroup]="ofertaForm">
+
+                                        <div class="form-group">
+                                            <label>¿Se comunicó la oferta?</label>
+                                            <select class="form-control" name="comunicoOferta" formControlName="comunicoOferta" [(ngModel)]="oferta.comunicoOferta">
                            <option value="">- Seleccione -</option>
                            <option value="SI">SI</option>
                            <option value="NO">NO</option>
                          </select>
-                                    </div>
+                                            <div *ngIf="submittedOferta && ofForm.comunicoOferta.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="ofForm.comunicoOferta.errors.required">¿Se comunicó la oferta? es requerido
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                    <div class="form-group">
-                                        <label>Fecha de comunicación</label>
-                                        <input type="text" mwlFlatpickr [(ngModel)]="oferta.fechaComunicacion" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Fecha de Comunicación-">
-                                    </div>
-                                    <hr/>
-                                    <div class="form-group">
-                                        <label>¿Aceptó la oferta?</label>
-                                        <select class="form-control" [(ngModel)]="oferta.aceptoOferta">
+                                        <div class="form-group">
+                                            <label>Fecha de comunicación</label>
+                                            <input type="text" mwlFlatpickr name="fechaComunicacion" formControlName="fechaComunicacion" [(ngModel)]="oferta.fechaComunicacion" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Fecha de Comunicación-">
+                                            <div *ngIf="submittedOferta && ofForm.fechaComunicacion.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="ofForm.fechaComunicacion.errors.required">Fecha de comunicación es requerida
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="form-group">
+                                            <label>¿Aceptó la oferta?</label>
+                                            <select class="form-control" name="aceptoOferta" formControlName="aceptoOferta" [(ngModel)]="oferta.aceptoOferta">
                            <option value="">- Seleccione -</option>
                            <option value="SI">SI</option>
                            <option value="NO">NO</option>
                          </select>
-                                    </div>
+                                            <div *ngIf="submittedOferta && ofForm.aceptoOferta.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="ofForm.aceptoOferta.errors.required">¿Aceptó la oferta? es requerido
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                    <div class="form-group">
-                                        <label>Fecha de aceptación</label>
-                                        <input type="text" mwlFlatpickr [(ngModel)]="oferta.fechaAceptacion" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Fecha de Comunicación-">
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Calificación de la oferta</label>
-                                        <select class="form-control" [(ngModel)]="oferta.calificacionOferta">
+                                        <div class="form-group">
+                                            <label>Fecha de aceptación</label>
+                                            <input type="text" mwlFlatpickr name="fechaAceptacion" formControlName="fechaAceptacion" [(ngModel)]="oferta.fechaAceptacion" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Fecha de Comunicación-">
+                                            <div *ngIf="submittedOferta && ofForm.fechaAceptacion.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="ofForm.fechaAceptacion.errors.required">Fecha de aceptación es requerida
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Calificación de la oferta</label>
+                                            <select class="form-control" name="calificacionOferta" formControlName="calificacionOferta" [(ngModel)]="oferta.calificacionOferta">
                            <option value="0">- Seleccione -</option>
                            <option value="1">1</option>
                            <option value="2">2</option>
@@ -295,17 +312,27 @@
                            <option value="9">9</option>
                            <option value="10">10</option>
                          </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Estado</label>
-                                        <select class="form-control" [(ngModel)]="oferta.estado">
+                                            <div *ngIf="submittedOferta && ofForm.calificacionOferta.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="ofForm.calificacionOferta.errors.required">Calificación de la oferta es requerida
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Estado</label>
+                                            <select class="form-control" name="estado" formControlName="estado" [(ngModel)]="oferta.estado">
                            <option value="">- Seleccione -</option>
                            <option value="Venta concretada">Venta concretada</option>
                            <option value="Venta fallida">Venta fallida</option>
                          </select>
-                                    </div>
-                                    <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close" (click)="actualizarGestionOferta()">Guardar</button>
-                                    <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                            <div *ngIf="submittedOferta && ofForm.calificacionOferta.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="ofForm.calificacionOferta.errors.required">Estado es requerido
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary mr-1" aria-label="Close" (click)="actualizarGestionOferta()">Guardar</button>
+                                        <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
+                                        <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -558,3 +585,17 @@
 <div class="sidenav-overlay "></div>
 <div class="drag-target "></div>
 <app-footer></app-footer>
+<ng-template #aviso let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div [innerHTML]="mensaje"></div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="cerrarModal()">Cerrar</button>
+    </div>
+</ng-template>

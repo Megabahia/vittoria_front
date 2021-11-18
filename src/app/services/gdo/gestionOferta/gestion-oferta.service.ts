@@ -27,7 +27,7 @@ export class GestionOfertaService {
       fechaComunicacion:"",
       aceptoOferta:"",
       fechaAceptacion:"",
-      calificacionOferta:"",
+      calificacionOferta:0,
       estado:"",
     }
   }

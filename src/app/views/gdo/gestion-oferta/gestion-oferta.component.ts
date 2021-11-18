@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { GestionOfertaService, GestionOferta } from '../../../services/gdo/gestionOferta/gestion-oferta.service';
 import { DatePipe } from '@angular/common';
 import { ParamService as ParamServiceADM } from 'src/app/services/admin/param.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-gestion-oferta',
@@ -9,6 +11,14 @@ import { ParamService as ParamServiceADM } from 'src/app/services/admin/param.se
   providers: [DatePipe]
 })
 export class GestionOfertaComponent implements OnInit {
+  @ViewChild('dismissModal') dismissModal;
+  @ViewChild('aviso') aviso;
+
+  ofertaForm: FormGroup;
+
+  submittedOferta = false;  
+
+  mensaje = "";
   menu;
   tipoCliente = "";
   identificacion;
@@ -25,12 +35,25 @@ export class GestionOfertaComponent implements OnInit {
   constructor(
     private gestionOfertaService: GestionOfertaService,
     private datePipe: DatePipe,
-    private globalParam: ParamServiceADM
+    private globalParam: ParamServiceADM,
+    private _formBuilder: FormBuilder,
+    private modalService: NgbModal,
+
   ) {
     this.oferta = this.gestionOfertaService.inicializarGestionOferta();
   }
-
+  get ofForm() {
+    return this.ofertaForm.controls;
+  }
   ngOnInit(): void {
+    this.ofertaForm = this._formBuilder.group({
+      comunicoOferta: ['', [Validators.required]],
+      fechaComunicacion: ['', [Validators.required]],
+      aceptoOferta: ['', [Validators.required]],
+      fechaAceptacion: ['', [Validators.required]],
+      calificacionOferta: [0, [Validators.required]],
+      estado: ['', [Validators.required]],
+    });
     this.menu = {
       modulo: "gdo",
       seccion: "gestOferta"
@@ -42,6 +65,7 @@ export class GestionOfertaComponent implements OnInit {
   }
   obternerGestionOferta(id) {
     this.gestionOfertaService.obtenerGestionOferta(id).subscribe((info) => {
+      console.log(info);
       this.oferta = info;
     });
   }
@@ -87,8 +111,22 @@ export class GestionOfertaComponent implements OnInit {
     return this.globalParam.obtenerURL(url);
   }
   actualizarGestionOferta(){
+    this.submittedOferta = true;
+    if (this.ofertaForm.invalid) {
+      return;
+    }
     this.gestionOfertaService.actualizarGestionOferta(this.oferta).subscribe(()=>{
       this.obtenerListaGestionOferta();
+      this.mensaje = "Oferta guardada";
+      this.abrirModal(this.aviso);
+      this.dismissModal.nativeElement.click();
+      this.submittedOferta = false;
     });
+  }
+  cerrarModal() {
+    this.modalService.dismissAll();
+  }
+  abrirModal(modal) {
+    this.modalService.open(modal);
   }
 }
