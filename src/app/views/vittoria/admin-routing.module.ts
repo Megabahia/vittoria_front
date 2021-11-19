@@ -12,7 +12,9 @@ import { RolesAddComponent } from './roles/roles-add/roles-add.component';
 const routes: Routes = [{
   path: '', component: AdminComponent, children: [
     {path: '', redirectTo: 'management', pathMatch: 'full'},
-    {path: 'management', component: ManagementComponent, canActivate: [AuthGuard]},
+    {path: 'management', component: ManagementComponent, canActivate: [AuthGuard], data:{
+      module: "ADM"
+    }},
     {
       path: 'user' , children:[
         {path: '', redirectTo: 'list', pathMatch: 'full'},{

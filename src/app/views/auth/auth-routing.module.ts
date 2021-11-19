@@ -10,7 +10,7 @@ import { SetPasswordComponent } from './set-password/set-password.component';
 const routes: Routes = [
   {
     path: '', component: AuthComponent, children: [
-      {path: '', redirectTo: 'signin', pathMatch: 'full'},
+      {path: '', redirectTo: 'signin', pathMatch: 'full',},
       {path: 'signin', component: SignInComponent},
       {
         path: 'recuperar-pass', children: [
