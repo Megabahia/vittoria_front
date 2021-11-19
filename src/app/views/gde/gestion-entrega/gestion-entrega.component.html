@@ -94,7 +94,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td></td>
+                                <td>{{entrega.identificacion}}</td>
                                 <td>{{entrega.telefono}}</td>
                                 <td>{{entrega.correo}} </td>
                                 <td>{{entrega.indicadorCliente}}</td>
@@ -173,24 +173,41 @@
                                 <h5 class="modal-title" id="exampleModalLabel">Gestión de la entrega</h5>
                             </div>
                             <div class="modal-body flex-grow-1">
-                                <div class="form-group">
-                                    <label>¿Se entregó el producto?</label>
-                                    <select class="form-control" [(ngModel)]="entrega.entregoProducto">
+                                <form class="auth-login-form mt-2" [formGroup]="entregaForm">
+
+                                    <div class="form-group">
+                                        <label>¿Se entregó el producto?</label>
+                                        <select class="form-control" name="entregoProducto" formControlName="entregoProducto" [(ngModel)]="entrega.entregoProducto">
                            <option value="">- Seleccione -</option>
                            <option value="SI">SI</option>
                            <option value="NO">NO</option>
                          </select>
-                                </div>
+                                        <div *ngIf="submittedEntrega && enForm.entregoProducto.errors" class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="enForm.entregoProducto.errors.required">¿Se entregó el producto? es requerido
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                <div class="form-group">
-                                    <label>Fecha y hora de entrega</label>
-                                    <input type="text" mwlFlatpickr [(ngModel)]="entrega.fechaEntrega" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Fecha de Comunicación-">
+                                    <div class="form-group">
+                                        <label>Fecha de entrega</label>
+                                        <input type="text" mwlFlatpickr name="fechaEntrega" formControlName="fechaEntrega" [(ngModel)]="entrega.fechaEntrega" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Fecha de Entrega-">
+                                        <div *ngIf="submittedEntrega && enForm.fechaEntrega.errors" class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="enForm.fechaEntrega.errors.required">Fecha de entrega es requerida
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Hora de entrega</label>
+                                        <input type="time" name="horaEntrega" formControlName="horaEntrega" [(ngModel)]="entrega.horaEntrega" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Hora de Entrega-">
+                                        <div *ngIf="submittedEntrega && enForm.horaEntrega.errors" class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="enForm.horaEntrega.errors.required">Hora de entrega es requerida
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Calificación de la oferta</label>
-                                    <select class="form-control" [(ngModel)]="entrega.calificacion">
+                                    <div class="form-group">
+                                        <label>Calificación de la oferta</label>
+                                        <select class="form-control" name="calificacion" formControlName="calificacion" [(ngModel)]="entrega.calificacion">
                        <option value="0">- Seleccione -</option>
                        <option value="1">1</option>
                        <option value="2">2</option>
@@ -203,17 +220,27 @@
                        <option value="9">9</option>
                        <option value="10">10</option>
                      </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Estado</label>
-                                    <select class="form-control" [(ngModel)]="entrega.estado">
+                                        <div *ngIf="submittedEntrega && enForm.calificacion.errors" class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="enForm.calificacion.errors.required">Calificación de la oferta es requerida
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Estado</label>
+                                        <select class="form-control" name="estado" formControlName="estado" [(ngModel)]="entrega.estado">
                            <option value="">- Seleccione -</option>
                            <option value="Entregado">Entregado</option>
                            <option value="No Entregado">No entregado</option>
                          </select>
-                                </div>
-                                <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close" (click)="actualizarGestionEntrega()">Guardar</button>
-                                <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                        <div *ngIf="submittedEntrega && enForm.estado.errors" class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="enForm.estado.errors.required">Estado de la oferta es requerido
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary mr-1" aria-label="Close" (click)="actualizarGestionEntrega()">Guardar</button>
+                                    <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
+                                    <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -511,3 +538,17 @@
 <div class="sidenav-overlay "></div>
 <div class="drag-target "></div>
 <app-footer></app-footer>
+<ng-template #aviso let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div [innerHTML]="mensaje"></div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="cerrarModal()">Cerrar</button>
+    </div>
+</ng-template>

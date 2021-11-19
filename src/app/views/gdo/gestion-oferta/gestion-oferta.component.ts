@@ -65,7 +65,6 @@ export class GestionOfertaComponent implements OnInit {
   }
   obternerGestionOferta(id) {
     this.gestionOfertaService.obtenerGestionOferta(id).subscribe((info) => {
-      console.log(info);
       this.oferta = info;
     });
   }
@@ -121,6 +120,15 @@ export class GestionOfertaComponent implements OnInit {
       this.abrirModal(this.aviso);
       this.dismissModal.nativeElement.click();
       this.submittedOferta = false;
+    },
+    (error) => {
+      let errores = Object.values(error);
+      let llaves = Object.keys(error);
+      this.mensaje = "";
+      errores.map((infoErrores, index) => {
+        this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+      });
+      this.abrirModal(this.aviso);
     });
   }
   cerrarModal() {

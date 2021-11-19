@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { GestionEntregaService, GestionEntrega } from '../../../services/gde/gestionEntrega/gestion-entrega.service';
 import { DatePipe } from '@angular/common';
 import { ParamService as ParamServiceADM } from 'src/app/services/admin/param.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -10,6 +12,14 @@ import { ParamService as ParamServiceADM } from 'src/app/services/admin/param.se
   providers: [DatePipe]
 })
 export class GestionEntregaComponent implements OnInit {
+
+  @ViewChild('dismissModal') dismissModal;
+  @ViewChild('aviso') aviso;
+
+  entregaForm: FormGroup;
+
+  submittedEntrega = false;
+  mensaje = "";
   menu;
   tipoCliente = "";
   identificacion;
@@ -26,12 +36,24 @@ export class GestionEntregaComponent implements OnInit {
   constructor(
     private gestionEntregaService: GestionEntregaService,
     private datePipe: DatePipe,
-    private globalParam:ParamServiceADM
+    private globalParam: ParamServiceADM,
+    private _formBuilder: FormBuilder,
+    private modalService: NgbModal,
   ) {
     this.entrega = this.gestionEntregaService.inicializarGestionEntrega();
-   }
+  }
 
+  get enForm() {
+    return this.entregaForm.controls;
+  }
   ngOnInit(): void {
+    this.entregaForm = this._formBuilder.group({
+      entregoProducto: ['', [Validators.required]],
+      fechaEntrega: ['', [Validators.required]],
+      horaEntrega: ['', [Validators.required]],
+      calificacion: [0, [Validators.required]],
+      estado: ['', [Validators.required]],
+    });
     this.menu = {
       modulo: "gde",
       seccion: "gestEntrega"
@@ -85,9 +107,33 @@ export class GestionEntregaComponent implements OnInit {
   obtenerURLImagen(url) {
     return this.globalParam.obtenerURL(url);
   }
-  actualizarGestionEntrega(){
-    this.gestionEntregaService.actualizarGestionEntrega(this.entrega).subscribe(()=>{
+  actualizarGestionEntrega() {
+    this.submittedEntrega = true;
+    if (this.entregaForm.invalid) {
+      return;
+    }
+    this.gestionEntregaService.actualizarGestionEntrega(this.entrega).subscribe(() => {
       this.obtenerListaGestionEntrega();
-    });
+      this.mensaje = "Entrega guardada";
+      this.abrirModal(this.aviso);
+      this.dismissModal.nativeElement.click();
+      this.submittedEntrega = false;
+    },
+      (error) => {
+        let errores = Object.values(error);
+        let llaves = Object.keys(error);
+        this.mensaje = "";
+        errores.map((infoErrores, index) => {
+          this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+        });
+        this.abrirModal(this.aviso);
+      });
+
+  }
+  cerrarModal() {
+    this.modalService.dismissAll();
+  }
+  abrirModal(modal) {
+    this.modalService.open(modal);
   }
 }
