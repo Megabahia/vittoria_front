@@ -6,6 +6,8 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ToolbarComponent implements OnInit {
   @Input('menu') menu;
+  usuario;
+  acciones;
   menuToolbar = {
     adm: {
       user: "",
@@ -55,6 +57,8 @@ export class ToolbarComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.usuario = JSON.parse(localStorage.getItem('currentUser'));
+    this.acciones = this.usuario.acciones;
     this.selectMenu();
   }
   selectMenu() {
