@@ -102,7 +102,7 @@
                             </span>
                                     </td>
                                     <td>
-                                        <span class="text-capitalize badge badge-light-success badge-pill">{{usuario.estado}}</span>
+                                        <span class="text-capitalize badge {{usuario.estado == 'Activo' || usuario.estado == 'ACTIVO' ? 'badge-light-success': 'badge-light-danger'}} badge-pill">{{usuario.estado}}</span>
                                     </td>
                                     <td>
                                         <a (click)="editarUsuario(usuario.id)">

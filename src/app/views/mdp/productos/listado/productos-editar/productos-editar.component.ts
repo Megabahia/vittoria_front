@@ -169,15 +169,37 @@ export class ProductosEditarComponent implements OnInit {
       this.archivos.map((valor, pos) => {
         this.datosProducto.append("imagenes[" + pos + "].imagen", valor);
       });
-      this.productosService.actualizarProducto(this.datosProducto, this.producto.id).subscribe((info) => {
-      });
+      this.productosService.actualizarProducto(this.datosProducto, this.idProducto).subscribe((info) => {
+        this.mensaje = "Producto actualizado";
+        this.abrirModal(this.aviso);
+      },
+        (error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = "";
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          });
+          this.abrirModal(this.aviso);
+        });
     } else {
       this.archivos.map((valor, pos) => {
         this.datosProducto.append("imagenes[" + pos + "].imagen", valor);
       });
       this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
         this.idProducto = info.id;
-      });
+        this.mensaje = "Producto guardado";
+        this.abrirModal(this.aviso);
+      },
+        (error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = "";
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          });
+          this.abrirModal(this.aviso);
+        });
     }
   }
   eliminarImagenModal(id) {
@@ -223,7 +245,16 @@ export class ProductosEditarComponent implements OnInit {
           this.submittedFichaTecnicaForm = false;
           this.mensaje = "Ficha técnica guardada";
           this.abrirModal(this.aviso);
-        });
+        },
+          (error) => {
+            let errores = Object.values(error);
+            let llaves = Object.keys(error);
+            this.mensaje = "";
+            errores.map((infoErrores, index) => {
+              this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            });
+            this.abrirModal(this.aviso);
+          });
       } else {
         this.mensaje = "Es necesario ingresar un producto primero";
         this.abrirModal(this.aviso);
@@ -235,7 +266,16 @@ export class ProductosEditarComponent implements OnInit {
         this.submittedFichaTecnicaForm = false;
         this.mensaje = "Ficha técnica guardada";
         this.abrirModal(this.aviso);
-      });
+      },
+        (error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = "";
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          });
+          this.abrirModal(this.aviso);
+        });
     }
   }
   abrirModal(modal, id = null) {

@@ -164,9 +164,11 @@ export class ProspectosClientesListComponent implements OnInit {
   }
   async crearProspecto() {
     this.submitted = true;
-    if (this.pospectoForm.invalid || !this.imagen) {
-      return;
-    }
+    // if (this.pospectoForm.invalid || !this.imagen) {
+      if(this.pospectoForm.invalid){
+        return;
+      }
+    // }
     this.cargando = true;
     this.usuario.append('nombres', this.nombres);
     this.usuario.append('apellidos', this.apellidos);
@@ -186,7 +188,9 @@ export class ProspectosClientesListComponent implements OnInit {
     this.usuario.append('precio', this.precio);
     this.usuario.append('nombreVendedor', this.nombreVendedor);
     this.usuario.append('confirmacionProspecto', this.confirmacionProspecto);
-    this.usuario.append('imagen', this.imagen, this.imagen.name);
+    if(this.imagen){
+      this.usuario.append('imagen', this.imagen, this.imagen.name);
+    }
     this.prospectosService.crearProspectos(this.usuario).subscribe(() => {
       this.obtenerListaProspectos();
       this.dismissModal.nativeElement.click();

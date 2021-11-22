@@ -174,6 +174,8 @@ export class TransaccionesAddComponent implements OnInit {
         subtotal += precio;
         cantidad += valor.cantidad ? valor.cantidad : 0;
         valor.precio = this.redondear(precio);
+        valor.total = valor.precio;
+
       });
     }
 
@@ -252,7 +254,16 @@ export class TransaccionesAddComponent implements OnInit {
     await this.clientesService.crearTransaccion(this.transaccion).subscribe(() => {
       window.location.href = '/mdm/clientes/personas/transacciones/list';
 
-    });
+    },
+      (error) => {
+        let errores = Object.values(error);
+        let llaves = Object.keys(error);
+        this.mensaje = "";
+        errores.map((infoErrores, index) => {
+          this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+        });
+        this.abrirModal(this.mensajeModal);
+      });
   }
   async obternerUltimaTransaccion() {
     await this.clientesService.obtenerUltimaTransaccion().subscribe((info) => {

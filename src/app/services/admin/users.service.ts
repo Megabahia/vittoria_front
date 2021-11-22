@@ -72,8 +72,8 @@ export class UsersService {
     let usuarioActualizado:nuevoUsuario = usuario;
     return this.http.post<any>(`${apiUrl}/adm/usuarios/update/${usuario.id}`,usuarioActualizado);
   } 
-  eliminarUsuario(id){
-    return  this.http.delete<any>(`${apiUrl}/adm/usuarios/delete/${id}`);
+  eliminarUsuario(id, estado){
+    return  this.http.post<any>(`${apiUrl}/adm/usuarios/delete/${id}`, {estado});
   }
 
 }

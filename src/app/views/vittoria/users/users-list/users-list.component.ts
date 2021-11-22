@@ -154,7 +154,7 @@ export class UsersListComponent implements OnInit {
   }
   eliminar() {
     this.modalService.dismissAll();
-    this.servicioUsuarios.eliminarUsuario(this.idUsuario).subscribe(info => {
+    this.servicioUsuarios.eliminarUsuario(this.idUsuario,'Inactivo').subscribe(info => {
       this.obtenerListaUsuarios();
     });
   }
