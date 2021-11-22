@@ -314,6 +314,12 @@
                                                     <p class="invoice-total-title">Descuento:</p>
                                                     <p class="invoice-total-amount">${{transaccion.descuento}}</p>
                                                 </div>
+                                                <hr class="my-50" />
+
+                                                <div class="invoice-total-item">
+                                                    <p class="invoice-total-title">Subtotal (con descuento):</p>
+                                                    <p class="invoice-total-amount">${{transaccion.subTotal-transaccion.descuento}}</p>
+                                                </div>
                                                 <div class="invoice-total-item">
                                                     <p class="invoice-total-title">{{iva.descripcion}}:</p>
                                                     <p class="invoice-total-amount">${{transaccion.iva}}</p>
