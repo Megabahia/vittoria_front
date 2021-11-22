@@ -11,6 +11,27 @@
             <section class="app-user-list">
                 <!-- users filter start -->
                 <div class="card">
+                    <h5 class="card-header">Búsqueda de prospectos</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <input type="text" class="form-control form-control-sm" placeholder="Cliente" [(ngModel)]="busquedaProspecto.cliente">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control form-control-sm" placeholder="Cédula" [(ngModel)]="busquedaProspecto.identificacion">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control form-control-sm" placeholder="Teléfono" [(ngModel)]="busquedaProspecto.telefono">
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary" (click)="abrirModalProspectos()">
+                  <i-feather name='search' class="edit-user"></i-feather>
+                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
                     <h5 class="card-header">Filtros de búsqueda</h5>
                     <div class="card-body">
                         <div class="row">
@@ -187,8 +208,45 @@
         <button type="button" class="btn btn-light" (click)="cerrarModal()">SI</button>
     </div>
 </ng-template>
-<app-personas-edit *ngIf="vista=='editar'" [idCliente]="idCliente"></app-personas-edit>
+<app-personas-edit *ngIf="vista=='editar'" [idCliente]="idCliente" [idProspecto]="idProspecto"></app-personas-edit>
 <!-- END: Content-->
 <div class="sidenav-overlay"></div>
 <div class="drag-target"></div>
 <app-footer></app-footer>
+<ng-template #prospectosMdl let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Prospectos</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <table class="user-list-table table">
+            <thead class="thead-light">
+                <tr>
+                    <th>Cliente</th>
+                    <th>Identificación</th>
+                    <th>Teléfono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let prospecto of listaProspectos">
+                    <td>
+                        {{prospecto.nombres}} {{ prospecto.apellidos }}
+                    </td>
+                    <td>{{prospecto.identificacion}}</td>
+                    <td>{{prospecto.telefono}}</td>
+                    <td>
+                        <a (click)="agregarProspecto(prospecto.id)">
+                            <i-feather name="user-check"></i-feather>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="cerrarModalProspectos()">Cerrar</button>
+    </div>
+</ng-template>

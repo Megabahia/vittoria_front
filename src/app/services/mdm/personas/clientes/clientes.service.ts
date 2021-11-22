@@ -331,6 +331,9 @@ export class ClientesService {
   }
   obtenerClientePorTelefono(telefono){
     return this.http.post<any>(`${apiUrl}/mdm/clientes/listOne/telefono/`, telefono);
+  }
 
+  obtenerProspectoCliente(datos){
+    return this.http.post<any>(`${apiUrl}/mdm/prospectosClientes/search/`, datos);
   }
 }

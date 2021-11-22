@@ -8,6 +8,7 @@ import { NgbModal, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label, Color } from 'ng2-charts';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ProspectosService } from '../../../../../services/mdm/prospectosCli/prospectos.service';
 @Component({
   selector: 'app-personas-edit',
   templateUrl: './personas-edit.component.html',
@@ -15,6 +16,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class PersonasEditComponent implements OnInit {
   @Input() idCliente;
+  @Input() idProspecto;
   @ViewChild(NgbPagination) paginatorDF: NgbPagination;
   @ViewChild(NgbPagination) paginatorDV: NgbPagination;
   @ViewChild(NgbPagination) paginatorTA: NgbPagination;
@@ -178,6 +180,7 @@ export class PersonasEditComponent implements OnInit {
   constructor(
     private datePipe: DatePipe,
     private clientesService: ClientesService,
+    private prospectosService: ProspectosService,
     private paramService: ParamService,
     private globalParam: ParamServiceADM,
     private _formBuilder: FormBuilder,
@@ -206,16 +209,54 @@ export class PersonasEditComponent implements OnInit {
     this.obtenerTipoDireccion();
     this.obtenerTiposContacto();
     this.obtenerIconosDatosVirtuales();
-    if (this.idCliente == 0) {
-      this.datosBasicos.created_at = this.transformarFecha(this.fechaActual);
+    if (this.idProspecto) {
+      this.prospectosService.obtenerProspecto(this.idProspecto).subscribe((info) => {
+        this.datosBasicos = info.apellidos;
+        this.datosBasicos = info.correo1;
+        this.datosBasicos = info.nombres;
+        this.datosBasicos = info.identificacion;
+        this.datosBasicos = info.telefono;
+        this.datosBasicos = info.tipoCliente;
+
+        // apellidos: "Álvarez "
+        // canal: "Facebook"
+        // ciudad: "Ibarra"
+        // codigoProducto: "ADB-001"
+        // confirmacionProspecto: "En espera"
+        // correo1: "alejandroalvara@gmail.com"
+        // correo2: "alejandro2@gmail.com"
+        // created_at: "2021-05-20T18:15:09.224530-05:00"
+        // facebook: "https://www.facebook.com/"
+        // identificacion: "1001001001"
+        // imagen: "https://vittoria.s3.amazonaws.com/MDM/prospectosClientes/imgProspectosClientes/120_15912219730543.png"
+        // instagram: "https://www.instagram.com/?hl=es-la"
+        // nombreCompleto: "Alejandro Paúl Álvarez"
+        // nombreProducto: "Camiseta XL"
+        // nombreVendedor: "Álvaro Cedeño"
+        // nombres: "Alejandro Paúl"
+        // precio: 12
+        // state: 1
+        // telefono: "98565213121"
+        // tipoCliente: "Cliente por mayor"
+        // tipoPrecio: "Efectivo"
+        // twitter: "https://twitter.com/?lang=es"
+        // updated_at: "2021-10-19T09:10:12.993076-05:00"
+        // whatsapp: "984564"
+        console.log(info);
+      });
     } else {
-      this.obtenerDatosBasicos();
-      this.obtenerDatosFisicos();
-      this.obtenerDatosVirtuales();
-      this.obtenerTransacciones();
-      this.obtenerParientes();
-      // this.obtenerGraficaTransacciones();
+      if (this.idCliente == 0) {
+        this.datosBasicos.created_at = this.transformarFecha(this.fechaActual);
+      } else {
+        this.obtenerDatosBasicos();
+        this.obtenerDatosFisicos();
+        this.obtenerDatosVirtuales();
+        this.obtenerTransacciones();
+        this.obtenerParientes();
+        // this.obtenerGraficaTransacciones();
+      }
     }
+
     this.datosBasicosForm = this._formBuilder.group({
       tipoCliente: ['', [Validators.required]],
       created_at: ['', [Validators.required]],
