@@ -3,6 +3,7 @@ import { ProspectosService } from '../../../../services/mdm/prospectosCli/prospe
 import { NgbModal, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { ParamService } from '../../../../services/mdm/param/param.service';
 
 @Component({
   selector: 'app-prospectos-clientes-list',
@@ -49,28 +50,42 @@ export class ProspectosClientesListComponent implements OnInit {
   instagram;
   correo1;
   correo2;
-  ciudad;
+  ciudad="";
   canal = "";
   codigoProducto;
   nombreProducto;
   precio;
+  pais="";
+  paisOpciones;
+  provincia="";
+  provinciaOpciones;
+  ciudadOpciones;
   tipoPrecio = "";
   nombreVendedor;
   confirmacionProspecto = "";
   imagen;
   vista;
+  identificacion;
+  usuarioLoggeado;
   constructor(
     private prospectosService: ProspectosService,
     private datePipe: DatePipe,
     private _formBuilder: FormBuilder,
     private modalService: NgbModal,
-  ) { }
+    private paramService: ParamService,
+
+  ) {
+
+    this.usuarioLoggeado = JSON.parse(localStorage.getItem('currentUser'));
+    this.nombreVendedor = this.usuarioLoggeado.usuario.nombres + " " + this.usuarioLoggeado.usuario.apellidos;
+   }
 
   ngOnInit(): void {
     this.pospectoForm = this._formBuilder.group({
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
       telefono: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      identificacion: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
       tipoCliente: ['', [Validators.required]],
       whatsapp: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
       facebook: ['', [Validators.required]],
@@ -78,6 +93,8 @@ export class ProspectosClientesListComponent implements OnInit {
       instagram: ['', [Validators.required]],
       correo1: ['', [Validators.required]],
       correo2: ['', [Validators.required]],
+      pais: ['', [Validators.required]],
+      provincia: ['', [Validators.required]],
       ciudad: ['', [Validators.required]],
       canal: ['', [Validators.required]],
       codigoProducto: ['', [Validators.required]],
@@ -92,6 +109,7 @@ export class ProspectosClientesListComponent implements OnInit {
       seccion: "prospectosCli"
     };
     this.vista = 'lista';
+    this.obtenerPaisOpciones();
   }
   async ngAfterViewInit() {
     this.obtenerCanales();
@@ -139,6 +157,24 @@ export class ProspectosClientesListComponent implements OnInit {
       this.canalOpciones = info;
     });
   }
+  async obtenerPaisOpciones() {
+    this.provincia="";
+    this.ciudad="";
+    await this.paramService.obtenerListaPadres("PAIS").subscribe((info) => {
+      this.paisOpciones = info;
+    });
+  }
+  async obtenerProvincias() {
+    this.ciudad="";
+    await this.paramService.obtenerListaHijos(this.pais, "PAIS").subscribe((info) => {
+      this.provinciaOpciones = info;
+    });
+  }
+  async obtenerCiudad() {
+    await this.paramService.obtenerListaHijos(this.provincia, "PROVINCIA").subscribe((info) => {
+      this.ciudadOpciones = info;
+    });
+  }
   async obtenerVendedores() {
     await this.prospectosService.obtenerVendedor("Vendedor").subscribe((info) => {
       this.vendedorOpciones = info;
@@ -165,14 +201,15 @@ export class ProspectosClientesListComponent implements OnInit {
   async crearProspecto() {
     this.submitted = true;
     // if (this.pospectoForm.invalid || !this.imagen) {
-      if(this.pospectoForm.invalid){
-        return;
-      }
+    if (this.pospectoForm.invalid) {
+      return;
+    }
     // }
     this.cargando = true;
     this.usuario.append('nombres', this.nombres);
     this.usuario.append('apellidos', this.apellidos);
     this.usuario.append('telefono', this.telefono);
+    this.usuario.append('identificacion', this.identificacion);
     this.usuario.append('tipoCliente', this.tipoCliente);
     this.usuario.append('whatsapp', this.whatsapp);
     this.usuario.append('facebook', this.facebook);
@@ -180,6 +217,8 @@ export class ProspectosClientesListComponent implements OnInit {
     this.usuario.append('instagram', this.instagram);
     this.usuario.append('correo1', this.correo1);
     this.usuario.append('correo2', this.correo2);
+    this.usuario.append('pais', this.pais);
+    this.usuario.append('provincia', this.provincia);
     this.usuario.append('ciudad', this.ciudad);
     this.usuario.append('canal', this.canal);
     this.usuario.append('codigoProducto', this.codigoProducto);
@@ -188,7 +227,7 @@ export class ProspectosClientesListComponent implements OnInit {
     this.usuario.append('precio', this.precio);
     this.usuario.append('nombreVendedor', this.nombreVendedor);
     this.usuario.append('confirmacionProspecto', this.confirmacionProspecto);
-    if(this.imagen){
+    if (this.imagen) {
       this.usuario.append('imagen', this.imagen, this.imagen.name);
     }
     this.prospectosService.crearProspectos(this.usuario).subscribe(() => {
@@ -209,7 +248,6 @@ export class ProspectosClientesListComponent implements OnInit {
         });
         this.abrirModal(this.mensajeModal);
         this.cargando = false;
-
       }
     );
   }

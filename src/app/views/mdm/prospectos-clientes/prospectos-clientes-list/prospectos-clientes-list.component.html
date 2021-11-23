@@ -151,6 +151,16 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-uname">Identificación:</label>
+                                            <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" name="identificacion" formControlName="identificacion" [(ngModel)]="identificacion" />
+                                            <div *ngIf="submitted && f.identificacion.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="f.identificacion.errors.required">Identificación requerida
+                                                </div>
+                                                <div *ngIf="f.identificacion.errors.pattern">Solo se aceptan números
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-label" for="basic-icon-default-uname">Teléfono:</label>
                                             <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" name="telefono" formControlName="telefono" [(ngModel)]="telefono" />
                                             <div *ngIf="submitted && f.telefono.errors" class="invalid-feedback" style="display: block;">
@@ -230,11 +240,39 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label" for="basic-icon-default-email">Ciudad:</label>
-                                            <input type="text" id="basic-icon-default-email" class="form-control dt-email" name="ciudad" formControlName="ciudad" [(ngModel)]="ciudad" />
+                                            <label for="username">País</label>
+                                            <select class="form-control select2" name="pais" formControlName="pais" [(ngModel)]="pais" (change)="obtenerProvincias()">
+                            <option value="" selected>- Seleccionar -</option>
+                            <option value="{{paisesOp.valor}}" *ngFor="let paisesOp of paisOpciones">
+                              {{paisesOp.nombre}}
+                            </option>
+                          </select>
+                                            <div *ngIf="submitted && f.pais.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="f.pais.errors.required">Pais es requerido</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="username">Provincia</label>
+                                            <select class="form-control select2" name="provincia" formControlName="provincia" [(ngModel)]="provincia" (change)="obtenerCiudad()">
+                            <option value="" selected>- Seleccionar -</option>
+                            <option value="{{provinciasOP.valor}}" *ngFor="let provinciasOP of provinciaOpciones">
+                              {{provinciasOP.nombre}}
+                            </option>
+                          </select>
+                                            <div *ngIf="submitted && f.provincia.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="f.provincia.errors.required">Provincia es requerida</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="username">Ciudad</label>
+                                            <select class="form-control select2" name="ciudad" formControlName="ciudad" [(ngModel)]="ciudad">
+                            <option value="" selected>- Seleccionar -</option>
+                            <option value="{{ciudadesOp.valor}}" *ngFor="let ciudadesOp of ciudadOpciones">
+                              {{ciudadesOp.nombre}}
+                            </option>
+                          </select>
                                             <div *ngIf="submitted && f.ciudad.errors" class="invalid-feedback" style="display: block;">
-                                                <div *ngIf="f.ciudad.errors.required">Ciudad requerida
-                                                </div>
+                                                <div *ngIf="f.ciudad.errors.required">Ciudad es requerida</div>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -309,7 +347,7 @@
                                         <div class="form-group">
                                             <label class="form-label" for="basic-icon-default-email">Nombre del
                                                 vendedor:</label>
-                                            <input type="text" id="basic-icon-default-email" class="form-control dt-email" name="nombreVendedor" formControlName="nombreVendedor" [(ngModel)]="nombreVendedor" />
+                                            <input type="text" id="basic-icon-default-email" class="form-control dt-email" name="nombreVendedor" formControlName="nombreVendedor" [(ngModel)]="nombreVendedor" disabled />
                                             <div *ngIf="submitted && f.nombreVendedor.errors" class="invalid-feedback" style="display: block;">
                                                 <div *ngIf="f.nombreVendedor.errors.required">Nombre requerido
                                                 </div>

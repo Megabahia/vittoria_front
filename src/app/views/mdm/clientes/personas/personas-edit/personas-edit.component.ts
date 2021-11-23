@@ -253,7 +253,6 @@ export class PersonasEditComponent implements OnInit {
         this.obtenerDatosVirtuales();
         this.obtenerTransacciones();
         this.obtenerParientes();
-        // this.obtenerGraficaTransacciones();
       }
     }
 
