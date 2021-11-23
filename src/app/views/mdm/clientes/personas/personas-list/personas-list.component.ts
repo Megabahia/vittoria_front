@@ -82,6 +82,7 @@ export class PersonasListComponent implements OnInit {
   //   });
   // }
   agregarProspecto(id){
+    this.idCliente = 0;
     this.idProspecto = id;
     this.vista = 'editar';
     this.cerrarModalProspectos();

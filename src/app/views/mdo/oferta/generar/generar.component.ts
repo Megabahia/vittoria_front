@@ -289,12 +289,15 @@ export class GenerarComponent implements OnInit {
             this.oferta.cliente = null;
             this.oferta.indicadorCliente = "N-" + info.id;
           }
-        }, (error)=>{
+        }, (error) => {
           if (error.error == 'No existe') {
             this.mensaje = "Negocio no existe";
             this.abrirModalMensaje(this.mensajeModal);
           }
         })
+      } else {
+        this.mensaje = "Es necesario seleccionar un tipo de cliente";
+        this.abrirModalMensaje(this.mensajeModal);
       }
     } else if (this.telefonoOfertaBusq) {
       if (this.tipoClienteOferta == "cliente") {
@@ -328,13 +331,19 @@ export class GenerarComponent implements OnInit {
             this.oferta.cliente = null;
             this.oferta.indicadorCliente = "N-" + info.id;
           }
-        }, (error)=> {
+        }, (error) => {
           if (error.error == 'No existe') {
             this.mensaje = "Negocio no existe";
             this.abrirModalMensaje(this.mensajeModal);
           }
         })
+      } else {
+        this.mensaje = "Es necesario seleccionar un tipo de cliente";
+        this.abrirModalMensaje(this.mensajeModal);
       }
+    } else {
+      this.mensaje = "No se ha ingresado ningun valor";
+      this.abrirModalMensaje(this.mensajeModal);
     }
   }
 
@@ -371,7 +380,7 @@ export class GenerarComponent implements OnInit {
     }
     this.submittedTransaccionForm = true;
     console.log(this.ofertaForm);
-    
+
     this.comprobarProductos.map(compProd => {
       if (!compProd) {
         this.checkProductos = false;
