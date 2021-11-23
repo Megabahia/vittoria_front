@@ -211,12 +211,13 @@ export class PersonasEditComponent implements OnInit {
     this.obtenerIconosDatosVirtuales();
     if (this.idProspecto) {
       this.prospectosService.obtenerProspecto(this.idProspecto).subscribe((info) => {
-        this.datosBasicos = info.apellidos;
-        this.datosBasicos = info.correo1;
-        this.datosBasicos = info.nombres;
-        this.datosBasicos = info.identificacion;
-        this.datosBasicos = info.telefono;
-        this.datosBasicos = info.tipoCliente;
+        this.datosBasicos.apellidos = info.apellidos;
+        this.datosBasicos.correo = info.correo1;
+        this.datosBasicos.nombres = info.nombres;
+        this.datosBasicos.cedula = info.identificacion;
+        this.datosBasicos.telefono = info.telefono;
+        this.datosBasicos.tipoCliente = info.tipoCliente;
+        this.datosBasicos.created_at = this.transformarFecha(this.fechaActual);
 
         // apellidos: "Álvarez "
         // canal: "Facebook"
@@ -242,7 +243,6 @@ export class PersonasEditComponent implements OnInit {
         // twitter: "https://twitter.com/?lang=es"
         // updated_at: "2021-10-19T09:10:12.993076-05:00"
         // whatsapp: "984564"
-        console.log(info);
       });
     } else {
       if (this.idCliente == 0) {
@@ -462,7 +462,6 @@ export class PersonasEditComponent implements OnInit {
   async guardarDatosBasicos() {
 
     this.submittedDatosBasicosForm = true;
-
     if (this.datosBasicosForm.invalid) {
       return;
     }
