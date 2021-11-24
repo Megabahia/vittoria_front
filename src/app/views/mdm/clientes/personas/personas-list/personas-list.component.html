@@ -221,30 +221,41 @@
       </button>
     </div>
     <div class="modal-body">
-        <table class="user-list-table table">
-            <thead class="thead-light">
-                <tr>
-                    <th>Cliente</th>
-                    <th>Identificación</th>
-                    <th>Teléfono</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let prospecto of listaProspectos">
-                    <td>
-                        {{prospecto.nombres}} {{ prospecto.apellidos }}
-                    </td>
-                    <td>{{prospecto.identificacion}}</td>
-                    <td>{{prospecto.telefono}}</td>
-                    <td>
-                        <a (click)="agregarProspecto(prospecto.id)">
-                            <i-feather name="user-check"></i-feather>
-                        </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="card-datatable table-responsive pt-0">
+            <table class="user-list-table table">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Identificación</th>
+                        <th>Teléfono</th>
+                        <th>WhatsApp</th>
+                        <th>Código de producto</th>
+                        <th>Nombre de producto</th>
+                        <th>Precio</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let prospecto of listaProspectos">
+                        <td>
+                            {{prospecto.nombres}} {{ prospecto.apellidos }}
+                        </td>
+                        <td>{{prospecto.identificacion}}</td>
+                        <td>{{prospecto.telefono}}</td>
+                        <td>{{prospecto.whatsapp}}</td>
+                        <td>{{prospecto.codigoProducto}}</td>
+                        <td>{{prospecto.nombreProducto}}</td>
+                        <td>${{prospecto.precio}}</td>
+                        <td>
+                            <a (click)="agregarProspecto(prospecto.id)">
+                                <i-feather name="user-check"></i-feather>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" (click)="cerrarModalProspectos()">Cerrar</button>
