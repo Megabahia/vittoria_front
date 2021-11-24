@@ -486,6 +486,10 @@ export class PersonasEditComponent implements OnInit {
         this.datosFisicos.cliente = this.idCliente;
         this.datosVirtuales.cliente = this.idCliente;
         this.tab2.nativeElement.click();
+        if (this.idProspecto) {
+          this.obtenerDatosVirtuales();
+
+        }
       },
         (error) => {
           let errores = Object.values(error);
