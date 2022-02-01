@@ -167,7 +167,8 @@ export class ProductosEditarComponent implements OnInit {
     if (this.idProducto != 0) {
 
       this.archivos.map((valor, pos) => {
-        this.datosProducto.append("imagenes[" + pos + "].imagen", valor);
+        this.datosProducto.append("imagenes[" + pos + "]id", "0");
+        this.datosProducto.append("imagenes[" + pos + "]imagen", valor);
       });
       this.productosService.actualizarProducto(this.datosProducto, this.idProducto).subscribe((info) => {
         this.mensaje = "Producto actualizado";
@@ -184,7 +185,8 @@ export class ProductosEditarComponent implements OnInit {
         });
     } else {
       this.archivos.map((valor, pos) => {
-        this.datosProducto.append("imagenes[" + pos + "].imagen", valor);
+        this.datosProducto.append("imagenes[" + pos + "]id", "0");
+        this.datosProducto.append("imagenes[" + pos + "]imagen", valor);
       });
       this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
         this.idProducto = info.id;
