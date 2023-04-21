@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://209.145.61.41:8001',
+  apiUrl: 'http://209.145.61.41:8010',
   roles: {
     rol: {
       id:0,
