@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://127.0.0.1:8003',
+  apiUrl: 'https://ventas-vittoria-api-test.crediventa.com',
   roles: {
     rol: {
       id:0,
