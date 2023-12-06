@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/admin/auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -7,7 +8,7 @@ import { AuthService } from '../../services/admin/auth.service';
 })
 export class NavbarComponent implements OnInit {
   usuario;
-  constructor(private authService: AuthService,) {
+  constructor(private authService: AuthService, private router: Router) {
     this.usuario = JSON.parse(localStorage.getItem('currentUser'));
 
   }
@@ -16,6 +17,6 @@ export class NavbarComponent implements OnInit {
   }
   cerrarSesion() {
     this.authService.signOut();
-    window.location.href = '/auth/signin';
+    this.router.navigate(['/auth/signin']);
   }
 }

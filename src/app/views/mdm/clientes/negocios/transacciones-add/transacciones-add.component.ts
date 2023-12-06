@@ -6,6 +6,7 @@ import { NegociosService, Transaccion } from '../../../../../services/mdm/person
 import { ProductosService } from 'src/app/services/mdp/productos/productos.service';
 import { ParamService as ParamServiceADM } from 'src/app/services/admin/param.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {Router} from '@angular/router';
 @Component({
   selector: 'app-transacciones-add',
   templateUrl: './transacciones-add.component.html',
@@ -42,8 +43,8 @@ export class TransaccionesAddComponent implements OnInit {
     private datePipe: DatePipe,
     private productosService: ProductosService,
     private globalParam: ParamServiceADM,
-    private modalService: NgbModal
-
+    private modalService: NgbModal,
+    private router: Router,
   ) {
     this.transaccion = negociosService.inicializarTransaccion();
     this.iva = {
@@ -239,12 +240,12 @@ export class TransaccionesAddComponent implements OnInit {
     if (this.detalles.length == 0) {
       this.mensaje = "No se han ingresado productos";
         this.abrirModal(this.mensajeModal);
-      return; 
+      return;
     }
     this.calcularSubtotal();
     this.transaccion.detalles = this.detallesTransac;
     await this.negociosService.crearTransaccion(this.transaccion).subscribe(() => {
-      window.location.href = '/mdm/clientes/negocios/transacciones/list';
+      this.router.navigate(['/mdm/clientes/negocios/transacciones/list']);
 
     },
     (error) => {

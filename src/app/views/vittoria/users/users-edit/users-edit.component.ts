@@ -3,6 +3,7 @@ import { Usuario, UsersService } from 'src/app/services/admin/users.service';
 import { ParamService as ParamServiceADM } from 'src/app/services/admin/param.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-users-edit',
@@ -44,7 +45,7 @@ export class UsersEditComponent implements OnInit {
     private globalParam: ParamServiceADM,
     private _formBuilder: FormBuilder,
     private modalService: NgbModal,
-
+    private router: Router,
   ) {
 
   }
@@ -94,7 +95,7 @@ export class UsersEditComponent implements OnInit {
       return;
     }
     await this.usersService.actualizarUsuario(this.usuario).subscribe(() => {
-      window.location.href = '/admin/user';
+      this.router.navigate(['/admin/user']);
     },
       (error) => {
         let errores = Object.values(error);

@@ -6,6 +6,7 @@ import { ParamService as ParamServiceADM } from '../../../../../services/admin/p
 import { DatePipe } from '@angular/common';
 import { ProductosService } from '../../../../../services/mdp/productos/productos.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-transacciones-add',
@@ -44,8 +45,8 @@ export class TransaccionesAddComponent implements OnInit {
     private datePipe: DatePipe,
     private productosService: ProductosService,
     private globalParam: ParamServiceADM,
-    private modalService: NgbModal
-
+    private modalService: NgbModal,
+    private router: Router,
   ) {
     this.transaccion = clientesService.inicializarTransaccion();
     this.iva = {
@@ -252,7 +253,7 @@ export class TransaccionesAddComponent implements OnInit {
     this.calcularSubtotal();
     this.transaccion.detalles = this.detallesTransac;
     await this.clientesService.crearTransaccion(this.transaccion).subscribe(() => {
-      window.location.href = '/mdm/clientes/personas/transacciones/list';
+      this.router.navigate(['/mdm/clientes/personas/transacciones/list']);
 
     },
       (error) => {

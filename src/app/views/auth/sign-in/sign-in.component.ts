@@ -1,12 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { first, timeout } from 'rxjs/operators';
-import { AuthService } from 'src/app/services/admin/auth.service';
-// import Swal from 'sweetalert2';
-import { ReCaptchaV3Service } from 'ngx-captcha';
-// import { AuthService } from '../../../services/auth.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {first, timeout} from 'rxjs/operators';
+import {AuthService} from 'src/app/services/admin/auth.service';
+import {ReCaptchaV3Service} from 'ngx-captcha';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-sign-in',
@@ -16,20 +13,20 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class SignInComponent implements OnInit {
   @ViewChild('errorAuth') errorAuth;
-  @ViewChild('captchaElem') captchaElem
+  @ViewChild('captchaElem') captchaElem;
   captcha: boolean;
   username: '';
   password: '';
   siteKey: string;
   submitted = false;
+
   constructor(
     private modalService: NgbModal,
     private authService: AuthService,
     private router: Router,
     private reCaptchaV3Service: ReCaptchaV3Service,
-
   ) {
-    this.siteKey = "6Le9XCgpAAAAAGLvVLmTUsLr057fNVB6J1-ejMum";
+    this.siteKey = '6Le9XCgpAAAAAGLvVLmTUsLr057fNVB6J1-ejMum';
     this.captcha = false;
   }
 
@@ -37,6 +34,7 @@ export class SignInComponent implements OnInit {
     this.authService.signOut();
 
   }
+
   captchaValidado(evento) {
     this.captcha = true;
   }
@@ -44,12 +42,10 @@ export class SignInComponent implements OnInit {
   signIn(): void {
     this.submitted = true;
     if (this.captcha) {
-      this.authService.signIn({ 'username': this.username, 'password': this.password })
+      this.authService.signIn({username: this.username, password: this.password})
         .pipe(first())
         .subscribe((result) => {
-
-          window.location.href = '/admin/management';
-
+          this.router.navigate(['/admin/management']);
         }, (error) => {
           this.abrirModal(this.errorAuth);
         });
@@ -59,9 +55,11 @@ export class SignInComponent implements OnInit {
 
 
   }
+
   abrirModal(modal) {
-    this.modalService.open(modal)
+    this.modalService.open(modal);
   }
+
   cerrarModal() {
     this.modalService.dismissAll();
   }

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { AuthService } from '../../../services/admin/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -20,6 +20,7 @@ export class SetPasswordComponent implements OnInit {
     private modalService: NgbModal,
     private route: ActivatedRoute,
     private authService: AuthService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -48,7 +49,7 @@ export class SetPasswordComponent implements OnInit {
           email: this.email
         }
       ).subscribe(info => {
-        window.location.href = '/auth/signin';
+        this.router.navigate(['/auth/signin']);
       }, error => {
         let errores = Object.values(error);
         let llaves = Object.keys(error);

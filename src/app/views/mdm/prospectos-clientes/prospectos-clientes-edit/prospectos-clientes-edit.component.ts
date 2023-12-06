@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ParamService } from 'src/app/services/admin/param.service';
 import { ProspectosService, Prospecto } from '../../../../services/mdm/prospectosCli/prospectos.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-prospectos-clientes-edit',
@@ -38,7 +39,7 @@ export class ProspectosClientesEditComponent implements OnInit {
     private prospectosService: ProspectosService,
     private globalParam: ParamService,
     private modalService: NgbModal,
-
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -78,13 +79,13 @@ export class ProspectosClientesEditComponent implements OnInit {
 
   async actualizarProspecto() {
     this.prospectosService.actualizarProspecto(this.idUsuario, this.prospecto.confirmacionProspecto).subscribe(() => {
-      window.location.href = '/mdm/prospectosClientes/list';
+      this.router.navigate(['/mdm/prospectosClientes/list']);
     });
   }
   eliminarProspecto() {
 
     this.prospectosService.eliminarProspecto(this.idUsuario).subscribe((info) => {
-      window.location.href = '/mdm/prospectosClientes/list';
+      this.router.navigate(['/mdm/prospectosClientes/list']);
     });
 
   }
