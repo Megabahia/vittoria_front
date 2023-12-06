@@ -29,7 +29,7 @@ export class SignInComponent implements OnInit {
     private reCaptchaV3Service: ReCaptchaV3Service,
 
   ) {
-    this.siteKey = "6Lf8RtUaAAAAAJ-X1OdWM1yk80S_U4dF_A3nNMc1";
+    this.siteKey = "6Le9XCgpAAAAAGLvVLmTUsLr057fNVB6J1-ejMum";
     this.captcha = false;
   }
 
