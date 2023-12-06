@@ -1,7 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import { AuthService } from '../../../services/admin/auth.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {AuthService} from '../../../services/admin/auth.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-password-reset',
@@ -15,13 +17,26 @@ export class PasswordResetComponent implements OnInit {
   confirmPassword;
   confirmar = true;
   submitted = false;
-  mensaje = "";
+  mensaje = '';
+  public form: FormGroup;
+  public captcha: boolean;
+  public siteKey: string;
+
   constructor(
     private router: Router,
     private modalService: NgbModal,
     private route: ActivatedRoute,
     private authService: AuthService,
-  ) { }
+    private formBuilder: FormBuilder,
+  ) {
+    this.siteKey = environment.setKey;
+    this.form = this.formBuilder.group({
+      password: ['', [Validators.minLength(8),
+        Validators.pattern('(?=[A-Za-z0-9]+$)^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,}).*$'),
+        Validators.required]],
+      confirmPassword: ['', [Validators.required]]
+    });
+  }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -29,9 +44,14 @@ export class PasswordResetComponent implements OnInit {
       this.email = params['email'];
     });
   }
+
+  get f() {
+    return this.form.controls;
+  }
+
   verificarPassword() {
 
-    if (this.password == this.confirmPassword) {
+    if (this.password === this.confirmPassword) {
       this.confirmar = true;
     } else {
       this.confirmar = false;
@@ -40,6 +60,9 @@ export class PasswordResetComponent implements OnInit {
 
   enviarPassword() {
     this.submitted = true;
+    if (this.form.invalid || !this.captcha) {
+      return;
+    }
 
     if (this.confirmar && this.password) {
       this.authService.enviarClaveNueva(
@@ -53,19 +76,25 @@ export class PasswordResetComponent implements OnInit {
       }, error => {
         let errores = Object.values(error);
         let llaves = Object.keys(error);
-        this.mensaje = "";
+        this.mensaje = '';
         errores.map((infoErrores, index) => {
-          this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
         });
         this.abrirModal(this.errorAuth);
 
       });
     }
   }
+
   abrirModal(modal) {
-    this.modalService.open(modal)
+    this.modalService.open(modal);
   }
+
   cerrarModal() {
     this.modalService.dismissAll();
+  }
+
+  captchaValidado(evento): void {
+    this.captcha = true;
   }
 }

@@ -4,6 +4,7 @@ import {first, timeout} from 'rxjs/operators';
 import {AuthService} from 'src/app/services/admin/auth.service';
 import {ReCaptchaV3Service} from 'ngx-captcha';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-sign-in',
@@ -26,7 +27,7 @@ export class SignInComponent implements OnInit {
     private router: Router,
     private reCaptchaV3Service: ReCaptchaV3Service,
   ) {
-    this.siteKey = '6Le9XCgpAAAAAGLvVLmTUsLr057fNVB6J1-ejMum';
+    this.siteKey = environment.setKey;
     this.captcha = false;
   }
 
