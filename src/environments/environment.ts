@@ -5,12 +5,14 @@
 export const environment = {
   production: false,
   apiUrl: 'https://ventas-vittoria-api-test.crediventa.com',
+  // apiUrl: 'http://127.0.0.1:8000',
+  setKey: '6Le9XCgpAAAAAGLvVLmTUsLr057fNVB6J1-ejMum',
   roles: {
     rol: {
-      id:0,
-      codigo: "",
-      nombre: "",
-      descripcion: ""
+      id: 0,
+      codigo: '',
+      nombre: '',
+      descripcion: ''
     },
     acciones: {
       ADM: {
