@@ -1,19 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgbPagination, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { nuevoUsuario, UsersService } from 'src/app/services/admin/users.service';
-import { map } from 'rxjs/operators';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { stringify } from 'querystring';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {NgbPagination, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {nuevoUsuario, UsersService} from 'src/app/services/admin/users.service';
+import {FormGroup, Validators, FormBuilder} from '@angular/forms';
+
 @Component({
   selector: 'app-users-list',
   templateUrl: './users-list.component.html',
   providers: [UsersService]
 })
-export class UsersListComponent implements OnInit {
+export class UsersListComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @ViewChild('dismissModal') dismissModal;
   @ViewChild('mensajeModal') mensajeModal;
-  public mensaje = "";
+  public mensaje = '';
   submitted = false;
   usuarioForm: FormGroup;
 
@@ -45,11 +44,11 @@ export class UsersListComponent implements OnInit {
     idRol: 0,
     estado: 'Activo'
   };
+
   constructor(
     private servicioUsuarios: UsersService,
     private modalService: NgbModal,
     private _formBuilder: FormBuilder,
-
   ) {
   }
 
@@ -58,16 +57,18 @@ export class UsersListComponent implements OnInit {
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
       username: ['', [Validators.required]],
-      email: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
       compania: ['', [Validators.required]],
       pais: ['', [Validators.required]],
-      telefono: ['', [Validators.required]],
-      whatsapp: ['', [Validators.required]],
+      telefono: ['', [Validators.required, Validators.maxLength(10),
+        Validators.minLength(10), Validators.pattern('^[0-9]*$')]],
+      whatsapp: ['', [Validators.required, Validators.maxLength(10),
+        Validators.minLength(10), Validators.pattern('^[0-9]*$')]],
       idRol: [0, [Validators.min(1)]],
     });
     this.menu = {
-      modulo: "adm",
-      seccion: "user"
+      modulo: 'adm',
+      seccion: 'user'
     };
     this.pageSize = 10;
     this.vista = 'lista';
@@ -91,11 +92,13 @@ export class UsersListComponent implements OnInit {
     this.iniciarPaginador();
     this.obtenerListaUsuarios();
   }
+
   async iniciarPaginador() {
     this.paginator.pageChange.subscribe(() => {
       this.obtenerListaUsuarios();
     });
   }
+
   async obtenerListaUsuarios() {
 
     await this.servicioUsuarios.obtenerListaUsuarios(this.page, this.pageSize, this.rolesOpciones, this.estadosOpciones)
@@ -104,13 +107,15 @@ export class UsersListComponent implements OnInit {
         this.usuarios = result.info;
       });
   }
-  volver(){
+
+  volver(): void {
     this.vista = 'lista';
   }
-  primeraLetra(nombre, apellido) {
-    let iniciales = nombre.charAt(0) + apellido.charAt(0);
-    return iniciales;
+
+  primeraLetra(nombre, apellido): string {
+    return nombre.charAt(0) + apellido.charAt(0);
   }
+
   async guardarUsuario() {
 
     this.submitted = true;
@@ -120,41 +125,46 @@ export class UsersListComponent implements OnInit {
     }
     this.cargando = true;
     await this.servicioUsuarios.insertarUsuario(this.nuevoUsuario).subscribe(() => {
-      this.cargando = false;
-      this.obtenerListaUsuarios();
-      this.mensaje = "Usuario creado exitosamente"
-      this.abrirModal(this.mensajeModal);
-      this.dismissModal.nativeElement.click();
-    },
+        this.cargando = false;
+        this.obtenerListaUsuarios();
+        this.mensaje = 'Usuario creado exitosamente';
+        this.abrirModal(this.mensajeModal);
+        this.dismissModal.nativeElement.click();
+      },
       (error) => {
         this.cargando = false;
         let errores = Object.values(error);
-        this.mensaje = "";
+        this.mensaje = '';
         errores.map(infoErrores => {
-          this.mensaje += infoErrores + "<br>";
+          this.mensaje += infoErrores + '<br>';
         });
         this.abrirModal(this.mensajeModal);
 
       });
 
   }
-  editarUsuario(id) {
+
+  editarUsuario(id): void {
     this.vista = 'editar';
     this.idUsuario = id;
   }
-  comprobarEliminar(modal, id) {
+
+  comprobarEliminar(modal, id): void {
     this.idUsuario = id;
-    this.modalService.open(modal)
+    this.modalService.open(modal);
   }
-  abrirModal(modal) {
-    this.modalService.open(modal)
+
+  abrirModal(modal): void {
+    this.modalService.open(modal);
   }
-  cerrarModal() {
+
+  cerrarModal(): void {
     this.modalService.dismissAll();
   }
-  eliminar() {
+
+  eliminar(): void {
     this.modalService.dismissAll();
-    this.servicioUsuarios.eliminarUsuario(this.idUsuario,'Inactivo').subscribe(info => {
+    this.servicioUsuarios.eliminarUsuario(this.idUsuario, 'Inactivo').subscribe(info => {
       this.obtenerListaUsuarios();
     });
   }

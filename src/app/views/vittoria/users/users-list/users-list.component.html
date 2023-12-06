@@ -178,6 +178,7 @@
                                             <input type="text" name="email" formControlName="email" [(ngModel)]="nuevoUsuario.email" id="basic-icon-default-email" class="form-control dt-email" />
                                             <div *ngIf="submitted && f.email.errors" class="invalid-feedback" style="display: block;">
                                                 <div *ngIf="f.email.errors.required">Email es requerido</div>
+                                                <div *ngIf="f.email.errors.email">Email no es valido</div>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -201,16 +202,24 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label" for="basic-icon-default-uname">Teléfono:</label>
-                                            <input type="number" name="telefono" formControlName="telefono" [(ngModel)]="nuevoUsuario.telefono" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                            <input type="text" name="telefono" formControlName="telefono" [(ngModel)]="nuevoUsuario.telefono" id="basic-icon-default-uname" class="form-control dt-uname" />
                                             <div *ngIf="submitted && f.telefono.errors" class="invalid-feedback" style="display: block;">
                                                 <div *ngIf="f.telefono.errors.required">Teléfono es requerido</div>
+                                                <div *ngIf="f.telefono?.errors.pattern">Ingrese solo números</div>
+                                                <div *ngIf="f.telefono.errors?.minlength || f.telefono.errors?.maxlength ">
+                                                  Ingrese un número de 10 dígitos
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label" for="basic-icon-default-uname">WhatsApp:</label>
-                                            <input type="number" name="whatsapp" formControlName="whatsapp" [(ngModel)]="nuevoUsuario.whatsapp" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                            <input type="text" name="whatsapp" formControlName="whatsapp" [(ngModel)]="nuevoUsuario.whatsapp" id="basic-icon-default-uname" class="form-control dt-uname" />
                                             <div *ngIf="submitted && f.whatsapp.errors" class="invalid-feedback" style="display: block;">
                                                 <div *ngIf="f.whatsapp.errors.required">Whatsapp es requerido</div>
+                                                <div *ngIf="f.whatsapp?.errors.pattern">Ingrese solo números</div>
+                                                <div *ngIf="f.whatsapp.errors?.minlength || f.whatsapp.errors?.maxlength ">
+                                                  Ingrese un número de 10 dígitos
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
