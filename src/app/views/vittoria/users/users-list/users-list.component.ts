@@ -168,4 +168,14 @@ export class UsersListComponent implements OnInit, AfterViewInit {
       this.obtenerListaUsuarios();
     });
   }
+
+  export(): void {
+    this.servicioUsuarios.exportarUsuarios().subscribe((data) => {
+      const downloadURL = window.URL.createObjectURL(data);
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = 'parametrizaciones.xls';
+      link.click();
+    });
+  }
 }
