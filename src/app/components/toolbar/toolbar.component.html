@@ -19,17 +19,17 @@
             </li>
             <li class="navigation-header">Administración</li>
             <li class="nav-item {{menuToolbar['adm']['user']}}" *ngIf="acciones.ADM.LEER">
-                <a class="d-flex align-items-center" href="/admin/user">
+                <a class="d-flex align-items-center" href="#/admin/user">
                     <i data-feather="user"></i>
                     <span class="menu-title text-truncate" data-i18n="User">Usuarios</span>
                 </a>
             </li>
             <li class="nav-item {{menuToolbar['adm']['roles']}}" *ngIf="acciones.ADM.LEER">
-                <a class="d-flex align-items-center" href="/admin/roles"><i data-feather="check-square"></i>
+                <a class="d-flex align-items-center" href="#/admin/roles"><i data-feather="check-square"></i>
                 <span class="menu-title text-truncate"data-i18n="Todo">Rol de usuarios</span></a>
             </li>
             <li class="nav-item {{menuToolbar['adm']['param']}}" *ngIf="acciones.ADM.LEER">
-                <a class="d-flex align-items-center" href="/admin/param">
+                <a class="d-flex align-items-center" href="#/admin/param">
                     <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrizaciones</span></a>
             </li>
             <li class="navigation-header">Módulos de sistema</li>
@@ -39,7 +39,7 @@
                     <span class="menu-title text-truncate" data-i18n="Invoice">MDM Master Data Managment</span></a>
                 <ul class="menu-content">
                     <li class="nav-item {{menuToolbar['mdm']['param']}}">
-                        <a class="d-flex align-items-center" href="/mdm/parametrizaciones">
+                        <a class="d-flex align-items-center" href="#/mdm/parametrizaciones">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrizaciones</span></a>
                     </li>
                     <li>
@@ -47,15 +47,15 @@
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Preview">Prospectos clientes</span></a>
                         <ul class="menu-content">
                             <li class="nav-item {{menuToolbar['mdm']['prospectosCli']}}">
-                                <a class="d-flex align-items-center" href="/mdm/prospectosClientes" data-toggle="tooltip" data-placement="right" title="Admin prospectos clientes">
+                                <a class="d-flex align-items-center" href="#/mdm/prospectosClientes" data-toggle="tooltip" data-placement="right" title="Admin prospectos clientes">
                                     <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Admin Prospectos Clientes</span></a>
                             </li>
                             <!-- <li class="nav-item {{menuToolbar['mdm']['addXLSX']}}">
-                                <a class="d-flex align-items-center" href="/mdm/prospectosClientes/addXLSX" data-toggle="tooltip" data-placement="right" title="Carga de prospectos XLSX">
+                                <a class="d-flex align-items-center" href="#/mdm/prospectosClientes/addXLSX" data-toggle="tooltip" data-placement="right" title="Carga de prospectos XLSX">
                                     <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Preview">Carga de prospectos XLSX</span></a>
                             </li>
                             <li class="nav-item {{menuToolbar['mdm']['addCSV']}}">
-                                <a class="d-flex align-items-center" href="/mdm/prospectosClientes/addCSV" data-toggle="tooltip" data-placement="right" title="Carga de prospectos CSV">
+                                <a class="d-flex align-items-center" href="#/mdm/prospectosClientes/addCSV" data-toggle="tooltip" data-placement="right" title="Carga de prospectos CSV">
                                     <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Edit">Carga de prospectos CSV</span></a>
                             </li> -->
                         </ul>
@@ -69,23 +69,23 @@
                                     <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Personas</span></a>
                                 <ul class="menu-content">
                                     <li class="nav-item {{menuToolbar['mdm']['clientesList']}}">
-                                        <a class="d-flex align-items-center" href="/mdm/clientes/personas/list" data-toggle="tooltip" data-placement="right" title="Administrar todos los clientes">
+                                        <a class="d-flex align-items-center" href="#/mdm/clientes/personas/list" data-toggle="tooltip" data-placement="right" title="Administrar todos los clientes">
                                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración</span></a>
                                     </li>
                                     <li class="nav-item {{menuToolbar['mdm']['clientesTransac']}}">
-                                        <a class="d-flex align-items-center" href="/mdm/clientes/personas/transacciones" data-toggle="tooltip" data-placement="right" title="Transacciones de compra">
+                                        <a class="d-flex align-items-center" href="#/mdm/clientes/personas/transacciones" data-toggle="tooltip" data-placement="right" title="Transacciones de compra">
                                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Preview">Transacciones de compra</span></a>
                                     </li>
                                     <li class="nav-item {{menuToolbar['mdm']['clientesTransacAdd']}}">
-                                        <a class="d-flex align-items-center" href="/mdm/clientes/personas/transacciones/add" data-toggle="tooltip" data-placement="right" title="Generar transacciones de compra">
+                                        <a class="d-flex align-items-center" href="#/mdm/clientes/personas/transacciones/add" data-toggle="tooltip" data-placement="right" title="Generar transacciones de compra">
                                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Edit">Generar transación</span></a>
                                     </li>
                                     <!-- <li class="nav-item {{menuToolbar['mdm']['clientesTransacLoad']}}">
-                                        <a class="d-flex align-items-center" href="/mdm/clientes/personas/transacciones/load" data-toggle="tooltip" data-placement="right" title="Cargar transacciones CSV XLSX">
+                                        <a class="d-flex align-items-center" href="#/mdm/clientes/personas/transacciones/load" data-toggle="tooltip" data-placement="right" title="Cargar transacciones CSV XLSX">
                                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Edit">Cargar transacciones</span></a>
                                     </li> -->
                                     <!-- <li class="nav-item {{menuToolbar['mdm']['clientesLoad']}}">
-                                        <a class="d-flex align-items-center" href="/mdm/clientes/personas/load" data-toggle="tooltip" data-placement="right" title="Cargar datos de cliente CSV XLSX">
+                                        <a class="d-flex align-items-center" href="#/mdm/clientes/personas/load" data-toggle="tooltip" data-placement="right" title="Cargar datos de cliente CSV XLSX">
                                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Edit">Cargar datos de cliente</span></a>
                                     </li> -->
                                 </ul>
@@ -96,23 +96,23 @@
                                     <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Negocios</span></a>
                                 <ul class="menu-content">
                                     <li class="nav-item {{menuToolbar['mdm']['negociosList']}}">
-                                        <a class="d-flex align-items-center" href="/mdm/clientes/negocios/list" data-toggle="tooltip" data-placement="right" title="Administrar todos los negocios">
+                                        <a class="d-flex align-items-center" href="#/mdm/clientes/negocios/list" data-toggle="tooltip" data-placement="right" title="Administrar todos los negocios">
                                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración</span></a>
                                     </li>
                                     <li class="nav-item {{menuToolbar['mdm']['negociosTransac']}}">
-                                        <a class="d-flex align-items-center" href="/mdm/clientes/negocios/transacciones/list" data-toggle="tooltip" data-placement="right" title="Transacciones de compra">
+                                        <a class="d-flex align-items-center" href="#/mdm/clientes/negocios/transacciones/list" data-toggle="tooltip" data-placement="right" title="Transacciones de compra">
                                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Preview">Transacciones de compra</span></a>
                                     </li>
                                     <li class="nav-item {{menuToolbar['mdm']['negociosTransacAdd']}}">
-                                        <a class="d-flex align-items-center" href="/mdm/clientes/negocios/transacciones/add" data-toggle="tooltip" data-placement="right" title="Generar transacciones de compra">
+                                        <a class="d-flex align-items-center" href="#/mdm/clientes/negocios/transacciones/add" data-toggle="tooltip" data-placement="right" title="Generar transacciones de compra">
                                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Edit">Generar transación</span></a>
                                     </li>
                                     <!-- <li class="nav-item {{menuToolbar['mdm']['negociosTransacLoad']}}">
-                                        <a class="d-flex align-items-center" href="/mdm/clientes/negocios/transacciones/load" data-toggle="tooltip" data-placement="right" title="Cargar transacciones CSV XLSX">
+                                        <a class="d-flex align-items-center" href="#/mdm/clientes/negocios/transacciones/load" data-toggle="tooltip" data-placement="right" title="Cargar transacciones CSV XLSX">
                                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Edit">Cargar transacciones</span></a>
                                     </li>
                                     <li class="nav-item {{menuToolbar['mdm']['negociosLoad']}}">
-                                        <a class="d-flex align-items-center" href="/mdm/clientes/negocios/load" data-toggle="tooltip" data-placement="right" title="Cargar datos de negocios CSV XLSX">
+                                        <a class="d-flex align-items-center" href="#/mdm/clientes/negocios/load" data-toggle="tooltip" data-placement="right" title="Cargar datos de negocios CSV XLSX">
                                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Edit">Cargar datos de cliente</span></a>
                                     </li> -->
                                 </ul>
@@ -131,47 +131,47 @@
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración productos</span></a>
                         <ul class="menu-content">
                             <li class="nav-item {{menuToolbar['mdp']['param']}}">
-                                <a class="d-flex align-items-center" href="/mdp/parametrizaciones">
+                                <a class="d-flex align-items-center" href="#/mdp/parametrizaciones">
                                     <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
                             </li>
                             <li class="nav-item {{menuToolbar['mdp']['cat']}}">
-                                <a class="d-flex align-items-center" href="/mdp/categorias" data-toggle="tooltip" data-placement="right" title="Administrar categorias">
+                                <a class="d-flex align-items-center" href="#/mdp/categorias" data-toggle="tooltip" data-placement="right" title="Administrar categorias">
                                     <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración de categorias</span></a>
                             </li>
                             <li class="nav-item {{menuToolbar['mdp']['subCat']}}">
-                                <a class="d-flex align-items-center" href="/mdp/subcategorias" data-toggle="tooltip" data-placement="right" title="Administrar subcategorías">
+                                <a class="d-flex align-items-center" href="#/mdp/subcategorias" data-toggle="tooltip" data-placement="right" title="Administrar subcategorías">
                                     <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración subcategorías</span></a>
                             </li>
                             <li class="nav-item {{menuToolbar['mdp']['prodList']}}">
-                                <a class="d-flex align-items-center" href="/mdp/productos" data-toggle="tooltip" data-placement="right" title="Listado de productos">
+                                <a class="d-flex align-items-center" href="#/mdp/productos" data-toggle="tooltip" data-placement="right" title="Listado de productos">
                                     <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Listado de productos</span></a>
                             </li>
                             <li class="nav-item {{menuToolbar['mdp']['prodBusq']}}">
-                                <a class="d-flex align-items-center" href="/mdp/productos/search" data-toggle="tooltip" data-placement="right" title="Buscar productos">
+                                <a class="d-flex align-items-center" href="#/mdp/productos/search" data-toggle="tooltip" data-placement="right" title="Buscar productos">
                                     <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Buscar productos</span></a>
                             </li>
                             <li class="nav-item {{menuToolbar['mdp']['stockAct']}}">
-                                <a class="d-flex align-items-center" href="/mdp/productos/actualizarStock" data-toggle="tooltip" data-placement="right" title="Actualizar Stock de productos">
+                                <a class="d-flex align-items-center" href="#/mdp/productos/actualizarStock" data-toggle="tooltip" data-placement="right" title="Actualizar Stock de productos">
                                     <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Actualizar Stock</span></a>
                             </li>
                             <li class="nav-item {{menuToolbar['mdp']['abastRep']}}">
-                                <a class="d-flex align-items-center" href="/mdp/reportes/abastecimiento" data-toggle="tooltip" data-placement="right" title="Reporte de abastecimiento">
+                                <a class="d-flex align-items-center" href="#/mdp/reportes/abastecimiento" data-toggle="tooltip" data-placement="right" title="Reporte de abastecimiento">
                                     <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reporte de abastecimiento</span></a>
                             </li>
                             <li class="nav-item {{menuToolbar['mdp']['stockRep']}}">
-                                <a class="d-flex align-items-center" href="/mdp/reportes/stock" data-toggle="tooltip" data-placement="right" title="Reporte de stock">
+                                <a class="d-flex align-items-center" href="#/mdp/reportes/stock" data-toggle="tooltip" data-placement="right" title="Reporte de stock">
                                     <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reporte de stock</span></a>
                             </li>
                             <li class="nav-item {{menuToolbar['mdp']['caduRep']}}">
-                                <a class="d-flex align-items-center" href="/mdp/reportes/caducidad" data-toggle="tooltip" data-placement="right" title="Reporte de caducidad de productos">
+                                <a class="d-flex align-items-center" href="#/mdp/reportes/caducidad" data-toggle="tooltip" data-placement="right" title="Reporte de caducidad de productos">
                                     <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reporte de caducidad de productos</span></a>
                             </li>
                             <li class="nav-item {{menuToolbar['mdp']['rotaRep']}}">
-                                <a class="d-flex align-items-center" href="/mdp/reportes/rotacion" data-toggle="tooltip" data-placement="right" title="Reporte de rotación de productos">
+                                <a class="d-flex align-items-center" href="#/mdp/reportes/rotacion" data-toggle="tooltip" data-placement="right" title="Reporte de rotación de productos">
                                     <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reporte de rotación de productos</span></a>
                             </li>
                             <li class="nav-item {{menuToolbar['mdp']['refilRep']}}">
-                                <a class="d-flex align-items-center" href="/mdp/reportes/refil" data-toggle="tooltip" data-placement="right" title="Reporte refil">
+                                <a class="d-flex align-items-center" href="#/mdp/reportes/refil" data-toggle="tooltip" data-placement="right" title="Reporte refil">
                                     <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reporte de refil</span></a>
                             </li>
                         </ul>
@@ -184,23 +184,23 @@
                     <span class="menu-title text-truncate" data-i18n="Invoice">MDO Motor de ofertas</span></a>
                 <ul class="menu-content">
                     <li class="nav-item {{menuToolbar['mdo']['param']}}">
-                        <a class="d-flex align-items-center" href="mdo/parametrizaciones/list">
+                        <a class="d-flex align-items-center" href="#/mdo/parametrizaciones/list">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
                     </li>
                     <li class="nav-item {{menuToolbar['mdo']['predCross']}}">
-                        <a class="d-flex align-items-center" href="mdo/predicciones/cross" data-toggle="tooltip" data-placement="right" title="Predicciones para crosseling">
+                        <a class="d-flex align-items-center" href="#/mdo/predicciones/cross" data-toggle="tooltip" data-placement="right" title="Predicciones para crosseling">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Predicciones para crosseling</span></a>
                     </li>
                     <li class="nav-item {{menuToolbar['mdo']['predRefil']}}">
-                        <a class="d-flex align-items-center" href="mdo/predicciones/refil" data-toggle="tooltip" data-placement="right" title="Predicciones para refil">
+                        <a class="d-flex align-items-center" href="#/mdo/predicciones/refil" data-toggle="tooltip" data-placement="right" title="Predicciones para refil">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Predicciones para refil</span></a>
                     </li>
                     <li class="nav-item {{menuToolbar['mdo']['predNueProd']}}">
-                        <a class="d-flex align-items-center" href="mdo/predicciones/nuevos" data-toggle="tooltip" data-placement="right" title="Predicciones para nuevos productos">
+                        <a class="d-flex align-items-center" href="#/mdo/predicciones/nuevos" data-toggle="tooltip" data-placement="right" title="Predicciones para nuevos productos">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Predicciones para nuevos productos</span></a>
                     </li>
                     <li class="nav-item {{menuToolbar['mdo']['genOferta']}}">
-                        <a class="d-flex align-items-center" href="mdo/oferta/generar" data-toggle="tooltip" data-placement="right" title="Generar oferta para cliente">
+                        <a class="d-flex align-items-center" href="#/mdo/oferta/generar" data-toggle="tooltip" data-placement="right" title="Generar oferta para cliente">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Generar oferta para cliente</span></a>
                     </li>
                 </ul>
@@ -211,11 +211,11 @@
                     <span class="menu-title text-truncate" data-i18n="Invoice">GDO Gestión de ofertas</span></a>
                 <ul class="menu-content">
                     <li class="nav-item {{menuToolbar['gdo']['param']}}">
-                        <a class="d-flex align-items-center" href="gdo/parametrizaciones/list">
+                        <a class="d-flex align-items-center" href="#/gdo/parametrizaciones/list">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
                     </li>
                     <li class="nav-item {{menuToolbar['gdo']['gestOferta']}}">
-                        <a class="d-flex align-items-center" href="gdo/gestionOferta/list" data-toggle="tooltip" data-placement="right" title="Gestión de la oferta">
+                        <a class="d-flex align-items-center" href="#/gdo/gestionOferta/list" data-toggle="tooltip" data-placement="right" title="Gestión de la oferta">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Gestión de la oferta</span></a>
                     </li>
                 </ul>
@@ -226,18 +226,15 @@
                     <span class="menu-title text-truncate" data-i18n="Invoice">GDE Gestión de entregas</span></a>
                 <ul class="menu-content">
                     <li class="nav-item {{menuToolbar['gde']['param']}}">
-                        <a class="d-flex align-items-center" href="gde/parametrizaciones/list">
+                        <a class="d-flex align-items-center" href="#/gde/parametrizaciones/list">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
                     </li>
                     <li class="nav-item {{menuToolbar['gde']['gestEntrega']}}">
-                        <a class="d-flex align-items-center" href="gde/gestionEntrega/list" data-toggle="tooltip" data-placement="right" title="Gestión de entrega de la oferta">
+                        <a class="d-flex align-items-center" href="#/gde/gestionEntrega/list" data-toggle="tooltip" data-placement="right" title="Gestión de entrega de la oferta">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Gestión de entrega de la oferta</span></a>
                     </li>
                 </ul>
             </li>
-
-
-
         </ul>
     </div>
 </div>
