@@ -113,7 +113,7 @@ export class ParamsListComponent implements OnInit {
     });
   }
 
-  insertarParametro() {
+  insertarParametro(): void {
     this.nombre = '';
     this.nombreTipo = '';
     this.descripcion = '';
@@ -187,7 +187,7 @@ export class ParamsListComponent implements OnInit {
     }
   }
 
-  abrirModal(modal, id) {
+  abrirModal(modal, id): void {
     this.idParametro = id;
     this.modalService.open(modal);
   }
@@ -208,11 +208,21 @@ export class ParamsListComponent implements OnInit {
     });
   }
 
-  abrirModalMensaje(modal) {
+  abrirModalMensaje(modal): void {
     this.modalService.open(modal);
   }
 
-  cerrarModalMensaje() {
+  cerrarModalMensaje(): void {
     this.modalService.dismissAll();
+  }
+
+  export(): void {
+    this.paramService.exportarUsuarios().subscribe((data) => {
+      const downloadURL = window.URL.createObjectURL(data);
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = 'parametrizaciones.xls';
+      link.click();
+    });
   }
 }

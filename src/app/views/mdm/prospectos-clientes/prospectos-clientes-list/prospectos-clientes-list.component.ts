@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ProspectosService } from '../../../../services/mdm/prospectosCli/prospectos.service';
-import { NgbModal, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { DatePipe } from '@angular/common';
-import { ParamService } from '../../../../services/mdm/param/param.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ProspectosService} from '../../../../services/mdm/prospectosCli/prospectos.service';
+import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
+import {FormGroup, Validators, FormBuilder} from '@angular/forms';
+import {DatePipe} from '@angular/common';
+import {ParamService} from '../../../../services/mdm/param/param.service';
 
 @Component({
   selector: 'app-prospectos-clientes-list',
@@ -15,7 +15,7 @@ export class ProspectosClientesListComponent implements OnInit {
   @ViewChild('dismissModal') dismissModal;
   @ViewChild('mensajeModal') mensajeModal;
   @ViewChild('eliminarProspectoMdl') eliminarProspectoMdl;
-  public mensaje = "";
+  public mensaje = '';
 
   numRegex = /^-?\d*[.,]?\d{0,2}$/;
 
@@ -24,11 +24,11 @@ export class ProspectosClientesListComponent implements OnInit {
   submitted = false;
   menu;
   canalOpciones;
-  canalLista = "";
-  vendedor = "";
+  canalLista = '';
+  vendedor = '';
   vendedorOpciones;
-  fecha = "";
-  confirmProspectoLista = "";
+  fecha = '';
+  confirmProspectoLista = '';
   confirmProspectoOpciones;
   tipoPrecioOpciones;
   tipoClienteOpciones;
@@ -43,56 +43,56 @@ export class ProspectosClientesListComponent implements OnInit {
   nombres;
   apellidos;
   telefono;
-  tipoCliente = "";
+  tipoCliente = '';
   whatsapp;
   facebook;
   twitter;
   instagram;
   correo1;
   correo2;
-  ciudad="";
-  canal = "";
+  ciudad = '';
+  canal = '';
   codigoProducto;
   nombreProducto;
   precio;
-  pais="";
+  pais = '';
   paisOpciones;
-  provincia="";
+  provincia = '';
   provinciaOpciones;
   ciudadOpciones;
-  tipoPrecio = "";
+  tipoPrecio = '';
   nombreVendedor;
-  confirmacionProspecto = "";
+  confirmacionProspecto = '';
   imagen;
   vista;
   identificacion;
   usuarioLoggeado;
+
   constructor(
     private prospectosService: ProspectosService,
     private datePipe: DatePipe,
     private _formBuilder: FormBuilder,
     private modalService: NgbModal,
     private paramService: ParamService,
-
   ) {
 
     this.usuarioLoggeado = JSON.parse(localStorage.getItem('currentUser'));
-    this.nombreVendedor = this.usuarioLoggeado.usuario.nombres + " " + this.usuarioLoggeado.usuario.apellidos;
-   }
+    this.nombreVendedor = this.usuarioLoggeado.usuario.nombres + ' ' + this.usuarioLoggeado.usuario.apellidos;
+  }
 
   ngOnInit(): void {
     this.pospectoForm = this._formBuilder.group({
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
-      telefono: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      identificacion: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      telefono: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10), Validators.maxLength(10)]],
+      identificacion: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10), Validators.maxLength(10)]],
       tipoCliente: ['', [Validators.required]],
-      whatsapp: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      whatsapp: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10), Validators.maxLength(10)]],
       facebook: ['', [Validators.required]],
       twitter: ['', [Validators.required]],
       instagram: ['', [Validators.required]],
-      correo1: ['', [Validators.required]],
-      correo2: ['', [Validators.required]],
+      correo1: ['', [Validators.required, Validators.email]],
+      correo2: ['', [Validators.required, Validators.email]],
       pais: ['', [Validators.required]],
       provincia: ['', [Validators.required]],
       ciudad: ['', [Validators.required]],
@@ -105,12 +105,13 @@ export class ProspectosClientesListComponent implements OnInit {
       confirmacionProspecto: ['', [Validators.required]]
     });
     this.menu = {
-      modulo: "mdm",
-      seccion: "prospectosCli"
+      modulo: 'mdm',
+      seccion: 'prospectosCli'
     };
     this.vista = 'lista';
     this.obtenerPaisOpciones();
   }
+
   async ngAfterViewInit() {
     this.obtenerCanales();
     this.obtenerProspectos();
@@ -120,18 +121,22 @@ export class ProspectosClientesListComponent implements OnInit {
     this.obtenerTiposPrecio();
     this.obtenerTiposCliente();
   }
+
   async iniciarPaginador() {
     this.paginator.pageChange.subscribe(() => {
       this.obtenerListaProspectos();
     });
   }
+
   transformarFecha(fecha) {
     let nuevaFecha = this.datePipe.transform(fecha, 'yyyy-MM-dd');
     return nuevaFecha;
   }
+
   get f() {
     return this.pospectoForm.controls;
   }
+
   async obtenerListaProspectos() {
     await this.prospectosService.obtenerLista(
       {
@@ -144,60 +149,71 @@ export class ProspectosClientesListComponent implements OnInit {
       }
     )
       .subscribe((info) => {
-        this.lista = info.info;
-        this.collectionSize = info.cont;
-      }
+          this.lista = info.info;
+          this.collectionSize = info.cont;
+        }
       );
   }
+
   async removerImagen() {
 
   }
+
   async obtenerCanales() {
-    await this.prospectosService.obtenerFiltro("CANAL").subscribe((info) => {
+    await this.prospectosService.obtenerFiltro('CANAL').subscribe((info) => {
       this.canalOpciones = info;
     });
   }
+
   async obtenerPaisOpciones() {
-    this.provincia="";
-    this.ciudad="";
-    await this.paramService.obtenerListaPadres("PAIS").subscribe((info) => {
+    this.provincia = '';
+    this.ciudad = '';
+    await this.paramService.obtenerListaPadres('PAIS').subscribe((info) => {
       this.paisOpciones = info;
     });
   }
+
   async obtenerProvincias() {
-    this.ciudad="";
-    await this.paramService.obtenerListaHijos(this.pais, "PAIS").subscribe((info) => {
+    this.ciudad = '';
+    await this.paramService.obtenerListaHijos(this.pais, 'PAIS').subscribe((info) => {
       this.provinciaOpciones = info;
     });
   }
+
   async obtenerCiudad() {
-    await this.paramService.obtenerListaHijos(this.provincia, "PROVINCIA").subscribe((info) => {
+    await this.paramService.obtenerListaHijos(this.provincia, 'PROVINCIA').subscribe((info) => {
       this.ciudadOpciones = info;
     });
   }
+
   async obtenerVendedores() {
-    await this.prospectosService.obtenerVendedor("Vendedor").subscribe((info) => {
+    await this.prospectosService.obtenerVendedor('Vendedor').subscribe((info) => {
       this.vendedorOpciones = info;
     });
   }
+
   async obtenerProspectos() {
-    await this.prospectosService.obtenerFiltro("CONFIRMACION_PROSPECTO").subscribe((info) => {
+    await this.prospectosService.obtenerFiltro('CONFIRMACION_PROSPECTO').subscribe((info) => {
       this.confirmProspectoOpciones = info;
     });
   }
+
   async obtenerTiposPrecio() {
-    await this.prospectosService.obtenerFiltro("TIPO_PRECIO").subscribe((info) => {
+    await this.prospectosService.obtenerFiltro('TIPO_PRECIO').subscribe((info) => {
       this.tipoPrecioOpciones = info;
     });
   }
+
   async obtenerTiposCliente() {
-    await this.prospectosService.obtenerFiltro("TIPO_CLIENTE").subscribe((info) => {
+    await this.prospectosService.obtenerFiltro('TIPO_CLIENTE').subscribe((info) => {
       this.tipoClienteOpciones = info;
     });
   }
+
   async guardarImagen(event) {
     this.imagen = event.target.files[0];
   }
+
   async crearProspecto() {
     this.submitted = true;
     // if (this.pospectoForm.invalid || !this.imagen) {
@@ -231,40 +247,45 @@ export class ProspectosClientesListComponent implements OnInit {
       this.usuario.append('imagen', this.imagen, this.imagen.name);
     }
     this.prospectosService.crearProspectos(this.usuario).subscribe(() => {
-      this.obtenerListaProspectos();
-      this.dismissModal.nativeElement.click();
-      this.submitted = false;
-      this.cargando = false;
-      this.mensaje = "Prospecto creado exitosamente";
-      this.abrirModal(this.mensajeModal);
+        this.obtenerListaProspectos();
+        this.dismissModal.nativeElement.click();
+        this.submitted = false;
+        this.cargando = false;
+        this.mensaje = 'Prospecto creado exitosamente';
+        this.abrirModal(this.mensajeModal);
 
-    },
+      },
       (error) => {
         let errores = Object.values(error);
         let llaves = Object.keys(error);
-        this.mensaje = "";
+        this.mensaje = '';
         errores.map((infoErrores, index) => {
-          this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
         });
         this.abrirModal(this.mensajeModal);
         this.cargando = false;
       }
     );
   }
+
   abrirModal(modal) {
-    this.modalService.open(modal)
+    this.modalService.open(modal);
   }
+
   cerrarModal() {
     this.modalService.dismissAll();
   }
+
   editarProspecto(id) {
     this.idUsuario = id;
     this.vista = 'editar';
   }
+
   eliminarProspecto(id) {
     this.idProspecto = id;
     this.abrirModal(this.eliminarProspectoMdl);
   }
+
   eliminarProspectoModal() {
     this.prospectosService.eliminarProspecto(this.idProspecto).subscribe((info) => {
       this.obtenerListaProspectos();
