@@ -1,9 +1,7 @@
-import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { Rol, RolesService } from 'src/app/services/admin/roles.service';
-import { transform } from 'typescript';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {Component, Input, OnInit, Output, EventEmitter, ViewChild} from '@angular/core';
+import {Rol, RolesService} from 'src/app/services/admin/roles.service';
+import {FormGroup, Validators, FormBuilder} from '@angular/forms';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-roles-add',
@@ -19,85 +17,90 @@ export class RolesAddComponent implements OnInit {
   submitted = false;
   menu;
   permisosRol;
-  accionesRol;
   roles: Rol;
   mensaje;
+
   constructor(
     private servicioRoles: RolesService,
     private _formBuilder: FormBuilder,
     private modalService: NgbModal
-
-
   ) {
     this.roles = this.servicioRoles.obtenerNuevoRol();
   }
+
   get f() {
     return this.rolesForm.controls;
   }
 
   async ngOnInit() {
-    this.rolesForm = this._formBuilder.group({
-      nombre: ['', [Validators.required]]
-    });
     this.menu = 'roles';
     await this.servicioRoles.obtenerListaPermisos().subscribe(async (result) => {
       this.permisosRol = result;
-    })
-    if (this.funcion == 'editar') {
+    });
+    if (this.funcion === 'editar') {
       await this.servicioRoles.obtenerRol(this.idRol).subscribe(async (result: Rol) => {
-        this.roles = result;
-      },
+          this.roles = result;
+        },
       );
     } else {
       this.roles = this.servicioRoles.obtenerNuevoRol();
     }
+    this.rolesForm = this._formBuilder.group({
+      nombre: ['', [Validators.required]]
+    });
   }
+
   async ngAfterViewInit() {
 
   }
-  regresar() {
+
+  regresar(): void {
     this.volver.emit();
   }
-  async guardarRol() {
+
+  guardarRol() {
     this.submitted = true;
     if (this.rolesForm.invalid) {
       return;
     }
-    if (this.funcion == 'editar') {
-      await this.servicioRoles.editarRol(this.roles).subscribe((result) => {
-        this.mensaje = "Rol editado con éxito";
-        this.abrirModal(this.mensajeModal);
-
-      },
+    if (this.funcion === 'editar') {
+      this.servicioRoles.editarRol(this.roles).subscribe((result) => {
+          this.mensaje = 'Rol editado con éxito';
+          this.abrirModal(this.mensajeModal);
+          this.regresar();
+        },
         (error) => {
           let errores = Object.values(error);
           let llaves = Object.keys(error);
-          this.mensaje = "";
+          this.mensaje = '';
           errores.map((infoErrores, index) => {
-            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
           });
           this.abrirModal(this.mensajeModal);
         });
-    } else if (this.funcion == 'insertar') {
-      await this.servicioRoles.insertarRol(this.roles).subscribe((result) => {
-        this.mensaje = "Rol creado con éxito";
-        this.abrirModal(this.mensajeModal);
-      },
+    } else if (this.funcion === 'insertar') {
+      this.servicioRoles.insertarRol(this.roles).subscribe((result) => {
+          this.mensaje = 'Rol creado con éxito';
+          this.abrirModal(this.mensajeModal);
+          this.regresar();
+        },
         (error) => {
           let errores = Object.values(error);
           let llaves = Object.keys(error);
-          this.mensaje = "";
+          this.mensaje = '';
           errores.map((infoErrores, index) => {
-            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
           });
           this.abrirModal(this.mensajeModal);
         });
     }
   }
-  abrirModal(modal) {
-    this.modalService.open(modal)
+
+  abrirModal(modal): void {
+    this.modalService.open(modal);
   }
-  cerrarModal() {
+
+  cerrarModal(): void {
     this.modalService.dismissAll();
   }
 }

@@ -15,8 +15,10 @@
                         <form class="auth-login-form mt-2" [formGroup]="rolesForm">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <input class="form-control" name="nombre" formControlName="nombre" placeholder="Nombre de rol" [(ngModel)]="roles.rol.nombre">
-                                    <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback" style="display: block;">
+                                    <input class="form-control" name="nombre" formControlName="nombre"
+                                           placeholder="Nombre de rol" [(ngModel)]="roles.rol.nombre">
+                                    <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback"
+                                         style="display: block;">
                                         <div *ngIf="f.nombre.errors.required">Nombre es requerido</div>
                                     </div>
                                 </div>
@@ -33,177 +35,201 @@
                             </h6>
                             <table class="table table-striped table-borderless">
                                 <thead class="thead-light">
-                                    <tr>
-                                        <th>Módulo</th>
-                                        <th>Leer</th>
-                                        <th>Escribir</th>
-                                        <th>Crear</th>
-                                        <th>Borrar</th>
-                                    </tr>
+                                <tr>
+                                    <th>Módulo</th>
+                                    <th>Leer</th>
+                                    <th>Escribir</th>
+                                    <th>Crear</th>
+                                    <th>Borrar</th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>ADM Administración</td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="admin-read" [(ngModel)]="roles.acciones.ADM.LEER" />
-                                                <label class="custom-control-label" for="admin-read"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="admin-write" [(ngModel)]="roles.acciones.ADM.ESCRIBIR" />
-                                                <label class="custom-control-label" for="admin-write"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="admin-create" [(ngModel)]="roles.acciones.ADM.CREAR" />
-                                                <label class="custom-control-label" for="admin-create"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="admin-delete" [(ngModel)]="roles.acciones.ADM.BORRAR" />
-                                                <label class="custom-control-label" for="admin-delete"></label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>MDM Master Data Managment</td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="staff-read" [(ngModel)]="roles.acciones.MDM.LEER" />
-                                                <label class="custom-control-label" for="staff-read"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="staff-write" [(ngModel)]="roles.acciones.MDM.ESCRIBIR" />
-                                                <label class="custom-control-label" for="staff-write"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="staff-create" [(ngModel)]="roles.acciones.MDM.CREAR" />
-                                                <label class="custom-control-label" for="staff-create"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="staff-delete" [(ngModel)]="roles.acciones.MDM.BORRAR" />
-                                                <label class="custom-control-label" for="staff-delete"></label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>MDP Master Data Products</td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="author-read" [(ngModel)]="roles.acciones.MDP.LEER" />
-                                                <label class="custom-control-label" for="author-read"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="author-write" [(ngModel)]="roles.acciones.MDP.ESCRIBIR" />
-                                                <label class="custom-control-label" for="author-write"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="author-create" [(ngModel)]="roles.acciones.MDP.CREAR" />
-                                                <label class="custom-control-label" for="author-create"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="author-delete" [(ngModel)]="roles.acciones.MDP.BORRAR" />
-                                                <label class="custom-control-label" for="author-delete"></label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>MDO Motor de Ofertas</td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="MDO-read" [(ngModel)]="roles.acciones.MDO.LEER" />
-                                                <label class="custom-control-label" for="MDO-read"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="MDO-write" [(ngModel)]="roles.acciones.MDO.ESCRIBIR" />
-                                                <label class="custom-control-label" for="MDO-write"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="MDO-create" [(ngModel)]="roles.acciones.MDO.CREAR" />
-                                                <label class="custom-control-label" for="MDO-create"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="MDO-delete" [(ngModel)]="roles.acciones.MDO.BORRAR" />
-                                                <label class="custom-control-label" for="MDO-delete"></label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>GDO Gestión de Ofertas</td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="GDO-read" [(ngModel)]="roles.acciones.GDO.LEER" />
-                                                <label class="custom-control-label" for="GDO-read"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="GDO-write" [(ngModel)]="roles.acciones.GDO.ESCRIBIR" />
-                                                <label class="custom-control-label" for="GDO-write"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="GDO-create" [(ngModel)]="roles.acciones.GDO.CREAR" />
-                                                <label class="custom-control-label" for="GDO-create"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="GDO-delete" [(ngModel)]="roles.acciones.GDO.BORRAR" />
-                                                <label class="custom-control-label" for="GDO-delete"></label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>GDE Gestión de Entregas</td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="GDE-read" [(ngModel)]="roles.acciones.GDE.LEER" />
-                                                <label class="custom-control-label" for="GDE-read"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="GDE-write" [(ngModel)]="roles.acciones.GDE.ESCRIBIR" />
-                                                <label class="custom-control-label" for="GDE-write"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="GDE-create" [(ngModel)]="roles.acciones.GDE.CREAR" />
-                                                <label class="custom-control-label" for="GDE-create"></label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="GDE-delete" [(ngModel)]="roles.acciones.GDE.BORRAR" />
-                                                <label class="custom-control-label" for="GDE-delete"></label>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td>ADM Administración</td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="admin-read"
+                                                   [(ngModel)]="roles.acciones.ADM.LEER"/>
+                                            <label class="custom-control-label" for="admin-read"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="admin-write"
+                                                   [(ngModel)]="roles.acciones.ADM.ESCRIBIR"/>
+                                            <label class="custom-control-label" for="admin-write"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="admin-create"
+                                                   [(ngModel)]="roles.acciones.ADM.CREAR"/>
+                                            <label class="custom-control-label" for="admin-create"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="admin-delete"
+                                                   [(ngModel)]="roles.acciones.ADM.BORRAR"/>
+                                            <label class="custom-control-label" for="admin-delete"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>MDM Master Data Managment</td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="staff-read"
+                                                   [(ngModel)]="roles.acciones.MDM.LEER"/>
+                                            <label class="custom-control-label" for="staff-read"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="staff-write"
+                                                   [(ngModel)]="roles.acciones.MDM.ESCRIBIR"/>
+                                            <label class="custom-control-label" for="staff-write"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="staff-create"
+                                                   [(ngModel)]="roles.acciones.MDM.CREAR"/>
+                                            <label class="custom-control-label" for="staff-create"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="staff-delete"
+                                                   [(ngModel)]="roles.acciones.MDM.BORRAR"/>
+                                            <label class="custom-control-label" for="staff-delete"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>MDP Master Data Products</td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="author-read"
+                                                   [(ngModel)]="roles.acciones.MDP.LEER"/>
+                                            <label class="custom-control-label" for="author-read"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="author-write"
+                                                   [(ngModel)]="roles.acciones.MDP.ESCRIBIR"/>
+                                            <label class="custom-control-label" for="author-write"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="author-create"
+                                                   [(ngModel)]="roles.acciones.MDP.CREAR"/>
+                                            <label class="custom-control-label" for="author-create"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="author-delete"
+                                                   [(ngModel)]="roles.acciones.MDP.BORRAR"/>
+                                            <label class="custom-control-label" for="author-delete"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>MDO Motor de Ofertas</td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="MDO-read"
+                                                   [(ngModel)]="roles.acciones.MDO.LEER"/>
+                                            <label class="custom-control-label" for="MDO-read"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="MDO-write"
+                                                   [(ngModel)]="roles.acciones.MDO.ESCRIBIR"/>
+                                            <label class="custom-control-label" for="MDO-write"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="MDO-create"
+                                                   [(ngModel)]="roles.acciones.MDO.CREAR"/>
+                                            <label class="custom-control-label" for="MDO-create"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="MDO-delete"
+                                                   [(ngModel)]="roles.acciones.MDO.BORRAR"/>
+                                            <label class="custom-control-label" for="MDO-delete"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>GDO Gestión de Ofertas</td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GDO-read"
+                                                   [(ngModel)]="roles.acciones.GDO.LEER"/>
+                                            <label class="custom-control-label" for="GDO-read"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GDO-write"
+                                                   [(ngModel)]="roles.acciones.GDO.ESCRIBIR"/>
+                                            <label class="custom-control-label" for="GDO-write"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GDO-create"
+                                                   [(ngModel)]="roles.acciones.GDO.CREAR"/>
+                                            <label class="custom-control-label" for="GDO-create"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GDO-delete"
+                                                   [(ngModel)]="roles.acciones.GDO.BORRAR"/>
+                                            <label class="custom-control-label" for="GDO-delete"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>GDE Gestión de Entregas</td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GDE-read"
+                                                   [(ngModel)]="roles.acciones.GDE.LEER"/>
+                                            <label class="custom-control-label" for="GDE-read"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GDE-write"
+                                                   [(ngModel)]="roles.acciones.GDE.ESCRIBIR"/>
+                                            <label class="custom-control-label" for="GDE-write"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GDE-create"
+                                                   [(ngModel)]="roles.acciones.GDE.CREAR"/>
+                                            <label class="custom-control-label" for="GDE-create"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GDE-delete"
+                                                   [(ngModel)]="roles.acciones.GDE.BORRAR"/>
+                                            <label class="custom-control-label" for="GDE-delete"></label>
+                                        </div>
+                                    </td>
+                                </tr>
 
                                 </tbody>
                             </table>
@@ -212,7 +238,9 @@
 
                     <div class="row p-20">
                         <div class="col-12">
-                            <a (click)="guardarRol()" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar cambios</a>
+                            <a (click)="guardarRol()"
+                               class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar
+                                cambios</a>
                             <button (click)="regresar()" class="btn btn-outline-secondary waves-effect">Volver</button>
                         </div>
                     </div>
@@ -228,8 +256,8 @@
     <div class="modal-header">
         <h4 class="modal-title">Mensaje</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
     <div class="modal-body">
         <div [innerHTML]="mensaje"></div>

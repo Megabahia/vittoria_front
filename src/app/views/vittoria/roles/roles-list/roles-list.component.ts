@@ -1,71 +1,80 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgbModal,NgbPagination } from '@ng-bootstrap/ng-bootstrap';
-import { RolesService,Rol } from 'src/app/services/admin/roles.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
+import {RolesService, Rol} from 'src/app/services/admin/roles.service';
 
 @Component({
   selector: 'app-roles-list',
   templateUrl: './roles-list.component.html'
 })
 export class RolesListComponent implements OnInit {
-  @ViewChild(NgbPagination)paginator:NgbPagination;
+  @ViewChild(NgbPagination) paginator: NgbPagination;
   menu;
-  roles:Rol;
+  roles: Rol;
   collectionSize;
-  page=1;
-  pageSize:any;
+  page = 1;
+  pageSize: any;
   vista;
   idRol;
   funcion;
-  constructor(
-    private servicioRoles:RolesService,
-    private modalService: NgbModal
 
+  constructor(
+    private servicioRoles: RolesService,
+    private modalService: NgbModal
   ) {
-   }
+  }
 
   ngOnInit(): void {
-    this.menu={
-      modulo:"adm",
-      seccion: "roles"
-    }
-    this.pageSize=10;
-    this.vista = 'lista'; 
+    this.menu = {
+      modulo: 'adm',
+      seccion: 'roles'
+    };
+    this.pageSize = 10;
+    this.vista = 'lista';
   }
-  async ngAfterViewInit(){
+
+  async ngAfterViewInit() {
     this.iniciarPaginador();
     this.obtenerListaRoles();
   }
-  async iniciarPaginador(){
-    this.paginator.pageChange.subscribe(()=>{
-    this.obtenerListaRoles();
+
+  async iniciarPaginador() {
+    this.paginator.pageChange.subscribe(() => {
+      this.obtenerListaRoles();
     });
   }
-  async obtenerListaRoles(){
-    await this.servicioRoles.obtenerListaRoles(this.page-1,this.pageSize)
-    .subscribe((result)=>{
-      this.roles = result.info;
-      this.collectionSize= result.cont;
-    });
+
+  async obtenerListaRoles() {
+    await this.servicioRoles.obtenerListaRoles(this.page - 1, this.pageSize)
+      .subscribe((result) => {
+        this.roles = result.info;
+        this.collectionSize = result.cont;
+      });
   }
-  async insertarRol(){
+
+  async insertarRol() {
     this.vista = 'editar';
     this.funcion = 'insertar';
   }
-  async editarRol(id){
+
+  async editarRol(id) {
     this.vista = 'editar';
     this.funcion = 'editar';
-    this.idRol= id;
+    this.idRol = id;
   }
-  volver(){
+
+  volver() {
     this.vista = 'lista';
+    this.obtenerListaRoles();
   }
-  abrirModal(modal,id){
-    this.idRol=id;
-    this.modalService.open(modal)
+
+  abrirModal(modal, id) {
+    this.idRol = id;
+    this.modalService.open(modal);
   }
-  cerrarModal(){
+
+  cerrarModal() {
     this.modalService.dismissAll();
-    this.servicioRoles.eliminarRol(this.idRol).subscribe(()=>{
+    this.servicioRoles.eliminarRol(this.idRol).subscribe(() => {
       this.obtenerListaRoles();
     });
   }
