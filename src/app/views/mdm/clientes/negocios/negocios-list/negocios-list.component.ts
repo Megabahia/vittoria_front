@@ -91,7 +91,7 @@ export class NegociosListComponent implements OnInit {
       const downloadURL = window.URL.createObjectURL(data);
       const link = document.createElement('a');
       link.href = downloadURL;
-      link.download = 'personasClientes.xls';
+      link.download = 'negociosClientes.xls';
       link.click();
     });
   }

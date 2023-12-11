@@ -151,6 +151,12 @@
                                                     <div *ngIf="submittedDatosBasicosForm && dbForm.ruc.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="dbForm.ruc.errors.required">Ruc requerido
                                                         </div>
+                                                        <div *ngIf="dbForm.ruc.errors.minlength">Ingrese mínimo 13 digitos
+                                                        </div>
+                                                        <div *ngIf="dbForm.ruc.errors.maxlength">Ingrese máximo 13 digitos
+                                                        </div>
+                                                        <div *ngIf="dbForm.ruc.errors.rucInvalid">Ruc no valido
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -284,6 +290,7 @@
                                                     <input type="text" class="form-control" name="numeroEmpleados" formControlName="numeroEmpleados" [(ngModel)]="datosBasicos.numeroEmpleados">
                                                     <div *ngIf="submittedDatosBasicosForm && dbForm.numeroEmpleados.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="dbForm.numeroEmpleados.errors.required"> Nro de empleados requerido</div>
+                                                        <div *ngIf="dbForm.numeroEmpleados.errors.pattern"> Ingrese solo numeros</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -357,7 +364,7 @@
                                                     <input type="text" class="form-control" name="ingresosPromedioMensual" formControlName="ingresosPromedioMensual" [(ngModel)]="datosBasicos.ingresosPromedioMensual">
                                                     <div *ngIf="submittedDatosBasicosForm && dbForm.ingresosPromedioMensual.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="dbForm.ingresosPromedioMensual.errors.required"> Ingresos mensuales requeridos</div>
-                                                        <div *ngIf="dbForm.gastosPromedioMensual.errors.pattern">Solo se aceptan números decimales
+                                                        <div *ngIf="dbForm.ingresosPromedioMensual.errors.pattern">Solo se aceptan números decimales
                                                         </div>
                                                     </div>
                                                 </div>
@@ -383,6 +390,7 @@
                                                     <input type="text" class="form-control" name="numeroEstablecimientos" formControlName="numeroEstablecimientos" [(ngModel)]="datosBasicos.numeroEstablecimientos">
                                                     <div *ngIf="submittedDatosBasicosForm && dbForm.numeroEstablecimientos.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="dbForm.numeroEstablecimientos.errors.required"> # de establecimientos en el país requerido</div>
+                                                        <div *ngIf="dbForm.numeroEstablecimientos.errors.pattern"> Ingrese solo numeros</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -399,6 +407,8 @@
                                                         <div *ngIf="dbForm.telefonoOficina.errors.required"> Teléfono de oficina requerido</div>
                                                         <div *ngIf="dbForm.telefonoOficina.errors.pattern">Solo se aceptan números
                                                         </div>
+                                                        <div *ngIf="dbForm.telefonoOficina.errors.minlength">Ingrese mínimo 10 digitos</div>
+                                                        <div *ngIf="dbForm.telefonoOficina.errors.maxlength">Ingrese máximo 10 digitos</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -411,6 +421,8 @@
                                                         <div *ngIf="dbForm.celularOficina.errors.required"> Celular de oficina requerido</div>
                                                         <div *ngIf="dbForm.celularOficina.errors.pattern">Solo se aceptan números
                                                         </div>
+                                                        <div *ngIf="dbForm.celularOficina.errors.minlength">Ingrese mínimo 10 digitos</div>
+                                                        <div *ngIf="dbForm.celularOficina.errors.maxlength">Ingrese máximo 10 digitos</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -423,6 +435,8 @@
                                                         <div *ngIf="dbForm.celularPersonal.errors.required"> Celular personal requerido</div>
                                                         <div *ngIf="dbForm.celularPersonal.errors.pattern">Solo se aceptan números
                                                         </div>
+                                                        <div *ngIf="dbForm.celularPersonal.errors.minlength">Ingrese mínimo 10 digitos</div>
+                                                        <div *ngIf="dbForm.celularPersonal.errors.maxlength">Ingrese máximo 10 digitos</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -435,6 +449,8 @@
                                                         <div *ngIf="dbForm.whatsappPersonal.errors.required"> WhatsApp personal requerido</div>
                                                         <div *ngIf="dbForm.whatsappPersonal.errors.pattern">Solo se aceptan números
                                                         </div>
+                                                        <div *ngIf="dbForm.whatsappPersonal.errors.minlength">Ingrese mínimo 10 digitos</div>
+                                                        <div *ngIf="dbForm.whatsappPersonal.errors.maxlength">Ingrese máximo 10 digitos</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -447,6 +463,8 @@
                                                         <div *ngIf="dbForm.whatsappSecundario.errors.required"> WhatsApp secundario requerido</div>
                                                         <div *ngIf="dbForm.whatsappSecundario.errors.pattern">Solo se aceptan números
                                                         </div>
+                                                        <div *ngIf="dbForm.whatsappSecundario.errors.minlength">Ingrese mínimo 10 digitos</div>
+                                                        <div *ngIf="dbForm.whatsappSecundario.errors.maxlength">Ingrese máximo 10 digitos</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -457,6 +475,7 @@
                                                     <input type="text" class="form-control" name="correoPersonal" formControlName="correoPersonal" [(ngModel)]="datosBasicos.correoPersonal">
                                                     <div *ngIf="submittedDatosBasicosForm && dbForm.correoPersonal.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="dbForm.correoPersonal.errors.required"> Correo personal requerido</div>
+                                                        <div *ngIf="dbForm.correoPersonal.errors.email"> Correo no valido</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -466,6 +485,7 @@
                                                     <input type="text" class="form-control" name="correoOficina" formControlName="correoOficina" [(ngModel)]="datosBasicos.correoOficina">
                                                     <div *ngIf="submittedDatosBasicosForm && dbForm.correoOficina.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="dbForm.correoOficina.errors.required"> Correo oficina requerido</div>
+                                                        <div *ngIf="dbForm.correoOficina.errors.email"> Correo no valido</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -475,6 +495,7 @@
                                                     <input type="text" class="form-control" name="googlePlus" formControlName="googlePlus" [(ngModel)]="datosBasicos.googlePlus">
                                                     <div *ngIf="submittedDatosBasicosForm && dbForm.googlePlus.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="dbForm.googlePlus.errors.required"> Google plus requerido</div>
+                                                        <div *ngIf="dbForm.googlePlus.errors.email"> Google plus no valido</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -746,6 +767,9 @@
                                                             </div>
                                                             <div *ngIf="dpForm.cedula.errors.pattern">Solo se aceptan números
                                                             </div>
+                                                            <div *ngIf="dpForm.cedula.errors.minlength">Ingrese mínimo 10 digitos</div>
+                                                            <div *ngIf="dpForm.cedula.errors.maxlength">Ingrese máximo 10 digitos</div>
+                                                            <div *ngIf="dpForm.cedula.errors.identificacionInvalid">Cédula no valida</div>
                                                         </div>
                                                     </div>
 
@@ -775,6 +799,8 @@
                                                             </div>
                                                             <div *ngIf="dpForm.telefonoFijo.errors.pattern">Solo se aceptan números
                                                             </div>
+                                                            <div *ngIf="dpForm.telefonoFijo.errors.minlength">Ingrese mínimo 10 digitos</div>
+                                                            <div *ngIf="dpForm.telefonoFijo.errors.maxlength">Ingrese máximo 10 digitos</div>
                                                         </div>
                                                     </div>
 
@@ -797,6 +823,8 @@
                                                             </div>
                                                             <div *ngIf="dpForm.celularEmpresa.errors.pattern">Solo se aceptan números
                                                             </div>
+                                                            <div *ngIf="dpForm.celularEmpresa.errors.minlength">Ingrese mínimo 10 digitos</div>
+                                                            <div *ngIf="dpForm.celularEmpresa.errors.maxlength">Ingrese máximo 10 digitos</div>
                                                         </div>
                                                     </div>
 
@@ -808,6 +836,8 @@
                                                             </div>
                                                             <div *ngIf="dpForm.whatsappEmpresa.errors.pattern">Solo se aceptan números
                                                             </div>
+                                                            <div *ngIf="dpForm.whatsappEmpresa.errors.minlength">Ingrese mínimo 10 digitos</div>
+                                                            <div *ngIf="dpForm.whatsappEmpresa.errors.maxlength">Ingrese máximo 10 digitos</div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -818,6 +848,8 @@
                                                             </div>
                                                             <div *ngIf="dpForm.celularPersonal.errors.pattern">Solo se aceptan números
                                                             </div>
+                                                            <div *ngIf="dpForm.celularPersonal.errors.minlength">Ingrese mínimo 10 digitos</div>
+                                                            <div *ngIf="dpForm.celularPersonal.errors.maxlength">Ingrese máximo 10 digitos</div>
                                                         </div>
                                                     </div>
 
@@ -829,6 +861,8 @@
                                                             </div>
                                                             <div *ngIf="dpForm.whatsappPersonal.errors.pattern">Solo se aceptan números
                                                             </div>
+                                                            <div *ngIf="dpForm.whatsappPersonal.errors.minlength">Ingrese mínimo 10 digitos</div>
+                                                            <div *ngIf="dpForm.whatsappPersonal.errors.maxlength">Ingrese máximo 10 digitos</div>
                                                         </div>
                                                     </div>
 
@@ -838,6 +872,8 @@
                                                         <div *ngIf="submittedDatosPersonalForm && dpForm.correoEmpresa.errors" class="invalid-feedback" style="display: block;">
                                                             <div *ngIf="dpForm.correoEmpresa.errors.required">Correo de empresa requerido
                                                             </div>
+                                                            <div *ngIf="dpForm.correoEmpresa.errors.email">Correo de empresa no valido
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -846,6 +882,8 @@
                                                         <input type="text" class="form-control" name="correoPersonal" formControlName="correoPersonal" [(ngModel)]="datosPersonal.correoPersonal" />
                                                         <div *ngIf="submittedDatosPersonalForm && dpForm.correoPersonal.errors" class="invalid-feedback" style="display: block;">
                                                             <div *ngIf="dpForm.correoPersonal.errors.required">Correo personal requerido
+                                                            </div>
+                                                            <div *ngIf="dpForm.correoPersonal.errors.email">Correo personal no valido
                                                             </div>
                                                         </div>
                                                     </div>
