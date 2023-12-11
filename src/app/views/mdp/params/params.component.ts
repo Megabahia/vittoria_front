@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgbModal, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
-import { ParamService } from 'src/app/services/mdp/param/param.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
+import {ParamService} from 'src/app/services/mdp/param/param.service';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-params',
@@ -19,31 +19,34 @@ export class ParamsComponent implements OnInit {
   maxSize;
   collectionSize;
   parametros;
-  tiposOpciones: string = "";
+  tiposOpciones: string = '';
   tipos;
   nombreBuscar;
   nombre;
-  nombreTipo = "";
+  nombreTipo = '';
   descripcion;
   funcion;
   idParametro;
-  tipoPadre = "";
+  tipoPadre = '';
   idPadre = 0;
   tipoVariable;
   minimo;
   maximo;
   valor;
   padres;
+
   // @ViewChild('padres') padres;
   constructor(
     private paramService: ParamService,
     private modalService: NgbModal,
     private _formBuilder: FormBuilder,
+  ) {
+  }
 
-  ) { }
   get f() {
     return this.paramForm.controls;
   }
+
   ngOnInit(): void {
     this.paramForm = this._formBuilder.group({
       nombre: ['', [Validators.required]],
@@ -53,14 +56,16 @@ export class ParamsComponent implements OnInit {
       valor: ['', [Validators.required]]
     });
     this.menu = {
-      modulo: "mdp",
-      seccion: "param"
+      modulo: 'mdp',
+      seccion: 'param'
     };
   }
+
   async ngAfterViewInit() {
     this.iniciarPaginador();
     this.obtenerListaParametros();
   }
+
   async iniciarPaginador() {
     await this.paramService.obtenerListaTipos().subscribe((result) => {
       this.tipos = result;
@@ -70,13 +75,20 @@ export class ParamsComponent implements OnInit {
     });
 
   }
+
   async obtenerListaParametros() {
-    await this.paramService.obtenerListaParametros({ page: this.page - 1, page_size: this.pageSize, tipo: this.tiposOpciones, nombre: this.nombreBuscar }).subscribe((result) => {
+    await this.paramService.obtenerListaParametros({
+      page: this.page - 1,
+      page_size: this.pageSize,
+      tipo: this.tiposOpciones,
+      nombre: this.nombreBuscar
+    }).subscribe((result) => {
       this.parametros = result.info;
       this.collectionSize = result.cont;
     });
-    
+
   }
+
   async editarParametro(id) {
 
     this.idParametro = id;
@@ -92,7 +104,7 @@ export class ParamsComponent implements OnInit {
         });
         this.idPadre = result.idPadre;
       } else {
-        this.tipoPadre = "";
+        this.tipoPadre = '';
         this.idPadre = 0;
 
       }
@@ -105,36 +117,38 @@ export class ParamsComponent implements OnInit {
       this.minimo = result.minimo;
     });
   }
+
   insertarParametro() {
-    this.nombre = "";
-    this.nombreTipo = "";
-    this.descripcion = "";
-    this.tipoPadre = "";
-    this.tipoVariable = "";
-    this.valor = "";
+    this.nombre = '';
+    this.nombreTipo = '';
+    this.descripcion = '';
+    this.tipoPadre = '';
+    this.tipoVariable = '';
+    this.valor = '';
     this.idPadre = 0;
     this.submitted = false;
 
     this.funcion = 'insertar';
-    this.minimo = "";
-    this.maximo = "";
+    this.minimo = '';
+    this.maximo = '';
   }
+
   async gestionarParametro() {
 
     this.submitted = true;
     if (this.paramForm.invalid) {
       return;
     }
-    if (this.funcion == "insertar") {
+    if (this.funcion == 'insertar') {
       await this.paramService.insertarParametro({
         nombre: this.nombre,
-        tipo:this.nombreTipo,
+        tipo: this.nombreTipo,
         descripcion: this.descripcion,
         tipoVariable: this.tipoVariable,
         valor: this.valor,
         idPadre: this.idPadre,
         minimo: this.minimo,
-        maximo : this.maximo
+        maximo: this.maximo
       }).subscribe((result) => {
         this.obtenerListaParametros();
         this.dismissModal.nativeElement.click();
@@ -144,36 +158,48 @@ export class ParamsComponent implements OnInit {
     } else if (this.funcion = 'editar') {
       await this.paramService.editarParametro(
         {
-            id:this.idParametro,
-            nombre: this.nombre,
-            tipo:this.nombreTipo,
-            descripcion: this.descripcion,
-            tipoVariable: this.tipoVariable,
-            valor: this.valor,
-            idPadre: this.idPadre,
-            minimo: this.minimo,
-            maximo : this.maximo
-          }).subscribe((result) => {
-          this.obtenerListaParametros();
-          this.dismissModal.nativeElement.click();
-          this.submitted = false;
-        });
+          id: this.idParametro,
+          nombre: this.nombre,
+          tipo: this.nombreTipo,
+          descripcion: this.descripcion,
+          tipoVariable: this.tipoVariable,
+          valor: this.valor,
+          idPadre: this.idPadre,
+          minimo: this.minimo,
+          maximo: this.maximo
+        }).subscribe((result) => {
+        this.obtenerListaParametros();
+        this.dismissModal.nativeElement.click();
+        this.submitted = false;
+      });
     }
   }
 
   abrirModal(modal, id) {
     this.idParametro = id;
-    this.modalService.open(modal)
+    this.modalService.open(modal);
   }
+
   async cerrarModal() {
     this.modalService.dismissAll();
     await this.paramService.eliminarParametro(this.idParametro).subscribe((result) => {
       this.obtenerListaParametros();
     });
   }
+
   async buscarPadre() {
     await this.paramService.obtenerListaPadres(this.tipoPadre).subscribe((result) => {
       this.padres = result;
+    });
+  }
+
+  export(): void {
+    this.paramService.exportar().subscribe((data) => {
+      const downloadURL = window.URL.createObjectURL(data);
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = 'parametrizaciones.xls';
+      link.click();
     });
   }
 }

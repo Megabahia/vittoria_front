@@ -1,22 +1,22 @@
-import { DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgbModal, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
-import { ProductosService } from 'src/app/services/mdp/productos/productos.service';
-import { ExportService } from '../../../../services/admin/export.service';
+import {DatePipe} from '@angular/common';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
+import {ProductosService} from 'src/app/services/mdp/productos/productos.service';
+import {ExportService} from '../../../../services/admin/export.service';
 
 @Component({
   selector: 'app-rotacion',
   templateUrl: './rotacion.component.html',
-  providers:[DatePipe]
+  providers: [DatePipe]
 })
 export class RotacionComponent implements OnInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   menu;
-  inicio = "";
-  fin = "";
-  categoria = "";
+  inicio = '';
+  fin = '';
+  categoria = '';
   categoriasOpciones;
-  subcategoria = "";
+  subcategoria = '';
   subcategoriasOpciones;
   page = 1;
   pageSize: any = 10;
@@ -24,22 +24,26 @@ export class RotacionComponent implements OnInit {
   collectionSize;
   listaProductos;
   infoExportar;
+
   constructor(
-    private productosService:ProductosService,
+    private productosService: ProductosService,
     private datePipe: DatePipe,
     private exportFile: ExportService,
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.menu = {
-      modulo: "mdp",
-      seccion: "rotaRep"
+      modulo: 'mdp',
+      seccion: 'rotaRep'
     };
   }
+
   async ngAfterViewInit() {
     this.obtenerListaProductos();
     this.iniciarPaginador();
   }
+
   async iniciarPaginador() {
     this.paginator.pageChange.subscribe(() => {
       this.obtenerListaProductos();
@@ -83,6 +87,7 @@ export class RotacionComponent implements OnInit {
 
     this.exportFile.exportExcel(reportData);
   }
+
   transformarFecha(fecha) {
     let nuevaFecha = this.datePipe.transform(fecha, 'yyyy-MM-dd');
     return nuevaFecha;

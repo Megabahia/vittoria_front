@@ -1,47 +1,68 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
-const  apiUrl:string  = environment.apiUrl;
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {environment} from 'src/environments/environment';
+import {Observable} from 'rxjs';
+
+const apiUrl: string = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
 })
 export class ParamService {
 
-  constructor(private http: HttpClient) { }
-  obtenerListaParametros(datos){
-    
-    return this.http.post<any>(`${apiUrl}/mdp/param/list/`, datos);
-     
+  constructor(private http: HttpClient) {
   }
-  obtenerListaTipos(){
+
+  obtenerListaParametros(datos) {
+
+    return this.http.post<any>(`${apiUrl}/mdp/param/list/`, datos);
+
+  }
+
+  obtenerListaTipos() {
     return this.http.get<any>(`${apiUrl}/mdp/param/list/tipo/`);
   }
+
   insertarParametro(
     datos
-    ){
-    return this.http.post<any>(`${apiUrl}/mdp/param/create/`,datos);
+  ) {
+    return this.http.post<any>(`${apiUrl}/mdp/param/create/`, datos);
   }
+
   editarParametro(
-    datos){
-    return this.http.post<any>(`${apiUrl}/mdp/param/update/${datos.id}`,datos);
+    datos) {
+    return this.http.post<any>(`${apiUrl}/mdp/param/update/${datos.id}`, datos);
   }
-  eliminarParametro(id){
+
+  eliminarParametro(id) {
     return this.http.delete<any>(`${apiUrl}/mdp/param/delete/${id}`,);
   }
-  obtenerParametro(id){
+
+  obtenerParametro(id) {
     return this.http.get<any>(`${apiUrl}/mdp/param/listOne/${id}`,);
   }
-  obtenerListaPadres(tipo){
-    return this.http.post<any>(`${apiUrl}/mdp/param/list/tipo/todos/`,{tipo});
+
+  obtenerListaPadres(tipo) {
+    return this.http.post<any>(`${apiUrl}/mdp/param/list/tipo/todos/`, {tipo});
   }
-  obtenerListaHijos(nombre,tipo){
-    return this.http.post<any>(`${apiUrl}/mdp/param/list/filtro/nombre`,{tipo,nombre});
+
+  obtenerListaHijos(nombre, tipo) {
+    return this.http.post<any>(`${apiUrl}/mdp/param/list/filtro/nombre`, {tipo, nombre});
   }
-  obtenerParametroNombreTipo(nombre,tipo){
-    return this.http.post<any>(`${apiUrl}/mdp/param/list/listOne`,{nombre,tipo});
+
+  obtenerParametroNombreTipo(nombre, tipo) {
+    return this.http.post<any>(`${apiUrl}/mdp/param/list/listOne`, {nombre, tipo});
   }
-  obtenerListaEstado(){
+
+  obtenerListaEstado() {
     return this.http.get<any>(`${apiUrl}/mdp/param/list/estado/`);
+  }
+
+  exportar(): Observable<any> {
+    const httpOptions = {
+      responseType: 'blob' as 'json'
+    };
+    return this.http.get<any>(
+      `${environment.apiUrl}/mdp/param/exportar/`, httpOptions);
   }
 }

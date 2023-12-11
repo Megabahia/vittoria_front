@@ -1,11 +1,10 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { NgbPagination, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CategoriasService } from '../../../../../services/mdp/productos/categorias/categorias.service';
-import { Producto, ProductosService } from '../../../../../services/mdp/productos/productos.service';
-import { SubcategoriasService } from '../../../../../services/mdp/productos/subcategorias/subcategorias.service';
-import { map } from 'rxjs/operators';
-import { ParamService } from 'src/app/services/mdp/param/param.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {Component, OnInit, Input, ViewChild} from '@angular/core';
+import {NgbPagination, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {CategoriasService} from '../../../../../services/mdp/productos/categorias/categorias.service';
+import {Producto, ProductosService} from '../../../../../services/mdp/productos/productos.service';
+import {SubcategoriasService} from '../../../../../services/mdp/productos/subcategorias/subcategorias.service';
+import {ParamService} from 'src/app/services/mdp/param/param.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import * as moment from 'moment';
 
 @Component({
@@ -25,8 +24,8 @@ export class ProductosEditarComponent implements OnInit {
   datosProducto: FormData = new FormData();
   productoForm: FormGroup;
   fichaTecnicaForm: FormGroup;
-  submittedProductoForm: boolean = false;
-  submittedFichaTecnicaForm: boolean = false;
+  submittedProductoForm = false;
+  submittedFichaTecnicaForm = false;
   opcion;
   categoriasOpciones;
   subcategoriasOpciones;
@@ -53,6 +52,7 @@ export class ProductosEditarComponent implements OnInit {
   get fp() {
     return this.productoForm.controls;
   }
+
   get fft() {
     return this.fichaTecnicaForm.controls;
   }
@@ -75,7 +75,7 @@ export class ProductosEditarComponent implements OnInit {
       precioVentaE: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       precioVentaBultos: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       estado: ['', [Validators.required]],
-      variableRefil: ['', [Validators.required]],
+      variableRefil: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       fechaCaducidad: ['', [Validators.required]],
       fechaElaboracion: ['', [Validators.required]],
     });
@@ -83,38 +83,43 @@ export class ProductosEditarComponent implements OnInit {
       codigo: ['', [Validators.required]],
       nombreAtributo: ['', [Validators.required]],
       valor: ['', [Validators.required]]
-    })
+    });
     this.obtenerAbastecimientoOpciones();
     this.obtenerCategoriasOpciones();
-    if (this.idProducto != 0) {
+    if (this.idProducto !== 0) {
       this.obtenerProducto();
       this.obtenerFichasTecnicas();
     }
   }
+
   obtenerProducto() {
     this.productosService.obtenerProducto(this.idProducto).subscribe((info) => {
-      let producto = info;
+      const producto = info;
       this.imagenes = info.imagenes;
       delete producto.imagenes;
       this.producto = producto;
       this.obtenerListaSubcategorias();
     });
   }
+
   async obtenerAbastecimientoOpciones() {
-    await this.paramService.obtenerListaPadres("ALERTA_ABASTECIMIENTO").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('ALERTA_ABASTECIMIENTO').subscribe((info) => {
       this.abastecimientoOpciones = info;
     });
   }
+
   obtenerFichasTecnicas() {
     this.productosService.obtenerFichasTecnicas(this.idProducto).subscribe((info) => {
       this.fichaTecnicaLista = info.info;
     });
   }
+
   async obtenerCategoriasOpciones() {
     await this.categoriasService.obtenerListaCategorias().subscribe((info) => {
       this.categoriasOpciones = info;
     });
   }
+
   async obtenerListaSubcategorias() {
     await this.subcategoriasService.obtenerListaSubcategoriasHijas(this.producto.categoria).subscribe((info) => {
       this.subcategoriasOpciones = info;
@@ -131,16 +136,18 @@ export class ProductosEditarComponent implements OnInit {
   onRemove(event) {
     this.archivos.splice(this.archivos.indexOf(event), 1);
   }
+
   removeAll() {
     this.archivos = [];
   }
+
   guardarProducto() {
     let llaves = Object.keys(this.producto);
     let valores = Object.values(this.producto);
     this.datosProducto = new FormData();
 
     valores.map((valor, pos) => {
-      this.datosProducto.append(llaves[pos], valor)
+      this.datosProducto.append(llaves[pos], valor);
     });
 
     // this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
@@ -155,59 +162,61 @@ export class ProductosEditarComponent implements OnInit {
     let diferenciaDiasElabCad = fechaCaducidad.diff(fechaElaboracion, 'days');
     let diferenciaDiasHoyCad = fechaCaducidad.diff(moment(), 'days');
     if (diferenciaDiasElabCad < 0) {
-      this.mensaje = "La fecha de caducidad debe ser mayor a la de elaboración"
+      this.mensaje = 'La fecha de caducidad debe ser mayor a la de elaboración';
       this.abrirModal(this.aviso);
       return;
     }
     if (diferenciaDiasHoyCad < 0) {
-      this.mensaje = "La fecha de caducidad debe ser mayor a la fecha actual"
+      this.mensaje = 'La fecha de caducidad debe ser mayor a la fecha actual';
       this.abrirModal(this.aviso);
       return;
     }
-    if (this.idProducto != 0) {
+    if (this.idProducto !== 0) {
 
       this.archivos.map((valor, pos) => {
-        this.datosProducto.append("imagenes[" + pos + "]id", "0");
-        this.datosProducto.append("imagenes[" + pos + "]imagen", valor);
+        this.datosProducto.append('imagenes[' + pos + ']id', '0');
+        this.datosProducto.append('imagenes[' + pos + ']imagen', valor);
       });
       this.productosService.actualizarProducto(this.datosProducto, this.idProducto).subscribe((info) => {
-        this.mensaje = "Producto actualizado";
-        this.abrirModal(this.aviso);
-      },
+          this.mensaje = 'Producto actualizado';
+          this.abrirModal(this.aviso);
+        },
         (error) => {
           let errores = Object.values(error);
           let llaves = Object.keys(error);
-          this.mensaje = "";
+          this.mensaje = '';
           errores.map((infoErrores, index) => {
-            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
           });
           this.abrirModal(this.aviso);
         });
     } else {
       this.archivos.map((valor, pos) => {
-        this.datosProducto.append("imagenes[" + pos + "]id", "0");
-        this.datosProducto.append("imagenes[" + pos + "]imagen", valor);
+        this.datosProducto.append('imagenes[' + pos + ']id', '0');
+        this.datosProducto.append('imagenes[' + pos + ']imagen', valor);
       });
       this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
-        this.idProducto = info.id;
-        this.mensaje = "Producto guardado";
-        this.abrirModal(this.aviso);
-      },
+          this.idProducto = info.id;
+          this.mensaje = 'Producto guardado';
+          this.abrirModal(this.aviso);
+        },
         (error) => {
           let errores = Object.values(error);
           let llaves = Object.keys(error);
-          this.mensaje = "";
+          this.mensaje = '';
           errores.map((infoErrores, index) => {
-            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
           });
           this.abrirModal(this.aviso);
         });
     }
   }
+
   eliminarImagenModal(id) {
     this.idImagen = id;
     this.modalService.open(this.eliminarImagenMdl);
   }
+
   eliminarImagen() {
     this.productosService.eliminarImagen(this.idImagen).subscribe((info) => {
       this.obtenerProducto();
@@ -215,87 +224,96 @@ export class ProductosEditarComponent implements OnInit {
 
     });
   }
+
   crearFichaTecnica() {
     this.fichaTecnica = this.productosService.inicializarFichaTecnica();
-    this.opcion = "insertar";
+    this.opcion = 'insertar';
     this.submittedFichaTecnicaForm = false;
     this.fichaTecnica.producto = this.idProducto;
 
 
   }
+
   editarFichaTecnica(id) {
     this.productosService.obtenerFichaTecnica(id).subscribe((info) => {
       this.fichaTecnica = info;
       this.submittedFichaTecnicaForm = false;
-      this.opcion = "editar"
+      this.opcion = 'editar';
     });
   }
+
   eliminarFichaTecnica(id) {
     this.productosService.eliminarFichaTecnica(id).subscribe(() => {
     });
   }
+
   guardarFichaTecnica() {
     this.submittedFichaTecnicaForm = true;
     if (this.fichaTecnicaForm.invalid) {
       return;
     }
-    if (this.opcion === "insertar") {
+    if (this.opcion === 'insertar') {
       if (this.idProducto != 0) {
         this.productosService.crearFichaTecnica(this.fichaTecnica).subscribe((info) => {
-          this.obtenerFichasTecnicas();
-          this.dismissModal.nativeElement.click();
-          this.submittedFichaTecnicaForm = false;
-          this.mensaje = "Ficha técnica guardada";
-          this.abrirModal(this.aviso);
-        },
+            this.obtenerFichasTecnicas();
+            this.dismissModal.nativeElement.click();
+            this.submittedFichaTecnicaForm = false;
+            this.mensaje = 'Ficha técnica guardada';
+            this.abrirModal(this.aviso);
+          },
           (error) => {
             let errores = Object.values(error);
             let llaves = Object.keys(error);
-            this.mensaje = "";
+            this.mensaje = '';
             errores.map((infoErrores, index) => {
-              this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+              this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
             });
             this.abrirModal(this.aviso);
           });
       } else {
-        this.mensaje = "Es necesario ingresar un producto primero";
+        this.mensaje = 'Es necesario ingresar un producto primero';
         this.abrirModal(this.aviso);
       }
-    } else if (this.opcion === "editar") {
+    } else if (this.opcion === 'editar') {
       this.productosService.editarFichaTecnica(this.fichaTecnica).subscribe((info) => {
-        this.obtenerFichasTecnicas();
-        this.dismissModal.nativeElement.click();
-        this.submittedFichaTecnicaForm = false;
-        this.mensaje = "Ficha técnica guardada";
-        this.abrirModal(this.aviso);
-      },
+          this.obtenerFichasTecnicas();
+          this.dismissModal.nativeElement.click();
+          this.submittedFichaTecnicaForm = false;
+          this.mensaje = 'Ficha técnica guardada';
+          this.abrirModal(this.aviso);
+        },
         (error) => {
           let errores = Object.values(error);
           let llaves = Object.keys(error);
-          this.mensaje = "";
+          this.mensaje = '';
           errores.map((infoErrores, index) => {
-            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
           });
           this.abrirModal(this.aviso);
         });
     }
   }
+
   abrirModal(modal, id = null) {
     this.idFichaTecnica = id;
     this.modalService.open(modal);
   }
+
   cerrarModalMensaje() {
     this.modalService.dismissAll();
   }
+
   abrirModalMensaje(modal) {
     this.modalService.open(modal);
   }
+
   cerrarModal() {
     this.modalService.dismissAll();
     this.productosService.eliminarFichaTecnica(this.idFichaTecnica).subscribe(() => {
       this.obtenerFichasTecnicas();
     });
   }
+
   cerrarModalEliminar() {
     this.modalService.dismissAll();
   }
