@@ -65,9 +65,8 @@
 
                         </div>
                         <div class="col-lg-12 col-xl-8 text-right">
-                            <button class="btn btn-success" tabindex="0" aria-controls="DataTables_Table_0"
-                                    type="button" data-toggle="modal" data-target="#modals-slide-in">
-                                Exportar a excel
+                            <button class="btn btn-success" type="button" (click)="export()">
+                                Exportar a Excel
                             </button>
                             <button class="btn btn-primary" tabindex="0" aria-controls="DataTables_Table_0"
                                     type="button" data-toggle="modal" data-target="#modals-slide-in">
@@ -181,6 +180,9 @@
                                                 <div *ngIf="f.identificacion.errors.minlength || f.identificacion.errors.maxlength">
                                                     Solo se aceptan 10 digitos
                                                 </div>
+                                                <div *ngIf="f.identificacion.errors.identificacionInvalid">
+                                                    Identificación no válida
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -278,7 +280,7 @@
                                                  style="display: block;">
                                                 <div *ngIf="f.correo1.errors.required">Correo1 requerido
                                                 </div>
-                                                <div *ngIf="f.correo1.errors.email">Correo1  no cumple el formato
+                                                <div *ngIf="f.correo1.errors.email">Correo1 no cumple el formato
                                                 </div>
                                             </div>
                                         </div>
@@ -483,7 +485,7 @@
         </div>
     </div>
 </div>
-<app-prospectos-clientes-edit *ngIf="vista=='editar'" [idUsuario]="idUsuario"
+<app-prospectos-clientes-edit *ngIf="vista=='editar'" [idUsuario]="idUsuario" (messageEvent)="receiveMessage($event)"
                               [confirmProspectoOpciones]="confirmProspectoOpciones"></app-prospectos-clientes-edit>
 
 <!-- END: Content-->

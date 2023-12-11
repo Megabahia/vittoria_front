@@ -4,6 +4,7 @@ import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {FormGroup, Validators, FormBuilder} from '@angular/forms';
 import {DatePipe} from '@angular/common';
 import {ParamService} from '../../../../services/mdm/param/param.service';
+import {ValidacionesPropias} from '../../../../utils/customer.validators';
 
 @Component({
   selector: 'app-prospectos-clientes-list',
@@ -85,7 +86,10 @@ export class ProspectosClientesListComponent implements OnInit {
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
       telefono: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10), Validators.maxLength(10)]],
-      identificacion: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10), Validators.maxLength(10)]],
+      identificacion: ['', [
+        Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10),
+        Validators.maxLength(10), ValidacionesPropias.cedulaValido
+      ]],
       tipoCliente: ['', [Validators.required]],
       whatsapp: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10), Validators.maxLength(10)]],
       facebook: ['', [Validators.required]],
@@ -129,8 +133,7 @@ export class ProspectosClientesListComponent implements OnInit {
   }
 
   transformarFecha(fecha) {
-    let nuevaFecha = this.datePipe.transform(fecha, 'yyyy-MM-dd');
-    return nuevaFecha;
+    return this.datePipe.transform(fecha, 'yyyy-MM-dd');
   }
 
   get f() {
@@ -294,4 +297,18 @@ export class ProspectosClientesListComponent implements OnInit {
 
   }
 
+  export(): void {
+    this.prospectosService.exportar().subscribe((data) => {
+      const downloadURL = window.URL.createObjectURL(data);
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = 'prospectosClientes.xls';
+      link.click();
+    });
+  }
+
+  receiveMessage($event): void {
+    this.obtenerProspectos();
+    this.vista = $event;
+  }
 }

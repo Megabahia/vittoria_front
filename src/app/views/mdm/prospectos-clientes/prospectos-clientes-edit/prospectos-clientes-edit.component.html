@@ -23,7 +23,7 @@
                                 <div class="media mb-2">
                                     <img src="{{urlImagen ? urlImagen : '/assets/images/avatars/avatar.png'}}" alt="users avatar" class="user-avatar users-avatar-shadow rounded mr-2 my-25 cursor-pointer" height="90" width="90" />
                                     <div class="media-body mt-50">
-                                        <h4>Eleanor Aguilar</h4>
+                                        <h4>{{prospecto.nombres}} {{prospecto.apellidos}}</h4>
                                         <div class="col-12 d-flex mt-1 px-0">
                                             <label class="btn btn-primary mr-75 mb-0" for="change-picture">
                                                 <span class="d-none d-sm-block">Cambiar</span>
@@ -246,6 +246,7 @@
         <div>¿Desea eliminar este cliente?</div>
     </div>
     <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" aria-label="Close" (click)="modal.dismiss( 'Cross click')">No</button>
         <button type="button" class="btn btn-light" (click)="eliminarProspecto()">Si</button>
     </div>
 </ng-template>

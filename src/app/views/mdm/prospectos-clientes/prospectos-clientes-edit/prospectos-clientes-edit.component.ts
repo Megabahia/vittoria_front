@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { ParamService } from 'src/app/services/admin/param.service';
-import { ProspectosService, Prospecto } from '../../../../services/mdm/prospectosCli/prospectos.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {Component, OnInit, Input, ViewChild, Output, EventEmitter} from '@angular/core';
+import {ParamService} from 'src/app/services/admin/param.service';
+import {ProspectosService, Prospecto} from '../../../../services/mdm/prospectosCli/prospectos.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
 
 @Component({
@@ -9,38 +9,41 @@ import {Router} from '@angular/router';
   templateUrl: './prospectos-clientes-edit.component.html',
 })
 export class ProspectosClientesEditComponent implements OnInit {
+  @Output() messageEvent = new EventEmitter<string>();
   @ViewChild('eliminarImagenMdl') eliminarImagenMdl;
   @ViewChild('eliminarProspectoMdl') eliminarProspectoMdl;
   @Input() idUsuario;
   @Input() confirmProspectoOpciones;
   prospecto: Prospecto = {
-    nombres: "",
-    apellidos: "",
-    telefono: "",
-    tipoCliente: "",
-    whatsapp: "",
-    facebook: "",
-    twitter: "",
-    instagram: "",
-    correo1: "",
-    correo2: "",
-    ciudad: "",
-    canal: "",
-    codigoProducto: "",
-    nombreProducto: "",
+    nombres: '',
+    apellidos: '',
+    telefono: '',
+    tipoCliente: '',
+    whatsapp: '',
+    facebook: '',
+    twitter: '',
+    instagram: '',
+    correo1: '',
+    correo2: '',
+    ciudad: '',
+    canal: '',
+    codigoProducto: '',
+    nombreProducto: '',
     precio: 0,
-    tipoPrecio: "",
-    nombreVendedor: "",
-    confirmacionProspecto: "",
-    imagen: "",
-  }
+    tipoPrecio: '',
+    nombreVendedor: '',
+    confirmacionProspecto: '',
+    imagen: '',
+  };
   urlImagen;
+
   constructor(
     private prospectosService: ProspectosService,
     private globalParam: ParamService,
     private modalService: NgbModal,
     private router: Router,
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.prospectosService.obtenerProspecto(this.idUsuario).subscribe((info) => {
@@ -48,12 +51,15 @@ export class ProspectosClientesEditComponent implements OnInit {
       this.urlImagen = info.imagen;
     });
   }
+
   obtenerURLImagen(url) {
     return this.globalParam.obtenerURL(url);
   }
+
   async ngAfterViewInit() {
 
   }
+
   async subirImagen(event) {
     let imagen = event.target.files[0];
     let imagenForm = new FormData();
@@ -63,15 +69,18 @@ export class ProspectosClientesEditComponent implements OnInit {
     });
 
   }
-  abrirModalEliminarImagen() {
+
+  abrirModalEliminarImagen(): void {
     this.abrirModal(this.eliminarImagenMdl);
   }
-  abrirModalEliminarProspecto() {
+
+  abrirModalEliminarProspecto(): void {
     this.abrirModal(this.eliminarProspectoMdl);
 
   }
-  eliminarImagen() {
-    this.prospectosService.insertarImagen(this.idUsuario, { imagen: null }).subscribe((data) => {
+
+  eliminarImagen(): void {
+    this.prospectosService.insertarImagen(this.idUsuario, {imagen: null}).subscribe((data) => {
       this.urlImagen = data.imagen;
       this.cerrarModal();
     });
@@ -79,20 +88,22 @@ export class ProspectosClientesEditComponent implements OnInit {
 
   async actualizarProspecto() {
     this.prospectosService.actualizarProspecto(this.idUsuario, this.prospecto.confirmacionProspecto).subscribe(() => {
-      this.router.navigate(['/mdm/prospectosClientes/list']);
+      this.messageEvent.emit('lista');
     });
   }
-  eliminarProspecto() {
 
+  eliminarProspecto(): void {
     this.prospectosService.eliminarProspecto(this.idUsuario).subscribe((info) => {
-      this.router.navigate(['/mdm/prospectosClientes/list']);
+      this.messageEvent.emit('lista');
+      this.cerrarModal();
     });
+  }
 
+  abrirModal(modal): void {
+    this.modalService.open(modal);
   }
-  abrirModal(modal) {
-    this.modalService.open(modal)
-  }
-  cerrarModal() {
+
+  cerrarModal(): void {
     this.modalService.dismissAll();
   }
 
