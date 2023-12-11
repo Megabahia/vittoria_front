@@ -156,6 +156,12 @@
                                                         </div>
                                                         <div *ngIf="fdb.cedula.errors.pattern">Solo se aceptan números
                                                         </div>
+                                                        <div *ngIf="fdb.cedula.errors.minlength">Ingrese mínimo 10 digitos
+                                                        </div>
+                                                        <div *ngIf="fdb.cedula.errors.maxlength">Ingrese máximo 10 digitos
+                                                        </div>
+                                                        <div *ngIf="fdb.cedula.errors.identificacionInvalid">Número de cédula incorrecta
+                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -188,6 +194,7 @@
                                                     <input type="text" class="form-control" name="correo" formControlName="correo" [(ngModel)]="datosBasicos.correo">
                                                     <div *ngIf="submittedDatosBasicosForm && fdb.correo.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="fdb.correo.errors.required">Correo es requerido</div>
+                                                        <div *ngIf="fdb.correo.errors.email">Correo no es valido</div>
                                                     </div>
                                                 </div>
 
@@ -199,6 +206,10 @@
                                                     <div *ngIf="submittedDatosBasicosForm && fdb.telefono.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="fdb.telefono.errors.required">Teléfono es requerido</div>
                                                         <div *ngIf="fdb.telefono.errors.pattern">Solo se aceptan números
+                                                        </div>
+                                                        <div *ngIf="fdb.telefono.errors.minlength">Ingrese mínimo 10 digitos
+                                                        </div>
+                                                        <div *ngIf="fdb.telefono.errors.maxlength">Ingrese máximo 10 digitos
                                                         </div>
                                                     </div>
                                                 </div>

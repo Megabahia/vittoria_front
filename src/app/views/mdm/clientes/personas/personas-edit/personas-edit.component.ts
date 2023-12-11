@@ -1,14 +1,23 @@
-import { DatePipe } from '@angular/common';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ClientesService, DatosBasicos, DatosFisicos, DatosVirtuales, Transaccion, Pariente } from '../../../../../services/mdm/personas/clientes/clientes.service';
-import { ParamService } from '../../../../../services/mdm/param/param.service';
-import { ParamService as ParamServiceADM } from '../../../../../services/admin/param.service';
+import {DatePipe} from '@angular/common';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {
+  ClientesService,
+  DatosBasicos,
+  DatosFisicos,
+  DatosVirtuales,
+  Transaccion,
+  Pariente
+} from '../../../../../services/mdm/personas/clientes/clientes.service';
+import {ParamService} from '../../../../../services/mdm/param/param.service';
+import {ParamService as ParamServiceADM} from '../../../../../services/admin/param.service';
 import * as moment from 'moment';
-import { NgbModal, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
-import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
-import { Label, Color } from 'ng2-charts';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ProspectosService } from '../../../../../services/mdm/prospectosCli/prospectos.service';
+import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
+import {ChartOptions, ChartType, ChartDataSets} from 'chart.js';
+import {Label, Color} from 'ng2-charts';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ProspectosService} from '../../../../../services/mdm/prospectosCli/prospectos.service';
+import {ValidacionesPropias} from '../../../../../utils/customer.validators';
+
 @Component({
   selector: 'app-personas-edit',
   templateUrl: './personas-edit.component.html',
@@ -25,42 +34,40 @@ export class PersonasEditComponent implements OnInit {
   @ViewChild('tab2') tab2;
   @ViewChild('tab3') tab3;
   @ViewChild('tab4') tab4;
-  //Modals
+  // Modals
   @ViewChild('dismissModalDV') dismissModalDV;
   @ViewChild('dismissModalDF') dismissModalDF;
   @ViewChild('mensajeModal') mensajeModal;
   @ViewChild('eliminarDatosVirtMdl') eliminarDatosVirtMdl;
   @ViewChild('eliminarDatosFisiMdl') eliminarDatosFisiMdl;
   @ViewChild('eliminarParienteMdl') eliminarParienteMdl;
-  //------------------------------------
+  // ------------------------------------
   basicDemoValue = '2017-01-01';
   tabs = 0;
-  //forms
+  // forms
   datosBasicosForm: FormGroup;
   datosVirtualesForm: FormGroup;
   datosFisicosForm: FormGroup;
-  //------------------------
-  //subbmiteds
+  // ------------------------
+  // subbmiteds
   submittedDatosBasicosForm = false;
   submittedDatosVirtualesForm = false;
   submittedDatosFisicosForm = false;
-  //------------------------
-  //Mensaje
-  mensaje = "";
-  //-------------
-  //ids Datos
+  // ------------------------
+  // Mensaje
+  mensaje = '';
+  // -------------
+  // ids Datos
   idDatoVirtual = 0;
   idDatoFisico = 0;
-  //---------------
+  // ---------------
   numRegex = /^-?\d*[.,]?\d{0,2}$/;
 
   public barChartOptions: ChartOptions = {
     responsive: true,
     aspectRatio: 1
   };
-  public barChartLabels: Label[] = [
-
-  ];
+  public barChartLabels: Label[] = [];
   public barChartType: ChartType = 'line';
   public barChartLegend = true;
   public barChartPlugins = [];
@@ -72,7 +79,7 @@ export class PersonasEditComponent implements OnInit {
   }];
   datosTransferencias = {
     data: [], label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)',
-  }
+  };
   fechaInicioTransac = new Date();
   fechaFinTransac = new Date();
   pageDF = 1;
@@ -88,70 +95,70 @@ export class PersonasEditComponent implements OnInit {
   pageSizePA = 10;
   collectionSizePA;
   datosBasicos: DatosBasicos = {
-    tipoCliente: "",
-    created_at: "",
-    cedula: "",
-    telefono: "",
-    nombres: "",
-    apellidos: "",
-    genero: "",
-    correo: "",
-    nacionalidad: "",
-    fechaNacimiento: "",
+    tipoCliente: '',
+    created_at: '',
+    cedula: '',
+    telefono: '',
+    nombres: '',
+    apellidos: '',
+    genero: '',
+    correo: '',
+    nacionalidad: '',
+    fechaNacimiento: '',
     edad: 0,
-    paisNacimiento: "",
-    provinciaNacimiento: "",
-    ciudadNacimiento: "",
-    estadoCivil: "",
-    paisResidencia: "",
-    provinciaResidencia: "",
-    ciudadResidencia: "",
-    nivelEstudios: "",
-    profesion: "",
-    provinciaTrabajo: "",
-    ciudadTrabajo: "",
-    paisTrabajo: "",
-    lugarTrabajo: "",
-    ubicacionTrabajo: "",
+    paisNacimiento: '',
+    provinciaNacimiento: '',
+    ciudadNacimiento: '',
+    estadoCivil: '',
+    paisResidencia: '',
+    provinciaResidencia: '',
+    ciudadResidencia: '',
+    nivelEstudios: '',
+    profesion: '',
+    provinciaTrabajo: '',
+    ciudadTrabajo: '',
+    paisTrabajo: '',
+    lugarTrabajo: '',
+    ubicacionTrabajo: '',
     mesesUltimoTrabajo: 0,
     mesesTotalTrabajo: 0,
     ingresosPromedioMensual: 0,
     gastosPromedioMensual: 0,
     estado: 0
-  }
+  };
 
   datosFisicos: DatosFisicos = {
     id: 0,
-    created_at: "",
-    tipoDireccion: "",
-    pais: "",
-    provincia: "",
-    ciudad: "",
-    callePrincipal: "",
-    numero: "",
-    calleSecundaria: "",
-    edificio: "",
-    piso: "",
-    oficina: "",
-    referencia: "",
-    cliente: ""
-  }
+    created_at: '',
+    tipoDireccion: '',
+    pais: '',
+    provincia: '',
+    ciudad: '',
+    callePrincipal: '',
+    numero: '',
+    calleSecundaria: '',
+    edificio: '',
+    piso: '',
+    oficina: '',
+    referencia: '',
+    cliente: ''
+  };
   datosVirtuales: DatosVirtuales = {
     id: 0,
-    tipoContacto: "",
-    icono: "",
-    informacion: "",
-    created_at: "",
+    tipoContacto: '',
+    icono: '',
+    informacion: '',
+    created_at: '',
     cliente: 0
-  }
+  };
   transaccion: Transaccion;
   pariente: Pariente;
-  //LISTAS DE DATOS
+  // LISTAS DE DATOS
   listaDatosFisicos;
   listaDatosVirtuales;
   listaTransacciones;
   listaParientes;
-  //OPCIONES DE DROPDOWNLIST
+  // OPCIONES DE DROPDOWNLIST
   estadoOpcion;
   generoOpciones;
   tipoClientesOpciones;
@@ -177,6 +184,7 @@ export class PersonasEditComponent implements OnInit {
   parientesVista = 'lista';
   idPariente = 0;
   urlImagen;
+
   constructor(
     private datePipe: DatePipe,
     private clientesService: ClientesService,
@@ -185,7 +193,6 @@ export class PersonasEditComponent implements OnInit {
     private globalParam: ParamServiceADM,
     private _formBuilder: FormBuilder,
     private modalService: NgbModal,
-
   ) {
     this.datosFisicos.cliente = this.idCliente;
     this.datosVirtuales.cliente = this.idCliente;
@@ -196,8 +203,7 @@ export class PersonasEditComponent implements OnInit {
 
   ngOnInit() {
     this.barChartData = [this.datosTransferencias];
-    this.barChartLabels = [
-    ]
+    this.barChartLabels = [];
 
     this.obtenerGeneroOpciones();
     this.obtenerTipoClientesOpciones();
@@ -245,7 +251,7 @@ export class PersonasEditComponent implements OnInit {
         // whatsapp: "984564"
       });
     } else {
-      if (this.idCliente == 0) {
+      if (this.idCliente === 0) {
         this.datosBasicos.created_at = this.transformarFecha(this.fechaActual);
       } else {
         this.obtenerDatosBasicos();
@@ -259,12 +265,19 @@ export class PersonasEditComponent implements OnInit {
     this.datosBasicosForm = this._formBuilder.group({
       tipoCliente: ['', [Validators.required]],
       created_at: ['', [Validators.required]],
-      cedula: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      telefono: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      cedula: ['', [
+        Validators.required, Validators.pattern('^[0-9]*$'),
+        Validators.minLength(10), Validators.maxLength(10),
+        ValidacionesPropias.cedulaValido
+      ]],
+      telefono: ['', [
+        Validators.required, Validators.pattern('^[0-9]*$'),
+        Validators.minLength(10), Validators.maxLength(10)
+      ]],
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
       genero: ['', [Validators.required]],
-      correo: ['', [Validators.required]],
+      correo: ['', [Validators.required, Validators.email]],
       nacionalidad: ['', [Validators.required]],
       fechaNacimiento: ['', [Validators.required]],
       edad: [0, [Validators.required]],
@@ -281,10 +294,10 @@ export class PersonasEditComponent implements OnInit {
       ciudadTrabajo: ['', [Validators.required]],
       paisTrabajo: ['', [Validators.required]],
       lugarTrabajo: ['', [Validators.required]],
-      mesesUltimoTrabajo: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
-      mesesTotalTrabajo: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
-      ingresosPromedioMensual: [0, [Validators.required, Validators.pattern(this.numRegex)]],
-      gastosPromedioMensual: [0, [Validators.required, Validators.pattern(this.numRegex)]]
+      mesesUltimoTrabajo: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      mesesTotalTrabajo: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      ingresosPromedioMensual: ['', [Validators.required, Validators.pattern(this.numRegex)]],
+      gastosPromedioMensual: ['', [Validators.required, Validators.pattern(this.numRegex)]]
     });
     this.datosVirtualesForm = this._formBuilder.group({
       tipoContacto: ['', [Validators.required]],
@@ -305,9 +318,11 @@ export class PersonasEditComponent implements OnInit {
       referencia: ['', [Validators.required]]
     });
   }
+
   async ngAfterViewInit() {
     this.iniciarPaginador();
   }
+
   async iniciarPaginador() {
     this.paginatorDF.pageChange.subscribe(() => {
       this.obtenerDatosFisicos();
@@ -323,13 +338,15 @@ export class PersonasEditComponent implements OnInit {
     });
 
   }
+
   obtenerURLImagen(url) {
     return this.globalParam.obtenerURL(url);
   }
+
   async obtenerDatosBasicos() {
     this.clientesService.obtenerCliente(this.idCliente).subscribe((info) => {
       this.datosBasicos = info;
-      this.estadoOpcion = info.estado == 'Activo' ? 1 : 0;
+      this.estadoOpcion = info.estado === 'Activo' ? 1 : 0;
       this.urlImagen = info.imagen;
       this.datosBasicos.estado = info.estado;
       this.datosBasicos.created_at = this.transformarFecha(info.created_at);
@@ -342,6 +359,7 @@ export class PersonasEditComponent implements OnInit {
       this.obtenerCiudadTrabajo();
     });
   }
+
   async obtenerDatosFisicos() {
     this.clientesService.obtenerDatosFisicos(this.idCliente, {
       page: this.pageDF - 1,
@@ -351,6 +369,7 @@ export class PersonasEditComponent implements OnInit {
       this.listaDatosFisicos = info.info;
     });
   }
+
   async obtenerDatosVirtuales() {
     this.clientesService.obtenerDatosVirtuales(this.idCliente, {
       page: this.pageDV - 1,
@@ -360,105 +379,125 @@ export class PersonasEditComponent implements OnInit {
       this.listaDatosVirtuales = info.info;
     });
   }
+
   async obtenerGeneroOpciones() {
-    await this.paramService.obtenerListaPadres("GENERO").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('GENERO').subscribe((info) => {
       this.generoOpciones = info;
     });
   }
+
   async obtenerTipoClientesOpciones() {
-    await this.paramService.obtenerListaPadres("TIPO_CLIENTE").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('TIPO_CLIENTE').subscribe((info) => {
       this.tipoClientesOpciones = info;
     });
   }
+
   async obtenerNacionalidadOpciones() {
-    await this.paramService.obtenerListaPadres("NACIONALIDAD").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('NACIONALIDAD').subscribe((info) => {
       this.nacionalidadOpciones = info;
     });
   }
+
   async obtenerPaisOpciones() {
-    await this.paramService.obtenerListaPadres("PAIS").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('PAIS').subscribe((info) => {
       this.paisesOpciones = info;
     });
   }
+
   async obtenerNivelEstudiosOpciones() {
-    await this.paramService.obtenerListaPadres("NIVEL_ESTUDIOS").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('NIVEL_ESTUDIOS').subscribe((info) => {
       this.nivelEstudiosOpciones = info;
     });
   }
+
   async obtenerNivelProfesionOpciones() {
-    await this.paramService.obtenerListaPadres("PROFESION").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('PROFESION').subscribe((info) => {
       this.profesionOpciones = info;
     });
   }
+
   async obtenerEstadoCivilOpciones() {
-    await this.paramService.obtenerListaPadres("ESTADO_CIVIL").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('ESTADO_CIVIL').subscribe((info) => {
       this.estadoCivilOpciones = info;
     });
   }
+
   async obtenerProvinciasNacimiento() {
-    await this.paramService.obtenerListaHijos(this.datosBasicos.paisNacimiento, "PAIS").subscribe((info) => {
+    await this.paramService.obtenerListaHijos(this.datosBasicos.paisNacimiento, 'PAIS').subscribe((info) => {
       this.provinciaNacimientoOpciones = info;
     });
   }
+
   async obtenerCiudadNacimiento() {
-    await this.paramService.obtenerListaHijos(this.datosBasicos.provinciaNacimiento, "PROVINCIA").subscribe((info) => {
+    await this.paramService.obtenerListaHijos(this.datosBasicos.provinciaNacimiento, 'PROVINCIA').subscribe((info) => {
       this.ciudadNacimientoOpciones = info;
     });
   }
+
   async obtenerProvinciasResidencia() {
-    await this.paramService.obtenerListaHijos(this.datosBasicos.paisResidencia, "PAIS").subscribe((info) => {
+    await this.paramService.obtenerListaHijos(this.datosBasicos.paisResidencia, 'PAIS').subscribe((info) => {
       this.provinciaResidenciaOpciones = info;
     });
   }
+
   async obtenerCiudadResidencia() {
-    await this.paramService.obtenerListaHijos(this.datosBasicos.provinciaResidencia, "PROVINCIA").subscribe((info) => {
+    await this.paramService.obtenerListaHijos(this.datosBasicos.provinciaResidencia, 'PROVINCIA').subscribe((info) => {
       this.ciudadResidenciaOpciones = info;
     });
   }
+
   async obtenerProvinciasTrabajo() {
-    await this.paramService.obtenerListaHijos(this.datosBasicos.paisTrabajo, "PAIS").subscribe((info) => {
+    await this.paramService.obtenerListaHijos(this.datosBasicos.paisTrabajo, 'PAIS').subscribe((info) => {
       this.provinciaTrabajoOpciones = info;
     });
   }
+
   async obtenerCiudadTrabajo() {
-    await this.paramService.obtenerListaHijos(this.datosBasicos.provinciaTrabajo, "PROVINCIA").subscribe((info) => {
+    await this.paramService.obtenerListaHijos(this.datosBasicos.provinciaTrabajo, 'PROVINCIA').subscribe((info) => {
       this.ciudadTrabajoOpciones = info;
     });
   }
 
   async obtenerTipoDireccion() {
-    await this.paramService.obtenerListaPadres("TIPO_DIRECCION").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('TIPO_DIRECCION').subscribe((info) => {
       this.tipoDireccionOpciones = info;
     });
   }
+
   async obtenerProvinciasDatosFisicos() {
-    await this.paramService.obtenerListaHijos(this.datosFisicos.pais, "PAIS").subscribe((info) => {
+    await this.paramService.obtenerListaHijos(this.datosFisicos.pais, 'PAIS').subscribe((info) => {
       this.provinciaDatosFisicosOpciones = info;
     });
   }
+
   async obtenerCiudadDatosFisicos() {
-    await this.paramService.obtenerListaHijos(this.datosFisicos.provincia, "PROVINCIA").subscribe((info) => {
+    await this.paramService.obtenerListaHijos(this.datosFisicos.provincia, 'PROVINCIA').subscribe((info) => {
       this.ciudadDatosFisicosOpciones = info;
     });
   }
+
   async calcularEdad() {
     this.datosBasicos.edad = moment().diff(this.datosBasicos.fechaNacimiento, 'years');
   }
+
   async cambiarEstado() {
-    this.datosBasicos.estado = this.estadoOpcion == 1 ? 'Activo' : 'Inactivo'
+    this.datosBasicos.estado = this.estadoOpcion === 1 ? 'Activo' : 'Inactivo';
   }
 
   //gets
   get fdb() {
     return this.datosBasicosForm.controls;
   }
+
   get dvForm() {
     return this.datosVirtualesForm.controls;
   }
+
   get dfForm() {
     return this.datosFisicosForm.controls;
   }
-  //------------------
+
+  // ------------------
   async guardarDatosBasicos() {
 
     this.submittedDatosBasicosForm = true;
@@ -466,42 +505,43 @@ export class PersonasEditComponent implements OnInit {
       return;
     }
 
-    if (this.idCliente != 0) {
+    if (this.idCliente !== 0) {
       this.clientesService.editarDatosBasicos(this.idCliente, this.datosBasicos).subscribe((info) => {
-        this.tab2.nativeElement.click();
-      },
+          this.tab2.nativeElement.click();
+        },
         (error) => {
           let errores = Object.values(error);
           let llaves = Object.keys(error);
-          this.mensaje = "";
+          this.mensaje = '';
           errores.map((infoErrores, index) => {
-            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
           });
           this.abrirModal(this.mensajeModal);
         }
       );
     } else {
       this.clientesService.crearDatosBasicos(this.datosBasicos).subscribe((info) => {
-        this.idCliente = info.id;
-        this.datosFisicos.cliente = this.idCliente;
-        this.datosVirtuales.cliente = this.idCliente;
-        this.tab2.nativeElement.click();
-        if (this.idProspecto) {
-          this.obtenerDatosVirtuales();
+          this.idCliente = info.id;
+          this.datosFisicos.cliente = this.idCliente;
+          this.datosVirtuales.cliente = this.idCliente;
+          this.tab2.nativeElement.click();
+          if (this.idProspecto) {
+            this.obtenerDatosVirtuales();
 
-        }
-      },
+          }
+        },
         (error) => {
           let errores = Object.values(error);
           let llaves = Object.keys(error);
-          this.mensaje = "";
+          this.mensaje = '';
           errores.map((infoErrores, index) => {
-            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
           });
           this.abrirModal(this.mensajeModal);
         });
     }
   }
+
   cambiarTab(numero) {
     switch (numero) {
       case 1:
@@ -518,21 +558,22 @@ export class PersonasEditComponent implements OnInit {
         break;
     }
   }
+
   async guardarImagen(event) {
 
-    if (this.idCliente != 0) {
+    if (this.idCliente !== 0) {
       let nuevaImagen = event.target.files[0];
       let imagen = new FormData();
       imagen.append('imagen', nuevaImagen, nuevaImagen.name);
       this.clientesService.editarImagen(this.idCliente, imagen).subscribe((info) => {
         this.urlImagen = info.imagen;
       });
-    }
-    else {
-      this.mensaje = "Es necesario que primero ingrese sus datos básicos"
+    } else {
+      this.mensaje = 'Es necesario que primero ingrese sus datos básicos';
       this.abrirModal(this.mensajeModal);
     }
   }
+
   async editarDatoFisico(id) {
     this.clientesService.obtenerDatoFisico(id).subscribe((info) => {
       this.datosFisicos = info;
@@ -541,98 +582,106 @@ export class PersonasEditComponent implements OnInit {
       this.obtenerCiudadDatosFisicos();
     });
   }
+
   async crearDatoFisico() {
     this.datosFisicos = {
       id: 0,
       created_at: this.transformarFecha(this.fechaActual),
-      tipoDireccion: "",
-      pais: "",
-      provincia: "",
-      ciudad: "",
-      callePrincipal: "",
-      numero: "",
-      calleSecundaria: "",
-      edificio: "",
-      piso: "",
-      oficina: "",
-      referencia: "",
+      tipoDireccion: '',
+      pais: '',
+      provincia: '',
+      ciudad: '',
+      callePrincipal: '',
+      numero: '',
+      calleSecundaria: '',
+      edificio: '',
+      piso: '',
+      oficina: '',
+      referencia: '',
       cliente: this.idCliente
     };
   }
+
   transformarFecha(fecha) {
-    let nuevaFecha = this.datePipe.transform(fecha, 'yyyy-MM-dd');
-    return nuevaFecha;
+    return this.datePipe.transform(fecha, 'yyyy-MM-dd');
   }
+
   async guardarDatosFisicos() {
     this.submittedDatosFisicosForm = true;
     if (this.datosFisicosForm.invalid) {
       return;
     }
-    if (this.idCliente != 0) {
-      if (this.datosFisicos.id == 0) {
+    if (this.idCliente !== 0) {
+      if (this.datosFisicos.id === 0) {
         this.clientesService.crearDatosFisicos(this.datosFisicos).subscribe((info) => {
-          this.obtenerDatosFisicos();
-          this.dismissModalDF.nativeElement.click();
-        },
+            this.obtenerDatosFisicos();
+            this.dismissModalDF.nativeElement.click();
+          },
           (error) => {
             let errores = Object.values(error);
             let llaves = Object.keys(error);
-            this.mensaje = "";
+            this.mensaje = '';
             errores.map((infoErrores, index) => {
-              this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+              this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
             });
             this.abrirModal(this.mensajeModal);
           });
       } else {
         this.clientesService.editarDatosFisicos(this.datosFisicos).subscribe((info) => {
-          this.obtenerDatosFisicos();
-          this.dismissModalDF.nativeElement.click();
-        },
+            this.obtenerDatosFisicos();
+            this.dismissModalDF.nativeElement.click();
+          },
           (error) => {
             let errores = Object.values(error);
             let llaves = Object.keys(error);
-            this.mensaje = "";
+            this.mensaje = '';
             errores.map((infoErrores, index) => {
-              this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+              this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
             });
             this.abrirModal(this.mensajeModal);
           });
       }
     } else {
-      this.mensaje = "Es necesario que primero ingrese sus datos básicos"
+      this.mensaje = 'Es necesario que primero ingrese sus datos básicos';
       this.abrirModal(this.mensajeModal);
     }
   }
+
   async eliminarDatoFisicoModal(id) {
     this.idDatoFisico = id;
     this.abrirModal(this.eliminarDatosFisiMdl);
   }
+
   eliminarDatoFisico() {
     this.clientesService.eliminarDatosFisicos(this.idDatoFisico).subscribe((info) => {
       this.obtenerDatosFisicos();
       this.cerrarModal();
     });
   }
+
   async crearDatoVirtual() {
     this.datosVirtuales = {
       id: 0,
-      tipoContacto: "",
-      icono: "",
-      informacion: "",
+      tipoContacto: '',
+      icono: '',
+      informacion: '',
       created_at: this.transformarFecha(this.fechaActual),
       cliente: this.idCliente
-    }
+    };
   }
+
   async obtenerTiposContacto() {
-    await this.paramService.obtenerListaPadres("TIPO_CONTACTO").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('TIPO_CONTACTO').subscribe((info) => {
       this.tipoContactoOpciones = info;
     });
   }
+
   async obtenerIconosDatosVirtuales() {
-    await this.paramService.obtenerListaPadres("ICONO_DATOS_VIRTUALES").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('ICONO_DATOS_VIRTUALES').subscribe((info) => {
       this.iconosDatosVirtualOpciones = info;
     });
   }
+
   async editarDatoVirtual(id) {
     this.clientesService.obtenerDatoVirtual(id).subscribe((info) => {
       this.datosVirtuales = info;
@@ -641,57 +690,61 @@ export class PersonasEditComponent implements OnInit {
       this.obtenerCiudadDatosFisicos();
     });
   }
+
   async guardarDatosVirtuales() {
     this.submittedDatosVirtualesForm = true;
     if (this.datosVirtualesForm.invalid) {
       return;
     }
-    if (this.idCliente != 0) {
-      if (this.datosVirtuales.id == 0) {
+    if (this.idCliente !== 0) {
+      if (this.datosVirtuales.id === 0) {
         this.clientesService.crearDatosVirtuales(this.datosVirtuales).subscribe((info) => {
-          this.obtenerDatosVirtuales();
-          this.dismissModalDV.nativeElement.click();
-        },
+            this.obtenerDatosVirtuales();
+            this.dismissModalDV.nativeElement.click();
+          },
           (error) => {
             let errores = Object.values(error);
             let llaves = Object.keys(error);
-            this.mensaje = "";
+            this.mensaje = '';
             errores.map((infoErrores, index) => {
-              this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+              this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
             });
             this.abrirModal(this.mensajeModal);
           });
       } else {
         this.clientesService.editarDatosVirtuales(this.datosVirtuales).subscribe((info) => {
-          this.obtenerDatosVirtuales();
-          this.dismissModalDV.nativeElement.click();
-        },
+            this.obtenerDatosVirtuales();
+            this.dismissModalDV.nativeElement.click();
+          },
           (error) => {
             let errores = Object.values(error);
             let llaves = Object.keys(error);
-            this.mensaje = "";
+            this.mensaje = '';
             errores.map((infoErrores, index) => {
-              this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+              this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
             });
             this.abrirModal(this.mensajeModal);
           });
       }
     } else {
-      this.mensaje = "Es necesario que primero ingrese sus datos básicos"
+      this.mensaje = 'Es necesario que primero ingrese sus datos básicos';
       this.abrirModal(this.mensajeModal);
     }
 
   }
+
   async eliminarDatoVirtualModal(id) {
     this.idDatoVirtual = id;
     this.abrirModal(this.eliminarDatosVirtMdl);
   }
+
   async eliminarDatoVirtual() {
     this.clientesService.eliminarDatosVirtuales(this.idDatoVirtual).subscribe((info) => {
       this.obtenerDatosVirtuales();
       this.cerrarModal();
     });
   }
+
   // async obtenerTransacciones(){
   //   this.clientesService.obtenerTransacciones({
   //     cliente:this.idCliente,
@@ -708,6 +761,7 @@ export class PersonasEditComponent implements OnInit {
       this.transaccion.created_at = this.transformarFecha(info.created_at);
     });
   }
+
   async obtenerTransacciones() {
     this.clientesService.obtenerTransaccionesCliente(this.idCliente,
       {
@@ -716,47 +770,51 @@ export class PersonasEditComponent implements OnInit {
         inicio: this.fechaInicioTransac,
         fin: this.fechaFinTransac
       }).subscribe((info) => {
-        this.collectionSizeTA = info.cont;
-        this.listaTransacciones = info.info;
-        this.obtenerGraficos();
-      });
+      this.collectionSizeTA = info.cont;
+      this.listaTransacciones = info.info;
+      this.obtenerGraficos();
+    });
   }
+
   async obtenerGraficos() {
     this.clientesService.obtenerGraficaTransaccionesCliente(this.idCliente, {
-      page: this.pageTA - 1,
-      page_size: this.pageSizeTA,
-      inicio: this.fechaInicioTransac,
-      fin: this.fechaFinTransac
-    }
+        page: this.pageTA - 1,
+        page_size: this.pageSizeTA,
+        inicio: this.fechaInicioTransac,
+        fin: this.fechaFinTransac
+      }
     ).subscribe((info) => {
       let etiquetas = [];
       let valores = [];
 
       info.map((datos) => {
-        etiquetas.push(datos.anio + "-" + datos.mes);
+        etiquetas.push(datos.anio + '-' + datos.mes);
         valores.push(datos.cantidad);
       });
       this.datosTransferencias = {
         data: valores, label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)'
-      }
+      };
       this.barChartData = [this.datosTransferencias];
       this.barChartLabels = etiquetas;
     });
   }
+
   crearPariente() {
-    if (this.idCliente != 0) {
+    if (this.idCliente !== 0) {
       this.idPariente = 0;
-      this.parientesVista = "editar";
+      this.parientesVista = 'editar';
     } else {
-      this.mensaje = "Es necesario que primero ingrese sus datos básicos"
+      this.mensaje = 'Es necesario que primero ingrese sus datos básicos';
       this.abrirModal(this.mensajeModal);
     }
 
   }
+
   volver() {
-    this.parientesVista = "lista";
+    this.parientesVista = 'lista';
     this.obtenerParientes();
   }
+
   async obtenerParientes() {
     this.clientesService.obtenerParientes(this.idCliente, {
       page: this.pagePA - 1,
@@ -766,10 +824,11 @@ export class PersonasEditComponent implements OnInit {
       this.listaParientes = info.info;
     });
   }
+
   editarPariente(id) {
-    if (this.idCliente != 0) {
+    if (this.idCliente !== 0) {
       this.idPariente = id;
-      this.parientesVista = "editar";
+      this.parientesVista = 'editar';
     }
   }
 
@@ -777,15 +836,18 @@ export class PersonasEditComponent implements OnInit {
     this.idPariente = id;
     this.abrirModal(this.eliminarParienteMdl);
   }
+
   async eliminarPariente() {
     this.clientesService.eliminarPariente(this.idPariente).subscribe((info) => {
       this.obtenerParientes();
       this.cerrarModal();
     });
   }
+
   abrirModal(modal) {
-    this.modalService.open(modal)
+    this.modalService.open(modal);
   }
+
   cerrarModal() {
     this.modalService.dismissAll();
   }
