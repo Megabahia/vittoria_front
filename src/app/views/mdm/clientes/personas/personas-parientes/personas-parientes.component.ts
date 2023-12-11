@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ClientesService, Pariente } from '../../../../../services/mdm/personas/clientes/clientes.service';
-import { ParamService } from '../../../../../services/mdm/param/param.service';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {ClientesService, Pariente} from '../../../../../services/mdm/personas/clientes/clientes.service';
+import {ParamService} from '../../../../../services/mdm/param/param.service';
 import * as moment from 'moment';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ValidacionesPropias} from '../../../../../utils/customer.validators';
 
 @Component({
   selector: 'app-personas-parientes',
@@ -16,13 +17,13 @@ export class PersonasParientesComponent implements OnInit {
   @Input() idCliente;
   pariente: Pariente;
   submitted = false;
-  //FORMS
+  // FORMS
   datosParientesForm: FormGroup;
-  //--------------------------------------
+  // --------------------------------------
   numRegex = /^-?\d*[.,]?\d{0,2}$/;
 
-  //mensaje modal
-  mensaje = "";
+  // mensaje modal
+  mensaje = '';
 
   tipoParientesOpciones;
   generoOpciones;
@@ -38,6 +39,7 @@ export class PersonasParientesComponent implements OnInit {
   ciudadTrabajoOpciones;
   estadoCivilOpciones;
   estadoOpcion;
+
   constructor(
     private clientesService: ClientesService,
     private paramService: ParamService,
@@ -50,7 +52,11 @@ export class PersonasParientesComponent implements OnInit {
   async ngOnInit() {
     this.datosParientesForm = this._formBuilder.group({
       tipoPariente: ['', [Validators.required]],
-      cedula: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      cedula: ['', [
+        Validators.required, Validators.pattern('^[0-9]*$'),
+        Validators.minLength(10), Validators.maxLength(10),
+        ValidacionesPropias.cedulaValido
+      ]],
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
       genero: ['', [Validators.required]],
@@ -70,15 +76,33 @@ export class PersonasParientesComponent implements OnInit {
       edificio: ['', [Validators.required]],
       piso: ['', [Validators.required]],
       departamento: ['', [Validators.required]],
-      telefonoDomicilio: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      telefonoOficina: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      celularPersonal: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      celularOficina: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      whatsappPersonal: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      whatsappSecundario: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      correoPersonal: ['', [Validators.required]],
-      correoTrabajo: ['', [Validators.required]],
-      googlePlus: ['', [Validators.required]],
+      telefonoDomicilio: ['', [
+        Validators.required, Validators.pattern('^[0-9]*$'),
+        Validators.minLength(10), Validators.maxLength(10),
+      ]],
+      telefonoOficina: ['', [
+        Validators.required, Validators.pattern('^[0-9]*$'),
+        Validators.minLength(10), Validators.maxLength(10),
+      ]],
+      celularPersonal: ['', [
+        Validators.required, Validators.pattern('^[0-9]*$'),
+        Validators.minLength(10), Validators.maxLength(10),
+      ]],
+      celularOficina: ['', [
+        Validators.required, Validators.pattern('^[0-9]*$'),
+        Validators.minLength(10), Validators.maxLength(10),
+      ]],
+      whatsappPersonal: ['', [
+        Validators.required, Validators.pattern('^[0-9]*$'),
+        Validators.minLength(10), Validators.maxLength(10),
+      ]],
+      whatsappSecundario: ['', [
+        Validators.required, Validators.pattern('^[0-9]*$'),
+        Validators.minLength(10), Validators.maxLength(10),
+      ]],
+      correoPersonal: ['', [Validators.required, Validators.email]],
+      correoTrabajo: ['', [Validators.required, Validators.email]],
+      googlePlus: ['', [Validators.required, Validators.email]],
       twitter: ['', [Validators.required]],
       facebook: ['', [Validators.required]],
       instagram: ['', [Validators.required]],
@@ -88,18 +112,19 @@ export class PersonasParientesComponent implements OnInit {
       paisTrabajo: ['', [Validators.required]],
       provinciaTrabajo: ['', [Validators.required]],
       ciudadTrabajo: ['', [Validators.required]],
-      mesesUltimoTrabajo: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
-      mesesTotalTrabajo: [0, [Validators.required, Validators.pattern("^[0-9]*$")]],
+      mesesUltimoTrabajo: [0, [Validators.required, Validators.pattern('^[0-9]*$')]],
+      mesesTotalTrabajo: [0, [Validators.required, Validators.pattern('^[0-9]*$')]],
       ingresosPromedioMensual: [0, [Validators.required, Validators.pattern(this.numRegex)]],
       gastosPromedioMensual: [0, [Validators.required, Validators.pattern(this.numRegex)]]
     });
   }
 
-  //GETS-------
+  // GETS-------
   get f() {
     return this.datosParientesForm.controls;
   }
-  //------------
+
+  // ------------
 
   async ngAfterViewInit() {
     this.obtenerTipoParientesOpciones();
@@ -109,10 +134,10 @@ export class PersonasParientesComponent implements OnInit {
     this.obtenerNivelEstudiosOpciones();
     this.obtenerNivelProfesionOpciones();
     this.obtenerEstadoCivilOpciones();
-    if (this.idPariente != 0) {
+    if (this.idPariente !== 0) {
       await this.clientesService.obtenerPariente(this.idPariente).subscribe((info) => {
         this.pariente = info;
-        this.estadoOpcion = info.estado == 'Activo' ? 1 : 0;
+        this.estadoOpcion = info.estado === 'Activo' ? 1 : 0;
         this.pariente.estado = info.estado;
         this.obtenerProvinciasNacimiento();
         this.obtenerCiudadNacimiento();
@@ -126,119 +151,138 @@ export class PersonasParientesComponent implements OnInit {
     }
     this.pariente.cliente = this.idCliente;
   }
+
   async obtenerTipoParientesOpciones() {
-    await this.paramService.obtenerListaPadres("TIPO_PARIENTE").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('TIPO_PARIENTE').subscribe((info) => {
       this.tipoParientesOpciones = info;
     });
   }
+
   async obtenerGeneroOpciones() {
-    await this.paramService.obtenerListaPadres("GENERO").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('GENERO').subscribe((info) => {
       this.generoOpciones = info;
     });
   }
+
   async obtenerNacionalidadOpciones() {
-    await this.paramService.obtenerListaPadres("NACIONALIDAD").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('NACIONALIDAD').subscribe((info) => {
       this.nacionalidadOpciones = info;
     });
   }
+
   async obtenerPaisOpciones() {
-    await this.paramService.obtenerListaPadres("PAIS").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('PAIS').subscribe((info) => {
       this.paisesOpciones = info;
     });
   }
+
   async obtenerProvinciasNacimiento() {
-    await this.paramService.obtenerListaHijos(this.pariente.paisNacimiento, "PAIS").subscribe((info) => {
+    await this.paramService.obtenerListaHijos(this.pariente.paisNacimiento, 'PAIS').subscribe((info) => {
       this.provinciaNacimientoOpciones = info;
     });
   }
+
   async obtenerCiudadNacimiento() {
-    await this.paramService.obtenerListaHijos(this.pariente.provinciaNacimiento, "PROVINCIA").subscribe((info) => {
+    await this.paramService.obtenerListaHijos(this.pariente.provinciaNacimiento, 'PROVINCIA').subscribe((info) => {
       this.ciudadNacimientoOpciones = info;
     });
   }
+
   async obtenerProvinciasResidencia() {
-    await this.paramService.obtenerListaHijos(this.pariente.paisResidencia, "PAIS").subscribe((info) => {
+    await this.paramService.obtenerListaHijos(this.pariente.paisResidencia, 'PAIS').subscribe((info) => {
       this.provinciaResidenciaOpciones = info;
     });
   }
+
   async obtenerCiudadResidencia() {
-    await this.paramService.obtenerListaHijos(this.pariente.provinciaResidencia, "PROVINCIA").subscribe((info) => {
+    await this.paramService.obtenerListaHijos(this.pariente.provinciaResidencia, 'PROVINCIA').subscribe((info) => {
       this.ciudadResidenciaOpciones = info;
     });
   }
+
   async obtenerNivelEstudiosOpciones() {
-    await this.paramService.obtenerListaPadres("NIVEL_ESTUDIOS").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('NIVEL_ESTUDIOS').subscribe((info) => {
       this.nivelEstudiosOpciones = info;
     });
   }
+
   async obtenerNivelProfesionOpciones() {
-    await this.paramService.obtenerListaPadres("PROFESION").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('PROFESION').subscribe((info) => {
       this.profesionOpciones = info;
     });
   }
+
   async obtenerProvinciasTrabajo() {
-    await this.paramService.obtenerListaHijos(this.pariente.paisTrabajo, "PAIS").subscribe((info) => {
+    await this.paramService.obtenerListaHijos(this.pariente.paisTrabajo, 'PAIS').subscribe((info) => {
       this.provinciaTrabajoOpciones = info;
     });
   }
+
   async obtenerCiudadTrabajo() {
-    await this.paramService.obtenerListaHijos(this.pariente.provinciaTrabajo, "PROVINCIA").subscribe((info) => {
+    await this.paramService.obtenerListaHijos(this.pariente.provinciaTrabajo, 'PROVINCIA').subscribe((info) => {
       this.ciudadTrabajoOpciones = info;
     });
   }
+
   async obtenerEstadoCivilOpciones() {
-    await this.paramService.obtenerListaPadres("ESTADO_CIVIL").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('ESTADO_CIVIL').subscribe((info) => {
       this.estadoCivilOpciones = info;
     });
   }
+
   async calcularEdad() {
     this.pariente.edad = moment().diff(this.pariente.fechaNacimiento, 'years');
   }
-  regresar() {
+
+  regresar(): void {
     this.volver.emit();
   }
+
   async cambiarEstado() {
-    this.pariente.estado = this.estadoOpcion == 1 ? 'Activo' : 'Inactivo'
+    this.pariente.estado = this.estadoOpcion === 1 ? 'Activo' : 'Inactivo';
   }
+
   async guardarPariente() {
     this.submitted = true;
     if (this.datosParientesForm.invalid) {
       return;
     }
-    if (this.idPariente != 0) {
+    if (this.idPariente !== 0) {
       await this.clientesService.actualizarPariente(this.idPariente, this.pariente).subscribe((info) => {
-        this.regresar();
-      },
+          this.regresar();
+        },
         (error) => {
-          let errores = Object.values(error);
-          let llaves = Object.keys(error);
-          this.mensaje = "";
+          const errores = Object.values(error);
+          const llaves = Object.keys(error);
+          this.mensaje = '';
           errores.map((infoErrores, index) => {
-            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
           });
           this.abrirModal(this.mensajeModal);
         }
       );
     } else {
       await this.clientesService.crearPariente(this.pariente).subscribe((info) => {
-        this.regresar();
-      },
+          this.regresar();
+        },
         (error) => {
-          let errores = Object.values(error);
-          let llaves = Object.keys(error);
-          this.mensaje = "";
+          const errores = Object.values(error);
+          const llaves = Object.keys(error);
+          this.mensaje = '';
           errores.map((infoErrores, index) => {
-            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
           });
           this.abrirModal(this.mensajeModal);
         });
     }
 
   }
-  abrirModal(modal) {
-    this.modalService.open(modal)
+
+  abrirModal(modal): void {
+    this.modalService.open(modal);
   }
-  cerrarModal() {
+
+  cerrarModal(): void {
     this.modalService.dismissAll();
   }
 }

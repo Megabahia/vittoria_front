@@ -24,6 +24,12 @@
                             <div *ngIf="f.cedula.errors.required">Cédula requerido</div>
                             <div *ngIf="f.cedula.errors.pattern">Solo se aceptan números
                             </div>
+                            <div *ngIf="f.cedula.errors.minlength">Ingrese mínimo 10 digitos
+                            </div>
+                            <div *ngIf="f.cedula.errors.maxlength">Ingrese máximo 10 digitos
+                            </div>
+                            <div *ngIf="f.cedula.errors.identificacionInvalid">Número de cédula incorrecta
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -273,8 +279,12 @@
                         <label for="username">Teléfono domicilio</label>
                         <input type="text" class="form-control" name="telefonoDomicilio" formControlName="telefonoDomicilio" [(ngModel)]="pariente.telefonoDomicilio">
                         <div *ngIf="submitted && f.telefonoDomicilio.errors" class="invalid-feedback" style="display: block;">
-                            <div *ngIf="f.telefonoDomicilio.errors.required">Teléfono domicilioo requerido</div>
+                            <div *ngIf="f.telefonoDomicilio.errors.required">Teléfono domicilio requerido</div>
                             <div *ngIf="f.telefonoDomicilio.errors.pattern">Solo se aceptan números
+                            </div>
+                            <div *ngIf="f.telefonoDomicilio.errors.minlength">Ingrese mínimo 10 digitos
+                            </div>
+                            <div *ngIf="f.telefonoDomicilio.errors.maxlength">Ingrese máximo 10 digitos
                             </div>
                         </div>
                     </div>
@@ -287,6 +297,10 @@
                             <div *ngIf="f.telefonoOficina.errors.required">Teléfono oficina requerido</div>
                             <div *ngIf="f.telefonoOficina.errors.pattern">Solo se aceptan números
                             </div>
+                            <div *ngIf="f.telefonoOficina.errors.minlength">Ingrese mínimo 10 digitos
+                            </div>
+                            <div *ngIf="f.telefonoOficina.errors.maxlength">Ingrese máximo 10 digitos
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -298,6 +312,10 @@
                             <div *ngIf="f.celularPersonal.errors.required">Celular personal requerido</div>
                             <div *ngIf="f.celularPersonal.errors.pattern">Solo se aceptan números
                             </div>
+                            <div *ngIf="f.celularPersonal.errors.minlength">Ingrese mínimo 10 digitos
+                            </div>
+                            <div *ngIf="f.celularPersonal.errors.maxlength">Ingrese máximo 10 digitos
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -308,6 +326,10 @@
                         <div *ngIf="submitted && f.celularOficina.errors" class="invalid-feedback" style="display: block;">
                             <div *ngIf="f.celularOficina.errors.required">Celular oficina requerido</div>
                             <div *ngIf="f.celularOficina.errors.pattern">Solo se aceptan números
+                            </div>
+                            <div *ngIf="f.celularOficina.errors.minlength">Ingrese mínimo 10 digitos
+                            </div>
+                            <div *ngIf="f.celularOficina.errors.maxlength">Ingrese máximo 10 digitos
                             </div>
                         </div>
                     </div>
@@ -321,6 +343,10 @@
                             <div *ngIf="f.whatsappPersonal.errors.required">WhatsApp personal requerido</div>
                             <div *ngIf="f.whatsappPersonal.errors.pattern">Solo se aceptan números
                             </div>
+                            <div *ngIf="f.whatsappPersonal.errors.minlength">Ingrese mínimo 10 digitos
+                            </div>
+                            <div *ngIf="f.whatsappPersonal.errors.maxlength">Ingrese máximo 10 digitos
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -333,6 +359,10 @@
                             <div *ngIf="f.whatsappSecundario.errors.required">WhatsApp secundario requerido</div>
                             <div *ngIf="f.whatsappSecundario.errors.pattern">Solo se aceptan números
                             </div>
+                            <div *ngIf="f.whatsappSecundario.errors.minlength">Ingrese mínimo 10 digitos
+                            </div>
+                            <div *ngIf="f.whatsappSecundario.errors.maxlength">Ingrese máximo 10 digitos
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -343,6 +373,7 @@
                         <input type="text" class="form-control" name="correoPersonal" formControlName="correoPersonal" [(ngModel)]="pariente.correoPersonal">
                         <div *ngIf="submitted && f.correoPersonal.errors" class="invalid-feedback" style="display: block;">
                             <div *ngIf="f.correoPersonal.errors.required">Correo personal requerido</div>
+                            <div *ngIf="f.correoPersonal.errors.email">Correo personal no es valido</div>
                         </div>
                     </div>
                 </div>
@@ -352,6 +383,7 @@
                         <input type="text" class="form-control" name="correoTrabajo" formControlName="correoTrabajo" [(ngModel)]="pariente.correoTrabajo">
                         <div *ngIf="submitted && f.correoTrabajo.errors" class="invalid-feedback" style="display: block;">
                             <div *ngIf="f.correoTrabajo.errors.required">Correo trabajo requerido</div>
+                            <div *ngIf="f.correoTrabajo.errors.email">Correo personal no es valido</div>
                         </div>
                     </div>
                 </div>
@@ -361,6 +393,7 @@
                         <input type="text" class="form-control" name="googlePlus" formControlName="googlePlus" [(ngModel)]="pariente.googlePlus">
                         <div *ngIf="submitted && f.googlePlus.errors" class="invalid-feedback" style="display: block;">
                             <div *ngIf="f.googlePlus.errors.required">Google Plus requerido</div>
+                            <div *ngIf="f.googlePlus.errors.email">Correo no validado</div>
                         </div>
                     </div>
                 </div>
