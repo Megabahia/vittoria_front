@@ -19,20 +19,25 @@
 
                             </div>
                             <div class="col-md-3">
-                                <input type="text" class="form-control form-control-sm" placeholder="Ruc" [(ngModel)]="ruc">
+                                <input type="text" class="form-control form-control-sm" placeholder="Ruc"
+                                       [(ngModel)]="ruc">
 
                             </div>
                             <div class="col-md-2">
-                                <input type="text" mwlFlatpickr [(ngModel)]="inicio" [altInput]="true" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
+                                <input type="text" mwlFlatpickr [(ngModel)]="inicio" [altInput]="true"
+                                       class="form-control form-control-sm flatpickr-basic flatpickr-input"
+                                       placeholder="- Periodo de finalización -">
                             </div>
                             <div class="col-md-2">
-                                <input type="text" mwlFlatpickr [(ngModel)]="fin" [altInput]="true" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
+                                <input type="text" mwlFlatpickr [(ngModel)]="fin" [altInput]="true"
+                                       class="form-control form-control-sm flatpickr-basic flatpickr-input"
+                                       placeholder="- Periodo de finalización -">
 
                             </div>
                             <div class="col-md-2">
                                 <button class="btn btn-primary" (click)="obtenerListaNegocios()">
-                  <i-feather name='search' class="edit-user"></i-feather>
-                </button>
+                                    <i-feather name='search' class="edit-user"></i-feather>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -45,70 +50,72 @@
                             <div class="col-lg-12 col-xl-6">
                                 <label>Mostrar</label>
                                 <select class="form-control-sm" [(ngModel)]="pageSize" (click)="obtenerListaNegocios()">
-                          <option value="10">10</option>
-                          <option value="25">25</option>
-                          <option value="50">50</option>
-                          <option value="100">100</option>
-                        </select>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
 
                             </div>
                             <div class="col-lg-12 col-xl-6 text-right">
-                                <button class="btn btn-success" type="button">
-                      Exportar a excel
-                    </button>
+                                <button class="btn btn-success" type="button" (click)="export()">
+                                    Exportar a Excel
+                                </button>
                                 <a (click)="crearNegocio()" class="btn btn-primary">
-                        Añadir negocio
-                      </a>
+                                    Añadir negocio
+                                </a>
                             </div>
                         </div>
                         <table class="user-list-table table">
                             <thead class="thead-light">
-                                <tr>
-                                    <th>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck2" />
-                                            <label class="custom-control-label" for="customCheck2"></label>
-                                        </div>
-                                    </th>
-                                    <th>Negocio</th>
-                                    <th>Razon social</th>
-                                    <th>Acciones</th>
-                                </tr>
+                            <tr>
+                                <th>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck2"/>
+                                        <label class="custom-control-label" for="customCheck2"></label>
+                                    </div>
+                                </th>
+                                <th>Negocio</th>
+                                <th>Razon social</th>
+                                <th>Acciones</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let negocio of negocios">
-                                    <td>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck2" />
-                                            <label class="custom-control-label" for="customCheck2"></label>
+                            <tr *ngFor="let negocio of negocios">
+                                <td>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck2"/>
+                                        <label class="custom-control-label" for="customCheck2"></label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-left align-items-center">
+                                        <div class="avatar mr-1 bg-light-danger">
+                                            <span class="avatar-content">AM</span>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-left align-items-center">
-                                            <div class="avatar mr-1 bg-light-danger">
-                                                <span class="avatar-content">AM</span>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <a class="user-name text-truncate mb-0">
-                                                    <span class="font-weight-bold">{{negocio.nombreComercial}}</span></a>
-                                                <small class="text-truncate text-muted mb-0"></small>
-                                            </div>
+                                        <div class="d-flex flex-column">
+                                            <a class="user-name text-truncate mb-0">
+                                                <span class="font-weight-bold">{{negocio.nombreComercial}}</span></a>
+                                            <small class="text-truncate text-muted mb-0"></small>
                                         </div>
-                                    </td>
-                                    <td>{{negocio.razonSocial}}</td>
-                                    <td>
-                                        <a (click)="editarNegocio(negocio.id)">
-                                            <i-feather name='edit-2'></i-feather>
-                                        </a>
-                                        <a (click)="abrirModal(contenido,negocio.id)" data-target="#eliminar" data-toggle="modal">
-                                            <i-feather name="trash"></i-feather>
-                                        </a>
-                                    </td>
-                                </tr>
+                                    </div>
+                                </td>
+                                <td>{{negocio.razonSocial}}</td>
+                                <td>
+                                    <a (click)="editarNegocio(negocio.id)">
+                                        <i-feather name='edit-2'></i-feather>
+                                    </a>
+                                    <a (click)="abrirModal(contenido,negocio.id)" data-target="#eliminar"
+                                       data-toggle="modal">
+                                        <i-feather name="trash"></i-feather>
+                                    </a>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
-                    <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [(pageSize)]="pageSize" [maxSize]="5" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+                    <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [(pageSize)]="pageSize"
+                                    [maxSize]="5" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
 
                     <!-- Modal to add new user starts-->
                     <div class="modal modal-slide-in new-user-modal fade" id="modals-slide-in">
@@ -121,46 +128,51 @@
                                 <div class="modal-body flex-grow-1">
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-fullname">Nombres:</label>
-                                        <input type="text" class="form-control dt-full-name" id="basic-icon-default-fullname" />
+                                        <input type="text" class="form-control dt-full-name"
+                                               id="basic-icon-default-fullname"/>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-uname">Apellidos:</label>
-                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname"/>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-uname">Usuario:</label>
-                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname"/>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-email">Correo:</label>
-                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email" />
+                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email"/>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-uname">Compañía:</label>
-                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname"/>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-uname">País:</label>
-                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname"/>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-uname">Teléfono:</label>
-                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname"/>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="basic-icon-default-uname">WhatsApp:</label>
-                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                        <input type="text" id="basic-icon-default-uname" class="form-control dt-uname"/>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="user-role">Rol de usuario</label>
                                         <select id="user-role" class="form-control">
-                                  <option value="subscriber">Suscriptor</option>
-                                  <option value="editor">Editor</option>
-                                  <option value="admin">Administrador</option>
-                               </select>
+                                            <option value="subscriber">Suscriptor</option>
+                                            <option value="editor">Editor</option>
+                                            <option value="admin">Administrador</option>
+                                        </select>
                                     </div>
-                                    <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close">Guardar</button>
-                                    <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                    <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito"
+                                            data-dismiss="modal" aria-label="Close">Guardar
+                                    </button>
+                                    <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">
+                                        Cancelar
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -178,8 +190,8 @@
     <div class="modal-header">
         <h4 class="modal-title">Mensaje</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
     <div class="modal-body">
         <p>Confirma eliminar</p>
