@@ -20,7 +20,9 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i data-feather='calendar'></i></span>
                                         </div>
-                                        <input type="text" mwlFlatpickr mode="range" [(ngModel)]="fecha" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
+                                        <input type="text" mwlFlatpickr mode="range" [(ngModel)]="fecha"
+                                               class="form-control form-control-sm flatpickr-basic flatpickr-input"
+                                               placeholder="- Periodo de finalización -">
                                         <!-- <input type="text" class="form-control form-control-sm flatpickr-range flatpickr-input" placeholder="- Rango de fechas"> -->
                                     </div>
                                 </div>
@@ -28,24 +30,23 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <select class="form-control form-control-sm" [(ngModel)]="tipoCliente">
-                    <option value="" selected>- Tipo de cliente - </option>
-                    <option value="cliente">Cliente</option>
-                    <option value="negocio">Negocio</option>
-                  </select>
+                                        <option value="" selected>- Tipo de cliente -</option>
+                                        <option value="cliente">Cliente</option>
+                                        <option value="negocio">Negocio</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-control-sm" placeholder="Identificación" [(ngModel)]="identificacion">
+                                    <input type="text" class="form-control form-control-sm" placeholder="Identificación"
+                                           [(ngModel)]="identificacion">
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <button class="btn btn-primary" (click)="obtenerListaPredicciones()">
-                  <i-feather name='search' class="edit-user"></i-feather>
-                </button>
+                                    <i-feather name='search' class="edit-user"></i-feather>
+                                </button>
                             </div>
-
-
 
 
                         </div>
@@ -55,74 +56,84 @@
                 <div class="card">
                     <div class="row m-75">
                         <div class="col-md-12 text-right">
-                            <button class="btn btn-success waves-effect waves-float waves-light" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-toggle="modal" data-target="#modals-slide-in">
-                Exportar a Excel
-              </button>
+                            <button class="btn btn-success waves-effect waves-float waves-light" type="button"
+                                    (click)="exportarExcel()">
+                                Exportar a Excel
+                            </button>
                         </div>
                     </div>
                     <div class="card-datatable table-responsive pt-0">
 
                         <table class="user-list-table table table-striped">
                             <thead class="thead-light">
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Fecha de predicción</th>
-                                    <th>Nombre cliente</th>
-                                    <th>Apellido cliente</th>
-                                    <th>Identificación</th>
-                                    <th># contacto</th>
-                                    <th>Correo</th>
-                                    <th>Fecha última compra</th>
-                                    <th>Monto última compra</th>
-                                    <th>Últimos productos adquiridos</th>
-                                    <th>Acciones</th>
-                                </tr>
+                            <tr>
+                                <th>Código</th>
+                                <th>Fecha de predicción</th>
+                                <th>Nombre cliente</th>
+                                <th>Apellido cliente</th>
+                                <th>Identificación</th>
+                                <th># contacto</th>
+                                <th>Correo</th>
+                                <th>Fecha última compra</th>
+                                <th>Monto última compra</th>
+                                <th>Últimos productos adquiridos</th>
+                                <th>Acciones</th>
+                            </tr>
                             </thead>
 
                             <tbody>
-                                <tr *ngFor="let prediccion of listaPredicciones">
-                                    <td>{{prediccion.id}}</td>
-                                    <td>{{prediccion.fechaPredicciones}}</td>
-                                    <td>{{prediccion.nombres}}</td>
-                                    <td>{{prediccion.apellidos}}</td>
-                                    <td>{{prediccion.identificacion}}</td>
-                                    <td>{{prediccion.telefono}}</td>
-                                    <td>{{prediccion.correo}}</td>
-                                    <td>{{transformarFecha(prediccion.created_at)}}</td>
-                                    <td>${{prediccion.total}}</td>
-                                    <td>
-                                        <a (click)="obtenerUltimosProductos(prediccion.id)" class="avatar bg-info" data-target="#productos-detail" data-toggle="modal">
-                                            <div class="avatar-content" data-toggle="tooltip" data-placement="top" title="Ver productos">
-                                                <i-feather name='shopping-bag' class="edit-user"></i-feather>
-                                            </div>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a (click)="obtenerProductosPrediccion(prediccion.id)" class="avatar bg-primary" data-target="#client-detail" data-toggle="modal">
-                                            <div class="avatar-content" data-toggle="tooltip" data-placement="top" title="Ver predicciones">
-                                                <i-feather name='eye' class="edit-user"></i-feather>
-                                            </div>
-                                        </a>
-                                    </td>
-                                </tr>
+                            <tr *ngFor="let prediccion of listaPredicciones">
+                                <td>{{prediccion.id}}</td>
+                                <td>{{prediccion.fechaPredicciones}}</td>
+                                <td>{{prediccion.nombres}}</td>
+                                <td>{{prediccion.apellidos}}</td>
+                                <td>{{prediccion.identificacion}}</td>
+                                <td>{{prediccion.telefono}}</td>
+                                <td>{{prediccion.correo}}</td>
+                                <td>{{transformarFecha(prediccion.created_at)}}</td>
+                                <td>${{prediccion.total}}</td>
+                                <td>
+                                    <a (click)="obtenerUltimosProductos(prediccion.id)" class="avatar bg-info"
+                                       data-target="#productos-detail" data-toggle="modal">
+                                        <div class="avatar-content" data-toggle="tooltip" data-placement="top"
+                                             title="Ver productos">
+                                            <i-feather name='shopping-bag' class="edit-user"></i-feather>
+                                        </div>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a (click)="obtenerProductosPrediccion(prediccion.id)" class="avatar bg-primary"
+                                       data-target="#client-detail" data-toggle="modal">
+                                        <div class="avatar-content" data-toggle="tooltip" data-placement="top"
+                                             title="Ver predicciones">
+                                            <i-feather name='eye' class="edit-user"></i-feather>
+                                        </div>
+                                    </a>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
-                    <ngb-pagination #paginator [collectionSize]="collectionSize " [(page)]="page " [(pageSize)]="pageSize " [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+                    <ngb-pagination #paginator [collectionSize]="collectionSize " [(page)]="page "
+                                    [(pageSize)]="pageSize " [maxSize]="5 " [ellipses]="false "
+                                    [boundaryLinks]="true "></ngb-pagination>
 
-                    <div class="modal" tabindex="-1" role="dialog" id="client-detail" aria-labelledby="myLargeModalLabel">
+                    <div class="modal" tabindex="-1" role="dialog" id="client-detail"
+                         aria-labelledby="myLargeModalLabel">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Predicciones para nuevos productos</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×
+                                    </button>
                                 </div>
                                 <div class="modal-body" *ngIf="tipoClienteModal == 'cliente'">
                                     <div class="row p-2">
                                         <div class="col-xl-6 col-lg-12 d-flex flex-column justify-content-between border-container-lg">
                                             <div class="user-avatar-section">
                                                 <div class="d-flex justify-content-start">
-                                                    <img class="img-fluid rounded" src="{{prediccion.cliente.imagen}}" width="80" />
+                                                    <img class="img-fluid rounded" src="{{prediccion.cliente.imagen}}"
+                                                         width="80"/>
                                                     <div class="d-flex flex-column ml-1">
                                                         <div class="user-info mb-1">
                                                             <h4 class="mb-0">{{prediccion.cliente.nombreCompleto}}</h4>
@@ -151,11 +162,13 @@
                                                     </div>
                                                     <p class="card-text mb-0 ml-1"> {{prediccion.cliente.paisNacimiento}}</p>
                                                 </div>
-                                                <div class="d-flex flex-wrap my-50" *ngFor="let datoVirt of prediccion.cliente.datosVirtuales">
+                                                <div class="d-flex flex-wrap my-50"
+                                                     *ngFor="let datoVirt of prediccion.cliente.datosVirtuales">
                                                     <div class="user-info-title">
                                                         <i-feather name="{{datoVirt.icono}}" class="edit-user">
                                                         </i-feather>
-                                                        <span class="card-text user-info-title font-weight-bold mb-0">{{datoVirt.tipoContacto}}:</span>
+                                                        <span class="card-text user-info-title font-weight-bold mb-0">{{datoVirt.tipoContacto}}
+                                                            :</span>
                                                     </div>
                                                     <p class="card-text mb-0 ml-1">{{datoVirt.informacion}}</p>
                                                 </div>
@@ -177,7 +190,8 @@
                                         <div class="col-md-4">
                                             <div class="d-flex">
                                                 <div class="color-box bg-light-primary">
-                                                    <i-feather name="dollar-sign" class="text-primary edit-user"></i-feather>
+                                                    <i-feather name="dollar-sign"
+                                                               class="text-primary edit-user"></i-feather>
                                                 </div>
                                                 <div class="ml-1">
                                                     <small>Compras mensuales</small>
@@ -188,7 +202,8 @@
                                         <div class="col-md-4">
                                             <div class="d-flex">
                                                 <div class="color-box bg-light-success">
-                                                    <i-feather name="trending-up" class="text-success edit-user"></i-feather>
+                                                    <i-feather name="trending-up"
+                                                               class="text-success edit-user"></i-feather>
                                                 </div>
                                                 <div class="ml-1">
                                                     <small>Promedio anual de compras</small>
@@ -199,7 +214,7 @@
                                     </div>
                                     <div class="row p-2" *ngFor="let producto of prediccion.productos; let i = index">
                                         <div class="col-md-12">
-                                            <h5 class="mb-2">Producto {{i+1}} comprado</h5>
+                                            <h5 class="mb-2">Producto {{i + 1}} comprado</h5>
                                             <div class="card plan-card border-primary">
                                                 <div class="card-body">
                                                     <div class="item-heading">
@@ -208,13 +223,15 @@
 
                                                     </div>
                                                     <div class="img-container w-50 mx-auto py-50">
-                                                        <img src="{{producto.imagen}}" class="img-fluid" alt="image" />
+                                                        <img src="{{producto.imagen}}" class="img-fluid" alt="image"/>
                                                     </div>
                                                     <div class="item-meta">
                                                         <p class="card-text mb-0">Código: {{producto.codigo}}</p>
                                                         <p class="card-text mb-0">Cantidad: {{producto.cantidad}}</p>
-                                                        <p class="card-text mb-0">Categoría de producto: {{producto.categoria}}</p>
-                                                        <p class="card-text text-info mb-0 font-weight-bold">Total: ${{producto.precio}}</p>
+                                                        <p class="card-text mb-0">Categoría de
+                                                            producto: {{producto.categoria}}</p>
+                                                        <p class="card-text text-info mb-0 font-weight-bold">Total:
+                                                            ${{producto.precio}}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -230,21 +247,27 @@
                                                         <!-- <small class="text-body">by Apple</small> -->
                                                     </div>
                                                     <div class="img-container w-50 mx-auto py-50">
-                                                        <img src="{{prediccion.imagen}}" class="img-fluid" alt="image" />
+                                                        <img src="{{prediccion.imagen}}" class="img-fluid" alt="image"/>
                                                     </div>
-                                                    <hr />
+                                                    <hr/>
                                                     <div class="item-meta">
                                                         <small class="card-text mb-0 text-primary">Código: {{prediccion.codigoBarras}}</small>
-                                                        <p class="card-text mb-0">Precio normal: ${{prediccion.precioVentaA}}</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaA}}
+                                                        <p class="card-text mb-0">Precio normal:
+                                                            ${{prediccion.precioVentaA}}</p>
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio
+                                                            oferta: ${{prediccion.precioVentaA}}
                                                         </p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaB}}
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio
+                                                            oferta: ${{prediccion.precioVentaB}}
                                                         </p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaC}}
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio
+                                                            oferta: ${{prediccion.precioVentaC}}
                                                         </p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaD}}
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio
+                                                            oferta: ${{prediccion.precioVentaD}}
                                                         </p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaE}}
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio
+                                                            oferta: ${{prediccion.precioVentaE}}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -260,7 +283,8 @@
                                         <div class="col-xl-6 col-lg-12 d-flex flex-column justify-content-between border-container-lg">
                                             <div class="user-avatar-section">
                                                 <div class="d-flex justify-content-start">
-                                                    <img class="img-fluid rounded" src="{{prediccion.negocio.imagen}}" width="80" />
+                                                    <img class="img-fluid rounded" src="{{prediccion.negocio.imagen}}"
+                                                         width="80"/>
                                                     <div class="d-flex flex-column ml-1">
                                                         <div class="user-info mb-1">
                                                             <h4 class="mb-0">{{prediccion.negocio.nombreComercial}}</h4>
@@ -315,7 +339,8 @@
                                         <div class="col-md-4">
                                             <div class="d-flex">
                                                 <div class="color-box bg-light-primary">
-                                                    <i-feather name="dollar-sign" class="text-primary edit-user"></i-feather>
+                                                    <i-feather name="dollar-sign"
+                                                               class="text-primary edit-user"></i-feather>
                                                 </div>
                                                 <div class="ml-1">
                                                     <small>Compras mensuales</small>
@@ -326,7 +351,8 @@
                                         <div class="col-md-4">
                                             <div class="d-flex">
                                                 <div class="color-box bg-light-success">
-                                                    <i-feather name="trending-up" class="text-success edit-user"></i-feather>
+                                                    <i-feather name="trending-up"
+                                                               class="text-success edit-user"></i-feather>
                                                 </div>
                                                 <div class="ml-1">
                                                     <small>Promedio anual de compras</small>
@@ -338,7 +364,7 @@
 
                                     <div class="row p-2" *ngFor="let producto of prediccion.productos; let i = index">
                                         <div class="col-md-12">
-                                            <h5 class="mb-2">Producto {{i+1}} comprado</h5>
+                                            <h5 class="mb-2">Producto {{i + 1}} comprado</h5>
                                             <div class="card plan-card border-primary">
                                                 <div class="card-body">
                                                     <div class="item-heading">
@@ -347,13 +373,15 @@
 
                                                     </div>
                                                     <div class="img-container w-50 mx-auto py-50">
-                                                        <img src="{{producto.imagen}}" class="img-fluid" alt="image" />
+                                                        <img src="{{producto.imagen}}" class="img-fluid" alt="image"/>
                                                     </div>
                                                     <div class="item-meta">
                                                         <p class="card-text mb-0">Código: {{producto.codigo}}</p>
                                                         <p class="card-text mb-0">Cantidad: {{producto.cantidad}}</p>
-                                                        <p class="card-text mb-0">Categoría de producto: {{producto.categoria}}</p>
-                                                        <p class="card-text text-info mb-0 font-weight-bold">Total: ${{producto.precio}}</p>
+                                                        <p class="card-text mb-0">Categoría de
+                                                            producto: {{producto.categoria}}</p>
+                                                        <p class="card-text text-info mb-0 font-weight-bold">Total:
+                                                            ${{producto.precio}}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -369,21 +397,27 @@
                                                         <!-- <small class="text-body">by Apple</small> -->
                                                     </div>
                                                     <div class="img-container w-50 mx-auto py-50">
-                                                        <img src="{{prediccion.imagen}}" class="img-fluid" alt="image" />
+                                                        <img src="{{prediccion.imagen}}" class="img-fluid" alt="image"/>
                                                     </div>
-                                                    <hr />
+                                                    <hr/>
                                                     <div class="item-meta">
                                                         <small class="card-text mb-0 text-primary">Código: {{prediccion.codigoBarras}}</small>
-                                                        <p class="card-text mb-0">Precio normal: ${{prediccion.precioVentaA}}</p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaA}}
+                                                        <p class="card-text mb-0">Precio normal:
+                                                            ${{prediccion.precioVentaA}}</p>
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio
+                                                            oferta: ${{prediccion.precioVentaA}}
                                                         </p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaB}}
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio
+                                                            oferta: ${{prediccion.precioVentaB}}
                                                         </p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaC}}
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio
+                                                            oferta: ${{prediccion.precioVentaC}}
                                                         </p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaD}}
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio
+                                                            oferta: ${{prediccion.precioVentaD}}
                                                         </p>
-                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio oferta: ${{prediccion.precioVentaE}}
+                                                        <p class="card-text mb-0 font-weight-bold text-info">Precio
+                                                            oferta: ${{prediccion.precioVentaE}}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -399,12 +433,14 @@
                     </div>
 
 
-                    <div class="modal" tabindex="-1" role="dialog" id="productos-detail" aria-labelledby="myLargeModalLabel">
+                    <div class="modal" tabindex="-1" role="dialog" id="productos-detail"
+                         aria-labelledby="myLargeModalLabel">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Detalle productos comprados</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×
+                                    </button>
                                 </div>
                                 <div class="modal-body">
 
@@ -420,13 +456,14 @@
                                                         <h6 class="text-truncate mb-0">{{producto.articulo}}</h6>
                                                     </div>
                                                     <div class="img-container w-50 mx-auto py-50">
-                                                        <img src="{{producto.imagen}}" class="img-fluid" alt="image" />
+                                                        <img src="{{producto.imagen}}" class="img-fluid" alt="image"/>
                                                     </div>
-                                                    <hr />
+                                                    <hr/>
                                                     <div class="item-meta">
                                                         <p class="card-text mb-0">Código: {{producto.codigo}}</p>
                                                         <p class="card-text mb-0">Cantidad: {{producto.cantidad}}</p>
-                                                        <p class="card-text text-primary mb-0 font-weight-bold">Total: ${{producto.precio}}</p>
+                                                        <p class="card-text text-primary mb-0 font-weight-bold">Total:
+                                                            ${{producto.precio}}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -477,10 +514,10 @@
                     </div>
 
 
-                    <hr />
+                    <hr/>
                 </div>
 
-                <hr />
+                <hr/>
 
             </section>
             <!-- users list ends -->
