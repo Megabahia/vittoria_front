@@ -1,14 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgbPagination, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DatePipe } from '@angular/common';
-import { ParamService } from 'src/app/services/admin/param.service';
-import { ParamService as ParamServiceMDO } from 'src/app/services/mdo/param/param.service';
-import { ExportService } from '../../../../services/admin/export.service';
-import { GenerarService, Oferta, Detalles } from '../../../../services/mdo/ofertas/generar/generar.service';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ClientesService } from '../../../../services/mdm/personas/clientes/clientes.service';
-import { NegociosService } from '../../../../services/mdm/personas/negocios/negocios.service';
-import { ProductosService } from '../../../../services/mdp/productos/productos.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {NgbPagination, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {DatePipe} from '@angular/common';
+import {ParamService} from 'src/app/services/admin/param.service';
+import {ParamService as ParamServiceMDO} from 'src/app/services/mdo/param/param.service';
+import {ExportService} from '../../../../services/admin/export.service';
+import {GenerarService, Oferta, Detalles} from '../../../../services/mdo/ofertas/generar/generar.service';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ClientesService} from '../../../../services/mdm/personas/clientes/clientes.service';
+import {NegociosService} from '../../../../services/mdm/personas/negocios/negocios.service';
+import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 
 @Component({
   selector: 'app-generar',
@@ -21,7 +21,7 @@ export class GenerarComponent implements OnInit {
   @ViewChild('mensajeModal') mensajeModal;
   public usuario;
 
-  mensaje = "";
+  mensaje = '';
   numRegex = /^-?\d*[.,]?\d{0,2}$/;
 
   //forms
@@ -35,14 +35,14 @@ export class GenerarComponent implements OnInit {
   pageSize: any = 10;
   maxSize;
   collectionSize;
-  fecha = "";
-  inicio = "";
-  fin = "";
+  fecha = '';
+  inicio = '';
+  fin = '';
   ultimosProductos;
   prediccion;
   cliente;
-  tipoCliente = "";
-  tipoClienteModal = "";
+  tipoCliente = '';
+  tipoClienteModal = '';
   identificacion;
   infoExportar = [];
   listaOfertas;
@@ -51,7 +51,7 @@ export class GenerarComponent implements OnInit {
   identificacionOfertaBusq;
   telefonoOfertaBusq;
   oferta: Oferta;
-  tipoClienteOferta = "";
+  tipoClienteOferta = '';
   iva;
   comprobarProductos: Boolean[];
   checkProductos = true;
@@ -68,6 +68,7 @@ export class GenerarComponent implements OnInit {
   tipoCanalOpciones;
 
   ofertaId;
+
   constructor(
     private _formBuilder: FormBuilder,
     private generarService: GenerarService,
@@ -94,7 +95,7 @@ export class GenerarComponent implements OnInit {
       fecha: ['', [Validators.required]],
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
-      identificacion: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      identificacion: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       telefono: ['', [Validators.required]],
       correo: ['', [Validators.required]],
       vigenciaOferta: [0, [Validators.required]],
@@ -104,16 +105,18 @@ export class GenerarComponent implements OnInit {
       direccion: ['', [Validators.required]],
     });
     this.menu = {
-      modulo: "mdo",
-      seccion: "genOferta"
+      modulo: 'mdo',
+      seccion: 'genOferta'
     };
     this.obtenerTipoIdentificacionOpciones();
     this.obtenerIVA();
     this.agregarPrecios();
   }
+
   get oForm() {
     return this.ofertaForm.controls;
   }
+
   inicializarDetallesOferta() {
     this.detalles = [];
     this.detalles.push(this.generarService.inicializarDetalle());
@@ -121,20 +124,23 @@ export class GenerarComponent implements OnInit {
       this.generarService.inicializarPrecios()
     );
   }
+
   async ngAfterViewInit() {
     this.iniciarPaginador();
     this.obtenerListaOfertas();
 
   }
+
   async iniciarPaginador() {
     this.paginator.pageChange.subscribe(() => {
       this.obtenerListaOfertas();
     });
   }
+
   obtenerListaOfertas() {
     let fecha = this.fecha.split(' to ');
-    this.inicio = fecha[0] ? fecha[0] : "";
-    this.fin = fecha[1] ? fecha[1] : "";
+    this.inicio = fecha[0] ? fecha[0] : '';
+    this.fin = fecha[1] ? fecha[1] : '';
     let busqueda: any = {
       page: this.page - 1,
       page_size: this.pageSize,
@@ -142,9 +148,9 @@ export class GenerarComponent implements OnInit {
       fin: this.fin
     };
     if (this.tipoCliente == 'negocio') {
-      busqueda = { ...busqueda, negocio: 1, identificacion: this.identificacion }
+      busqueda = {...busqueda, negocio: 1, identificacion: this.identificacion};
     } else if (this.tipoCliente == 'cliente') {
-      busqueda = { ...busqueda, cliente: 1, identificacion: this.identificacion }
+      busqueda = {...busqueda, cliente: 1, identificacion: this.identificacion};
     }
     this.generarService.obtenerListaOfertas(
       busqueda
@@ -153,30 +159,36 @@ export class GenerarComponent implements OnInit {
       this.collectionSize = info.cont;
     });
   }
+
   transformarFecha(fecha) {
     let nuevaFecha = this.datePipe.transform(fecha, 'yyyy-MM-dd');
     return nuevaFecha;
   }
+
   obtenerURLImagen(url) {
     return this.globalParam.obtenerURL(url);
   }
+
   crearDetalleGrupo() {
     return this._formBuilder.group({
       codigo: ['', [Validators.required]],
       articulo: ['', [Validators.required]],
       valorUnitario: [0, [Validators.required, Validators.min(1)]],
-      cantidad: [0, [Validators.required, Validators.pattern("^[0-9]*$"), Validators.min(1)]],
+      cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       informacionAdicional: ['', [Validators.required]],
       descuento: [0, [Validators.required, Validators.pattern(this.numRegex)]],
       valorDescuento: [0, [Validators.required]]
     });
   }
+
   get detallesArray(): FormArray {
     return this.ofertaForm.get('detalles') as FormArray;
   }
+
   crearDetalle() {
     return this._formBuilder.group(this.generarService.inicializarDetalle());
   }
+
   agregarItem(): void {
     this.detalles.push(this.generarService.inicializarDetalle());
     this.agregarPrecios();
@@ -184,11 +196,13 @@ export class GenerarComponent implements OnInit {
     this.comprobarProductos.push(false);
     this.detallesArray.push(detGrupo);
   }
+
   agregarPrecios() {
     this.listaPrecios.push(
       this.generarService.inicializarPrecios()
     );
   }
+
   removerItem(i): void {
 
     this.detalles.splice(i, 1);
@@ -228,11 +242,14 @@ export class GenerarComponent implements OnInit {
     this.oferta.descuento = this.redondear(descuento);
     this.oferta.total = this.redondear((subtotal - descuento) + this.oferta.iva);
   }
+
   redondear(num, decimales = 2) {
     var signo = (num >= 0 ? 1 : -1);
     num = num * signo;
     if (decimales === 0) //con 0 decimales
+    {
       return signo * Math.round(num);
+    }
     // round(x * 10 ^ decimales)
     num = num.toString().split('e');
     num = Math.round(+(num[0] + 'e' + (num[1] ? (+num[1] + decimales) : decimales)));
@@ -241,9 +258,11 @@ export class GenerarComponent implements OnInit {
     let valor = signo * (Number)(num[0] + 'e' + (num[1] ? (+num[1] - decimales) : -decimales));
     return valor;
   }
+
   redondeoValor(valor) {
     return isNaN(valor) ? valor : parseFloat(valor).toFixed(2);
   }
+
   verificarBusqueda() {
     if (!this.identificacionOfertaBusq && !this.telefonoOfertaBusq) {
       this.habilitarIdentificacion = false;
@@ -256,29 +275,30 @@ export class GenerarComponent implements OnInit {
       this.habilitarTelefono = false;
     }
   }
+
   obtenerCliente() {
     if (this.identificacionOfertaBusq) {
-      if (this.tipoClienteOferta == "cliente") {
-        this.clientesService.obtenerClientePorCedula({ cedula: this.identificacionOfertaBusq }).subscribe((info) => {
-          if (info) {
-            this.oferta.nombres = info.nombres;
-            this.oferta.apellidos = info.apellidos;
-            this.oferta.identificacion = info.cedula;
-            this.oferta.telefono = info.telefono;
-            this.oferta.correo = info.correo;
-            this.oferta.cliente = info.id;
-            this.oferta.negocio = null;
-            this.oferta.indicadorCliente = "C-" + info.id;
-          }
-        },
+      if (this.tipoClienteOferta == 'cliente') {
+        this.clientesService.obtenerClientePorCedula({cedula: this.identificacionOfertaBusq}).subscribe((info) => {
+            if (info) {
+              this.oferta.nombres = info.nombres;
+              this.oferta.apellidos = info.apellidos;
+              this.oferta.identificacion = info.cedula;
+              this.oferta.telefono = info.telefono;
+              this.oferta.correo = info.correo;
+              this.oferta.cliente = info.id;
+              this.oferta.negocio = null;
+              this.oferta.indicadorCliente = 'C-' + info.id;
+            }
+          },
           (error) => {
             if (error.error == 'No existe') {
-              this.mensaje = "Cliente no existe";
+              this.mensaje = 'Cliente no existe';
               this.abrirModalMensaje(this.mensajeModal);
             }
           });
-      } else if (this.tipoClienteOferta == "negocio") {
-        this.negociosService.obtenerNegocioPorRuc({ ruc: this.identificacionOfertaBusq }).subscribe((info) => {
+      } else if (this.tipoClienteOferta == 'negocio') {
+        this.negociosService.obtenerNegocioPorRuc({ruc: this.identificacionOfertaBusq}).subscribe((info) => {
           if (info) {
             this.oferta.nombres = info.razonSocial;
             this.oferta.apellidos = info.nombreComercial;
@@ -287,40 +307,40 @@ export class GenerarComponent implements OnInit {
             this.oferta.correo = info.correoOficina;
             this.oferta.negocio = info.id;
             this.oferta.cliente = null;
-            this.oferta.indicadorCliente = "N-" + info.id;
+            this.oferta.indicadorCliente = 'N-' + info.id;
           }
         }, (error) => {
           if (error.error == 'No existe') {
-            this.mensaje = "Negocio no existe";
+            this.mensaje = 'Negocio no existe';
             this.abrirModalMensaje(this.mensajeModal);
           }
-        })
+        });
       } else {
-        this.mensaje = "Es necesario seleccionar un tipo de cliente";
+        this.mensaje = 'Es necesario seleccionar un tipo de cliente';
         this.abrirModalMensaje(this.mensajeModal);
       }
     } else if (this.telefonoOfertaBusq) {
-      if (this.tipoClienteOferta == "cliente") {
-        this.clientesService.obtenerClientePorTelefono({ telefono: this.telefonoOfertaBusq }).subscribe((info) => {
-          if (info) {
-            this.oferta.nombres = info.nombres;
-            this.oferta.apellidos = info.apellidos;
-            this.oferta.identificacion = info.cedula;
-            this.oferta.telefono = info.telefono;
-            this.oferta.correo = info.correo;
-            this.oferta.cliente = info.id;
-            this.oferta.negocio = null;
-            this.oferta.indicadorCliente = "C-" + info.id;
-          }
-        },
+      if (this.tipoClienteOferta == 'cliente') {
+        this.clientesService.obtenerClientePorTelefono({telefono: this.telefonoOfertaBusq}).subscribe((info) => {
+            if (info) {
+              this.oferta.nombres = info.nombres;
+              this.oferta.apellidos = info.apellidos;
+              this.oferta.identificacion = info.cedula;
+              this.oferta.telefono = info.telefono;
+              this.oferta.correo = info.correo;
+              this.oferta.cliente = info.id;
+              this.oferta.negocio = null;
+              this.oferta.indicadorCliente = 'C-' + info.id;
+            }
+          },
           (error) => {
             if (error.error == 'No existe') {
-              this.mensaje = "Cliente no existe";
+              this.mensaje = 'Cliente no existe';
               this.abrirModalMensaje(this.mensajeModal);
             }
           });
-      } else if (this.tipoClienteOferta == "negocio") {
-        this.negociosService.obtenerNegocioPorTelefono({ telefonoOficina: this.telefonoOfertaBusq }).subscribe((info) => {
+      } else if (this.tipoClienteOferta == 'negocio') {
+        this.negociosService.obtenerNegocioPorTelefono({telefonoOficina: this.telefonoOfertaBusq}).subscribe((info) => {
           if (info) {
             this.oferta.nombres = info.razonSocial;
             this.oferta.apellidos = info.nombreComercial;
@@ -329,52 +349,54 @@ export class GenerarComponent implements OnInit {
             this.oferta.correo = info.correoOficina;
             this.oferta.negocio = info.id;
             this.oferta.cliente = null;
-            this.oferta.indicadorCliente = "N-" + info.id;
+            this.oferta.indicadorCliente = 'N-' + info.id;
           }
         }, (error) => {
           if (error.error == 'No existe') {
-            this.mensaje = "Negocio no existe";
+            this.mensaje = 'Negocio no existe';
             this.abrirModalMensaje(this.mensajeModal);
           }
-        })
+        });
       } else {
-        this.mensaje = "Es necesario seleccionar un tipo de cliente";
+        this.mensaje = 'Es necesario seleccionar un tipo de cliente';
         this.abrirModalMensaje(this.mensajeModal);
       }
     } else {
-      this.mensaje = "No se ha ingresado ningun valor";
+      this.mensaje = 'No se ha ingresado ningun valor';
       this.abrirModalMensaje(this.mensajeModal);
     }
   }
 
   crearOferta() {
     if (!this.iva) {
-      this.mensaje = "Error en la obtención del iva, verifique su configuración";
+      this.mensaje = 'Error en la obtención del iva, verifique su configuración';
       this.abrirModalMensaje(this.mensajeModal);
     }
     this.checkProductos = true;
 
     this.oferta = this.generarService.inicializarOferta();
-    this.oferta.personaGenera = this.usuario.usuario.nombres + " " + this.usuario.usuario.apellidos;
-    this.oferta.nombreVendedor = this.usuario.usuario.nombres + " " + this.usuario.usuario.apellidos;
+    this.oferta.personaGenera = this.usuario.usuario.nombres + ' ' + this.usuario.usuario.apellidos;
+    this.oferta.nombreVendedor = this.usuario.usuario.nombres + ' ' + this.usuario.usuario.apellidos;
     this.oferta.created_at = this.transformarFecha(this.fechaActual);
     this.oferta.fecha = this.transformarFecha(this.fechaActual);
     this.inicializarDetallesOferta();
     this.listaPrecios = [];
     this.agregarPrecios();
   }
+
   async obtenerIVA() {
-    await this.paramService.obtenerParametroNombreTipo("ACTIVO", "TIPO_IVA").subscribe((info) => {
-      this.iva = info;
-    },
+    await this.paramService.obtenerParametroNombreTipo('ACTIVO', 'TIPO_IVA').subscribe((info) => {
+        this.iva = info;
+      },
       (error) => {
-        this.mensaje = "Error en la obtención del iva, verifique su configuración";
+        this.mensaje = 'Error en la obtención del iva, verifique su configuración';
         this.abrirModalMensaje(this.mensajeModal);
       });
   }
+
   async guardarOferta() {
     if (!this.iva) {
-      this.mensaje = "Error en la obtención del iva, verifique su configuración";
+      this.mensaje = 'Error en la obtención del iva, verifique su configuración';
       this.abrirModalMensaje(this.mensajeModal);
       return;
     }
@@ -389,17 +411,17 @@ export class GenerarComponent implements OnInit {
     });
 
     if (!this.oferta.cliente && !this.oferta.negocio) {
-      this.mensaje = "Es necesario asignar al cliente o negocio";
+      this.mensaje = 'Es necesario asignar al cliente o negocio';
       this.abrirModalMensaje(this.mensajeModal);
       return;
     }
     if (!this.checkProductos) {
-      this.mensaje = "No se han ingresado productos correctamente";
+      this.mensaje = 'No se han ingresado productos correctamente';
       this.abrirModalMensaje(this.mensajeModal);
       return;
     }
     if (this.detalles.length == 0) {
-      this.mensaje = "No se han ingresado productos";
+      this.mensaje = 'No se han ingresado productos';
       this.abrirModalMensaje(this.mensajeModal);
       return;
     }
@@ -411,17 +433,17 @@ export class GenerarComponent implements OnInit {
     this.oferta.detalles = this.detallesTransac;
     if (this.oferta.id == 0) {
       await this.generarService.crearOferta(this.oferta).subscribe((info) => {
-        this.obtenerListaOfertas();
-        this.mensaje = "Oferta creada con éxito";
-        this.abrirModalMensaje(this.mensajeModal);
-        this.ofertaGuardar.nativeElement.click();
-      },
+          this.obtenerListaOfertas();
+          this.mensaje = 'Oferta creada con éxito';
+          this.abrirModalMensaje(this.mensajeModal);
+          this.ofertaGuardar.nativeElement.click();
+        },
         (error) => {
           let errores = Object.values(error);
           let llaves = Object.keys(error);
-          this.mensaje = "";
+          this.mensaje = '';
           errores.map((infoErrores, index) => {
-            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
           });
           this.abrirModalMensaje(this.mensajeModal);
           this.ofertaGuardar.nativeElement.click();
@@ -429,23 +451,24 @@ export class GenerarComponent implements OnInit {
         });
     } else {
       await this.generarService.actualizarOferta(this.oferta).subscribe((info) => {
-        this.obtenerListaOfertas();
-        this.mensaje = "Oferta actualizada con éxito";
-        this.abrirModalMensaje(this.mensajeModal);
-        this.ofertaGuardar.nativeElement.click();
+          this.obtenerListaOfertas();
+          this.mensaje = 'Oferta actualizada con éxito';
+          this.abrirModalMensaje(this.mensajeModal);
+          this.ofertaGuardar.nativeElement.click();
 
-      },
+        },
         (error) => {
           let errores = Object.values(error);
           let llaves = Object.keys(error);
-          this.mensaje = "";
+          this.mensaje = '';
           errores.map((infoErrores, index) => {
-            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
           });
           this.abrirModalMensaje(this.mensajeModal);
         });
     }
   }
+
   obtenerProducto(i) {
     this.productosService.obtenerProductoPorCodigo({
       codigoBarras: this.detalles[i].codigo
@@ -460,19 +483,20 @@ export class GenerarComponent implements OnInit {
         this.listaPrecios[i].precioVentaC = info.precioVentaC;
         this.listaPrecios[i].precioVentaD = info.precioVentaD;
         this.listaPrecios[i].precioVentaE = info.precioVentaE;
-      }
-      else {
+      } else {
         this.comprobarProductos[i] = false;
-        this.mensaje = "No existe el producto a buscar";
+        this.mensaje = 'No existe el producto a buscar';
         this.abrirModalMensaje(this.mensajeModal);
       }
     });
   }
+
   async obtenerTipoIdentificacionOpciones() {
-    await this.paramService.obtenerListaPadres("CANAL_VENTA").subscribe((info) => {
+    await this.paramService.obtenerListaPadres('CANAL_VENTA').subscribe((info) => {
       this.tipoCanalOpciones = info;
     });
   }
+
   obtenerUltimosProductos(id) {
     this.generarService.obtenerProductosAdquiridos(id).subscribe((info) => {
       info.map((prod) => {
@@ -481,6 +505,7 @@ export class GenerarComponent implements OnInit {
       this.ultimosProductos = info;
     });
   }
+
   obtenerOferta(id) {
     this.generarService.obtenerOferta(id).subscribe((info) => {
       this.oferta = info;
@@ -503,12 +528,15 @@ export class GenerarComponent implements OnInit {
     this.ofertaId = id;
     this.modalService.open(modal);
   }
+
   abrirModalMensaje(modal) {
     this.modalService.open(modal);
   }
+
   cerrarModalMensaje() {
     this.modalService.dismissAll();
   }
+
   cerrarModal() {
     this.modalService.dismissAll();
     this.generarService.eliminarOferta(this.ofertaId).subscribe(() => {
@@ -516,4 +544,31 @@ export class GenerarComponent implements OnInit {
     });
   }
 
+  exportarExcel() {
+    this.infoExportar = [];
+    const headers = ['Código', 'Fecha de oferta', 'Nombre Cliente', 'Apellido Cliente', '#Contacto', 'Correo', 'indicadorCliente', 'calificacionCliente', 'vigenciaOferta', 'canal', 'total'];
+    let objetoExportar = Object.create(this.listaOfertas);
+    objetoExportar.forEach((row: any) => {
+      const values = [];
+      values.push(row['id']);
+      values.push(this.transformarFecha(row['fechaPredicciones']));
+      values.push(row['nombres']);
+      values.push(row['apellidos']);
+      values.push(row['telefono']);
+      values.push(row['correo']);
+      values.push(row['indicadorCliente']);
+      values.push(row['calificacionCliente']);
+      values.push(row['vigenciaOferta']);
+      values.push(row['canal']);
+      values.push(row['total']);
+      this.infoExportar.push(values);
+    });
+    const reportData = {
+      title: 'Reporte de Generacion para clientes',
+      data: this.infoExportar,
+      headers
+    };
+
+    this.exportFile.exportExcel(reportData);
+  }
 }

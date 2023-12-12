@@ -19,7 +19,9 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i data-feather='calendar'></i></span>
                                         </div>
-                                        <input type="text" mwlFlatpickr mode="range" [(ngModel)]="fecha" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
+                                        <input type="text" mwlFlatpickr mode="range" [(ngModel)]="fecha"
+                                               class="form-control form-control-sm flatpickr-basic flatpickr-input"
+                                               placeholder="- Periodo de finalización -">
                                         <!-- <input type="text" class="form-control form-control-sm flatpickr-range flatpickr-input" placeholder="- Rango de fechas"> -->
                                     </div>
                                 </div>
@@ -27,23 +29,23 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <select class="form-control form-control-sm" [(ngModel)]="tipoCliente">
-                                        <option value="" selected>- Tipo de cliente - </option>
+                                        <option value="" selected>- Tipo de cliente -</option>
                                         <option value="cliente">Cliente</option>
                                         <option value="negocio">Negocio</option>
-                                      </select>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-control-sm" placeholder="Identificación" [(ngModel)]="identificacion">
+                                    <input type="text" class="form-control form-control-sm" placeholder="Identificación"
+                                           [(ngModel)]="identificacion">
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <button class="btn btn-primary" (click)="obtenerListaGestionOferta()">
-                  <i-feather name='search' class="edit-user"></i-feather>
-                </button>
+                                    <i-feather name='search' class="edit-user"></i-feather>
+                                </button>
                             </div>
-
 
 
                         </div>
@@ -52,103 +54,113 @@
                 <div class="card">
                     <div class="row m-75">
                         <div class="col-md-12 text-right">
-                            <button class="btn btn-success waves-effect waves-float waves-light" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-toggle="modal" data-target="#modals-slide-in">
-                     Exportar a Excel
-                   </button>
+                            <button class="btn btn-success waves-effect waves-float waves-light"
+                                    type="button"
+                                    >
+                                Exportar a Excel
+                            </button>
                         </div>
                     </div>
                     <div class="card-datatable table-responsive pt-0 pb-2">
                         <table class="table table-bordered table-striped">
                             <thead class="thead-light">
-                                <tr>
-                                    <th rowspan="2">Código</th>
-                                    <th rowspan="2">Fecha de oferta</th>
-                                    <th rowspan="2">Cliente</th>
-                                    <th rowspan="2">Identificación</th>
-                                    <th rowspan="2"># contacto</th>
-                                    <th rowspan="2">Correo</th>
-                                    <th rowspan="2">Indicador de cliente</th>
-                                    <th rowspan="2">Fecha compra</th>
-                                    <th class="text-center" rowspan="2">Productos adquiridos</th>
-                                    <th colspan="2" class="text-center border-left">Comunicación de la oferta</th>
-                                    <th colspan="2" class="text-center border-left border-right">Confirmación de la oferta</th>
-                                    <th rowspan="2">Calificación de la oferta</th>
-                                    <th rowspan="2">Vigencia de la oferta</th>
-                                    <th rowspan="2">Canal de ventas</th>
-                                    <th rowspan="2">Monto USD</th>
-                                    <th rowspan="2">Estado</th>
-                                    <th rowspan="2">Acciones</th>
-                                </tr>
-                                <tr>
-                                    <th class="border-left">¿Se comunicó la oferta?</th>
-                                    <th class="border-left">Fecha de comunicación</th>
-                                    <th class="border-left">¿Aceptó la oferta?</th>
-                                    <th class="border-left border-right">Fecha de aceptación</th>
-                                </tr>
+                            <tr>
+                                <th rowspan="2">Código</th>
+                                <th rowspan="2">Fecha de oferta</th>
+                                <th rowspan="2">Cliente</th>
+                                <th rowspan="2">Identificación</th>
+                                <th rowspan="2"># contacto</th>
+                                <th rowspan="2">Correo</th>
+                                <th rowspan="2">Indicador de cliente</th>
+                                <th rowspan="2">Fecha compra</th>
+                                <th class="text-center" rowspan="2">Productos adquiridos</th>
+                                <th colspan="2" class="text-center border-left">Comunicación de la oferta</th>
+                                <th colspan="2" class="text-center border-left border-right">Confirmación de la oferta
+                                </th>
+                                <th rowspan="2">Calificación de la oferta</th>
+                                <th rowspan="2">Vigencia de la oferta</th>
+                                <th rowspan="2">Canal de ventas</th>
+                                <th rowspan="2">Monto USD</th>
+                                <th rowspan="2">Estado</th>
+                                <th rowspan="2">Acciones</th>
+                            </tr>
+                            <tr>
+                                <th class="border-left">¿Se comunicó la oferta?</th>
+                                <th class="border-left">Fecha de comunicación</th>
+                                <th class="border-left">¿Aceptó la oferta?</th>
+                                <th class="border-left border-right">Fecha de aceptación</th>
+                            </tr>
                             </thead>
 
                             <tbody>
-                                <tr *ngFor="let oferta of listaOfertas">
-                                    <td>{{oferta.codigo}} </td>
-                                    <td>{{transformarFecha(oferta.fechaOferta)}}</td>
-                                    <td>
-                                        <div class="d-flex justify-content-left align-items-center">
-                                            <div class="avatar mr-1 bg-light-danger">
-                                                <span class="avatar-content">{{primeraLetra(oferta.nombres,oferta.apellidos)}}</span>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <a class="user-name text-truncate mb-0" href="#" data-target="#client-detail" data-toggle="modal">
-                                                    <span class="font-weight-bold">{{oferta.nombres}} {{oferta.apellidos}}</span></a>
-                                            </div>
+                            <tr *ngFor="let oferta of listaOfertas">
+                                <td>{{oferta.codigo}} </td>
+                                <td>{{transformarFecha(oferta.fechaOferta)}}</td>
+                                <td>
+                                    <div class="d-flex justify-content-left align-items-center">
+                                        <div class="avatar mr-1 bg-light-danger">
+                                            <span class="avatar-content">{{primeraLetra(oferta.nombres, oferta.apellidos)}}</span>
                                         </div>
-                                    </td>
-                                    <td>{{oferta.identificacion}}</td>
-                                    <td>{{oferta.telefono}}</td>
-                                    <td>{{oferta.correo}} </td>
-                                    <td>{{oferta.indicadorCliente}}</td>
-                                    <td>{{transformarFecha(oferta.fechaCompra)}}</td>
-                                    <td>
-                                        <a class="avatar bg-info" data-target="#productos-detail" data-toggle="modal">
-                                            <div class="avatar-content" data-toggle="tooltip" data-placement="top" title="Ver productos" (click)="obtenerUltimosProductos(oferta.id) ">
-                                                <i-feather class="edit-user" name='shopping-bag'></i-feather>
-                                            </div>
-                                        </a>
-                                    </td>
-                                    <td>{{oferta.comunicoOferta}}</td>
-                                    <td>{{transformarFecha(oferta.fechaComunicacion)}}</td>
-                                    <td>{{oferta.aceptoOferta}}</td>
-                                    <td>{{transformarFecha(oferta.fechaAceptacion)}}</td>
-                                    <td>{{oferta.calificacionOferta}}</td>
-                                    <td>{{oferta.vigenciaOferta}} días</td>
-                                    <td>{{oferta.canal}}</td>
-                                    <td>${{oferta.total}}</td>
-                                    <td>
-                                        <span class="text-capitalize badge {{oferta.estado == 'Venta concretada' ? 'badge-light-success': 'badge-light-danger'}} badge-pill">{{oferta.estado}}</span>
-                                    </td>
-                                    <td>
-                                        <a class="avatar bg-primary mr-1" data-target="#add-registro" data-toggle="modal" (click)="obternerGestionOferta(oferta.id)">
-                                            <div class="avatar-content" data-toggle="tooltip" data-placement="bottom" title="Gestionar">
-                                                <i-feather class="edit-user" name='truck'></i-feather>
-                                            </div>
-                                        </a>
-                                    </td>
-                                </tr>
+                                        <div class="d-flex flex-column">
+                                            <a class="user-name text-truncate mb-0" href="#"
+                                               data-target="#client-detail" data-toggle="modal">
+                                                <span class="font-weight-bold">{{oferta.nombres}} {{oferta.apellidos}}</span></a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{oferta.identificacion}}</td>
+                                <td>{{oferta.telefono}}</td>
+                                <td>{{oferta.correo}} </td>
+                                <td>{{oferta.indicadorCliente}}</td>
+                                <td>{{transformarFecha(oferta.fechaCompra)}}</td>
+                                <td>
+                                    <a class="avatar bg-info" data-target="#productos-detail" data-toggle="modal">
+                                        <div class="avatar-content" data-toggle="tooltip" data-placement="top"
+                                             title="Ver productos" (click)="obtenerUltimosProductos(oferta.id) ">
+                                            <i-feather class="edit-user" name='shopping-bag'></i-feather>
+                                        </div>
+                                    </a>
+                                </td>
+                                <td>{{oferta.comunicoOferta}}</td>
+                                <td>{{transformarFecha(oferta.fechaComunicacion)}}</td>
+                                <td>{{oferta.aceptoOferta}}</td>
+                                <td>{{transformarFecha(oferta.fechaAceptacion)}}</td>
+                                <td>{{oferta.calificacionOferta}}</td>
+                                <td>{{oferta.vigenciaOferta}} días</td>
+                                <td>{{oferta.canal}}</td>
+                                <td>${{oferta.total}}</td>
+                                <td>
+                                    <span class="text-capitalize badge {{oferta.estado == 'Venta concretada' ? 'badge-light-success': 'badge-light-danger'}} badge-pill">{{oferta.estado}}</span>
+                                </td>
+                                <td>
+                                    <a class="avatar bg-primary mr-1" data-target="#add-registro" data-toggle="modal"
+                                       (click)="obternerGestionOferta(oferta.id)">
+                                        <div class="avatar-content" data-toggle="tooltip" data-placement="bottom"
+                                             title="Gestionar">
+                                            <i-feather class="edit-user" name='truck'></i-feather>
+                                        </div>
+                                    </a>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="modal" tabindex="-1" role="dialog" id="client-detail" aria-labelledby="myLargeModalLabel">
+                    <div class="modal" tabindex="-1" role="dialog" id="client-detail"
+                         aria-labelledby="myLargeModalLabel">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Detalle de venta</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×
+                                    </button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="row p-2">
                                         <div class="col-xl-6 col-lg-12 d-flex flex-column justify-content-between border-container-lg">
                                             <div class="user-avatar-section">
                                                 <div class="d-flex justify-content-start">
-                                                    <img class="img-fluid rounded" src="app-assets/images/avatars/7.png" width="80" />
+                                                    <img class="img-fluid rounded" src="app-assets/images/avatars/7.png"
+                                                         width="80"/>
                                                     <div class="d-flex flex-column ml-1">
                                                         <div class="user-info mb-1">
                                                             <h4 class="mb-0">Eleanor Aguilar</h4>
@@ -216,12 +228,14 @@
                                             <div class="card plan-card border-primary">
                                                 <div class="card-body">
                                                     <div class="item-heading">
-                                                        <h6 class="text-truncate mb-0 text-info">Apple Watch 6 series</h6>
+                                                        <h6 class="text-truncate mb-0 text-info">Apple Watch 6
+                                                            series</h6>
                                                         <small class="text-body d-block">by Apple</small>
 
                                                     </div>
                                                     <div class="img-container w-50 mx-auto py-50">
-                                                        <img src="app-assets/images/elements/apple-watch.png" class="img-fluid" alt="image" />
+                                                        <img src="app-assets/images/elements/apple-watch.png"
+                                                             class="img-fluid" alt="image"/>
                                                     </div>
 
                                                 </div>
@@ -231,7 +245,8 @@
                                             <div class="card plan-card border-secondary">
                                                 <div class="card-body">
                                                     <div class="item-meta">
-                                                        <p class="card-text mb-0">Costo: <span class="text-info">$600.00</span></p>
+                                                        <p class="card-text mb-0">Costo: <span
+                                                                class="text-info">$600.00</span></p>
                                                         <p class="card-text mb-0">Fecha de compra: 23-04-2021</p>
                                                         <p class="card-text mb-0">Categoría de producto: Electrónica</p>
                                                     </div>
@@ -256,93 +271,126 @@
 
                                         <div class="form-group">
                                             <label>¿Se comunicó la oferta?</label>
-                                            <select class="form-control" name="comunicoOferta" formControlName="comunicoOferta" [(ngModel)]="oferta.comunicoOferta">
-                           <option value="">- Seleccione -</option>
-                           <option value="SI">SI</option>
-                           <option value="NO">NO</option>
-                         </select>
-                                            <div *ngIf="submittedOferta && ofForm.comunicoOferta.errors" class="invalid-feedback" style="display: block;">
-                                                <div *ngIf="ofForm.comunicoOferta.errors.required">¿Se comunicó la oferta? es requerido
+                                            <select class="form-control" name="comunicoOferta"
+                                                    formControlName="comunicoOferta"
+                                                    [(ngModel)]="oferta.comunicoOferta">
+                                                <option value="">- Seleccione -</option>
+                                                <option value="SI">SI</option>
+                                                <option value="NO">NO</option>
+                                            </select>
+                                            <div *ngIf="submittedOferta && ofForm.comunicoOferta.errors"
+                                                 class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="ofForm.comunicoOferta.errors.required">¿Se comunicó la
+                                                    oferta? es requerido
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label>Fecha de comunicación</label>
-                                            <input type="text" mwlFlatpickr name="fechaComunicacion" formControlName="fechaComunicacion" [(ngModel)]="oferta.fechaComunicacion" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Fecha de Comunicación-">
-                                            <div *ngIf="submittedOferta && ofForm.fechaComunicacion.errors" class="invalid-feedback" style="display: block;">
-                                                <div *ngIf="ofForm.fechaComunicacion.errors.required">Fecha de comunicación es requerida
+                                            <input type="text" mwlFlatpickr name="fechaComunicacion"
+                                                   formControlName="fechaComunicacion"
+                                                   [(ngModel)]="oferta.fechaComunicacion"
+                                                   class="form-control form-control-sm flatpickr-basic flatpickr-input"
+                                                   placeholder="- Fecha de Comunicación-">
+                                            <div *ngIf="submittedOferta && ofForm.fechaComunicacion.errors"
+                                                 class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="ofForm.fechaComunicacion.errors.required">Fecha de
+                                                    comunicación es requerida
                                                 </div>
                                             </div>
                                         </div>
                                         <hr/>
                                         <div class="form-group">
                                             <label>¿Aceptó la oferta?</label>
-                                            <select class="form-control" name="aceptoOferta" formControlName="aceptoOferta" [(ngModel)]="oferta.aceptoOferta">
-                           <option value="">- Seleccione -</option>
-                           <option value="SI">SI</option>
-                           <option value="NO">NO</option>
-                         </select>
-                                            <div *ngIf="submittedOferta && ofForm.aceptoOferta.errors" class="invalid-feedback" style="display: block;">
-                                                <div *ngIf="ofForm.aceptoOferta.errors.required">¿Aceptó la oferta? es requerido
+                                            <select class="form-control" name="aceptoOferta"
+                                                    formControlName="aceptoOferta" [(ngModel)]="oferta.aceptoOferta">
+                                                <option value="">- Seleccione -</option>
+                                                <option value="SI">SI</option>
+                                                <option value="NO">NO</option>
+                                            </select>
+                                            <div *ngIf="submittedOferta && ofForm.aceptoOferta.errors"
+                                                 class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="ofForm.aceptoOferta.errors.required">¿Aceptó la oferta? es
+                                                    requerido
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label>Fecha de aceptación</label>
-                                            <input type="text" mwlFlatpickr name="fechaAceptacion" formControlName="fechaAceptacion" [(ngModel)]="oferta.fechaAceptacion" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Fecha de Comunicación-">
-                                            <div *ngIf="submittedOferta && ofForm.fechaAceptacion.errors" class="invalid-feedback" style="display: block;">
-                                                <div *ngIf="ofForm.fechaAceptacion.errors.required">Fecha de aceptación es requerida
+                                            <input type="text" mwlFlatpickr name="fechaAceptacion"
+                                                   formControlName="fechaAceptacion"
+                                                   [(ngModel)]="oferta.fechaAceptacion"
+                                                   class="form-control form-control-sm flatpickr-basic flatpickr-input"
+                                                   placeholder="- Fecha de Comunicación-">
+                                            <div *ngIf="submittedOferta && ofForm.fechaAceptacion.errors"
+                                                 class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="ofForm.fechaAceptacion.errors.required">Fecha de aceptación
+                                                    es requerida
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label>Calificación de la oferta</label>
-                                            <select class="form-control" name="calificacionOferta" formControlName="calificacionOferta" [(ngModel)]="oferta.calificacionOferta">
-                           <option value="0">- Seleccione -</option>
-                           <option value="1">1</option>
-                           <option value="2">2</option>
-                           <option value="3">3</option>
-                           <option value="4">4</option>
-                           <option value="5">5</option>
-                           <option value="6">6</option>
-                           <option value="7">7</option>
-                           <option value="8">8</option>
-                           <option value="9">9</option>
-                           <option value="10">10</option>
-                         </select>
-                                            <div *ngIf="submittedOferta && ofForm.calificacionOferta.errors" class="invalid-feedback" style="display: block;">
-                                                <div *ngIf="ofForm.calificacionOferta.errors.required">Calificación de la oferta es requerida
+                                            <select class="form-control" name="calificacionOferta"
+                                                    formControlName="calificacionOferta"
+                                                    [(ngModel)]="oferta.calificacionOferta">
+                                                <option value="0">- Seleccione -</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                            </select>
+                                            <div *ngIf="submittedOferta && ofForm.calificacionOferta.errors"
+                                                 class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="ofForm.calificacionOferta.errors.required">Calificación de
+                                                    la oferta es requerida
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label>Estado</label>
-                                            <select class="form-control" name="estado" formControlName="estado" [(ngModel)]="oferta.estado">
-                           <option value="">- Seleccione -</option>
-                           <option value="Venta concretada">Venta concretada</option>
-                           <option value="Venta fallida">Venta fallida</option>
-                         </select>
-                                            <div *ngIf="submittedOferta && ofForm.calificacionOferta.errors" class="invalid-feedback" style="display: block;">
-                                                <div *ngIf="ofForm.calificacionOferta.errors.required">Estado es requerido
+                                            <select class="form-control" name="estado" formControlName="estado"
+                                                    [(ngModel)]="oferta.estado">
+                                                <option value="">- Seleccione -</option>
+                                                <option value="Venta concretada">Venta concretada</option>
+                                                <option value="Venta fallida">Venta fallida</option>
+                                            </select>
+                                            <div *ngIf="submittedOferta && ofForm.calificacionOferta.errors"
+                                                 class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="ofForm.calificacionOferta.errors.required">Estado es
+                                                    requerido
                                                 </div>
                                             </div>
                                         </div>
-                                        <button class="btn btn-primary mr-1" aria-label="Close" (click)="actualizarGestionOferta()">Guardar</button>
-                                        <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
-                                        <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                        <button class="btn btn-primary mr-1" aria-label="Close"
+                                                (click)="actualizarGestionOferta()">Guardar
+                                        </button>
+                                        <button #dismissModal data-toggle="modal" data-target="#exito"
+                                                data-dismiss="modal" style="display: none;"></button>
+                                        <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">
+                                            Cancelar
+                                        </button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal" tabindex="-1" role="dialog" id="productos-detail" aria-labelledby="myLargeModalLabel">
+                    <div class="modal" tabindex="-1" role="dialog" id="productos-detail"
+                         aria-labelledby="myLargeModalLabel">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Productos comprados</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×
+                                    </button>
                                 </div>
                                 <div class="modal-body">
 
@@ -358,13 +406,14 @@
                                                         <h6 class="text-truncate mb-0">{{producto.articulo}}</h6>
                                                     </div>
                                                     <div class="img-container w-50 mx-auto py-50">
-                                                        <img src="{{producto.imagen}}" class="img-fluid" alt="image" />
+                                                        <img src="{{producto.imagen}}" class="img-fluid" alt="image"/>
                                                     </div>
-                                                    <hr />
+                                                    <hr/>
                                                     <div class="item-meta">
                                                         <p class="card-text mb-0">Código: {{producto.codigo}}</p>
                                                         <p class="card-text mb-0">Cantidad: {{producto.cantidad}}</p>
-                                                        <p class="card-text text-primary mb-0 font-weight-bold">Total: ${{producto.precio}}</p>
+                                                        <p class="card-text text-primary mb-0 font-weight-bold">Total:
+                                                            ${{producto.precio}}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -402,11 +451,15 @@
                                                     <div class="card collapse-icon">
                                                         <div class="collapse-default">
                                                             <div class="card">
-                                                                <div id="heading1" class="card-header" data-toggle="collapse" role="button" data-target="#accordion1" aria-expanded="false" aria-controls="accordion1">
+                                                                <div id="heading1" class="card-header"
+                                                                     data-toggle="collapse" role="button"
+                                                                     data-target="#accordion1" aria-expanded="false"
+                                                                     aria-controls="accordion1">
 
                                                                     <div class="media align-items-center">
                                                                         <div class="avatar">
-                                                                            <img src="app-assets/images/avatars/12-small.png" alt="avatar" height="38" width="38" />
+                                                                            <img src="app-assets/images/avatars/12-small.png"
+                                                                                 alt="avatar" height="38" width="38"/>
                                                                         </div>
                                                                         <div class="media-body ml-50">
                                                                             <h6 class="mb-0">Daniel Proaño</h6>
@@ -414,28 +467,39 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1 mr-1">
-                                                                        <small class="timeline-event-time">hace 45 min.</small>
+                                                                        <small class="timeline-event-time">hace 45
+                                                                            min.</small>
                                                                     </div>
                                                                 </div>
-                                                                <div id="accordion1" role="tabpanel" data-parent="#accordionWrapa1" aria-labelledby="heading1" class="collapse">
+                                                                <div id="accordion1" role="tabpanel"
+                                                                     data-parent="#accordionWrapa1"
+                                                                     aria-labelledby="heading1" class="collapse">
                                                                     <div class="card-body">
-                                                                        Se llamo al cliente para ofrecer un nuevo producto complementario al adquirido semanas atras para lo cual se le brindó información tanto por teléfono como por correo electrónico.
+                                                                        Se llamo al cliente para ofrecer un nuevo
+                                                                        producto complementario al adquirido semanas
+                                                                        atras para lo cual se le brindó información
+                                                                        tanto por teléfono como por correo electrónico.
                                                                     </div>
                                                                     <div class="row p-1">
                                                                         <div class="file-manager-item file">
                                                                             <div class="card-img-top file-logo-wrapper">
                                                                                 <div class="dropdown float-right">
-                                                                                    <i data-feather="more-vertical" class="toggle-dropdown mt-n25"></i>
+                                                                                    <i data-feather="more-vertical"
+                                                                                       class="toggle-dropdown mt-n25"></i>
                                                                                 </div>
                                                                                 <div class="d-flex align-items-center justify-content-center w-100">
-                                                                                    <img src="app-assets/images/icons/jpg.png" alt="file-icon" height="35" />
+                                                                                    <img src="app-assets/images/icons/jpg.png"
+                                                                                         alt="file-icon" height="35"/>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="card-body">
                                                                                 <div class="content-wrapper">
-                                                                                    <p class="card-text file-name mb-0">nombre-archivo.jpg</p>
-                                                                                    <p class="card-text file-size mb-0">12.6mb</p>
-                                                                                    <p class="card-text file-date">23 may 2021</p>
+                                                                                    <p class="card-text file-name mb-0">
+                                                                                        nombre-archivo.jpg</p>
+                                                                                    <p class="card-text file-size mb-0">
+                                                                                        12.6mb</p>
+                                                                                    <p class="card-text file-date">23
+                                                                                        may 2021</p>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -443,10 +507,14 @@
                                                                 </div>
                                                             </div>
                                                             <div class="card">
-                                                                <div id="heading2" class="card-header" data-toggle="collapse" role="button" data-target="#accordion2" aria-expanded="false" aria-controls="accordion2">
+                                                                <div id="heading2" class="card-header"
+                                                                     data-toggle="collapse" role="button"
+                                                                     data-target="#accordion2" aria-expanded="false"
+                                                                     aria-controls="accordion2">
                                                                     <div class="media align-items-center">
                                                                         <div class="avatar">
-                                                                            <img src="app-assets/images/avatars/12-small.png" alt="avatar" height="38" width="38" />
+                                                                            <img src="app-assets/images/avatars/12-small.png"
+                                                                                 alt="avatar" height="38" width="38"/>
                                                                         </div>
                                                                         <div class="media-body ml-50">
                                                                             <h6 class="mb-0">Daniel Proaño</h6>
@@ -454,40 +522,57 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1 mr-1">
-                                                                        <small class="timeline-event-time">hace 12 horas.</small>
+                                                                        <small class="timeline-event-time">hace 12
+                                                                            horas.</small>
                                                                     </div>
                                                                 </div>
-                                                                <div id="accordion2" role="tabpanel" data-parent="#accordionWrapa1" aria-labelledby="heading2" class="collapse" aria-expanded="false">
+                                                                <div id="accordion2" role="tabpanel"
+                                                                     data-parent="#accordionWrapa1"
+                                                                     aria-labelledby="heading2" class="collapse"
+                                                                     aria-expanded="false">
                                                                     <div class="card-body">
-                                                                        Se llamo al cliente para ofrecer un nuevo producto complementario al adquirido semanas atras para lo cual se le brindó información tanto por teléfono como por correo electrónico.
+                                                                        Se llamo al cliente para ofrecer un nuevo
+                                                                        producto complementario al adquirido semanas
+                                                                        atras para lo cual se le brindó información
+                                                                        tanto por teléfono como por correo electrónico.
                                                                     </div>
                                                                     <div class="row p-1">
                                                                         <div class="file-manager-item file">
                                                                             <div class="card-img-top file-logo-wrapper">
                                                                                 <div class="dropdown float-right">
-                                                                                    <i data-feather="more-vertical" class="toggle-dropdown mt-n25"></i>
+                                                                                    <i data-feather="more-vertical"
+                                                                                       class="toggle-dropdown mt-n25"></i>
                                                                                 </div>
                                                                                 <div class="d-flex align-items-center justify-content-center w-100">
-                                                                                    <img src="app-assets/images/icons/jpg.png" alt="file-icon" height="35" />
+                                                                                    <img src="app-assets/images/icons/jpg.png"
+                                                                                         alt="file-icon" height="35"/>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="card-body">
                                                                                 <div class="content-wrapper">
-                                                                                    <p class="card-text file-name mb-0">nombre-archivo.jpg</p>
-                                                                                    <p class="card-text file-size mb-0">12.6mb</p>
-                                                                                    <p class="card-text file-date">23 may 2021</p>
+                                                                                    <p class="card-text file-name mb-0">
+                                                                                        nombre-archivo.jpg</p>
+                                                                                    <p class="card-text file-size mb-0">
+                                                                                        12.6mb</p>
+                                                                                    <p class="card-text file-date">23
+                                                                                        may 2021</p>
                                                                                 </div>
-                                                                                <small class="file-accessed text-muted">Subido hace: 3 horas</small>
+                                                                                <small class="file-accessed text-muted">Subido
+                                                                                    hace: 3 horas</small>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="card">
-                                                                <div id="heading3" class="card-header" data-toggle="collapse" role="button" data-target="#accordion3" aria-expanded="false" aria-controls="accordion3">
+                                                                <div id="heading3" class="card-header"
+                                                                     data-toggle="collapse" role="button"
+                                                                     data-target="#accordion3" aria-expanded="false"
+                                                                     aria-controls="accordion3">
                                                                     <div class="media align-items-center">
                                                                         <div class="avatar">
-                                                                            <img src="app-assets/images/avatars/12-small.png" alt="avatar" height="38" width="38" />
+                                                                            <img src="app-assets/images/avatars/12-small.png"
+                                                                                 alt="avatar" height="38" width="38"/>
                                                                         </div>
                                                                         <div class="media-body ml-50">
                                                                             <h6 class="mb-0">Daniel Proaño</h6>
@@ -498,37 +583,53 @@
                                                                         <small class="timeline-event-time">15/mayo/2021.</small>
                                                                     </div>
                                                                 </div>
-                                                                <div id="accordion3" role="tabpanel" data-parent="#accordionWrapa1" aria-labelledby="heading3" class="collapse" aria-expanded="false">
+                                                                <div id="accordion3" role="tabpanel"
+                                                                     data-parent="#accordionWrapa1"
+                                                                     aria-labelledby="heading3" class="collapse"
+                                                                     aria-expanded="false">
                                                                     <div class="card-body">
-                                                                        Se llamo al cliente para ofrecer un nuevo producto complementario al adquirido semanas atras para lo cual se le brindó información tanto por teléfono como por correo electrónico.
+                                                                        Se llamo al cliente para ofrecer un nuevo
+                                                                        producto complementario al adquirido semanas
+                                                                        atras para lo cual se le brindó información
+                                                                        tanto por teléfono como por correo electrónico.
                                                                     </div>
                                                                     <div class="row p-1">
                                                                         <div class="file-manager-item file">
                                                                             <div class="card-img-top file-logo-wrapper">
                                                                                 <div class="dropdown float-right">
-                                                                                    <i data-feather="more-vertical" class="toggle-dropdown mt-n25"></i>
+                                                                                    <i data-feather="more-vertical"
+                                                                                       class="toggle-dropdown mt-n25"></i>
                                                                                 </div>
                                                                                 <div class="d-flex align-items-center justify-content-center w-100">
-                                                                                    <img src="app-assets/images/icons/jpg.png" alt="file-icon" height="35" />
+                                                                                    <img src="app-assets/images/icons/jpg.png"
+                                                                                         alt="file-icon" height="35"/>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="card-body">
                                                                                 <div class="content-wrapper">
-                                                                                    <p class="card-text file-name mb-0">nombre-archivo.jpg</p>
-                                                                                    <p class="card-text file-size mb-0">12.6mb</p>
-                                                                                    <p class="card-text file-date">23 may 2021</p>
+                                                                                    <p class="card-text file-name mb-0">
+                                                                                        nombre-archivo.jpg</p>
+                                                                                    <p class="card-text file-size mb-0">
+                                                                                        12.6mb</p>
+                                                                                    <p class="card-text file-date">23
+                                                                                        may 2021</p>
                                                                                 </div>
-                                                                                <small class="file-accessed text-muted">Subido hace: 3 horas</small>
+                                                                                <small class="file-accessed text-muted">Subido
+                                                                                    hace: 3 horas</small>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="card">
-                                                                <div id="heading4" class="card-header" data-toggle="collapse" role="button" data-target="#accordion4" aria-expanded="false" aria-controls="accordion4">
+                                                                <div id="heading4" class="card-header"
+                                                                     data-toggle="collapse" role="button"
+                                                                     data-target="#accordion4" aria-expanded="false"
+                                                                     aria-controls="accordion4">
                                                                     <div class="media align-items-center">
                                                                         <div class="avatar">
-                                                                            <img src="app-assets/images/avatars/12-small.png" alt="avatar" height="38" width="38" />
+                                                                            <img src="app-assets/images/avatars/12-small.png"
+                                                                                 alt="avatar" height="38" width="38"/>
                                                                         </div>
                                                                         <div class="media-body ml-50">
                                                                             <h6 class="mb-0">Daniel Proaño</h6>
@@ -539,27 +640,39 @@
                                                                         <small class="timeline-event-time">12/mayo/2021.</small>
                                                                     </div>
                                                                 </div>
-                                                                <div id="accordion4" role="tabpanel" data-parent="#accordionWrapa1" aria-labelledby="heading4" class="collapse" aria-expanded="false">
+                                                                <div id="accordion4" role="tabpanel"
+                                                                     data-parent="#accordionWrapa1"
+                                                                     aria-labelledby="heading4" class="collapse"
+                                                                     aria-expanded="false">
                                                                     <div class="card-body">
-                                                                        Se llamo al cliente para ofrecer un nuevo producto complementario al adquirido semanas atras para lo cual se le brindó información tanto por teléfono como por correo electrónico.
+                                                                        Se llamo al cliente para ofrecer un nuevo
+                                                                        producto complementario al adquirido semanas
+                                                                        atras para lo cual se le brindó información
+                                                                        tanto por teléfono como por correo electrónico.
                                                                     </div>
                                                                     <div class="row p-1">
                                                                         <div class="file-manager-item file">
                                                                             <div class="card-img-top file-logo-wrapper">
                                                                                 <div class="dropdown float-right">
-                                                                                    <i data-feather="more-vertical" class="toggle-dropdown mt-n25"></i>
+                                                                                    <i data-feather="more-vertical"
+                                                                                       class="toggle-dropdown mt-n25"></i>
                                                                                 </div>
                                                                                 <div class="d-flex align-items-center justify-content-center w-100">
-                                                                                    <img src="app-assets/images/icons/jpg.png" alt="file-icon" height="35" />
+                                                                                    <img src="app-assets/images/icons/jpg.png"
+                                                                                         alt="file-icon" height="35"/>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="card-body">
                                                                                 <div class="content-wrapper">
-                                                                                    <p class="card-text file-name mb-0">nombre-archivo.jpg</p>
-                                                                                    <p class="card-text file-size mb-0">12.6mb</p>
-                                                                                    <p class="card-text file-date">23 may 2021</p>
+                                                                                    <p class="card-text file-name mb-0">
+                                                                                        nombre-archivo.jpg</p>
+                                                                                    <p class="card-text file-size mb-0">
+                                                                                        12.6mb</p>
+                                                                                    <p class="card-text file-date">23
+                                                                                        may 2021</p>
                                                                                 </div>
-                                                                                <small class="file-accessed text-muted">Subido hace: 3 horas</small>
+                                                                                <small class="file-accessed text-muted">Subido
+                                                                                    hace: 3 horas</small>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -589,8 +702,8 @@
     <div class="modal-header">
         <h4 class="modal-title">Mensaje</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
     <div class="modal-body">
         <div [innerHTML]="mensaje"></div>
@@ -603,8 +716,8 @@
     <div class="modal-header">
         <h4 class="modal-title">Prospectos</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
     <div class="modal-body">
         <div [innerHTML]="mensaje"></div>
