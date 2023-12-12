@@ -13,7 +13,9 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i data-feather='calendar'></i></span>
                                     </div>
-                                    <input type="text" mwlFlatpickr mode="range" [(ngModel)]="fecha" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Periodo de finalización -">
+                                    <input type="text" mwlFlatpickr mode="range" [(ngModel)]="fecha"
+                                           class="form-control form-control-sm flatpickr-basic flatpickr-input"
+                                           placeholder="- Periodo de finalización -">
                                     <!-- <input type="text" class="form-control form-control-sm flatpickr-range flatpickr-input" placeholder="- Rango de fechas"> -->
                                 </div>
                             </div>
@@ -21,23 +23,23 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <select class="form-control form-control-sm" [(ngModel)]="tipoCliente">
-                                    <option value="" selected>- Tipo de cliente - </option>
+                                    <option value="" selected>- Tipo de cliente -</option>
                                     <option value="cliente">Cliente</option>
                                     <option value="negocio">Negocio</option>
-                                  </select>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <input type="text" class="form-control form-control-sm" placeholder="Identificación" [(ngModel)]="identificacion">
+                                <input type="text" class="form-control form-control-sm" placeholder="Identificación"
+                                       [(ngModel)]="identificacion">
                             </div>
                         </div>
                         <div class="col-md-2">
                             <button class="btn btn-primary" (click)="obtenerListaGestionEntrega()">
-              <i-feather name='search' class="edit-user"></i-feather>
-            </button>
+                                <i-feather name='search' class="edit-user"></i-feather>
+                            </button>
                         </div>
-
 
 
                     </div>
@@ -47,86 +49,92 @@
             <div class="card">
                 <div class="row m-75">
                     <div class="col-md-12 text-right">
-                        <button class="btn btn-success waves-effect waves-float waves-light" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-toggle="modal" data-target="#modals-slide-in">
-                 Exportar a Excel
-               </button>
+                        <button class="btn btn-success waves-effect waves-float waves-light"
+                                type="button" (click)="exportarExcel()">
+                            Exportar a Excel
+                        </button>
                     </div>
                 </div>
                 <div class="card-datatable table-responsive pt-0">
                     <table class="table table-bordered table-striped">
                         <thead class="thead-light">
-                            <tr>
-                                <th rowspan="2">Código</th>
-                                <th rowspan="2">Fecha de oferta</th>
-                                <th rowspan="2">Cliente</th>
-                                <th rowspan="2">Identificación</th>
-                                <th rowspan="2"># contacto</th>
-                                <th rowspan="2">Correo</th>
-                                <th rowspan="2">Indicador de cliente</th>
-                                <th rowspan="2">Fecha compra</th>
-                                <th rowspan="2">Productos adquiridos</th>
-                                <th colspan="2" class="text-center border-left border-right">Confirmación de la entrega</th>
-                                <th rowspan="2">Canal de ventas</th>
-                                <th rowspan="2">Calificación</th>
+                        <tr>
+                            <th rowspan="2">Código</th>
+                            <th rowspan="2">Fecha de oferta</th>
+                            <th rowspan="2">Cliente</th>
+                            <th rowspan="2">Identificación</th>
+                            <th rowspan="2"># contacto</th>
+                            <th rowspan="2">Correo</th>
+                            <th rowspan="2">Indicador de cliente</th>
+                            <th rowspan="2">Fecha compra</th>
+                            <th rowspan="2">Productos adquiridos</th>
+                            <th colspan="2" class="text-center border-left border-right">Confirmación de la entrega</th>
+                            <th rowspan="2">Canal de ventas</th>
+                            <th rowspan="2">Calificación</th>
 
-                                <th rowspan="2">Monto USD</th>
-                                <th rowspan="2">Estado de entrega</th>
-                                <th rowspan="2">Acciones</th>
-                            </tr>
-                            <tr>
-                                <th class="border-left">¿Se entregó el producto?</th>
-                                <th class="border-left border-right">Fecha de entrega</th>
-                            </tr>
+                            <th rowspan="2">Monto USD</th>
+                            <th rowspan="2">Estado de entrega</th>
+                            <th rowspan="2">Acciones</th>
+                        </tr>
+                        <tr>
+                            <th class="border-left">¿Se entregó el producto?</th>
+                            <th class="border-left border-right">Fecha de entrega</th>
+                        </tr>
                         </thead>
 
                         <tbody>
-                            <tr *ngFor="let entrega of listaEntregas">
-                                <td>{{entrega.codigoOferta}} </td>
-                                <td>{{transformarFecha(entrega.fechaOferta)}}</td>
-                                <td>
-                                    <div class="d-flex justify-content-left align-items-center">
-                                        <div class="avatar mr-1 bg-light-danger">
-                                            <span class="avatar-content">{{primeraLetra(entrega.nombres,entrega.apellidos)}}</span>
-                                        </div>
-                                        <div class="d-flex flex-column">
-                                            <a class="user-name text-truncate mb-0" href="#" data-target="#client-detail" data-toggle="modal">
-                                                <span class="font-weight-bold">{{entrega.nombres}} {{entrega.apellidos}}</span></a>
-                                        </div>
+                        <tr *ngFor="let entrega of listaEntregas">
+                            <td>{{entrega.codigoOferta}} </td>
+                            <td>{{transformarFecha(entrega.fechaOferta)}}</td>
+                            <td>
+                                <div class="d-flex justify-content-left align-items-center">
+                                    <div class="avatar mr-1 bg-light-danger">
+                                        <span class="avatar-content">{{primeraLetra(entrega.nombres, entrega.apellidos)}}</span>
                                     </div>
-                                </td>
-                                <td>{{entrega.identificacion}}</td>
-                                <td>{{entrega.telefono}}</td>
-                                <td>{{entrega.correo}} </td>
-                                <td>{{entrega.indicadorCliente}}</td>
-                                <td>{{transformarFecha(entrega.fechaCompra)}}</td>
-                                <td>
-                                    <a class="avatar bg-info" data-target="#productos-detail" data-toggle="modal">
-                                        <div class="avatar-content" data-toggle="tooltip" data-placement="top" title="Ver productos" (click)="obtenerUltimosProductos(entrega.id) ">
-                                            <i-feather class="edit-user" name='shopping-bag'></i-feather>
-                                        </div>
-                                    </a>
-                                </td>
-                                <td>{{entrega.entregoProducto}}</td>
-                                <td>{{transformarFecha(entrega.fechaCompra)}}</td>
-                                <td>{{entrega.canalVentas}}</td>
-                                <td>{{entrega.calificacion}}</td>
+                                    <div class="d-flex flex-column">
+                                        <a class="user-name text-truncate mb-0" href="#" data-target="#client-detail"
+                                           data-toggle="modal">
+                                            <span class="font-weight-bold">{{entrega.nombres}} {{entrega.apellidos}}</span></a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{entrega.identificacion}}</td>
+                            <td>{{entrega.telefono}}</td>
+                            <td>{{entrega.correo}} </td>
+                            <td>{{entrega.indicadorCliente}}</td>
+                            <td>{{transformarFecha(entrega.fechaCompra)}}</td>
+                            <td>
+                                <a class="avatar bg-info" data-target="#productos-detail" data-toggle="modal">
+                                    <div class="avatar-content" data-toggle="tooltip" data-placement="top"
+                                         title="Ver productos" (click)="obtenerUltimosProductos(entrega.id) ">
+                                        <i-feather class="edit-user" name='shopping-bag'></i-feather>
+                                    </div>
+                                </a>
+                            </td>
+                            <td>{{entrega.entregoProducto}}</td>
+                            <td>{{transformarFecha(entrega.fechaCompra)}}</td>
+                            <td>{{entrega.canalVentas}}</td>
+                            <td>{{entrega.calificacion}}</td>
 
-                                <td>${{entrega.total}}</td>
-                                <td>
-                                    <span class="text-capitalize badge {{entrega.estado == 'Entregado' ? 'badge-light-success' : 'badge-light-danger'}} badge-pill">{{entrega.estado}}</span>
-                                </td>
-                                <td>
-                                    <a class="avatar bg-primary mr-1" data-target="#gestion-entrega" data-toggle="modal" (click)="obternerGestionEntrega(entrega.id)">
-                                        <div class="avatar-content" data-toggle="tooltip" data-placement="bottom" title="Gestionar">
-                                            <i-feather class="edit-user" name='truck'></i-feather>
-                                        </div>
-                                    </a>
-                                </td>
-                            </tr>
+                            <td>${{entrega.total}}</td>
+                            <td>
+                                <span class="text-capitalize badge {{entrega.estado == 'Entregado' ? 'badge-light-success' : 'badge-light-danger'}} badge-pill">{{entrega.estado}}</span>
+                            </td>
+                            <td>
+                                <a class="avatar bg-primary mr-1" data-target="#gestion-entrega" data-toggle="modal"
+                                   (click)="obternerGestionEntrega(entrega.id)">
+                                    <div class="avatar-content" data-toggle="tooltip" data-placement="bottom"
+                                         title="Gestionar">
+                                        <i-feather class="edit-user" name='truck'></i-feather>
+                                    </div>
+                                </a>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="modal" tabindex="-1" role="dialog" id="productos-detail" aria-labelledby="myLargeModalLabel">
+                <div class="modal" tabindex="-1" role="dialog" id="productos-detail"
+                     aria-labelledby="myLargeModalLabel">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -147,13 +155,14 @@
                                                     <h6 class="text-truncate mb-0">{{producto.articulo}}</h6>
                                                 </div>
                                                 <div class="img-container w-50 mx-auto py-50">
-                                                    <img src="{{producto.imagen}}" class="img-fluid" alt="image" />
+                                                    <img src="{{producto.imagen}}" class="img-fluid" alt="image"/>
                                                 </div>
-                                                <hr />
+                                                <hr/>
                                                 <div class="item-meta">
                                                     <p class="card-text mb-0">Código: {{producto.codigo}}</p>
                                                     <p class="card-text mb-0">Cantidad: {{producto.cantidad}}</p>
-                                                    <p class="card-text text-primary mb-0 font-weight-bold">Total: ${{producto.precio}}</p>
+                                                    <p class="card-text text-primary mb-0 font-weight-bold">Total:
+                                                        ${{producto.precio}}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -177,29 +186,41 @@
 
                                     <div class="form-group">
                                         <label>¿Se entregó el producto?</label>
-                                        <select class="form-control" name="entregoProducto" formControlName="entregoProducto" [(ngModel)]="entrega.entregoProducto">
-                           <option value="">- Seleccione -</option>
-                           <option value="SI">SI</option>
-                           <option value="NO">NO</option>
-                         </select>
-                                        <div *ngIf="submittedEntrega && enForm.entregoProducto.errors" class="invalid-feedback" style="display: block;">
-                                            <div *ngIf="enForm.entregoProducto.errors.required">¿Se entregó el producto? es requerido
+                                        <select class="form-control" name="entregoProducto"
+                                                formControlName="entregoProducto" [(ngModel)]="entrega.entregoProducto">
+                                            <option value="">- Seleccione -</option>
+                                            <option value="SI">SI</option>
+                                            <option value="NO">NO</option>
+                                        </select>
+                                        <div *ngIf="submittedEntrega && enForm.entregoProducto.errors"
+                                             class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="enForm.entregoProducto.errors.required">¿Se entregó el producto?
+                                                es requerido
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label>Fecha de entrega</label>
-                                        <input type="text" mwlFlatpickr name="fechaEntrega" formControlName="fechaEntrega" [(ngModel)]="entrega.fechaEntrega" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Fecha de Entrega-">
-                                        <div *ngIf="submittedEntrega && enForm.fechaEntrega.errors" class="invalid-feedback" style="display: block;">
-                                            <div *ngIf="enForm.fechaEntrega.errors.required">Fecha de entrega es requerida
+                                        <input type="text" mwlFlatpickr name="fechaEntrega"
+                                               formControlName="fechaEntrega" [(ngModel)]="entrega.fechaEntrega"
+                                               class="form-control form-control-sm flatpickr-basic flatpickr-input"
+                                               placeholder="- Fecha de Entrega-">
+                                        <div *ngIf="submittedEntrega && enForm.fechaEntrega.errors"
+                                             class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="enForm.fechaEntrega.errors.required">Fecha de entrega es
+                                                requerida
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label>Hora de entrega</label>
-                                        <input type="time" name="horaEntrega" formControlName="horaEntrega" [(ngModel)]="entrega.horaEntrega" class="form-control form-control-sm flatpickr-basic flatpickr-input" placeholder="- Hora de Entrega-">
-                                        <div *ngIf="submittedEntrega && enForm.horaEntrega.errors" class="invalid-feedback" style="display: block;">
+                                        <input type="time" name="horaEntrega" formControlName="horaEntrega"
+                                               [(ngModel)]="entrega.horaEntrega"
+                                               class="form-control form-control-sm flatpickr-basic flatpickr-input"
+                                               placeholder="- Hora de Entrega-">
+                                        <div *ngIf="submittedEntrega && enForm.horaEntrega.errors"
+                                             class="invalid-feedback" style="display: block;">
                                             <div *ngIf="enForm.horaEntrega.errors.required">Hora de entrega es requerida
                                             </div>
                                         </div>
@@ -207,39 +228,49 @@
 
                                     <div class="form-group">
                                         <label>Calificación de la oferta</label>
-                                        <select class="form-control" name="calificacion" formControlName="calificacion" [(ngModel)]="entrega.calificacion">
-                       <option value="0">- Seleccione -</option>
-                       <option value="1">1</option>
-                       <option value="2">2</option>
-                       <option value="3">3</option>
-                       <option value="4">4</option>
-                       <option value="5">5</option>
-                       <option value="6">6</option>
-                       <option value="7">7</option>
-                       <option value="8">8</option>
-                       <option value="9">9</option>
-                       <option value="10">10</option>
-                     </select>
-                                        <div *ngIf="submittedEntrega && enForm.calificacion.errors" class="invalid-feedback" style="display: block;">
-                                            <div *ngIf="enForm.calificacion.errors.required">Calificación de la oferta es requerida
+                                        <select class="form-control" name="calificacion" formControlName="calificacion"
+                                                [(ngModel)]="entrega.calificacion">
+                                            <option value="0">- Seleccione -</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                        </select>
+                                        <div *ngIf="submittedEntrega && enForm.calificacion.errors"
+                                             class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="enForm.calificacion.errors.required">Calificación de la oferta
+                                                es requerida
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label>Estado</label>
-                                        <select class="form-control" name="estado" formControlName="estado" [(ngModel)]="entrega.estado">
-                           <option value="">- Seleccione -</option>
-                           <option value="Entregado">Entregado</option>
-                           <option value="No Entregado">No entregado</option>
-                         </select>
-                                        <div *ngIf="submittedEntrega && enForm.estado.errors" class="invalid-feedback" style="display: block;">
+                                        <select class="form-control" name="estado" formControlName="estado"
+                                                [(ngModel)]="entrega.estado">
+                                            <option value="">- Seleccione -</option>
+                                            <option value="Entregado">Entregado</option>
+                                            <option value="No Entregado">No entregado</option>
+                                        </select>
+                                        <div *ngIf="submittedEntrega && enForm.estado.errors" class="invalid-feedback"
+                                             style="display: block;">
                                             <div *ngIf="enForm.estado.errors.required">Estado de la oferta es requerido
                                             </div>
                                         </div>
                                     </div>
-                                    <button class="btn btn-primary mr-1" aria-label="Close" (click)="actualizarGestionEntrega()">Guardar</button>
-                                    <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
-                                    <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                    <button class="btn btn-primary mr-1" aria-label="Close"
+                                            (click)="actualizarGestionEntrega()">Guardar
+                                    </button>
+                                    <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal"
+                                            style="display: none;"></button>
+                                    <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">
+                                        Cancelar
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -279,12 +310,15 @@
                                                                         <i data-feather="hash"></i>
                                                                     </div>
                                                                 </div>
-                                                                <input type="text" class="form-control invoice-edit-input" placeholder="002" disabled />
+                                                                <input type="text"
+                                                                       class="form-control invoice-edit-input"
+                                                                       placeholder="002" disabled/>
                                                             </div>
                                                         </div>
                                                         <div class="d-flex align-items-center mb-1">
                                                             <span class="title">Fecha:</span>
-                                                            <input type="text" class="form-control invoice-edit-input date-picker" />
+                                                            <input type="text"
+                                                                   class="form-control invoice-edit-input date-picker"/>
                                                         </div>
 
                                                     </div>
@@ -292,7 +326,7 @@
                                             </div>
                                             <!-- Header ends -->
 
-                                            <hr class="invoice-spacing" />
+                                            <hr class="invoice-spacing"/>
                                             <div class="card-body invoice-padding pt-0">
                                                 <h4 class="invoice-title mb-2 text-primary">Remitente</h4>
                                                 <div class="row">
@@ -300,11 +334,11 @@
                                                         <div class="form-group">
                                                             <label>Tipo de identificación</label>
                                                             <select class="form-control">
-                                         <option>- Seleccione -</option>
-                                         <option>Cédula</option>
-                                         <option>RUC</option>
-                                         <option>Pasaporte</option>
-                                       </select>
+                                                                <option>- Seleccione -</option>
+                                                                <option>Cédula</option>
+                                                                <option>RUC</option>
+                                                                <option>Pasaporte</option>
+                                                            </select>
                                                         </div>
 
                                                     </div>
@@ -339,14 +373,15 @@
                                                     <div class="col-4">
                                                         <div class="form-group">
                                                             <label>Correo</label>
-                                                            <input class="form-control" type="text" placeholder="tucorreo@empresa.com">
+                                                            <input class="form-control" type="text"
+                                                                   placeholder="tucorreo@empresa.com">
                                                         </div>
 
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <hr class="invoice-spacing" />
+                                            <hr class="invoice-spacing"/>
                                             <div class="card-body invoice-padding pt-0">
                                                 <h4 class="invoice-title mb-2 text-info">Destinatario</h4>
                                                 <div class="row">
@@ -354,11 +389,11 @@
                                                         <div class="form-group">
                                                             <label>Tipo de identificación</label>
                                                             <select class="form-control">
-                                         <option>- Seleccione -</option>
-                                         <option>Cédula</option>
-                                         <option>RUC</option>
-                                         <option>Pasaporte</option>
-                                       </select>
+                                                                <option>- Seleccione -</option>
+                                                                <option>Cédula</option>
+                                                                <option>RUC</option>
+                                                                <option>Pasaporte</option>
+                                                            </select>
                                                         </div>
 
                                                     </div>
@@ -393,7 +428,8 @@
                                                     <div class="col-4">
                                                         <div class="form-group">
                                                             <label>Correo</label>
-                                                            <input class="form-control" type="text" placeholder="tucorreo@empresa.com">
+                                                            <input class="form-control" type="text"
+                                                                   placeholder="tucorreo@empresa.com">
                                                         </div>
 
                                                     </div>
@@ -402,7 +438,7 @@
 
 
                                             <!-- Address and Contact ends -->
-                                            <hr class="invoice-spacing" />
+                                            <hr class="invoice-spacing"/>
                                             <!-- Product Details starts -->
                                             <div class="card-body invoice-padding">
                                                 <h4 class="invoice-title text-success mb-4">Detalle de producto</h4>
@@ -413,52 +449,88 @@
                                                                 <div class="col-12 d-flex product-details-border position-relative pr-0">
                                                                     <div class="row w-100 pr-lg-0 pr-1 py-2">
                                                                         <div class="col-lg-5 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
-                                                                            <p class="card-text col-title mb-md-50 mb-0">Artículo/Producto</p>
+                                                                            <p class="card-text col-title mb-md-50 mb-0">
+                                                                                Artículo/Producto</p>
                                                                             <input class="form-control" type="text">
-                                                                            <textarea class="form-control mt-2" rows="1">Información adicional</textarea>
+                                                                            <textarea class="form-control mt-2"
+                                                                                      rows="1">Información adicional</textarea>
                                                                         </div>
                                                                         <div class="col-lg-3 col-12 my-lg-0 my-2">
-                                                                            <p class="card-text col-title mb-md-2 mb-0">Valor unitario</p>
-                                                                            <input type="text" class="form-control" value="24" placeholder="24" />
+                                                                            <p class="card-text col-title mb-md-2 mb-0">
+                                                                                Valor unitario</p>
+                                                                            <input type="text" class="form-control"
+                                                                                   value="24" placeholder="24"/>
                                                                             <div class="mt-2">
                                                                                 <span>Descuento:</span>
                                                                                 <span class="discount">0%</span>
-                                                                                <span class="tax-1 ml-50" data-toggle="tooltip" data-placement="top" title="Tax 1">0%</span>
-                                                                                <span class="tax-2 ml-50" data-toggle="tooltip" data-placement="top" title="Tax 2">0%</span>
+                                                                                <span class="tax-1 ml-50"
+                                                                                      data-toggle="tooltip"
+                                                                                      data-placement="top"
+                                                                                      title="Tax 1">0%</span>
+                                                                                <span class="tax-2 ml-50"
+                                                                                      data-toggle="tooltip"
+                                                                                      data-placement="top"
+                                                                                      title="Tax 2">0%</span>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                                                            <p class="card-text col-title mb-md-2 mb-0">Cantidad</p>
-                                                                            <input type="number" class="form-control" value="1" placeholder="1" />
+                                                                            <p class="card-text col-title mb-md-2 mb-0">
+                                                                                Cantidad</p>
+                                                                            <input type="number" class="form-control"
+                                                                                   value="1" placeholder="1"/>
                                                                         </div>
                                                                         <div class="col-lg-2 col-12 mt-lg-0 mt-2">
-                                                                            <p class="card-text col-title mb-md-50 mb-0">Precio</p>
+                                                                            <p class="card-text col-title mb-md-50 mb-0">
+                                                                                Precio</p>
                                                                             <p class="card-text mb-0">$24.00</p>
                                                                         </div>
                                                                     </div>
                                                                     <div class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
-                                                                        <i data-feather="x" class="cursor-pointer font-medium-3" data-repeater-delete></i>
+                                                                        <i data-feather="x"
+                                                                           class="cursor-pointer font-medium-3"
+                                                                           data-repeater-delete></i>
                                                                         <div class="dropdown">
-                                                                            <i class="cursor-pointer more-options-dropdown mr-0" data-feather="settings" id="dropdownMenuButton" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                               </i>
-                                                                            <div class="dropdown-menu dropdown-menu-right item-options-menu p-50" aria-labelledby="dropdownMenuButton">
+                                                                            <i class="cursor-pointer more-options-dropdown mr-0"
+                                                                               data-feather="settings"
+                                                                               id="dropdownMenuButton" role="button"
+                                                                               data-toggle="dropdown"
+                                                                               aria-haspopup="true"
+                                                                               aria-expanded="false">
+                                                                            </i>
+                                                                            <div class="dropdown-menu dropdown-menu-right item-options-menu p-50"
+                                                                                 aria-labelledby="dropdownMenuButton">
                                                                                 <div class="form-group">
-                                                                                    <label for="discount-input" class="form-label">Discount(%)</label>
-                                                                                    <input type="number" class="form-control" id="discount-input" />
+                                                                                    <label for="discount-input"
+                                                                                           class="form-label">Discount(%)</label>
+                                                                                    <input type="number"
+                                                                                           class="form-control"
+                                                                                           id="discount-input"/>
                                                                                 </div>
                                                                                 <div class="form-row mt-50">
                                                                                     <div class="form-group col-md-12">
-                                                                                        <label for="tax-1-input" class="form-label">Impuestos</label>
-                                                                                        <select name="tax-1-input" id="tax-1-input" class="form-control tax-select">
-                                                                               <option value="10%" selected>12%</option>
-                                                                               <option value="0%">0%</option>
-                                                                           </select>
+                                                                                        <label for="tax-1-input"
+                                                                                               class="form-label">Impuestos</label>
+                                                                                        <select name="tax-1-input"
+                                                                                                id="tax-1-input"
+                                                                                                class="form-control tax-select">
+                                                                                            <option value="10%"
+                                                                                                    selected>12%
+                                                                                            </option>
+                                                                                            <option value="0%">0%
+                                                                                            </option>
+                                                                                        </select>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="dropdown-divider my-1"></div>
                                                                                 <div class="d-flex justify-content-between">
-                                                                                    <button type="button" class="btn btn-outline-primary btn-apply-changes">Aplicar</button>
-                                                                                    <button type="button" class="btn btn-outline-secondary">Cancelar</button>
+                                                                                    <button type="button"
+                                                                                            class="btn btn-outline-primary btn-apply-changes">
+                                                                                        Aplicar
+                                                                                    </button>
+                                                                                    <button type="button"
+                                                                                            class="btn btn-outline-secondary">
+                                                                                        Cancelar
+                                                                                    </button>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -469,16 +541,18 @@
                                                     </div>
                                                     <div class="row mt-1">
                                                         <div class="col-12 px-0">
-                                                            <button type="button" class="btn btn-primary btn-sm btn-add-new" data-repeater-create>
-                                                   <i data-feather="plus" class="mr-25"></i>
-                                                   <span class="align-middle">Añadir</span>
-                                               </button>
+                                                            <button type="button"
+                                                                    class="btn btn-primary btn-sm btn-add-new"
+                                                                    data-repeater-create>
+                                                                <i data-feather="plus" class="mr-25"></i>
+                                                                <span class="align-middle">Añadir</span>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </form>
                                             </div>
                                             <!-- Product Details ends -->
-                                            <hr class="invoice-spacing" />
+                                            <hr class="invoice-spacing"/>
                                             <!-- Invoice Total starts -->
                                             <div class="card-body invoice-padding">
                                                 <div class="row invoice-sales-total-wrapper">
@@ -498,7 +572,7 @@
                                                                 <p class="invoice-total-title">IVA 12%:</p>
                                                                 <p class="invoice-total-amount">$21</p>
                                                             </div>
-                                                            <hr class="my-50" />
+                                                            <hr class="my-50"/>
                                                             <div class="invoice-total-item">
                                                                 <p class="invoice-total-title">Total:</p>
                                                                 <p class="invoice-total-amount">$1690</p>
@@ -509,12 +583,17 @@
                                             </div>
                                             <!-- Invoice Total ends -->
 
-                                            <hr class="invoice-spacing mt-0" />
+                                            <hr class="invoice-spacing mt-0"/>
 
                                             <div class="row p-2">
                                                 <div class="col-12">
-                                                    <button class="btn btn-primary mr-1 waves-effect waves-float waves-light" type="button" data-toggle="modal" data-target="#confirmar" data-dismiss="modal" aria-label="Close">Generar guía</button>
-                                                    <button type="reset" class="btn btn-outline-secondary waves-effect">Cancelar</button>
+                                                    <button class="btn btn-primary mr-1 waves-effect waves-float waves-light"
+                                                            type="button" data-toggle="modal" data-target="#confirmar"
+                                                            data-dismiss="modal" aria-label="Close">Generar guía
+                                                    </button>
+                                                    <button type="reset" class="btn btn-outline-secondary waves-effect">
+                                                        Cancelar
+                                                    </button>
                                                 </div>
                                             </div>
 
@@ -542,8 +621,8 @@
     <div class="modal-header">
         <h4 class="modal-title">Mensaje</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
     <div class="modal-body">
         <div [innerHTML]="mensaje"></div>
