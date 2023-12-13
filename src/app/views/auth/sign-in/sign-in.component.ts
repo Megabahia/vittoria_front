@@ -54,7 +54,7 @@ export class SignInComponent implements OnInit {
           // this.router.navigate(['/admin/management']);
           this.sharedDataService.setSharedData(true);
           this.mostrarSpinner = false;
-          window.location.href = '/admin/management';
+          window.location.href = '#/admin/management';
         }, (error) => {
           this.abrirModal(this.errorAuth);
           this.mostrarSpinner = false;
