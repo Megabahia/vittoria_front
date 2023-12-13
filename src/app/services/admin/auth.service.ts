@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import * as moment from 'moment';
 import {SharedDataService} from '../../shared/shared-data.service';
+import {Router} from '@angular/router';
 const apiUrl: string = environment.apiUrl;
 
 export interface User {
@@ -26,7 +27,8 @@ export class AuthService {
   public currentUser: Observable<User>;
   constructor(
     private http: HttpClient,
-    private sharedDataService: SharedDataService
+    private sharedDataService: SharedDataService,
+    private router: Router,
   ) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
@@ -67,6 +69,7 @@ export class AuthService {
     localStorage.removeItem('expiresAt');
     this.currentUserSubject.next(null);
     this.sharedDataService.setSharedData(false);
+    this.router.navigate(['/auth/signin']);
   }
   enviarCorreoCambioClave(datos){
     return this.http.post<any>(`${apiUrl}/adm/auth/password_reset/`,datos);
