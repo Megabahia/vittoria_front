@@ -1,5 +1,3 @@
-<app-toolbar [menu]="menu"></app-toolbar>
-<app-navbar></app-navbar>
 <div class="app-content content" *ngIf="vista=='lista'">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
@@ -226,10 +224,7 @@
     </div>
 </ng-template>
 <app-personas-edit *ngIf="vista=='editar'" [idCliente]="idCliente" [idProspecto]="idProspecto"></app-personas-edit>
-<!-- END: Content-->
-<div class="sidenav-overlay"></div>
-<div class="drag-target"></div>
-<app-footer></app-footer>
+
 <ng-template #prospectosMdl let-modal>
     <div class="modal-header">
         <h4 class="modal-title">Prospectos</h4>

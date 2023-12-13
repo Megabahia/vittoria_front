@@ -9,8 +9,7 @@ import {ParamsListComponent} from './params/params-list/params-list.component';
 import {AuthGuard} from 'src/app/guard/auth.guard';
 import {RolesAddComponent} from './roles/roles-add/roles-add.component';
 
-const routes: Routes = [{
-  path: '', component: AdminComponent, children: [
+const routes: Routes = [
     {path: '', redirectTo: 'management', pathMatch: 'full'},
     {
       path: 'management', component: ManagementComponent, canActivate: [AuthGuard], data: {
@@ -36,8 +35,7 @@ const routes: Routes = [{
           path: 'list', component: ParamsListComponent, canActivate: [AuthGuard]
         }]
     }
-  ]
-}];
+  ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

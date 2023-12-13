@@ -9,10 +9,11 @@ import {NgxCaptchaModule} from 'ngx-captcha';
 import {allIcons} from 'angular-feather/icons';
 import {FeatherModule} from 'angular-feather';
 import {RouterModule} from '@angular/router';
+import {AppLayoutComponent} from '../components/app-layout/app-layout.component';
 
 @NgModule({
   declarations: [
-    FooterComponent, ToolbarComponent, NavbarComponent],
+    FooterComponent, ToolbarComponent, NavbarComponent, AppLayoutComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -21,7 +22,7 @@ import {RouterModule} from '@angular/router';
     FeatherModule.pick(allIcons),
     RouterModule
   ],
-  exports: [FooterComponent, ToolbarComponent, NavbarComponent, FeatherModule]
+  exports: [FooterComponent, ToolbarComponent, NavbarComponent, FeatherModule, AppLayoutComponent]
 })
 export class SharedModule {
 }

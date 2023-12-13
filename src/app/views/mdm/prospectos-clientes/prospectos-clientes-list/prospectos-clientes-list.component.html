@@ -1,5 +1,3 @@
-<app-toolbar [menu]="menu"></app-toolbar>
-<app-navbar></app-navbar>
 <div class="app-content content" *ngIf="vista=='lista'">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
@@ -488,10 +486,7 @@
 <app-prospectos-clientes-edit *ngIf="vista=='editar'" [idUsuario]="idUsuario" (messageEvent)="receiveMessage($event)"
                               [confirmProspectoOpciones]="confirmProspectoOpciones"></app-prospectos-clientes-edit>
 
-<!-- END: Content-->
-<div class="sidenav-overlay"></div>
-<div class="drag-target"></div>
-<app-footer></app-footer>
+
 <ng-template #mensajeModal let-modal>
     <div class="modal-header">
         <h4 class="modal-title">Mensaje</h4>

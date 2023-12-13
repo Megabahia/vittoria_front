@@ -1,0 +1,12 @@
+/* Agrega estilos para el spinner y el botón en estado de carga */
+.loading {
+pointer-events: none; /* Evita que el botón sea clickeable mientras carga */
+opacity: 0.7; /* Puedes ajustar la opacidad según tus preferencias */
+}
+
+/* Puedes personalizar estos estilos según la apariencia deseada del spinner */
+.spinner-border {
+width: 1.25rem;
+height: 1.25rem;
+border-width: 0.2em;
+}

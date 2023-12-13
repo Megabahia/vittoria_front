@@ -1,5 +1,4 @@
-<app-toolbar [menu]="menu"></app-toolbar>
-<app-navbar></app-navbar>
+
 <div class="app-content content" *ngIf="vista=='lista'">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
@@ -256,9 +255,7 @@
 </div>
 <!-- END: Content-->
 <app-users-edit *ngIf="vista=='editar'" [idUsuario]="idUsuario" [roles]="roles" [paises]="paises" [estados]="estados" (volver)="volver()"></app-users-edit>
-<div class="sidenav-overlay"></div>
-<div class="drag-target"></div>
-<app-footer></app-footer>
+
 
 <ng-template #mensajeModal let-modal>
     <div class="modal-header">

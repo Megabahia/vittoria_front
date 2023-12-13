@@ -1,5 +1,3 @@
-<app-toolbar [menu]="menu"></app-toolbar>
-<app-navbar></app-navbar>
 <div class="app-content content" *ngIf="vista=='lista'">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
@@ -127,6 +125,4 @@
     </div>
 </div>
 <app-roles-add *ngIf="vista=='editar'" [funcion]="funcion" [idRol]="idRol" (volver)="volver()"></app-roles-add>
-<div class="sidenav-overlay "></div>
-<div class="drag-target "></div>
-<app-footer></app-footer>
+

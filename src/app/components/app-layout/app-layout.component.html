@@ -1,0 +1,11 @@
+<app-toolbar [menu]="menu" *ngIf="isLoggedIn"></app-toolbar>
+<app-navbar *ngIf="isLoggedIn"></app-navbar>
+
+
+<ng-content></ng-content>
+
+<!-- END: Content -->
+<div class="sidenav-overlay"></div>
+<div class="drag-target"></div>
+<app-footer></app-footer>
+

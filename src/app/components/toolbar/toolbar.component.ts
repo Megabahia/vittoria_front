@@ -1,10 +1,10 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, OnChanges} from '@angular/core';
 
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html'
 })
-export class ToolbarComponent implements OnInit {
+export class ToolbarComponent implements OnInit, OnChanges {
   @Input('menu') menu;
   usuario;
   acciones;
@@ -59,9 +59,16 @@ export class ToolbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.warn('init toolbar');
     this.usuario = JSON.parse(localStorage.getItem('currentUser'));
     this.acciones = this.usuario.acciones;
-    this.selectMenu();
+    // this.selectMenu();
+  }
+
+  ngOnChanges(): void {
+    console.warn('changes toolbar');
+    this.usuario = JSON.parse(localStorage.getItem('currentUser'));
+    this.acciones = this.usuario.acciones;
   }
 
   selectMenu(): void {
