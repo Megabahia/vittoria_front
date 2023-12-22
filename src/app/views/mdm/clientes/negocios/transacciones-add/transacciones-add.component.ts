@@ -142,7 +142,7 @@ export class TransaccionesAddComponent implements OnInit {
       if (info.codigoBarras) {
         this.comprobarProductos[i] = true;
         this.detalles[i].articulo = info.nombre;
-        this.detalles[i].imagen = this.obtenerURLImagen(info.imagen);
+        this.detalles[i].imagen = info.imagen;
         this.detalles[i].valorUnitario = info.precioVentaA;
       } else {
         this.comprobarProductos[i] = false;

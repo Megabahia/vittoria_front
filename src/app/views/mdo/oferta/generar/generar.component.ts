@@ -477,7 +477,7 @@ export class GenerarComponent implements OnInit {
         this.comprobarProductos[i] = true;
 
         this.detalles[i].articulo = info.nombre;
-        this.detalles[i].imagen = this.obtenerURLImagen(info.imagen);
+        this.detalles[i].imagen = info.imagen;
         this.listaPrecios[i].precioVentaA = info.precioVentaA;
         this.listaPrecios[i].precioVentaB = info.precioVentaB;
         this.listaPrecios[i].precioVentaC = info.precioVentaC;
