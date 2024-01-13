@@ -10,6 +10,11 @@ import {FlatpickrModule} from 'angularx-flatpickr';
 import { GuiasComponent } from './guias/guias.component';
 import { GuiaRetornoComponent } from './guia-retorno/guia-retorno.component';
 import { GuiaRecaudoComponent } from './guia-recaudo/guia-recaudo.component';
+import { GuiaPdfA4Component } from './guia-pdf-a4/guia-pdf-a4.component';
+import { GuiaDigitalPdfComponent } from './guia-digital-pdf/guia-digital-pdf.component';
+import { GuiaStickerComponent } from './guia-sticker/guia-sticker.component';
+import { GuiaManifiestoPdfComponent } from './guia-manifiesto-pdf/guia-manifiesto-pdf.component';
+import { GuiaRotulosFormatoPdfComponent } from './guia-rotulos-formato-pdf/guia-rotulos-formato-pdf.component';
 
 
 @NgModule({
@@ -18,6 +23,11 @@ import { GuiaRecaudoComponent } from './guia-recaudo/guia-recaudo.component';
     GuiasComponent,
     GuiaRetornoComponent,
     GuiaRecaudoComponent,
+    GuiaPdfA4Component,
+    GuiaDigitalPdfComponent,
+    GuiaStickerComponent,
+    GuiaManifiestoPdfComponent,
+    GuiaRotulosFormatoPdfComponent,
   ],
   imports: [
     CommonModule,

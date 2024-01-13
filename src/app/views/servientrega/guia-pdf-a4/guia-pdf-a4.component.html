@@ -1,0 +1,62 @@
+<div class="app-content content">
+  <div class="content-overlay"></div>
+  <div class="header-navbar-shadow"></div>
+  <div class="content-wrapper">
+    <div class="content-header row">
+    </div>
+    <div class="content-body">
+      <!-- users list start -->
+      <section class="app-user-list">
+        <!-- users filter start -->
+        <!--                <div class="card">-->
+        <!--                    <h5 class="card-header">Filtros de búsqueda</h5>-->
+        <!--                    <div class="card-body">-->
+        <!--                        <div class="row">-->
+        <!--                            <div class="col-md-4">-->
+        <!--                                <input class="form-control form-control-sm" type="text" placeholder="Nombre parámetro"-->
+        <!--                                       [(ngModel)]="nombreBuscar" (change)="obtenerListaParametros()">-->
+        <!--                            </div>-->
+        <!--                            <div class="col-md-4">-->
+        <!--                                <select class="select2 form-control form-control-sm" [(ngModel)]="tiposOpciones"-->
+        <!--                                        (change)="obtenerListaParametros()">-->
+        <!--                                    <option value="" selected>- Tipo de parámetro -</option>-->
+        <!--                                    <option *ngFor="let tipo of tipos" value="{{tipo.valor}}">{{tipo.valor}}</option>-->
+        <!--                                </select>-->
+        <!--                            </div>-->
+        <!--                        </div>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!-- users filter end -->
+        <!-- list section start -->
+        <div class="card">
+          <div class="card-header"><h4 class="card-title">GENERACION DE GUIA PDF A4</h4></div>
+          <div class="card-body">
+
+            <form [formGroup]="reactiveGuideForm" (ngSubmit)="generarGuia()">
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="largeInput">Número de guia</label>
+                  <input id="largeInput" class="form-control form-control-lg" type="text"
+                         formControlName="num_guia" placeholder="Ingrese numero de guía"/>
+                  <div *ngIf="submitted && reactiveForm.num_guia.errors" class="invalid-feedback" style="display: block;">
+                    <div *ngIf="reactiveForm.num_guia.errors.required">ID CIUDAD ORIGEN</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <button class="btn btn-primary" rippleEffect>Generar</button>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+        <!-- list section end -->
+      </section>
+      <!-- users list ends -->
+    </div>
+  </div>
+</div>
+
+

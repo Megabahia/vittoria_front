@@ -6,6 +6,11 @@ import {CiudadesComponent} from './ciudades/ciudades.component';
 import {GuiasComponent} from './guias/guias.component';
 import {GuiaRetornoComponent} from './guia-retorno/guia-retorno.component';
 import {GuiaRecaudoComponent} from './guia-recaudo/guia-recaudo.component';
+import {GuiaPdfA4Component} from './guia-pdf-a4/guia-pdf-a4.component';
+import {GuiaDigitalPdfComponent} from './guia-digital-pdf/guia-digital-pdf.component';
+import {GuiaStickerComponent} from './guia-sticker/guia-sticker.component';
+import {GuiaManifiestoPdfComponent} from './guia-manifiesto-pdf/guia-manifiesto-pdf.component';
+import {GuiaRotulosFormatoPdfComponent} from './guia-rotulos-formato-pdf/guia-rotulos-formato-pdf.component';
 
 const routes: Routes = [
   {
@@ -35,6 +40,31 @@ const routes: Routes = [
       {
         path: 'recaudo',
         component: GuiaRecaudoComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'pdf-a4',
+        component: GuiaPdfA4Component,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'digital-pdf',
+        component: GuiaDigitalPdfComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'sticker',
+        component: GuiaStickerComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'manifiesto-pdf',
+        component: GuiaManifiestoPdfComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'rotulos-formato-pdf',
+        component: GuiaRotulosFormatoPdfComponent,
         canActivate: [AuthGuard]
       },
     ]
