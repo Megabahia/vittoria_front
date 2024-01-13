@@ -5,6 +5,7 @@ import {AuthGuard} from '../../guard/auth.guard';
 import {CiudadesComponent} from './ciudades/ciudades.component';
 import {GuiasComponent} from './guias/guias.component';
 import {GuiaRetornoComponent} from './guia-retorno/guia-retorno.component';
+import {GuiaRecaudoComponent} from './guia-recaudo/guia-recaudo.component';
 
 const routes: Routes = [
   {
@@ -33,7 +34,7 @@ const routes: Routes = [
       },
       {
         path: 'recaudo',
-        component: GuiaRetornoComponent,
+        component: GuiaRecaudoComponent,
         canActivate: [AuthGuard]
       },
     ]

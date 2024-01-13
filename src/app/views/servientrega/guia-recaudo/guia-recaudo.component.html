@@ -1,1 +1,494 @@
-<p>guia-recaudo works!</p>
+<div class="app-content content">
+  <div class="content-overlay"></div>
+  <div class="header-navbar-shadow"></div>
+  <div class="content-wrapper">
+    <div class="content-header row">
+    </div>
+    <div class="content-body">
+      <!-- users list start -->
+      <section class="app-user-list">
+        <!-- users filter start -->
+        <!--                <div class="card">-->
+        <!--                    <h5 class="card-header">Filtros de búsqueda</h5>-->
+        <!--                    <div class="card-body">-->
+        <!--                        <div class="row">-->
+        <!--                            <div class="col-md-4">-->
+        <!--                                <input class="form-control form-control-sm" type="text" placeholder="Nombre parámetro"-->
+        <!--                                       [(ngModel)]="nombreBuscar" (change)="obtenerListaParametros()">-->
+        <!--                            </div>-->
+        <!--                            <div class="col-md-4">-->
+        <!--                                <select class="select2 form-control form-control-sm" [(ngModel)]="tiposOpciones"-->
+        <!--                                        (change)="obtenerListaParametros()">-->
+        <!--                                    <option value="" selected>- Tipo de parámetro -</option>-->
+        <!--                                    <option *ngFor="let tipo of tipos" value="{{tipo.valor}}">{{tipo.valor}}</option>-->
+        <!--                                </select>-->
+        <!--                            </div>-->
+        <!--                        </div>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!-- users filter end -->
+        <!-- list section start -->
+        <div class="card">
+          <div class="card-header"><h4 class="card-title">GENERACION DE GUIA RECUADO</h4></div>
+          <div class="card-body">
+            <form [formGroup]="reactiveGuideForm" (ngSubmit)="generarGuia()">
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="DETALLE_ENVIO_1">DETALLE_ENVIO_1</label>
+                    <input type="text" id="DETALLE_ENVIO_1" formControlName="DETALLE_ENVIO_1"
+                           class="form-control"/>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="DETALLE_ENVIO_2">DETALLE_ENVIO_2</label>
+                    <input type="text" id="DETALLE_ENVIO_2" formControlName="DETALLE_ENVIO_2"
+                           class="form-control"/>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="DETALLE_ENVIO_3">DETALLE_ENVIO_3</label>
+                    <input type="text" id="DETALLE_ENVIO_3" formControlName="DETALLE_ENVIO_3"
+                           class="form-control"/>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="ID_CIUDAD_ORIGEN">ID_CIUDAD_ORIGEN</label>
+                    <select id="ID_CIUDAD_ORIGEN" class="form-control" formControlName="ID_CIUDAD_ORIGEN">
+                      <option value="">-Seleccione-</option>
+                      <option value="Ibarra">Ibarra</option>
+                      <option value="Quito">Quito</option>
+                      <option value="Tulcan">Tulcan</option>
+                    </select>
+                    <div *ngIf="submitted && reactiveForm.ID_CIUDAD_ORIGEN.errors" class="invalid-feedback" style="display: block;">
+                      <div *ngIf="reactiveForm.ID_CIUDAD_ORIGEN.errors.required">ID CIUDAD ORIGEN</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="ID_CIUDAD_DESTINO">ID_CIUDAD_DESTINO</label>
+                    <select id="ID_CIUDAD_DESTINO" class="form-control" formControlName="ID_CIUDAD_DESTINO">
+                      <option>Ibarra</option>
+                      <option>Quito</option>
+                      <option>Tulcan</option>
+                    </select>
+                    <div *ngIf="submitted && reactiveForm.ID_CIUDAD_DESTINO.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.ID_CIUDAD_DESTINO.errors.required">ID CIUDAD DESTINO</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="ID_DESTINATARIO_NE_CL">ID_DESTINATARIO_NE_CL</label>
+                    <input type="text" id="ID_DESTINATARIO_NE_CL" formControlName="ID_DESTINATARIO_NE_CL"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.ID_DESTINATARIO_NE_CL.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.ID_DESTINATARIO_NE_CL.errors.required">ID DESTINATARIO NE CL</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="RAZON_SOCIAL_DESTI_NE">RAZON_SOCIAL_DESTI_NE</label>
+                    <input type="text" id="RAZON_SOCIAL_DESTI_NE" formControlName="RAZON_SOCIAL_DESTI_NE"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.RAZON_SOCIAL_DESTI_NE.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.RAZON_SOCIAL_DESTI_NE.errors.required">RAZON SOCIAL DESTI NE</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="NOMBRE_DESTINATARIO_NE">NOMBRE DESTINATARIO NE</label>
+                    <input type="text" id="NOMBRE_DESTINATARIO_NE" formControlName="NOMBRE_DESTINATARIO_NE"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.NOMBRE_DESTINATARIO_NE.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.NOMBRE_DESTINATARIO_NE.errors.required">NOMBRE DESTINATARIO NE</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="APELLIDO_DESTINATAR_NE">APELLIDO DESTINATAR NE</label>
+                    <input type="text" id="APELLIDO_DESTINATAR_NE" formControlName="APELLIDO_DESTINATAR_NE"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.APELLIDO_DESTINATAR_NE.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.APELLIDO_DESTINATAR_NE.errors.required">APELLIDO DESTINATAR NE</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="SECTOR_DESTINAT_NE">SECTOR DESTINAT NE</label>
+                    <input type="text" id="SECTOR_DESTINAT_NE" formControlName="SECTOR_DESTINAT_NE"
+                           class="form-control"/>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="TELEFONO1_DESTINAT_NE">TELEFONO1 DESTINAT NE</label>
+                    <input type="text" id="TELEFONO1_DESTINAT_NE" formControlName="TELEFONO1_DESTINAT_NE"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.TELEFONO1_DESTINAT_NE.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.TELEFONO1_DESTINAT_NE.errors.required">TELEFONO1 DESTINAT NE</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="TELEFONO2_DESTINAT_NE">TELEFONO2 DESTINAT NE</label>
+                    <input type="number" id="TELEFONO2_DESTINAT_NE" formControlName="TELEFONO2_DESTINAT_NE"
+                           class="form-control"/>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="CODIGO_POSTAL_DEST_NE">CODIGO POSTAL DEST NE</label>
+                    <input type="number" id="CODIGO_POSTAL_DEST_NE" formControlName="CODIGO_POSTAL_DEST_NE"
+                           class="form-control"/>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="CORREO_DESTINATARIO">CORREO_DESTINATARIO</label>
+                    <input type="number" id="CORREO_DESTINATARIO" formControlName="CORREO_DESTINATARIO"
+                           class="form-control"/>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="ID_REMITENTE_CL">ID REMITENTE CL</label>
+                    <input type="text" id="ID_REMITENTE_CL" formControlName="ID_REMITENTE_CL"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.ID_REMITENTE_CL.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.ID_REMITENTE_CL.errors.required">ID REMITENTE CL</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="RAZON_SOCIAL_REMITE">RAZON SOCIAL REMITE</label>
+                    <input type="text" id="RAZON_SOCIAL_REMITE" formControlName="RAZON_SOCIAL_REMITE"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.RAZON_SOCIAL_REMITE.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.RAZON_SOCIAL_REMITE.errors.required">RAZON SOCIAL REMITE</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="NOMBRE_REMITENTE">NOMBRE REMITENTE</label>
+                    <input type="text" id="NOMBRE_REMITENTE" formControlName="NOMBRE_REMITENTE"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.NOMBRE_REMITENTE.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.NOMBRE_REMITENTE.errors.required">NOMBRE REMITENTE</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="APELLIDO_REMITE">APELLIDO REMITE</label>
+                    <input type="text" id="APELLIDO_REMITE" formControlName="APELLIDO_REMITE"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.APELLIDO_REMITE.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.APELLIDO_REMITE.errors.required">APELLIDO REMITE</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="DIRECCION1_REMITE">DIRECCION1 REMITE</label>
+                    <input type="text" id="DIRECCION1_REMITE" formControlName="DIRECCION1_REMITE"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.DIRECCION1_REMITE.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.DIRECCION1_REMITE.errors.required">DIRECCION1 REMITE</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="SECTOR_REMITE">SECTOR REMITE</label>
+                    <input type="text" id="SECTOR_REMITE" formControlName="SECTOR_REMITE"
+                           class="form-control"/>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="TELEFONO1_REMITE">TELEFONO1 REMITE</label>
+                    <input type="number" id="TELEFONO1_REMITE" formControlName="TELEFONO1_REMITE"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.TELEFONO1_REMITE.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.TELEFONO1_REMITE.errors.required">TELEFONO1 REMITE</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="TELEFONO2_REMITE">TELEFONO2 REMITE</label>
+                    <input type="number" id="TELEFONO2_REMITE" formControlName="TELEFONO2_REMITE"
+                           class="form-control"/>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="CODIGO_POSTAL_REMI">CODIGO POSTAL REMI</label>
+                    <input type="number" id="CODIGO_POSTAL_REMI" formControlName="CODIGO_POSTAL_REMI"
+                           class="form-control" />
+                    <div *ngIf="submitted && reactiveForm.CODIGO_POSTAL_REMI.errors" class="invalid-feedback" style="display: block;">
+                      <div *ngIf="reactiveForm.CODIGO_POSTAL_REMI.errors.required">CODIGO POSTAL REMI</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="ID_PRODUCTO">ID_PRODUCTO</label>
+                    <select id="ID_PRODUCTO" class="form-control" formControlName="ID_PRODUCTO">
+                      <option value="">-Seleccione-</option>
+                      <option *ngFor="let item of productosServiCli" [value]="item.id">{{item.nombre}}</option>
+                    </select>
+                    <div *ngIf="submitted && reactiveForm.ID_PRODUCTO.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.ID_PRODUCTO.errors.required">ID_PRODUCTO</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="CONTENIDO">CONTENIDO</label>
+                    <input type="text" id="CONTENIDO" formControlName="CONTENIDO"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.CONTENIDO.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.CONTENIDO.errors.required">CONTENIDO</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="NUMERO_PIEZAS">NUMERO_PIEZAS</label>
+                    <input type="number" id="NUMERO_PIEZAS" formControlName="NUMERO_PIEZAS"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.NUMERO_PIEZAS.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.NUMERO_PIEZAS.errors.required">NUMERO_PIEZAS</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="VALOR_MERCANCIA">VALOR_MERCANCIA</label>
+                    <input type="number" id="VALOR_MERCANCIA" formControlName="VALOR_MERCANCIA"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.VALOR_MERCANCIA.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.VALOR_MERCANCIA.errors.required">VALOR_MERCANCIA</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="VALOR_ASEGURADO">VALOR_ASEGURADO</label>
+                    <input type="number" id="VALOR_ASEGURADO" formControlName="VALOR_ASEGURADO"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.VALOR_ASEGURADO.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.VALOR_ASEGURADO.errors.required">VALOR_ASEGURADO</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="LARGO">LARGO</label>
+                    <input type="number" id="LARGO" formControlName="LARGO"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.LARGO.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.LARGO.errors.required">LARGO</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="ANCHO">ANCHO</label>
+                    <input type="number" id="ANCHO" formControlName="ANCHO"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.ANCHO.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.ANCHO.errors.required">ANCHO</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="ALTO">ALTO</label>
+                    <input type="number" id="ALTO" formControlName="ALTO"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.ALTO.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.ALTO.errors.required">ALTO</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="PESO_FISICO">PESO FISICO</label>
+                    <input type="number" id="PESO_FISICO" formControlName="PESO_FISICO"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.PESO_FISICO.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.PESO_FISICO.errors.required">PESO FISICO</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="FECHA_FACTURA">FECHA_FACTURA</label>
+                    <input type="date" id="FECHA_FACTURA" formControlName="FECHA_FACTURA"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.FECHA_FACTURA.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.FECHA_FACTURA.errors.required">FECHA_FACTURA</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="NUMERO_FACTURA">NUMERO_FACTURA</label>
+                    <input type="text" id="NUMERO_FACTURA" formControlName="NUMERO_FACTURA"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.NUMERO_FACTURA.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.NUMERO_FACTURA.errors.required">NUMERO_FACTURA</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="VALOR_FACTURA">VALOR_FACTURA</label>
+                    <input type="number" id="VALOR_FACTURA" formControlName="VALOR_FACTURA"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.VALOR_FACTURA.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.VALOR_FACTURA.errors.required">VALOR_FACTURA</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="VALOR_FLETE">VALOR_FLETE</label>
+                    <input type="number" id="VALOR_FLETE" formControlName="VALOR_FLETE"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.VALOR_FLETE.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.VALOR_FLETE.errors.required">VALOR_FLETE</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="VALOR_COMISION">VALOR_COMISION</label>
+                    <input type="number" id="VALOR_COMISION" formControlName="VALOR_COMISION"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.VALOR_COMISION.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.VALOR_COMISION.errors.required">VALOR_COMISION</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="VALOR_SEGURO">VALOR_SEGURO</label>
+                    <input type="number" id="VALOR_SEGURO" formControlName="VALOR_SEGURO"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.VALOR_SEGURO.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.VALOR_SEGURO.errors.required">VALOR_SEGURO</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="VALOR_IMPUESTO">VALOR_IMPUESTO</label>
+                    <input type="number" id="VALOR_IMPUESTO" formControlName="VALOR_IMPUESTO"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.VALOR_IMPUESTO.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.VALOR_IMPUESTO.errors.required">VALOR_IMPUESTO</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="VALOR_OTROS">VALOR_OTROS</label>
+                    <input type="number" id="VALOR_OTROS" formControlName="VALOR_OTROS"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.VALOR_OTROS.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.VALOR_OTROS.errors.required">VALOR_OTROS</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="VALOR_A_RECAUDAR">VALOR_A_RECAUDAR</label>
+                    <input type="number" id="VALOR_A_RECAUDAR" formControlName="VALOR_A_RECAUDAR"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.VALOR_A_RECAUDAR.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.VALOR_A_RECAUDAR.errors.required">VALOR_A_RECAUDAR</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="DETALLE_ITEMS_FACTURA">DETALLE_ITEMS_FACTURA</label>
+                    <input type="text" id="DETALLE_ITEMS_FACTURA" formControlName="DETALLE_ITEMS_FACTURA"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.DETALLE_ITEMS_FACTURA.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.DETALLE_ITEMS_FACTURA.errors.required">DETALLE_ITEMS_FACTURA</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="VERIFICAR_CONTENIDO_RECAUDO">VERIFICAR_CONTENIDO_RECAUDO</label>
+                    <input type="text" id="VERIFICAR_CONTENIDO_RECAUDO" formControlName="VERIFICAR_CONTENIDO_RECAUDO"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.VERIFICAR_CONTENIDO_RECAUDO.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.VERIFICAR_CONTENIDO_RECAUDO.errors.required">VERIFICAR_CONTENIDO_RECAUDO</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="VALIDADOR_RECAUDO">VALIDADOR_RECAUDO</label>
+                    <input type="text" id="VALIDADOR_RECAUDO" formControlName="VALIDADOR_RECAUDO"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.VALIDADOR_RECAUDO.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.VALIDADOR_RECAUDO.errors.required">VALIDADOR_RECAUDO</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="ID_CL">ID_CL</label>
+                    <input type="number" id="ID_CL" formControlName="ID_CL"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.ID_CL.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.ID_CL.errors.required">ID_CL</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="DIRECCION_RECAUDO">DIRECCION_RECAUDO</label>
+                    <input type="text" id="DIRECCION_RECAUDO" formControlName="DIRECCION_RECAUDO"
+                           class="form-control"/>
+                    <div *ngIf="submitted && reactiveForm.DIRECCION_RECAUDO.errors" class="invalid-feedback" style="display: block;" >
+                      <div *ngIf="reactiveForm.DIRECCION_RECAUDO.errors.required">DIRECCION_RECAUDO</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-group">
+                    <button class="btn btn-primary" rippleEffect>Register</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- list section end -->
+      </section>
+      <!-- users list ends -->
+    </div>
+  </div>
+</div>
+
+
