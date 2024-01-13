@@ -4,6 +4,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../../guard/auth.guard';
 import {CiudadesComponent} from './ciudades/ciudades.component';
 import {GuiasComponent} from './guias/guias.component';
+import {GuiaRetornoComponent} from './guia-retorno/guia-retorno.component';
 
 const routes: Routes = [
   {
@@ -24,7 +25,17 @@ const routes: Routes = [
         path: 'crear',
         component: GuiasComponent,
         canActivate: [AuthGuard]
-      }
+      },
+      {
+        path: 'retorno',
+        component: GuiaRetornoComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'recaudo',
+        component: GuiaRetornoComponent,
+        canActivate: [AuthGuard]
+      },
     ]
   },
 ];

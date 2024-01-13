@@ -8,12 +8,16 @@ import {SharedModule} from '../../shared/shared.module';
 import {ChartsModule} from 'ng2-charts';
 import {FlatpickrModule} from 'angularx-flatpickr';
 import { GuiasComponent } from './guias/guias.component';
+import { GuiaRetornoComponent } from './guia-retorno/guia-retorno.component';
+import { GuiaRecaudoComponent } from './guia-recaudo/guia-recaudo.component';
 
 
 @NgModule({
   declarations: [
     CiudadesComponent,
     GuiasComponent,
+    GuiaRetornoComponent,
+    GuiaRecaudoComponent,
   ],
   imports: [
     CommonModule,
