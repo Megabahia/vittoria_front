@@ -5,6 +5,7 @@ import {FormGroup, Validators, FormBuilder} from '@angular/forms';
 import {DatePipe} from '@angular/common';
 import {ParamService} from '../../../../services/mdm/param/param.service';
 import {ValidacionesPropias} from '../../../../utils/customer.validators';
+import {AuthService} from '../../../../services/admin/auth.service';
 
 @Component({
   selector: 'app-prospectos-clientes-list',
@@ -68,6 +69,7 @@ export class ProspectosClientesListComponent implements OnInit {
   vista;
   identificacion;
   usuarioLoggeado;
+  currentUserValue;
 
   constructor(
     private prospectosService: ProspectosService,
@@ -75,8 +77,9 @@ export class ProspectosClientesListComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private modalService: NgbModal,
     private paramService: ParamService,
+    private authService: AuthService,
   ) {
-
+    this.currentUserValue = this.authService.currentUserValue;
     this.usuarioLoggeado = JSON.parse(localStorage.getItem('currentUser'));
     this.nombreVendedor = this.usuarioLoggeado.usuario.nombres + ' ' + this.usuarioLoggeado.usuario.apellidos;
   }

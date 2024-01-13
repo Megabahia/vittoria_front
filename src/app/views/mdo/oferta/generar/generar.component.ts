@@ -9,6 +9,7 @@ import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ClientesService} from '../../../../services/mdm/personas/clientes/clientes.service';
 import {NegociosService} from '../../../../services/mdm/personas/negocios/negocios.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
+import {AuthService} from '../../../../services/admin/auth.service';
 
 @Component({
   selector: 'app-generar',
@@ -68,6 +69,7 @@ export class GenerarComponent implements OnInit {
   tipoCanalOpciones;
 
   ofertaId;
+  currentUserValue;
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -79,8 +81,10 @@ export class GenerarComponent implements OnInit {
     private negociosService: NegociosService,
     private paramService: ParamServiceMDO,
     private productosService: ProductosService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private authService: AuthService,
   ) {
+    this.currentUserValue = this.authService.currentUserValue;
     this.oferta = this.generarService.inicializarOferta();
     this.comprobarProductos = [];
     this.usuario = JSON.parse(localStorage.getItem('currentUser'));

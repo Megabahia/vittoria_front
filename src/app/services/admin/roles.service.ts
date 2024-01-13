@@ -46,8 +46,14 @@ export interface Rol {
       ESCRIBIR: number,
       CREAR: number,
       BORRAR: number
-    }
-  }
+    },
+    SERVI: {
+      LEER: number,
+      ESCRIBIR: number,
+      CREAR: number,
+      BORRAR: number
+    },
+  };
 
 }
 @Injectable({

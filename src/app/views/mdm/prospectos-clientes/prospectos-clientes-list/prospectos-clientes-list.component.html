@@ -66,7 +66,8 @@
                             <button class="btn btn-success" type="button" (click)="export()">
                                 Exportar a Excel
                             </button>
-                            <button class="btn btn-primary" tabindex="0" aria-controls="DataTables_Table_0"
+                            <button *ngIf="currentUserValue.acciones.MDM.CREAR"
+                                    class="btn btn-primary" tabindex="0" aria-controls="DataTables_Table_0"
                                     type="button" data-toggle="modal" data-target="#modals-slide-in">
                                 Añadir prospecto
                             </button>
@@ -115,10 +116,12 @@
                                 <td> {{elem.ciudad}} </td>
                                 <td> {{elem.codigoProducto}} </td>
                                 <td>
-                                    <a (click)="editarProspecto(elem.id)">
+                                    <a *ngIf="currentUserValue.acciones.MDM.ESCRIBIR"
+                                       (click)="editarProspecto(elem.id)">
                                         <i-feather name="edit"></i-feather>
                                     </a>
-                                    <a (click)="eliminarProspecto(elem.id)">
+                                    <a *ngIf="currentUserValue.acciones.MDM.BORRAR"
+                                       (click)="eliminarProspecto(elem.id)">
                                         <i-feather name="trash"></i-feather>
                                     </a>
                                 </td>

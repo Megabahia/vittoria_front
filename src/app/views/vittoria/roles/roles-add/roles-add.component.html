@@ -230,7 +230,37 @@
                                         </div>
                                     </td>
                                 </tr>
-
+                                <tr>
+                                    <td>Servi Entrega</td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="SERVI-read"
+                                                   [(ngModel)]="roles.acciones.SERVI.LEER"/>
+                                            <label class="custom-control-label" for="SERVI-read"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="SERVI-write"
+                                                   [(ngModel)]="roles.acciones.SERVI.ESCRIBIR"/>
+                                            <label class="custom-control-label" for="SERVI-write"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="SERVI-create"
+                                                   [(ngModel)]="roles.acciones.SERVI.CREAR"/>
+                                            <label class="custom-control-label" for="SERVI-create"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="SERVI-delete"
+                                                   [(ngModel)]="roles.acciones.SERVI.BORRAR"/>
+                                            <label class="custom-control-label" for="SERVI-delete"></label>
+                                        </div>
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>

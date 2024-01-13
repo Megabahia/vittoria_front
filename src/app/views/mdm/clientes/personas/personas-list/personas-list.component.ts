@@ -1,12 +1,13 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {ClientesService} from '../../../../../services/mdm/personas/clientes/clientes.service';
 import {NgbPagination, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {AuthService} from '../../../../../services/admin/auth.service';
 
 @Component({
   selector: 'app-personas-list',
   templateUrl: './personas-list.component.html',
 })
-export class PersonasListComponent implements OnInit {
+export class PersonasListComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @ViewChild('prospectosMdl') prospectosMdl;
   menu;
@@ -29,11 +30,14 @@ export class PersonasListComponent implements OnInit {
   };
   idProspecto = 0;
   listaProspectos;
+  currentUserValue;
 
   constructor(
     private clientesService: ClientesService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private authService: AuthService,
   ) {
+    this.currentUserValue = this.authService.currentUserValue;
   }
 
   ngOnInit(): void {
