@@ -57,7 +57,8 @@
                                     type="button">
                                 Exportar a Excel
                             </button>
-                            <button class="btn btn-primary" tabindex="0" aria-controls="DataTables_Table_0"
+                            <button *ngIf="currentUserValue.acciones.MDO.CREAR"
+                                    class="btn btn-primary" tabindex="0" aria-controls="DataTables_Table_0"
                                     type="button" data-toggle="modal" data-target="#modals-slide-in"
                                     (click)="crearOferta()">
                                 Añadir oferta

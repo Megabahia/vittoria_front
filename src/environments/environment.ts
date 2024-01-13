@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   apiUrl: 'https://ventas-vittoria-api-test.crediventa.com',
+  apiUrlServientrega: 'https://181.39.87.158:8021',
   // apiUrl: 'http://127.0.0.1:8000',
   setKey: '6Le9XCgpAAAAAGLvVLmTUsLr057fNVB6J1-ejMum',
   roles: {
@@ -50,7 +51,13 @@ export const environment = {
         ESCRIBIR: 0,
         CREAR: 0,
         BORRAR: 0
-      }
+      },
+      SERVI: {
+        LEER: 0,
+        ESCRIBIR: 0,
+        CREAR: 0,
+        BORRAR: 0
+      },
     }
 
   }

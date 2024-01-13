@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {NegociosService} from '../../../../../services/mdm/personas/negocios/negocios.service';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
+import {AuthService} from '../../../../../services/admin/auth.service';
 
 @Component({
   selector: 'app-negocios-list',
@@ -19,11 +20,14 @@ export class NegociosListComponent implements OnInit {
   inicio;
   fin;
   ruc;
+  currentUserValue;
 
   constructor(
     private negociosService: NegociosService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private authService: AuthService,
   ) {
+    this.currentUserValue = this.authService.currentUserValue;
   }
 
   ngOnInit(): void {

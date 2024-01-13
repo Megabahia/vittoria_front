@@ -47,7 +47,8 @@
                                     type="button">
                                 Exportar a Excel
                             </button>
-                            <button class="btn btn-primary" tabindex="0" aria-controls="DataTables_Table_0"
+                            <button *ngIf="currentUserValue.acciones.GDO.CREAR"
+                                    class="btn btn-primary" tabindex="0" aria-controls="DataTables_Table_0"
                                     type="button" data-toggle="modal" data-target="#modals-slide-in"
                                     (click)="insertarParametro()">
                                 Añadir parámetro
@@ -97,7 +98,8 @@
                                 <td> {{parametro.minimo}}</td>
                                 <td> {{parametro.tipoVariable}}</td>
                                 <td>
-                                    <a data-toggle="modal" data-target="#modals-slide-in"
+                                    <a *ngIf="currentUserValue.acciones.GDO.ESCRIBIR"
+                                       data-toggle="modal" data-target="#modals-slide-in"
                                        (click)="editarParametro(parametro.id, parametro.nombre,parametro.idTipo,parametro.desccripcion)">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -107,7 +109,8 @@
                                             <line x1="10" y1="12" x2="14" y2="12"></line>
                                         </svg>
                                     </a>
-                                    <a (click)="abrirModal(contenido,parametro.id)">
+                                    <a *ngIf="currentUserValue.acciones.GDO.BORRAR"
+                                       (click)="abrirModal(contenido,parametro.id)">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                              stroke-linecap="round" stroke-linejoin="round" class="mr-50">

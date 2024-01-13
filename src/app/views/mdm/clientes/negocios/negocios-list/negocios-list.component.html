@@ -60,7 +60,8 @@
                                 <button class="btn btn-success" type="button" (click)="export()">
                                     Exportar a Excel
                                 </button>
-                                <a (click)="crearNegocio()" class="btn btn-primary">
+                                <a *ngIf="currentUserValue.acciones.MDM.ESCRIBIR"
+                                   (click)="crearNegocio()" class="btn btn-primary">
                                     Añadir negocio
                                 </a>
                             </div>
@@ -101,10 +102,12 @@
                                 </td>
                                 <td>{{negocio.razonSocial}}</td>
                                 <td>
-                                    <a (click)="editarNegocio(negocio.id)">
+                                    <a *ngIf="currentUserValue.acciones.MDM.ESCRIBIR"
+                                       (click)="editarNegocio(negocio.id)">
                                         <i-feather name='edit-2'></i-feather>
                                     </a>
-                                    <a (click)="abrirModal(contenido,negocio.id)" data-target="#eliminar"
+                                    <a *ngIf="currentUserValue.acciones.MDM.BORRAR"
+                                       (click)="abrirModal(contenido,negocio.id)" data-target="#eliminar"
                                        data-toggle="modal">
                                         <i-feather name="trash"></i-feather>
                                     </a>

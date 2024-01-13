@@ -84,7 +84,8 @@
                                 <button class="btn btn-success" type="button" (click)="export()">
                                     Exportar a Excel
                                 </button>
-                                <a (click)="crearCliente()" class="btn btn-primary">
+                                <a *ngIf="currentUserValue.acciones.MDM.CREAR"
+                                   (click)="crearCliente()" class="btn btn-primary">
                                     Añadir cliente
                                 </a>
                             </div>
@@ -125,10 +126,12 @@
                                 </td>
                                 <td>{{cliente.correo}}</td>
                                 <td>
-                                    <a (click)="editarCliente(cliente.id)">
+                                    <a *ngIf="currentUserValue.acciones.MDM.ESCRIBIR"
+                                       (click)="editarCliente(cliente.id)">
                                         <i-feather name="edit"></i-feather>
                                     </a>
-                                    <a (click)="abrirModal(contenido,cliente.id)" data-target="#eliminar"
+                                    <a *ngIf="currentUserValue.acciones.MDM.BORRAR"
+                                       (click)="abrirModal(contenido,cliente.id)" data-target="#eliminar"
                                        data-toggle="modal">
                                         <i-feather name="trash"></i-feather>
                                     </a>

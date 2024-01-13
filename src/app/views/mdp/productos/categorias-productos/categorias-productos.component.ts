@@ -3,6 +3,7 @@ import { CategoriasService, Categoria } from '../../../../services/mdp/productos
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ParamService } from 'src/app/services/mdp/param/param.service';
+import {AuthService} from '../../../../services/admin/auth.service';
 
 @Component({
   selector: 'app-categorias-productos',
@@ -24,13 +25,16 @@ export class CategoriasProductosComponent implements OnInit {
   idCategoria: any;
   mensaje: string;
   estados;
+  currentUserValue;
   constructor(
     private modalService: NgbModal,
     private categoriasService:CategoriasService,
     private paramService:ParamService,
-    private _formBuilder: FormBuilder
+    private _formBuilder: FormBuilder,
+    private authService: AuthService,
   ) {
     this.categoria = categoriasService.inicializarCategoria();
+    this.currentUserValue = this.authService.currentUserValue;
    }
   
    get f() {

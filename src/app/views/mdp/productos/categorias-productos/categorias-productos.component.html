@@ -22,7 +22,8 @@
 
                     </div>
                     <div class="col-lg-12 col-xl-6 text-right">
-                        <button class="btn btn-icon btn-primary" type="button" data-toggle="modal" data-target="#addcampo" (click)="crearCategoria()">
+                        <button *ngIf="currentUserValue.acciones.MDP.CREAR"
+                                class="btn btn-icon btn-primary" type="button" data-toggle="modal" data-target="#addcampo" (click)="crearCategoria()">
                     <i data-feather="plus" class="mr-25"></i>
                     <span>Añadir</span>
                 </button>
@@ -138,10 +139,12 @@
                                     <span class="text-capitalize badge {{categoria.estado=='Activo' ? 'badge-light-success': 'badge-secondary' }} badge-pill">{{categoria.estado}}</span>
                                 </td>
                                 <td>
-                                    <a (click)="editarCategoria(categoria.id)" data-toggle="modal" data-target="#addcampo">
+                                    <a *ngIf="currentUserValue.acciones.MDP.ESCRIBIR"
+                                       (click)="editarCategoria(categoria.id)" data-toggle="modal" data-target="#addcampo">
                                         <i-feather name='edit-2'></i-feather>
                                     </a>
-                                    <a (click)="abrirModal(contenido, categoria.id)" data-repeater-delete>
+                                    <a *ngIf="currentUserValue.acciones.MDP.BORRAR"
+                                       (click)="abrirModal(contenido, categoria.id)" data-repeater-delete>
                                         <i-feather name='trash'></i-feather>
                                     </a>
                                 </td>

@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CategoriasService } from 'src/app/services/mdp/productos/categorias/categorias.service';
 import { ParamService } from 'src/app/services/mdp/param/param.service';
+import {AuthService} from '../../../../services/admin/auth.service';
 
 @Component({
   selector: 'app-subcategorias-productos',
@@ -26,14 +27,17 @@ export class SubcategoriasProductosComponent implements OnInit {
   estados;
   mensaje;
   funcion;
+  currentUserValue;
   constructor(
     private modalService: NgbModal,
     private subcategoriasService:SubcategoriasService,
     private categoriasService:CategoriasService,
     private paramService:ParamService,
-    private _formBuilder: FormBuilder
+    private _formBuilder: FormBuilder,
+    private authService: AuthService,
   ) {
     this.subcategoria = subcategoriasService.inicializarSubcategoria();
+    this.currentUserValue = this.authService.currentUserValue;
    }
 
    get f() {

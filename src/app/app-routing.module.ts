@@ -25,7 +25,10 @@ const routes: Routes = [
   },
   {
     path: 'gde', loadChildren: () => import('./views/gde/gde.module').then(m => m.GdeModule)
-  }
+  },
+  {
+    path: 'servientrega', loadChildren: () => import('./views/servientrega/servientrega.module').then(m => m.ServientregaModule)
+  },
 ];
 
 @NgModule({

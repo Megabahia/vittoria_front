@@ -272,6 +272,66 @@
           </li>
         </ul>
       </li>
+      <li class="navigation-header">Módulos de servientrega</li>
+      <li class="nav-item" *ngIf="acciones.SERVI.LEER">
+        <a class="d-flex align-items-center">
+          <i data-feather="file-text"></i>
+          <span class="menu-title text-truncate" data-i18n="Invoice">Servientrega</span></a>
+        <ul class="menu-content">
+          <li class="nav-item {{menuToolbar['servi']['ciudades']}}">
+            <a class="d-flex align-items-center" href="#/servientrega/ciudades">
+              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Ciudades</span></a>
+          </li>
+          <li class="nav-item {{menuToolbar['servi']['guias']}}">
+            <a class="d-flex align-items-center" href="#/servientrega/guias/crear" data-toggle="tooltip"
+               data-placement="right" title="Generación de guías">
+              <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                                 data-i18n="List">Generación de guías</span></a>
+          </li>
+          <li class="nav-item {{menuToolbar['servi']['guias']}}">
+            <a class="d-flex align-items-center" href="#/servientrega/guias/retorno" data-toggle="tooltip"
+               data-placement="right" title="Generación de guías de retorno">
+              <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                                 data-i18n="List">Generación de guías de retorno</span></a>
+          </li>
+          <li class="nav-item {{menuToolbar['servi']['guias']}}">
+            <a class="d-flex align-items-center" href="#/servientrega/guias/recaudo" data-toggle="tooltip"
+               data-placement="right" title="Generación de guías de recaudo">
+              <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                                 data-i18n="List">Generación de guías de recaudo</span></a>
+          </li>
+          <li class="nav-item {{menuToolbar['servi']['guias']}}">
+            <a class="d-flex align-items-center" href="#/servientrega/guias/pdf-a4" data-toggle="tooltip"
+               data-placement="right" title="Generación de guías de PDF A4">
+              <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                                 data-i18n="List">Generación de guías de PDF A4</span></a>
+          </li>
+          <li class="nav-item {{menuToolbar['servi']['guias']}}">
+            <a class="d-flex align-items-center" href="#/servientrega/guias/digital-pdf" data-toggle="tooltip"
+               data-placement="right" title="Generación de guías digital PDF">
+              <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                                 data-i18n="List">Generación de guías digital PDF</span></a>
+          </li>
+          <li class="nav-item {{menuToolbar['servi']['guias']}}">
+            <a class="d-flex align-items-center" href="#/servientrega/guias/sticker" data-toggle="tooltip"
+               data-placement="right" title="Generación de guías formato Sticker">
+              <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                                 data-i18n="List">Generación de guías formato Sticker</span></a>
+          </li>
+          <li class="nav-item {{menuToolbar['servi']['guias']}}">
+            <a class="d-flex align-items-center" href="#/servientrega/guias/manifiesto-pdf" data-toggle="tooltip"
+               data-placement="right" title="Generación de manifiesto PDF">
+              <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                                 data-i18n="List">Generación de manifiesto PDF</span></a>
+          </li>
+          <li class="nav-item {{menuToolbar['servi']['guias']}}">
+            <a class="d-flex align-items-center" href="#/servientrega/guias/rotulos-formato-pdf" data-toggle="tooltip"
+               data-placement="right" title="Generación de Rotulos formato PDF">
+              <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                                 data-i18n="List">Generación de Rotulos formato PDF</span></a>
+          </li>
+        </ul>
+      </li>
     </ul>
   </div>
 </div>

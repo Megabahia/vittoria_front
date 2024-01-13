@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbModal, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { ParamService } from 'src/app/services/mdm/param/param.service';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import {AuthService} from '../../../services/admin/auth.service';
 
 @Component({
   selector: 'app-params',
@@ -36,13 +37,16 @@ export class ParamsComponent implements OnInit {
   tipoVariable;
   valor;
   padres;
+  currentUserValue;
   // @ViewChild('padres') padres;
   constructor(
     private paramService: ParamService,
     private modalService: NgbModal,
     private _formBuilder: FormBuilder,
-
-  ) { }
+    private authService: AuthService,
+  ) {
+    this.currentUserValue = this.authService.currentUserValue;
+  }
   get f() {
     return this.paramForm.controls;
   }
