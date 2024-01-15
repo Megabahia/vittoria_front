@@ -58,6 +58,12 @@ export const environment = {
         CREAR: 0,
         BORRAR: 0
       },
+      TODOMEGA: {
+        LEER: 0,
+        ESCRIBIR: 0,
+        CREAR: 0,
+        BORRAR: 0
+      },
     }
 
   }

@@ -52,6 +52,9 @@ export class ToolbarComponent implements OnInit, OnChanges {
     servi: {
       ciudades: '',
       guias: '',
+    },
+    todomegacentro: {
+      inicio: '',
     }
   };
   menuUser;

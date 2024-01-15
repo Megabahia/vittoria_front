@@ -1,0 +1,18 @@
+<div class="content-body">
+    <!-- users list start -->
+    <div class="content-body">
+        <div class="text-center container">
+            <div class="">
+                <img src="/assets/images/logo/todomegacentro.png">
+            </div>
+            <div *ngIf="currentUserValue?.usuario.idRol === 42 || currentUserValue?.usuario.idRol === 1">
+                <a class="btn btn-primary mt-2" href="https://todomegacentro.com/">Ingresa a la página del catálogo</a>
+            </div>
+            <div *ngIf="currentUserValue?.usuario.idRol === 43 || currentUserValue?.usuario.idRol === 1">
+                <a class="btn btn-primary mt-2" href="https://todomegacentro.com/admin">Ingresa a la página como
+                    administrador</a>
+            </div>
+        </div>
+    </div>
+    <!-- users list ends -->
+</div>
