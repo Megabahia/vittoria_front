@@ -1,6 +1,7 @@
 export const environment = {
   production: true,
   apiUrl: 'https://ventas-vittoria-api-prod.crediventa.com',
+  apiUrlServientrega: 'https://181.39.87.158:8021',
   setKey: '6Le9XCgpAAAAAGLvVLmTUsLr057fNVB6J1-ejMum',
   roles: {
     rol: {
