@@ -29,6 +29,9 @@ const routes: Routes = [
   {
     path: 'servientrega', loadChildren: () => import('./views/servientrega/servientrega.module').then(m => m.ServientregaModule)
   },
+  {
+    path: 'todomegacentro', loadChildren: () => import('./views/todomegacentro/todomegacentro.module').then(m => m.TodomegacentroModule)
+  },
 ];
 
 @NgModule({

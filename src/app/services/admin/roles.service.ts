@@ -53,6 +53,12 @@ export interface Rol {
       CREAR: number,
       BORRAR: number
     },
+    TODOMEGA: {
+      LEER: number,
+      ESCRIBIR: number,
+      CREAR: number,
+      BORRAR: number
+    },
   };
 
 }
