@@ -13,6 +13,7 @@ import { RolesListComponent } from './roles/roles-list/roles-list.component';
 import { RolesAddComponent } from './roles/roles-add/roles-add.component';
 import { ParamsListComponent } from './params/params-list/params-list.component';
 import { NgxCaptchaModule } from 'ngx-captcha';
+import { ProfileComponent } from './users/profile/profile.component';
 
 
 @NgModule({
@@ -24,7 +25,7 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     RolesListComponent,
     RolesAddComponent,
     ParamsListComponent,
-    
+    ProfileComponent,
   ],
   imports: [
     CommonModule,

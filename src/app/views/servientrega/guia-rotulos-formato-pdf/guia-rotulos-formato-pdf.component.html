@@ -39,7 +39,7 @@
                   <input id="largeInput" class="form-control form-control-lg" type="text"
                          formControlName="num_guia" placeholder="Ingrese numero de guía"/>
                   <div *ngIf="submitted && reactiveForm.num_guia.errors" class="invalid-feedback" style="display: block;">
-                    <div *ngIf="reactiveForm.num_guia.errors.required">Número de guia</div>
+                    <div *ngIf="reactiveForm.num_guia.errors.required">Número de guia requerido</div>
                   </div>
                 </div>
               </div>

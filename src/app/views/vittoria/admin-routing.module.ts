@@ -8,6 +8,7 @@ import {RolesListComponent} from './roles/roles-list/roles-list.component';
 import {ParamsListComponent} from './params/params-list/params-list.component';
 import {AuthGuard} from 'src/app/guard/auth.guard';
 import {RolesAddComponent} from './roles/roles-add/roles-add.component';
+import {ProfileComponent} from './users/profile/profile.component';
 
 const routes: Routes = [
     {path: '', redirectTo: 'management', pathMatch: 'full'},
@@ -20,9 +21,14 @@ const routes: Routes = [
       path: 'user', children: [
         {path: '', redirectTo: 'list', pathMatch: 'full'}, {
           path: 'list', component: UsersListComponent, canActivate: [AuthGuard]
-        }, {
+        },
+        {
           path: 'edit', component: UsersEditComponent
-        }]
+        },
+        {
+          path: 'profile', component: ProfileComponent
+        },
+        ]
     }, {
       path: 'roles', children: [
         {path: '', redirectTo: 'list', pathMatch: 'full'}, {
