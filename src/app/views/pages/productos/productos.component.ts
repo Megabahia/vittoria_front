@@ -29,6 +29,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
   confirmProspectoOpciones;
   tipoPrecioOpciones;
   tipoClienteOpciones;
+  public tituloPaginaProductos;
 
   constructor(
     private rutaActiva: ActivatedRoute,
@@ -57,22 +58,20 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     this.pospectoForm = this._formBuilder.group({
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
-      telefono: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10), Validators.maxLength(10)]],
       identificacion: ['', [
         Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10),
         Validators.maxLength(10), ValidacionesPropias.cedulaValido
       ]],
-      tipoCliente: ['', [Validators.required]],
       whatsapp: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10), Validators.maxLength(10)]],
-      facebook: ['', [Validators.required]],
-      twitter: ['', [Validators.required]],
-      instagram: ['', [Validators.required]],
       correo1: ['', [Validators.required, Validators.email]],
-      correo2: ['', [Validators.required, Validators.email]],
       pais: ['', [Validators.required]],
       provincia: ['', [Validators.required]],
       ciudad: ['', [Validators.required]],
-      canal: ['', [Validators.required]],
+      callePrincipal: ['', [Validators.required]],
+      numeroCasa: ['', [Validators.required]],
+      calleSecundaria: ['', [Validators.required]],
+      referencia: ['', [Validators.required]],
+      comentarios: ['', [Validators.required]],
       nombreProducto: ['', [Validators.required]],
       precio: ['', [Validators.required, Validators.pattern(this.numRegex)]],
     });
@@ -85,6 +84,9 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     this.obtenerTiposPrecio();
     this.obtenerTiposCliente();
     this.obtenerPaisOpciones();
+    this.paramService.obtenerListaPadres('PAGINA_PRODUCTOS_URL').subscribe((info) => {
+      this.tituloPaginaProductos = info[0];
+    });
   }
 
   obtenerCanales(): void {
@@ -98,6 +100,8 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     // this.ciudad = '';
     this.paramService.obtenerListaPadres('PAIS').subscribe((info) => {
       this.paisOpciones = info;
+      this.pospectoForm.get('pais').setValue(this.paisOpciones[0].valor);
+      this.obtenerProvincias();
     });
   }
 

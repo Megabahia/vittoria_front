@@ -46,6 +46,7 @@ export class EditComponent implements OnInit {
       titulo: ['', [Validators.required]],
       subtitulo: ['', [Validators.required]],
       precio: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      precioOferta: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       video: ['', []],
       descripcion: ['', [Validators.required]],
       caracteristicas: ['', [Validators.required]],
