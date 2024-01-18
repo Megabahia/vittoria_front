@@ -86,7 +86,7 @@ export class ListComponent implements OnInit, AfterViewInit {
   copiarURL(inputTextValue): void {
     const selectBox = document.createElement('textarea');
     selectBox.style.position = 'fixed';
-    selectBox.value = `${environment.apiUrlFront}/pages/productos/${inputTextValue}`;
+    selectBox.value = `${environment.apiUrlFront}/#/pages/productos/${inputTextValue}`;
     document.body.appendChild(selectBox);
     selectBox.focus();
     selectBox.select();
