@@ -8,6 +8,12 @@
                 </a>
             </div>
             <div class="card">
+                <div class="d-flex justify-content-center">
+                    <h1>{{producto.titulo}}</h1>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <h2 style="color: red">{{tituloPaginaProductos?.valor}}</h2>
+                </div>
                 <div class="card-body">
                     <div class="row my-2">
                         <div class="col-12 col-md-5 d-flex align-items-center justify-content-center mb-2 mb-md-0">
@@ -37,9 +43,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-md-7"><h4>{{producto.titulo}}</h4>
-                            <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h4 class="item-price mr-1">
+                        <div class="col-12 col-md-7">
+                            <h4>{{producto.subtitulo}}</h4>
+                            <div class="ecommerce-details-price d-flex flex-wrap mt-1">
+                                <h4 class="item-price mr-1 text-danger" style="text-decoration: line-through">
                                 $ {{producto.precio}}</h4>
+                            </div>
+                            <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h4 class="item-price mr-1">
+                                $ {{producto.precioOferta}}</h4>
                             </div>
                             <p class="card-text">
                                 {{producto.descripcion}}
@@ -64,16 +75,32 @@
                                         <circle cx="20" cy="21" r="1"></circle>
                                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                                     </svg>
-                                    <span class="add-to-cart">Comprar</span></button><!---->
+                                    <span class="add-to-cart">Pedir ahora</span></button><!---->
+                            </div>
+                            <div class="row my-2" *ngIf="producto.video.archivo">
+                                <video [src]="producto.video.archivo" width="600"
+                                       height="400" controls>
+                                    <p>Su navegador no soporta vídeos HTML5.</p>
+                                </video>
+                            </div>
+                            <div class="d-flex flex-column flex-sm-row pt-1"><!---->
+                                <button
+                                        data-toggle="modal" data-target="#modals-slide-in"
+                                        rippleeffect=""
+                                        class="btn btn-primary btn-cart mr-0 mr-sm-1 mb-1 mb-sm-0 waves-effect waves-float waves-light ng-star-inserted"
+                                        href="/vuexy-angular-admin-template/demo-1/apps/e-commerce/checkout">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-shopping-cart mr-25">
+                                        <circle cx="9" cy="21" r="1"></circle>
+                                        <circle cx="20" cy="21" r="1"></circle>
+                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                    </svg>
+                                    <span class="add-to-cart">Pedir ahora</span></button><!---->
                             </div>
                         </div>
                     </div>
-                    <div class="row my-2" *ngIf="producto.video.archivo">
-                        <video [src]="producto.video.archivo" width="600"
-                               height="400" controls>
-                            <p>Su navegador no soporta vídeos HTML5.</p>
-                        </video>
-                    </div>
+
 
                     <!-- Modal to add new user starts-->
                     <div class="modal modal-slide-in new-user-modal fade" id="modals-slide-in">
@@ -81,7 +108,7 @@
                             <div class="modal-content pt-0">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                                 <div class="modal-header mb-1">
-                                    <h5 class="modal-title" id="exampleModalLabel">Comprar</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">{{tituloPaginaProductos?.valor}}</h5>
                                 </div>
                                 <div class="modal-body flex-grow-1">
                                     <form class="auth-login-form mt-2" [formGroup]="pospectoForm">
@@ -128,39 +155,6 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label" for="basic-icon-default-uname">Teléfono:</label>
-                                            <input type="text" id="basic-icon-default-uname"
-                                                   class="form-control dt-uname" name="telefono"
-                                                   formControlName="telefono"/>
-                                            <div *ngIf="submitted && f.telefono.errors" class="invalid-feedback"
-                                                 style="display: block;">
-                                                <div *ngIf="f.telefono.errors.required">Teléfono requerido
-                                                </div>
-                                                <div *ngIf="f.telefono.errors.pattern">Solo se aceptan números
-                                                </div>
-                                                <div *ngIf="f.telefono.errors.minlength || f.telefono.errors.maxlength">
-                                                    Solo se aceptan 10 digitos
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label" for="basic-icon-default-email">Tipo de
-                                                cliente:</label>
-                                            <select class="select2 form-control" name="tipoCliente"
-                                                    formControlName="tipoCliente">
-                                                <option value="" selected>- Tipo de cliente -</option>
-                                                <option value="{{tipoCli.valor}}"
-                                                        *ngFor="let tipoCli of tipoClienteOpciones">
-                                                    {{tipoCli.nombre}}
-                                                </option>
-                                            </select>
-                                            <div *ngIf="submitted && f.tipoCliente.errors" class="invalid-feedback"
-                                                 style="display: block;">
-                                                <div *ngIf="f.tipoCliente.errors.required">Tipo de cliente requerido
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
                                             <label class="form-label" for="basic-icon-default-email">Número de
                                                 WhatsApp:</label>
                                             <input type="text" id="basic-icon-default-email"
@@ -178,42 +172,6 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label" for="basic-icon-default-email">Dirección
-                                                Facebook:</label>
-                                            <input type="text" id="basic-icon-default-email"
-                                                   class="form-control dt-email" name="facebook"
-                                                   formControlName="facebook"/>
-                                            <div *ngIf="submitted && f.facebook.errors" class="invalid-feedback"
-                                                 style="display: block;">
-                                                <div *ngIf="f.facebook.errors.required">Facebook requerido
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label" for="basic-icon-default-email">Dirección
-                                                Twitter:</label>
-                                            <input type="text" id="basic-icon-default-email"
-                                                   class="form-control dt-email" name="twitter"
-                                                   formControlName="twitter"/>
-                                            <div *ngIf="submitted && f.twitter.errors" class="invalid-feedback"
-                                                 style="display: block;">
-                                                <div *ngIf="f.twitter.errors.required">Twitter requerido
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label" for="basic-icon-default-email">Dirección
-                                                Instagram:</label>
-                                            <input type="text" id="basic-icon-default-email"
-                                                   class="form-control dt-email" name="instagram"
-                                                   formControlName="instagram"/>
-                                            <div *ngIf="submitted && f.instagram.errors" class="invalid-feedback"
-                                                 style="display: block;">
-                                                <div *ngIf="f.instagram.errors.required">Instagram requerido
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
                                             <label class="form-label" for="basic-icon-default-email">Correo 1:</label>
                                             <input type="text" id="basic-icon-default-email"
                                                    class="form-control dt-email" name="correo1"
@@ -227,28 +185,12 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label" for="basic-icon-default-email">Correo 2:</label>
-                                            <input type="text" id="basic-icon-default-email"
-                                                   class="form-control dt-email" name="correo2"
-                                                   formControlName="correo2"/>
-                                            <div *ngIf="submitted && f.correo2.errors" class="invalid-feedback"
-                                                 style="display: block;">
-                                                <div *ngIf="f.correo2.errors.required">Correo2 requerido
-                                                </div>
-                                                <div *ngIf="f.correo2.errors.email">Correo2 no cumple el formato
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
                                             <label for="pais">País</label>
-                                            <select class="form-control select2" id="pais" formControlName="pais"
-                                                    (change)="obtenerProvincias()">
-                                                <option value="" selected>- Seleccionar -</option>
-                                                <option value="{{paisesOp.valor}}"
-                                                        *ngFor="let paisesOp of paisOpciones">
-                                                    {{paisesOp.nombre}}
-                                                </option>
-                                            </select>
+                                            <input type="text" id="pais"
+                                                   class="form-control" name="pais"
+                                                   formControlName="pais"
+                                                   disabled
+                                            />
                                             <div *ngIf="submitted && f.pais.errors" class="invalid-feedback"
                                                  style="display: block;">
                                                 <div *ngIf="f.pais.errors.required">Pais es requerido</div>
@@ -285,17 +227,57 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label" for="basic-icon-default-email">Canal:</label>
-                                            <select class="select2 form-control form-control-sm" name="canal"
-                                                    formControlName="canal">
-                                                <option value="" selected>- Canal -</option>
-                                                <option value="{{canalOp.valor}}" *ngFor="let canalOp of canalOpciones">
-                                                    {{canalOp.nombre}}
-                                                </option>
-                                            </select>
-                                            <div *ngIf="submitted && f.canal.errors" class="invalid-feedback"
+                                            <label class="form-label" for="callePrincipal">Calle principal:</label>
+                                            <input type="text" id="callePrincipal"
+                                                   class="form-control" name="callePrincipal"
+                                                   formControlName="callePrincipal"/>
+                                            <div *ngIf="submitted && f.callePrincipal.errors" class="invalid-feedback"
                                                  style="display: block;">
-                                                <div *ngIf="f.canal.errors.required">Canal requerido
+                                                <div *ngIf="f.callePrincipal.errors.required">Calle principal requerido
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="numeroCasa">Numero casa:</label>
+                                            <input type="text" id="numeroCasa"
+                                                   class="form-control" name="numeroCasa"
+                                                   formControlName="numeroCasa"/>
+                                            <div *ngIf="submitted && f.numeroCasa.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.numeroCasa.errors.required">Numero Casa requerido
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="calleSecundaria">Calle secundaria:</label>
+                                            <input type="text" id="calleSecundaria"
+                                                   class="form-control" name="calleSecundaria"
+                                                   formControlName="calleSecundaria"/>
+                                            <div *ngIf="submitted && f.calleSecundaria.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.calleSecundaria.errors.required">Calle secundaria requerido
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="referencia">Refencia:</label>
+                                            <input type="text" id="referencia"
+                                                   class="form-control" name="referencia"
+                                                   formControlName="referencia"/>
+                                            <div *ngIf="submitted && f.referencia.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.referencia.errors.required">Refencia requerido
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="comentarios">Comentarios:</label>
+                                            <input type="text" id="comentarios"
+                                                   class="form-control" name="comentarios"
+                                                   formControlName="comentarios"/>
+                                            <div *ngIf="submitted && f.comentarios.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.comentarios.errors.required">Comentarios requerido
                                                 </div>
                                             </div>
                                         </div>
