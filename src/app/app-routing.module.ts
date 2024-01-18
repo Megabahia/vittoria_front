@@ -27,10 +27,16 @@ const routes: Routes = [
     path: 'gde', loadChildren: () => import('./views/gde/gde.module').then(m => m.GdeModule)
   },
   {
+    path: 'gdp', loadChildren: () => import('./views/gdp/gdp.module').then(m => m.GdpModule)
+  },
+  {
     path: 'servientrega', loadChildren: () => import('./views/servientrega/servientrega.module').then(m => m.ServientregaModule)
   },
   {
     path: 'todomegacentro', loadChildren: () => import('./views/todomegacentro/todomegacentro.module').then(m => m.TodomegacentroModule)
+  },
+  {
+    path: 'pages', loadChildren: () => import('./views/pages/pages.module').then(m => m.PagesModule)
   },
 ];
 

@@ -1,0 +1,90 @@
+<div class="app-content" *ngIf="producto">
+
+    <div class="content-body">
+        <section class="app-ecommerce-details">
+            <div class="d-flex justify-content-center">
+                <a href="javascript:void(0);" class="brand-logo">
+                    <img src="../../../../assets/images/logo.svg" width="160">
+                </a>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row my-2">
+                        <div class="col-12 col-md-5 d-flex align-items-center justify-content-center mb-2 mb-md-0">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="swiper-responsive-breakpoints swiper-container px-4 py-2"
+                                >
+                                    <div class="swiper-wrapper mb-2">
+
+
+                                        <!-- ngb-carousel component -->
+                                        <ngb-carousel [interval]="2000" [pauseOnHover]="false"
+                                                      *ngIf="producto.imagenes">
+                                            <ng-template ngbSlide *ngFor="let producto of producto.imagenes">
+                                                <div class="carousel-img-wrapper">
+                                                    <img [src]="producto.archivo" alt="Random first slide"
+                                                         width="300" height="300"
+                                                    />
+                                                </div>
+                                                <div class="carousel-caption"></div>
+                                            </ng-template>
+                                        </ngb-carousel>
+                                        <!-- ngb-carousel component -->
+                                    </div>
+                                    <!-- Add Arrows -->
+                                    <div class="swiper-button-next"></div>
+                                    <div class="swiper-button-prev"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-7"><h4>{{producto.titulo}}</h4>
+                            <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h4 class="item-price mr-1">
+                                $ {{producto.precio}}</h4>
+                            </div>
+                            <p class="card-text">
+                                {{producto.descripcion}}
+                            </p>
+                            <hr>
+                            <div class="product-color-options"><h6>Caracteristicas</h6>
+                                <p class="card-text">
+                                    {{producto.caracteristicas}}
+                                </p>
+                            </div>
+                            <hr>
+                            <div class="d-flex flex-column flex-sm-row pt-1"><!---->
+                                <button
+                                        (click)="openModal(errorAuth)"
+                                        rippleeffect=""
+                                        class="btn btn-primary btn-cart mr-0 mr-sm-1 mb-1 mb-sm-0 waves-effect waves-float waves-light ng-star-inserted"
+                                        href="/vuexy-angular-admin-template/demo-1/apps/e-commerce/checkout">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-shopping-cart mr-25">
+                                        <circle cx="9" cy="21" r="1"></circle>
+                                        <circle cx="20" cy="21" r="1"></circle>
+                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                    </svg>
+                                    <span class="add-to-cart">Comprar</span></button><!---->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<ng-template #errorAuth let-modal>
+    <div class="modal-header ">
+        <h4 class="modal-title ">Error</h4>
+        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click')">
+            <span aria-hidden="true ">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body ">
+        <p>No puede iniciar sesión con las credenciales proporcionadas.</p>
+    </div>
+    <div class="modal-footer ">
+        <button type="button " class="btn btn-light " (click)="modal.dismiss( 'Cross click')">Cerrar</button>
+    </div>
+</ng-template>
