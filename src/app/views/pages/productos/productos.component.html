@@ -53,7 +53,7 @@
                             <hr>
                             <div class="d-flex flex-column flex-sm-row pt-1"><!---->
                                 <button
-                                        (click)="openModal(errorAuth)"
+                                        data-toggle="modal" data-target="#modals-slide-in"
                                         rippleeffect=""
                                         class="btn btn-primary btn-cart mr-0 mr-sm-1 mb-1 mb-sm-0 waves-effect waves-float waves-light ng-star-inserted"
                                         href="/vuexy-angular-admin-template/demo-1/apps/e-commerce/checkout">
@@ -68,23 +68,273 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row my-2" *ngIf="producto.video.archivo">
+                        <video [src]="producto.video.archivo" width="600"
+                               height="400" controls>
+                            <p>Su navegador no soporta vídeos HTML5.</p>
+                        </video>
+                    </div>
+
+                    <!-- Modal to add new user starts-->
+                    <div class="modal modal-slide-in new-user-modal fade" id="modals-slide-in">
+                        <div class="modal-dialog">
+                            <div class="modal-content pt-0">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                                <div class="modal-header mb-1">
+                                    <h5 class="modal-title" id="exampleModalLabel">Comprar</h5>
+                                </div>
+                                <div class="modal-body flex-grow-1">
+                                    <form class="auth-login-form mt-2" [formGroup]="pospectoForm">
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-fullname">Nombres:</label>
+                                            <input type="text" class="form-control dt-full-name"
+                                                   id="basic-icon-default-fullname" name="nombres"
+                                                   formControlName="nombres"/>
+                                            <div *ngIf="submitted && f.nombres.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.nombres.errors.required">Nombres requeridos
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-uname">Apellidos:</label>
+                                            <input type="text" id="basic-icon-default-uname"
+                                                   class="form-control dt-uname" name="apellidos"
+                                                   formControlName="apellidos"/>
+                                            <div *ngIf="submitted && f.apellidos.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.apellidos.errors.required">Apellidos requeridos
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label"
+                                                   for="basic-icon-default-uname">Identificación:</label>
+                                            <input type="text" id="basic-icon-default-uname"
+                                                   class="form-control dt-uname" name="identificacion"
+                                                   formControlName="identificacion"/>
+                                            <div *ngIf="submitted && f.identificacion.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.identificacion.errors.required">Identificación requerida
+                                                </div>
+                                                <div *ngIf="f.identificacion.errors.pattern">Solo se aceptan números
+                                                </div>
+                                                <div *ngIf="f.identificacion.errors.minlength || f.identificacion.errors.maxlength">
+                                                    Solo se aceptan 10 digitos
+                                                </div>
+                                                <div *ngIf="f.identificacion.errors.identificacionInvalid">
+                                                    Identificación no válida
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-uname">Teléfono:</label>
+                                            <input type="text" id="basic-icon-default-uname"
+                                                   class="form-control dt-uname" name="telefono"
+                                                   formControlName="telefono"/>
+                                            <div *ngIf="submitted && f.telefono.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.telefono.errors.required">Teléfono requerido
+                                                </div>
+                                                <div *ngIf="f.telefono.errors.pattern">Solo se aceptan números
+                                                </div>
+                                                <div *ngIf="f.telefono.errors.minlength || f.telefono.errors.maxlength">
+                                                    Solo se aceptan 10 digitos
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-email">Tipo de
+                                                cliente:</label>
+                                            <select class="select2 form-control" name="tipoCliente"
+                                                    formControlName="tipoCliente">
+                                                <option value="" selected>- Tipo de cliente -</option>
+                                                <option value="{{tipoCli.valor}}"
+                                                        *ngFor="let tipoCli of tipoClienteOpciones">
+                                                    {{tipoCli.nombre}}
+                                                </option>
+                                            </select>
+                                            <div *ngIf="submitted && f.tipoCliente.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.tipoCliente.errors.required">Tipo de cliente requerido
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-email">Número de
+                                                WhatsApp:</label>
+                                            <input type="text" id="basic-icon-default-email"
+                                                   class="form-control dt-email" name="whatsapp"
+                                                   formControlName="whatsapp"/>
+                                            <div *ngIf="submitted && f.whatsapp.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.whatsapp.errors.required">Teléfono requerido
+                                                </div>
+                                                <div *ngIf="f.whatsapp.errors.pattern">Solo se aceptan números
+                                                </div>
+                                                <div *ngIf="f.whatsapp.errors.minlength || f.whatsapp.errors.maxlength">
+                                                    Solo se aceptan 10 digitos
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-email">Dirección
+                                                Facebook:</label>
+                                            <input type="text" id="basic-icon-default-email"
+                                                   class="form-control dt-email" name="facebook"
+                                                   formControlName="facebook"/>
+                                            <div *ngIf="submitted && f.facebook.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.facebook.errors.required">Facebook requerido
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-email">Dirección
+                                                Twitter:</label>
+                                            <input type="text" id="basic-icon-default-email"
+                                                   class="form-control dt-email" name="twitter"
+                                                   formControlName="twitter"/>
+                                            <div *ngIf="submitted && f.twitter.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.twitter.errors.required">Twitter requerido
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-email">Dirección
+                                                Instagram:</label>
+                                            <input type="text" id="basic-icon-default-email"
+                                                   class="form-control dt-email" name="instagram"
+                                                   formControlName="instagram"/>
+                                            <div *ngIf="submitted && f.instagram.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.instagram.errors.required">Instagram requerido
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-email">Correo 1:</label>
+                                            <input type="text" id="basic-icon-default-email"
+                                                   class="form-control dt-email" name="correo1"
+                                                   formControlName="correo1"/>
+                                            <div *ngIf="submitted && f.correo1.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.correo1.errors.required">Correo1 requerido
+                                                </div>
+                                                <div *ngIf="f.correo1.errors.email">Correo1 no cumple el formato
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-email">Correo 2:</label>
+                                            <input type="text" id="basic-icon-default-email"
+                                                   class="form-control dt-email" name="correo2"
+                                                   formControlName="correo2"/>
+                                            <div *ngIf="submitted && f.correo2.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.correo2.errors.required">Correo2 requerido
+                                                </div>
+                                                <div *ngIf="f.correo2.errors.email">Correo2 no cumple el formato
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="pais">País</label>
+                                            <select class="form-control select2" id="pais" formControlName="pais"
+                                                    (change)="obtenerProvincias()">
+                                                <option value="" selected>- Seleccionar -</option>
+                                                <option value="{{paisesOp.valor}}"
+                                                        *ngFor="let paisesOp of paisOpciones">
+                                                    {{paisesOp.nombre}}
+                                                </option>
+                                            </select>
+                                            <div *ngIf="submitted && f.pais.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.pais.errors.required">Pais es requerido</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="provincia">Provincia</label>
+                                            <select class="form-control select2" id="provincia"
+                                                    formControlName="provincia"
+                                                    (change)="obtenerCiudad()">
+                                                <option value="" selected>- Seleccionar -</option>
+                                                <option value="{{provinciasOP.valor}}"
+                                                        *ngFor="let provinciasOP of provinciaOpciones">
+                                                    {{provinciasOP.nombre}}
+                                                </option>
+                                            </select>
+                                            <div *ngIf="submitted && f.provincia.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.provincia.errors.required">Provincia es requerida</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="ciudad">Ciudad</label>
+                                            <select class="form-control select2" id="ciudad" formControlName="ciudad">
+                                                <option value="" selected>- Seleccionar -</option>
+                                                <option value="{{ciudadesOp.valor}}"
+                                                        *ngFor="let ciudadesOp of ciudadOpciones">
+                                                    {{ciudadesOp.nombre}}
+                                                </option>
+                                            </select>
+                                            <div *ngIf="submitted && f.ciudad.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.ciudad.errors.required">Ciudad es requerida</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="basic-icon-default-email">Canal:</label>
+                                            <select class="select2 form-control form-control-sm" name="canal"
+                                                    formControlName="canal">
+                                                <option value="" selected>- Canal -</option>
+                                                <option value="{{canalOp.valor}}" *ngFor="let canalOp of canalOpciones">
+                                                    {{canalOp.nombre}}
+                                                </option>
+                                            </select>
+                                            <div *ngIf="submitted && f.canal.errors" class="invalid-feedback"
+                                                 style="display: block;">
+                                                <div *ngIf="f.canal.errors.required">Canal requerido
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <button class="btn btn-primary mr-1" data-toggle="modal" aria-label="Close"
+                                                (click)="crearProspecto()">
+                                            <span *ngIf="cargando" class="spinner-border spinner-border-sm"></span>Guardar
+                                        </button>
+                                        <button #dismissModal data-toggle="modal" data-target="#exito"
+                                                data-dismiss="modal" style="display: none;"></button>
+
+                                        <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">
+                                            Cancelar
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal to add new user Ends-->
+
                 </div>
             </div>
         </section>
     </div>
 </div>
 
-<ng-template #errorAuth let-modal>
-    <div class="modal-header ">
-        <h4 class="modal-title ">Error</h4>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click')">
-            <span aria-hidden="true ">&times;</span>
+<ng-template #mensajeModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+            <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body ">
-        <p>No puede iniciar sesión con las credenciales proporcionadas.</p>
+    <div class="modal-body">
+        <div [innerHTML]="mensaje"></div>
     </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-light " (click)="modal.dismiss( 'Cross click')">Cerrar</button>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="cerrarModal()">Cerrar</button>
     </div>
 </ng-template>
