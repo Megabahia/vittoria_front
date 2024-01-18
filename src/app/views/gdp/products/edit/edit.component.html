@@ -1,0 +1,184 @@
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="header-navbar-shadow"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+        </div>
+        <div class="content-body">
+            <div class="card">
+                <h5 class="card-header">Crear producto</h5>
+                <div class="card-body">
+                    <form class="auth-login-form mt-2" [formGroup]="productoForm">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Titulo</label>
+                                    <input type="text" class="form-control" name="titulo"
+                                           formControlName="titulo">
+                                    <div *ngIf="submittedProductoForm && fp.titulo.errors"
+                                         class="invalid-feedback" style="display: block;">
+                                        <div *ngIf="fp.titulo.errors.required">Titulo es requerido
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Precio</label>
+                                    <input class="form-control invoice-edit-input date-picker" type="number"
+                                           formControlName="precio">
+                                    <div *ngIf="submittedProductoForm && fp.precio.errors"
+                                         class="invalid-feedback" style="display: block;">
+                                        <div *ngIf="fp.precio.errors.required">Precio es
+                                            requerido
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Descripción</label>
+                                    <textarea class="form-control" name="descripcion" formControlName="descripcion">
+                                    </textarea>
+                                    <div *ngIf="submittedProductoForm && fp.descripcion.errors" class="invalid-feedback"
+                                         style="display: block;">
+                                        <div *ngIf="fp.descripcion.errors.required">Descripción es requerido</div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Caracteristicas</label>
+                                    <textarea class="form-control" formControlName="caracteristicas">
+                                    </textarea>
+                                    <div *ngIf="submittedProductoForm && fp.caracteristicas.errors"
+                                         class="invalid-feedback"
+                                         style="display: block;">
+                                        <div *ngIf="fp.caracteristicas.errors.required">Caracteristicas es requerido
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Subtitulo</label>
+                                    <input type="text" class="form-control" formControlName="subtitulo">
+                                    <div *ngIf="submittedProductoForm && fp.subtitulo.errors" class="invalid-feedback"
+                                         style="display: block;">
+                                        <div *ngIf="fp.subtitulo.errors.required">Subtitulo es requerido
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Video</label>
+                                    <input type="file" accept="video/mp4,video/x-m4v,video/*" class="form-control"
+                                           #video
+                                           formControlName="video">
+                                    <div *ngIf="submittedProductoForm && fp.video.errors" class="invalid-feedback"
+                                         style="display: block;">
+                                        <div *ngIf="fp.video.errors.required">Video es requerido
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Estado</label>
+                                    <select class="form-control" formControlName="estado">
+                                        <option value="">- Seleccione -</option>
+                                        <option value="Activo">Activo</option>
+                                        <option value="Inactivo">Inactivo</option>
+                                    </select>
+                                    <div *ngIf="submittedProductoForm && fp.estado.errors" class="invalid-feedback"
+                                         style="display: block;">
+                                        <div *ngIf="fp.estado.errors.required">Estado es requerido
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-4">
+                                <p class="card-text">
+                                    Imágenes del producto
+                                </p>
+
+                                <div class="dropzone" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
+
+                                    <ngx-dropzone-label>
+                                        <div class="dz-message">
+                                            <h2>Cargar imágenes</h2>
+                                        </div>
+                                    </ngx-dropzone-label>
+                                    <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview"
+                                                                *ngFor="let f of archivos" [file]="f" [removable]="true"
+                                                                (removed)="onRemove(f)">
+                                        <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+                                    </ngx-dropzone-image-preview>
+                                </div>
+                                <button id="clear-dropzone" class="btn btn-secondary btn-sm mt-1" (click)="removeAll()">
+                                    <i-feather name="trash" class="edit-user"></i-feather>
+                                    <span class="align-middle">Limpiar imágenes</span>
+                                </button>
+                                <div *ngFor="let img of imagenes" class="div-imagenes-productos">
+                                    <a (click)="eliminarImagenModal(img.id)">
+                                        <img class="eliminar-imagen" width="100%" height="200px" [src]="img.archivo">
+                                        <img class="fondo-eliminar-imagen" width="100%" height="200px"
+                                             src="/assets/images/borrar_imagen.png">
+                                    </a>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-12">
+                                <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarProducto()">
+                                    Guardar
+                                </button>
+                                <button class="btn btn-secondary mr-1" aria-label="Close" (click)="cambiarVista()">
+                                    Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #contenido let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p>Confirma eliminar</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="cerrarModal()">SI</button>
+    </div>
+</ng-template>
+<ng-template #eliminarImagenMdl let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p>Confirma eliminar</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="eliminarImagen()">SI</button>
+    </div>
+</ng-template>
+<ng-template #aviso let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div [innerHTML]="mensaje"></div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="cerrarModalMensaje()">Cerrar</button>
+    </div>
+</ng-template>
