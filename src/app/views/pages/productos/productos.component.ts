@@ -17,8 +17,12 @@ export class ProductosComponent implements OnInit {
     private modalService: NgbModal,
     private productoService: ProductosService,
   ) {
-    document.getElementById('navbar').style.display = 'none';
-    document.getElementById('toolbar').style.display = 'none';
+    const navbar = document.getElementById('navbar');
+    const toolbar = document.getElementById('toolbar');
+    if (navbar && toolbar) {
+      navbar.style.display = 'none';
+      toolbar.style.display = 'none';
+    }
   }
 
   ngOnInit(): void {
