@@ -99,18 +99,22 @@
                                         <label class="custom-control-label" for="customCheck2"></label>
                                     </div>
                                 </th>
+                                <th>FECHA DE CREACIÓN</th>
                                 <th>Cliente</th>
                                 <th>Correo</th>
                                 <th>Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr *ngFor="let cliente of clientes">
+                            <tr *ngFor="let cliente of clientes; let i = index">
                                 <td>
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck2"/>
-                                        <label class="custom-control-label" for="customCheck2"></label>
+                                        <input type="checkbox" class="custom-control-input" id="customCheck2{{i}}"/>
+                                        <label class="custom-control-label" for="customCheck2{{i}}"></label>
                                     </div>
+                                </td>
+                                <td>
+                                    {{cliente.created_at | date: 'yyyy-MM-dd'}}
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-left align-items-center">

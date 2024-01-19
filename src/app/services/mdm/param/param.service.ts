@@ -88,4 +88,8 @@ export class ParamService {
     return this.http.get<any>(
       `${environment.apiUrl}/adm/param/exportar/`, httpOptions);
   }
+
+  actualizarArchivo(id, data): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/mdm/param/update/${id}`, data);
+  }
 }
