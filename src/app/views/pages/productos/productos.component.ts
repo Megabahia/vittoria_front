@@ -25,7 +25,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
   paisOpciones;
   provinciaOpciones;
   ciudadOpciones;
-  vendedorOpciones;
+  public tipoIdentificacion = [];
   confirmProspectoOpciones;
   tipoPrecioOpciones;
   tipoClienteOpciones;
@@ -58,6 +58,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     this.pospectoForm = this._formBuilder.group({
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
+      tipoIdentificacion: ['', [Validators.required]],
       identificacion: ['', [
         Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10),
         Validators.maxLength(10), ValidacionesPropias.cedulaValido
@@ -86,6 +87,9 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     this.obtenerPaisOpciones();
     this.paramService.obtenerListaPadres('PAGINA_PRODUCTOS_URL').subscribe((info) => {
       this.tituloPaginaProductos = info[0];
+    });
+    this.paramService.obtenerListaPadres('TIPO_IDENTIFICACION').subscribe((info) => {
+      this.tipoIdentificacion = info;
     });
   }
 
@@ -179,4 +183,25 @@ export class ProductosComponent implements OnInit, AfterViewInit {
   cerrarModal(): void {
     this.modalService.dismissAll();
   }
+
+  obtenerTipoIdentificacion(): void {
+    if (this.pospectoForm.value.tipoIdentificacion === 'Ruc') {
+      this.pospectoForm.get('identificacion').setValidators(
+        [Validators.required, ValidacionesPropias.rucValido]
+      );
+    } else {
+      this.pospectoForm.get('identificacion').setValidators(
+        [Validators.required, ValidacionesPropias.cedulaValido]
+      );
+    }
+    this.pospectoForm.get('identificacion').updateValueAndValidity();
+  }
+
+  modalOpenSM(modalSM): void {
+    this.modalService.open(modalSM, {
+      centered: true,
+      size: 'xl' // size: 'xs' | 'sm' | 'lg' | 'xl'
+    });
+  }
+
 }
