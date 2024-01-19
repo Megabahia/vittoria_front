@@ -43,9 +43,11 @@ export class EditComponent implements OnInit {
 
   ngOnInit(): void {
     this.productoForm = this._formBuilder.group({
-      titulo: ['', [Validators.required]],
-      subtitulo: ['', [Validators.required]],
+      titulo: ['', [Validators.required, Validators.maxLength(150)]],
+      subtitulo: ['', [Validators.required, Validators.maxLength(150)]],
       precio: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      codigo: ['', [Validators.required]],
+      stock: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       precioOferta: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       video: ['', []],
       descripcion: ['', [Validators.required]],

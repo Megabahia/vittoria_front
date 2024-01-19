@@ -12,12 +12,36 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
+                                    <label>Código producto</label>
+                                    <input type="text" class="form-control" name="codigo"
+                                           formControlName="codigo">
+                                    <div *ngIf="submittedProductoForm && fp.codigo.errors"
+                                         class="invalid-feedback" style="display: block;">
+                                        <div *ngIf="fp.codigo.errors.required">Código producto es requerido
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Stock</label>
+                                    <input type="number" class="form-control" name="stock"
+                                           formControlName="stock">
+                                    <div *ngIf="submittedProductoForm && fp.stock.errors"
+                                         class="invalid-feedback" style="display: block;">
+                                        <div *ngIf="fp.stock.errors.required">Stock es requerido
+                                        </div>
+                                        <div *ngIf="fp.stock.errors.pattern">Ingrese solo numeros
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label>Titulo</label>
                                     <input type="text" class="form-control" name="titulo"
                                            formControlName="titulo">
                                     <div *ngIf="submittedProductoForm && fp.titulo.errors"
                                          class="invalid-feedback" style="display: block;">
                                         <div *ngIf="fp.titulo.errors.required">Titulo es requerido
+                                        </div>
+                                        <div *ngIf="fp.titulo.errors.maxlength">Supera 150 caracteres
                                         </div>
                                     </div>
                                 </div>
@@ -73,6 +97,8 @@
                                     <div *ngIf="submittedProductoForm && fp.subtitulo.errors" class="invalid-feedback"
                                          style="display: block;">
                                         <div *ngIf="fp.subtitulo.errors.required">Subtitulo es requerido
+                                        </div>
+                                        <div *ngIf="fp.subtitulo.errors.maxlength">Supera 150 caracteres
                                         </div>
                                     </div>
                                 </div>

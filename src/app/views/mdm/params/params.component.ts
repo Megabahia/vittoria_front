@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgbModal, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
-import { ParamService } from 'src/app/services/mdm/param/param.service';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
+import {ParamService} from 'src/app/services/mdm/param/param.service';
+import {Validators, FormBuilder, FormGroup} from '@angular/forms';
 import {AuthService} from '../../../services/admin/auth.service';
 
 @Component({
@@ -14,7 +14,7 @@ export class ParamsComponent implements OnInit {
   @ViewChild('mensajeModal') mensajeModal;
 
   cargando = false;
-  mensaje = "";
+  mensaje = '';
   paramForm: FormGroup;
   submitted;
   menu;
@@ -24,20 +24,22 @@ export class ParamsComponent implements OnInit {
   maxSize;
   collectionSize;
   parametros;
-  tiposOpciones: string = "";
+  tiposOpciones: string = '';
   tipos;
   nombreBuscar;
   nombre;
-  nombreTipo = "";
+  nombreTipo = '';
   descripcion;
   funcion;
   idParametro;
-  tipoPadre = "";
+  tipoPadre = '';
   idPadre = 0;
   tipoVariable;
   valor;
   padres;
   currentUserValue;
+  archivo: FormData = new FormData();
+
   // @ViewChild('padres') padres;
   constructor(
     private paramService: ParamService,
@@ -47,9 +49,11 @@ export class ParamsComponent implements OnInit {
   ) {
     this.currentUserValue = this.authService.currentUserValue;
   }
+
   get f() {
     return this.paramForm.controls;
   }
+
   ngOnInit(): void {
     this.paramForm = this._formBuilder.group({
       nombre: ['', [Validators.required]],
@@ -59,14 +63,16 @@ export class ParamsComponent implements OnInit {
       valor: ['', [Validators.required]]
     });
     this.menu = {
-      modulo: "mdm",
-      seccion: "param"
+      modulo: 'mdm',
+      seccion: 'param'
     };
   }
+
   async ngAfterViewInit() {
     this.iniciarPaginador();
     this.obtenerListaParametros();
   }
+
   async iniciarPaginador() {
     await this.paramService.obtenerListaTipos().subscribe((result) => {
       this.tipos = result;
@@ -76,6 +82,7 @@ export class ParamsComponent implements OnInit {
     });
 
   }
+
   async obtenerListaParametros() {
     await this.paramService.obtenerListaParametros(this.page - 1, this.pageSize, this.tiposOpciones, this.nombreBuscar).subscribe((result) => {
       this.parametros = result.info;
@@ -83,6 +90,7 @@ export class ParamsComponent implements OnInit {
     });
 
   }
+
   async editarParametro(id) {
 
     this.idParametro = id;
@@ -98,7 +106,7 @@ export class ParamsComponent implements OnInit {
         });
         this.idPadre = result.idPadre;
       } else {
-        this.tipoPadre = "";
+        this.tipoPadre = '';
         this.idPadre = 0;
 
       }
@@ -109,18 +117,20 @@ export class ParamsComponent implements OnInit {
       this.valor = result.valor;
     });
   }
+
   insertarParametro() {
-    this.nombre = "";
-    this.nombreTipo = "";
-    this.descripcion = "";
-    this.tipoPadre = "";
-    this.tipoVariable = "";
-    this.valor = "";
+    this.nombre = '';
+    this.nombreTipo = '';
+    this.descripcion = '';
+    this.tipoPadre = '';
+    this.tipoVariable = '';
+    this.valor = '';
     this.idPadre = 0;
     this.submitted = false;
 
     this.funcion = 'insertar';
   }
+
   async gestionarParametro() {
 
     this.submitted = true;
@@ -128,7 +138,7 @@ export class ParamsComponent implements OnInit {
       return;
     }
     this.cargando = true;
-    if (this.funcion == "insertar") {
+    if (this.funcion === 'insertar') {
       await this.paramService.insertarParametro(
         this.nombre,
         this.nombreTipo,
@@ -137,24 +147,25 @@ export class ParamsComponent implements OnInit {
         this.valor,
         this.idPadre
       ).subscribe((result) => {
-        this.obtenerListaParametros();
-        this.dismissModal.nativeElement.click();
-        this.submitted = false;
-        this.cargando = false;
-        this.mensaje = "Parámetro guardado";
-        this.abrirModalMensaje(this.mensajeModal);
-
-      },
+          this.obtenerListaParametros();
+          this.dismissModal.nativeElement.click();
+          this.submitted = false;
+          this.cargando = false;
+          this.mensaje = 'Parámetro guardado';
+          this.abrirModalMensaje(this.mensajeModal);
+          this.idParametro = result.id;
+          this.actualizarArchivoParametro();
+        },
         (error) => {
           let errores = Object.values(error);
           let llaves = Object.keys(error);
-          this.mensaje = "";
+          this.mensaje = '';
           errores.map((infoErrores, index) => {
-            this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+            this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
           });
           this.abrirModalMensaje(this.mensajeModal);
         });
-    } else if (this.funcion = 'editar') {
+    } else if (this.funcion === 'editar') {
       await this.paramService.editarParametro(
         this.idParametro,
         this.nombre,
@@ -167,40 +178,46 @@ export class ParamsComponent implements OnInit {
           this.dismissModal.nativeElement.click();
           this.submitted = false;
           this.cargando = false;
-          this.mensaje = "Parámetro guardado";
+          this.mensaje = 'Parámetro guardado';
           this.abrirModalMensaje(this.mensajeModal);
+          this.idParametro = result.id;
+          this.actualizarArchivoParametro();
         },
-          (error) => {
-            let errores = Object.values(error);
-            let llaves = Object.keys(error);
-            this.mensaje = "";
-            errores.map((infoErrores, index) => {
-              this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
-            });
-            this.abrirModalMensaje(this.mensajeModal);
+        (error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = '';
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
           });
+          this.abrirModalMensaje(this.mensajeModal);
+        });
     }
   }
 
   abrirModal(modal, id) {
     this.idParametro = id;
-    this.modalService.open(modal)
+    this.modalService.open(modal);
   }
+
   async cerrarModal() {
     this.modalService.dismissAll();
     await this.paramService.eliminarParametro(this.idParametro).subscribe((result) => {
       this.obtenerListaParametros();
     });
   }
+
   async buscarPadre() {
     await this.paramService.obtenerListaPadres(this.tipoPadre).subscribe((result) => {
       this.padres = result;
     });
   }
-  abrirModalMensaje(modal) {
-    this.modalService.open(modal)
+
+  abrirModalMensaje(modal): void {
+    this.modalService.open(modal);
   }
-  cerrarModalMensaje() {
+
+  cerrarModalMensaje(): void {
     this.modalService.dismissAll();
   }
 
@@ -212,5 +229,16 @@ export class ParamsComponent implements OnInit {
       link.download = 'parametrizaciones.xls';
       link.click();
     });
+  }
+
+  actualizarArchivoParametro(): void {
+    this.archivo.append('id', this.idParametro);
+    this.paramService.actualizarArchivo(this.idParametro, this.archivo).subscribe((info) => {
+    });
+  }
+
+  subirArchivo(event): void {
+    this.archivo = new FormData();
+    this.archivo.append('archivo', event.target.files[0]);
   }
 }

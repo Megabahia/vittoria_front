@@ -6,6 +6,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ParamService} from '../../../services/mdm/param/param.service';
 import {ValidacionesPropias} from '../../../utils/customer.validators';
 import {ProspectosService} from '../../../services/mdm/prospectosCli/prospectos.service';
+import {Toaster} from 'ngx-toast-notifications';
 
 @Component({
   selector: 'app-productos',
@@ -30,8 +31,12 @@ export class ProductosComponent implements OnInit, AfterViewInit {
   tipoPrecioOpciones;
   tipoClienteOpciones;
   public tituloPaginaProductos;
+  public subTituloPaginaProductos;
+  public mensajeModalPedido;
+  public imagenServientrega;
 
   constructor(
+    private toaster: Toaster,
     private rutaActiva: ActivatedRoute,
     private modalService: NgbModal,
     private _formBuilder: FormBuilder,
@@ -56,6 +61,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       this.producto = info;
     });
     this.pospectoForm = this._formBuilder.group({
+      cantidad: [1, [Validators.required, Validators.min(1)]],
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
       tipoIdentificacion: ['', [Validators.required]],
@@ -72,7 +78,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       numeroCasa: ['', [Validators.required]],
       calleSecundaria: ['', [Validators.required]],
       referencia: ['', [Validators.required]],
-      comentarios: ['', [Validators.required]],
+      comentarios: ['', []],
       nombreProducto: ['', [Validators.required]],
       precio: ['', [Validators.required, Validators.pattern(this.numRegex)]],
     });
@@ -85,8 +91,19 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     this.obtenerTiposPrecio();
     this.obtenerTiposCliente();
     this.obtenerPaisOpciones();
-    this.paramService.obtenerListaPadres('PAGINA_PRODUCTOS_URL').subscribe((info) => {
-      this.tituloPaginaProductos = info[0];
+    this.paramService.obtenerListaPadres('PAGINA_PRODUCTOS_URL').subscribe((info: []) => {
+      this.tituloPaginaProductos = info.find((item: any) => {
+        return item.nombre === 'TITULO_PAGINA_PRODUCTOS';
+      });
+      this.subTituloPaginaProductos = info.find((item: any) => {
+        return item.nombre === 'SUBTITULO_PAGINA_PRODUCTOS';
+      });
+      this.mensajeModalPedido = info.find((item: any) => {
+        return item.nombre === 'MENSAJE_MODAL_COMPLETADO';
+      });
+    });
+    this.paramService.obtenerListaPadres('SERVIENTREGA_PARAMETROS').subscribe((info) => {
+      this.imagenServientrega = info[0];
     });
     this.paramService.obtenerListaPadres('TIPO_IDENTIFICACION').subscribe((info) => {
       this.tipoIdentificacion = info;
@@ -151,26 +168,22 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     this.pospectoForm.get('precio').setValue(this.producto.precio);
     this.submitted = true;
     if (this.pospectoForm.invalid) {
+      this.toaster.open('Llenar campos', {type: 'warning'});
       console.log('form', this.pospectoForm);
       return;
     }
     this.cargando = true;
     this.prospectosService.crearProspectos(this.pospectoForm.value).subscribe(() => {
-        this.dismissModal.nativeElement.click();
         this.submitted = false;
         this.cargando = false;
-        this.mensaje = 'Prospecto creado exitosamente';
-        this.abrirModal(this.mensajeModal);
-        this.pospectoForm.reset();
+        this.cerrarModal();
       },
       (error) => {
         const errores = Object.values(error);
         const llaves = Object.keys(error);
-        this.mensaje = '';
         errores.map((infoErrores, index) => {
-          this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
+          this.toaster.open(llaves[index] + ': ' + infoErrores, {type: 'danger'});
         });
-        this.abrirModal(this.mensajeModal);
         this.cargando = false;
       }
     );
@@ -204,4 +217,11 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     });
   }
 
+  escogerCantidad(operacion): void {
+    const cantidadControl = this.pospectoForm.get('cantidad');
+    let cantidad = +cantidadControl.value;
+    cantidad = operacion === 'sumar' ? Math.min(cantidad + 1, this.producto.stock) : Math.max(cantidad - 1, 0);
+    cantidadControl.setValue(cantidad);
+    this.pospectoForm.updateValueAndValidity();
+  }
 }
