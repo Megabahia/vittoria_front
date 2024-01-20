@@ -4,8 +4,8 @@
         <section class="app-ecommerce-details" >
             <div class="d-flex justify-content-center">
                 <a href="javascript:void(0);" class="brand-logo">
-                    <img src="../../../../assets/images/logo.svg" width="100">
                     <img src="../../../../assets/images/super_barato.jpeg" width="75">
+                    <img src="../../../../assets/images/logo.svg" width="100">
                 </a>
             </div>
             <div class="card" >
@@ -29,6 +29,37 @@
                       <p>Su navegador no soporta vídeos HTML5.</p>
                     </video>
                 </div>
+                <div class="d-flex justify-content-center">
+                  <h4>{{producto.subtitulo}}</h4>
+                </div>
+                <div class="d-flex justify-content-center">
+                  <div class="ecommerce-details-price d-flex flex-wrap mt-1">
+                    <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
+                      Precio Normal: $ {{producto.precio}}</h5>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                  <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h2 class="item-price mr-1 text-danger">
+                    Precio Oferta: $ {{producto.precioOferta}}</h2>
+                  </div>
+                </div>
+                <div class="col-12 d-flex justify-content-center my-1">
+                <div class="d-flex flex-column flex-sm-row pt-1"><!---->
+                  <button
+                    (click)="modalOpenSM(modalSM)"
+                    rippleeffect=""
+                    class="btn btn-primary btn-cart mr-0 mr-sm-1 mb-1 mb-sm-0 waves-effect waves-float waves-light ng-star-inserted"
+                    href="/vuexy-angular-admin-template/demo-1/apps/e-commerce/checkout">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round" class="feather feather-shopping-cart mr-25">
+                      <circle cx="9" cy="21" r="1"></circle>
+                      <circle cx="20" cy="21" r="1"></circle>
+                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="add-to-cart">Pedir ahora</span></button><!---->
+                </div>
+              </div>
                 <div class="card-body">
                     <div class="row my-2">
                         <div class="col-12 col-md-5 d-flex flex-column align-items-center justify-content-center mb-2 mb-md-0">
@@ -60,20 +91,6 @@
                             <div>{{producto.codigo}}</div>
                         </div>
                         <div class="col-12 col-md-7">
-                            <div class="d-flex justify-content-center">
-                                <h4>{{producto.subtitulo}}</h4>
-                            </div>
-                            <div class="d-flex justify-content-center">
-                                <div class="ecommerce-details-price d-flex flex-wrap mt-1">
-                                    <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
-                                        Precio Normal: $ {{producto.precio}}</h5>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-center">
-                                <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h2 class="item-price mr-1 text-danger">
-                                    Precio Oferta: $ {{producto.precioOferta}}</h2>
-                                </div>
-                            </div>
                             <p class="card-text">
                                 {{producto.descripcion}}
                             </p>
@@ -89,23 +106,6 @@
                     </div>
 
                     <div class="row my-2">
-                        <div class="col-12 d-flex justify-content-center my-1">
-                            <div class="d-flex flex-column flex-sm-row pt-1"><!---->
-                                <button
-                                        (click)="modalOpenSM(modalSM)"
-                                        rippleeffect=""
-                                        class="btn btn-primary btn-cart mr-0 mr-sm-1 mb-1 mb-sm-0 waves-effect waves-float waves-light ng-star-inserted"
-                                        href="/vuexy-angular-admin-template/demo-1/apps/e-commerce/checkout">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                         stroke-linejoin="round" class="feather feather-shopping-cart mr-25">
-                                        <circle cx="9" cy="21" r="1"></circle>
-                                        <circle cx="20" cy="21" r="1"></circle>
-                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                                    </svg>
-                                    <span class="add-to-cart">Pedir ahora</span></button><!---->
-                            </div>
-                        </div>
                         <div class="col-12 d-flex justify-content-center">
                             <h2 style="color: red">{{tituloPaginaProductos?.valor}}</h2>
                         </div>
@@ -165,32 +165,63 @@
     <div class="modal-body" tabindex="0" ngbAutofocus>
         <form class="auth-login-form mt-2" [formGroup]="pospectoForm">
             <div class="d-flex justify-content-center">
-                <!-- ngb-carousel component -->
-                <ngb-carousel [interval]="2000" [pauseOnHover]="false"
-                              *ngIf="producto.imagenes">
-                    <ng-template ngbSlide *ngFor="let producto of producto.imagenes">
-                        <div class="carousel-img-wrapper">
-                            <img [src]="producto.archivo" alt="Random first slide"
-                                 width="300" height="300"
-                            />
-                        </div>
-                        <div class="carousel-caption"></div>
-                    </ng-template>
-                </ngb-carousel>
-                <!-- ngb-carousel component -->
+              <video [src]="producto.video.archivo" width="600"
+                     height="400" controls>
+                <p>Su navegador no soporta vídeos HTML5.</p>
+              </video>
             </div>
             <div class="d-flex justify-content-center">
                 <label class="form-label">{{producto.titulo}}</label>
             </div>
             <div class="d-flex justify-content-center">
-                <div class="ecommerce-details-price d-flex flex-wrap mt-1">
                   <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
                     Precio Normal: $ {{producto.precio}}</h5>
-                </div>
-                <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h2 class="item-price mr-1 text-danger">
-                  Precio Oferta: $ {{producto.precioOferta}}</h2>
-                </div>
             </div>
+                <div class="d-flex justify-content-center">
+                  <h2 class="item-price mr-1 text-danger">
+                    Precio Oferta: $ {{producto.precioOferta}}</h2>
+                </div>
+              <div class="d-flex justify-content-center">
+                <div class="form-group">
+                  <div class="item-quantity"><span class="quantity-title">Cantidad:</span>
+                    <div class="quantity-counter-wrapper">
+                      <core-touchspin>
+                        <div class="btn-group touchspin-wrapper">
+                          <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-down"
+                                  (click)="escogerCantidad('restar')"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-minus">
+                              <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg><!----><!----></button>
+                          <input type="number" pattern="\d*" maxlength="4"
+                                 class="form-control ng-untouched ng-pristine ng-valid" step="1" min="1" max="10"
+                                 disabled
+                                 formControlName="cantidad"
+                          >
+                          <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-up"
+                                  (click)="escogerCantidad('sumar')"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-plus">
+                              <line x1="12" y1="5" x2="12" y2="19"></line>
+                              <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg><!----><!----></button>
+                        </div>
+                      </core-touchspin>
+                    </div>
+                  </div>
+                  <div *ngIf="submitted && f.cantidad.errors" class="invalid-feedback"
+                       style="display: block;">
+                    <div *ngIf="f.cantidad.errors.required">Cantidad requeridos
+                    </div>
+                    <div *ngIf="f.cantidad.errors.min">Cantidad minima 1
+                    </div>
+                  </div>
+                </div>
+              </div>
             <div class="d-flex justify-content-center">
                 <h1 style="color: red">{{tituloPaginaProductos?.valor}}</h1>
             </div>
@@ -199,45 +230,6 @@
             </div>
             <div class="d-flex justify-content-center">
                 <img [src]="imagenServientrega.archivo" [alt]="imagenServientrega.valor" width="100">
-            </div>
-            <div class="form-group">
-                <div class="item-quantity"><span class="quantity-title">Cantidad:</span>
-                    <div class="quantity-counter-wrapper">
-                        <core-touchspin>
-                            <div class="btn-group touchspin-wrapper">
-                                <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-down"
-                                        (click)="escogerCantidad('restar')"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                         stroke-linejoin="round" class="feather feather-minus">
-                                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    </svg><!----><!----></button>
-                                <input type="number" pattern="\d*" maxlength="4"
-                                       class="form-control ng-untouched ng-pristine ng-valid" step="1" min="1" max="10"
-                                       disabled
-                                       formControlName="cantidad"
-                                >
-                                <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-up"
-                                        (click)="escogerCantidad('sumar')"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                         stroke-linejoin="round" class="feather feather-plus">
-                                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    </svg><!----><!----></button>
-                            </div>
-                        </core-touchspin>
-                    </div>
-                </div>
-                <div *ngIf="submitted && f.cantidad.errors" class="invalid-feedback"
-                     style="display: block;">
-                    <div *ngIf="f.cantidad.errors.required">Cantidad requeridos
-                    </div>
-                    <div *ngIf="f.cantidad.errors.min">Cantidad minima 1
-                    </div>
-                </div>
             </div>
             <div class="form-group">
                 <label class="form-label" for="basic-icon-default-fullname">Nombres:</label>
