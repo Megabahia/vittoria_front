@@ -80,6 +80,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       referencia: ['', [Validators.required]],
       comentarios: ['', []],
       nombreProducto: ['', [Validators.required]],
+      codigoProducto: ['', [Validators.required]],
       precio: ['', [Validators.required, Validators.pattern(this.numRegex)]],
     });
   }
@@ -165,7 +166,8 @@ export class ProductosComponent implements OnInit, AfterViewInit {
 
   crearProspecto(): void {
     this.pospectoForm.get('nombreProducto').setValue(this.producto.titulo);
-    this.pospectoForm.get('precio').setValue(this.producto.precio);
+    this.pospectoForm.get('precio').setValue(this.producto.precio * (+this.pospectoForm.get('cantidad').value));
+    this.pospectoForm.get('codigoProducto').setValue(this.producto.codigo);
     this.submitted = true;
     if (this.pospectoForm.invalid) {
       this.toaster.open('Llenar campos', {type: 'warning'});
@@ -173,10 +175,12 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       return;
     }
     this.cargando = true;
-    this.prospectosService.crearProspectos(this.pospectoForm.value).subscribe(() => {
+    this.prospectosService.crearProspectos(this.pospectoForm.value).subscribe((pedido) => {
         this.submitted = false;
         this.cargando = false;
         this.cerrarModal();
+        this.mensaje = `Su pedido ${pedido.id} ha sido recibido. Nuestro asesor se pondrá en contacto con usted a través del número de WhatsApp.`;
+        this.modalService.open(this.mensajeModal, {backdrop : 'static', keyboard : false});
       },
       (error) => {
         const errores = Object.values(error);
