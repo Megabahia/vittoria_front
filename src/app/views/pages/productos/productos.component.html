@@ -1,10 +1,11 @@
-<div class="app-content" *ngIf="producto" xmlns="http://www.w3.org/1999/html">
+<div class="app-content " *ngIf="producto">
 
     <div class="content-body">
         <section class="app-ecommerce-details">
             <div class="d-flex justify-content-center">
                 <a href="javascript:void(0);" class="brand-logo">
-                    <img src="../../../../assets/images/logo.svg" width="160">
+                    <img src="../../../../assets/images/logo.svg" width="100">
+                    <img src="../../../../assets/images/super_barato.jpeg" width="75">
                 </a>
             </div>
             <div class="card">
@@ -17,10 +18,16 @@
                     <h2 style="color: red">{{tituloPaginaProductos?.valor}}</h2>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <h2 style="color: #1CE7FF">{{subTituloPaginaProductos?.valor}}</h2>
+                    <h2 style="color: #2d2c55">{{subTituloPaginaProductos?.valor}}</h2>
                 </div>
-                <div class="d-flex justify-content-center">
+                <div class="d-flex justify-content-center" *ngIf="imagenServientrega">
                     <img [src]="imagenServientrega.archivo" [alt]="imagenServientrega.valor" width="100">
+                </div>
+                <div class="d-flex justify-content-center my-1" *ngIf="producto.video.archivo">
+                    <video [src]="producto.video.archivo" width="600"
+                           height="400" controls>
+                      <p>Su navegador no soporta vídeos HTML5.</p>
+                    </video>
                 </div>
                 <div class="card-body">
                     <div class="row my-2">
@@ -58,13 +65,13 @@
                             </div>
                             <div class="d-flex justify-content-center">
                                 <div class="ecommerce-details-price d-flex flex-wrap mt-1">
-                                    <h4 class="item-price mr-1 text-danger" style="text-decoration: line-through">
-                                        $ {{producto.precio}}</h4>
+                                    <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
+                                        Precio Normal: $ {{producto.precio}}</h5>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-center">
-                                <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h4 class="item-price mr-1">
-                                    $ {{producto.precioOferta}}</h4>
+                                <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h2 class="item-price mr-1 text-danger">
+                                    Precio Oferta: $ {{producto.precioOferta}}</h2>
                                 </div>
                             </div>
                             <p class="card-text">
@@ -99,19 +106,13 @@
                                     <span class="add-to-cart">Pedir ahora</span></button><!---->
                             </div>
                         </div>
-                        <div class="col-12 d-flex justify-content-center my-1" *ngIf="producto.video.archivo">
-                            <video [src]="producto.video.archivo" width="600"
-                                   height="400" controls>
-                                <p>Su navegador no soporta vídeos HTML5.</p>
-                            </video>
-                        </div>
                         <div class="col-12 d-flex justify-content-center">
                             <h2 style="color: red">{{tituloPaginaProductos?.valor}}</h2>
                         </div>
                         <div class="col-12 d-flex justify-content-center">
-                            <h2 style="color: #1CE7FF">{{subTituloPaginaProductos?.valor}}</h2>
+                            <h2 style="color: #2d2c55">{{subTituloPaginaProductos?.valor}}</h2>
                         </div>
-                        <div class="col-12 d-flex justify-content-center">
+                        <div class="col-12 d-flex justify-content-center" *ngIf="imagenServientrega">
                             <img [src]="imagenServientrega.archivo" [alt]="imagenServientrega.valor" width="100">
                         </div>
                         <div class="col-12 d-flex justify-content-center my-1">
@@ -183,20 +184,18 @@
             </div>
             <div class="d-flex justify-content-center">
                 <div class="ecommerce-details-price d-flex flex-wrap mt-1">
-                    <h4 class="item-price mr-1 text-danger"
-                        style="text-decoration: line-through">
-                        $ {{producto.precio}}</h4>
+                  <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
+                    Precio Normal: $ {{producto.precio}}</h5>
                 </div>
-                <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h4
-                        class="item-price mr-1">
-                    $ {{producto.precioOferta}}</h4>
+                <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h2 class="item-price mr-1 text-danger">
+                  Precio Oferta: $ {{producto.precioOferta}}</h2>
                 </div>
             </div>
             <div class="d-flex justify-content-center">
                 <h1 style="color: red">{{tituloPaginaProductos?.valor}}</h1>
             </div>
             <div class="d-flex justify-content-center">
-                <h2 style="color: #1CE7FF">{{subTituloPaginaProductos?.valor}}</h2>
+                <h2 style="color: #2d2c55">{{subTituloPaginaProductos?.valor}}</h2>
             </div>
             <div class="d-flex justify-content-center">
                 <img [src]="imagenServientrega.archivo" [alt]="imagenServientrega.valor" width="100">
