@@ -130,4 +130,8 @@ export class ProductosService {
   obtenerProductoFree(id) {
     return this.http.get<any>(`${apiUrl}/gdp/productos/listOne/free/${id}`);
   }
+
+  obtenerProductoCodigo(codigo) {
+    return this.http.get<any>(`${apiUrl}/gdp/productos/listOne/codigoProducto/${codigo}`);
+  }
 }
