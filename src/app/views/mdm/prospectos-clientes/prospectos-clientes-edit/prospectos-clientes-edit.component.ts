@@ -3,6 +3,8 @@ import {ParamService} from 'src/app/services/admin/param.service';
 import {ProspectosService, Prospecto} from '../../../../services/mdm/prospectosCli/prospectos.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
+import {Toaster} from 'ngx-toast-notifications';
+import {ProductosService} from '../../../../services/gdp/productos/productos.service';
 
 @Component({
   selector: 'app-prospectos-clientes-edit',
@@ -34,14 +36,18 @@ export class ProspectosClientesEditComponent implements OnInit {
     nombreVendedor: '',
     confirmacionProspecto: '',
     imagen: '',
+    comentariosVendedor: '',
   };
   urlImagen;
+  producto;
 
   constructor(
     private prospectosService: ProspectosService,
     private globalParam: ParamService,
+    private productosServicer: ProductosService,
     private modalService: NgbModal,
     private router: Router,
+    private toaster: Toaster,
   ) {
   }
 
@@ -49,6 +55,9 @@ export class ProspectosClientesEditComponent implements OnInit {
     this.prospectosService.obtenerProspecto(this.idUsuario).subscribe((info) => {
       this.prospecto = info;
       this.urlImagen = info.imagen;
+      this.productosServicer.obtenerProductoCodigo(this.prospecto.codigoProducto).subscribe((producto) => {
+        this.producto = producto;
+      });
     });
   }
 
@@ -87,7 +96,14 @@ export class ProspectosClientesEditComponent implements OnInit {
   }
 
   async actualizarProspecto() {
-    this.prospectosService.actualizarProspecto(this.idUsuario, this.prospecto.confirmacionProspecto).subscribe(() => {
+    if (!this.prospecto.confirmacionProspecto) {
+      this.toaster.open('Llenar campos', {type: 'warning'});
+      return;
+    }
+    this.prospectosService.actualizarProspecto(
+      this.idUsuario, this.prospecto.confirmacionProspecto, this.prospecto.comentariosVendedor
+    ).subscribe(() => {
+      this.toaster.open('Actualizacion', {type: 'success'});
       this.messageEvent.emit('lista');
     });
   }
@@ -105,6 +121,10 @@ export class ProspectosClientesEditComponent implements OnInit {
 
   cerrarModal(): void {
     this.modalService.dismissAll();
+  }
+
+  abrirModalProducto(modal): void {
+    this.modalService.open(modal, { size: 'lg', backdrop: 'static' });
   }
 
 }

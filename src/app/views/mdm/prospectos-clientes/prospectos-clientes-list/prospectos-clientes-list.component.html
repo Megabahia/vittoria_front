@@ -116,14 +116,16 @@
                                 <td> {{elem.ciudad}} </td>
                                 <td> {{elem.codigoProducto}} </td>
                                 <td>
-                                    <a *ngIf="currentUserValue.acciones.MDM.ESCRIBIR"
-                                       (click)="editarProspecto(elem.id)">
-                                        <i-feather name="edit"></i-feather>
-                                    </a>
-                                    <a *ngIf="currentUserValue.acciones.MDM.BORRAR"
-                                       (click)="eliminarProspecto(elem.id)">
-                                        <i-feather name="trash"></i-feather>
-                                    </a>
+                                  <div *ngIf="elem.confirmacionProspecto !== 'Confirmado'">
+                                      <a *ngIf="currentUserValue.acciones.MDM.ESCRIBIR"
+                                         (click)="editarProspecto(elem.id)">
+                                          <i-feather name="edit"></i-feather>
+                                      </a>
+                                      <a *ngIf="currentUserValue.acciones.MDM.BORRAR"
+                                         (click)="eliminarProspecto(elem.id)">
+                                          <i-feather name="trash"></i-feather>
+                                      </a>
+                                  </div>
                                 </td>
                             </tr>
                             </tbody>

@@ -104,6 +104,7 @@
                                             <div class="form-group">
                                                 <label for="name">Código producto</label>
                                                 <input type="text" class="form-control" name="codigoProducto" [(ngModel)]="prospecto.codigoProducto" disabled />
+                                                <button class="btn btn-primary" (click)="abrirModalProducto(verProducto)">Ver</button>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -137,12 +138,18 @@
                                             <div class="form-group">
                                                 <label for="name">Confirmación del prospecto</label>
                                                 <select class="select2 form-control form-control-lg" name="confirmacionProspecto" [(ngModel)]="prospecto.confirmacionProspecto">
-                                                    <option value="" selected>- Confirmación prospecto -</option>
+                                                    <option value="" selected>- Seleccionar -</option>
                                                     <option value="{{prospe.valor}}" *ngFor="let prospe of confirmProspectoOpciones">
                                                         {{prospe.nombre}}
                                                       </option>
                                                 </select>
                                             </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                          <div class="form-group">
+                                            <label for="comentariosVendedor">Comentarios del vendedor</label>
+                                            <input type="text" class="form-control" id="comentariosVendedor" name="comentariosVendedor" [(ngModel)]="prospecto.comentariosVendedor" />
+                                          </div>
                                         </div>
 
                                         <div class="col-12 d-flex flex-sm-row flex-column mt-2">
@@ -247,4 +254,73 @@
         <button type="button" class="btn btn-secondary" aria-label="Close" (click)="modal.dismiss( 'Cross click')">No</button>
         <button type="button" class="btn btn-light" (click)="eliminarProspecto()">Si</button>
     </div>
+</ng-template>
+<ng-template #verProducto let-modal >
+  <div class="modal-header">
+    <h4 class="modal-title">{{producto?.titulo}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row my-2">
+      <div class="col-12 col-md-5 d-flex flex-column align-items-center justify-content-center mb-2 mb-md-0">
+        <div class="d-flex align-items-center justify-content-center">
+          <div class="swiper-responsive-breakpoints swiper-container px-4 py-2"
+          >
+            <div class="swiper-wrapper mb-2">
+
+
+              <!-- ngb-carousel component -->
+              <ngb-carousel [interval]="2000" [pauseOnHover]="false"
+                            *ngIf="producto?.imagenes">
+                <ng-template ngbSlide *ngFor="let producto of producto?.imagenes">
+                  <div class="carousel-img-wrapper">
+                    <img [src]="producto.archivo" alt="Random first slide"
+                         width="300" height="300"
+                    />
+                  </div>
+                  <div class="carousel-caption"></div>
+                </ng-template>
+              </ngb-carousel>
+              <!-- ngb-carousel component -->
+            </div>
+            <!-- Add Arrows -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+          </div>
+        </div>
+        <div>{{producto?.codigo}}</div>
+      </div>
+      <div class="col-12 col-md-7">
+        <div class="d-flex justify-content-center">
+          <h4>{{producto?.subtitulo}}</h4>
+        </div>
+        <div class="d-flex justify-content-center">
+          <div class="ecommerce-details-price d-flex flex-wrap mt-1">
+            <h4 class="item-price mr-1 text-danger" style="text-decoration: line-through">
+              $ {{producto?.precio}}</h4>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center">
+          <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h4 class="item-price mr-1">
+            $ {{producto?.precioOferta}}</h4>
+          </div>
+        </div>
+        <p class="card-text">
+          {{producto?.descripcion}}
+        </p>
+        <hr>
+        <div class="product-color-options"><h6>Caracteristicas</h6>
+          <p class="card-text">
+            {{producto?.caracteristicas}}
+          </p>
+        </div>
+        <hr>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" aria-label="Close" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
+  </div>
 </ng-template>
