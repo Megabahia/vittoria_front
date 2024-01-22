@@ -17,6 +17,8 @@ export interface Prospecto {
   instagram: string,
   correo1: string,
   correo2: string,
+  pais: string,
+  provincia: string,
   ciudad: string,
   canal: string,
   codigoProducto: string,
@@ -27,6 +29,9 @@ export interface Prospecto {
   confirmacionProspecto: string,
   imagen: string,
   comentariosVendedor: string,
+  cantidad: string,
+  tipoIdentificacion: string;
+  identificacion: string;
 }
 
 @Injectable({
@@ -61,9 +66,9 @@ export class ProspectosService {
     return this.http.post<any>(`${apiUrl}/mdm/prospectosClientes/update/imagen/${id}`, imagen);
   }
 
-  actualizarProspecto(id, confirmacionProspecto, comentariosVendedor) {
-    const data = {confirmacionProspecto, comentariosVendedor};
-    return this.http.post<any>(`${apiUrl}/mdm/prospectosClientes/update/${id}`, data);
+  actualizarProspecto(data) {
+    // const data = {confirmacionProspecto, comentariosVendedor};
+    return this.http.post<any>(`${apiUrl}/mdm/prospectosClientes/update/${data.id}`, data);
   }
 
   eliminarProspecto(id) {

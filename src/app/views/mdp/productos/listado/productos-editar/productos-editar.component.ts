@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, ViewChild} from '@angular/core';
+import {Component, OnInit, Input, ViewChild, ElementRef} from '@angular/core';
 import {NgbPagination, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {CategoriasService} from '../../../../../services/mdp/productos/categorias/categorias.service';
 import {Producto, ProductosService} from '../../../../../services/mdp/productos/productos.service';
@@ -12,6 +12,9 @@ import * as moment from 'moment';
   templateUrl: './productos-editar.component.html'
 })
 export class ProductosEditarComponent implements OnInit {
+  @ViewChild('video', {
+    read: ElementRef
+  }) video: ElementRef;
   @Input() idProducto;
   @ViewChild('dismissModal') dismissModal;
   @ViewChild(NgbPagination) paginator: NgbPagination;
@@ -78,6 +81,8 @@ export class ProductosEditarComponent implements OnInit {
       variableRefil: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       fechaCaducidad: ['', [Validators.required]],
       fechaElaboracion: ['', [Validators.required]],
+      caracteristicas: ['', [Validators.required]],
+      precioOferta: ['', [Validators.required, Validators.pattern(this.numRegex)]],
     });
     this.fichaTecnicaForm = this._formBuilder.group({
       codigo: ['', [Validators.required]],
@@ -170,6 +175,10 @@ export class ProductosEditarComponent implements OnInit {
       this.mensaje = 'La fecha de caducidad debe ser mayor a la fecha actual';
       this.abrirModal(this.aviso);
       return;
+    }
+    this.datosProducto.delete('video');
+    if (this.video.nativeElement.files[0]) {
+      this.datosProducto.append('video', this.video.nativeElement.files[0]);
     }
     if (this.idProducto !== 0) {
 

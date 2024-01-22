@@ -38,117 +38,273 @@
                                 </div>
                                 <!-- users edit media object ends -->
                                 <!-- users edit account form start -->
-                                <form class="form-validate">
+                                <form class="auth-login-form mt-2" [formGroup]="prospectoForm">
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="name">Nombres</label>
-                                                <input type="text" class="form-control" name="nombres" [(ngModel)]="prospecto.nombres" disabled />
+                                                <label for="nombres">Nombres</label>
+                                                <input type="text" class="form-control" name="nombres" id="nombres" formControlName="nombres" />
+                                                <div *ngIf="submitted && f.nombres.errors" class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="f.nombres.errors.required">
+                                                        Nombres es requerido
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="name">Apellidos</label>
-                                                <input type="text" class="form-control" name="apellidos" [(ngModel)]="prospecto.apellidos" disabled />
+                                                <label for="apellidos">Apellidos</label>
+                                                <input type="text" class="form-control" name="apellidos" id="apellidos" formControlName="apellidos" />
+                                                <div *ngIf="submitted && f.apellidos.errors" class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="f.apellidos.errors.required">
+                                                        Apellidos es requerido
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="name">Teléfono</label>
-                                                <input type="text" class="form-control" name="telefono" [(ngModel)]="prospecto.telefono" disabled />
+                                                <label for="tipoIdentificacion">Tipo de identificación</label>
+                                                <select formControlName="tipoIdentificacion" class="form-control"
+                                                        id="tipoIdentificacion" name="tipoIdentificacion"
+                                                        (change)="obtenerTipoIdentificacion()"
+                                                        disabled
+                                                >
+                                                    <option value="">- Seleccionar -</option>
+                                                    <option *ngFor="let value of tipoIdentificacion">
+                                                        {{value.nombre}}
+                                                    </option>
+                                                </select>
+                                                <div *ngIf="submitted && f.tipoIdentificacion.errors" class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="f.tipoIdentificacion.errors.required">Tipo de identificación es
+                                                        requerido
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="name">Número de WhatsApp</label>
-                                                <input type="text" class="form-control" name="whatsapp" [(ngModel)]="prospecto.whatsapp" disabled />
+                                                <label class="form-label"
+                                                       for="identificacion">Numero de Identificación:</label>
+                                                <input type="text" id="identificacion"
+                                                       class="form-control dt-uname" name="identificacion"
+                                                       formControlName="identificacion" disabled/>
+                                                <div *ngIf="submitted && f.identificacion.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.identificacion.errors.required">Numero de Identificación requerida
+                                                    </div>
+                                                    <div *ngIf="f.identificacion.errors.pattern">Solo se aceptan números
+                                                    </div>
+                                                    <div *ngIf="f.identificacion.errors.minlength || f.identificacion.errors.maxlength">
+                                                        Solo se aceptan 10 digitos
+                                                    </div>
+                                                    <div *ngIf="f.identificacion.errors.identificacionInvalid">
+                                                        Numero de Identificación no válida
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="name">Dirección de facebook</label>
-                                                <input type="text" class="form-control" name="facebook" [(ngModel)]="prospecto.facebook" disabled />
+                                                <label for="telefono">Teléfono</label>
+                                                <input type="text" class="form-control" name="telefono" id="telefono" formControlName="telefono" />
+                                                <div *ngIf="submitted && f.telefono.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.telefono.errors.required">Teléfono requerido
+                                                    </div>
+                                                    <div *ngIf="f.telefono.errors.pattern">Solo se aceptan números
+                                                    </div>
+                                                    <div *ngIf="f.telefono.errors.minlength || f.telefono.errors.maxlength">
+                                                        Solo se aceptan 10 digitos
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="name">Dirección de twitter</label>
-                                                <input type="text" class="form-control" name="twitter" [(ngModel)]="prospecto.twitter" disabled />
+                                                <label for="whatsapp">Número de WhatsApp</label>
+                                                <input type="text" class="form-control" name="whatsapp" id="whatsapp" formControlName="whatsapp" />
+                                                <div *ngIf="submitted && f.whatsapp.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.whatsapp.errors.required">Número de WhatsApp requerido
+                                                    </div>
+                                                    <div *ngIf="f.whatsapp.errors.pattern">Solo se aceptan números
+                                                    </div>
+                                                    <div *ngIf="f.whatsapp.errors.minlength || f.whatsapp.errors.maxlength">
+                                                        Solo se aceptan 10 digitos
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="name">Correo 1</label>
-                                                <input type="text" class="form-control" name="correo1" [(ngModel)]="prospecto.correo1" disabled />
+                                                <label for="facebook">Dirección de facebook</label>
+                                                <input type="text" class="form-control" name="facebook" id="facebook" formControlName="facebook" />
+                                                <div *ngIf="submitted && f.facebook.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.facebook.errors.required">Dirección de facebook es requerido</div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="name">Correo 2</label>
-                                                <input type="text" class="form-control" name="correo2" [(ngModel)]="prospecto.correo2" disabled />
+                                                <label for="twitter">Dirección de twitter</label>
+                                                <input type="text" class="form-control" name="twitter" id="twitter" formControlName="twitter" />
+                                                <div *ngIf="submitted && f.twitter.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.twitter.errors.required">Dirección de twitter es requerido</div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="name">Ciudad</label>
-                                                <input type="text" class="form-control" name="ciudad" [(ngModel)]="prospecto.ciudad" disabled />
+                                                <label for="correo1">Correo 1</label>
+                                                <input type="text" class="form-control" name="correo1" id="correo1" formControlName="correo1" />
+                                                <div *ngIf="submitted && f.correo1.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.correo1.errors.required">Correo 1 es requerido</div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="name">Canal</label>
-                                                <input type="text" class="form-control" name="canal" [(ngModel)]="prospecto.canal" disabled />
+                                                <label for="correo2">Correo 2</label>
+                                                <input type="text" class="form-control" name="correo2" id="correo2" formControlName="correo2" />
+                                                <div *ngIf="submitted && f.correo2.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.correo2.errors.required">Correo 2 es requerido</div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="name">Código producto</label>
-                                                <input type="text" class="form-control" name="codigoProducto" [(ngModel)]="prospecto.codigoProducto" disabled />
+                                                <label for="pais">País</label>
+                                                <input type="text" id="pais"
+                                                       class="form-control" name="pais"
+                                                       formControlName="pais"
+                                                       disabled
+                                                />
+                                                <div *ngIf="submitted && f.pais.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.pais.errors.required">Pais es requerido</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="provincia">Provincia</label>
+                                                <select class="form-control select2" id="provincia"
+                                                        name="provincia" formControlName="provincia"
+                                                        (change)="obtenerCiudad()">
+                                                    <option value="" selected>- Seleccionar -</option>
+                                                    <option value="{{provinciasOP.valor}}"
+                                                            *ngFor="let provinciasOP of provinciaOpciones">
+                                                        {{provinciasOP.nombre}}
+                                                    </option>
+                                                </select>
+                                                <div *ngIf="submitted && f.provincia.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.provincia.errors.required">Provincia es requerido</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="ciudad">Ciudad</label>
+                                                <select class="form-control select2" id="ciudad" name="ciudad" formControlName="ciudad">
+                                                    <option value="" selected>- Seleccionar -</option>
+                                                    <option value="{{ciudadesOp.valor}}"
+                                                            *ngFor="let ciudadesOp of ciudadOpciones">
+                                                        {{ciudadesOp.nombre}}
+                                                    </option>
+                                                </select>
+                                                <div *ngIf="submitted && f.ciudad.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.ciudad.errors.required">Ciudad es requerido</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="canal">Canal</label>
+                                                <input type="text" class="form-control" name="canal" id="canal" formControlName="canal" />
+                                                <div *ngIf="submitted && f.canal.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.canal.errors.required">Canal es requerido</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="codigoProducto">Código producto</label>
+                                                <input type="text" class="form-control" name="codigoProducto" id="codigoProducto" formControlName="codigoProducto" disabled />
                                                 <button class="btn btn-primary" (click)="abrirModalProducto(verProducto)">Ver</button>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="name">Nombre del producto de interés</label>
-                                                <input type="text" class="form-control" name="nombreProducto" [(ngModel)]="prospecto.nombreProducto" disabled />
+                                                <label for="nombreProducto">Nombre del producto de interés</label>
+                                                <input type="text" class="form-control" name="nombreProducto" id="nombreProducto" formControlName="nombreProducto" disabled />
                                             </div>
                                         </div>
 
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="email">Precio</label>
-                                                <input type="email" class="form-control" name="precio" [(ngModel)]="prospecto.precio" disabled />
+                                                <label for="precio">Precio</label>
+                                                <input type="email" class="form-control" name="precio" id="precio" formControlName="precio" disabled />
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="email">Tipo de precio</label>
-                                                <input type="email" class="form-control" name="tipoPrecio" [(ngModel)]="prospecto.tipoPrecio" disabled />
+                                                <label for="cantidad">Cantidad</label>
+                                                <input type="number" class="form-control" id="cantidad" name="cantidad" formControlName="cantidad" disabled />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="tipoPrecio">Tipo de precio</label>
+                                                <input type="email" class="form-control" name="tipoPrecio" id="tipoPrecio" formControlName="tipoPrecio" />
+                                                <div *ngIf="submitted && f.tipoPrecio.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.tipoPrecio.errors.required">Tipo de precio es requerido</div>
+                                                </div>
                                             </div>
                                         </div>
 
 
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="name">Nombre del vendedor</label>
-                                                <input type="text" class="form-control" name="nombreVendedor" [(ngModel)]="prospecto.nombreVendedor" disabled />
+                                                <label for="nombreVendedor">Nombre del vendedor</label>
+                                                <input type="text" class="form-control" name="nombreVendedor" id="nombreVendedor" formControlName="nombreVendedor" />
+                                                <div *ngIf="submitted && f.nombreVendedor.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.nombreVendedor.errors.required">Nombre del vendedor es requerido</div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="name">Confirmación del prospecto</label>
-                                                <select class="select2 form-control form-control-lg" name="confirmacionProspecto" [(ngModel)]="prospecto.confirmacionProspecto">
+                                                <label for="confirmacionProspecto">Confirmación del prospecto</label>
+                                                <select class="select2 form-control form-control-lg" name="confirmacionProspecto" id="confirmacionProspecto" formControlName="confirmacionProspecto">
                                                     <option value="" selected>- Seleccionar -</option>
                                                     <option value="{{prospe.valor}}" *ngFor="let prospe of confirmProspectoOpciones">
                                                         {{prospe.nombre}}
                                                       </option>
                                                 </select>
+                                                <div *ngIf="submitted && f.confirmacionProspecto.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.confirmacionProspecto.errors.required">Confirmación del prospecto es requerido</div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                           <div class="form-group">
                                             <label for="comentariosVendedor">Comentarios del vendedor</label>
-                                            <input type="text" class="form-control" id="comentariosVendedor" name="comentariosVendedor" [(ngModel)]="prospecto.comentariosVendedor" />
+                                            <input type="text" class="form-control" id="comentariosVendedor" name="comentariosVendedor" formControlName="comentariosVendedor" />
+                                              <div *ngIf="submitted && f.comentariosVendedor.errors" class="invalid-feedback"
+                                                   style="display: block;">
+                                                  <div *ngIf="f.comentariosVendedor.errors.required">Comentarios del vendedor es requerido</div>
+                                              </div>
                                           </div>
                                         </div>
 
@@ -257,7 +413,7 @@
 </ng-template>
 <ng-template #verProducto let-modal >
   <div class="modal-header">
-    <h4 class="modal-title">{{producto?.titulo}}</h4>
+    <h4 class="modal-title">{{producto?.nombre}}</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -276,7 +432,7 @@
                             *ngIf="producto?.imagenes">
                 <ng-template ngbSlide *ngFor="let producto of producto?.imagenes">
                   <div class="carousel-img-wrapper">
-                    <img [src]="producto.archivo" alt="Random first slide"
+                    <img [src]="producto.imagen" alt="Random first slide"
                          width="300" height="300"
                     />
                   </div>
@@ -290,16 +446,16 @@
             <div class="swiper-button-prev"></div>
           </div>
         </div>
-        <div>{{producto?.codigo}}</div>
+        <div>{{producto?.codigoBarras}}</div>
       </div>
       <div class="col-12 col-md-7">
         <div class="d-flex justify-content-center">
-          <h4>{{producto?.subtitulo}}</h4>
+          <h4>{{producto?.categoria}}</h4>
         </div>
         <div class="d-flex justify-content-center">
           <div class="ecommerce-details-price d-flex flex-wrap mt-1">
             <h4 class="item-price mr-1 text-danger" style="text-decoration: line-through">
-              $ {{producto?.precio}}</h4>
+              $ {{producto?.precioVentaA}}</h4>
           </div>
         </div>
         <div class="d-flex justify-content-center">
