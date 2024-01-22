@@ -104,6 +104,14 @@
                                         <div *ngIf="fp.precioVentaD.errors.pattern">Solo se aceptan números decimales</div>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label>Precio Oferta</label>
+                                    <input type="text" class="form-control" formControlName="precioOferta" [(ngModel)]="producto.precioOferta">
+                                    <div *ngIf="submittedProductoForm && fp.precioOferta.errors" class="invalid-feedback" style="display: block;">
+                                        <div *ngIf="fp.precioOferta.errors.required">Precio de venta D es requerido</div>
+                                        <div *ngIf="fp.precioOferta.errors.pattern">Solo se aceptan números decimales</div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -193,7 +201,20 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <div class="form-group">
+                                    <label>Caracteristicas</label>
+                                    <input type="text" class="form-control" formControlName="caracteristicas" [(ngModel)]="producto.caracteristicas">
+                                    <div *ngIf="submittedProductoForm && fp.caracteristicas.errors" class="invalid-feedback" style="display: block;">
+                                        <div *ngIf="fp.caracteristicas.errors.required">Caracteristicas es requerido
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Video</label>
+                                    <input type="file" accept="video/mp4,video/x-m4v,video/*" class="form-control"
+                                           #video
+                                           >
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <p class="card-text">

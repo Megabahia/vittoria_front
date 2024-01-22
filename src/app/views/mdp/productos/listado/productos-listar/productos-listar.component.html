@@ -72,6 +72,7 @@
                                     </div>
                                 </th>
                                 <th>Código de barras</th>
+                                <th>URL</th>
                                 <th>Nombre</th>
                                 <th>Categoría</th>
                                 <th>Subcategoría</th>
@@ -82,14 +83,20 @@
                         </thead>
 
                         <tbody data-repeater-list="invoice">
-                            <tr data-repeater-item *ngFor="let producto of listaProductos">
+                            <tr data-repeater-item *ngFor="let producto of listaProductos; let i = index">
                                 <td>
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck2" />
-                                        <label class="custom-control-label" for="customCheck2"></label>
+                                        <input type="checkbox" class="custom-control-input" id="customCheck2{{i}}" />
+                                        <label class="custom-control-label" for="customCheck2{{i}}"></label>
                                     </div>
                                 </td>
                                 <td>{{producto.codigoBarras}}</td>
+                                <td>
+                                    <button class="btn btn-outline-primary"
+                                            (click)="copiarURL(producto.id)" rippleEffect
+                                    >Copiar Url
+                                    </button>
+                                </td>
                                 <td>{{producto.nombre}}</td>
                                 <td>{{producto.categoria}}</td>
                                 <td>{{producto.subCategoria}}</td>

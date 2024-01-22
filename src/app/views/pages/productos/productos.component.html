@@ -11,7 +11,7 @@
             <div class="card" >
                 <div class="card-header">
                     <div class="d-flex justify-content-center">
-                        <h1>{{producto.titulo}}</h1>
+                        <h1>{{producto.nombre}}</h1>
                     </div>
                 </div>
                 <div class="d-flex justify-content-center">
@@ -23,19 +23,19 @@
                 <div class="d-flex justify-content-center" *ngIf="imagenServientrega">
                     <img [src]="imagenServientrega.archivo" [alt]="imagenServientrega.valor" width="100">
                 </div>
-                <div class="d-flex justify-content-center my-1" *ngIf="producto.video.archivo">
-                    <video [src]="producto.video.archivo" width="600"
+                <div class="d-flex justify-content-center my-1" *ngIf="producto.video">
+                    <video [src]="producto.video" width="600"
                            height="400" controls>
                       <p>Su navegador no soporta vídeos HTML5.</p>
                     </video>
                 </div>
                 <div class="d-flex justify-content-center">
-                  <h4>{{producto.subtitulo}}</h4>
+                  <h4>{{producto.categoria}}</h4>
                 </div>
                 <div class="d-flex justify-content-center">
                   <div class="ecommerce-details-price d-flex flex-wrap mt-1">
                     <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
-                      Precio Normal: $ {{producto.precio}}</h5>
+                      Precio Normal: $ {{producto.precioVentaA}}</h5>
                   </div>
                 </div>
                 <div class="d-flex justify-content-center">
@@ -74,7 +74,7 @@
                                                       *ngIf="producto.imagenes">
                                             <ng-template ngbSlide *ngFor="let producto of producto.imagenes">
                                                 <div class="carousel-img-wrapper">
-                                                    <img [src]="producto.archivo" alt="Random first slide"
+                                                    <img [src]="producto.imagen" alt="Random first slide"
                                                          width="300" height="300"
                                                     />
                                                 </div>
@@ -88,7 +88,7 @@
                                     <div class="swiper-button-prev"></div>
                                 </div>
                             </div>
-                            <div>{{producto.codigo}}</div>
+                            <div>{{producto.codigoBarras}}</div>
                         </div>
                         <div class="col-12 col-md-7">
                             <p class="card-text">
@@ -167,17 +167,17 @@
     <div class="modal-body" tabindex="0" ngbAutofocus>
         <form class="auth-login-form mt-2" [formGroup]="pospectoForm">
             <div class="d-flex justify-content-center">
-              <video [src]="producto.video.archivo" width="600"
+              <video [src]="producto.video" width="600"
                      height="400" controls>
                 <p>Su navegador no soporta vídeos HTML5.</p>
               </video>
             </div>
             <div class="d-flex justify-content-center">
-                <label class="form-label">{{producto.titulo}}</label>
+                <label class="form-label">{{producto.nombre}}</label>
             </div>
             <div class="d-flex justify-content-center">
                   <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
-                    Precio Normal: $ {{producto.precio}}</h5>
+                    Precio Normal: $ {{producto.precioVentaA}}</h5>
             </div>
                 <div class="d-flex justify-content-center">
                   <h2 class="item-price mr-1 text-danger">
@@ -224,6 +224,14 @@
                   </div>
                 </div>
               </div>
+            <div class="d-flex justify-content-center">
+                <div class="form-group">
+                    <label class="form-label" for="precio">Precio Total:</label>
+                    <input type="text" class="form-control dt-full-name"
+                           id="precio" name="precio"
+                           formControlName="precio" disabled/>
+                </div>
+            </div>
             <div class="d-flex justify-content-center">
                 <h2 style="color: red">{{tituloPaginaProductos?.valor}}</h2>
             </div>

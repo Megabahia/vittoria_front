@@ -25,6 +25,8 @@ export interface Producto {
   imagenes;
   fechaCaducidad;
   fechaElaboracion;
+  caracteristicas;
+  precioOferta;
 }
 export interface FichaTecnicaProducto {
   id;
@@ -62,8 +64,10 @@ export class ProductosService {
       variableRefil: "",
       imagenes: [],
       fechaCaducidad: "",
-      fechaElaboracion: ""
-    }
+      fechaElaboracion: "",
+      caracteristicas: '',
+      precioOferta: '',
+    };
   }
   inicializarFichaTecnica() {
     return {
@@ -131,5 +135,10 @@ export class ProductosService {
   eliminarFichaTecnica(id) {
     return this.http.delete<any>(`${apiUrl}/mdp/fichaTecnicaProductos/delete/${id}`);
   }
-  
+  obtenerProductoFree(id) {
+    return this.http.get<any>(`${apiUrl}/mdp/productos/listOne/free/${id}`);
+  }
+  obtenerProductoCodigo(codigo) {
+    return this.http.get<any>(`${apiUrl}/mdp/productos/listOne/codigoProducto/${codigo}`);
+  }
 }

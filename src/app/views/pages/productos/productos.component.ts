@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {ProductosService} from '../../../services/gdp/productos/productos.service';
+import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {ActivatedRoute} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -59,6 +59,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.productoService.obtenerProductoFree(this.rutaActiva.snapshot.params.id).subscribe((info) => {
       this.producto = info;
+      this.pospectoForm.get('precio').setValue(this.producto.precioOferta * 1);
     });
     this.pospectoForm = this._formBuilder.group({
       cantidad: [1, [Validators.required, Validators.min(1)]],
@@ -165,9 +166,8 @@ export class ProductosComponent implements OnInit, AfterViewInit {
   }
 
   crearProspecto(): void {
-    this.pospectoForm.get('nombreProducto').setValue(this.producto.titulo);
-    this.pospectoForm.get('precio').setValue(this.producto.precio * (+this.pospectoForm.get('cantidad').value));
-    this.pospectoForm.get('codigoProducto').setValue(this.producto.codigo);
+    this.pospectoForm.get('nombreProducto').setValue(this.producto.nombre);
+    this.pospectoForm.get('codigoProducto').setValue(this.producto.codigoBarras);
     this.submitted = true;
     if (this.pospectoForm.invalid) {
       this.toaster.open('Llenar campos', {type: 'warning'});
@@ -226,6 +226,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     let cantidad = +cantidadControl.value;
     cantidad = operacion === 'sumar' ? Math.min(cantidad + 1, this.producto.stock) : Math.max(cantidad - 1, 0);
     cantidadControl.setValue(cantidad);
+    this.pospectoForm.get('precio').setValue(this.producto.precioOferta * cantidad);
     this.pospectoForm.updateValueAndValidity();
   }
 }
