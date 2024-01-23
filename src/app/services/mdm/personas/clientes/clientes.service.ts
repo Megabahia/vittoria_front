@@ -86,6 +86,13 @@ export interface Transaccion {
   telefono;
   tipoIdentificacion;
   total;
+  pais;
+  provincia;
+  ciudad;
+  callePrincipal;
+  calleSecundaria;
+  numeroCasa;
+  referencia;
 }
 
 export interface Pariente {
@@ -232,7 +239,14 @@ export class ClientesService {
       subTotal: 0,
       telefono: '',
       tipoIdentificacion: '',
-      total: 0
+      total: 0,
+      pais: '',
+      provincia: '',
+      ciudad: '',
+      callePrincipal: '',
+      calleSecundaria: '',
+      numeroCasa: '',
+      referencia: '',
     };
   }
 
