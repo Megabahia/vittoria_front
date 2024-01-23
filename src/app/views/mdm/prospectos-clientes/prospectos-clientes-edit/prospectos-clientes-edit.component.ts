@@ -103,13 +103,13 @@ export class ProspectosClientesEditComponent implements OnInit {
       codigoProducto: ['', [Validators.required]],
       precio: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       confirmacionProspecto: ['', [Validators.required]],
-      comentariosVendedor: ['', [Validators.required]],
-      telefono: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10), Validators.maxLength(10)]],
-      facebook: ['', [Validators.required]],
-      twitter: ['', [Validators.required]],
-      correo2: ['', [Validators.required]],
-      canal: ['', [Validators.required]],
-      tipoPrecio: ['', [Validators.required]],
+      comentariosVendedor: ['', []],
+      telefono: ['', [Validators.pattern('^[0-9]*$'), Validators.minLength(10), Validators.maxLength(10)]],
+      facebook: ['', []],
+      twitter: ['', []],
+      correo2: ['', []],
+      canal: ['', []],
+      tipoPrecio: ['', []],
       nombreVendedor: ['', [Validators.required]],
     });
     this.mdmParamService.obtenerListaPadres('TIPO_IDENTIFICACION').subscribe((info) => {
@@ -159,6 +159,7 @@ export class ProspectosClientesEditComponent implements OnInit {
     this.submitted = true;
     if (this.prospectoForm.invalid) {
       this.toaster.open('Llenar campos', {type: 'warning'});
+      console.log(this.prospectoForm);
       return;
     }
     this.prospectosService.actualizarProspecto(

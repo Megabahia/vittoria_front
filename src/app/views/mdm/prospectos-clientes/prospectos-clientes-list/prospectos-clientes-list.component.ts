@@ -312,6 +312,7 @@ export class ProspectosClientesListComponent implements OnInit {
 
   receiveMessage($event): void {
     this.obtenerProspectos();
+    this.obtenerListaProspectos();
     this.vista = $event;
   }
 }
