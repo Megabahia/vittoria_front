@@ -124,7 +124,8 @@ export class PersonasEditComponent implements OnInit {
     mesesTotalTrabajo: 0,
     ingresosPromedioMensual: 0,
     gastosPromedioMensual: 0,
-    estado: 0
+    estado: 0,
+    tipoIdentificacion: ''
   };
 
   datosFisicos: DatosFisicos = {
@@ -263,7 +264,7 @@ export class PersonasEditComponent implements OnInit {
     }
 
     this.datosBasicosForm = this._formBuilder.group({
-      tipoCliente: ['', [Validators.required]],
+      tipoCliente: ['', []],
       created_at: ['', [Validators.required]],
       cedula: ['', [
         Validators.required, Validators.pattern('^[0-9]*$'),
@@ -271,33 +272,34 @@ export class PersonasEditComponent implements OnInit {
         ValidacionesPropias.cedulaValido
       ]],
       telefono: ['', [
-        Validators.required, Validators.pattern('^[0-9]*$'),
+        Validators.pattern('^[0-9]*$'),
         Validators.minLength(10), Validators.maxLength(10)
       ]],
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
-      genero: ['', [Validators.required]],
+      genero: ['', []],
       correo: ['', [Validators.required, Validators.email]],
-      nacionalidad: ['', [Validators.required]],
-      fechaNacimiento: ['', [Validators.required]],
-      edad: [0, [Validators.required]],
+      nacionalidad: ['', []],
+      fechaNacimiento: ['', []],
+      edad: [0, []],
       paisNacimiento: ['', [Validators.required]],
       provinciaNacimiento: ['', [Validators.required]],
       ciudadNacimiento: ['', [Validators.required]],
-      estadoCivil: ['', [Validators.required]],
-      paisResidencia: ['', [Validators.required]],
-      provinciaResidencia: ['', [Validators.required]],
-      ciudadResidencia: ['', [Validators.required]],
-      nivelEstudios: ['', [Validators.required]],
-      profesion: ['', [Validators.required]],
-      provinciaTrabajo: ['', [Validators.required]],
-      ciudadTrabajo: ['', [Validators.required]],
-      paisTrabajo: ['', [Validators.required]],
-      lugarTrabajo: ['', [Validators.required]],
-      mesesUltimoTrabajo: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
-      mesesTotalTrabajo: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
-      ingresosPromedioMensual: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      gastosPromedioMensual: ['', [Validators.required, Validators.pattern(this.numRegex)]]
+      estadoCivil: ['', []],
+      paisResidencia: ['', []],
+      provinciaResidencia: ['', []],
+      ciudadResidencia: ['', []],
+      nivelEstudios: ['', []],
+      profesion: ['', []],
+      provinciaTrabajo: ['', []],
+      ciudadTrabajo: ['', []],
+      paisTrabajo: ['', []],
+      lugarTrabajo: ['', []],
+      mesesUltimoTrabajo: ['', [Validators.pattern('^[0-9]*$')]],
+      mesesTotalTrabajo: ['', [Validators.pattern('^[0-9]*$')]],
+      ingresosPromedioMensual: ['', [Validators.pattern(this.numRegex)]],
+      gastosPromedioMensual: ['', [Validators.pattern(this.numRegex)]],
+      tipoIdentificacion: ['', []],
     });
     this.datosVirtualesForm = this._formBuilder.group({
       tipoContacto: ['', [Validators.required]],
@@ -346,6 +348,7 @@ export class PersonasEditComponent implements OnInit {
   async obtenerDatosBasicos() {
     this.clientesService.obtenerCliente(this.idCliente).subscribe((info) => {
       this.datosBasicos = info;
+      console.log('datos basicos', info);
       this.estadoOpcion = info.estado === 'Activo' ? 1 : 0;
       this.urlImagen = info.imagen;
       this.datosBasicos.estado = info.estado;

@@ -149,8 +149,17 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
+                                                    <label for="username">Tipo Identificación</label>
+                                                    <input type="text" class="form-control" name="cedula" formControlName="tipoIdentificacion"
+                                                           [(ngModel)]="datosBasicos.tipoIdentificacion" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
                                                     <label for="username">Número de cédula</label>
-                                                    <input type="text" class="form-control" name="cedula" formControlName="cedula" [(ngModel)]="datosBasicos.cedula">
+                                                    <input type="text" class="form-control" name="cedula" formControlName="cedula" [(ngModel)]="datosBasicos.cedula"
+                                                           disabled
+                                                    >
                                                     <div *ngIf="submittedDatosBasicosForm && fdb.cedula.errors" class="invalid-feedback" style="display: block;">
                                                         <div *ngIf="fdb.cedula.errors.required">Cédula es requerida
                                                         </div>

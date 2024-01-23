@@ -80,6 +80,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       calleSecundaria: ['', [Validators.required]],
       referencia: ['', [Validators.required]],
       comentarios: ['', []],
+      nombreVendedor: [''],
       nombreProducto: ['', [Validators.required]],
       codigoProducto: ['', [Validators.required]],
       precio: ['', [Validators.required, Validators.pattern(this.numRegex)]],
@@ -103,6 +104,10 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       this.mensajeModalPedido = info.find((item: any) => {
         return item.nombre === 'MENSAJE_MODAL_COMPLETADO';
       });
+      const nombreVendedor: any = info.find((item: any) => {
+        return item.nombre === 'NOMBRE_VENDEDOR';
+      });
+      this.pospectoForm.get('nombreVendedor').setValue(nombreVendedor.valor);
     });
     this.paramService.obtenerListaPadres('SERVIENTREGA_PARAMETROS').subscribe((info) => {
       this.imagenServientrega = info[0];

@@ -36,6 +36,7 @@ export interface DatosBasicos {
   ingresosPromedioMensual;
   gastosPromedioMensual;
   estado;
+  tipoIdentificacion;
 }
 
 
