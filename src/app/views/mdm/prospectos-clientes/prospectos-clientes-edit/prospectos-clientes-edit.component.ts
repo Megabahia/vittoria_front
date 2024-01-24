@@ -6,7 +6,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
 import {Toaster} from 'ngx-toast-notifications';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ValidacionesPropias} from '../../../../utils/customer.validators';
 
 @Component({
@@ -73,9 +73,11 @@ export class ProspectosClientesEditComponent implements OnInit {
       this.prospecto = info;
       this.urlImagen = info.imagen;
       this.prospectoForm.patchValue({...info});
-      this.productosServicer.obtenerProductoCodigo(this.prospecto.codigoProducto).subscribe((producto) => {
-        this.producto = producto;
-      });
+      this.fDetalles.controls[0].get('codigo').setValue(this.prospecto.codigoProducto);
+      this.obtenerProducto(0);
+      // this.productosServicer.obtenerProductoCodigo(this.prospecto.codigoProducto).subscribe((producto) => {
+      //   this.producto = producto;
+      // });
       this.obtenerPaisOpciones();
       this.obtenerTipoIdentificacion();
     });
@@ -111,6 +113,22 @@ export class ProspectosClientesEditComponent implements OnInit {
       canal: ['', []],
       tipoPrecio: ['', []],
       nombreVendedor: ['', [Validators.required]],
+      detalles: this._formBuilder.array([
+        this._formBuilder.group({
+          id: [],
+          imagen: ['', []],
+          articulo: [0, [Validators.required]],
+          valorUnitario: [0, []],
+          cantidad: [1, [Validators.required]],
+          precio: [0, [Validators.required]],
+          codigo: [0, [Validators.required]],
+          informacionAdicional: ['compra desde la url', []],
+          descuento: [0, []],
+          impuesto: [0, []],
+          valorDescuento: [0, [Validators.required]],
+          total: [0, [Validators.required]],
+        }
+      )])
     });
     this.mdmParamService.obtenerListaPadres('TIPO_IDENTIFICACION').subscribe((info) => {
       this.tipoIdentificacion = info;
@@ -121,6 +139,76 @@ export class ProspectosClientesEditComponent implements OnInit {
     return this.prospectoForm.controls;
   }
 
+  get fDetalles() {
+    return this.prospectoForm.controls['detalles'] as FormArray;
+  }
+
+  agregarItem(): void {
+    this.fDetalles.push(
+      this._formBuilder.group({
+        imagen: ['', []],
+        articulo: [0, [Validators.required]],
+        valorUnitario: [0, []],
+        cantidad: [1, [Validators.required]],
+        precio: [0, [Validators.required]],
+        codigo: [0, [Validators.required]],
+        informacionAdicional: ['compra desde la url', []],
+        descuento: [0, []],
+        impuesto: [0, []],
+        valorDescuento: [0, [Validators.required]],
+        total: [0, [Validators.required]],
+      })
+    );
+  }
+
+  removerItem(i): void {
+    // this.calcularSubtotal();
+    this.fDetalles.removeAt(i);
+  }
+  obtenerProducto(i): void {
+    console.log('buscar', this.fDetalles.controls[i].get('codigo').value);
+    this.productosServicer.obtenerProductoPorCodigo({
+      codigoBarras: this.fDetalles.controls[i].get('codigo').value
+    }).subscribe((info) => {
+      if (info.codigoBarras) {
+        this.fDetalles.controls[i].get('articulo').setValue(info.nombre);
+        this.fDetalles.controls[i].get('imagen').setValue(info.imagen.toString());
+        console.log('llega..', info.precioVentaA);
+        this.fDetalles.controls[i].get('precio').setValue(info.precioVentaA);
+        this.fDetalles.controls[i].get('valorUnitario').setValue(info.precioVentaA);
+        console.log('this.fDetalles.controls[i].get(\'precio\')', this.fDetalles.controls[i].get('imagen').value);
+        console.log(this.fDetalles.controls[i]);
+      } else {
+        // this.comprobarProductos[i] = false;
+        alert('No existe el producto a buscar');
+        // this.abrirModal(this.mensajeModal);
+      }
+    }, (error) => {
+
+    });
+  }
+  calcularSubtotal() {
+    // let detalles = this.detalles;
+    // let subtotal = 0;
+    // let descuento = 0;
+    // let cantidad = 0;
+    // if (detalles) {
+    //   detalles.map((valor) => {
+    //     let valorUnitario = Number(valor.valorUnitario) ? Number(valor.valorUnitario) : 0;
+    //     let porcentDescuento = valor.descuento ? valor.descuento : 0;
+    //     let cantidadProducto = valor.cantidad ? valor.cantidad : 0;
+    //     let precio = cantidadProducto * valorUnitario;
+    //
+    //     valor.valorDescuento = this.redondeoValor(precio * (porcentDescuento / 100));
+    //     descuento += precio * (porcentDescuento / 100);
+    //     subtotal += precio;
+    //     cantidad += valor.cantidad ? valor.cantidad : 0;
+    //     valor.precio = this.redondear(precio);
+    //     valor.total = valor.precio;
+    //
+    //   });
+    // }
+  }
   obtenerURLImagen(url) {
     return this.globalParam.obtenerURL(url);
   }
