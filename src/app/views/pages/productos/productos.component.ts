@@ -2,7 +2,7 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {ActivatedRoute} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ParamService} from '../../../services/mdm/param/param.service';
 import {ValidacionesPropias} from '../../../utils/customer.validators';
 import {ProspectosService} from '../../../services/mdm/prospectosCli/prospectos.service';
@@ -56,10 +56,33 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     return this.pospectoForm.controls;
   }
 
+  get fDetalles() {
+    return this.pospectoForm.controls['detalles'] as FormArray;
+  }
+
+  // Helper method to get the 'subItems' FormArray inside an 'item'
+  getSubItems(itemIndex: number) {
+    console.log('item', (this.fDetalles.at(itemIndex) as FormGroup));
+    return (this.fDetalles.at(itemIndex) as FormGroup) as FormGroup;
+  }
+
   ngOnInit(): void {
     this.productoService.obtenerProductoFree(this.rutaActiva.snapshot.params.id).subscribe((info) => {
       this.producto = info;
-      this.pospectoForm.get('precio').setValue(this.producto.precioOferta * 1);
+      const cuentaForm = this._formBuilder.group({
+        articulo: [this.producto.nombre, []],
+        valorUnitario: [this.producto.precioOferta, []],
+        cantidad: [1, []],
+        precio: [this.producto.precioOferta, []],
+        codigo: [this.producto.codigoBarras, []],
+        informacionAdicional: ['compra desde la url', []],
+        descuento: [0, []],
+        impuesto: [0, []],
+        valorDescuento: [0, []],
+        total: [this.producto.precioOferta * 1, []],
+      });
+      this.fDetalles.push(cuentaForm);
+      // this.pospectoForm.get('precio').setValue(this.producto.precioOferta * 1);
     });
     this.pospectoForm = this._formBuilder.group({
       cantidad: [1, [Validators.required, Validators.min(1)]],
@@ -75,15 +98,16 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       pais: ['', [Validators.required]],
       provincia: ['', [Validators.required]],
       ciudad: ['', [Validators.required]],
-      callePrincipal: ['', [Validators.required]],
-      numeroCasa: ['', [Validators.required]],
-      calleSecundaria: ['', [Validators.required]],
-      referencia: ['', [Validators.required]],
-      comentarios: ['', []],
+      callePrincipal: ['', [Validators.required, Validators.maxLength(150)]],
+      numeroCasa: ['', [Validators.required, Validators.maxLength(20)]],
+      calleSecundaria: ['', [Validators.required, Validators.maxLength(150)]],
+      referencia: ['', [Validators.required, Validators.maxLength(255)]],
+      comentarios: ['', [Validators.maxLength(255)]],
       nombreVendedor: [''],
       nombreProducto: ['', [Validators.required]],
       codigoProducto: ['', [Validators.required]],
       precio: ['', [Validators.required, Validators.pattern(this.numRegex)]],
+      detalles: this._formBuilder.array([])
     });
   }
 
@@ -185,7 +209,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
         this.cargando = false;
         this.cerrarModal();
         this.mensaje = `Su pedido ${pedido.id} ha sido recibido. Nuestro asesor se pondrá en contacto con usted a través del número de WhatsApp.`;
-        this.modalService.open(this.mensajeModal, {backdrop : 'static', keyboard : false});
+        this.modalService.open(this.mensajeModal, {backdrop: 'static', keyboard: false});
       },
       (error) => {
         const errores = Object.values(error);
@@ -231,6 +255,8 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     let cantidad = +cantidadControl.value;
     cantidad = operacion === 'sumar' ? Math.min(cantidad + 1, this.producto.stock) : Math.max(cantidad - 1, 0);
     cantidadControl.setValue(cantidad);
+    this.fDetalles.controls[0].get('cantidad').setValue(cantidad);
+    this.fDetalles.controls[0].get('precio').setValue(this.producto.precioOferta * cantidad);
     this.pospectoForm.get('precio').setValue(this.producto.precioOferta * cantidad);
     this.pospectoForm.updateValueAndValidity();
   }

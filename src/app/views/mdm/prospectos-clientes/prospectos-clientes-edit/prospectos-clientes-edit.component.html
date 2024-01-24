@@ -39,7 +39,7 @@
                                 <!-- users edit media object ends -->
                                 <!-- users edit account form start -->
                                 <form class="auth-login-form mt-2" [formGroup]="prospectoForm">
-                                    <h2>Datos del prospectos</h2>
+                                    <h2>Datos Prospectos</h2>
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
@@ -177,6 +177,16 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="canal">Canal</label>
+                                                <input type="text" class="form-control" name="canal" id="canal" formControlName="canal" />
+                                                <div *ngIf="submitted && f.canal.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.canal.errors.required">Canal es requerido</div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <hr>
                                     <h2>Datos de entrega del pedido</h2>
@@ -231,17 +241,162 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="canal">Canal</label>
-                                                <input type="text" class="form-control" name="canal" id="canal" formControlName="canal" />
-                                                <div *ngIf="submitted && f.canal.errors" class="invalid-feedback"
+                                                <label for="callePrincipal">Calle principal</label>
+                                                <input class="form-control select2" id="callePrincipal" name="callePrincipal" formControlName="callePrincipal"
+                                                />
+                                                <div *ngIf="submitted && f.callePrincipal.errors" class="invalid-feedback"
                                                      style="display: block;">
-                                                    <div *ngIf="f.canal.errors.required">Canal es requerido</div>
+                                                    <div *ngIf="f.callePrincipal.errors.required">Calle principal es requerido</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="numeroCasa">Numero Casa</label>
+                                                <input class="form-control select2" id="numeroCasa" name="numeroCasa" formControlName="numeroCasa"
+                                                />
+                                                <div *ngIf="submitted && f.numeroCasa.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.numeroCasa.errors.required">Numero Casa es requerido</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="calleSecundaria">Calle Secundaria</label>
+                                                <input class="form-control select2" id="calleSecundaria" name="calleSecundaria" formControlName="calleSecundaria"
+                                                />
+                                                <div *ngIf="submitted && f.calleSecundaria.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.calleSecundaria.errors.required">Calle Secundaria es requerido</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="referencia">Referencia</label>
+                                                <input class="form-control select2" id="referencia" name="referencia" formControlName="referencia"
+                                                />
+                                                <div *ngIf="submitted && f.referencia.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.referencia.errors.required">Referencia es requerido</div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- Address and Contact ends -->
+                                    <ng-container formArrayName="detalles">
+                                        <h2>Productos Pedido</h2>
+                                        <div class="card-body invoice-padding">
+                                            <div class="row mt-1">
+                                                <div class="col-12 px-0">
+                                                    <button type="button" class="btn btn-primary btn-sm btn-add-new" data-repeater-create>
+                                                        <i-feather name="plus" class="mr-25 edit-user"></i-feather>
+                                                        <span class="align-middle" (click)="agregarItem()">Añadir producto</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div *ngFor="let cuenta of prospectoForm.get('detalles')['controls']; let i = index">
+                                            <div class="card-body invoice-padding">
+                                                <ng-container class="row" [formGroup]="cuenta">
+                                                    <div class="col-12 pt-2 d-flex product-details-border position-relative pr-0">
+                                                        <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                                            <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                                <p class="card-text col-title">Código</p>
+                                                                <input class="form-control" type="text" name="codigo" formControlName="codigo" (change)="obtenerProducto(i)">
+                                                                <div *ngIf="submitted && cuenta.controls?.codigo.errors" class="invalid-feedback" style="display: block;">
+                                                                    <div *ngIf="cuenta.controls?.codigo.errors.required">Requerido
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-3 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                                <p class="card-text col-title">Producto</p>
+                                                                <input class="form-control" type="text" name="articulo" formControlName="articulo" disabled>
+                                                                <div *ngIf="submitted && cuenta.controls?.articulo.errors" class="invalid-feedback" style="display: block;">
+                                                                    <div *ngIf="cuenta.controls?.articulo.errors.required">Requerido
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                                <p class="card-text col-title">Valor Unitario</p>
+                                                                <input class="form-control" type="text" name="valorUnitario" formControlName="valorUnitario" disabled>
+                                                                <div *ngIf="submitted && cuenta.controls?.valorUnitario.errors" class="invalid-feedback" style="display: block;">
+                                                                    <div *ngIf="cuenta.controls?.valorUnitario.errors.required">Requerido
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-1 my-lg-0 my-2">
+                                                                <p class="card-text col-title">Cantidad</p>
+                                                                <input type="number" class="form-control" value="0" placeholder="0" name="cantidad" formControlName="cantidad" (change)="calcularSubtotal()" />
+                                                                <div *ngIf="submitted && cuenta.controls?.cantidad.errors" class="invalid-feedback" style="display: block;">
+                                                                    <div *ngIf="cuenta.controls?.cantidad.errors.required">Requerido
+                                                                    </div>
+                                                                    <div *ngIf="cuenta.controls?.cantidad.errors.pattern">Solo números
+                                                                    </div>
+                                                                    <div *ngIf="cuenta.controls?.cantidad.errors.min">Debe ser mayor a 0
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-2 my-lg-0 my-2">
+                                                                <p class="card-text col-title"><b>Precio:</b></p>
+                                                                <h5><b>${{cuenta.controls?.precio.value}}</b></h5>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <img class="img-detalle" src="{{cuenta.controls?.imagen.value}}" *ngIf="cuenta.controls?.imagen" >
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
+                                                            <i-feather name="x" class="cursor-pointer font-medium-3" data-repeater-delete (click)="removerItem(i)"></i-feather>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class=" row">
+                                                        <div class="col-12 pt-2">
+                                                            <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                                                <div class="col-md-4 mb-lg-0 mb-2 mt-lg-0">
+                                                                    <p class="card-text col-title">Información Adicional</p>
+                                                                    <textarea class="form-control" rows="1" name="informacionAdicional" formControlName="informacionAdicional" placeholder="Información adicional"></textarea>
+                                                                    <div *ngIf="submitted && cuenta.controls?.informacionAdicional.errors" class="invalid-feedback" style="display: block;">
+                                                                        <div *ngIf="cuenta.controls?.informacionAdicional.errors.required">Requerido
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2 my-lg-0 my-2">
+                                                                    <p class="card-text col-title">% descuento</p>
+                                                                    <input type="number" class="form-control" value="0" placeholder="0" name="descuento" formControlName="descuento" [ngModelOptions]="{standalone: true}" />
+                                                                    <div *ngIf="submitted && cuenta.controls?.descuento.errors" class="invalid-feedback" style="display: block;">
+                                                                        <div *ngIf="cuenta.controls?.descuento.errors.required">Requerido
+                                                                        </div>
+                                                                        <div *ngIf="cuenta.controls?.descuento.errors.pattern">Solo números decimales
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2 my-lg-0 my-2">
+                                                                    <p class="card-text col-title">$ descuento:</p>
+                                                                    <input type="number" class="form-control" value="0" placeholder="0" name="valorDescuento" formControlName="valorDescuento" disabled />
+                                                                    <div *ngIf="submitted && cuenta.controls?.controls?.valorDescuento.errors" class="invalid-feedback" style="display: block;">
+                                                                        <div *ngIf="cuenta.controls?.controls?.valorDescuento.errors.required">Requerido
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                        <hr />
+
+                                    </ng-container>
+                                    <!-- Product Details starts -->
                                     <hr>
-                                    <h2>Datos del pedido</h2>
+                                    <h2>Productos pedido</h2>
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
@@ -291,14 +446,20 @@
                                                 </div>
                                             </div>
                                         </div>
+
+
+                                    </div>
+                                    <hr>
+                                    <h2>Confirmación Prospecto</h2>
+                                    <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="confirmacionProspecto">Confirmación del prospecto</label>
+                                                <label for="confirmacionProspecto"><span style="color: red">Confirmación del prospecto</span></label>
                                                 <select class="select2 form-control form-control-lg" name="confirmacionProspecto" id="confirmacionProspecto" formControlName="confirmacionProspecto">
                                                     <option value="" selected>- Seleccionar -</option>
                                                     <option value="{{prospe.valor}}" *ngFor="let prospe of confirmProspectoOpciones">
                                                         {{prospe.nombre}}
-                                                      </option>
+                                                    </option>
                                                 </select>
                                                 <div *ngIf="submitted && f.confirmacionProspecto.errors" class="invalid-feedback"
                                                      style="display: block;">
@@ -307,16 +468,15 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                          <div class="form-group">
-                                            <label for="comentariosVendedor">Comentarios del vendedor</label>
-                                            <input type="text" class="form-control" id="comentariosVendedor" name="comentariosVendedor" formControlName="comentariosVendedor" />
-                                              <div *ngIf="submitted && f.comentariosVendedor.errors" class="invalid-feedback"
-                                                   style="display: block;">
-                                                  <div *ngIf="f.comentariosVendedor.errors.required">Comentarios del vendedor es requerido</div>
-                                              </div>
-                                          </div>
+                                            <div class="form-group">
+                                                <label for="comentariosVendedor">Comentarios del vendedor</label>
+                                                <input type="text" class="form-control" id="comentariosVendedor" name="comentariosVendedor" formControlName="comentariosVendedor" />
+                                                <div *ngIf="submitted && f.comentariosVendedor.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.comentariosVendedor.errors.required">Comentarios del vendedor es requerido</div>
+                                                </div>
+                                            </div>
                                         </div>
-
                                         <div class="col-12 d-flex flex-sm-row flex-column mt-2">
                                             <a (click)="actualizarProspecto()" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1">Guardar cambios</a>
                                             <button (click)="abrirModalEliminarProspecto()" class="btn btn-outline-secondary">Eliminar</button>

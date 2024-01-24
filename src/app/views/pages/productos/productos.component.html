@@ -1,14 +1,14 @@
-<div class="app-content " *ngIf="producto" >
+<div class="app-content " *ngIf="producto">
 
-    <div class="content-body" >
-        <section class="app-ecommerce-details" >
+    <div class="content-body">
+        <section class="app-ecommerce-details">
             <div class="d-flex justify-content-center">
                 <a href="javascript:void(0);" class="brand-logo">
                     <img src="../../../../assets/images/super_barato.jpeg" width="75">
                     <img src="../../../../assets/images/logo.svg" width="100">
                 </a>
             </div>
-            <div class="card" >
+            <div class="card">
                 <div class="d-flex justify-content-center text-center">
                     <h1>{{producto.nombre}}</h1>
                 </div>
@@ -24,40 +24,40 @@
                 <div class="d-flex justify-content-center my-1" *ngIf="producto.video">
                     <video [src]="producto.video" width="600"
                            height="400" controls>
-                      <p>Su navegador no soporta vídeos HTML5.</p>
+                        <p>Su navegador no soporta vídeos HTML5.</p>
                     </video>
                 </div>
                 <div class="d-flex justify-content-center">
-                  <h4>{{producto.categoria}}</h4>
+                    <h4>{{producto.categoria}}</h4>
                 </div>
                 <div class="d-flex justify-content-center">
-                  <div class="ecommerce-details-price d-flex flex-wrap mt-1">
-                    <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
-                      Precio Normal: $ {{producto.precioVentaA}}</h5>
-                  </div>
+                    <div class="ecommerce-details-price d-flex flex-wrap mt-1">
+                        <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
+                            Precio Normal: $ {{producto.precioVentaA}}</h5>
+                    </div>
                 </div>
                 <div class="d-flex justify-content-center">
-                  <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h2 class="item-price mr-1 text-danger">
-                    Precio Oferta: $ {{producto.precioOferta}}</h2>
-                  </div>
+                    <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h2 class="item-price mr-1 text-danger">
+                        Precio Oferta: $ {{producto.precioOferta}}</h2>
+                    </div>
                 </div>
                 <div class="col-12 d-flex justify-content-center my-1">
-                <div class="d-flex flex-column flex-sm-row pt-1"><!---->
-                  <button
-                    (click)="modalOpenSM(modalSM)"
-                    rippleeffect=""
-                    class="btn btn-primary btn-cart mr-0 mr-sm-1 mb-1 mb-sm-0 waves-effect waves-float waves-light ng-star-inserted"
-                    href="/vuexy-angular-admin-template/demo-1/apps/e-commerce/checkout">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                         stroke-linejoin="round" class="feather feather-shopping-cart mr-25">
-                      <circle cx="9" cy="21" r="1"></circle>
-                      <circle cx="20" cy="21" r="1"></circle>
-                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
-                    <span class="add-to-cart">Pedir ahora</span></button><!---->
+                    <div class="d-flex flex-column flex-sm-row pt-1"><!---->
+                        <button
+                                (click)="modalOpenSM(modalSM)"
+                                rippleeffect=""
+                                class="btn btn-primary btn-cart mr-0 mr-sm-1 mb-1 mb-sm-0 waves-effect waves-float waves-light ng-star-inserted"
+                                href="/vuexy-angular-admin-template/demo-1/apps/e-commerce/checkout">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-shopping-cart mr-25">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                            </svg>
+                            <span class="add-to-cart">Pedir ahora</span></button><!---->
+                    </div>
                 </div>
-              </div>
                 <div class="card-body">
                     <div class="row my-2">
                         <div class="col-12 col-md-5 d-flex flex-column align-items-center justify-content-center mb-2 mb-md-0">
@@ -141,17 +141,18 @@
 <ng-template #mensajeModal let-modal>
     <div class="modal-header">
         <h4 class="modal-title">Mensaje</h4>
-      <a href="https://www.facebook.com/Local.Super.Barato?mibextid=LQQJ4d">
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </a>
+        <a href="https://www.facebook.com/Local.Super.Barato?mibextid=LQQJ4d">
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </a>
     </div>
     <div class="modal-body">
         <div [innerHTML]="mensaje"></div>
     </div>
     <div class="modal-footer">
-        <a type="button" class="btn btn-light" href="https://www.facebook.com/Local.Super.Barato?mibextid=LQQJ4d" (click)="modal.dismiss( 'Cross click')">Aceptar</a>
+        <a type="button" class="btn btn-light" href="https://www.facebook.com/Local.Super.Barato?mibextid=LQQJ4d"
+           (click)="modal.dismiss( 'Cross click')">Aceptar</a>
     </div>
 </ng-template>
 
@@ -165,71 +166,92 @@
     <div class="modal-body" tabindex="0" ngbAutofocus>
         <form class="auth-login-form mt-2" [formGroup]="pospectoForm">
             <div class="d-flex justify-content-center">
-              <video [src]="producto.video" width="600"
-                     height="400" controls>
-                <p>Su navegador no soporta vídeos HTML5.</p>
-              </video>
+                <video [src]="producto.video" width="600"
+                       height="400" controls>
+                    <p>Su navegador no soporta vídeos HTML5.</p>
+                </video>
             </div>
             <div class="d-flex justify-content-center text-center">
                 <label class="form-label">{{producto.nombre}}</label>
             </div>
             <div class="d-flex justify-content-center">
-                  <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
+                <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
                     Precio Normal: $ {{producto.precioVentaA}}</h5>
             </div>
-                <div class="d-flex justify-content-center">
-                  <h2 class="item-price mr-1 text-danger">
+            <div class="d-flex justify-content-center">
+                <h2 class="item-price mr-1 text-danger">
                     Precio Oferta: $ {{producto.precioOferta}}</h2>
-                </div>
-              <div class="d-flex justify-content-center text-center">
-                <div class="form-group">
-                  <div class="item-quantity"><span class="quantity-title">Cantidad:</span>
-                    <div class="quantity-counter-wrapper">
-                      <core-touchspin>
-                        <div class="btn-group touchspin-wrapper">
-                          <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-down"
-                                  (click)="escogerCantidad('restar')"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="feather feather-minus">
-                              <line x1="5" y1="12" x2="19" y2="12"></line>
-                            </svg><!----><!----></button>
-                          <input type="number" pattern="\d*" maxlength="4"
-                                 class="form-control ng-untouched ng-pristine ng-valid" step="1" min="1" max="10"
-                                 disabled
-                                 formControlName="cantidad"
-                          >
-                          <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-up"
-                                  (click)="escogerCantidad('sumar')"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="feather feather-plus">
-                              <line x1="12" y1="5" x2="12" y2="19"></line>
-                              <line x1="5" y1="12" x2="19" y2="12"></line>
-                            </svg><!----><!----></button>
-                        </div>
-                      </core-touchspin>
-                    </div>
-                  </div>
-                  <div *ngIf="submitted && f.cantidad.errors" class="invalid-feedback"
-                       style="display: block;">
-                    <div *ngIf="f.cantidad.errors.required">Cantidad requeridos
-                    </div>
-                    <div *ngIf="f.cantidad.errors.min">Cantidad minima 1
-                    </div>
-                  </div>
-                </div>
-              </div>
-            <div class="d-flex justify-content-center text-center">
-                <div class="form-group">
-                    <label class="form-label" for="precio">Precio Total:</label>
-                    <input type="text" class="form-control"
-                           id="precio" name="precio"
-                           formControlName="precio" disabled/>
-                </div>
             </div>
+            <ng-container formArrayName="detalles">
+                <ng-container *ngFor="let cuenta of pospectoForm.get('detalles')['controls']; let i = index">
+                    <ng-container class="row" [formGroup]="cuenta">
+                        <div class="d-flex justify-content-center text-center">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="item-quantity"><span class="quantity-title">Cantidad:</span>
+                                        <div class="quantity-counter-wrapper">
+                                            <core-touchspin>
+                                                <div class="btn-group touchspin-wrapper">
+                                                    <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-down"
+                                                            (click)="escogerCantidad('restar')"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                                             viewBox="0 0 24 24"
+                                                             fill="none" stroke="currentColor" stroke-width="2"
+                                                             stroke-linecap="round"
+                                                             stroke-linejoin="round" class="feather feather-minus">
+                                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                        </svg><!----><!----></button>
+                                                    <input type="number" pattern="\d*" maxlength="4"
+                                                           class="form-control ng-untouched ng-pristine ng-valid"
+                                                           step="1" min="1"
+                                                           max="10"
+                                                           disabled
+                                                           formControlName="cantidad"
+                                                    >
+                                                    <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-up"
+                                                            (click)="escogerCantidad('sumar')"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                                             viewBox="0 0 24 24"
+                                                             fill="none" stroke="currentColor" stroke-width="2"
+                                                             stroke-linecap="round"
+                                                             stroke-linejoin="round" class="feather feather-plus">
+                                                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                        </svg><!----><!----></button>
+                                                </div>
+                                            </core-touchspin>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="submitted && f.cantidad.errors" class="invalid-feedback"
+                                         style="display: block;">
+                                        <div *ngIf="f.cantidad.errors.required">Cantidad requeridos
+                                        </div>
+                                        <div *ngIf="f.cantidad.errors.min">Cantidad minima 1
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center text-center">
+                            <div class="d-flex justify-content-center text-center">
+                                <label class="form-label" for="precio">Precio Total:</label>
+                                <input type="text" class="form-control form-control-sm"
+                                       id="precio" name="precio"
+                                       formControlName="precio" disabled/>
+                                <!--                        <div class="input-group">-->
+                                <!--                            <div class="input-group-prepend">-->
+                                <!--                                <span class="input-group-text" id="basic-addon1">$</span>-->
+                                <!--                            </div>-->
+                                <!--                            <input type="text" class="form-control" formControlName="precio" disabled/>-->
+                                <!--                        </div>-->
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </ng-container>
+
             <div class="d-flex justify-content-center">
                 <h2 style="color: red">{{tituloPaginaProductos?.valor}}</h2>
             </div>
@@ -240,7 +262,7 @@
                 <img [src]="imagenServientrega.archivo" [alt]="imagenServientrega.valor" width="100">
             </div>
             <hr>
-            <h2>Datos del cliente</h2>
+            <h2 style="color: #2d2c55">Datos del pedido</h2>
             <div class="form-group">
                 <label class="form-label" for="basic-icon-default-fullname">Nombres:</label>
                 <input type="text" class="form-control dt-full-name"
@@ -333,7 +355,7 @@
                 </div>
             </div>
             <hr>
-            <h2>Lugar de entrega</h2>
+            <h2 style="color: #2d2c55">Lugar de entrega</h2>
             <div class="form-group">
                 <label for="pais">País</label>
                 <input type="text" id="pais"
@@ -385,6 +407,8 @@
                      style="display: block;">
                     <div *ngIf="f.callePrincipal.errors.required">Calle principal requerido
                     </div>
+                    <div *ngIf="f.callePrincipal.errors.maxlength">Ingrese maximo 150 caracteres
+                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -395,6 +419,8 @@
                 <div *ngIf="submitted && f.numeroCasa.errors" class="invalid-feedback"
                      style="display: block;">
                     <div *ngIf="f.numeroCasa.errors.required">Numero Casa requerido
+                    </div>
+                    <div *ngIf="f.numeroCasa.errors.maxlength">Ingrese maximo 20 caracteres
                     </div>
                 </div>
             </div>
@@ -408,6 +434,8 @@
                     <div *ngIf="f.calleSecundaria.errors.required">Calle secundaria
                         requerido
                     </div>
+                    <div *ngIf="f.calleSecundaria.errors.maxlength">Ingrese maximo 150 caracteres
+                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -419,6 +447,8 @@
                      style="display: block;">
                     <div *ngIf="f.referencia.errors.required">Refencia requerido
                     </div>
+                    <div *ngIf="f.referencia.errors.maxlength">Ingrese maximo 255 caracteres
+                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -426,6 +456,13 @@
                 <input type="text" id="comentarios"
                        class="form-control" name="comentarios"
                        formControlName="comentarios"/>
+                <div *ngIf="submitted && f.comentarios.errors" class="invalid-feedback"
+                     style="display: block;">
+                    <div *ngIf="f.comentarios.errors.required">Refencia requerido
+                    </div>
+                    <div *ngIf="f.comentarios.errors.maxlength">Ingrese maximo 255 caracteres
+                    </div>
+                </div>
             </div>
 
         </form>
