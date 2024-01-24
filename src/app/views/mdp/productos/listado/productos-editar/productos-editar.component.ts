@@ -4,6 +4,7 @@ import {CategoriasService} from '../../../../../services/mdp/productos/categoria
 import {Producto, ProductosService} from '../../../../../services/mdp/productos/productos.service';
 import {SubcategoriasService} from '../../../../../services/mdp/productos/subcategorias/subcategorias.service';
 import {ParamService} from 'src/app/services/mdp/param/param.service';
+import {ParamService as MDMParamService} from 'src/app/services/mdm/param/param.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import * as moment from 'moment';
 
@@ -39,6 +40,8 @@ export class ProductosEditarComponent implements OnInit {
   archivos: File[] = [];
   mensaje: string;
   numRegex = /^-?\d*[.,]?\d{0,2}$/;
+  couriers = [];
+  provincias = [];
 
   constructor(
     private categoriasService: CategoriasService,
@@ -46,6 +49,7 @@ export class ProductosEditarComponent implements OnInit {
     private productosService: ProductosService,
     private modalService: NgbModal,
     private paramService: ParamService,
+    private MDMparamService: MDMParamService,
     private _formBuilder: FormBuilder,
   ) {
     this.producto = this.productosService.inicializarProducto();
@@ -83,6 +87,8 @@ export class ProductosEditarComponent implements OnInit {
       fechaElaboracion: ['', [Validators.required]],
       caracteristicas: ['', [Validators.required]],
       precioOferta: ['', [Validators.required, Validators.pattern(this.numRegex)]],
+      lugarVenta: ['', [Validators.required]],
+      courier: ['', [Validators.required]],
     });
     this.fichaTecnicaForm = this._formBuilder.group({
       codigo: ['', [Validators.required]],
@@ -95,15 +101,29 @@ export class ProductosEditarComponent implements OnInit {
       this.obtenerProducto();
       this.obtenerFichasTecnicas();
     }
+    this.obtenerCourierOpciones();
+    this.obtenerProvinciasOpciones();
   }
 
-  obtenerProducto() {
+  obtenerProducto(): void {
     this.productosService.obtenerProducto(this.idProducto).subscribe((info) => {
       const producto = info;
       this.imagenes = info.imagenes;
       delete producto.imagenes;
       this.producto = producto;
       this.obtenerListaSubcategorias();
+    });
+  }
+
+  async obtenerCourierOpciones() {
+    await this.paramService.obtenerListaPadres('COURIER').subscribe((info) => {
+      this.couriers = info;
+    });
+  }
+
+  async obtenerProvinciasOpciones() {
+    await this.MDMparamService.obtenerListaHijos('Ecuador', 'PAIS').subscribe((info) => {
+      this.provincias = info;
     });
   }
 

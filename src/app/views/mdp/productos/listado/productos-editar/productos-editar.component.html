@@ -112,6 +112,26 @@
                                         <div *ngIf="fp.precioOferta.errors.pattern">Solo se aceptan números decimales</div>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label for="lugarVenta">Lugar Venta (Provincia)</label>
+                                    <select class="form-control select2" id="lugarVenta" name="lugarVenta" formControlName="lugarVenta" [(ngModel)]="producto.lugarVenta">
+                                        <option value="" selected>- Seleccionar -</option>
+                                        <option *ngFor="let provincia of provincias" value="{{provincia.valor}}">{{provincia.nombre}}</option>
+                                    </select>
+                                    <div *ngIf="submittedProductoForm && fp.lugarVenta.errors" class="invalid-feedback" style="display: block;">
+                                        <div *ngIf="fp.lugarVenta.errors.required">Lugar Venta es requerido</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="courier">Courier</label>
+                                    <select class="form-control select2" id="courier" name="courier" formControlName="courier" [(ngModel)]="producto.courier">
+                                        <option value="" selected>- Seleccionar -</option>
+                                        <option *ngFor="let courier of couriers" value="{{courier.valor}}">{{courier.nombre}}</option>
+                                    </select>
+                                    <div *ngIf="submittedProductoForm && fp.courier.errors" class="invalid-feedback" style="display: block;">
+                                        <div *ngIf="fp.courier.errors.required">Courier es requerido</div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">

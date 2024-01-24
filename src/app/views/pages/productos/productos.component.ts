@@ -83,6 +83,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       });
       this.fDetalles.push(cuentaForm);
       // this.pospectoForm.get('precio').setValue(this.producto.precioOferta * 1);
+      this.obtenerParametrosPagina();
     });
     this.pospectoForm = this._formBuilder.group({
       cantidad: [1, [Validators.required, Validators.min(1)]],
@@ -118,7 +119,13 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     this.obtenerTiposPrecio();
     this.obtenerTiposCliente();
     this.obtenerPaisOpciones();
-    this.paramService.obtenerListaPadres('PAGINA_PRODUCTOS_URL').subscribe((info: []) => {
+    this.paramService.obtenerListaPadres('TIPO_IDENTIFICACION').subscribe((info) => {
+      this.tipoIdentificacion = info;
+    });
+  }
+
+  obtenerParametrosPagina(): void {
+    this.paramService.obtenerListaPadres('PAGINA_PRODUCTOS_URL_' + this.producto.courier).subscribe((info: []) => {
       this.tituloPaginaProductos = info.find((item: any) => {
         return item.nombre === 'TITULO_PAGINA_PRODUCTOS';
       });
@@ -132,12 +139,9 @@ export class ProductosComponent implements OnInit, AfterViewInit {
         return item.nombre === 'NOMBRE_VENDEDOR';
       });
       this.pospectoForm.get('nombreVendedor').setValue(nombreVendedor.valor);
-    });
-    this.paramService.obtenerListaPadres('SERVIENTREGA_PARAMETROS').subscribe((info) => {
-      this.imagenServientrega = info[0];
-    });
-    this.paramService.obtenerListaPadres('TIPO_IDENTIFICACION').subscribe((info) => {
-      this.tipoIdentificacion = info;
+      this.imagenServientrega = info.find((item: any) => {
+        return item.nombre === 'IMAGEN_COURIER';
+      });
     });
   }
 
