@@ -27,6 +27,8 @@ export interface Producto {
   fechaElaboracion;
   caracteristicas;
   precioOferta;
+  lugarVenta;
+  courier;
 }
 export interface FichaTecnicaProducto {
   id;
@@ -67,6 +69,8 @@ export class ProductosService {
       fechaElaboracion: "",
       caracteristicas: '',
       precioOferta: '',
+      lugarVenta: '',
+      courier: '',
     };
   }
   inicializarFichaTecnica() {
