@@ -117,6 +117,7 @@
                                     <div class="custom-control custom-switch custom-switch-success">
                                         <input type="checkbox" class="custom-control-input" id="envioNivelNacional"
                                                formControlName="envioNivelNacional"
+                                               [(ngModel)]="producto.envioNivelNacional"
                                                (change)="seleccionarEnvio($event)"
                                                />
                                         <label class="custom-control-label" for="envioNivelNacional">
@@ -127,7 +128,9 @@
                                 </div>
                                 <div class="form-group" *ngIf="habilitarEnvio">
                                     <label for="lugarVentaProvincia">Lugar Venta (Provincia)</label>
-                                    <select class="form-control select2" id="lugarVentaProvincia" name="lugarVentaProvincia" formControlName="lugarVentaProvincia" [(ngModel)]="producto.lugarVentaProvincia">
+                                    <select class="form-control select2" id="lugarVentaProvincia" name="lugarVentaProvincia"
+                                            (change)="obtenerCiudad()"
+                                            formControlName="lugarVentaProvincia" [(ngModel)]="producto.lugarVentaProvincia">
                                         <option value="" selected>- Seleccionar -</option>
                                         <option *ngFor="let provincia of provincias" value="{{provincia.valor}}">{{provincia.nombre}}</option>
                                     </select>
@@ -139,7 +142,7 @@
                                     <label for="lugarVentaCiudad">Lugar Venta (Ciudad)</label>
                                     <select class="form-control select2" id="lugarVentaCiudad" name="lugarVentaCiudad" formControlName="lugarVentaCiudad" [(ngModel)]="producto.lugarVentaCiudad">
                                         <option value="" selected>- Seleccionar -</option>
-                                        <option *ngFor="let provincia of provincias" value="{{provincia.valor}}">{{provincia.nombre}}</option>
+                                        <option *ngFor="let ciudad of ciudadOpciones" value="{{ciudad.valor}}">{{ciudad.nombre}}</option>
                                     </select>
                                     <div *ngIf="submittedProductoForm && fp.lugarVentaCiudad.errors" class="invalid-feedback" style="display: block;">
                                         <div *ngIf="fp.lugarVentaCiudad.errors.required">Lugar Venta es requerido</div>

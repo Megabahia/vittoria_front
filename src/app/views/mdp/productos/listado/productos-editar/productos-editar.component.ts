@@ -43,6 +43,7 @@ export class ProductosEditarComponent implements OnInit {
   numRegex = /^-?\d*[.,]?\d{0,2}$/;
   couriers = [];
   provincias = [];
+  ciudadOpciones = [];
   habilitarEnvio = false;
 
   constructor(
@@ -89,7 +90,7 @@ export class ProductosEditarComponent implements OnInit {
       fechaElaboracion: ['', [Validators.required]],
       caracteristicas: ['', [Validators.required]],
       precioOferta: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      envioNivelNacional: [true, [Validators.required]],
+      envioNivelNacional: [true, []],
       lugarVentaProvincia: ['', []],
       lugarVentaCiudad: ['', []],
       courier: ['', [Validators.required]],
@@ -115,6 +116,12 @@ export class ProductosEditarComponent implements OnInit {
       this.imagenes = info.imagenes;
       delete producto.imagenes;
       this.producto = producto;
+      this.habilitarEnvio = !producto.envioNivelNacional;
+      if (!this.producto.envioNivelNacional) {
+        this.productoForm.get('lugarVentaProvincia').setValue(this.producto.lugarVentaProvincia);
+        this.obtenerCiudad();
+        this.productoForm.get('lugarVentaCiudad').setValue(this.producto.lugarVentaCiudad);
+      }
       this.obtenerListaSubcategorias();
     });
   }
@@ -355,8 +362,16 @@ export class ProductosEditarComponent implements OnInit {
     } else {
       this.productoForm.get('lugarVentaProvincia').setValidators([]);
       this.productoForm.get('lugarVentaCiudad').setValidators([]);
+      this.productoForm.get('lugarVentaProvincia').setValue('');
+      this.productoForm.get('lugarVentaCiudad').setValue('');
     }
     this.productoForm.get('lugarVentaProvincia').updateValueAndValidity();
     this.productoForm.get('lugarVentaCiudad').updateValueAndValidity();
+  }
+
+  obtenerCiudad(): void {
+    this.MDMparamService.obtenerListaHijos(this.productoForm.value.lugarVentaProvincia, 'PROVINCIA').subscribe((info) => {
+      this.ciudadOpciones = info;
+    });
   }
 }

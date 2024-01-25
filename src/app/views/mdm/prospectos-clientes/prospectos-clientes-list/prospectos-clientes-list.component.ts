@@ -34,7 +34,7 @@ export class ProspectosClientesListComponent implements OnInit {
   confirmProspectoOpciones;
   tipoPrecioOpciones;
   tipoClienteOpciones;
-  pageSize: any = 10;
+  pageSize: any = 3;
   page = 1;
   maxSize;
   collectionSize;

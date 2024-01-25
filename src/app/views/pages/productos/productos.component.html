@@ -19,7 +19,7 @@
                     <h2 style="color: #2d2c55">{{subTituloPaginaProductos?.valor}}</h2>
                 </div>
                 <div class="d-flex justify-content-center" *ngIf="imagenServientrega">
-                    <img [src]="imagenServientrega.archivo" [alt]="imagenServientrega.valor" width="100">
+                    <img [src]="imagenServientrega?.archivo" [alt]="imagenServientrega?.valor" width="100">
                 </div>
                 <div class="d-flex justify-content-center my-1" *ngIf="producto.video">
                     <video [src]="producto.video" width="600"
@@ -103,6 +103,18 @@
 
                     </div>
 
+                    <div class="d-flex justify-content-center">
+                        <div class="ecommerce-details-price d-flex flex-wrap mt-1">
+                            <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
+                                Precio Normal: $ {{producto.precioVentaA}}</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h2 class="item-price mr-1 text-danger">
+                            Precio Oferta: $ {{producto.precioOferta}}</h2>
+                        </div>
+                    </div>
+
                     <div class="row my-2">
                         <div class="col-12 d-flex justify-content-center">
                             <h2 style="color: red">{{tituloPaginaProductos?.valor}}</h2>
@@ -111,7 +123,7 @@
                             <h2 style="color: #2d2c55">{{subTituloPaginaProductos?.valor}}</h2>
                         </div>
                         <div class="col-12 d-flex justify-content-center" *ngIf="imagenServientrega">
-                            <img [src]="imagenServientrega.archivo" [alt]="imagenServientrega.valor" width="100">
+                            <img [src]="imagenServientrega?.archivo" [alt]="imagenServientrega?.valor" width="100">
                         </div>
                         <div class="col-12 d-flex justify-content-center my-1">
                             <div class="d-flex flex-column flex-sm-row pt-1"><!---->
@@ -368,36 +380,73 @@
                     <div *ngIf="f.pais.errors.required">Pais es requerido</div>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="provincia">Provincia</label>
-                <select class="form-control select2" id="provincia"
-                        formControlName="provincia"
-                        (change)="obtenerCiudad()">
-                    <option value="" selected>- Seleccionar -</option>
-                    <option value="{{provinciasOP.valor}}"
-                            *ngFor="let provinciasOP of provinciaOpciones">
-                        {{provinciasOP.nombre}}
-                    </option>
-                </select>
-                <div *ngIf="submitted && f.provincia.errors" class="invalid-feedback"
-                     style="display: block;">
-                    <div *ngIf="f.provincia.errors.required">Provincia es requerida</div>
+            <div *ngIf="producto?.envioNivelNacional; else lugarEnvioCiudad">
+                <div class="form-group">
+                    <label for="provincia1">Provincia</label>
+                    <select class="form-control select2" id="provincia1"
+                            formControlName="provincia"
+                            (change)="obtenerCiudad()">
+                        <option value="" selected>- Seleccionar -</option>
+                        <option value="{{provinciasOP.valor}}"
+                                *ngFor="let provinciasOP of provinciaOpciones">
+                            {{provinciasOP.nombre}}
+                        </option>
+                    </select>
+                    <div *ngIf="submitted && f.provincia.errors" class="invalid-feedback"
+                         style="display: block;">
+                        <div *ngIf="f.provincia.errors.required">Provincia es requerida</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="ciudad1">Ciudad</label>
+                    <select class="form-control select2" id="ciudad1" formControlName="ciudad">
+                        <option value="" selected>- Seleccionar -</option>
+                        <option value="{{ciudadesOp.valor}}"
+                                *ngFor="let ciudadesOp of ciudadOpciones">
+                            {{ciudadesOp.nombre}}
+                        </option>
+                    </select>
+                    <div *ngIf="submitted && f.ciudad.errors" class="invalid-feedback"
+                         style="display: block;">
+                        <div *ngIf="f.ciudad.errors.required">Ciudad es requerida</div>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="ciudad">Ciudad</label>
-                <select class="form-control select2" id="ciudad" formControlName="ciudad">
-                    <option value="" selected>- Seleccionar -</option>
-                    <option value="{{ciudadesOp.valor}}"
-                            *ngFor="let ciudadesOp of ciudadOpciones">
-                        {{ciudadesOp.nombre}}
-                    </option>
-                </select>
-                <div *ngIf="submitted && f.ciudad.errors" class="invalid-feedback"
-                     style="display: block;">
-                    <div *ngIf="f.ciudad.errors.required">Ciudad es requerida</div>
+            <ng-template #lugarEnvioCiudad>
+                <div class="form-group">
+                    <label for="provincia2">Provincia</label>
+                    <select class="form-control select2" id="provincia2"
+                            formControlName="provincia"
+                            disabled
+                            (change)="obtenerCiudad()">
+                        <option value="" selected>- Seleccionar -</option>
+                        <option value="{{provinciasOP.valor}}"
+                                *ngFor="let provinciasOP of provinciaOpciones">
+                            {{provinciasOP.nombre}}
+                        </option>
+                    </select>
+                    <div *ngIf="submitted && f.provincia.errors" class="invalid-feedback"
+                         style="display: block;">
+                        <div *ngIf="f.provincia.errors.required">Provincia es requerida</div>
+                    </div>
                 </div>
-            </div>
+                <div class="form-group">
+                    <label for="ciudad2">Ciudad</label>
+                    <select class="form-control select2"
+                            disabled
+                            id="ciudad2" formControlName="ciudad">
+                        <option value="" selected>- Seleccionar -</option>
+                        <option value="{{ciudadesOp.valor}}"
+                                *ngFor="let ciudadesOp of ciudadOpciones">
+                            {{ciudadesOp.nombre}}
+                        </option>
+                    </select>
+                    <div *ngIf="submitted && f.ciudad.errors" class="invalid-feedback"
+                         style="display: block;">
+                        <div *ngIf="f.ciudad.errors.required">Ciudad es requerida</div>
+                    </div>
+                </div>
+            </ng-template>
             <div class="form-group">
                 <label class="form-label" for="callePrincipal">Calle principal:</label>
                 <input type="text" id="callePrincipal"

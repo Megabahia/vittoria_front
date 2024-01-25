@@ -81,6 +81,11 @@ export class ProductosComponent implements OnInit, AfterViewInit {
         valorDescuento: [0, []],
         total: [this.producto.precioOferta * 1, []],
       });
+      if (!this.producto.envioNivelNacional) {
+        this.pospectoForm.get('provincia').setValue(this.producto.lugarVentaProvincia);
+        this.obtenerCiudad();
+        this.pospectoForm.get('ciudad').setValue(this.producto.lugarVentaCiudad);
+      }
       this.fDetalles.push(cuentaForm);
       // this.pospectoForm.get('precio').setValue(this.producto.precioOferta * 1);
       this.obtenerParametrosPagina();
