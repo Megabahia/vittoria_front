@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, ViewChild, ElementRef} from '@angular/core';
+import {Component, OnInit, Input, ViewChild, ElementRef, Output, EventEmitter} from '@angular/core';
 import {NgbPagination, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {CategoriasService} from '../../../../../services/mdp/productos/categorias/categorias.service';
 import {Producto, ProductosService} from '../../../../../services/mdp/productos/productos.service';
@@ -13,6 +13,7 @@ import * as moment from 'moment';
   templateUrl: './productos-editar.component.html'
 })
 export class ProductosEditarComponent implements OnInit {
+  @Output() messageEvent = new EventEmitter<string>();
   @ViewChild('video', {
     read: ElementRef
   }) video: ElementRef;
@@ -42,6 +43,7 @@ export class ProductosEditarComponent implements OnInit {
   numRegex = /^-?\d*[.,]?\d{0,2}$/;
   couriers = [];
   provincias = [];
+  habilitarEnvio = false;
 
   constructor(
     private categoriasService: CategoriasService,
@@ -87,7 +89,9 @@ export class ProductosEditarComponent implements OnInit {
       fechaElaboracion: ['', [Validators.required]],
       caracteristicas: ['', [Validators.required]],
       precioOferta: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      lugarVenta: ['', [Validators.required]],
+      envioNivelNacional: [true, [Validators.required]],
+      lugarVentaProvincia: ['', []],
+      lugarVentaCiudad: ['', []],
       courier: ['', [Validators.required]],
     });
     this.fichaTecnicaForm = this._formBuilder.group({
@@ -133,7 +137,7 @@ export class ProductosEditarComponent implements OnInit {
     });
   }
 
-  obtenerFichasTecnicas() {
+  obtenerFichasTecnicas(): void {
     this.productosService.obtenerFichasTecnicas(this.idProducto).subscribe((info) => {
       this.fichaTecnicaLista = info.info;
     });
@@ -151,22 +155,22 @@ export class ProductosEditarComponent implements OnInit {
     });
   }
 
-  onSelect(event) {
+  onSelect(event): void {
     if (this.archivos && this.archivos.length - this.imagenes.length > 0) {
       this.onRemove(this.archivos[0]);
     }
     this.archivos.push(...event.addedFiles);
   }
 
-  onRemove(event) {
+  onRemove(event): void {
     this.archivos.splice(this.archivos.indexOf(event), 1);
   }
 
-  removeAll() {
+  removeAll(): void {
     this.archivos = [];
   }
 
-  guardarProducto() {
+  guardarProducto(): void {
     let llaves = Object.keys(this.producto);
     let valores = Object.values(this.producto);
     this.datosProducto = new FormData();
@@ -182,10 +186,10 @@ export class ProductosEditarComponent implements OnInit {
     if (this.productoForm.invalid) {
       return;
     }
-    let fechaCaducidad = moment(this.producto.fechaCaducidad, 'YYYY-MM-DD');
-    let fechaElaboracion = moment(this.producto.fechaElaboracion, 'YYYY-MM-DD');
-    let diferenciaDiasElabCad = fechaCaducidad.diff(fechaElaboracion, 'days');
-    let diferenciaDiasHoyCad = fechaCaducidad.diff(moment(), 'days');
+    const fechaCaducidad = moment(this.producto.fechaCaducidad, 'YYYY-MM-DD');
+    const fechaElaboracion = moment(this.producto.fechaElaboracion, 'YYYY-MM-DD');
+    const diferenciaDiasElabCad = fechaCaducidad.diff(fechaElaboracion, 'days');
+    const diferenciaDiasHoyCad = fechaCaducidad.diff(moment(), 'days');
     if (diferenciaDiasElabCad < 0) {
       this.mensaje = 'La fecha de caducidad debe ser mayor a la de elaboración';
       this.abrirModal(this.aviso);
@@ -200,15 +204,15 @@ export class ProductosEditarComponent implements OnInit {
     if (this.video.nativeElement.files[0]) {
       this.datosProducto.append('video', this.video.nativeElement.files[0]);
     }
+    this.archivos.map((valor, pos) => {
+      this.datosProducto.append('imagenes[' + pos + ']id', pos.toString());
+      this.datosProducto.append('imagenes[' + pos + ']imagen', valor);
+    });
     if (this.idProducto !== 0) {
-
-      this.archivos.map((valor, pos) => {
-        this.datosProducto.append('imagenes[' + pos + ']id', '0');
-        this.datosProducto.append('imagenes[' + pos + ']imagen', valor);
-      });
       this.productosService.actualizarProducto(this.datosProducto, this.idProducto).subscribe((info) => {
           this.mensaje = 'Producto actualizado';
           this.abrirModal(this.aviso);
+          this.messageEvent.emit('lista');
         },
         (error) => {
           let errores = Object.values(error);
@@ -220,10 +224,6 @@ export class ProductosEditarComponent implements OnInit {
           this.abrirModal(this.aviso);
         });
     } else {
-      this.archivos.map((valor, pos) => {
-        this.datosProducto.append('imagenes[' + pos + ']id', '0');
-        this.datosProducto.append('imagenes[' + pos + ']imagen', valor);
-      });
       this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
           this.idProducto = info.id;
           this.mensaje = 'Producto guardado';
@@ -241,12 +241,12 @@ export class ProductosEditarComponent implements OnInit {
     }
   }
 
-  eliminarImagenModal(id) {
+  eliminarImagenModal(id): void {
     this.idImagen = id;
     this.modalService.open(this.eliminarImagenMdl);
   }
 
-  eliminarImagen() {
+  eliminarImagen(): void {
     this.productosService.eliminarImagen(this.idImagen).subscribe((info) => {
       this.obtenerProducto();
       this.modalService.dismissAll();
@@ -254,7 +254,7 @@ export class ProductosEditarComponent implements OnInit {
     });
   }
 
-  crearFichaTecnica() {
+  crearFichaTecnica(): void {
     this.fichaTecnica = this.productosService.inicializarFichaTecnica();
     this.opcion = 'insertar';
     this.submittedFichaTecnicaForm = false;
@@ -263,7 +263,7 @@ export class ProductosEditarComponent implements OnInit {
 
   }
 
-  editarFichaTecnica(id) {
+  editarFichaTecnica(id): void {
     this.productosService.obtenerFichaTecnica(id).subscribe((info) => {
       this.fichaTecnica = info;
       this.submittedFichaTecnicaForm = false;
@@ -271,18 +271,18 @@ export class ProductosEditarComponent implements OnInit {
     });
   }
 
-  eliminarFichaTecnica(id) {
+  eliminarFichaTecnica(id): void {
     this.productosService.eliminarFichaTecnica(id).subscribe(() => {
     });
   }
 
-  guardarFichaTecnica() {
+  guardarFichaTecnica(): void {
     this.submittedFichaTecnicaForm = true;
     if (this.fichaTecnicaForm.invalid) {
       return;
     }
     if (this.opcion === 'insertar') {
-      if (this.idProducto != 0) {
+      if (this.idProducto !== 0) {
         this.productosService.crearFichaTecnica(this.fichaTecnica).subscribe((info) => {
             this.obtenerFichasTecnicas();
             this.dismissModal.nativeElement.click();
@@ -323,27 +323,40 @@ export class ProductosEditarComponent implements OnInit {
     }
   }
 
-  abrirModal(modal, id = null) {
+  abrirModal(modal, id = null): void {
     this.idFichaTecnica = id;
     this.modalService.open(modal);
   }
 
-  cerrarModalMensaje() {
+  cerrarModalMensaje(): void {
     this.modalService.dismissAll();
   }
 
-  abrirModalMensaje(modal) {
+  abrirModalMensaje(modal): void {
     this.modalService.open(modal);
   }
 
-  cerrarModal() {
+  cerrarModal(): void {
     this.modalService.dismissAll();
     this.productosService.eliminarFichaTecnica(this.idFichaTecnica).subscribe(() => {
       this.obtenerFichasTecnicas();
     });
   }
 
-  cerrarModalEliminar() {
+  cerrarModalEliminar(): void {
     this.modalService.dismissAll();
+  }
+
+  seleccionarEnvio(event): void {
+    this.habilitarEnvio = !event.currentTarget.checked;
+    if (this.habilitarEnvio) {
+      this.productoForm.get('lugarVentaProvincia').setValidators([Validators.required]);
+      this.productoForm.get('lugarVentaCiudad').setValidators([Validators.required]);
+    } else {
+      this.productoForm.get('lugarVentaProvincia').setValidators([]);
+      this.productoForm.get('lugarVentaCiudad').setValidators([]);
+    }
+    this.productoForm.get('lugarVentaProvincia').updateValueAndValidity();
+    this.productoForm.get('lugarVentaCiudad').updateValueAndValidity();
   }
 }
