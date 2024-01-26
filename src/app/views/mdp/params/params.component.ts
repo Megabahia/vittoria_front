@@ -36,6 +36,7 @@ export class ParamsComponent implements OnInit {
   valor;
   padres;
   currentUserValue;
+  archivo: FormData = new FormData();
 
   // @ViewChild('padres') padres;
   constructor(
@@ -143,7 +144,7 @@ export class ParamsComponent implements OnInit {
     if (this.paramForm.invalid) {
       return;
     }
-    if (this.funcion == 'insertar') {
+    if (this.funcion === 'insertar') {
       await this.paramService.insertarParametro({
         nombre: this.nombre,
         tipo: this.nombreTipo,
@@ -157,9 +158,10 @@ export class ParamsComponent implements OnInit {
         this.obtenerListaParametros();
         this.dismissModal.nativeElement.click();
         this.submitted = false;
-
+        this.idParametro = result.id;
+        this.actualizarArchivoParametro();
       });
-    } else if (this.funcion = 'editar') {
+    } else if (this.funcion === 'editar') {
       await this.paramService.editarParametro(
         {
           id: this.idParametro,
@@ -175,6 +177,8 @@ export class ParamsComponent implements OnInit {
         this.obtenerListaParametros();
         this.dismissModal.nativeElement.click();
         this.submitted = false;
+        this.idParametro = result.id;
+        this.actualizarArchivoParametro();
       });
     }
   }
@@ -205,5 +209,16 @@ export class ParamsComponent implements OnInit {
       link.download = 'parametrizaciones.xls';
       link.click();
     });
+  }
+
+  actualizarArchivoParametro(): void {
+    this.archivo.append('id', this.idParametro);
+    this.paramService.actualizarArchivo(this.idParametro, this.archivo).subscribe((info) => {
+    });
+  }
+
+  subirArchivo(event): void {
+    this.archivo = new FormData();
+    this.archivo.append('archivo', event.target.files[0]);
   }
 }

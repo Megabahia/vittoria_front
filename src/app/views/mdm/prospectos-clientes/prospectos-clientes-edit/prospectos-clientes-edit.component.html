@@ -287,22 +287,12 @@
                                     <!-- Address and Contact ends -->
                                     <ng-container formArrayName="detalles">
                                         <h2>Productos Pedido</h2>
-                                        <div class="card-body invoice-padding">
-                                            <div class="row mt-1">
-                                                <div class="col-12 px-0">
-                                                    <button type="button" class="btn btn-primary btn-sm btn-add-new" data-repeater-create>
-                                                        <i-feather name="plus" class="mr-25 edit-user"></i-feather>
-                                                        <span class="align-middle" (click)="agregarItem()">Añadir producto</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div *ngFor="let cuenta of prospectoForm.get('detalles')['controls']; let i = index">
                                             <div class="card-body invoice-padding">
                                                 <ng-container class="row" [formGroup]="cuenta">
                                                     <div class="col-12 pt-2 d-flex product-details-border position-relative pr-0">
                                                         <div class="row w-100 pr-lg-0 pr-1 py-2">
-                                                            <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                            <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2 border-left">
                                                                 <p class="card-text col-title">Código</p>
                                                                 <input class="form-control" type="text" name="codigo" formControlName="codigo" (change)="obtenerProducto(i)">
                                                                 <div *ngIf="submitted && cuenta.controls?.codigo.errors" class="invalid-feedback" style="display: block;">
@@ -311,7 +301,7 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="col-md-3 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                            <div class="col-md-3 mb-lg-0 mb-2 mt-lg-0 mt-2 border-left">
                                                                 <p class="card-text col-title">Producto</p>
                                                                 <input class="form-control" type="text" name="articulo" formControlName="articulo" disabled>
                                                                 <div *ngIf="submitted && cuenta.controls?.articulo.errors" class="invalid-feedback" style="display: block;">
@@ -320,15 +310,17 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                            <div class="col-md-2 mb-lg-0 mb-2 mt-lg-0 mt-2 border-left">
                                                                 <p class="card-text col-title">Valor Unitario</p>
                                                                 <input class="form-control" type="text" name="valorUnitario" formControlName="valorUnitario" disabled>
                                                                 <div *ngIf="submitted && cuenta.controls?.valorUnitario.errors" class="invalid-feedback" style="display: block;">
                                                                     <div *ngIf="cuenta.controls?.valorUnitario.errors.required">Requerido
                                                                     </div>
+                                                                    <div *ngIf="cuenta.controls?.valorUnitario.errors.min">Debe ser mayor a 0
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-1 my-lg-0 my-2">
+                                                            <div class="col-md-1 my-lg-0 my-2 border-left">
                                                                 <p class="card-text col-title">Cantidad</p>
                                                                 <input type="number" class="form-control" value="0" placeholder="0" name="cantidad" formControlName="cantidad" (change)="calcularSubtotal()" />
                                                                 <div *ngIf="submitted && cuenta.controls?.cantidad.errors" class="invalid-feedback" style="display: block;">
@@ -341,114 +333,63 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="col-md-2 my-lg-0 my-2">
-                                                                <p class="card-text col-title"><b>Precio:</b></p>
-                                                                <h5><b>${{cuenta.controls?.precio.value}}</b></h5>
+                                                            <div class="col-md-2 my-lg-0 my-2 border-left">
+                                                                <p class="card-text col-title"><b>Precio Total:</b></p>
+                                                                <h5><b>${{cuenta.controls?.total.value}}</b></h5>
                                                             </div>
-                                                            <div class="col-md-2">
+                                                            <div class="col-md-2 border-left">
                                                                 <img class="img-detalle" src="{{cuenta.controls?.imagen.value}}" *ngIf="cuenta.controls?.imagen" >
                                                             </div>
                                                         </div>
-                                                        <div class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
+                                                        <div class="d-flex flex-column align-items-center justify-content-between invoice-product-actions py-50 px-25">
                                                             <i-feather name="x" class="cursor-pointer font-medium-3" data-repeater-delete (click)="removerItem(i)"></i-feather>
-
                                                         </div>
                                                     </div>
-                                                    <div class=" row">
-                                                        <div class="col-12 pt-2">
-                                                            <div class="row w-100 pr-lg-0 pr-1 py-2">
-                                                                <div class="col-md-4 mb-lg-0 mb-2 mt-lg-0">
-                                                                    <p class="card-text col-title">Información Adicional</p>
-                                                                    <textarea class="form-control" rows="1" name="informacionAdicional" formControlName="informacionAdicional" placeholder="Información adicional"></textarea>
-                                                                    <div *ngIf="submitted && cuenta.controls?.informacionAdicional.errors" class="invalid-feedback" style="display: block;">
-                                                                        <div *ngIf="cuenta.controls?.informacionAdicional.errors.required">Requerido
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-2 my-lg-0 my-2">
-                                                                    <p class="card-text col-title">% descuento</p>
-                                                                    <input type="number" class="form-control" value="0" placeholder="0" name="descuento" formControlName="descuento" [ngModelOptions]="{standalone: true}" />
-                                                                    <div *ngIf="submitted && cuenta.controls?.descuento.errors" class="invalid-feedback" style="display: block;">
-                                                                        <div *ngIf="cuenta.controls?.descuento.errors.required">Requerido
-                                                                        </div>
-                                                                        <div *ngIf="cuenta.controls?.descuento.errors.pattern">Solo números decimales
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-2 my-lg-0 my-2">
-                                                                    <p class="card-text col-title">$ descuento:</p>
-                                                                    <input type="number" class="form-control" value="0" placeholder="0" name="valorDescuento" formControlName="valorDescuento" disabled />
-                                                                    <div *ngIf="submitted && cuenta.controls?.controls?.valorDescuento.errors" class="invalid-feedback" style="display: block;">
-                                                                        <div *ngIf="cuenta.controls?.controls?.valorDescuento.errors.required">Requerido
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-
-                                                    </div>
+                                                    <hr />
                                                 </ng-container>
                                             </div>
                                         </div>
-                                        <hr />
-
+                                        <div class="card-body invoice-padding">
+                                            <div class="row mt-1">
+                                                <div class="col-12 px-0">
+                                                    <button type="button" class="btn btn-primary btn-sm btn-add-new" data-repeater-create>
+                                                        <i-feather name="plus" class="mr-25 edit-user"></i-feather>
+                                                        <span class="align-middle" (click)="agregarItem()">Añadir producto</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Invoice Total starts -->
+                                        <div class="card-body invoice-padding">
+                                            <div class="row invoice-sales-total-wrapper">
+                                                <div class="col-md-6 order-md-1 order-2 mt-md-0 mt-3">
+                                                    <div class="d-flex align-items-center mb-1">
+                                                        <label for="salesperson" class="form-label">Persona de ventas:</label>
+                                                        <input type="text" class="form-control ml-50" id="salesperson" placeholder="Nombre vendedor" name="nombreVendedor" [value]="f?.nombreVendedor.value" disabled />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 d-flex justify-content-end order-md-2 order-1">
+                                                    <div class="invoice-total-wrapper">
+                                                        <div class="invoice-total-item">
+                                                            <p class="invoice-total-title">Subtotal:</p>
+                                                            <p class="invoice-total-amount">${{f?.subTotal.value}}</p>
+                                                        </div>
+                                                        <div class="invoice-total-item">
+                                                            <p class="invoice-total-title">{{iva?.descripcion}}:</p>
+                                                            <p class="invoice-total-amount">${{f?.iva.value}}</p>
+                                                        </div>
+                                                        <hr class="my-50" />
+                                                        <div class="invoice-total-item">
+                                                            <p class="invoice-total-title">Total:</p>
+                                                            <p class="invoice-total-amount">${{f?.total.value}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Invoice Total ends -->
                                     </ng-container>
                                     <!-- Product Details starts -->
-                                    <hr>
-                                    <h2>Productos pedido</h2>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="codigoProducto">Código producto</label>
-                                                <input type="text" class="form-control" name="codigoProducto" id="codigoProducto" formControlName="codigoProducto" disabled />
-                                                <button class="btn btn-primary" (click)="abrirModalProducto(verProducto)">Ver</button>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="nombreProducto">Nombre del producto de interés</label>
-                                                <input type="text" class="form-control" name="nombreProducto" id="nombreProducto" formControlName="nombreProducto" disabled />
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="precio">Precio</label>
-                                                <input type="email" class="form-control" name="precio" id="precio" formControlName="precio" disabled />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="cantidad">Cantidad</label>
-                                                <input type="number" class="form-control" id="cantidad" name="cantidad" formControlName="cantidad" disabled />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="tipoPrecio">Tipo de precio</label>
-                                                <input type="email" class="form-control" name="tipoPrecio" id="tipoPrecio" formControlName="tipoPrecio" />
-                                                <div *ngIf="submitted && f.tipoPrecio.errors" class="invalid-feedback"
-                                                     style="display: block;">
-                                                    <div *ngIf="f.tipoPrecio.errors.required">Tipo de precio es requerido</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="nombreVendedor">Nombre del vendedor</label>
-                                                <input type="text" class="form-control" name="nombreVendedor" id="nombreVendedor" formControlName="nombreVendedor" />
-                                                <div *ngIf="submitted && f.nombreVendedor.errors" class="invalid-feedback"
-                                                     style="display: block;">
-                                                    <div *ngIf="f.nombreVendedor.errors.required">Nombre del vendedor es requerido</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                    </div>
                                     <hr>
                                     <h2>Confirmación Prospecto</h2>
                                     <div class="row">
@@ -464,6 +405,16 @@
                                                 <div *ngIf="submitted && f.confirmacionProspecto.errors" class="invalid-feedback"
                                                      style="display: block;">
                                                     <div *ngIf="f.confirmacionProspecto.errors.required">Confirmación del prospecto es requerido</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="nombreVendedor">Nombre del vendedor</label>
+                                                <input type="text" class="form-control" name="nombreVendedor" id="nombreVendedor" formControlName="nombreVendedor" />
+                                                <div *ngIf="submitted && f.nombreVendedor.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.nombreVendedor.errors.required">Nombre del vendedor es requerido</div>
                                                 </div>
                                             </div>
                                         </div>

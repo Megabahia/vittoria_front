@@ -401,4 +401,8 @@ export class ClientesService {
     return this.http.get<any>(
       `${environment.apiUrl}/mdm/clientes/exportar/`, httpOptions);
   }
+
+  procesarEnvio(id) {
+    return this.http.get<any>(`${apiUrl}/mdm/facturas/procesar/envio/${id}`);
+  }
 }

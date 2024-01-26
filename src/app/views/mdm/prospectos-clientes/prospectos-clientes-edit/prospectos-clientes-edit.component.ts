@@ -1,6 +1,7 @@
 import {Component, OnInit, Input, ViewChild, Output, EventEmitter} from '@angular/core';
 import {ParamService} from 'src/app/services/admin/param.service';
 import {ParamService as MDMParamService} from 'src/app/services/mdm/param/param.service';
+import {ParamService as MDPParamService} from 'src/app/services/mdp/param/param.service';
 import {ProspectosService, Prospecto} from '../../../../services/mdm/prospectosCli/prospectos.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
@@ -55,26 +56,34 @@ export class ProspectosClientesEditComponent implements OnInit {
   ciudadOpciones;
   tipoIdentificacion = [];
   submitted = false;
+  iva;
 
   constructor(
     private prospectosService: ProspectosService,
     private globalParam: ParamService,
     private productosServicer: ProductosService,
     private mdmParamService: MDMParamService,
+    private mdpParamService: MDPParamService,
     private _formBuilder: FormBuilder,
     private modalService: NgbModal,
     private router: Router,
     private toaster: Toaster,
   ) {
+    this.obtenerIVA();
   }
 
   ngOnInit(): void {
     this.prospectosService.obtenerProspecto(this.idUsuario).subscribe((info) => {
       this.prospecto = info;
       this.urlImagen = info.imagen;
+      info.detalles.forEach((detalle, index) => {
+        this.agregarItem();
+      });
       this.prospectoForm.patchValue({...info});
-      this.fDetalles.controls[0].get('codigo').setValue(this.prospecto.codigoProducto);
-      this.obtenerProducto(0);
+      info.detalles.forEach((detalle, index) => {
+        this.fDetalles.controls[index].get('codigo').setValue(detalle.codigo);
+        this.obtenerProducto(index);
+      });
       // this.productosServicer.obtenerProductoCodigo(this.prospecto.codigoProducto).subscribe((producto) => {
       //   this.producto = producto;
       // });
@@ -113,22 +122,11 @@ export class ProspectosClientesEditComponent implements OnInit {
       canal: ['', []],
       tipoPrecio: ['', []],
       nombreVendedor: ['', [Validators.required]],
-      detalles: this._formBuilder.array([
-        this._formBuilder.group({
-          id: [],
-          imagen: ['', []],
-          articulo: [0, [Validators.required]],
-          valorUnitario: [0, []],
-          cantidad: [1, [Validators.required]],
-          precio: [0, [Validators.required]],
-          codigo: [0, [Validators.required]],
-          informacionAdicional: ['compra desde la url', []],
-          descuento: [0, []],
-          impuesto: [0, []],
-          valorDescuento: [0, [Validators.required]],
-          total: [0, [Validators.required]],
-        }
-      )])
+      detalles: this._formBuilder.array([]),
+      subTotal: ['', [Validators.required]],
+      descuento: ['', []],
+      iva: ['', [Validators.required]],
+      total: ['', [Validators.required]],
     });
     this.mdmParamService.obtenerListaPadres('TIPO_IDENTIFICACION').subscribe((info) => {
       this.tipoIdentificacion = info;
@@ -146,17 +144,19 @@ export class ProspectosClientesEditComponent implements OnInit {
   agregarItem(): void {
     this.fDetalles.push(
       this._formBuilder.group({
+        id: [0, []],
         imagen: ['', []],
-        articulo: [0, [Validators.required]],
-        valorUnitario: [0, []],
-        cantidad: [1, [Validators.required]],
+        articulo: ['', [Validators.required]],
+        valorUnitario: [0, [Validators.required, Validators.min(1)]],
+        cantidad: [1, [Validators.required, Validators.min(1)]],
         precio: [0, [Validators.required]],
         codigo: [0, [Validators.required]],
         informacionAdicional: ['compra desde la url', []],
         descuento: [0, []],
         impuesto: [0, []],
         valorDescuento: [0, [Validators.required]],
-        total: [0, [Validators.required]],
+        total: [0, [Validators.required, Validators.min(1)]],
+        prospectoClienteEncabezado: [this.prospectoForm.get('id').value, []],
       })
     );
   }
@@ -165,19 +165,16 @@ export class ProspectosClientesEditComponent implements OnInit {
     // this.calcularSubtotal();
     this.fDetalles.removeAt(i);
   }
+
   obtenerProducto(i): void {
-    console.log('buscar', this.fDetalles.controls[i].get('codigo').value);
     this.productosServicer.obtenerProductoPorCodigo({
       codigoBarras: this.fDetalles.controls[i].get('codigo').value
     }).subscribe((info) => {
       if (info.codigoBarras) {
         this.fDetalles.controls[i].get('articulo').setValue(info.nombre);
         this.fDetalles.controls[i].get('imagen').setValue(info.imagen.toString());
-        console.log('llega..', info.precioVentaA);
-        this.fDetalles.controls[i].get('precio').setValue(info.precioVentaA);
-        this.fDetalles.controls[i].get('valorUnitario').setValue(info.precioVentaA);
-        console.log('this.fDetalles.controls[i].get(\'precio\')', this.fDetalles.controls[i].get('imagen').value);
-        console.log(this.fDetalles.controls[i]);
+        this.fDetalles.controls[i].get('valorUnitario').setValue(info.precioOferta);
+        this.fDetalles.controls[i].get('total').setValue(info.precioOferta * +this.fDetalles.controls[i].get('cantidad').value);
       } else {
         // this.comprobarProductos[i] = false;
         alert('No existe el producto a buscar');
@@ -187,28 +184,57 @@ export class ProspectosClientesEditComponent implements OnInit {
 
     });
   }
+
   calcularSubtotal() {
-    // let detalles = this.detalles;
-    // let subtotal = 0;
-    // let descuento = 0;
-    // let cantidad = 0;
-    // if (detalles) {
-    //   detalles.map((valor) => {
-    //     let valorUnitario = Number(valor.valorUnitario) ? Number(valor.valorUnitario) : 0;
-    //     let porcentDescuento = valor.descuento ? valor.descuento : 0;
-    //     let cantidadProducto = valor.cantidad ? valor.cantidad : 0;
-    //     let precio = cantidadProducto * valorUnitario;
-    //
-    //     valor.valorDescuento = this.redondeoValor(precio * (porcentDescuento / 100));
-    //     descuento += precio * (porcentDescuento / 100);
-    //     subtotal += precio;
-    //     cantidad += valor.cantidad ? valor.cantidad : 0;
-    //     valor.precio = this.redondear(precio);
-    //     valor.total = valor.precio;
-    //
-    //   });
-    // }
+    console.log('detallaes antes', this.prospectoForm.get('detalles').value);
+    let detalles = this.prospectoForm.get('detalles').value;
+    let subtotal = 0;
+    let descuento = 0;
+    let cantidad = 0;
+    if (detalles) {
+      detalles.map((valor) => {
+        let valorUnitario = Number(valor.valorUnitario) ? Number(valor.valorUnitario) : 0;
+        let porcentDescuento = valor.descuento ? valor.descuento : 0;
+        let cantidadProducto = valor.cantidad ? valor.cantidad : 0;
+        let precio = cantidadProducto * valorUnitario;
+
+        valor.valorDescuento = this.redondeoValor(precio * (porcentDescuento / 100));
+        descuento += precio * (porcentDescuento / 100);
+        subtotal += precio;
+        cantidad += valor.cantidad ? valor.cantidad : 0;
+        valor.precio = this.redondear(precio);
+        valor.total = valor.precio;
+
+      });
+      this.prospectoForm.get('detalles').patchValue(detalles);
+      this.prospectoForm.get('subTotal').patchValue(subtotal);
+      const iva = Number(subtotal * this.iva.valor).toFixed(2);
+      this.prospectoForm.get('iva').patchValue(iva);
+      const total = Number(iva + subtotal).toFixed(2);
+      this.prospectoForm.get('total').patchValue(total);
+    }
+    console.log('detallaes despues', detalles);
   }
+
+  redondeoValor(valor) {
+    return isNaN(valor) ? valor : parseFloat(valor).toFixed(2);
+  }
+
+  redondear(num, decimales = 2) {
+    var signo = (num >= 0 ? 1 : -1);
+    num = num * signo;
+    if (decimales === 0) {
+      return signo * Math.round(num);
+    }
+    // round(x * 10 ^ decimales)
+    num = num.toString().split('e');
+    num = Math.round(+(num[0] + 'e' + (num[1] ? (+num[1] + decimales) : decimales)));
+    // x * 10 ^ (-decimales)
+    num = num.toString().split('e');
+    let valor = signo * (Number)(num[0] + 'e' + (num[1] ? (+num[1] - decimales) : -decimales));
+    return valor;
+  }
+
   obtenerURLImagen(url) {
     return this.globalParam.obtenerURL(url);
   }
@@ -296,7 +322,7 @@ export class ProspectosClientesEditComponent implements OnInit {
     // this.ciudad = '';
     this.mdmParamService.obtenerListaPadres('PAIS').subscribe((info) => {
       this.paisOpciones = info;
-      this.prospecto.pais  = this.paisOpciones[0].valor;
+      this.prospecto.pais = this.paisOpciones[0].valor;
       this.obtenerProvincias();
     });
   }
@@ -313,5 +339,15 @@ export class ProspectosClientesEditComponent implements OnInit {
     this.mdmParamService.obtenerListaHijos(this.prospecto.provincia, 'PROVINCIA').subscribe((info) => {
       this.ciudadOpciones = info;
     });
+  }
+
+  async obtenerIVA() {
+    await this.mdpParamService.obtenerParametroNombreTipo('ACTIVO', 'TIPO_IVA').subscribe((info) => {
+        this.iva = info;
+      },
+      (error) => {
+        alert('Iva no configurado');
+      }
+    );
   }
 }
