@@ -53,12 +53,6 @@ export const environment = {
         CREAR: 0,
         BORRAR: 0
       },
-      GDP: {
-        LEER: 0,
-        ESCRIBIR: 0,
-        CREAR: 0,
-        BORRAR: 0
-      },
       SERVI: {
         LEER: 0,
         ESCRIBIR: 0,
@@ -73,7 +67,9 @@ export const environment = {
       },
     }
 
-  }
+  },
+  user: 'flores.edgar',
+  password: '123456'
 };
 
 /*

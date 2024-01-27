@@ -107,9 +107,6 @@ export class GestionEntregaComponent implements OnInit {
 
   obtenerUltimosProductos(id) {
     this.gestionEntregaService.obtenerUltimosProductos(id).subscribe((info) => {
-      info.map((prod) => {
-        prod.imagen = this.obtenerURLImagen(prod.imagen);
-      });
       this.ultimosProductos = info;
     });
   }

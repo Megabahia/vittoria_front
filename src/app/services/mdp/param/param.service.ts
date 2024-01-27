@@ -14,9 +14,7 @@ export class ParamService {
   }
 
   obtenerListaParametros(datos) {
-
     return this.http.post<any>(`${apiUrl}/mdp/param/list/`, datos);
-
   }
 
   obtenerListaTipos() {
@@ -64,5 +62,9 @@ export class ParamService {
     };
     return this.http.get<any>(
       `${environment.apiUrl}/mdp/param/exportar/`, httpOptions);
+  }
+
+  actualizarArchivo(id, data): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/mdp/param/update/${id}`, data);
   }
 }

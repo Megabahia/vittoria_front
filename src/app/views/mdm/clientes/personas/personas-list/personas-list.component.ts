@@ -12,7 +12,7 @@ export class PersonasListComponent implements OnInit, AfterViewInit {
   @ViewChild('prospectosMdl') prospectosMdl;
   menu;
   page = 1;
-  pageSize = 10;
+  pageSize = 3;
   collectionSize;
   nombres;
   apellidos;

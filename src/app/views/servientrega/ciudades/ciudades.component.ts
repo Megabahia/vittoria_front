@@ -3,6 +3,7 @@ import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {Validators, FormBuilder, FormGroup} from '@angular/forms';
 import {AuthService} from '../../../services/admin/auth.service';
 import {CiudadesService} from '../../../services/servientrega/ciudades/ciudades.service';
+import {environment} from 'src/environments/environment';
 
 @Component({
   selector: 'app-ciudades',
@@ -18,6 +19,8 @@ export class CiudadesComponent implements OnInit, AfterViewInit {
     {id: 3, nombre: 'Prueba3'},
   ];
   currentUserValue;
+  user = environment.user;
+  password = environment.password;
 
   constructor(
     private servientregaCiudades: CiudadesService,
@@ -38,7 +41,7 @@ export class CiudadesComponent implements OnInit, AfterViewInit {
   }
 
   obtenerListaParametros(): void {
-    this.servientregaCiudades.obtenerCiudades(['usuario', 'constraseña']).subscribe((result) => {
+    this.servientregaCiudades.obtenerCiudades(`[${this.user}', '${this.password}]'`).subscribe((result) => {
       // this.ciuades = result;
     });
   }

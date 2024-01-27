@@ -23,23 +23,23 @@
                         </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-sm-center align-items-start flex-sm-row flex-column">
-                        <div class="header-left">
-                            <h5>Gráfica de transacciones</h5>
-                        </div>
-                        <div class="header-right d-flex align-items-center mt-sm-0 mt-1">
-                            <small><i data-feather="calendar"></i>
-                                rango: <b>21-03-2021 / 21-04-2021</b></small>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <canvas baseChart height="70vh" [colors]="barChartColors " [datasets]="barChartData "
-                                [labels]="barChartLabels " [options]="barChartOptions " [plugins]="barChartPlugins "
-                                [legend]="barChartLegend " [chartType]="barChartType ">
-                        </canvas>
-                    </div>
-                </div>
+<!--                <div class="card">-->
+<!--                    <div class="card-header d-flex justify-content-between align-items-sm-center align-items-start flex-sm-row flex-column">-->
+<!--                        <div class="header-left">-->
+<!--                            <h5>Gráfica de transacciones</h5>-->
+<!--                        </div>-->
+<!--                        <div class="header-right d-flex align-items-center mt-sm-0 mt-1">-->
+<!--                            <small><i data-feather="calendar"></i>-->
+<!--                                rango: <b>21-03-2021 / 21-04-2021</b></small>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="card-body">-->
+<!--                        <canvas baseChart height="70vh" [colors]="barChartColors " [datasets]="barChartData "-->
+<!--                                [labels]="barChartLabels " [options]="barChartOptions " [plugins]="barChartPlugins "-->
+<!--                                [legend]="barChartLegend " [chartType]="barChartType ">-->
+<!--                        </canvas>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div class="card">
                     <div class="card-datatable table-responsive pt-0">
                         <div class="row m-75">
@@ -65,10 +65,12 @@
                                     </div>
                                 </th>
                                 <th>Fecha de compra</th>
+                                <th>Nombres</th>
                                 <th>Canal de compra</th>
                                 <th># productos comprados</th>
                                 <th>Monto</th>
                                 <th>Factura</th>
+                                <th>Acciones</th>
                             </tr>
                             </thead>
 
@@ -81,12 +83,16 @@
                                     </div>
                                 </td>
                                 <td>{{transformarFecha(transaccion.created_at)}}</td>
+                                <td>{{transaccion.cliente.nombreCompleto}} </td>
                                 <td>{{transaccion.canal}} </td>
                                 <td>{{transaccion.numeroProductosComprados}} </td>
                                 <td> ${{transaccion.total}} </td>
                                 <td>
                                     <a (click)="obtenerTransaccion(transaccion.id)" data-toggle="modal"
                                        data-target="#verfactura">factura-{{transaccion.numeroFactura}}</a>
+                                </td>
+                                <td>
+                                    <a (click)="procesarEnvio(transaccion.id)" >Procesar Envio</a>
                                 </td>
                             </tr>
                             </tbody>
@@ -151,14 +157,19 @@
 
                                             </div>
                                             <div class="col-4">
-                                                <label>Identificación</label>
+                                                <label>Numero Identificación</label>
                                                 <input class="form-control" type="text"
                                                        value="{{transaccion.identificacion}}" disabled>
                                             </div>
                                             <div class="col-4">
-                                                <label>Razón social</label>
+                                                <label>Nombres</label>
                                                 <input class="form-control" type="text"
-                                                       value="{{transaccion.razonSocial}}" disabled>
+                                                       value="{{transaccion.cliente.nombres}}" disabled>
+                                            </div>
+                                            <div class="col-4">
+                                                <label>Apellidos</label>
+                                                <input class="form-control" type="text"
+                                                       value="{{transaccion.cliente.apellidos}}" disabled>
                                             </div>
                                             <div class="col-4">
                                                 <label>Dirección</label>
@@ -167,7 +178,7 @@
                                             </div>
                                             <div class="col-4">
                                                 <label>Teléfono</label>
-                                                <input class="form-control" type="text" value="{{transaccion.telefono}}"
+                                                <input class="form-control" type="text" value="{{transaccion.cliente.telefono}}"
                                                        disabled>
                                             </div>
                                             <div class="col-4">
@@ -193,19 +204,12 @@
                                                                         Artículo/Producto</p>
                                                                     <input class="form-control" type="text"
                                                                            value="{{detalle.articulo}}" disabled>
-                                                                    <textarea class="form-control mt-2" rows="2"
-                                                                              disabled>{{detalle.informacionAdicional}}</textarea>
                                                                 </div>
                                                                 <div class="col-lg-3 col-12 my-lg-0 my-2">
                                                                     <p class="card-text col-title mb-md-50 mb-0">Valor
                                                                         unitario</p>
                                                                     <input type="text" class="form-control"
                                                                            value="{{detalle.valorUnitario}}" disabled/>
-                                                                    <div class="mt-2">
-                                                                        <span>Descuento:</span>
-                                                                        <span class="discount">{{detalle.descuento}}
-                                                                            %</span>
-                                                                    </div>
                                                                 </div>
                                                                 <div class="col-lg-2 col-12 my-lg-0 my-2">
                                                                     <p class="card-text col-title mb-md-50 mb-0">
@@ -245,10 +249,6 @@
                                                     <div class="invoice-total-item">
                                                         <p class="invoice-total-title">Subtotal:
                                                             ${{transaccion.subTotal}}</p>
-                                                    </div>
-                                                    <div class="invoice-total-item">
-                                                        <p class="invoice-total-title">Descuento:
-                                                            ${{transaccion.descuento}}</p>
                                                     </div>
                                                     <div class="invoice-total-item">
                                                         <p class="invoice-total-title">IVA 12%: ${{transaccion.iva}}</p>

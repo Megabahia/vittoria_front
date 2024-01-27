@@ -97,7 +97,7 @@
                                     >Copiar Url
                                     </button>
                                 </td>
-                                <td>{{producto.nombre}}</td>
+                                <td>{{producto.nombre | slice:0:30}}</td>
                                 <td>{{producto.categoria}}</td>
                                 <td>{{producto.subCategoria}}</td>
                                 <td>{{producto.stock}} (Unidades)</td>
@@ -138,5 +138,5 @@
         <button type="button " class="btn btn-light " (click)="cerrarModal()">SI</button>
     </div>
 </ng-template>
-<app-productos-editar *ngIf="vista=='editar'" [idProducto]="idProducto"></app-productos-editar>
+<app-productos-editar *ngIf="vista=='editar'" [idProducto]="idProducto" (messageEvent)="receiveMessage($event)"></app-productos-editar>
 

@@ -58,13 +58,12 @@
                     <table class="table table-bordered table-striped">
                         <thead class="thead-light">
                         <tr>
-                            <th rowspan="2">Código</th>
                             <th rowspan="2">Fecha de oferta</th>
+                            <th rowspan="2">Lugar Venta</th>
                             <th rowspan="2">Cliente</th>
                             <th rowspan="2">Identificación</th>
                             <th rowspan="2"># contacto</th>
                             <th rowspan="2">Correo</th>
-                            <th rowspan="2">Indicador de cliente</th>
                             <th rowspan="2">Fecha compra</th>
                             <th rowspan="2">Productos adquiridos</th>
                             <th colspan="2" class="text-center border-left border-right">Confirmación de la entrega</th>
@@ -83,8 +82,8 @@
 
                         <tbody>
                         <tr *ngFor="let entrega of listaEntregas">
-                            <td>{{entrega.codigoOferta}} </td>
                             <td>{{transformarFecha(entrega.fechaOferta)}}</td>
+                            <td>{{entrega.lugarEnvio}}</td>
                             <td>
                                 <div class="d-flex justify-content-left align-items-center">
                                     <div class="avatar mr-1 bg-light-danger">
@@ -100,7 +99,6 @@
                             <td>{{entrega.identificacion}}</td>
                             <td>{{entrega.telefono}}</td>
                             <td>{{entrega.correo}} </td>
-                            <td>{{entrega.indicadorCliente}}</td>
                             <td>{{transformarFecha(entrega.fechaCompra)}}</td>
                             <td>
                                 <a class="avatar bg-info" data-target="#productos-detail" data-toggle="modal">
@@ -112,7 +110,7 @@
                             </td>
                             <td>{{entrega.entregoProducto}}</td>
                             <td>{{transformarFecha(entrega.fechaCompra)}}</td>
-                            <td>{{entrega.canalVentas}}</td>
+                            <td>{{entrega.courier}}</td>
                             <td>{{entrega.calificacion}}</td>
 
                             <td>${{entrega.total}}</td>

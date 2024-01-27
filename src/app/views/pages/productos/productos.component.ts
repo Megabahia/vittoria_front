@@ -4,6 +4,7 @@ import {ActivatedRoute} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ParamService} from '../../../services/mdm/param/param.service';
+import {ParamService as MDPParamService} from '../../../services/mdp/param/param.service';
 import {ValidacionesPropias} from '../../../utils/customer.validators';
 import {ProspectosService} from '../../../services/mdm/prospectosCli/prospectos.service';
 import {Toaster} from 'ngx-toast-notifications';
@@ -41,6 +42,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private _formBuilder: FormBuilder,
     private paramService: ParamService,
+    private MDPparamService: MDPParamService,
     private prospectosService: ProspectosService,
     private productoService: ProductosService,
   ) {
@@ -81,9 +83,15 @@ export class ProductosComponent implements OnInit, AfterViewInit {
         valorDescuento: [0, []],
         total: [this.producto.precioOferta * 1, []],
       });
+      if (!this.producto.envioNivelNacional) {
+        this.pospectoForm.get('provincia').setValue(this.producto.lugarVentaProvincia);
+        this.obtenerCiudad();
+        this.pospectoForm.get('ciudad').setValue(this.producto.lugarVentaCiudad);
+      }
       this.fDetalles.push(cuentaForm);
-      // this.pospectoForm.get('precio').setValue(this.producto.precioOferta * 1);
+      this.pospectoForm.get('precio').setValue(this.producto.precioOferta * 1);
       this.obtenerParametrosPagina();
+      this.pospectoForm.get('courier').setValue(this.producto.courier);
     });
     this.pospectoForm = this._formBuilder.group({
       cantidad: [1, [Validators.required, Validators.min(1)]],
@@ -108,7 +116,8 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       nombreProducto: ['', [Validators.required]],
       codigoProducto: ['', [Validators.required]],
       precio: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      detalles: this._formBuilder.array([])
+      detalles: this._formBuilder.array([]),
+      courier: ['', []],
     });
   }
 
@@ -125,7 +134,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
   }
 
   obtenerParametrosPagina(): void {
-    this.paramService.obtenerListaPadres('PAGINA_PRODUCTOS_URL_' + this.producto.courier).subscribe((info: []) => {
+    this.MDPparamService.obtenerListaPadres('PAGINA_PRODUCTOS_URL_' + this.producto.courier).subscribe((info: []) => {
       this.tituloPaginaProductos = info.find((item: any) => {
         return item.nombre === 'TITULO_PAGINA_PRODUCTOS';
       });
@@ -260,7 +269,8 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     cantidad = operacion === 'sumar' ? Math.min(cantidad + 1, this.producto.stock) : Math.max(cantidad - 1, 0);
     cantidadControl.setValue(cantidad);
     this.fDetalles.controls[0].get('cantidad').setValue(cantidad);
-    this.fDetalles.controls[0].get('precio').setValue(this.producto.precioOferta * cantidad);
+    this.fDetalles.controls[0].get('precio').setValue(this.producto.precioOferta);
+    this.fDetalles.controls[0].get('total').setValue(this.producto.precioOferta * cantidad);
     this.pospectoForm.get('precio').setValue(this.producto.precioOferta * cantidad);
     this.pospectoForm.updateValueAndValidity();
   }

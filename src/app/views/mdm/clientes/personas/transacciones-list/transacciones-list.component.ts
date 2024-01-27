@@ -13,7 +13,7 @@ import {DatePipe} from '@angular/common';
 export class TransaccionesListComponent implements OnInit {
   menu;
   page = 1;
-  pageSize = 10;
+  pageSize = 3;
   collectionSize;
   listaTransacciones;
   inicio = new Date();
@@ -135,6 +135,12 @@ export class TransaccionesListComponent implements OnInit {
       };
       this.barChartData = [this.datosTransferencias];
       this.barChartLabels = etiquetas;
+    });
+  }
+
+  procesarEnvio(id): void {
+    this.clientesService.procesarEnvio(id).subscribe((info) => {
+      this.transaccion = info;
     });
   }
 }

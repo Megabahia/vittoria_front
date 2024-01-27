@@ -87,4 +87,9 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     document.execCommand('copy');
     document.body.removeChild(selectBox);
   }
+
+  receiveMessage($event): void {
+    this.obtenerListaProductos();
+    this.vista = $event;
+  }
 }
