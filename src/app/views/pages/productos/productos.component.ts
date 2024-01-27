@@ -89,8 +89,9 @@ export class ProductosComponent implements OnInit, AfterViewInit {
         this.pospectoForm.get('ciudad').setValue(this.producto.lugarVentaCiudad);
       }
       this.fDetalles.push(cuentaForm);
-      // this.pospectoForm.get('precio').setValue(this.producto.precioOferta * 1);
+      this.pospectoForm.get('precio').setValue(this.producto.precioOferta * 1);
       this.obtenerParametrosPagina();
+      this.pospectoForm.get('courier').setValue(this.producto.courier);
     });
     this.pospectoForm = this._formBuilder.group({
       cantidad: [1, [Validators.required, Validators.min(1)]],
@@ -115,7 +116,8 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       nombreProducto: ['', [Validators.required]],
       codigoProducto: ['', [Validators.required]],
       precio: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      detalles: this._formBuilder.array([])
+      detalles: this._formBuilder.array([]),
+      courier: ['', []],
     });
   }
 

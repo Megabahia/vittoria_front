@@ -67,7 +67,9 @@ export const environment = {
       },
     }
 
-  }
+  },
+  user: 'flores.edgar',
+  password: '123456'
 };
 
 /*

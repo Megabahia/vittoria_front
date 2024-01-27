@@ -89,6 +89,7 @@ export class ProspectosClientesEditComponent implements OnInit {
       // });
       this.obtenerPaisOpciones();
       this.obtenerTipoIdentificacion();
+      this.calcularSubtotal();
     });
     this.prospectoForm = this._formBuilder.group({
       id: ['', [Validators.required]],
@@ -168,7 +169,8 @@ export class ProspectosClientesEditComponent implements OnInit {
 
   obtenerProducto(i): void {
     this.productosServicer.obtenerProductoPorCodigo({
-      codigoBarras: this.fDetalles.controls[i].get('codigo').value
+      codigoBarras: this.fDetalles.controls[i].get('codigo').value,
+      lugarVentaCiudad: this.prospectoForm.get('ciudad').value
     }).subscribe((info) => {
       if (info.codigoBarras) {
         this.fDetalles.controls[i].get('articulo').setValue(info.nombre);
