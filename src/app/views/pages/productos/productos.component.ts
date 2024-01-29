@@ -15,6 +15,7 @@ import {Toaster} from 'ngx-toast-notifications';
   styleUrls: ['./productos.component.css']
 })
 export class ProductosComponent implements OnInit, AfterViewInit {
+  productoInactivo = false;
   @ViewChild('dismissModal') dismissModal;
   @ViewChild('mensajeModal') mensajeModal;
   public mensaje = '';
@@ -69,7 +70,8 @@ export class ProductosComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.productoService.obtenerProductoFree(this.rutaActiva.snapshot.params.id).subscribe((info) => {
+    this.productoService.obtenerProductoFree(this.rutaActiva.snapshot.params.id, {estado: 'Activo'}).subscribe((info) => {
+      this.productoInactivo = false;
       this.producto = info;
       const cuentaForm = this._formBuilder.group({
         articulo: [this.producto.nombre, []],
@@ -92,6 +94,8 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       this.pospectoForm.get('precio').setValue(this.producto.precioOferta * 1);
       this.obtenerParametrosPagina();
       this.pospectoForm.get('courier').setValue(this.producto.courier);
+    }, error => {
+      this.productoInactivo = true;
     });
     this.pospectoForm = this._formBuilder.group({
       cantidad: [1, [Validators.required, Validators.min(1)]],

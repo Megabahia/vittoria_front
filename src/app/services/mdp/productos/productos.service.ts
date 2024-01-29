@@ -168,8 +168,8 @@ export class ProductosService {
     return this.http.delete<any>(`${apiUrl}/mdp/fichaTecnicaProductos/delete/${id}`);
   }
 
-  obtenerProductoFree(id) {
-    return this.http.get<any>(`${apiUrl}/mdp/productos/listOne/free/${id}`);
+  obtenerProductoFree(id, data) {
+    return this.http.post<any>(`${apiUrl}/mdp/productos/listOne/free/${id}`, data);
   }
 
   obtenerProductoCodigo(codigo) {
