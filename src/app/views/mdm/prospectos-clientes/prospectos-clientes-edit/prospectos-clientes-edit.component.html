@@ -349,6 +349,10 @@
                                                 </ng-container>
                                             </div>
                                         </div>
+                                            <div *ngIf="submitted && fDetalles.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="fDetalles.errors.required">Requerido un producto
+                                                </div>
+                                            </div>
                                         <div class="card-body invoice-padding">
                                             <div class="row mt-1">
                                                 <div class="col-12 px-0">

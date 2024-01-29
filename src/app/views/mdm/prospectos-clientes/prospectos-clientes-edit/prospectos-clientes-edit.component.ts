@@ -123,7 +123,7 @@ export class ProspectosClientesEditComponent implements OnInit {
       canal: ['', []],
       tipoPrecio: ['', []],
       nombreVendedor: ['', [Validators.required]],
-      detalles: this._formBuilder.array([]),
+      detalles: this._formBuilder.array([], Validators.required),
       subTotal: ['', [Validators.required]],
       descuento: ['', []],
       iva: ['', [Validators.required]],
@@ -163,8 +163,8 @@ export class ProspectosClientesEditComponent implements OnInit {
   }
 
   removerItem(i): void {
-    // this.calcularSubtotal();
     this.fDetalles.removeAt(i);
+    this.calcularSubtotal();
   }
 
   obtenerProducto(i): void {
@@ -177,6 +177,7 @@ export class ProspectosClientesEditComponent implements OnInit {
         this.fDetalles.controls[i].get('imagen').setValue(info.imagen.toString());
         this.fDetalles.controls[i].get('valorUnitario').setValue(info.precioOferta);
         this.fDetalles.controls[i].get('total').setValue(info.precioOferta * +this.fDetalles.controls[i].get('cantidad').value);
+        this.calcularSubtotal();
       } else {
         // this.comprobarProductos[i] = false;
         alert('No existe el producto a buscar');
@@ -214,6 +215,11 @@ export class ProspectosClientesEditComponent implements OnInit {
       this.prospectoForm.get('iva').patchValue(iva);
       const total = Number(iva + subtotal).toFixed(2);
       this.prospectoForm.get('total').patchValue(total);
+    } else {
+      this.prospectoForm.get('detalles').patchValue(detalles);
+      this.prospectoForm.get('subTotal').patchValue(0);
+      this.prospectoForm.get('iva').patchValue(0);
+      this.prospectoForm.get('total').patchValue(0);
     }
     console.log('detallaes despues', detalles);
   }
@@ -272,6 +278,7 @@ export class ProspectosClientesEditComponent implements OnInit {
   }
 
   actualizarProspecto(): void {
+    this.calcularSubtotal();
     this.submitted = true;
     if (this.prospectoForm.invalid) {
       this.toaster.open('Llenar campos', {type: 'warning'});
