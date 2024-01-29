@@ -41,8 +41,8 @@ export class CiudadesComponent implements OnInit, AfterViewInit {
   }
 
   obtenerListaParametros(): void {
-    this.servientregaCiudades.obtenerCiudades(`[${this.user}', '${this.password}]'`).subscribe((result) => {
-      // this.ciuades = result;
+    this.servientregaCiudades.obtenerCiudades(`['${this.user}','${this.password}']`).subscribe((result) => {
+      this.ciuades = result;
     });
   }
 }
