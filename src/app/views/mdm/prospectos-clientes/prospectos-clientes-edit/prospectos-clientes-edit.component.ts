@@ -213,9 +213,9 @@ export class ProspectosClientesEditComponent implements OnInit {
       });
       this.prospectoForm.get('detalles').patchValue(detalles);
       this.prospectoForm.get('subTotal').patchValue(subtotal);
-      const iva = Number(subtotal * this.iva.valor).toFixed(2);
+      const iva = + new Decimal(subtotal).mul(this.iva.valor).toFixed(2).toString();
       this.prospectoForm.get('iva').patchValue(iva);
-      const total = Number(iva + subtotal).toFixed(2);
+      const total = +new Decimal(iva).add(subtotal).toFixed(2).toString();
       this.prospectoForm.get('total').patchValue(total);
     } else {
       this.prospectoForm.get('detalles').patchValue(detalles);
