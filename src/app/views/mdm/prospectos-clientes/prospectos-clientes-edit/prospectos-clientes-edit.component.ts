@@ -9,6 +9,7 @@ import {Toaster} from 'ngx-toast-notifications';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ValidacionesPropias} from '../../../../utils/customer.validators';
+import Decimal from 'decimal.js';
 
 @Component({
   selector: 'app-prospectos-clientes-edit',
@@ -176,7 +177,8 @@ export class ProspectosClientesEditComponent implements OnInit {
         this.fDetalles.controls[i].get('articulo').setValue(info.nombre);
         this.fDetalles.controls[i].get('imagen').setValue(info.imagen.toString());
         this.fDetalles.controls[i].get('valorUnitario').setValue(info.precioOferta);
-        this.fDetalles.controls[i].get('total').setValue(info.precioOferta * +this.fDetalles.controls[i].get('cantidad').value);
+        const total = new Decimal(info.precioOferta).mul(this.fDetalles.controls[i].get('cantidad').value).toFixed(2).toString();
+        this.fDetalles.controls[i].get('total').setValue(total);
         this.calcularSubtotal();
       } else {
         // this.comprobarProductos[i] = false;
@@ -188,7 +190,7 @@ export class ProspectosClientesEditComponent implements OnInit {
     });
   }
 
-  calcularSubtotal() {
+  calcularSubtotal(): void {
     console.log('detallaes antes', this.prospectoForm.get('detalles').value);
     let detalles = this.prospectoForm.get('detalles').value;
     let subtotal = 0;
@@ -199,7 +201,7 @@ export class ProspectosClientesEditComponent implements OnInit {
         let valorUnitario = Number(valor.valorUnitario) ? Number(valor.valorUnitario) : 0;
         let porcentDescuento = valor.descuento ? valor.descuento : 0;
         let cantidadProducto = valor.cantidad ? valor.cantidad : 0;
-        let precio = cantidadProducto * valorUnitario;
+        let precio = +new Decimal(cantidadProducto).mul(valorUnitario).toFixed(2).toString();
 
         valor.valorDescuento = this.redondeoValor(precio * (porcentDescuento / 100));
         descuento += precio * (porcentDescuento / 100);

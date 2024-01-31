@@ -22,8 +22,8 @@
                     <img [src]="imagenServientrega?.archivo" [alt]="imagenServientrega?.valor" width="100">
                 </div>
                 <div class="d-flex justify-content-center my-1" *ngIf="producto.video">
-                    <video [src]="producto.video" width="600"
-                           height="400" controls>
+                    <video [src]="producto.video" width="75%"
+                           height="50%" controls>
                         <p>Su navegador no soporta vídeos HTML5.</p>
                     </video>
                 </div>
@@ -190,8 +190,8 @@
     <div class="modal-body" tabindex="0" ngbAutofocus>
         <form class="auth-login-form mt-2" [formGroup]="pospectoForm">
             <div class="d-flex justify-content-center">
-                <video [src]="producto.video" width="600"
-                       height="400" controls>
+                <video [src]="producto.video" width="75%"
+                       height="50%" controls>
                     <p>Su navegador no soporta vídeos HTML5.</p>
                 </video>
             </div>

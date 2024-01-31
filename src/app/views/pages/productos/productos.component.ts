@@ -8,6 +8,7 @@ import {ParamService as MDPParamService} from '../../../services/mdp/param/param
 import {ValidacionesPropias} from '../../../utils/customer.validators';
 import {ProspectosService} from '../../../services/mdm/prospectosCli/prospectos.service';
 import {Toaster} from 'ngx-toast-notifications';
+import Decimal from 'decimal.js';
 
 @Component({
   selector: 'app-productos',
@@ -274,7 +275,8 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     cantidadControl.setValue(cantidad);
     this.fDetalles.controls[0].get('cantidad').setValue(cantidad);
     this.fDetalles.controls[0].get('precio').setValue(this.producto.precioOferta);
-    this.fDetalles.controls[0].get('total').setValue(this.producto.precioOferta * cantidad);
+    const total = +new Decimal(this.producto.precioOferta).mul(cantidad).toFixed(2).toString();
+    this.fDetalles.controls[0].get('total').setValue(total);
     this.pospectoForm.get('precio').setValue(this.producto.precioOferta * cantidad);
     this.pospectoForm.updateValueAndValidity();
   }
