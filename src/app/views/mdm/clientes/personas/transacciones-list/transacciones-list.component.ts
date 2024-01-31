@@ -141,6 +141,7 @@ export class TransaccionesListComponent implements OnInit {
   procesarEnvio(id): void {
     this.clientesService.procesarEnvio(id).subscribe((info) => {
       this.transaccion = info;
+      this.obtenerTransacciones();
     });
   }
 }
