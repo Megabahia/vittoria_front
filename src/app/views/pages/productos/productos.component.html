@@ -247,12 +247,12 @@
                                                 </div>
                                             </core-touchspin>
                                         </div>
-                                    </div>
-                                    <div *ngIf="submitted && f.cantidad.errors" class="invalid-feedback"
-                                         style="display: block;">
-                                        <div *ngIf="f.cantidad.errors.required">Cantidad requeridos
-                                        </div>
-                                        <div *ngIf="f.cantidad.errors.min">Cantidad minima 1
+                                        <div *ngIf="submitted && f.cantidad.errors" class="invalid-feedback"
+                                             style="display: block;">
+                                            <div *ngIf="f.cantidad.errors.required">Cantidad requeridos
+                                            </div>
+                                            <div *ngIf="f.cantidad.errors.min">Cantidad minima 1
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -341,7 +341,7 @@
                     <div *ngIf="f.identificacion.errors.minlength || f.identificacion.errors.maxlength">
                         Solo se aceptan 10 digitos
                     </div>
-                    <div *ngIf="f.identificacion.errors.identificacionInvalid">
+                    <div *ngIf="f.identificacion.errors.identificacionInvalid || f.identificacion.errors.rucInvalid">
                         Numero de Identificación no válida
                     </div>
                 </div>
@@ -380,6 +380,7 @@
             </div>
             <hr>
             <h2 style="color: #2d2c55">Lugar de entrega</h2>
+            <h5 style="color: red">Este pedido aplica a nivel {{producto.envioNivelNacional ? 'Nacional' : producto.lugarVentaCiudad}}</h5>
             <div class="form-group">
                 <label for="pais">País</label>
                 <input type="text" id="pais"
