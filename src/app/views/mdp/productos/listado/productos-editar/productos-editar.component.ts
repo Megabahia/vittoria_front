@@ -22,7 +22,7 @@ export class ProductosEditarComponent implements OnInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @ViewChild('eliminarImagenMdl') eliminarImagenMdl;
   idImagen = 0;
-  imagenes;
+  imagenes = [];
   cantImagenes = 0;
   @ViewChild('aviso') aviso;
   producto: Producto;
