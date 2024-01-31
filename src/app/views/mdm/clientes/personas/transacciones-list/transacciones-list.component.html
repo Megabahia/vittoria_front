@@ -92,7 +92,7 @@
                                        data-target="#verfactura">factura-{{transaccion.numeroFactura}}</a>
                                 </td>
                                 <td>
-                                    <a (click)="procesarEnvio(transaccion.id)" >Procesar Envio</a>
+                                    <a *ngIf="!transaccion.updated_at" (click)="procesarEnvio(transaccion.id)" >Procesar Envio</a>
                                 </td>
                             </tr>
                             </tbody>
