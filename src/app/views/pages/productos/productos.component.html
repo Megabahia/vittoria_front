@@ -18,6 +18,9 @@
                 <div class="d-flex justify-content-center">
                     <h2 style="color: #2d2c55">{{subTituloPaginaProductos?.valor}}</h2>
                 </div>
+                <div class="d-flex justify-content-center">
+                    <span style="color: red"><small>Este pedido aplica a nivel {{producto.envioNivelNacional ? 'Nacional' : producto.lugarVentaCiudad}}</small></span>
+                </div>
                 <div class="d-flex justify-content-center" *ngIf="imagenServientrega">
                     <img [src]="imagenServientrega?.archivo" [alt]="imagenServientrega?.valor" width="100">
                 </div>
@@ -121,6 +124,9 @@
                         </div>
                         <div class="col-12 d-flex justify-content-center">
                             <h2 style="color: #2d2c55">{{subTituloPaginaProductos?.valor}}</h2>
+                        </div>
+                        <div class="col-12 d-flex justify-content-center">
+                            <span style="color: red"><small>Este pedido aplica a nivel {{producto.envioNivelNacional ? 'Nacional' : producto.lugarVentaCiudad}}</small></span>
                         </div>
                         <div class="col-12 d-flex justify-content-center" *ngIf="imagenServientrega">
                             <img [src]="imagenServientrega?.archivo" [alt]="imagenServientrega?.valor" width="100">
@@ -281,6 +287,9 @@
             </div>
             <div class="d-flex justify-content-center">
                 <h2 style="color: #2d2c55">{{subTituloPaginaProductos?.valor}}</h2>
+            </div>
+            <div class="d-flex justify-content-center">
+                <span style="color: red"><small>Este pedido aplica a nivel {{producto.envioNivelNacional ? 'Nacional' : producto.lugarVentaCiudad}}</small></span>
             </div>
             <div class="d-flex justify-content-center">
                 <img [src]="imagenServientrega.archivo" [alt]="imagenServientrega.valor" width="100">
