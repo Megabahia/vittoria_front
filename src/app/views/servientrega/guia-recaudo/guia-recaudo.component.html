@@ -58,10 +58,8 @@
                   <div class="form-group">
                     <label for="ID_CIUDAD_ORIGEN">ID_CIUDAD_ORIGEN</label>
                     <select id="ID_CIUDAD_ORIGEN" class="form-control" formControlName="ID_CIUDAD_ORIGEN">
-                      <option value="">-Seleccione-</option>
-                      <option value="Ibarra">Ibarra</option>
-                      <option value="Quito">Quito</option>
-                      <option value="Tulcan">Tulcan</option>
+                        <option value="">-Seleccione-</option>
+                        <option *ngFor="let ciudad of ciudades" value="{{ciudad.id}}">{{ciudad.nombre}}</option>
                     </select>
                     <div *ngIf="submitted && reactiveForm.ID_CIUDAD_ORIGEN.errors" class="invalid-feedback" style="display: block;">
                       <div *ngIf="reactiveForm.ID_CIUDAD_ORIGEN.errors.required">ID CIUDAD ORIGEN</div>
@@ -72,9 +70,8 @@
                   <div class="form-group">
                     <label for="ID_CIUDAD_DESTINO">ID_CIUDAD_DESTINO</label>
                     <select id="ID_CIUDAD_DESTINO" class="form-control" formControlName="ID_CIUDAD_DESTINO">
-                      <option>Ibarra</option>
-                      <option>Quito</option>
-                      <option>Tulcan</option>
+                        <option value="">-Seleccione-</option>
+                        <option *ngFor="let ciudad of ciudades" value="{{ciudad.id}}">{{ciudad.nombre}}</option>
                     </select>
                     <div *ngIf="submitted && reactiveForm.ID_CIUDAD_DESTINO.errors" class="invalid-feedback" style="display: block;" >
                       <div *ngIf="reactiveForm.ID_CIUDAD_DESTINO.errors.required">ID CIUDAD DESTINO</div>
@@ -448,8 +445,10 @@
                 <div class="col-6">
                   <div class="form-group">
                     <label for="VALIDADOR_RECAUDO">VALIDADOR_RECAUDO</label>
-                    <input type="text" id="VALIDADOR_RECAUDO" formControlName="VALIDADOR_RECAUDO"
-                           class="form-control"/>
+                      <select id="VALIDADOR_RECAUDO" class="form-control" formControlName="VALIDADOR_RECAUDO">
+                          <option value="">-Seleccione-</option>
+                          <option *ngFor="let item of validadorRecaudo" value="{{item.id}}">{{item.nombre}}</option>
+                      </select>
                     <div *ngIf="submitted && reactiveForm.VALIDADOR_RECAUDO.errors" class="invalid-feedback" style="display: block;" >
                       <div *ngIf="reactiveForm.VALIDADOR_RECAUDO.errors.required">VALIDADOR_RECAUDO</div>
                     </div>

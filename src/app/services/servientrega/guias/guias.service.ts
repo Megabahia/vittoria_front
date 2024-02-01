@@ -12,34 +12,34 @@ export class GuiasService {
   }
 
   generarGuia(datos): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrlServientrega}/api/guiawebs/`, datos);
+    return this.http.post<any>(`${environment.apiUrl}/servientrega/api/guiawebs/`, datos);
   }
 
   generarGuiaRetorno(datos): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrlServientrega}/api/GuiaRetornoNacional/`, datos);
+    return this.http.post<any>(`${environment.apiUrl}/servientrega/api/GuiaRetornoNacional/`, datos);
   }
 
   generarGuiaRecaudo(datos): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrlServientrega}/api/GuiaRecaudo`, datos);
+    return this.http.post<any>(`${environment.apiUrl}/servientrega/api/GuiaRecaudo`, datos);
   }
 
   generarGuiaPDFA4(datos): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrlServientrega}/api/GuiasWeb/${datos}`);
+    return this.http.get<any>(`${environment.apiUrl}/servientrega/api/GuiasWeb/${datos}`);
   }
 
   generarGuiaDigitalPDF(datos): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrlServientrega}/api/GuiaDigital/${datos}`);
+    return this.http.get<any>(`${environment.apiUrl}/servientrega/api/GuiaDigital/${datos}`);
   }
 
   generarGuiaFormatoSticker(datos): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrlServientrega}/api/ImprimeSticker/${datos}`);
+    return this.http.get<any>(`${environment.apiUrl}/servientrega/api/ImprimeSticker/${datos}`);
   }
 
   generarManifiestoPDF(datos): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrlServientrega}/api/Manifiestos/${datos}`);
+    return this.http.get<any>(`${environment.apiUrl}/servientrega/api/Manifiestos/${datos}`);
   }
 
   generarRotulosFormatoPDF(datos): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrlServientrega}/api/ImprimeRotulos/${datos}`);
+    return this.http.get<any>(`${environment.apiUrl}/servientrega/api/ImprimeRotulos/${datos}`);
   }
 }

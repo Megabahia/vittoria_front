@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {CiudadesService} from '../../../services/servientrega/ciudades/ciudades.service';
 import {AuthService} from '../../../services/admin/auth.service';
 import {GuiasService} from '../../../services/servientrega/guias/guias.service';
+import {Toaster} from 'ngx-toast-notifications';
 
 @Component({
   selector: 'app-guia-retorno',
@@ -22,12 +23,14 @@ export class GuiaRetornoComponent implements OnInit {
   public reactiveGuideForm: FormGroup;
   submitted = false;
   currentUserValue;
+  ciudades = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private servientregaCiudades: CiudadesService,
     private authService: AuthService,
     private guiasService: GuiasService,
+    private toaster: Toaster,
   ) {
     this.currentUserValue = this.authService.currentUserValue;
     this.reactiveGuideForm = this.formBuilder.group({
@@ -73,6 +76,9 @@ export class GuiaRetornoComponent implements OnInit {
       LOGIN_CREACION: ['', []],
       PASSWORD: ['', []],
     });
+    this.servientregaCiudades.obtenerCiudades().subscribe((ciudades) => {
+      this.ciudades = ciudades;
+    });
   }
 
   ngOnInit(): void {
@@ -96,10 +102,9 @@ export class GuiaRetornoComponent implements OnInit {
     if (this.reactiveGuideForm.invalid) {
       return;
     }
-    alert('Se envia a la api');
 
-    this.guiasService.generarGuiaRetorno(this.reactiveGuideForm.value).subscribe(() => {
-      alert('Se guardo');
+    this.guiasService.generarGuiaRetorno(this.reactiveGuideForm.value).subscribe((info) => {
+      this.toaster.open(`${info.id} ${info.msj}`, {type: 'success'});
     });
   }
 }

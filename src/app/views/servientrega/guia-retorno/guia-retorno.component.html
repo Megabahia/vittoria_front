@@ -58,10 +58,8 @@
                   <div class="form-group">
                     <label for="ID_CIUDAD_ORIGEN">ID_CIUDAD_ORIGEN</label>
                     <select id="ID_CIUDAD_ORIGEN" class="form-control" formControlName="ID_CIUDAD_ORIGEN">
-                      <option value="">-Seleccione-</option>
-                      <option value="Ibarra">Ibarra</option>
-                      <option value="Quito">Quito</option>
-                      <option value="Tulcan">Tulcan</option>
+                        <option value="">-Seleccione-</option>
+                        <option *ngFor="let ciudad of ciudades" value="{{ciudad.id}}">{{ciudad.nombre}}</option>
                     </select>
                     <div *ngIf="submitted && reactiveForm.ID_CIUDAD_ORIGEN.errors" class="invalid-feedback" style="display: block;">
                       <div *ngIf="reactiveForm.ID_CIUDAD_ORIGEN.errors.required">ID CIUDAD ORIGEN</div>
@@ -72,9 +70,8 @@
                   <div class="form-group">
                     <label for="ID_CIUDAD_DESTINO">ID_CIUDAD_DESTINO</label>
                     <select id="ID_CIUDAD_DESTINO" class="form-control" formControlName="ID_CIUDAD_DESTINO">
-                      <option>Ibarra</option>
-                      <option>Quito</option>
-                      <option>Tulcan</option>
+                        <option value="">-Seleccione-</option>
+                        <option *ngFor="let ciudad of ciudades" value="{{ciudad.id}}">{{ciudad.nombre}}</option>
                     </select>
                     <div *ngIf="submitted && reactiveForm.ID_CIUDAD_DESTINO.errors" class="invalid-feedback" style="display: block;" >
                       <div *ngIf="reactiveForm.ID_CIUDAD_DESTINO.errors.required">ID CIUDAD DESTINO</div>
@@ -141,7 +138,7 @@
                 <div class="col-6">
                   <div class="form-group">
                     <label for="TELEFONO1_DESTINAT_NE">TELEFONO1 DESTINAT NE</label>
-                    <input type="text" id="TELEFONO1_DESTINAT_NE" formControlName="TELEFONO1_DESTINAT_NE"
+                    <input type="number" id="TELEFONO1_DESTINAT_NE" formControlName="TELEFONO1_DESTINAT_NE"
                            class="form-control"/>
                     <div *ngIf="submitted && reactiveForm.TELEFONO1_DESTINAT_NE.errors" class="invalid-feedback" style="display: block;" >
                       <div *ngIf="reactiveForm.TELEFONO1_DESTINAT_NE.errors.required">TELEFONO1 DESTINAT NE</div>
