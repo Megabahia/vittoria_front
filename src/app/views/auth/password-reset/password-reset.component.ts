@@ -10,6 +10,7 @@ import {environment} from '../../../../environments/environment';
   templateUrl: './password-reset.component.html'
 })
 export class PasswordResetComponent implements OnInit {
+  @ViewChild('mensajeModal') mensajeModal;
   @ViewChild('errorAuth') errorAuth;
   token;
   password;
@@ -29,6 +30,12 @@ export class PasswordResetComponent implements OnInit {
     private authService: AuthService,
     private formBuilder: FormBuilder,
   ) {
+    const navbar = document.getElementById('navbar');
+    const toolbar = document.getElementById('toolbar');
+    if (navbar && toolbar) {
+      navbar.style.display = 'none';
+      toolbar.style.display = 'none';
+    }
     this.siteKey = environment.setKey;
     this.form = this.formBuilder.group({
       password: ['', [Validators.minLength(8),
@@ -72,6 +79,8 @@ export class PasswordResetComponent implements OnInit {
           email: this.email
         }
       ).subscribe(info => {
+        this.mensaje = 'Contraseña actualizada correctamente, haga click en continuar para ir a la página de inicio';
+        this.abrirModal(this.mensajeModal);
         this.router.navigate(['/auth/signin']);
       }, error => {
         let errores = Object.values(error);
