@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {CiudadesService} from '../../../services/servientrega/ciudades/ciudades.service';
 import {AuthService} from '../../../services/admin/auth.service';
 import {GuiasService} from '../../../services/servientrega/guias/guias.service';
+import {Toaster} from 'ngx-toast-notifications';
 
 @Component({
   selector: 'app-guia-recaudo',
@@ -18,16 +19,22 @@ export class GuiaRecaudoComponent implements OnInit {
     {id: 8, nombre: 'VALIJA EMPRESARIAL'},
     {id: 71, nombre: 'FARMA'},
   ];
+  validadorRecaudo = [
+    {id: 'C', nombre: 'CENTRO DE SOLUCIONES'},
+    {id: 'D', nombre: 'DOMICILIO'},
+  ];
   menu;
   public reactiveGuideForm: FormGroup;
   submitted = false;
   currentUserValue;
+  ciudades = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private servientregaCiudades: CiudadesService,
     private authService: AuthService,
     private guiasService: GuiasService,
+    private toaster: Toaster,
   ) {
     this.currentUserValue = this.authService.currentUserValue;
     this.reactiveGuideForm = this.formBuilder.group({
@@ -41,9 +48,9 @@ export class GuiaRecaudoComponent implements OnInit {
       RAZON_SOCIAL_DESTI_NE: ['', [Validators.required]],
       NOMBRE_DESTINATARIO_NE: ['', [Validators.required]],
       APELLIDO_DESTINATAR_NE: ['', [Validators.required]],
-      SECTOR_DESTINAT_NE: ['', [Validators.required]],
+      SECTOR_DESTINAT_NE: ['', []],
       TELEFONO1_DESTINAT_NE: ['', []],
-      TELEFONO2_DESTINAT_NE: ['', [Validators.required]],
+      TELEFONO2_DESTINAT_NE: ['', []],
       CODIGO_POSTAL_DEST_NE: ['', []],
       CORREO_DESTINATARIO: ['', []],
       ID_REMITENTE_CL: ['', [Validators.required]],
@@ -75,11 +82,14 @@ export class GuiaRecaudoComponent implements OnInit {
       VALOR_A_RECAUDAR: [0, [Validators.required]],
       DETALLE_ITEMS_FACTURA: [0, [Validators.required]],
       VERIFICAR_CONTENIDO_RECAUDO: [0, [Validators.required]],
-      VALIDADOR_RECAUDO: [0, [Validators.required]],
+      VALIDADOR_RECAUDO: ['', [Validators.required]],
       ID_CL: [0, [Validators.required]],
       DIRECCION_RECAUDO: [0, [Validators.required]],
       LOGIN_CREACION: ['', []],
       PASSWORD: ['', []],
+    });
+    this.servientregaCiudades.obtenerCiudades().subscribe((ciudades) => {
+      this.ciudades = ciudades;
     });
   }
 
@@ -102,12 +112,12 @@ export class GuiaRecaudoComponent implements OnInit {
 
     // stop here if form is invalid
     if (this.reactiveGuideForm.invalid) {
+      console.log('form', this.reactiveGuideForm);
       return;
     }
-    alert('Se envia a la api');
 
-    this.guiasService.generarGuiaRecaudo(this.reactiveGuideForm.value).subscribe(() => {
-      alert('Se guardo');
+    this.guiasService.generarGuiaRecaudo(this.reactiveGuideForm.value).subscribe((info) => {
+      this.toaster.open(`${info.id} ${info.msj}`, {type: 'success'});
     });
   }
 }

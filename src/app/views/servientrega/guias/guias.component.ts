@@ -3,6 +3,7 @@ import {CiudadesService} from '../../../services/servientrega/ciudades/ciudades.
 import {AuthService} from '../../../services/admin/auth.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {GuiasService} from '../../../services/servientrega/guias/guias.service';
+import {Toaster} from 'ngx-toast-notifications';
 
 @Component({
   selector: 'app-guias',
@@ -22,12 +23,14 @@ export class GuiasComponent implements OnInit {
   public ReactiveUserDetailsForm: FormGroup;
   submitted = false;
   currentUserValue;
+  ciudades = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private servientregaCiudades: CiudadesService,
     private authService: AuthService,
     private guiasService: GuiasService,
+    private toaster: Toaster,
   ) {
     this.currentUserValue = this.authService.currentUserValue;
     this.ReactiveUserDetailsForm = this.formBuilder.group({
@@ -67,6 +70,9 @@ export class GuiasComponent implements OnInit {
       login_creacion: ['', []],
       password: ['', []],
     });
+    this.servientregaCiudades.obtenerCiudades().subscribe((ciudades) => {
+      this.ciudades = ciudades;
+    });
   }
 
   ngOnInit(): void {
@@ -85,15 +91,11 @@ export class GuiasComponent implements OnInit {
 
   generarGuia(): void {
     this.submitted = true;
-
-    // stop here if form is invalid
     if (this.ReactiveUserDetailsForm.invalid) {
       return;
     }
-    alert('Se envia a la api');
-
-    this.guiasService.generarGuia(this.ReactiveUserDetailsForm.value).subscribe(() => {
-      alert('Se guardo');
+    this.guiasService.generarGuia(this.ReactiveUserDetailsForm.value).subscribe((info) => {
+      this.toaster.open(`${info.id} ${info.msj}`, {type: 'success'});
     });
   }
 }

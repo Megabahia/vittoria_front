@@ -35,8 +35,8 @@
             <form [formGroup]="reactiveGuideForm" (ngSubmit)="generarGuia()">
               <div class="col-12">
                 <div class="form-group">
-                  <label for="largeInput">Número de guia</label>
-                  <input id="largeInput" class="form-control form-control-lg" type="text"
+                  <label for="largeInput">Fecha</label>
+                  <input id="largeInput" class="form-control form-control-lg" type="date"
                          formControlName="num_guia" placeholder="Ingrese numero de guía"/>
                   <div *ngIf="submitted && reactiveForm.num_guia.errors" class="invalid-feedback" style="display: block;">
                     <div *ngIf="reactiveForm.num_guia.errors.required">Número de guia requerido</div>
@@ -45,7 +45,11 @@
               </div>
               <div class="col-12">
                 <div class="form-group">
-                  <button class="btn btn-primary" rippleEffect>Generar</button>
+                    <button class="btn btn-primary" rippleEffect [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+                      <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                            aria-hidden="true"></span>
+                        Generar
+                    </button>
                 </div>
               </div>
             </form>

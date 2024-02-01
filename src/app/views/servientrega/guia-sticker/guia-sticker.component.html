@@ -45,7 +45,11 @@
               </div>
               <div class="col-12">
                 <div class="form-group">
-                  <button class="btn btn-primary" rippleEffect>Generar</button>
+                    <button class="btn btn-primary" rippleEffect [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+                      <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                            aria-hidden="true"></span>
+                        Generar
+                    </button>
                 </div>
               </div>
             </form>

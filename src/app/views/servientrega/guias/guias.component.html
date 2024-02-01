@@ -59,9 +59,7 @@
                     <label for="ID_CIUDAD_ORIGEN">ID CIUDAD ORIGEN</label>
                     <select id="ID_CIUDAD_ORIGEN" class="form-control" formControlName="id_ciudad_origen">
                       <option value="">-Seleccione-</option>
-                      <option value="Ibarra">Ibarra</option>
-                      <option value="Quito">Quito</option>
-                      <option value="Tulcan">Tulcan</option>
+                      <option *ngFor="let ciudad of ciudades" value="{{ciudad.id}}">{{ciudad.nombre}}</option>
                     </select>
                     <div *ngIf="submitted && reactiveForm.id_ciudad_origen.errors" class="invalid-feedback" style="display: block;">
                       <div *ngIf="reactiveForm.id_ciudad_origen.errors.required">ID CIUDAD ORIGEN</div>
@@ -72,6 +70,8 @@
                   <div class="form-group">
                     <label for="ID_CIUDAD_DESTINO">ID CIUDAD DESTINO</label>
                     <select id="ID_CIUDAD_DESTINO" class="form-control" formControlName="id_ciudad_destino">
+                      <option value="">-Seleccione-</option>
+                      <option *ngFor="let ciudad of ciudades" value="{{ciudad.id}}">{{ciudad.nombre}}</option>
                       <option>Ibarra</option>
                       <option>Quito</option>
                       <option>Tulcan</option>
@@ -141,7 +141,7 @@
                 <div class="col-6">
                   <div class="form-group">
                     <label for="TELEFONO1_DESTINAT_NE">TELEFONO1 DESTINAT NE</label>
-                    <input type="text" id="TELEFONO1_DESTINAT_NE" formControlName="telefono1_destinat_ne"
+                    <input type="number" id="TELEFONO1_DESTINAT_NE" formControlName="telefono1_destinat_ne"
                            class="form-control"/>
                     <div *ngIf="submitted && reactiveForm.telefono1_destinat_ne.errors" class="invalid-feedback" style="display: block;" >
                       <div *ngIf="reactiveForm.telefono1_destinat_ne.errors.required">TELEFONO1 DESTINAT NE</div>

@@ -11,7 +11,7 @@ export class CiudadesService {
   constructor(private http: HttpClient) {
   }
 
-  obtenerCiudades(datos): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrlServientrega}/api/ciudades/${datos}`);
+  obtenerCiudades(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/servientrega/api/ciudades/`);
   }
 }
