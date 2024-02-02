@@ -111,7 +111,10 @@ export class ProfileComponent implements OnInit {
       this.abrirModal(this.mensajeModal);
       return;
     }
+    delete this.usuario.imagen;
     await this.usersService.actualizarUsuario(this.usuario).subscribe(() => {
+        this.mensaje = 'Se actualizo correctamente';
+        this.abrirModal(this.mensajeModal);
         this.router.navigate(['/admin/management']);
       },
       (error) => {
