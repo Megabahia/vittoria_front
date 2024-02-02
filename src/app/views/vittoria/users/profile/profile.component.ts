@@ -43,6 +43,7 @@ export class ProfileComponent implements OnInit {
     facebook: '',
     imagen: new FormData()
   };
+  mostrar = true;
 
   constructor(
     private authService: AuthService,
@@ -53,6 +54,9 @@ export class ProfileComponent implements OnInit {
     private router: Router,
   ) {
     const usuario = this.authService.currentUserValue;
+    console.log(usuario);
+    this.mostrar = !!usuario.acciones.ADM.CREAR;
+    console.log('this.mostrAR', this.mostrar);
     this.idUsuario = usuario.id;
     this.usersService.obtenerListaPaises().subscribe((result) => {
       this.paises = result;

@@ -50,13 +50,22 @@
                                 <form class="auth-login-form mt-2" [formGroup]="usuarioForm">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <div class="form-group">
+                                            <div class="form-group" *ngIf="mostrar; else MostrarUsuario">
                                                 <label for="username">Usuario</label>
                                                 <input type="text" class="form-control" name="username" formControlName="username" [(ngModel)]="usuario.username" name="username" />
                                                 <div *ngIf="submitted && f.username.errors" class="invalid-feedback" style="display: block;">
                                                     <div *ngIf="f.username.errors.required">Nombre de usuario es requeridos</div>
                                                 </div>
                                             </div>
+                                            <ng-template #MostrarUsuario>
+                                                <div class="form-group">
+                                                    <label for="username">Usuario</label>
+                                                    <input type="text" class="form-control" name="username" formControlName="username" [(ngModel)]="usuario.username" name="username" disabled/>
+                                                    <div *ngIf="submitted && f.username.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="f.username.errors.required">Nombre de usuario es requeridos</div>
+                                                    </div>
+                                                </div>
+                                            </ng-template>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
@@ -77,15 +86,24 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="form-group">
+                                            <div class="form-group" *ngIf="mostrar; else MostrarCorreo">
                                                 <label for="email">Correo</label>
                                                 <input type="email" class="form-control" name="email" formControlName="email" [(ngModel)]="usuario.email" name="email" />
                                                 <div *ngIf="submitted && f.email.errors" class="invalid-feedback" style="display: block;">
                                                     <div *ngIf="f.email.errors.required">Correo es requerido</div>
                                                 </div>
                                             </div>
+                                            <ng-template #MostrarCorreo>
+                                                <div class="form-group">
+                                                    <label for="email">Correo</label>
+                                                    <input type="email" class="form-control" name="email" formControlName="email" [(ngModel)]="usuario.email" name="email" disabled/>
+                                                    <div *ngIf="submitted && f.email.errors" class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="f.email.errors.required">Correo es requerido</div>
+                                                    </div>
+                                                </div>
+                                            </ng-template>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-4" *ngIf="mostrar">
                                             <div class="form-group">
                                                 <label for="status">Estado</label>
                                                 <select class="form-control" name="estado" formControlName="estado" [(ngModel)]="usuario.estado" id="status">
@@ -99,7 +117,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-4" *ngIf="mostrar">
                                             <div class="form-group">
                                                 <label for="role">Rol</label>
                                                 <select class="form-control" name="idRol" formControlName="idRol" [(ngModel)]="usuario.idRol" id="role">
