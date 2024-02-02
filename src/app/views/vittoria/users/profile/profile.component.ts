@@ -100,6 +100,8 @@ export class ProfileComponent implements OnInit {
   async ngAfterViewInit() {
     await this.usersService.obtenerUsuario(this.idUsuario).subscribe((result) => {
       this.usuario = result;
+      this.usuarioForm.patchValue(result);
+      this.redesForm.patchValue(result);
       this.imagen = this.usuario.imagen;
     });
   }
@@ -108,6 +110,7 @@ export class ProfileComponent implements OnInit {
     this.submitted = true;
 
     if (this.usuarioForm.invalid) {
+      console.log('form', this.usuarioForm);
       return;
     }
     if (this.redesForm.invalid) {
