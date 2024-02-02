@@ -9,15 +9,82 @@ import {Router} from '@angular/router';
 const apiUrl: string = environment.apiUrl;
 
 export interface User {
-  token: string,
-  id: number,
-  full_name: string,
-  email: string,
-  tokenExpiracion: string
+  token: string;
+  id: number;
+  full_name: string;
+  email: string;
+  tokenExpiracion: string;
+  acciones?: Acciones;
 }
 export interface UserLogin {
   username: string;
   password?: string;
+}
+export interface Acciones {
+  ADM: Adm;
+  MDM: Mdm;
+  MDP: Mdp;
+  MDO: Mdo;
+  GDO: Gdo;
+  GDE: Gde;
+  SERVI: Servi;
+  TODOMEGA: Todomega;
+}
+
+export interface Adm {
+  LEER: number;
+  ESCRIBIR: number;
+  CREAR: number;
+  BORRAR: number;
+}
+
+export interface Mdm {
+  LEER: number;
+  ESCRIBIR: number;
+  CREAR: number;
+  BORRAR: number;
+}
+
+export interface Mdp {
+  LEER: number;
+  ESCRIBIR: number;
+  CREAR: number;
+  BORRAR: number;
+}
+
+export interface Mdo {
+  LEER: number;
+  ESCRIBIR: number;
+  CREAR: number;
+  BORRAR: number;
+}
+
+export interface Gdo {
+  LEER: number;
+  ESCRIBIR: number;
+  CREAR: number;
+  BORRAR: number;
+}
+
+export interface Gde {
+  LEER: number;
+  ESCRIBIR: number;
+  CREAR: number;
+  BORRAR: number;
+}
+
+export interface Servi {
+  LEER: number;
+  ESCRIBIR: number;
+  CREAR: number;
+  BORRAR: number;
+}
+
+export interface Todomega {
+  LEER: number;
+  ESCRIBIR: number;
+  CREAR: number;
+  BORRAR: number;
 }
 @Injectable({
   providedIn: 'root'
