@@ -30,6 +30,9 @@ const routes: Routes = [
     path: 'servientrega', loadChildren: () => import('./views/servientrega/servientrega.module').then(m => m.ServientregaModule)
   },
   {
+    path: 'facturacion', loadChildren: () => import('./views/facturacion/facturacion.module').then(m => m.FacturacionModule)
+  },
+  {
     path: 'todomegacentro', loadChildren: () => import('./views/todomegacentro/todomegacentro.module').then(m => m.TodomegacentroModule)
   },
   {

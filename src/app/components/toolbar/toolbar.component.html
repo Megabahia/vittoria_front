@@ -355,6 +355,43 @@
                     </li>
                 </ul>
             </li>
+            <li class="navigation-header">Facturación Electrónica</li>
+            <li class="nav-item" *ngIf="acciones.FACTURACION.LEER">
+                <a class="d-flex align-items-center">
+                    <i data-feather="file-text"></i>
+                    <span class="menu-title text-truncate" data-i18n="Invoice">Canal Vittoria</span></a>
+                <ul class="menu-content">
+                    <li class="nav-item {{menuToolbar['facturacion']['locales']}}">
+                        <a class="d-flex align-items-center" href="#/facturacion/canal-vittoria/pendiente">
+                            <i data-feather="circle"></i>
+                            <span class="menu-item text-truncate" data-i18n="List">Pendiente</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {{menuToolbar['facturacion']['externas']}}">
+                        <a class="d-flex align-items-center" href="#/facturacion/canal-vittoria/facturadas">
+                            <i data-feather="circle"></i>
+                            <span class="menu-item text-truncate" data-i18n="List">Factura electronica</span></a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item" *ngIf="acciones.FACTURACION.LEER">
+                <a class="d-flex align-items-center">
+                    <i data-feather="file-text"></i>
+                    <span class="menu-title text-truncate" data-i18n="Invoice">Canal Externas</span></a>
+                <ul class="menu-content">
+                    <li class="nav-item {{menuToolbar['facturacion']['locales']}}">
+                        <a class="d-flex align-items-center" href="#/facturacion/canal-externas/pendiente">
+                            <i data-feather="circle"></i>
+                            <span class="menu-item text-truncate" data-i18n="List">Pendientes</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {{menuToolbar['facturacion']['externas']}}">
+                        <a class="d-flex align-items-center" href="#/facturacion/canal-externas/facturadas">
+                            <i data-feather="circle"></i>
+                            <span class="menu-item text-truncate" data-i18n="List">Factura electronica</span></a>
+                    </li>
+                </ul>
+            </li>
             <li class="navigation-header">Todomegacentro</li>
             <li class="nav-item" *ngIf="acciones.TODOMEGA.LEER">
                 <a class="d-flex align-items-center">
