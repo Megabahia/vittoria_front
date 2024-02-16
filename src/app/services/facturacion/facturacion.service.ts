@@ -24,4 +24,12 @@ export class FacturacionService {
   obtenerFacturaId(id): Observable<any> {
     return this.http.get<any>(`${apiUrl}/facturacion/facturas/listOne/${id}`);
   }
+
+  facturar(data): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/facturacion/facturas/facturar/`, data);
+  }
+
+  facturarLocales(data): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/facturacion/facturas/locales/facturar/`, data);
+  }
 }

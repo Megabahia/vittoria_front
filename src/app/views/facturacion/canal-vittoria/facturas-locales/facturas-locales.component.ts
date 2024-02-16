@@ -3,6 +3,8 @@ import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {Color, Label} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
 import {ClientesService, Transaccion} from '../../../../services/mdm/personas/clientes/clientes.service';
+import {FacturacionService} from '../../../../services/facturacion/facturacion.service';
+import {Toaster} from 'ngx-toast-notifications';
 
 @Component({
   selector: 'app-facturas-locales',
@@ -77,7 +79,9 @@ export class FacturasLocalesComponent implements OnInit {
 
   constructor(
     private datePipe: DatePipe,
-    private clientesService: ClientesService
+    private clientesService: ClientesService,
+    private facturacionService: FacturacionService,
+    private toaster: Toaster,
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
   }
@@ -175,5 +179,8 @@ export class FacturasLocalesComponent implements OnInit {
   }
 
   enviarFacturar(): void {
+    this.facturacionService.facturarLocales({facturas: this.listaFacturasEnviar}).subscribe(() => {
+      this.toaster.open('Se envio correctamente', {type: 'success'});
+    });
   }
 }
