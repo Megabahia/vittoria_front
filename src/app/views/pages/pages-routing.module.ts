@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {AuthGuard} from '../../guard/auth.guard';
 import {ProductosComponent} from './productos/productos.component';
+import {CalculadoraComponent} from './calculadora/calculadora.component';
 
 const routes: Routes = [
   {
@@ -11,10 +11,15 @@ const routes: Routes = [
     path: 'productos/:id',
     component: ProductosComponent
   },
+  {
+    path: 'calculadora',
+    component: CalculadoraComponent
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class PagesRoutingModule { }
+export class PagesRoutingModule {
+}

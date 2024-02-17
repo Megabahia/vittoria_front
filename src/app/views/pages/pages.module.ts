@@ -8,12 +8,14 @@ import {FlatpickrModule} from 'angularx-flatpickr';
 import {PagesRoutingModule} from './pages-routing.module';
 import { ProductosComponent } from './productos/productos.component';
 import {NgxCaptchaModule} from 'ngx-captcha';
+import { CalculadoraComponent } from './calculadora/calculadora.component';
 
 
 
 @NgModule({
   declarations: [
-    ProductosComponent
+    ProductosComponent,
+    CalculadoraComponent
   ],
   imports: [
     CommonModule,
