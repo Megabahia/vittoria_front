@@ -94,7 +94,9 @@ export class CalculadoraComponent implements OnInit {
         return item.nombre === 'COMISION_ASESOR';
       })['valor'];
     });
-    this.iva = 12;
+    this.MDPparamService.obtenerListaPadres('TIPO_IVA').subscribe(({info}: any) => {
+      this.iva = info[0].valor;
+    });
   }
 
   calcular(): void {
