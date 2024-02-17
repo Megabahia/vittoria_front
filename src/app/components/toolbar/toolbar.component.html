@@ -392,6 +392,26 @@
                     </li>
                 </ul>
             </li>
+            <li class="navigation-header">Reportes</li>
+            <li class="nav-item" *ngIf="acciones.REPORTES.LEER">
+                <a class="d-flex align-items-center">
+                    <i data-feather="file-text"></i>
+                    <span class="menu-title text-truncate" data-i18n="Invoice">Reportes</span></a>
+                <ul class="menu-content">
+                    <li class="nav-item {{menuToolbar['reportes']['productos']}}">
+                        <a class="d-flex align-items-center" [routerLink]="['/reportes/productos']">
+                            <i data-feather="list"></i>
+                            <span class="menu-title text-truncate" data-i18n="List">Reporte Productos Comprados</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {{menuToolbar['reportes']['clientes']}}">
+                        <a class="d-flex align-items-center" [routerLink]="['/reportes/clientes']">
+                            <i data-feather="list"></i>
+                            <span class="menu-title text-truncate" data-i18n="List">Reporte Clientes Compras</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             <li class="navigation-header">Todomegacentro</li>
             <li class="nav-item" *ngIf="acciones.TODOMEGA.LEER">
                 <a class="d-flex align-items-center">

@@ -33,6 +33,9 @@ const routes: Routes = [
     path: 'facturacion', loadChildren: () => import('./views/facturacion/facturacion.module').then(m => m.FacturacionModule)
   },
   {
+    path: 'reportes', loadChildren: () => import('./views/reportes/reportes.module').then(m => m.ReportesModule)
+  },
+  {
     path: 'todomegacentro', loadChildren: () => import('./views/todomegacentro/todomegacentro.module').then(m => m.TodomegacentroModule)
   },
   {

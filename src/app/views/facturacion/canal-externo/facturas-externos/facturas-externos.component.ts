@@ -147,5 +147,8 @@ export class FacturasExternosComponent implements OnInit, AfterViewInit {
   }
 
   enviarFacturar(): void {
+    this.facturacionService.facturar({facturas: this.listaFacturasEnviar}).subscribe(() => {
+      this.toaster.open('Se envio correctamente', {type: 'success'});
+    });
   }
 }
