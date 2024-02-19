@@ -57,6 +57,7 @@
                                 <th>Canal de compra</th>
                                 <th># productos comprados</th>
                                 <th>Total Factura</th>
+                                <th>Estado</th>
                                 <th>Factura</th>
                             </tr>
                             </thead>
@@ -75,6 +76,7 @@
                                 <td>{{transaccion.canal}} </td>
                                 <td>{{transaccion.numeroProductosComprados}} </td>
                                 <td> ${{transaccion.total}} </td>
+                                <td>{{transaccion.estadoSRI}}</td>
                                 <td>
                                     <a (click)="obtenerTransaccion(transaccion.id)" data-toggle="modal"
                                        data-target="#verfactura">factura-{{transaccion.numeroFactura}}</a>

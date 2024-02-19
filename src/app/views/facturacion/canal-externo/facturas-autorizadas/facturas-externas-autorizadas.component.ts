@@ -3,6 +3,7 @@ import {ClientesService, Transaccion} from '../../../../services/mdm/personas/cl
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {Color, Label} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
+import {FacturacionService} from '../../../../services/facturacion/facturacion.service';
 
 @Component({
   selector: 'app-facturas-autorizadas',
@@ -77,7 +78,8 @@ export class FacturasExternasAutorizadasComponent implements OnInit {
 
   constructor(
     private datePipe: DatePipe,
-    private clientesService: ClientesService
+    // private clientesService: ClientesService,
+    private facturacionService: FacturacionService,
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
   }
@@ -91,57 +93,27 @@ export class FacturasExternasAutorizadasComponent implements OnInit {
     this.obtenerTransacciones();
   }
 
-  obtenerTransacciones() {
-    this.clientesService.obtenerTodasTrasacciones({
+  obtenerTransacciones(): void {
+    this.facturacionService.obtenerFacturas({
       page: this.page - 1,
       page_size: this.pageSize,
       inicio: this.inicio,
-      fin: this.fin
+      fin: this.fin,
+      autorizada: false,
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;
-      this.obtenerGraficos();
     });
   }
 
-  transformarFecha(fecha) {
+  transformarFecha(fecha): string {
     return this.datePipe.transform(fecha, 'yyyy-MM-dd');
   }
 
-  async obtenerTransaccion(id) {
-    this.clientesService.obtenerTransaccion(id).subscribe((info) => {
+  obtenerTransaccion(id): void {
+    this.facturacionService.obtenerFacturaId(id).subscribe((info) => {
       this.transaccion = info;
       console.log(info);
-    });
-  }
-
-  async obtenerGraficos() {
-    this.clientesService.obtenerGraficaTransaccionesGeneral({
-        page: this.page - 1,
-        page_size: this.pageSize,
-        inicio: this.inicio,
-        fin: this.fin
-      }
-    ).subscribe((info) => {
-      let etiquetas = [];
-      let valores = [];
-
-      info.map((datos) => {
-        etiquetas.push(datos.anio + '-' + datos.mes);
-        valores.push(datos.cantidad);
-      });
-      this.datosTransferencias = {
-        data: valores, label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)'
-      };
-      this.barChartData = [this.datosTransferencias];
-      this.barChartLabels = etiquetas;
-    });
-  }
-
-  procesarEnvio(id): void {
-    this.clientesService.procesarEnvio(id).subscribe((info) => {
-      this.transaccion = info;
-      this.obtenerTransacciones();
     });
   }
 

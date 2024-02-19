@@ -96,7 +96,8 @@ export class FacturasAutorizadasComponent implements OnInit {
       page: this.page - 1,
       page_size: this.pageSize,
       inicio: this.inicio,
-      fin: this.fin
+      fin: this.fin,
+      autorizada: false,
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;

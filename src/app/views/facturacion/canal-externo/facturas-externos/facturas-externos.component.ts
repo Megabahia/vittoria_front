@@ -93,6 +93,7 @@ export class FacturasExternosComponent implements OnInit, AfterViewInit {
     this.facturacionService.obtenerFacturas({
       page: this.page - 1,
       page_size: this.pageSize,
+      estadoSRI: null,
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;
