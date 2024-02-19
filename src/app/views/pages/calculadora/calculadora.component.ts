@@ -115,4 +115,15 @@ export class CalculadoraComponent implements OnInit {
     this.calculos.precioProducto = new Decimal(new Decimal(this.calculos.subtotal).sub(this.costoEnvio)).div(porcentaje).toFixed(2).toString();
     this.calculos.comisionAsesor = new Decimal(this.calculos.precioProducto).mul(comision).toFixed(2).toString();
   }
+
+  resetearValores(): void {
+    this.calculos = {
+      valorPagar: 0,
+      montoIva: 0,
+      subtotal: 0,
+      costoEnvio: 0,
+      precioProducto: 0,
+      comisionAsesor: 0,
+    };
+  }
 }

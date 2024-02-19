@@ -40,10 +40,10 @@
                     <div class="col-sm-9">
                       <div class="input-group">
                         <div class="input-group-prepend">
-                          <span class="input-group-text" id="basic-addon1">$</span>
+                            <span class="input-group-text" id="basic-addon1"><b>$</b></span>
                         </div>
                         <input type="number" id="precio" class="form-control" name="precioProducto"
-                               formControlName="precioProducto"
+                               formControlName="precioProducto" style="font-size: 18px; color: black;"
                         />
                       </div>
                       <div *ngIf="tForm.precioProducto.errors" class="invalid-feedback" style="display: block;">
@@ -65,7 +65,7 @@
                 <div class="col-12">
                 <div class="d-flex justify-content-center text-center">
                   <button type="submit" rippleEffect class="btn btn-primary mr-1">Calcular</button>
-                  <button type="reset" rippleEffect class="btn btn-outline-secondary">Resetear</button>
+                  <button type="reset" rippleEffect class="btn btn-outline-secondary" (click)="resetearValores()">Resetear</button>
                 </div>
 
                 </div>
@@ -78,8 +78,27 @@
           <div class="col-12 col-lg-6 container-sm justify-content-center">
             <form class="form form-horizontal">
               <div class="row">
+                  <div class="col-12">
+                      <div class="form-group row">
+                          <div class="col-sm-3 col-form-label">
+                              <label>
+                                  {{pagina.precioProducto}}
+                              </label>
+                          </div>
+                          <div class="col-sm-9">
+                              <div class="input-group">
+                                  <div class="input-group-prepend">
+                                      <span class="input-group-text" id="basic-addon1">$</span>
+                                  </div>
+                                  <input type="text" id="precioProducto" class="form-control" name="precioProducto"
+                                         [(ngModel)]="calculos.precioProducto" disabled/>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="container relieve my-2">
                 <div class="col-12">
-                  <div class="form-group row">
+                    <div class="d-flex justify-content-center text-center">
                     <div class="col-sm-12">
                       <h1>
                         {{pagina.mensajeVendedor}}
@@ -90,41 +109,25 @@
                 <div class="col-12">
                   <div class="form-group row">
                     <div class="col-sm-3 col-form-label">
-                      <h4 class="text-danger">
+                      <h5 class="text-danger">
                         <strong>
                           {{pagina.comisionAsesor}}
                         </strong>
-                      </h4>
+                      </h5>
                     </div>
                     <div class="col-sm-9">
                       <div class="input-group">
                         <div class="input-group-prepend">
-                          <span class="input-group-text" id="basic-addon1">$</span>
+                            <span class="input-group-text" id="basic-addon1"><b>$</b></span>
                         </div>
                         <input type="text" id="comisionAsesor" class="form-control" name="comisionAsesor"
+                               style="font-size: 18px; color: black;"
                                [(ngModel)]="calculos.comisionAsesor" disabled/>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="col-12">
-                  <div class="form-group row">
-                    <div class="col-sm-3 col-form-label">
-                      <label>
-                        {{pagina.pagarCliente}}
-                      </label>
-                    </div>
-                    <div class="col-sm-9">
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text" id="basic-addon1">$</span>
-                        </div>
-                        <input type="text" id="valorPagar" class="form-control" name="valorPagar"
-                               [(ngModel)]="calculos.valorPagar" disabled/>
-                      </div>
-                    </div>
                   </div>
-                </div>
                 <div class="col-12">
                   <div class="form-group row">
                     <div class="col-sm-3 col-form-label">
@@ -179,24 +182,24 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-12">
-                  <div class="form-group row">
-                    <div class="col-sm-3 col-form-label">
-                      <label>
-                        {{pagina.precioProducto}}
-                      </label>
-                    </div>
-                    <div class="col-sm-9">
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text" id="basic-addon1">$</span>
-                        </div>
-                        <input type="text" id="precioProducto" class="form-control" name="precioProducto"
-                               [(ngModel)]="calculos.precioProducto" disabled/>
+                  <div class="col-12">
+                      <div class="form-group row">
+                          <div class="col-sm-3 col-form-label">
+                              <label>
+                                  {{pagina.pagarCliente}}
+                              </label>
+                          </div>
+                          <div class="col-sm-9">
+                              <div class="input-group">
+                                  <div class="input-group-prepend">
+                                      <span class="input-group-text" id="basic-addon1">$</span>
+                                  </div>
+                                  <input type="text" id="valorPagar" class="form-control" name="valorPagar"
+                                         [(ngModel)]="calculos.valorPagar" disabled/>
+                              </div>
+                          </div>
                       </div>
-                    </div>
                   </div>
-                </div>
               </div>
             </form>
           </div>
