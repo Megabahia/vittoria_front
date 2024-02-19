@@ -9,14 +9,14 @@
       </div>
       <div class="card">
         <div class="d-flex justify-content-center text-center">
-          <h1>
+          <h4>
             {{pagina?.titulo?.valor}}
-          </h1>
+          </h4>
         </div>
         <div class="d-flex justify-content-center text-center">
-          <h1 class="text-danger">
+          <h4 class="text-danger">
             {{pagina?.subtitulo?.valor}}
-          </h1>
+          </h4>
         </div>
         <div class="d-flex justify-content-center text-center">
           <h1>
@@ -118,10 +118,10 @@
                     <div class="col-sm-9">
                       <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1"><b>$</b></span>
+                            <span class="input-group-text text-danger" id="basic-addon1"><b>$</b></span>
                         </div>
                         <input type="text" id="comisionAsesor" class="form-control" name="comisionAsesor"
-                               style="font-size: 18px; color: black;"
+                               style="font-size: 18px; color: red;"
                                [(ngModel)]="calculos.comisionAsesor" disabled/>
                       </div>
                     </div>

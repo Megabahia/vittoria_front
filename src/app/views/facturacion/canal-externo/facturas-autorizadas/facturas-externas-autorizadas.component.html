@@ -51,12 +51,14 @@
                                         <label class="custom-control-label" for="customCheck2"></label>
                                     </div>
                                 </th>
+                                <th>Numero Pedido</th>
                                 <th>Fecha de compra</th>
                                 <th>Nombres</th>
                                 <th>Apellidos</th>
                                 <th>Canal de compra</th>
                                 <th># productos comprados</th>
                                 <th>Total Factura</th>
+                                <th>Estado</th>
                                 <th>Factura</th>
                             </tr>
                             </thead>
@@ -69,12 +71,14 @@
                                         <label class="custom-control-label" for="transaccion-{{i}}"></label>
                                     </div>
                                 </td>
+                                <td>{{transaccion.numeroPedido}} </td>
                                 <td>{{transformarFecha(transaccion.created_at)}}</td>
-                                <td>{{transaccion.cliente.nombres}} </td>
-                                <td>{{transaccion.cliente.apellidos}} </td>
+                                <td>{{transaccion.nombresFacturacion}} </td>
+                                <td>{{transaccion.apellidosFacturacion}} </td>
                                 <td>{{transaccion.canal}} </td>
                                 <td>{{transaccion.numeroProductosComprados}} </td>
-                                <td> ${{transaccion.total}} </td>
+                                <td> ${{transaccion.importeTotalPedido}} </td>
+                                <td>{{transaccion.estadoSRI}}</td>
                                 <td>
                                     <a (click)="obtenerTransaccion(transaccion.id)" data-toggle="modal"
                                        data-target="#verfactura">factura-{{transaccion.numeroFactura}}</a>
