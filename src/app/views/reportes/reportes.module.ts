@@ -5,17 +5,16 @@ import {SharedModule} from '../../shared/shared.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ChartsModule} from 'ng2-charts';
 import {FlatpickrModule} from 'angularx-flatpickr';
-import {PagesRoutingModule} from './pages-routing.module';
-import { ProductosComponent } from './productos/productos.component';
-import {NgxCaptchaModule} from 'ngx-captcha';
-import { CalculadoraComponent } from './calculadora/calculadora.component';
+import {ReportesRoutingModule} from './reportes-routing.module';
+import { ReporteFacturasComponent } from './reporte-facturas/reporte-facturas.component';
+import { ReporteClientesComponent } from './reporte-clientes/reporte-clientes.component';
 
 
 
 @NgModule({
   declarations: [
-    ProductosComponent,
-    CalculadoraComponent
+    ReporteFacturasComponent,
+    ReporteClientesComponent
   ],
   imports: [
     CommonModule,
@@ -25,8 +24,7 @@ import { CalculadoraComponent } from './calculadora/calculadora.component';
     ChartsModule,
     ReactiveFormsModule,
     FlatpickrModule.forRoot(),
-    PagesRoutingModule,
-    NgxCaptchaModule,
+    ReportesRoutingModule,
   ]
 })
-export class PagesModule { }
+export class ReportesModule { }

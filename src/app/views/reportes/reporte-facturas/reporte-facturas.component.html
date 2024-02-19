@@ -1,0 +1,99 @@
+<div class="app-content content ">
+    <div class="content-overlay"></div>
+    <div class="header-navbar-shadow"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+        </div>
+        <div class="content-body">
+            <!-- users list start -->
+            <section class="app-user-list">
+                <!-- users filter start -->
+                <div class="card">
+                    <h5 class="card-header">Filtros de búsqueda</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="inicio"
+                                       (input)="obtenerTransacciones()">
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="fin"
+                                       (input)="obtenerTransacciones()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--                <div class="card">-->
+                <!--                    <div class="card-header d-flex justify-content-between align-items-sm-center align-items-start flex-sm-row flex-column">-->
+                <!--                        <div class="header-left">-->
+                <!--                            <h5>Gráfica de transacciones</h5>-->
+                <!--                        </div>-->
+                <!--                        <div class="header-right d-flex align-items-center mt-sm-0 mt-1">-->
+                <!--                            <small><i data-feather="calendar"></i>-->
+                <!--                                rango: <b>21-03-2021 / 21-04-2021</b></small>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                    <div class="card-body">-->
+                <!--                        <canvas baseChart height="70vh" [colors]="barChartColors " [datasets]="barChartData "-->
+                <!--                                [labels]="barChartLabels " [options]="barChartOptions " [plugins]="barChartPlugins "-->
+                <!--                                [legend]="barChartLegend " [chartType]="barChartType ">-->
+                <!--                        </canvas>-->
+                <!--                    </div>-->
+                <!--                </div>-->
+                <div class="card">
+                    <div class="card-datatable table-responsive pt-0">
+                        <div class="row m-75">
+                            <div class="col-lg-12 col-xl-6">
+                                <label>Mostrar</label>
+                                <select class="form-control-sm" [(ngModel)]="pageSize"
+                                        (change)="obtenerTransacciones()">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+
+                            </div>
+                        </div>
+                        <table class="user-list-table table">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck2"/>
+                                        <label class="custom-control-label" for="customCheck2"></label>
+                                    </div>
+                                </th>
+                                <th>Nombre</th>
+                                <th>Codigo</th>
+                                <th>Imagen</th>
+                                <th>Total Compras</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr *ngFor="let transaccion  of listaReporteProductos; let i = index">
+                                <td>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck2{{i}}"/>
+                                        <label class="custom-control-label" for="customCheck2{{i}}"></label>
+                                    </div>
+                                </td>
+                                <td>{{transaccion.producto.nombre}} </td>
+                                <td>{{transaccion.producto.codigoBarras}} </td>
+                                <td>
+                                    <img [src]="transaccion.producto.imagenes[0].imagen" width="100px">
+                                </td>
+                                <td>{{transaccion.total_cantidad}} </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
+                                    [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+                </div>
+            </section>
+            <!-- users list ends -->
+        </div>
+    </div>
+</div>

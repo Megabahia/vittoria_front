@@ -53,6 +53,14 @@ export class ToolbarComponent implements OnInit, OnChanges {
       ciudades: '',
       guias: '',
     },
+    facturacion: {
+      locales: '',
+      externas: '',
+    },
+    reportes: {
+      productos: '',
+      clientes: '',
+    },
     todomegacentro: {
       inicio: '',
     }

@@ -59,6 +59,12 @@ export interface Rol {
       CREAR: number,
       BORRAR: number
     },
+    FACTURACION: {
+      LEER: number,
+      ESCRIBIR: number,
+      CREAR: number,
+      BORRAR: number
+    },
   };
 
 }
