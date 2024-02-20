@@ -53,6 +53,8 @@ export class MailPasswordComponent implements OnInit {
       this.submitted = false;
       this.router.navigate(['auth/signin']);
     }, (error) => {
+      this.mensaje = 'No existe el correo';
+      this.abrirModal(this.mensajeModal);
     });
   }
 
