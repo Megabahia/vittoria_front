@@ -47,7 +47,7 @@ export class CalculadoraComponent implements OnInit {
       toolbar.style.display = 'none';
     }
     this.miFormulario = this.formBuilder.group({
-      precioProducto: ['', [Validators.required, Validators.min(1), Validators.max(1000)]],
+      precioProducto: ['', [Validators.required, Validators.min(1), Validators.max(50000)]],
     });
   }
 
@@ -106,9 +106,9 @@ export class CalculadoraComponent implements OnInit {
     }
     const precioProducto = this.miFormulario.value.precioProducto;
     const comision = new Decimal(this.comisionAsesor).div(100).toString();
-    const iva = new Decimal(this.iva).div(100).toString();
+    const iva = new Decimal(this.iva).div(100).add(1).toFixed(2).toString();
     this.calculos.valorPagar = precioProducto;
-    this.calculos.montoIva = new Decimal(precioProducto).mul(iva).toFixed(2).toString();
+    this.calculos.montoIva = new Decimal(precioProducto).sub(new Decimal(precioProducto).div(iva).toFixed(2)).toString();
     this.calculos.subtotal = new Decimal(precioProducto).sub(this.calculos.montoIva).toFixed(2).toString();
     this.calculos.costoEnvio = this.costoEnvio;
     const porcentaje = new Decimal(1).add(comision).toString();
