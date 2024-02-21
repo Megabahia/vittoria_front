@@ -3,6 +3,7 @@ import {AuthGuard} from '../../../guard/auth.guard';
 import {RouterModule, Routes} from '@angular/router';
 import {CargarProveedoresProductosComponent} from './cargar-proveedores-productos/cargar-proveedores-productos.component';
 import {ProveedoresComponent} from './proveedores/proveedores.component';
+import {CargarStockComponent} from './cargar-stock/cargar-stock.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'cargar-productos', pathMatch: 'full'},
@@ -11,6 +12,9 @@ const routes: Routes = [
   },
   {
     path: 'buscar-productos', component: ProveedoresComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'cargar-stock-productos', component: CargarStockComponent, canActivate: [AuthGuard]
   }
 ];
 

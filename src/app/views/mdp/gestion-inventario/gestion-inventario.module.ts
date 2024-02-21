@@ -9,12 +9,14 @@ import {NgxDropzoneModule} from 'ngx-dropzone';
 import {GestionInventarioRoutingModule} from './gestion-inventario-routing.module';
 import { CargarProveedoresProductosComponent } from './cargar-proveedores-productos/cargar-proveedores-productos.component';
 import { ProveedoresComponent } from './proveedores/proveedores.component';
+import { CargarStockComponent } from './cargar-stock/cargar-stock.component';
 
 
 @NgModule({
   declarations: [
     CargarProveedoresProductosComponent,
-    ProveedoresComponent
+    ProveedoresComponent,
+    CargarStockComponent
   ],
   imports: [
     GestionInventarioRoutingModule,

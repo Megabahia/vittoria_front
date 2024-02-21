@@ -17,23 +17,13 @@ export class ProveedoresComponent implements OnInit, AfterViewInit {
   pageSize: any = 10;
   maxSize;
   collectionSize;
-  parametros;
+  productos;
   tiposOpciones = '';
   tipos;
   nombreBuscar;
-  nombre;
-  nombreTipo = '';
-  descripcion;
-  funcion;
-  tipoPadre = '';
-  idPadre = 0;
-  tipoVariable;
-  minimo;
-  maximo;
+  proveedor = '';
   valor;
-  padres;
   currentUserValue;
-  archivo: FormData = new FormData();
 
   constructor(
     private gestionInventarioService: GestionInventarioService,
@@ -55,6 +45,7 @@ export class ProveedoresComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.iniciarPaginador();
     this.obtenerListaParametros();
+    this.obtenerProveedores();
   }
 
   iniciarPaginador(): void {
@@ -69,10 +60,18 @@ export class ProveedoresComponent implements OnInit, AfterViewInit {
       page: this.page - 1,
       page_size: this.pageSize,
       tipo: this.tiposOpciones,
-      nombre: this.nombreBuscar
+      codigoBarras: this.nombreBuscar,
+      proveedor: this.proveedor,
     }).subscribe((result) => {
-      this.parametros = result.info;
+      this.productos = result.info;
       this.collectionSize = result.cont;
+    });
+
+  }
+
+  obtenerProveedores(): void {
+    this.gestionInventarioService.obtenerProveedores().subscribe((result) => {
+      this.tipos = result;
     });
 
   }

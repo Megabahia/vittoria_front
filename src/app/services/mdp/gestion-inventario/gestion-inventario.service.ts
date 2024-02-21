@@ -22,6 +22,14 @@ export class GestionInventarioService {
     return this.http.post<any>(`${apiUrl}/mdp/gestion-inventario/proveedores/list/`, datos);
   }
 
+  obtenerProveedores(): Observable<any> {
+    return this.http.get<any>(`${apiUrl}/mdp/gestion-inventario/proveedores/`);
+  }
+
+  cargarStock(datos): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/mdp/gestion-inventario/cargar/stock/`, datos);
+  }
+
   exportar(): Observable<any> {
     const httpOptions = {
       responseType: 'blob' as 'json'

@@ -17,10 +17,10 @@
                                        [(ngModel)]="nombreBuscar" (change)="obtenerListaParametros()">
                             </div>
                             <div class="col-md-4">
-                                <select class="select2 form-control form-control-sm" [(ngModel)]="tiposOpciones"
+                                <select class="select2 form-control form-control-sm" [(ngModel)]="proveedor"
                                         (change)="obtenerListaParametros()">
                                     <option value="" selected>- Proveedor -</option>
-                                    <option *ngFor="let tipo of tipos" value="{{tipo.valor}}">{{tipo.valor}}</option>
+                                    <option *ngFor="let tipo of tipos" value="{{tipo.proveedor}}">{{tipo.proveedor}}</option>
                                 </select>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr *ngFor="let parametro of parametros; let i = index">
+                            <tr *ngFor="let parametro of productos; let i = index">
                                 <td>
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="customCheck2{{i}}"/>
