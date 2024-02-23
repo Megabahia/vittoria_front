@@ -20,7 +20,9 @@
                                         <label class="custom-file-label" for="inputGroupFile02">Seleccionar archivo XLSX</label>
                                     </div>
                                     <div class="input-group-append">
-                                        <span class="input-group-text btn-primary"><a (click)="cargarStock()">Cargar</a></span>
+                                        <button (click)="cargarStock()"
+                                                class="input-group-text btn-primary"
+                                                [disabled]="enviando">Cargar</button>
                                     </div>
                                 </div>
                             </div>

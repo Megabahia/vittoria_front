@@ -42,7 +42,10 @@
 
                         </div>
                         <div class="col-lg-12 col-xl-6 text-right">
-                            <button class="btn btn-success" type="button" (click)="export()">
+                            <button class="btn btn-secondary" type="button" (click)="sincronizarFotos()">
+                                Sincronizar Fotos
+                            </button>
+                            <button class="btn btn-success" type="button" (click)="export()" [disabled]="enviando">
                                 Exportar a Excel
                             </button>
                         </div>
@@ -73,7 +76,8 @@
                                     </div>
                                 </td>
                                 <td> {{parametro.codigoBarras}} </td>
-                                <td> <img [src]="parametro.imagen" width="100px"></td>
+                                <td> <img src="{{parametro?.imagenes[0].imagen}}" *ngIf="parametro?.imagenes.length > 0" width="100px"></td>
+<!--                                <td> <img src="https://appvittoria.s3.amazonaws.com/PRODUCTOS_EXTERNOS/FOTO_ORIGINAL/6914080380577.jpeg" width="100px"></td>-->
                                 <td> {{parametro.nombreProducto}}</td>
                                 <td> {{parametro.proveedor}}</td>
                                 <td> {{parametro.precioAdquisicion}}</td>

@@ -3,6 +3,7 @@ import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder} from '@angular/forms';
 import {AuthService} from '../../../../services/admin/auth.service';
 import {GestionInventarioService} from '../../../../services/mdp/gestion-inventario/gestion-inventario.service';
+import {Toaster} from 'ngx-toast-notifications';
 
 @Component({
   selector: 'app-proveedores',
@@ -24,12 +25,14 @@ export class ProveedoresComponent implements OnInit, AfterViewInit {
   proveedor = '';
   valor;
   currentUserValue;
+  enviando = false;
 
   constructor(
     private gestionInventarioService: GestionInventarioService,
     private modalService: NgbModal,
     private _formBuilder: FormBuilder,
     private authService: AuthService,
+    private toaster: Toaster,
   ) {
     this.currentUserValue = this.authService.currentUserValue;
   }
@@ -77,12 +80,28 @@ export class ProveedoresComponent implements OnInit, AfterViewInit {
   }
 
   export(): void {
+    this.enviando = true;
     this.gestionInventarioService.exportar().subscribe((data) => {
+      this.enviando = false;
       const downloadURL = window.URL.createObjectURL(data);
       const link = document.createElement('a');
       link.href = downloadURL;
       link.download = 'productos.xls';
       link.click();
+    }, (error) => {
+      this.enviando = false;
+    });
+  }
+
+  sincronizarFotos(): void {
+    this.enviando = true;
+    this.gestionInventarioService.sincronizarFotos().subscribe((data) => {
+      this.enviando = false;
+      this.obtenerListaParametros();
+      this.toaster.open('Se sincronizo las fotos', {type: 'success'});
+    }, (error) => {
+      this.enviando = false;
+      this.toaster.open('No se puedo sincronizar', {type: 'danger'});
     });
   }
 

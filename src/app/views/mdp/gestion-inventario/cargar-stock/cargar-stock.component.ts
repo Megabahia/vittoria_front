@@ -10,6 +10,7 @@ import {GestionInventarioService} from '../../../../services/mdp/gestion-inventa
 export class CargarStockComponent implements OnInit {
   menu;
   archivo: FormData = new FormData();
+  enviando = false;
 
   constructor(
     private toaster: Toaster,
@@ -30,8 +31,18 @@ export class CargarStockComponent implements OnInit {
   }
 
   cargarStock(): void {
+    console.log('enviado', this.archivo.get('archivo'));
+    if (this.archivo.get('archivo') === null) {
+      this.toaster.open('Agrege un archivo', {type: 'warning'});
+      return;
+    }
+    this.enviando = true;
     this.gestionInventarioService.cargarStock(this.archivo).subscribe((info) => {
       this.toaster.open('Se cargo correctamente', {type: 'success'});
+      this.enviando = false;
+    }, (error) => {
+      this.toaster.open('No es valido el archivo', {type: 'danger'});
+      this.enviando = false;
     });
   }
 }

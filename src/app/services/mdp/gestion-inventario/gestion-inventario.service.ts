@@ -37,4 +37,8 @@ export class GestionInventarioService {
     return this.http.get<any>(
       `${environment.apiUrl}/mdp/gestion-inventario/exportar/`, httpOptions);
   }
+
+  sincronizarFotos(): Observable<any> {
+    return this.http.get<any>(`${apiUrl}/mdp/gestion-inventario/sincronizar/fotos/productos/`);
+  }
 }

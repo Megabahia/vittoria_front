@@ -10,6 +10,7 @@ import {Toaster} from 'ngx-toast-notifications';
 export class CargarProveedoresProductosComponent implements OnInit {
   menu;
   archivo: FormData = new FormData();
+  enviando = false;
 
   constructor(
     private toaster: Toaster,
@@ -30,8 +31,18 @@ export class CargarProveedoresProductosComponent implements OnInit {
   }
 
   cargarStock(): void {
+    console.log('enviado', this.archivo.get('archivo'));
+    if (this.archivo.get('archivo') === null) {
+      this.toaster.open('Agrege un archivo', {type: 'warning'});
+      return;
+    }
+    this.enviando = true;
     this.gestionInventarioService.cargarProductosProveedores(this.archivo).subscribe((info) => {
+      this.enviando = false;
       this.toaster.open('Se cargo correctamente', {type: 'success'});
+    }, (error) => {
+      this.toaster.open('No es valido el archivo', {type: 'danger'});
+      this.enviando = false;
     });
   }
 }
