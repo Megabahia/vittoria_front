@@ -45,4 +45,18 @@ export class CargarStockComponent implements OnInit {
       this.enviando = false;
     });
   }
+
+  reporteProductosStock(): void {
+    this.enviando = true;
+    this.gestionInventarioService.reporteProductosStock().subscribe((data) => {
+      this.enviando = false;
+      const downloadURL = window.URL.createObjectURL(data);
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = 'productosStock.xls';
+      link.click();
+    }, (error) => {
+      this.enviando = false;
+    });
+  }
 }
