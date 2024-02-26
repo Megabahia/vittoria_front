@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {GestionInventarioService} from '../../../../services/mdp/gestion-inventario/gestion-inventario.service';
+import { Component, OnInit } from '@angular/core';
 import {Toaster} from 'ngx-toast-notifications';
+import {GestionInventarioService} from '../../../../services/mdp/gestion-inventario/gestion-inventario.service';
 
 @Component({
-  selector: 'app-cargar-proveedores-productos',
-  templateUrl: './cargar-proveedores-productos.component.html',
-  styleUrls: ['./cargar-proveedores-productos.component.css']
+  selector: 'app-cargar-stock',
+  templateUrl: './cargar-stock.component.html',
+  styleUrls: ['./cargar-stock.component.css']
 })
-export class CargarProveedoresProductosComponent implements OnInit {
+export class CargarStockComponent implements OnInit {
   menu;
   archivo: FormData = new FormData();
   enviando = false;
@@ -37,9 +37,9 @@ export class CargarProveedoresProductosComponent implements OnInit {
       return;
     }
     this.enviando = true;
-    this.gestionInventarioService.cargarProductosProveedores(this.archivo).subscribe((info) => {
-      this.enviando = false;
+    this.gestionInventarioService.cargarStock(this.archivo).subscribe((info) => {
       this.toaster.open('Se cargo correctamente', {type: 'success'});
+      this.enviando = false;
     }, (error) => {
       this.toaster.open('No es valido el archivo', {type: 'danger'});
       this.enviando = false;

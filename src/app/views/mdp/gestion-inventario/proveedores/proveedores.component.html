@@ -17,10 +17,10 @@
                                        [(ngModel)]="nombreBuscar" (change)="obtenerListaParametros()">
                             </div>
                             <div class="col-md-4">
-                                <select class="select2 form-control form-control-sm" [(ngModel)]="tiposOpciones"
+                                <select class="select2 form-control form-control-sm" [(ngModel)]="proveedor"
                                         (change)="obtenerListaParametros()">
                                     <option value="" selected>- Proveedor -</option>
-                                    <option *ngFor="let tipo of tipos" value="{{tipo.valor}}">{{tipo.valor}}</option>
+                                    <option *ngFor="let tipo of tipos" value="{{tipo.proveedor}}">{{tipo.proveedor}}</option>
                                 </select>
                             </div>
                         </div>
@@ -42,7 +42,10 @@
 
                         </div>
                         <div class="col-lg-12 col-xl-6 text-right">
-                            <button class="btn btn-success" type="button" (click)="export()">
+                            <button class="btn btn-secondary" type="button" (click)="sincronizarFotos()">
+                                Sincronizar Fotos
+                            </button>
+                            <button class="btn btn-success" type="button" (click)="export()" [disabled]="enviando">
                                 Exportar a Excel
                             </button>
                         </div>
@@ -65,7 +68,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr *ngFor="let parametro of parametros; let i = index">
+                            <tr *ngFor="let parametro of productos; let i = index">
                                 <td>
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="customCheck2{{i}}"/>
@@ -73,7 +76,8 @@
                                     </div>
                                 </td>
                                 <td> {{parametro.codigoBarras}} </td>
-                                <td> {{parametro.imagen}}</td>
+                                <td> <img src="{{parametro?.imagenes[0].imagen}}" *ngIf="parametro?.imagenes.length > 0" width="100px"></td>
+<!--                                <td> <img src="https://appvittoria.s3.amazonaws.com/PRODUCTOS_EXTERNOS/FOTO_ORIGINAL/6914080380577.jpeg" width="100px"></td>-->
                                 <td> {{parametro.nombreProducto}}</td>
                                 <td> {{parametro.proveedor}}</td>
                                 <td> {{parametro.precioAdquisicion}}</td>
