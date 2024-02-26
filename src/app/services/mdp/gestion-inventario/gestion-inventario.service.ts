@@ -38,6 +38,14 @@ export class GestionInventarioService {
       `${environment.apiUrl}/mdp/gestion-inventario/exportar/`, httpOptions);
   }
 
+  reporteProductosStock(): Observable<any> {
+    const httpOptions = {
+      responseType: 'blob' as 'json'
+    };
+    return this.http.get<any>(
+      `${environment.apiUrl}/mdp/gestion-inventario/exportar/productos/stock/`, httpOptions);
+  }
+
   sincronizarFotos(): Observable<any> {
     return this.http.get<any>(`${apiUrl}/mdp/gestion-inventario/sincronizar/fotos/productos/`);
   }
