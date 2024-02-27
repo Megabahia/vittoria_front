@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ClientesService, Transaccion} from '../../../services/mdm/personas/clientes/clientes.service';
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {Color, Label} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
 import {ReportesService} from '../../../services/reportes/reportes.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-reporte-facturas',
@@ -12,6 +13,7 @@ import {ReportesService} from '../../../services/reportes/reportes.service';
   providers: [DatePipe]
 })
 export class ReporteFacturasComponent implements OnInit {
+  @ViewChild('contenido') contenido;
   menu;
   page = 1;
   pageSize = 3;
@@ -36,9 +38,11 @@ export class ReporteFacturasComponent implements OnInit {
   datosTransferencias = {
     data: [], label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)'
   };
+  clientes = [];
 
   constructor(
     private datePipe: DatePipe,
+    private modalService: NgbModal,
     private reporteProductosService: ReportesService
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
@@ -67,5 +71,13 @@ export class ReporteFacturasComponent implements OnInit {
 
   transformarFecha(fecha): string {
     return this.datePipe.transform(fecha, 'yyyy-MM-dd');
+  }
+
+  verClientes(codigoProducto: string): void {
+    this.reporteProductosService.obtenerClientesCompras(codigoProducto)
+      .subscribe((info) => {
+        this.modalService.open(this.contenido, {size: 'xl', centered: true});
+        this.clientes = info.info;
+      });
   }
 }

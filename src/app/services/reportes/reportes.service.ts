@@ -20,4 +20,8 @@ export class ReportesService {
   obtenerReporteClientes(datos): Observable<any> {
     return this.http.post<any>(`${apiUrl}/mdm/facturas/reporte/clientes`, datos);
   }
+
+  obtenerClientesCompras(codigoProducto): Observable<any> {
+    return this.http.get<any>(`${apiUrl}/mdm/facturas/clientes/compra/${codigoProducto}`);
+  }
 }
