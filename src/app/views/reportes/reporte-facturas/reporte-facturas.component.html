@@ -68,6 +68,7 @@
                                 <th>Codigo</th>
                                 <th>Imagen</th>
                                 <th>Total Compras</th>
+                                <th>Ver Clientes</th>
                             </tr>
                             </thead>
 
@@ -85,6 +86,11 @@
                                     <img [src]="transaccion.producto.imagenes[0].imagen" width="100px">
                                 </td>
                                 <td>{{transaccion.total_cantidad}} </td>
+                                <td>
+                                    <button class="btn btn-primary"
+                                            (click)="verClientes(transaccion.producto.codigoBarras)">Ver
+                                    </button>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -97,3 +103,37 @@
         </div>
     </div>
 </div>
+
+
+<ng-template #contenido let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Mensaje</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <table class="user-list-table table">
+            <thead class="thead-light">
+            <tr>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>Telefono</th>
+                <th>Identificación</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let transaccion  of clientes; let i = index">
+                <td>{{transaccion.cliente?.nombres}} </td>
+                <td>{{transaccion.cliente?.apellidos}} </td>
+                <td>{{transaccion.cliente?.telefono}} </td>
+                <td>{{transaccion.cliente?.cedula}} </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
+    </div>
+</ng-template>
