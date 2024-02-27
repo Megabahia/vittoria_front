@@ -341,6 +341,10 @@ export class ClientesService {
     return this.http.post<any>(`${apiUrl}/mdm/facturas/list/cliente/`, datos);
   }
 
+  obtenerTodasTrasaccionesCliente(datos): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/mdm/facturas/list/`, datos);
+  }
+
   crearTransaccion(datos) {
     return this.http.post<any>(`${apiUrl}/mdm/facturas/create/`, datos);
   }

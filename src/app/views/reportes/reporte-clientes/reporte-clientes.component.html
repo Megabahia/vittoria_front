@@ -1,4 +1,4 @@
-<div class="app-content content ">
+<div class="app-content content " *ngIf="pantalla == 1">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
     <div class="content-wrapper">
@@ -68,6 +68,7 @@
                                 <th>Apellidos</th>
                                 <th>Identificación</th>
                                 <th>Total Compras</th>
+                                <th>Acciones</th>
                             </tr>
                             </thead>
 
@@ -83,6 +84,9 @@
                                 <td>{{transaccion.cliente.apellidos}} </td>
                                 <td>{{transaccion.cliente.cedula}} </td>
                                 <td>{{transaccion.total_cantidad}} </td>
+                                <td>
+                                    <button class="btn btn-primary" (click)="cambiarPantalla(transaccion.id)">Ver</button>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -95,3 +99,6 @@
         </div>
     </div>
 </div>
+
+
+<app-reporte-transacciones-list [clienteId]="33"  *ngIf="pantalla == 2"></app-reporte-transacciones-list>

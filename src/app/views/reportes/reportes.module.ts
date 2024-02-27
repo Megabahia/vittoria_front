@@ -8,13 +8,15 @@ import {FlatpickrModule} from 'angularx-flatpickr';
 import {ReportesRoutingModule} from './reportes-routing.module';
 import { ReporteFacturasComponent } from './reporte-facturas/reporte-facturas.component';
 import { ReporteClientesComponent } from './reporte-clientes/reporte-clientes.component';
+import {ReporteTransaccionesListComponent} from './reporte-transacciones-list/reporte-transacciones-list.component';
 
 
 
 @NgModule({
   declarations: [
     ReporteFacturasComponent,
-    ReporteClientesComponent
+    ReporteClientesComponent,
+    ReporteTransaccionesListComponent
   ],
   imports: [
     CommonModule,

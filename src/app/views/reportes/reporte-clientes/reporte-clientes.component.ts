@@ -11,6 +11,8 @@ import {ReportesService} from '../../../services/reportes/reportes.service';
   providers: [DatePipe]
 })
 export class ReporteClientesComponent implements OnInit {
+  clienteId;
+  pantalla = 1;
   menu;
   page = 1;
   pageSize = 3;
@@ -60,5 +62,10 @@ export class ReporteClientesComponent implements OnInit {
 
   transformarFecha(fecha): string {
     return this.datePipe.transform(fecha, 'yyyy-MM-dd');
+  }
+
+  cambiarPantalla(clienteId): void {
+    this.clienteId = clienteId;
+    this.pantalla = 2;
   }
 }
