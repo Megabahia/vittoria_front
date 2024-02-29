@@ -41,6 +41,7 @@
                                     <div *ngIf="submittedProductoForm && fp.codigoBarras.errors" class="invalid-feedback" style="display: block;">
                                         <div *ngIf="fp.codigoBarras.errors.required">Código de barras es requeridos
                                         </div>
+                                        <div *ngIf="fp.codigoBarras.errors.maxlength">Ingreso maximo de caracteres 150</div>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -57,6 +58,8 @@
                                     <input type="text" class="form-control" name="stock" formControlName="stock" [(ngModel)]="producto.stock">
                                     <div *ngIf="submittedProductoForm && fp.stock.errors" class="invalid-feedback" style="display: block;">
                                         <div *ngIf="fp.stock.errors.required">Stock es requerido</div>
+                                        <div *ngIf="fp.stock.errors.min">Stock minimo 1</div>
+                                        <div *ngIf="fp.stock.errors.numeroInvalid">Ingrese solo numeros enteros</div>
                                     </div>
                                 </div>
 
@@ -166,6 +169,7 @@
                                     <div *ngIf="submittedProductoForm && fp.nombre.errors" class="invalid-feedback" style="display: block;">
                                         <div *ngIf="fp.nombre.errors.required">Nombre completo es requerido
                                         </div>
+                                        <div *ngIf="fp.nombre.errors.maxlength">Ingreso maximo de caracteres 150</div>
                                     </div>
                                 </div>
                                 <div class="form-group">
