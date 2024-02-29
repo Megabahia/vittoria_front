@@ -7,6 +7,7 @@ import {ParamService} from 'src/app/services/mdp/param/param.service';
 import {ParamService as MDMParamService} from 'src/app/services/mdm/param/param.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import * as moment from 'moment';
+import {ValidacionesPropias} from '../../../../../utils/customer.validators';
 
 @Component({
   selector: 'app-productos-editar',
@@ -71,11 +72,11 @@ export class ProductosEditarComponent implements OnInit {
     this.productoForm = this._formBuilder.group({
       categoria: ['', [Validators.required]],
       subCategoria: ['', [Validators.required]],
-      nombre: ['', [Validators.required]],
+      nombre: ['', [Validators.required, Validators.maxLength(150)]],
       descripcion: ['', [Validators.required]],
-      codigoBarras: ['', [Validators.required]],
+      codigoBarras: ['', [Validators.required, Validators.maxLength(150)]],
       refil: ['', [Validators.required]],
-      stock: ['', [Validators.required]],
+      stock: ['', [Validators.required, Validators.min(1), ValidacionesPropias.numeroEntero]],
       parametrizacion: [0, [Validators.required, Validators.min(1)]],
       costoCompra: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       precioVentaA: ['', [Validators.required, Validators.pattern(this.numRegex)]],

@@ -27,4 +27,17 @@ export class ValidacionesPropias {
       return {identificacionInvalid: true};
     }
   }
+
+  static numeroEntero(control: AbstractControl): any {
+    const variable = /^[0-9]*$/;
+    const valido = variable.exec(control.value);
+    let errors = control['errors'] ?? {};
+    if (valido) {
+      delete errors?.['numeroInvalid'];
+      return null;
+    } else {
+      control.setErrors({...errors, numeroInvalid: true});
+      return {numeroInvalid: true};
+    }
+  }
 }
