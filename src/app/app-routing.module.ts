@@ -21,6 +21,9 @@ const routes: Routes = [
     path: 'mdo', loadChildren: () => import('./views/mdo/mdo.module').then(m => m.MdoModule)
   },
   {
+    path: 'mp', loadChildren: () => import('./views/mp/mp.module').then(m => m.MpModule)
+  },
+  {
     path: 'gdo', loadChildren: () => import('./views/gdo/gdo.module').then(m => m.GdoModule)
   },
   {

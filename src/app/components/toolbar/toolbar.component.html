@@ -287,6 +287,22 @@
                     </li>
                 </ul>
             </li>
+            <li class="nav-item" *ngIf="acciones.MP.LEER">
+                <a class="d-flex align-items-center">
+                    <i data-feather="file-text"></i>
+                    <span class="menu-title text-truncate" data-i18n="Invoice">MP Motor de pedidos</span></a>
+                <ul class="menu-content">
+                    <li class="nav-item {{menuToolbar['mp']['param']}}">
+                        <a class="d-flex align-items-center" href="#/mp/parametrizaciones/list">
+                            <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
+                    </li>
+                    <li class="nav-item {{menuToolbar['mp']['pedidos']}}">
+                        <a class="d-flex align-items-center" href="#/mp/pedidos/list" data-toggle="tooltip"
+                           data-placement="right" title="Pedidos">
+                            <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Pedidos</span></a>
+                    </li>
+                </ul>
+            </li>
             <li class="nav-item" *ngIf="acciones.GDO.LEER">
                 <a class="d-flex align-items-center">
                     <i data-feather="file-text"></i>
