@@ -10,6 +10,7 @@ import { FacturasAutorizadasComponent } from './canal-vittoria/facturas-autoriza
 import {FacturasLocalesComponent} from './canal-vittoria/facturas-locales/facturas-locales.component';
 import {FacturasExternosComponent} from './canal-externo/facturas-externos/facturas-externos.component';
 import {FacturasExternasAutorizadasComponent} from './canal-externo/facturas-autorizadas/facturas-externas-autorizadas.component';
+import {FacturasWoocommerceComponent} from './canal-woocommerce/facturas-locales/facturas-woocommerce.component';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import {FacturasExternasAutorizadasComponent} from './canal-externo/facturas-aut
     FacturasExternosComponent,
     FacturasAutorizadasComponent,
     FacturasExternasAutorizadasComponent,
+    FacturasWoocommerceComponent,
   ],
   imports: [
     CommonModule,

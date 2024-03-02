@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {Color, Label} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
-import {PedidosService} from '../../../services/mp/pedidos.service';
+import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
 import {ParamService} from '../../../services/mp/param/param.service';
 
 @Component({
@@ -54,7 +54,8 @@ export class PedidosComponent implements OnInit {
       page: this.page - 1,
       page_size: this.pageSize,
       inicio: this.inicio,
-      fin: this.fin
+      fin: this.fin,
+      estado: ['Pendiente']
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;
@@ -81,7 +82,7 @@ export class PedidosComponent implements OnInit {
 
   procesarEnvio(id, estado): void {
     if (confirm('Esta seguro de cambiar de estado') === true) {
-      this.pedidosService.enviarGestionEntrega({id, estado}).subscribe((info) => {
+      this.pedidosService.actualizarPedido({id, estado}).subscribe((info) => {
         this.transaccion = info;
         this.obtenerTransacciones();
       });

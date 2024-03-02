@@ -334,6 +334,11 @@
                            data-placement="right" title="Gestión de entrega de la oferta">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Gestión de entrega de la oferta</span></a>
                     </li>
+                    <li class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerce']}}">
+                        <a class="d-flex align-items-center" href="#/gde/gestionEntrega/woocommerce/list" data-toggle="tooltip"
+                           data-placement="right" title="Gestión de entrega de woocommerce">
+                            <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Gestión de entrega de woocommerce</span></a>
+                    </li>
                 </ul>
             </li>
             <li class="navigation-header">Módulos de servientrega</li>
@@ -435,6 +440,24 @@
                             <i data-feather="circle"></i>
                             <span class="menu-item text-truncate" data-i18n="List">Factura electronica</span></a>
                     </li>
+                </ul>
+            </li>
+            <li class="nav-item" *ngIf="acciones.FACTURACION.LEER">
+                <a class="d-flex align-items-center">
+                    <i data-feather="file-text"></i>
+                    <span class="menu-title text-truncate" data-i18n="Invoice">Canal Woocommerce</span></a>
+                <ul class="menu-content">
+                    <li class="nav-item {{menuToolbar['facturacion']['locales']}}">
+                        <a class="d-flex align-items-center" href="#/facturacion/canal-woocommerce/pendiente">
+                            <i data-feather="circle"></i>
+                            <span class="menu-item text-truncate" data-i18n="List">Pendientes</span>
+                        </a>
+                    </li>
+<!--                    <li class="nav-item {{menuToolbar['facturacion']['externas']}}">-->
+<!--                        <a class="d-flex align-items-center" href="#/facturacion/canal-woocommerce/facturadas">-->
+<!--                            <i data-feather="circle"></i>-->
+<!--                            <span class="menu-item text-truncate" data-i18n="List">Factura electronica</span></a>-->
+<!--                    </li>-->
                 </ul>
             </li>
             <li class="navigation-header">Reportes</li>
