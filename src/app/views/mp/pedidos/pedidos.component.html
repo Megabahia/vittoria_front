@@ -99,7 +99,7 @@
                                                         <span class="title mr-1">Fecha Pedido:</span>
                                                         <input type="text"
                                                                class="form-control invoice-edit-input date-picker"
-                                                               value="{{transaccion?.created_at | date: 'dd-MM-yyyy'}}"
+                                                               value="{{notaPedido.controls?.created_at.value | date: 'dd-MM-yyyy'}}"
                                                                disabled/>
                                                     </div>
                                                 </div>
@@ -114,7 +114,7 @@
                                                                 </div>
                                                             </div>
                                                             <input type="text" class="form-control invoice-edit-input"
-                                                                   placeholder="{{transaccion?.numeroPedido}}"
+                                                                   placeholder="{{notaPedido.controls?.numeroPedido.value}}"
                                                                    disabled/>
                                                         </div>
                                                     </div>
@@ -294,6 +294,7 @@
                                                                                     Código Producto
                                                                                 </p>
                                                                                 <input class="form-control" type="text"
+                                                                                       (change)="obtenerProducto(i)"
                                                                                        formControlName="codigo">
                                                                                 <div *ngIf="detalle.controls.codigo.errors"
                                                                                      class="invalid-feedback"
@@ -308,11 +309,13 @@
                                                                                     Cantidad
                                                                                 </p>
                                                                                 <input type="text" class="form-control"
-                                                                                       formControlName="codigo"/>
-                                                                                <div *ngIf="detalle.controls.codigo.errors"
+                                                                                       formControlName="cantidad"
+                                                                                       (change)="calcular()"
+                                                                                />
+                                                                                <div *ngIf="detalle.controls.cantidad.errors"
                                                                                      class="invalid-feedback"
                                                                                      style="display: block;">
-                                                                                    <div *ngIf="detalle.controls.codigo.errors.required">
+                                                                                    <div *ngIf="detalle.controls.cantidad.errors.required">
                                                                                         Requerido
                                                                                     </div>
                                                                                 </div>
@@ -322,11 +325,13 @@
                                                                                     Nombre
                                                                                 </p>
                                                                                 <input type="text" class="form-control"
-                                                                                       formControlName="codigo"/>
-                                                                                <div *ngIf="detalle.controls.codigo.errors"
+                                                                                       formControlName="articulo"
+                                                                                       disabled
+                                                                                />
+                                                                                <div *ngIf="detalle.controls.articulo.errors"
                                                                                      class="invalid-feedback"
                                                                                      style="display: block;">
-                                                                                    <div *ngIf="detalle.controls.codigo.errors.required">
+                                                                                    <div *ngIf="detalle.controls.articulo.errors.required">
                                                                                         Requerido
                                                                                     </div>
                                                                                 </div>
@@ -335,13 +340,11 @@
                                                                                 <p class="card-text col-title mb-md-50 mb-0">
                                                                                     Valor Unitario
                                                                                 </p>
-                                                                                <input type="number"
-                                                                                       class="form-control"
-                                                                                       formControlName="codigo"/>
-                                                                                <div *ngIf="detalle.controls.codigo.errors"
+                                                                                <label>{{detalle.controls.valorUnitario.value}}</label>
+                                                                                <div *ngIf="detalle.controls.valorUnitario.errors"
                                                                                      class="invalid-feedback"
                                                                                      style="display: block;">
-                                                                                    <div *ngIf="detalle.controls.codigo.errors.required">
+                                                                                    <div *ngIf="detalle.controls.valorUnitario.errors.required">
                                                                                         Requerido
                                                                                     </div>
                                                                                 </div>
@@ -350,13 +353,11 @@
                                                                                 <p class="card-text col-title mb-md-50 mb-0">
                                                                                     Total
                                                                                 </p>
-                                                                                <input type="number"
-                                                                                       class="form-control"
-                                                                                       formControlName="codigo"/>
-                                                                                <div *ngIf="detalle.controls.codigo.errors"
+                                                                                <label>{{detalle.controls.precio.value}}</label>
+                                                                                <div *ngIf="detalle.controls.precio.errors"
                                                                                      class="invalid-feedback"
                                                                                      style="display: block;">
-                                                                                    <div *ngIf="detalle.controls.codigo.errors.required">
+                                                                                    <div *ngIf="detalle.controls.precio.errors.required">
                                                                                         Requerido
                                                                                     </div>
                                                                                 </div>
@@ -434,16 +435,16 @@
                                                     <div class="invoice-total-wrapper">
                                                         <div class="invoice-total-item">
                                                             <p class="invoice-total-title">Subtotal:
-                                                                ${{transaccion?.total}}</p>
+                                                                ${{notaPedido.controls.subtotal.value}}</p>
                                                         </div>
                                                         <div class="invoice-total-item">
-                                                            <p class="invoice-total-title">IVA 12%:
-                                                                ${{transaccion?.iva}}</p>
+                                                            <p class="invoice-total-title">{{iva?.descripcion}}:
+                                                                ${{notaPedido.controls.iva.value}}</p>
                                                         </div>
                                                         <hr class="my-50"/>
                                                         <div class="invoice-total-item">
                                                             <p class="invoice-total-title text-primary font-weight-bold">
-                                                                Total: ${{transaccion?.total}}</p>
+                                                                Total: ${{notaPedido.controls.total.value}}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -605,8 +606,12 @@
 
                                         <div class="row p-2">
                                             <div class="col-12">
-                                                <button type="reset" class="btn btn-outline-secondary waves-effect"
+                                                <button type="reset" class="btn btn-secondary"
                                                         data-dismiss="modal">Cerrar
+                                                </button>
+                                                <button type="reset" class="btn btn-primary mx-1"
+                                                        (click)="actualizar()"
+                                                        data-dismiss="modal">Actualizar
                                                 </button>
                                             </div>
                                         </div>
