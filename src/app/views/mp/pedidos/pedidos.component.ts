@@ -184,14 +184,18 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       id: [id, [Validators.required]],
       metodoConfirmacion: ['', [Validators.required]],
       codigoConfirmacion: ['', [Validators.required]],
-      fechaHoraConfirmacion: [ new Date(), [Validators.required]],
+      fechaHoraConfirmacion: [ this.datePipe.transform(new Date(), 'yyyy-MM-ddThh:mm:ss.SSSZ'), [Validators.required]],
       tipoFacturacion: ['', [Validators.required]],
+      estado: ['Empacado', [Validators.required]],
     });
-    // if (confirm('Esta seguro de cambiar de estado') === true) {
-    //   this.pedidosService.actualizarPedido({id, estado}).subscribe((info) => {
-    //     this.transaccion = info;
-    //     this.obtenerTransacciones();
-    //   });
-    // }
+  }
+
+  procesarAutorizacion(): void {
+    if (confirm('Esta seguro de cambiar de estado') === true) {
+      this.pedidosService.actualizarPedido(this.autorizarForm.value).subscribe((info) => {
+        this.modalService.dismissAll();
+        this.obtenerTransacciones();
+      });
+    }
   }
 }
