@@ -49,6 +49,31 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     private productosService: ProductosService,
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
+    this.iniciarNotaPedido();
+    this.autorizarForm = this.formBuilder.group({
+      id: ['', [Validators.required]],
+      metodoConfirmacion: ['', [Validators.required]],
+      codigoConfirmacion: ['', [Validators.required]],
+      fechaHoraConfirmacion: ['', [Validators.required]],
+      tipoFacturacion: ['', [Validators.required]],
+    });
+  }
+
+  ngOnInit(): void {
+    this.menu = {
+      modulo: 'mdm',
+      seccion: 'clientesTransac'
+    };
+    this.barChartData = [this.datosTransferencias];
+    this.obtenerOpciones();
+  }
+
+  ngAfterViewInit(): void {
+    this.iniciarPaginador();
+    this.obtenerTransacciones();
+  }
+
+  iniciarNotaPedido(): void {
     this.notaPedido = this.formBuilder.group({
       id: ['', [Validators.required]],
       facturacion: this.formBuilder.group({
@@ -83,36 +108,13 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         referencia: ['', [Validators.required]],
         gps: ['', [Validators.required]],
       }),
-      articulos: this.formBuilder.array([
-        this.crearDetalleGrupo()
-      ], Validators.required),
+      articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
       subtotal: ['', [Validators.required]],
       iva: ['', [Validators.required]],
       numeroPedido: ['', [Validators.required]],
       created_at: ['', [Validators.required]],
     });
-    this.autorizarForm = this.formBuilder.group({
-      id: ['', [Validators.required]],
-      metodoConfirmacion: ['', [Validators.required]],
-      codigoConfirmacion: ['', [Validators.required]],
-      fechaHoraConfirmacion: ['', [Validators.required]],
-      tipoFacturacion: ['', [Validators.required]],
-    });
-  }
-
-  ngOnInit(): void {
-    this.menu = {
-      modulo: 'mdm',
-      seccion: 'clientesTransac'
-    };
-    this.barChartData = [this.datosTransferencias];
-    this.obtenerOpciones();
-  }
-
-  ngAfterViewInit(): void {
-    this.iniciarPaginador();
-    this.obtenerTransacciones();
   }
 
   iniciarPaginador(): void {
@@ -152,9 +154,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   }
 
   removerItem(i): void {
-    // this.calcularSubtotal();
     this.detallesArray.removeAt(i);
-    console.log('form', this.notaPedidoForm);
+    this.calcular();
   }
 
   obtenerTransacciones(): void {
@@ -176,10 +177,13 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
   obtenerTransaccion(id): void {
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
-      // this.transaccion = info;
+      this.iniciarNotaPedido();
+      info.articulos.map((item): void => {
+        this.agregarItem();
+      });
       const iva = +(info.total * this.iva.valor).toFixed(2);
       const total = iva + info.total;
-      this.notaPedido.patchValue({...info, subtotal: info.total, iva, total});
+      this.notaPedido.patchValue({...info, subtotal: info.subtotal, iva, total});
     });
   }
 
