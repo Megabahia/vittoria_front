@@ -47,8 +47,8 @@
                                 <th>Fecha Pedido</th>
                                 <th>Canal</th>
                                 <th>Numero Pedido</th>
-                                <th>Nombres</th>
-                                <th>Apellidos</th>
+                                <th>Nombres Facturación</th>
+                                <th>Apellidos Facturación</th>
                                 <th>Telefono</th>
                                 <th>Estado</th>
                                 <th>Ver</th>
@@ -407,7 +407,7 @@
                                                         <label for="codigoVendedor" class="form-label">Codigo
                                                             Vendedor:</label>
                                                         <input type="text" class="form-control" id="codigoVendedor"
-                                                               formControlName="codigoVendedor"/>
+                                                               formControlName="codigoVendedor" disabled/>
                                                         <div *ngIf="facturacionForm.codigoVendedor.errors"
                                                              class="invalid-feedback" style="display: block;">
                                                             <div *ngIf="facturacionForm.codigoVendedor.errors.required">
@@ -419,7 +419,7 @@
                                                         <label for="nombreVendedor" class="form-label">Nombre
                                                             Vendedor:</label>
                                                         <input type="text" class="form-control" id="nombreVendedor"
-                                                               formControlName="nombreVendedor"/>
+                                                               formControlName="nombreVendedor" disabled/>
                                                         <div *ngIf="facturacionForm.nombreVendedor.errors"
                                                              class="invalid-feedback" style="display: block;">
                                                             <div *ngIf="facturacionForm.nombreVendedor.errors.required">
