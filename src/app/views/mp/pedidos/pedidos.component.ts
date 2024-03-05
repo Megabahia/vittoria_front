@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {Color, Label} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
 import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
 import {ParamService} from '../../../services/mp/param/param.service';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-pedidos',
@@ -13,7 +13,8 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./pedidos.component.css'],
   providers: [DatePipe]
 })
-export class PedidosComponent implements OnInit {
+export class PedidosComponent implements OnInit, AfterViewInit {
+  @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
   menu;
@@ -95,8 +96,18 @@ export class PedidosComponent implements OnInit {
       seccion: 'clientesTransac'
     };
     this.barChartData = [this.datosTransferencias];
-    this.obtenerTransacciones();
     this.obtenerOpciones();
+  }
+
+  ngAfterViewInit(): void {
+    this.iniciarPaginador();
+    this.obtenerTransacciones();
+  }
+
+  iniciarPaginador(): void {
+    this.paginator.pageChange.subscribe(() => {
+      this.obtenerTransacciones();
+    });
   }
 
   get notaPedidoForm() {
