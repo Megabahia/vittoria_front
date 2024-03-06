@@ -45,7 +45,7 @@
                             <thead class="thead-light">
                             <tr>
                                 <th>Fecha Pedido</th>
-                                <th>Canal</th>
+                                <th>Canal Venta</th>
                                 <th>Numero Pedido</th>
                                 <th>Nombres Facturación</th>
                                 <th>Apellidos Facturación</th>
@@ -73,7 +73,7 @@
                                 </td>
                                 <td>
                                     <button class="btn btn-primary"
-                                            (click)="procesarEnvio(facturacionModal, transaccion.id)">
+                                            (click)="procesarEnvio(facturacionModal, transaccion)">
                                         Autorizar
                                     </button>
                                 </td>
@@ -269,6 +269,17 @@
                                                         <div *ngIf="facturacionForm.gps.errors"
                                                              class="invalid-feedback" style="display: block;">
                                                             <div *ngIf="facturacionForm.gps.errors.required">
+                                                                Requerido
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label>Comprobante Pago</label>
+                                                        <input class="form-control" type="text"
+                                                               formControlName="comprobantePago">
+                                                        <div *ngIf="facturacionForm.comprobantePago.errors"
+                                                             class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="facturacionForm.comprobantePago.errors.required">
                                                                 Requerido
                                                             </div>
                                                         </div>
@@ -600,6 +611,17 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="col-4">
+                                                        <label>Canal Envio</label>
+                                                        <input class="form-control" type="text"
+                                                               formControlName="canalEnvio">
+                                                        <div *ngIf="envioForm.canalEnvio.errors"
+                                                             class="invalid-feedback" style="display: block;">
+                                                            <div *ngIf="envioForm.canalEnvio.errors.required">
+                                                                Requerido
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -647,18 +669,30 @@
                             <option value="">- Seleccione -</option>
                             <option value="{{item.valor}}" *ngFor="let item of opciones">{{item.valor}}</option>
                         </select>
+                        <div *ngIf="autorizarFForm.metodoConfirmacion.errors"
+                             class="invalid-feedback" style="display: block;">
+                            <div *ngIf="autorizarFForm.metodoConfirmacion.errors.required">
+                                Requerido
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-12">
                     <div class="form-group">
                         <label>Tipo Facturacion</label>
                         <div>
-                            <input type="radio" value="facturacionElectronica" formControlName="tipoFacturacion">
+                            <input type="radio" value="facturacionElectronica" formControlName="tipoFacturacion" disabled>
                             <span>Factura Electronica</span>
                         </div>
                         <div>
-                            <input type="radio" value="rimpePopular" formControlName="tipoFacturacion">
+                            <input type="radio" value="rimpePopular" formControlName="tipoFacturacion" disabled>
                             <span>Rimpe Popular</span>
+                        </div>
+                        <div *ngIf="autorizarFForm.tipoFacturacion.errors"
+                             class="invalid-feedback" style="display: block;">
+                            <div *ngIf="autorizarFForm.tipoFacturacion.errors.required">
+                                Requerido
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -667,6 +701,12 @@
                         <label for="largeInput">Ingreso Codigo / Autorización</label>
                         <input class="form-control form-control-lg" type="text" id="largeInput"
                                formControlName="codigoConfirmacion"/>
+                        <div *ngIf="autorizarFForm.codigoConfirmacion.errors"
+                             class="invalid-feedback" style="display: block;">
+                            <div *ngIf="autorizarFForm.codigoConfirmacion.errors.required">
+                                Requerido
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-12">

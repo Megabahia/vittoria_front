@@ -8,6 +8,7 @@ import {ParamService as ParamServiceMDP} from '../../../services/mdp/param/param
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
+import {CONTRA_ENTREGA} from '../../../constats/mp/pedidos';
 
 @Component({
   selector: 'app-pedidos',
@@ -92,6 +93,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         gps: ['', [Validators.required]],
         codigoVendedor: ['', [Validators.required]],
         nombreVendedor: ['', [Validators.required]],
+        comprobantePago: ['', [Validators.required]],
       }),
       envio: this.formBuilder.group({
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
@@ -107,6 +109,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         calleSecundaria: ['', [Validators.required]],
         referencia: ['', [Validators.required]],
         gps: ['', [Validators.required]],
+        canalEnvio: ['', [Validators.required]],
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
@@ -121,6 +124,10 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     this.paginator.pageChange.subscribe(() => {
       this.obtenerTransacciones();
     });
+  }
+
+  get autorizarFForm() {
+    return this.autorizarForm['controls'];
   }
 
   get notaPedidoForm() {
@@ -163,8 +170,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       page: this.page - 1,
       page_size: this.pageSize,
       inicio: this.inicio,
-      fin: this.fin,
-      estado: ['Pendiente']
+      fin: this.transformarFecha(this.fin),
+      estado: ['Pendiente', 'Devolucion']
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;
@@ -249,14 +256,15 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  procesarEnvio(modal, id): void {
+  procesarEnvio(modal, transaccion): void {
     this.modalService.open(modal);
+    const tipoFacturacion = transaccion.metodoPago === CONTRA_ENTREGA ? 'rimpePopular' : 'facturacionElectronica';
     this.autorizarForm = this.formBuilder.group({
-      id: [id, [Validators.required]],
+      id: [transaccion.id, [Validators.required]],
       metodoConfirmacion: ['', [Validators.required]],
       codigoConfirmacion: ['', [Validators.required]],
       fechaHoraConfirmacion: [this.datePipe.transform(new Date(), 'yyyy-MM-ddThh:mm:ss.SSSZ'), [Validators.required]],
-      tipoFacturacion: ['', [Validators.required]],
+      tipoFacturacion: [tipoFacturacion, [Validators.required]],
       estado: ['Empacado', [Validators.required]],
     });
   }
