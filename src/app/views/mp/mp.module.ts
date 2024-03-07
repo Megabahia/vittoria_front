@@ -9,6 +9,7 @@ import {NgxDropzoneModule} from 'ngx-dropzone';
 import {MpRoutingModule} from './mp-routing.module';
 import {ParamsComponent} from './params/params.component';
 import { PedidosComponent } from './pedidos/pedidos.component';
+import { PedidosDevueltosComponent } from './pedidos-devueltos/pedidos-devueltos.component';
 
 
 
@@ -16,6 +17,7 @@ import { PedidosComponent } from './pedidos/pedidos.component';
   declarations: [
     ParamsComponent,
     PedidosComponent,
+    PedidosDevueltosComponent,
   ],
   imports: [
     CommonModule,

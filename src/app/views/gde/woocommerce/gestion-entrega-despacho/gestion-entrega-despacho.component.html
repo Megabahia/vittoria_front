@@ -52,6 +52,8 @@
                                 <th>Numero Pedido</th>
                                 <th>Nombres Facturación</th>
                                 <th>Apellidos Facturación</th>
+                                <th>Metodo Pago</th>
+                                <th>Comprobante Pago</th>
                                 <th>Telefono</th>
                                 <th>Estado</th>
                                 <th>Ver</th>
@@ -69,6 +71,8 @@
                                 <td>{{transaccion.numeroPedido}}</td>
                                 <td>{{transaccion.facturacion.nombres}} </td>
                                 <td>{{transaccion.facturacion.apellidos}}</td>
+                                <td>{{transaccion.metodoPago}}</td>
+                                <td>{{transaccion.comprobantePago}}</td>
                                 <td>{{transaccion.facturacion.telefono}} </td>
                                 <td>{{transaccion.estado}} </td>
                                 <td>
@@ -80,11 +84,7 @@
                                 <td>
                                     <button class="btn btn-primary"
                                             (click)="procesarEnvio(facturacionModal, transaccion)">
-                                        Autorizar
-                                    </button>
-                                    <button class="btn btn-secondary"
-                                            (click)="procesarDevolucion(transaccion.id)">
-                                        Devolver
+                                        Despachar
                                     </button>
                                 </td>
                             </tr>
@@ -283,17 +283,17 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4">
-                                                        <label>Comprobante Pago</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="comprobantePago" disabled>
-                                                        <div *ngIf="facturacionForm.comprobantePago.errors"
-                                                             class="invalid-feedback" style="display: block;">
-                                                            <div *ngIf="facturacionForm.comprobantePago.errors.required">
-                                                                Requerido
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <label>Método Pago</label>
+                                            <input class="form-control" type="text"
+                                                   formControlName="metodoPago" disabled>
+                                            <div *ngIf="notaPedidoForm.metodoPago.errors"
+                                                 class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="notaPedidoForm.metodoPago.errors.required">
+                                                    Requerido
                                                 </div>
                                             </div>
                                         </div>
@@ -316,7 +316,8 @@
                                                                                 </p>
                                                                                 <input class="form-control" type="text"
                                                                                        (change)="obtenerProducto(i)"
-                                                                                       formControlName="codigo" disabled>
+                                                                                       formControlName="codigo"
+                                                                                       disabled>
                                                                                 <div *ngIf="detalle.controls.codigo.errors"
                                                                                      class="invalid-feedback"
                                                                                      style="display: block;">
@@ -673,7 +674,7 @@
                     <div class="form-group">
                         <label for="numeroPedido">Ingreso Numero Pedido</label>
                         <input class="form-control form-control-lg" type="text" id="numeroPedido"
-                               formControlName="numeroPedido"/>
+                               formControlName="numeroPedido" disabled/>
                         <div *ngIf="autorizarFForm.numeroPedido.errors"
                              class="invalid-feedback" style="display: block;">
                             <div *ngIf="autorizarFForm.numeroPedido.errors.required">
@@ -684,25 +685,13 @@
                 </div>
                 <div class="col-12">
                     <div class="form-group">
-                        <label for="canalEnvio">Canal Envio</label>
-                        <input class="form-control form-control-lg" type="text" id="canalEnvio"
-                               formControlName="canalEnvio"/>
-                        <div *ngIf="autorizarFForm.canalEnvio.errors"
-                             class="invalid-feedback" style="display: block;">
-                            <div *ngIf="autorizarFForm.canalEnvio.errors.required">
-                                Requerido
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label for="customFile">Archivo Guia Envio</label>
+                        <label for="customFile">Cargar Foto Evidencia Empacado</label>
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="customFile"
-                                   (change)="cargarArchivo($event)"
+                                   accept="image/png, image/gif, image/jpeg"
+                                   (change)="cargarArchivo($event, 'archivoGuia')"
                                    formControlName="archivoGuia"/>
-                            <label class="custom-file-label" for="customFile">Seleecionar
+                            <label class="custom-file-label" for="customFile">Selecionar
                             </label>
                         </div>
                         <div *ngIf="autorizarFForm.archivoGuia.errors"
@@ -715,38 +704,18 @@
                 </div>
                 <div class="col-12">
                     <div class="form-group">
-                        <label for="codigoCourier">Codigo Courier</label>
-                        <input class="form-control form-control-lg" type="text" id="codigoCourier"
-                               formControlName="codigoCourier"/>
-                        <div *ngIf="autorizarFForm.codigoCourier.errors"
-                             class="invalid-feedback" style="display: block;">
-                            <div *ngIf="autorizarFForm.codigoCourier.errors.required">
-                                Requerido
-                            </div>
+                        <label for="customVideo">Cargar Video Evidencia Empacado</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customVideo"
+                                   accept="video/mp4,video/x-m4v,video/*"
+                                   (change)="cargarArchivo($event, 'videoGuia')"
+                                   formControlName="videoGuia"/>
+                            <label class="custom-file-label" for="customVideo">Selecionar
+                            </label>
                         </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label for="nombreCourier">Nombre Courier</label>
-                        <input class="form-control form-control-lg" type="text" id="nombreCourier"
-                               formControlName="nombreCourier"/>
-                        <div *ngIf="autorizarFForm.nombreCourier.errors"
+                        <div *ngIf="autorizarFForm.videoGuia.errors"
                              class="invalid-feedback" style="display: block;">
-                            <div *ngIf="autorizarFForm.nombreCourier.errors.required">
-                                Requerido
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label for="correoCourier">Correo Courier</label>
-                        <input class="form-control form-control-lg" type="text" id="correoCourier"
-                               formControlName="correoCourier"/>
-                        <div *ngIf="autorizarFForm.correoCourier.errors"
-                             class="invalid-feedback" style="display: block;">
-                            <div *ngIf="autorizarFForm.correoCourier.errors.required">
+                            <div *ngIf="autorizarFForm.videoGuia.errors.required">
                                 Requerido
                             </div>
                         </div>

@@ -4,7 +4,8 @@ import {AuthGuard} from 'src/app/guard/auth.guard';
 import {ParamsComponent} from '../gde/params/params.component';
 import {GestionEntregaComponent} from './gestion-entrega/gestion-entrega.component';
 import {GdeComponent} from './gde.component';
-import {GestionEntregaWoocoommerceComponent} from './gestion-entrega-woocommerce/gestion-entrega-woocoommerce.component';
+import {GestionEntregaNuevosComponent} from './woocommerce/gestion-entrega-nuevos/gestion-entrega-nuevos.component';
+import {GestionEntregaDespachoComponent} from './woocommerce/gestion-entrega-despacho/gestion-entrega-despacho.component';
 
 const routes: Routes = [
   {
@@ -29,7 +30,13 @@ const routes: Routes = [
             path: 'list', component: GestionEntregaComponent, canActivate: [AuthGuard]
           },
           {
-            path: 'woocommerce/list', component: GestionEntregaWoocoommerceComponent, canActivate: [AuthGuard],
+            path: 'woocommerce', children: [
+              {
+                path: '', redirectTo: 'empacado', pathMatch: 'full'
+              },
+              {path: 'empacado', component: GestionEntregaNuevosComponent, canActivate: [AuthGuard]},
+              {path: 'despacho', component: GestionEntregaDespachoComponent, canActivate: [AuthGuard]},
+            ],
           }
         ]
       }

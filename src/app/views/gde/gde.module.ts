@@ -10,7 +10,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChartsModule } from 'ng2-charts';
 import { FlatpickrModule } from 'angularx-flatpickr';
-import {GestionEntregaWoocoommerceComponent} from './gestion-entrega-woocommerce/gestion-entrega-woocoommerce.component';
+import {GestionEntregaNuevosComponent} from './woocommerce/gestion-entrega-nuevos/gestion-entrega-nuevos.component';
+import { GestionEntregaDespachoComponent } from './woocommerce/gestion-entrega-despacho/gestion-entrega-despacho.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import {GestionEntregaWoocoommerceComponent} from './gestion-entrega-woocommerce
     GdeComponent,
     ParamsComponent,
     GestionEntregaComponent,
-    GestionEntregaWoocoommerceComponent,
+    GestionEntregaNuevosComponent,
+    GestionEntregaDespachoComponent,
   ],
   imports: [
     CommonModule,

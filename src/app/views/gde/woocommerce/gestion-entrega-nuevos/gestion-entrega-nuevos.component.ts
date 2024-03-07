@@ -1,22 +1,21 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
-import {Color, Label} from 'ng2-charts';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {PedidosService} from '../../../../services/mp/pedidos/pedidos.service';
 import {DatePipe} from '@angular/common';
-import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
-import {ParamService} from '../../../services/mp/param/param.service';
-import {ParamService as ParamServiceMDP} from '../../../services/mdp/param/param.service';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormGroup, FormBuilder, Validators, FormArray} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
-import {ProductosService} from '../../../services/mdp/productos/productos.service';
-import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../constats/mp/pedidos';
+import {ChartDataSets} from 'chart.js';
+import {Color} from 'ng2-charts';
+import {ParamService} from '../../../../services/mp/param/param.service';
+import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
+import {ProductosService} from '../../../../services/mdp/productos/productos.service';
+
 
 @Component({
-  selector: 'app-pedidos',
-  templateUrl: './pedidos.component.html',
-  styleUrls: ['./pedidos.component.css'],
+  selector: 'app-gestion-entrega',
+  templateUrl: './gestion-entrega-nuevos.component.html',
   providers: [DatePipe]
 })
-export class PedidosComponent implements OnInit, AfterViewInit {
+export class GestionEntregaNuevosComponent implements OnInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
@@ -29,6 +28,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   fin = new Date();
   transaccion: any;
   opciones;
+  archivo: FormData = new FormData();
 
 
   public barChartData: ChartDataSets[] = [];
@@ -76,47 +76,47 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
   iniciarNotaPedido(): void {
     this.notaPedido = this.formBuilder.group({
-      id: ['', [Validators.required]],
+      id: ['', []],
       facturacion: this.formBuilder.group({
-        nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
-        apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
-        correo: ['', [Validators.required, Validators.email]],
-        identificacion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-        telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-        pais: ['', [Validators.required]],
-        provincia: ['', [Validators.required]],
-        ciudad: ['', [Validators.required]],
-        callePrincipal: ['', [Validators.required]],
-        numero: ['', [Validators.required]],
-        calleSecundaria: ['', [Validators.required]],
-        referencia: ['', [Validators.required]],
-        gps: ['', [Validators.required]],
-        codigoVendedor: ['', [Validators.required]],
-        nombreVendedor: ['', [Validators.required]],
-        comprobantePago: ['', [Validators.required]],
+        nombres: ['', []],
+        apellidos: ['', []],
+        correo: ['', []],
+        identificacion: ['', []],
+        telefono: ['', []],
+        pais: ['', []],
+        provincia: ['', []],
+        ciudad: ['', []],
+        callePrincipal: ['', []],
+        numero: ['', []],
+        calleSecundaria: ['', []],
+        referencia: ['', []],
+        gps: ['', []],
+        codigoVendedor: ['', []],
+        nombreVendedor: ['', []],
+        comprobantePago: ['', []],
       }),
       envio: this.formBuilder.group({
-        nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
-        apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
-        correo: ['', [Validators.required, Validators.email]],
-        identificacion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-        telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-        pais: ['', [Validators.required]],
-        provincia: ['', [Validators.required]],
-        ciudad: ['', [Validators.required]],
-        callePrincipal: ['', [Validators.required]],
-        numero: ['', [Validators.required]],
-        calleSecundaria: ['', [Validators.required]],
-        referencia: ['', [Validators.required]],
+        nombres: ['', []],
+        apellidos: ['', []],
+        correo: ['', []],
+        identificacion: ['', []],
+        telefono: ['', []],
+        pais: ['', []],
+        provincia: ['', []],
+        ciudad: ['', []],
+        callePrincipal: ['', []],
+        numero: ['', []],
+        calleSecundaria: ['', []],
+        referencia: ['', []],
         gps: ['', []],
-        canalEnvio: ['', [Validators.required]],
+        canalEnvio: ['', []],
       }),
-      articulos: this.formBuilder.array([], Validators.required),
-      total: ['', [Validators.required]],
-      subtotal: ['', [Validators.required]],
-      iva: ['', [Validators.required]],
-      numeroPedido: ['', [Validators.required]],
-      created_at: ['', [Validators.required]],
+      articulos: this.formBuilder.array([]),
+      total: ['', []],
+      subtotal: ['', []],
+      iva: ['', []],
+      numeroPedido: ['', []],
+      created_at: ['', []],
       metodoPago: ['', [Validators.required]],
     });
   }
@@ -172,7 +172,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       page_size: this.pageSize,
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
-      estado: ['Pendiente']
+      estado: ['Autorizado']
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;
@@ -258,25 +258,44 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   }
 
   procesarEnvio(modal, transaccion): void {
+    this.archivo = new FormData();
     this.modalService.open(modal);
-    const tipoFacturacion = transaccion.metodoPago === CONTRA_ENTREGA ? 'rimpePopular' : 'facturacionElectronica';
     this.autorizarForm = this.formBuilder.group({
       id: [transaccion.id, [Validators.required]],
-      metodoConfirmacion: ['', [Validators.required]],
-      codigoConfirmacion: ['', transaccion.metodoPago === PREVIO_PAGO ? [Validators.required] : []],
-      fechaHoraConfirmacion: [this.datePipe.transform(new Date(), 'yyyy-MM-ddThh:mm:ss.SSSZ'), [Validators.required]],
-      tipoFacturacion: [tipoFacturacion, [Validators.required]],
-      urlMetodoPago: ['', transaccion.metodoPago === PREVIO_PAGO ? [Validators.required] : []],
-      estado: ['Autorizado', [Validators.required]],
+      confirmacionEnvio: ['', [Validators.required]],
+      numeroPedido: [transaccion.numeroPedido, [Validators.required]],
+      canalEnvio: ['', [Validators.required]],
+      archivoGuia: ['', [Validators.required]],
+      videoGuia: ['', []],
+      estado: ['Empacado', [Validators.required]],
     });
   }
 
-  procesarAutorizacion(): void {
-    if (confirm('Esta seguro de cambiar de estado') === true) {
-      this.pedidosService.actualizarPedido(this.autorizarForm.value).subscribe((info) => {
+  procesarAutorizacionEnvio(): void {
+    if (confirm('Esta seguro de enviar') === true) {
+      const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
+      const facturaFisicaLlaves: string[] = Object.keys(this.autorizarForm.value);
+      facturaFisicaLlaves.map((llaves, index) => {
+        if (facturaFisicaValores[index] && llaves !== 'archivoGuia' && llaves !== 'videoGuia') {
+          this.archivo.append(llaves, facturaFisicaValores[index]);
+        }
+      });
+      this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
       });
     }
+  }
+
+  procesarDevolucion(id): void {
+    if (confirm('Esta seguro de enviar') === true) {
+      this.pedidosService.actualizarPedido({id, estado: 'Devolucion'}).subscribe((info) => {
+        this.obtenerTransacciones();
+      });
+    }
+  }
+
+  cargarArchivo(event, nombreCampo): void {
+    this.archivo.append(nombreCampo, event.target.files[0]);
   }
 }

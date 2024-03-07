@@ -297,9 +297,14 @@
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
                     </li>
                     <li class="nav-item {{menuToolbar['mp']['pedidos']}}">
-                        <a class="d-flex align-items-center" href="#/mp/pedidos/list" data-toggle="tooltip"
+                        <a class="d-flex align-items-center" href="#/mp/pedidos-nuevos" data-toggle="tooltip"
                            data-placement="right" title="Pedidos">
-                            <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Pedidos</span></a>
+                            <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Pedidos Nuevos</span></a>
+                    </li>
+                    <li class="nav-item {{menuToolbar['mp']['pedidos-devueltos']}}">
+                        <a class="d-flex align-items-center" href="#/mp/pedidos-devueltos" data-toggle="tooltip"
+                           data-placement="right" title="Pedidos Devueltos">
+                            <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Pedidos Devueltos</span></a>
                     </li>
                 </ul>
             </li>
@@ -334,10 +339,15 @@
                            data-placement="right" title="Gestión de entrega de la oferta">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Gestión de entrega de la oferta</span></a>
                     </li>
-                    <li class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerce']}}">
-                        <a class="d-flex align-items-center" href="#/gde/gestionEntrega/woocommerce/list" data-toggle="tooltip"
+                    <li class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceEmpacado']}}">
+                        <a class="d-flex align-items-center" href="#/gde/gestionEntrega/woocommerce/empacado" data-toggle="tooltip"
                            data-placement="right" title="Gestión de entrega de woocommerce">
-                            <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Gestión de entrega de woocommerce</span></a>
+                            <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Gestión de empacado</span></a>
+                    </li>
+                    <li class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceDespacho']}}">
+                        <a class="d-flex align-items-center" href="#/gde/gestionEntrega/woocommerce/despacho" data-toggle="tooltip"
+                           data-placement="right" title="Gestión de Despacho">
+                            <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Gestión de Despacho</span></a>
                     </li>
                 </ul>
             </li>
