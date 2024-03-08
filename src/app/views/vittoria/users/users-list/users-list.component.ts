@@ -2,6 +2,7 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {NgbPagination, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {nuevoUsuario, UsersService} from 'src/app/services/admin/users.service';
 import {FormGroup, Validators, FormBuilder} from '@angular/forms';
+import {ParamService} from '../../../../services/admin/param.service';
 
 @Component({
   selector: 'app-users-list',
@@ -44,11 +45,13 @@ export class UsersListComponent implements OnInit, AfterViewInit {
     idRol: 0,
     estado: 'Activo'
   };
+  empresas = [];
 
   constructor(
     private servicioUsuarios: UsersService,
     private modalService: NgbModal,
     private _formBuilder: FormBuilder,
+    private paramService: ParamService,
   ) {
   }
 
@@ -72,6 +75,7 @@ export class UsersListComponent implements OnInit, AfterViewInit {
     };
     this.pageSize = 10;
     this.vista = 'lista';
+    this.obtenerEmpresas();
   }
 
   get f() {
@@ -167,6 +171,16 @@ export class UsersListComponent implements OnInit, AfterViewInit {
     this.servicioUsuarios.eliminarUsuario(this.idUsuario, 'Inactivo').subscribe(info => {
       this.obtenerListaUsuarios();
     });
+  }
+
+  obtenerEmpresas(): void {
+    this.paramService.obtenerListaPadres('LISTA_EMPRESAS').subscribe((info) => {
+        console.log('empresas', info);
+        this.empresas = info;
+      },
+      (error) => {
+      }
+    );
   }
 
   export(): void {

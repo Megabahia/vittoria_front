@@ -182,7 +182,12 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label" for="basic-icon-default-uname">Compañía:</label>
-                                            <input type="text" name="compania" formControlName="compania" [(ngModel)]="nuevoUsuario.compania" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                            <select class="select2 form-control form-control-lg" name="compania" formControlName="pais" [(ngModel)]="nuevoUsuario.compania">
+                                                <option value="" selected>- Seleccione -</option>
+                                                <option value="{{empresa.valor}}" *ngFor="let empresa of empresas">
+                                                    {{empresa.valor}}
+                                                </option>
+                                            </select>
                                             <div *ngIf="submitted && f.compania.errors" class="invalid-feedback" style="display: block;">
                                                 <div *ngIf="f.compania.errors.required">Compañia es requerida</div>
                                             </div>

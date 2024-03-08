@@ -1,8 +1,8 @@
-import { Component, Input, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
-import { Usuario, UsersService } from 'src/app/services/admin/users.service';
-import { ParamService as ParamServiceADM } from 'src/app/services/admin/param.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {Component, Input, OnInit, ViewChild, Output, EventEmitter} from '@angular/core';
+import {Usuario, UsersService} from 'src/app/services/admin/users.service';
+import {ParamService, ParamService as ParamServiceADM} from 'src/app/services/admin/param.service';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
 
 @Component({
@@ -40,21 +40,27 @@ export class UsersEditComponent implements OnInit {
     facebook: '',
     imagen: new FormData()
   };
+  empresas = [];
+
   constructor(
     private usersService: UsersService,
     private globalParam: ParamServiceADM,
     private _formBuilder: FormBuilder,
     private modalService: NgbModal,
     private router: Router,
+    private paramService: ParamService,
   ) {
 
   }
+
   get f() {
     return this.usuarioForm.controls;
   }
+
   get fRedes() {
     return this.redesForm.controls;
   }
+
   async ngOnInit() {
     this.usuarioForm = this._formBuilder.group({
       nombres: ['', [Validators.required]],
@@ -73,16 +79,20 @@ export class UsersEditComponent implements OnInit {
       facebook: ['', [Validators.required]],
       instagram: ['', [Validators.required]]
     });
+    this.obtenerEmpresas();
   }
+
   async ngAfterViewInit() {
     await this.usersService.obtenerUsuario(this.idUsuario).subscribe((result) => {
       this.usuario = result;
       this.imagen = this.usuario.imagen;
     });
   }
+
   regresar() {
     this.volver.emit();
   }
+
   async actualizarUsuario() {
     this.submitted = true;
 
@@ -90,35 +100,39 @@ export class UsersEditComponent implements OnInit {
       return;
     }
     if (this.redesForm.invalid) {
-      this.mensaje = "Faltan llenar campos en la sección de redes sociales";
+      this.mensaje = 'Faltan llenar campos en la sección de redes sociales';
       this.abrirModal(this.mensajeModal);
       return;
     }
     delete this.usuario.imagen;
     await this.usersService.actualizarUsuario(this.usuario).subscribe(() => {
-      this.mensaje = 'Se actualizo correctamente';
-      this.abrirModal(this.mensajeModal);
-      this.router.navigate(['/admin/user']);
-    },
+        this.mensaje = 'Se actualizo correctamente';
+        this.abrirModal(this.mensajeModal);
+        this.router.navigate(['/admin/user']);
+      },
       (error) => {
         let errores = Object.values(error);
         let llaves = Object.keys(error);
-        this.mensaje = "";
+        this.mensaje = '';
         errores.map((infoErrores, index) => {
-          this.mensaje += llaves[index] + ": " + infoErrores + "<br>";
+          this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
         });
         this.abrirModal(this.mensajeModal);
       });
   }
+
   obtenerURLImagen(url) {
     return this.globalParam.obtenerURL(url);
   }
+
   abrirModal(modal) {
-    this.modalService.open(modal)
+    this.modalService.open(modal);
   }
+
   cerrarModal() {
     this.modalService.dismissAll();
   }
+
   async subirImagen(event) {
 
     if (event.target.files && event.target.files[0]) {
@@ -139,4 +153,12 @@ export class UsersEditComponent implements OnInit {
     }
   }
 
+  obtenerEmpresas(): void {
+    this.paramService.obtenerListaPadres('LISTA_EMPRESAS').subscribe((info) => {
+        this.empresas = info;
+      },
+      (error) => {
+      }
+    );
+  }
 }
