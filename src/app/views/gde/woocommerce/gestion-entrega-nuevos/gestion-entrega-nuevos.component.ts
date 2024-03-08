@@ -265,8 +265,8 @@ export class GestionEntregaNuevosComponent implements OnInit {
       confirmacionEnvio: ['', [Validators.required]],
       numeroPedido: [transaccion.numeroPedido, [Validators.required]],
       canalEnvio: ['', [Validators.required]],
-      archivoGuia: ['', [Validators.required]],
-      videoGuia: ['', []],
+      fotoEmpaque: ['', [Validators.required]],
+      videoEmpaque: ['', []],
       estado: ['Empacado', [Validators.required]],
     });
   }
@@ -276,7 +276,7 @@ export class GestionEntregaNuevosComponent implements OnInit {
       const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.autorizarForm.value);
       facturaFisicaLlaves.map((llaves, index) => {
-        if (facturaFisicaValores[index] && llaves !== 'archivoGuia' && llaves !== 'videoGuia') {
+        if (facturaFisicaValores[index] && llaves !== 'fotoEmpaque' && llaves !== 'videoEmpaque') {
           this.archivo.append(llaves, facturaFisicaValores[index]);
         }
       });

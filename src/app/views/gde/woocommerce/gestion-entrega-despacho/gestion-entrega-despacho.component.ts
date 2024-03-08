@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ChartDataSets} from 'chart.js';
@@ -6,6 +6,7 @@ import {Color} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
 import {PedidosService} from '../../../../services/mp/pedidos/pedidos.service';
 import {ParamService} from '../../../../services/mp/param/param.service';
+import {ParamService as ParamServiceGDE} from '../../../../services/gde/param/param.service';
 import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 
@@ -15,7 +16,7 @@ import {ProductosService} from '../../../../services/mdp/productos/productos.ser
   styleUrls: ['./gestion-entrega-despacho.component.css'],
   providers: [DatePipe]
 })
-export class GestionEntregaDespachoComponent implements OnInit {
+export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
@@ -39,6 +40,7 @@ export class GestionEntregaDespachoComponent implements OnInit {
     data: [], label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)'
   };
   public iva;
+  public couriers = [];
 
   constructor(
     private modalService: NgbModal,
@@ -46,6 +48,7 @@ export class GestionEntregaDespachoComponent implements OnInit {
     private datePipe: DatePipe,
     private pedidosService: PedidosService,
     private paramService: ParamService,
+    private paramServiceGDE: ParamServiceGDE,
     private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
   ) {
@@ -67,6 +70,7 @@ export class GestionEntregaDespachoComponent implements OnInit {
     };
     this.barChartData = [this.datosTransferencias];
     this.obtenerOpciones();
+    this.obtenerCouriers();
   }
 
   ngAfterViewInit(): void {
@@ -179,6 +183,12 @@ export class GestionEntregaDespachoComponent implements OnInit {
     });
   }
 
+  obtenerCouriers(): void {
+    this.paramServiceGDE.obtenerListaPadres('COURIER').subscribe((info) => {
+      this.couriers = info;
+    });
+  }
+
   transformarFecha(fecha): string {
     return this.datePipe.transform(fecha, 'yyyy-MM-dd');
   }
@@ -262,21 +272,22 @@ export class GestionEntregaDespachoComponent implements OnInit {
     this.modalService.open(modal);
     this.autorizarForm = this.formBuilder.group({
       id: [transaccion.id, [Validators.required]],
-      confirmacionEnvio: ['', [Validators.required]],
       numeroPedido: [transaccion.numeroPedido, [Validators.required]],
       canalEnvio: ['', [Validators.required]],
+      codigoCourier: ['', [Validators.required]],
+      nombreCourier: ['', [Validators.required]],
+      correoCourier: ['', [Validators.required]],
       archivoGuia: ['', [Validators.required]],
-      videoGuia: ['', []],
-      estado: ['Empacado', [Validators.required]],
+      estado: ['Despachado', [Validators.required]],
     });
   }
 
   procesarAutorizacionEnvio(): void {
-    if (confirm('Esta seguro de enviar') === true) {
+    if (confirm('Esta seguro de despachar') === true) {
       const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.autorizarForm.value);
       facturaFisicaLlaves.map((llaves, index) => {
-        if (facturaFisicaValores[index] && llaves !== 'archivoGuia' && llaves !== 'videoGuia') {
+        if (facturaFisicaValores[index] && llaves !== 'archivoGuia') {
           this.archivo.append(llaves, facturaFisicaValores[index]);
         }
       });
@@ -287,12 +298,23 @@ export class GestionEntregaDespachoComponent implements OnInit {
     }
   }
 
-  procesarDevolucion(id): void {
-    if (confirm('Esta seguro de enviar') === true) {
-      this.pedidosService.actualizarPedido({id, estado: 'Devolucion'}).subscribe((info) => {
-        this.obtenerTransacciones();
+  seleccionarCourier(event): void {
+    this.paramServiceGDE.obtenerListaPadres(event.target.value).subscribe((info) => {
+      info.map((item) => {
+        if ('NOMBRE_COURIER' === item.nombre) {
+          this.autorizarForm.get('nombreCourier').setValue(item.valor);
+        }
+        if ('CORREO_COURIER' === item.nombre) {
+          this.autorizarForm.get('correoCourier').setValue(item.valor);
+        }
+        if ('CANAL_ENVIO_COURIER' === item.nombre) {
+          this.autorizarForm.get('canalEnvio').setValue(item.valor);
+        }
+        if ('CODIGO_COURIER' === item.nombre) {
+          this.autorizarForm.get('codigoCourier').setValue(item.valor);
+        }
       });
-    }
+    });
   }
 
   cargarArchivo(event, nombreCampo): void {

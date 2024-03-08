@@ -692,14 +692,14 @@
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="customFile"
                                    accept="image/png, image/gif, image/jpeg"
-                                   (change)="cargarArchivo($event, 'archivoGuia')"
-                                   formControlName="archivoGuia"/>
+                                   (change)="cargarArchivo($event, 'fotoEmpaque')"
+                                   formControlName="fotoEmpaque"/>
                             <label class="custom-file-label" for="customFile">Selecionar
                             </label>
                         </div>
-                        <div *ngIf="autorizarFForm.archivoGuia.errors"
+                        <div *ngIf="autorizarFForm.fotoEmpaque.errors"
                              class="invalid-feedback" style="display: block;">
-                            <div *ngIf="autorizarFForm.archivoGuia.errors.required">
+                            <div *ngIf="autorizarFForm.fotoEmpaque.errors.required">
                                 Requerido
                             </div>
                         </div>
@@ -711,14 +711,14 @@
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="customVideo"
                                    accept="video/mp4,video/x-m4v,video/*"
-                                   (change)="cargarArchivo($event, 'videoGuia')"
-                                   formControlName="videoGuia"/>
+                                   (change)="cargarArchivo($event, 'videoEmpaque')"
+                                   formControlName="videoEmpaque"/>
                             <label class="custom-file-label" for="customVideo">Selecionar
                             </label>
                         </div>
-                        <div *ngIf="autorizarFForm.videoGuia.errors"
+                        <div *ngIf="autorizarFForm.videoEmpaque.errors"
                              class="invalid-feedback" style="display: block;">
-                            <div *ngIf="autorizarFForm.videoGuia.errors.required">
+                            <div *ngIf="autorizarFForm.videoEmpaque.errors.required">
                                 Requerido
                             </div>
                         </div>
