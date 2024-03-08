@@ -351,6 +351,20 @@
                     </li>
                 </ul>
             </li>
+            <li class="nav-item" *ngIf="acciones.MP.LEER">
+                <a class="d-flex align-items-center">
+                    <i data-feather="file-text"></i>
+                    <span class="menu-title text-truncate" data-i18n="Invoice">GCN Gestión de centro de negocios</span></a>
+                <ul class="menu-content">
+                    <li class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}">
+                        <a class="d-flex align-items-center" href="#/gcn/reporte-ventas-vendedor/list" data-toggle="tooltip"
+                           data-placement="right" title="Reporte de ventas por vendedor">
+                            <i data-feather="circle"></i>
+                            <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas por vendedor</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             <li class="navigation-header">Módulos de servientrega</li>
             <li class="nav-item" *ngIf="acciones.SERVI.LEER">
                 <a class="d-flex align-items-center">

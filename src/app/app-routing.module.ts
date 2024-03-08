@@ -30,6 +30,9 @@ const routes: Routes = [
     path: 'gde', loadChildren: () => import('./views/gde/gde.module').then(m => m.GdeModule)
   },
   {
+    path: 'gcn', loadChildren: () => import('./views/gcn/gestion-centro-negocios.module').then(m => m.GestionCentroNegociosModule)
+  },
+  {
     path: 'servientrega', loadChildren: () => import('./views/servientrega/servientrega.module').then(m => m.ServientregaModule)
   },
   {

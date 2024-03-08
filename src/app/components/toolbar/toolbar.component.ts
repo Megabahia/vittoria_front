@@ -49,6 +49,9 @@ export class ToolbarComponent implements OnInit, OnChanges {
       param: '',
       gestEntrega: ''
     },
+    gcn: {
+      reporteVentasVendedor: ''
+    },
     gdo: {
       param: '',
       gestOferta: ''
@@ -78,7 +81,6 @@ export class ToolbarComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    console.warn('init toolbar');
     this.usuario = JSON.parse(localStorage.getItem('currentUser'));
     this.acciones = this.usuario.acciones;
     // this.selectMenu();
