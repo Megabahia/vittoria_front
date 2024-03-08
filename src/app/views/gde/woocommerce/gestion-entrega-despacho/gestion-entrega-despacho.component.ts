@@ -278,7 +278,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       nombreCourier: ['', [Validators.required]],
       correoCourier: ['', [Validators.required]],
       archivoGuia: ['', [Validators.required]],
-      estado: ['Despachado', [Validators.required]],
+      estado: ['Autorizado', [Validators.required]],
     });
   }
 
