@@ -8,12 +8,14 @@ import {ChartsModule} from 'ng2-charts';
 import {FlatpickrModule} from 'angularx-flatpickr';
 import {GdeRoutingModule} from '../gde/gde-routing.module';
 import {GestionCentroNegociosRoutingModule} from './gestion-centro-negocios-routing.module';
+import { CentroNegocioComponent } from './reportes/centro-negocio/centro-negocio.component';
 
 
 
 @NgModule({
   declarations: [
-    VentasVendedorComponent
+    VentasVendedorComponent,
+    CentroNegocioComponent
   ],
   imports: [
     CommonModule,

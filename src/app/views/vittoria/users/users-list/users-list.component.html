@@ -182,7 +182,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label" for="basic-icon-default-uname">Compañía:</label>
-                                            <select class="select2 form-control form-control-lg" name="compania" formControlName="pais" [(ngModel)]="nuevoUsuario.compania">
+                                            <select class="select2 form-control form-control-lg" name="compania" formControlName="compania" [(ngModel)]="nuevoUsuario.compania">
                                                 <option value="" selected>- Seleccione -</option>
                                                 <option value="{{empresa.valor}}" *ngFor="let empresa of empresas">
                                                     {{empresa.valor}}
