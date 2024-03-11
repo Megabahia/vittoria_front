@@ -72,7 +72,7 @@
                                 <td>{{transaccion.facturacion.nombres}} </td>
                                 <td>{{transaccion.facturacion.apellidos}}</td>
                                 <td>{{transaccion.metodoPago}}</td>
-                                <td>{{transaccion.comprobantePago}}</td>
+                                <td>{{transaccion.urlMetodoPago}}</td>
                                 <td>{{transaccion.facturacion.telefono}} </td>
                                 <td>{{transaccion.estado}} </td>
                                 <td>
@@ -320,7 +320,8 @@
                                                                                 </p>
                                                                                 <input class="form-control" type="text"
                                                                                        (change)="obtenerProducto(i)"
-                                                                                       formControlName="codigo" disabled>
+                                                                                       formControlName="codigo"
+                                                                                       disabled>
                                                                                 <div *ngIf="detalle.controls.codigo.errors"
                                                                                      class="invalid-feedback"
                                                                                      style="display: block;">
