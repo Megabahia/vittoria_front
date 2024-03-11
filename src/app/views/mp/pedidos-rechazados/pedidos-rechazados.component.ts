@@ -11,16 +11,15 @@ import {ProductosService} from '../../../services/mdp/productos/productos.servic
 import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../constats/mp/pedidos';
 
 @Component({
-  selector: 'app-pedidos-devueltos',
-  templateUrl: './pedidos-devueltos.component.html',
-  styleUrls: ['./pedidos-devueltos.component.css'],
+  selector: 'app-pedidos-rechazados',
+  templateUrl: './pedidos-rechazados.component.html',
+  styleUrls: ['./pedidos-rechazados.component.css'],
   providers: [DatePipe],
 })
-export class PedidosDevueltosComponent implements OnInit {
+export class PedidosRechazadosComponent implements OnInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
-  public rechazoForm: FormGroup;
   menu;
   page = 1;
   pageSize = 3;
@@ -58,11 +57,6 @@ export class PedidosDevueltosComponent implements OnInit {
       codigoConfirmacion: ['', [Validators.required]],
       fechaHoraConfirmacion: ['', [Validators.required]],
       tipoFacturacion: ['', [Validators.required]],
-    });
-    this.rechazoForm = this.formBuilder.group({
-      id: ['', [Validators.required]],
-      motivo: ['', [Validators.required]],
-      estado: ['Rechazado', [Validators.required]],
     });
   }
 
@@ -137,11 +131,6 @@ export class PedidosDevueltosComponent implements OnInit {
     return this.autorizarForm['controls'];
   }
 
-
-  get rechazarFForm() {
-    return this.rechazoForm['controls'];
-  }
-
   get notaPedidoForm() {
     return this.notaPedido['controls'];
   }
@@ -183,7 +172,7 @@ export class PedidosDevueltosComponent implements OnInit {
       page_size: this.pageSize,
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
-      estado: ['Devolucion']
+      estado: ['Rechazado']
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;
@@ -282,27 +271,9 @@ export class PedidosDevueltosComponent implements OnInit {
     });
   }
 
-  procesarRechazo(modal, transaccion): void {
-    this.modalService.open(modal);
-    this.rechazoForm = this.formBuilder.group({
-      id: [transaccion.id, [Validators.required]],
-      motivo: ['', [Validators.required]],
-      estado: ['Rechazado', [Validators.required]],
-    });
-  }
-
   procesarAutorizacion(): void {
     if (confirm('Esta seguro de cambiar de estado') === true) {
       this.pedidosService.actualizarPedido(this.autorizarForm.value).subscribe((info) => {
-        this.modalService.dismissAll();
-        this.obtenerTransacciones();
-      });
-    }
-  }
-
-  procesarRechazar(): void {
-    if (confirm('Esta seguro de cambiar de estado') === true) {
-      this.pedidosService.actualizarPedido(this.rechazoForm.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
       });

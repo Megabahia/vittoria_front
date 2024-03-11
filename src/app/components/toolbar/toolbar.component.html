@@ -306,6 +306,11 @@
                            data-placement="right" title="Pedidos Devueltos">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Pedidos Devueltos</span></a>
                     </li>
+                    <li class="nav-item {{menuToolbar['mp']['pedidos-rechazados']}}">
+                        <a class="d-flex align-items-center" href="#/mp/pedidos-rechazados" data-toggle="tooltip"
+                           data-placement="right" title="Pedidos Rechazados">
+                            <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Pedidos Rechazados</span></a>
+                    </li>
                 </ul>
             </li>
             <li class="nav-item" *ngIf="acciones.GDO.LEER">
@@ -349,10 +354,15 @@
                            data-placement="right" title="Gestión de Despacho">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Gestión de Despacho</span></a>
                     </li>
+                    <li class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceEnviado']}}">
+                        <a class="d-flex align-items-center" href="#/gde/gestionEntrega/woocommerce/enviado" data-toggle="tooltip"
+                           data-placement="right" title="Gestión de Enviado">
+                            <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Gestión de Enviado</span></a>
+                    </li>
                 </ul>
             </li>
             <li class="nav-item" *ngIf="acciones.MP.LEER">
-                <a class="d-flex align-items-center">
+                <a class="d-flex align-items-center" title="GCN Gestión de centro de negocios">
                     <i data-feather="file-text"></i>
                     <span class="menu-title text-truncate" data-i18n="Invoice">GCN Gestión de centro de negocios</span></a>
                 <ul class="menu-content">

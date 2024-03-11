@@ -4,23 +4,22 @@ import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ChartDataSets} from 'chart.js';
 import {Color} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
-import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
-import {ParamService} from '../../../services/mp/param/param.service';
-import {ParamService as ParamServiceMDP} from '../../../services/mdp/param/param.service';
-import {ProductosService} from '../../../services/mdp/productos/productos.service';
-import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../constats/mp/pedidos';
+import {PedidosService} from '../../../../services/mp/pedidos/pedidos.service';
+import {ParamService} from '../../../../services/mp/param/param.service';
+import {ParamService as ParamServiceGDE} from '../../../../services/gde/param/param.service';
+import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
+import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 
 @Component({
-  selector: 'app-pedidos-devueltos',
-  templateUrl: './pedidos-devueltos.component.html',
-  styleUrls: ['./pedidos-devueltos.component.css'],
+  selector: 'app-gestion-entrega-enviados',
+  templateUrl: './gestion-entrega-enviados.component.html',
+  styleUrls: ['./gestion-entrega-enviados.component.css'],
   providers: [DatePipe],
 })
-export class PedidosDevueltosComponent implements OnInit {
+export class GestionEntregaEnviadosComponent implements OnInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
-  public rechazoForm: FormGroup;
   menu;
   page = 1;
   pageSize = 3;
@@ -30,6 +29,7 @@ export class PedidosDevueltosComponent implements OnInit {
   fin = new Date();
   transaccion: any;
   opciones;
+  archivo: FormData = new FormData();
 
 
   public barChartData: ChartDataSets[] = [];
@@ -40,6 +40,7 @@ export class PedidosDevueltosComponent implements OnInit {
     data: [], label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)'
   };
   public iva;
+  public couriers = [];
 
   constructor(
     private modalService: NgbModal,
@@ -47,6 +48,7 @@ export class PedidosDevueltosComponent implements OnInit {
     private datePipe: DatePipe,
     private pedidosService: PedidosService,
     private paramService: ParamService,
+    private paramServiceGDE: ParamServiceGDE,
     private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
   ) {
@@ -59,11 +61,6 @@ export class PedidosDevueltosComponent implements OnInit {
       fechaHoraConfirmacion: ['', [Validators.required]],
       tipoFacturacion: ['', [Validators.required]],
     });
-    this.rechazoForm = this.formBuilder.group({
-      id: ['', [Validators.required]],
-      motivo: ['', [Validators.required]],
-      estado: ['Rechazado', [Validators.required]],
-    });
   }
 
   ngOnInit(): void {
@@ -73,6 +70,7 @@ export class PedidosDevueltosComponent implements OnInit {
     };
     this.barChartData = [this.datosTransferencias];
     this.obtenerOpciones();
+    this.obtenerCouriers();
   }
 
   ngAfterViewInit(): void {
@@ -82,47 +80,47 @@ export class PedidosDevueltosComponent implements OnInit {
 
   iniciarNotaPedido(): void {
     this.notaPedido = this.formBuilder.group({
-      id: ['', [Validators.required]],
+      id: ['', []],
       facturacion: this.formBuilder.group({
-        nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
-        apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
-        correo: ['', [Validators.required, Validators.email]],
-        identificacion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-        telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-        pais: ['', [Validators.required]],
-        provincia: ['', [Validators.required]],
-        ciudad: ['', [Validators.required]],
-        callePrincipal: ['', [Validators.required]],
-        numero: ['', [Validators.required]],
-        calleSecundaria: ['', [Validators.required]],
-        referencia: ['', [Validators.required]],
-        gps: ['', [Validators.required]],
-        codigoVendedor: ['', [Validators.required]],
-        nombreVendedor: ['', [Validators.required]],
-        comprobantePago: ['', [Validators.required]],
+        nombres: ['', []],
+        apellidos: ['', []],
+        correo: ['', []],
+        identificacion: ['', []],
+        telefono: ['', []],
+        pais: ['', []],
+        provincia: ['', []],
+        ciudad: ['', []],
+        callePrincipal: ['', []],
+        numero: ['', []],
+        calleSecundaria: ['', []],
+        referencia: ['', []],
+        gps: ['', []],
+        codigoVendedor: ['', []],
+        nombreVendedor: ['', []],
+        comprobantePago: ['', []],
       }),
       envio: this.formBuilder.group({
-        nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
-        apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
-        correo: ['', [Validators.required, Validators.email]],
-        identificacion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-        telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-        pais: ['', [Validators.required]],
-        provincia: ['', [Validators.required]],
-        ciudad: ['', [Validators.required]],
-        callePrincipal: ['', [Validators.required]],
-        numero: ['', [Validators.required]],
-        calleSecundaria: ['', [Validators.required]],
-        referencia: ['', [Validators.required]],
+        nombres: ['', []],
+        apellidos: ['', []],
+        correo: ['', []],
+        identificacion: ['', []],
+        telefono: ['', []],
+        pais: ['', []],
+        provincia: ['', []],
+        ciudad: ['', []],
+        callePrincipal: ['', []],
+        numero: ['', []],
+        calleSecundaria: ['', []],
+        referencia: ['', []],
         gps: ['', []],
-        canalEnvio: ['', [Validators.required]],
+        canalEnvio: ['', []],
       }),
-      articulos: this.formBuilder.array([], Validators.required),
-      total: ['', [Validators.required]],
-      subtotal: ['', [Validators.required]],
-      iva: ['', [Validators.required]],
-      numeroPedido: ['', [Validators.required]],
-      created_at: ['', [Validators.required]],
+      articulos: this.formBuilder.array([]),
+      total: ['', []],
+      subtotal: ['', []],
+      iva: ['', []],
+      numeroPedido: ['', []],
+      created_at: ['', []],
       metodoPago: ['', [Validators.required]],
     });
   }
@@ -135,11 +133,6 @@ export class PedidosDevueltosComponent implements OnInit {
 
   get autorizarFForm() {
     return this.autorizarForm['controls'];
-  }
-
-
-  get rechazarFForm() {
-    return this.rechazoForm['controls'];
   }
 
   get notaPedidoForm() {
@@ -183,10 +176,16 @@ export class PedidosDevueltosComponent implements OnInit {
       page_size: this.pageSize,
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
-      estado: ['Devolucion']
+      estado: ['Despachado']
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;
+    });
+  }
+
+  obtenerCouriers(): void {
+    this.paramServiceGDE.obtenerListaPadres('COURIER').subscribe((info) => {
+      this.couriers = info;
     });
   }
 
@@ -269,43 +268,56 @@ export class PedidosDevueltosComponent implements OnInit {
   }
 
   procesarEnvio(modal, transaccion): void {
+    this.archivo = new FormData();
     this.modalService.open(modal);
-    const tipoFacturacion = transaccion.metodoPago === CONTRA_ENTREGA ? 'rimpePopular' : 'facturacionElectronica';
     this.autorizarForm = this.formBuilder.group({
       id: [transaccion.id, [Validators.required]],
-      metodoConfirmacion: ['', [Validators.required]],
-      codigoConfirmacion: ['', transaccion.metodoPago === PREVIO_PAGO ? [Validators.required] : []],
-      fechaHoraConfirmacion: [this.datePipe.transform(new Date(), 'yyyy-MM-ddThh:mm:ss.SSSZ'), [Validators.required]],
-      tipoFacturacion: [tipoFacturacion, [Validators.required]],
-      urlMetodoPago: ['', transaccion.metodoPago === PREVIO_PAGO ? [Validators.required] : []],
+      numeroPedido: [transaccion.numeroPedido, [Validators.required]],
+      canalEnvio: ['', [Validators.required]],
+      codigoCourier: ['', [Validators.required]],
+      nombreCourier: ['', [Validators.required]],
+      correoCourier: ['', [Validators.required]],
+      archivoGuia: ['', [Validators.required]],
       estado: ['Autorizado', [Validators.required]],
     });
   }
 
-  procesarRechazo(modal, transaccion): void {
-    this.modalService.open(modal);
-    this.rechazoForm = this.formBuilder.group({
-      id: [transaccion.id, [Validators.required]],
-      motivo: ['', [Validators.required]],
-      estado: ['Rechazado', [Validators.required]],
+  procesarAutorizacionEnvio(): void {
+    if (confirm('Esta seguro de despachar') === true) {
+      const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
+      const facturaFisicaLlaves: string[] = Object.keys(this.autorizarForm.value);
+      facturaFisicaLlaves.map((llaves, index) => {
+        if (facturaFisicaValores[index] && llaves !== 'archivoGuia') {
+          this.archivo.append(llaves, facturaFisicaValores[index]);
+        }
+      });
+      this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
+        this.modalService.dismissAll();
+        this.obtenerTransacciones();
+      });
+    }
+  }
+
+  seleccionarCourier(event): void {
+    this.paramServiceGDE.obtenerListaPadres(event.target.value).subscribe((info) => {
+      info.map((item) => {
+        if ('NOMBRE_COURIER' === item.nombre) {
+          this.autorizarForm.get('nombreCourier').setValue(item.valor);
+        }
+        if ('CORREO_COURIER' === item.nombre) {
+          this.autorizarForm.get('correoCourier').setValue(item.valor);
+        }
+        if ('CANAL_ENVIO_COURIER' === item.nombre) {
+          this.autorizarForm.get('canalEnvio').setValue(item.valor);
+        }
+        if ('CODIGO_COURIER' === item.nombre) {
+          this.autorizarForm.get('codigoCourier').setValue(item.valor);
+        }
+      });
     });
   }
 
-  procesarAutorizacion(): void {
-    if (confirm('Esta seguro de cambiar de estado') === true) {
-      this.pedidosService.actualizarPedido(this.autorizarForm.value).subscribe((info) => {
-        this.modalService.dismissAll();
-        this.obtenerTransacciones();
-      });
-    }
-  }
-
-  procesarRechazar(): void {
-    if (confirm('Esta seguro de cambiar de estado') === true) {
-      this.pedidosService.actualizarPedido(this.rechazoForm.value).subscribe((info) => {
-        this.modalService.dismissAll();
-        this.obtenerTransacciones();
-      });
-    }
+  cargarArchivo(event, nombreCampo): void {
+    this.archivo.append(nombreCampo, event.target.files[0]);
   }
 }

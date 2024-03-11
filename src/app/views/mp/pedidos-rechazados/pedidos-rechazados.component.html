@@ -55,7 +55,7 @@
                                 <th>Telefono</th>
                                 <th>Estado</th>
                                 <th>Ver</th>
-                                <th>Acciones</th>
+                                <th>Motivo</th>
                             </tr>
                             </thead>
 
@@ -77,16 +77,7 @@
                                         <i-feather name="eye" class="mr-25"></i-feather>
                                     </a>
                                 </td>
-                                <td>
-                                    <button class="btn btn-primary"
-                                            (click)="procesarEnvio(facturacionModal, transaccion)">
-                                        Autorizar
-                                    </button>
-                                    <button class="btn btn-danger"
-                                            (click)="procesarRechazo(facturacionRechazarModal, transaccion)">
-                                        Rechazar
-                                    </button>
-                                </td>
+                                <td>{{transaccion.motivo}} </td>
                             </tr>
                             </tbody>
                         </table>
@@ -744,37 +735,5 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
         <button type="button" class="btn btn-primary" (click)="procesarAutorizacion()">Guardar</button>
-    </div>
-</ng-template>
-
-<ng-template #facturacionRechazarModal let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title">Rechazar</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form [formGroup]="rechazoForm">
-            <div class="row">
-                <div class="col-12">
-                    <div class="form-group">
-                        <label for="motivo">Motivo Rechazo</label>
-                        <input class="form-control form-control-lg" type="text" id="motivo"
-                               formControlName="motivo"/>
-                        <div *ngIf="rechazarFForm.motivo.errors"
-                             class="invalid-feedback" style="display: block;">
-                            <div *ngIf="rechazarFForm.motivo.errors.required">
-                                Requerido
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
-        <button type="button" class="btn btn-primary" (click)="procesarRechazar()">Guardar</button>
     </div>
 </ng-template>

@@ -6,6 +6,7 @@ import {GestionEntregaComponent} from './gestion-entrega/gestion-entrega.compone
 import {GdeComponent} from './gde.component';
 import {GestionEntregaNuevosComponent} from './woocommerce/gestion-entrega-nuevos/gestion-entrega-nuevos.component';
 import {GestionEntregaDespachoComponent} from './woocommerce/gestion-entrega-despacho/gestion-entrega-despacho.component';
+import {GestionEntregaEnviadosComponent} from './woocommerce/gestion-entrega-enviados/gestion-entrega-enviados.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,7 @@ const routes: Routes = [
               },
               {path: 'empacado', component: GestionEntregaNuevosComponent, canActivate: [AuthGuard]},
               {path: 'despacho', component: GestionEntregaDespachoComponent, canActivate: [AuthGuard]},
+              {path: 'enviado', component: GestionEntregaEnviadosComponent, canActivate: [AuthGuard]},
             ],
           }
         ]

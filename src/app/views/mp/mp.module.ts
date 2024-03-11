@@ -10,6 +10,7 @@ import {MpRoutingModule} from './mp-routing.module';
 import {ParamsComponent} from './params/params.component';
 import { PedidosComponent } from './pedidos/pedidos.component';
 import { PedidosDevueltosComponent } from './pedidos-devueltos/pedidos-devueltos.component';
+import { PedidosRechazadosComponent } from './pedidos-rechazados/pedidos-rechazados.component';
 
 
 
@@ -18,6 +19,7 @@ import { PedidosDevueltosComponent } from './pedidos-devueltos/pedidos-devueltos
     ParamsComponent,
     PedidosComponent,
     PedidosDevueltosComponent,
+    PedidosRechazadosComponent,
   ],
   imports: [
     CommonModule,
