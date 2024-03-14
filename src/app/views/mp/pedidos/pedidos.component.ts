@@ -20,6 +20,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
+  public rechazoForm: FormGroup;
   menu;
   page = 1;
   pageSize = 3;
@@ -38,7 +39,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   datosTransferencias = {
     data: [], label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)'
   };
-  public iva;
 
   constructor(
     private modalService: NgbModal,
@@ -57,6 +57,11 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       codigoConfirmacion: ['', [Validators.required]],
       fechaHoraConfirmacion: ['', [Validators.required]],
       tipoFacturacion: ['', [Validators.required]],
+    });
+    this.rechazoForm = this.formBuilder.group({
+      id: ['', [Validators.required]],
+      motivo: ['', [Validators.required]],
+      estado: ['Rechazado', [Validators.required]],
     });
   }
 
@@ -90,7 +95,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         numero: ['', [Validators.required]],
         calleSecundaria: ['', [Validators.required]],
         referencia: ['', [Validators.required]],
-        gps: ['', [Validators.required]],
+        gps: ['', []],
         codigoVendedor: ['', [Validators.required]],
         nombreVendedor: ['', [Validators.required]],
         comprobantePago: ['', [Validators.required]],
@@ -109,12 +114,9 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         calleSecundaria: ['', [Validators.required]],
         referencia: ['', [Validators.required]],
         gps: ['', []],
-        canalEnvio: ['', [Validators.required]],
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
-      subtotal: ['', [Validators.required]],
-      iva: ['', [Validators.required]],
       numeroPedido: ['', [Validators.required]],
       created_at: ['', [Validators.required]],
       metodoPago: ['', [Validators.required]],
@@ -129,6 +131,10 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
   get autorizarFForm() {
     return this.autorizarForm['controls'];
+  }
+
+  get rechazarFForm() {
+    return this.rechazoForm['controls'];
   }
 
   get notaPedidoForm() {
@@ -189,9 +195,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       info.articulos.map((item): void => {
         this.agregarItem();
       });
-      const iva = +(info.total * this.iva.valor).toFixed(2);
-      const total = iva + info.total;
-      this.notaPedido.patchValue({...info, subtotal: info.subtotal, iva, total});
+      this.notaPedido.patchValue({...info});
     });
   }
 
@@ -200,13 +204,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     this.paramService.obtenerListaPadres('PEDIDO_ESTADO').subscribe((info) => {
       this.opciones = info;
     });
-    this.paramServiceMDP.obtenerParametroNombreTipo('ACTIVO', 'TIPO_IVA').subscribe((info) => {
-        this.iva = info;
-      },
-      (error) => {
-        alert('Iva no configurado');
-      }
-    );
   }
 
   obtenerProducto(i): void {
@@ -233,17 +230,13 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
   calcular(): void {
     const detalles = this.detallesArray.controls;
-    let subtotal = 0;
+    let total = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value);
       detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
-      subtotal += parseFloat(detalles[index].get('precio').value);
+      total += parseFloat(detalles[index].get('precio').value);
     });
-    this.notaPedido.get('subtotal').setValue(subtotal);
-    const iva = +(subtotal * this.iva.valor).toFixed(2);
-    const total = iva + subtotal;
-    this.notaPedido.get('iva').setValue(iva);
     this.notaPedido.get('total').setValue(total);
   }
 
@@ -274,6 +267,24 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   procesarAutorizacion(): void {
     if (confirm('Esta seguro de cambiar de estado') === true) {
       this.pedidosService.actualizarPedido(this.autorizarForm.value).subscribe((info) => {
+        this.modalService.dismissAll();
+        this.obtenerTransacciones();
+      });
+    }
+  }
+
+  procesarRechazo(modal, transaccion): void {
+    this.modalService.open(modal);
+    this.rechazoForm = this.formBuilder.group({
+      id: [transaccion.id, [Validators.required]],
+      motivo: ['', [Validators.required]],
+      estado: ['Rechazado', [Validators.required]],
+    });
+  }
+
+  procesarRechazar(): void {
+    if (confirm('Esta seguro de cambiar de estado') === true) {
+      this.pedidosService.actualizarPedido(this.rechazoForm.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
       });

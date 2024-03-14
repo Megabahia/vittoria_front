@@ -39,7 +39,6 @@ export class PedidosDevueltosComponent implements OnInit {
   datosTransferencias = {
     data: [], label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)'
   };
-  public iva;
 
   constructor(
     private modalService: NgbModal,
@@ -115,12 +114,9 @@ export class PedidosDevueltosComponent implements OnInit {
         calleSecundaria: ['', [Validators.required]],
         referencia: ['', [Validators.required]],
         gps: ['', []],
-        canalEnvio: ['', [Validators.required]],
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
-      subtotal: ['', [Validators.required]],
-      iva: ['', [Validators.required]],
       numeroPedido: ['', [Validators.required]],
       created_at: ['', [Validators.required]],
       metodoPago: ['', [Validators.required]],
@@ -200,9 +196,7 @@ export class PedidosDevueltosComponent implements OnInit {
       info.articulos.map((item): void => {
         this.agregarItem();
       });
-      const iva = +(info.total * this.iva.valor).toFixed(2);
-      const total = iva + info.total;
-      this.notaPedido.patchValue({...info, subtotal: info.subtotal, iva, total});
+      this.notaPedido.patchValue({...info});
     });
   }
 
@@ -211,13 +205,6 @@ export class PedidosDevueltosComponent implements OnInit {
     this.paramService.obtenerListaPadres('PEDIDO_ESTADO').subscribe((info) => {
       this.opciones = info;
     });
-    this.paramServiceMDP.obtenerParametroNombreTipo('ACTIVO', 'TIPO_IVA').subscribe((info) => {
-        this.iva = info;
-      },
-      (error) => {
-        alert('Iva no configurado');
-      }
-    );
   }
 
   obtenerProducto(i): void {
@@ -244,17 +231,13 @@ export class PedidosDevueltosComponent implements OnInit {
 
   calcular(): void {
     const detalles = this.detallesArray.controls;
-    let subtotal = 0;
+    let total = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value);
       detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
-      subtotal += parseFloat(detalles[index].get('precio').value);
+      total += parseFloat(detalles[index].get('precio').value);
     });
-    this.notaPedido.get('subtotal').setValue(subtotal);
-    const iva = +(subtotal * this.iva.valor).toFixed(2);
-    const total = iva + subtotal;
-    this.notaPedido.get('iva').setValue(iva);
     this.notaPedido.get('total').setValue(total);
   }
 

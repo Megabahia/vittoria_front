@@ -444,14 +444,6 @@
                                                 <div class="col-md-7"></div>
                                                 <div class="col-md-5 text-right">
                                                     <div class="invoice-total-wrapper">
-                                                        <div class="invoice-total-item">
-                                                            <p class="invoice-total-title">Subtotal:
-                                                                ${{notaPedido.controls.subtotal.value}}</p>
-                                                        </div>
-                                                        <div class="invoice-total-item">
-                                                            <p class="invoice-total-title">{{iva?.descripcion}}:
-                                                                ${{notaPedido.controls.iva.value}}</p>
-                                                        </div>
                                                         <hr class="my-50"/>
                                                         <div class="invoice-total-item">
                                                             <p class="invoice-total-title text-primary font-weight-bold">
@@ -694,7 +686,7 @@
                                    accept="image/png, image/gif, image/jpeg"
                                    (change)="cargarArchivo($event, 'fotoEmpaque')"
                                    formControlName="fotoEmpaque"/>
-                            <label class="custom-file-label" for="customFile">Selecionar
+                            <label class="custom-file-label" for="customFile" id="fotoEmpaquelbl">Selecionar
                             </label>
                         </div>
                         <div *ngIf="autorizarFForm.fotoEmpaque.errors"
@@ -713,7 +705,7 @@
                                    accept="video/mp4,video/x-m4v,video/*"
                                    (change)="cargarArchivo($event, 'videoEmpaque')"
                                    formControlName="videoEmpaque"/>
-                            <label class="custom-file-label" for="customVideo">Selecionar
+                            <label class="custom-file-label" for="customVideo" id="videoEmpaquelbl">Selecionar
                             </label>
                         </div>
                         <div *ngIf="autorizarFForm.videoEmpaque.errors"
@@ -729,6 +721,10 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
-        <button type="button" class="btn btn-primary" (click)="procesarAutorizacionEnvio()">Guardar</button>
+        <button type="button" class="btn btn-primary" (click)="procesarAutorizacionEnvio()" [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+            <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                  aria-hidden="true"></span>
+            Guardar
+        </button>
     </div>
 </ng-template>

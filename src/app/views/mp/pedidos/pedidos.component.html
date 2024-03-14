@@ -84,6 +84,10 @@
                                             (click)="procesarEnvio(facturacionModal, transaccion)">
                                         Autorizar
                                     </button>
+                                    <button class="btn btn-danger"
+                                            (click)="procesarRechazo(facturacionRechazarModal, transaccion)">
+                                        Rechazar
+                                    </button>
                                 </td>
                             </tr>
                             </tbody>
@@ -452,14 +456,6 @@
                                                 <div class="col-md-7"></div>
                                                 <div class="col-md-5 text-right">
                                                     <div class="invoice-total-wrapper">
-                                                        <div class="invoice-total-item">
-                                                            <p class="invoice-total-title">Subtotal:
-                                                                ${{notaPedido.controls.subtotal.value}}</p>
-                                                        </div>
-                                                        <div class="invoice-total-item">
-                                                            <p class="invoice-total-title">{{iva?.descripcion}}:
-                                                                ${{notaPedido.controls.iva.value}}</p>
-                                                        </div>
                                                         <hr class="my-50"/>
                                                         <div class="invoice-total-item">
                                                             <p class="invoice-total-title text-primary font-weight-bold">
@@ -619,17 +615,6 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4">
-                                                        <label>Canal Envio</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="canalEnvio">
-                                                        <div *ngIf="envioForm.canalEnvio.errors"
-                                                             class="invalid-feedback" style="display: block;">
-                                                            <div *ngIf="envioForm.canalEnvio.errors.required">
-                                                                Requerido
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -742,5 +727,37 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
         <button type="button" class="btn btn-primary" (click)="procesarAutorizacion()">Guardar</button>
+    </div>
+</ng-template>
+
+<ng-template #facturacionRechazarModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Rechazar</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="rechazoForm">
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="motivo">Motivo Rechazo</label>
+                        <input class="form-control form-control-lg" type="text" id="motivo"
+                               formControlName="motivo"/>
+                        <div *ngIf="rechazarFForm.motivo.errors"
+                             class="invalid-feedback" style="display: block;">
+                            <div *ngIf="rechazarFForm.motivo.errors.required">
+                                Requerido
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="procesarRechazar()">Guardar</button>
     </div>
 </ng-template>

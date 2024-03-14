@@ -39,8 +39,8 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
   datosTransferencias = {
     data: [], label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)'
   };
-  public iva;
   public couriers = [];
+  mostrarSpinner = false;
 
   constructor(
     private modalService: NgbModal,
@@ -117,8 +117,6 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       }),
       articulos: this.formBuilder.array([]),
       total: ['', []],
-      subtotal: ['', []],
-      iva: ['', []],
       numeroPedido: ['', []],
       created_at: ['', []],
       metodoPago: ['', [Validators.required]],
@@ -199,9 +197,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       info.articulos.map((item): void => {
         this.agregarItem();
       });
-      const iva = +(info.total * this.iva.valor).toFixed(2);
-      const total = iva + info.total;
-      this.notaPedido.patchValue({...info, subtotal: info.subtotal, iva, total});
+      this.notaPedido.patchValue({...info});
     });
   }
 
@@ -210,13 +206,6 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
     this.paramService.obtenerListaPadres('PEDIDO_ESTADO').subscribe((info) => {
       this.opciones = info;
     });
-    this.paramServiceMDP.obtenerParametroNombreTipo('ACTIVO', 'TIPO_IVA').subscribe((info) => {
-        this.iva = info;
-      },
-      (error) => {
-        alert('Iva no configurado');
-      }
-    );
   }
 
   obtenerProducto(i): void {
@@ -243,17 +232,13 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
 
   calcular(): void {
     const detalles = this.detallesArray.controls;
-    let subtotal = 0;
+    let total = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value);
       detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
-      subtotal += parseFloat(detalles[index].get('precio').value);
+      total += parseFloat(detalles[index].get('precio').value);
     });
-    this.notaPedido.get('subtotal').setValue(subtotal);
-    const iva = +(subtotal * this.iva.valor).toFixed(2);
-    const total = iva + subtotal;
-    this.notaPedido.get('iva').setValue(iva);
     this.notaPedido.get('total').setValue(total);
   }
 
@@ -284,6 +269,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
 
   procesarAutorizacionEnvio(): void {
     if (confirm('Esta seguro de despachar') === true) {
+      this.mostrarSpinner = true;
       const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.autorizarForm.value);
       facturaFisicaLlaves.map((llaves, index) => {
@@ -294,7 +280,8 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
-      });
+        this.mostrarSpinner = false;
+      }, error => this.mostrarSpinner = false);
     }
   }
 
@@ -318,7 +305,11 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
   }
 
   cargarArchivo(event, nombreCampo): void {
-    this.archivo.append(nombreCampo, event.target.files[0]);
+    const doc = event.target.files[0];
+    const x = document.getElementById(nombreCampo + 'lbl');
+    x.innerHTML = '' + Date.now() + '_' + doc.name;
+    this.archivo.delete(nombreCampo);
+    this.archivo.append(nombreCampo, doc);
   }
 }
 

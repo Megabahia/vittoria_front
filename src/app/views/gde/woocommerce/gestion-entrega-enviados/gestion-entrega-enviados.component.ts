@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ChartDataSets} from 'chart.js';
@@ -16,7 +16,7 @@ import {ProductosService} from '../../../../services/mdp/productos/productos.ser
   styleUrls: ['./gestion-entrega-enviados.component.css'],
   providers: [DatePipe],
 })
-export class GestionEntregaEnviadosComponent implements OnInit {
+export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
@@ -39,7 +39,6 @@ export class GestionEntregaEnviadosComponent implements OnInit {
   datosTransferencias = {
     data: [], label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)'
   };
-  public iva;
   public couriers = [];
 
   constructor(
@@ -199,9 +198,7 @@ export class GestionEntregaEnviadosComponent implements OnInit {
       info.articulos.map((item): void => {
         this.agregarItem();
       });
-      const iva = +(info.total * this.iva.valor).toFixed(2);
-      const total = iva + info.total;
-      this.notaPedido.patchValue({...info, subtotal: info.subtotal, iva, total});
+      this.notaPedido.patchValue({...info});
     });
   }
 
@@ -210,13 +207,6 @@ export class GestionEntregaEnviadosComponent implements OnInit {
     this.paramService.obtenerListaPadres('PEDIDO_ESTADO').subscribe((info) => {
       this.opciones = info;
     });
-    this.paramServiceMDP.obtenerParametroNombreTipo('ACTIVO', 'TIPO_IVA').subscribe((info) => {
-        this.iva = info;
-      },
-      (error) => {
-        alert('Iva no configurado');
-      }
-    );
   }
 
   obtenerProducto(i): void {
@@ -243,17 +233,13 @@ export class GestionEntregaEnviadosComponent implements OnInit {
 
   calcular(): void {
     const detalles = this.detallesArray.controls;
-    let subtotal = 0;
+    let total = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value);
       detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
-      subtotal += parseFloat(detalles[index].get('precio').value);
+      total += parseFloat(detalles[index].get('precio').value);
     });
-    this.notaPedido.get('subtotal').setValue(subtotal);
-    const iva = +(subtotal * this.iva.valor).toFixed(2);
-    const total = iva + subtotal;
-    this.notaPedido.get('iva').setValue(iva);
     this.notaPedido.get('total').setValue(total);
   }
 
