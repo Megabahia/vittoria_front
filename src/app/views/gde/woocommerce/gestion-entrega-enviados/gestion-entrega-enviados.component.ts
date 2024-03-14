@@ -58,7 +58,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
     this.evidenciasForm = this.formBuilder.group({
       id: ['', [Validators.required]],
       evidenciaFotoEmpaque: ['', [Validators.required]],
-      evidenciaVideoEmpaque: ['', [Validators.required]],
+      evidenciaVideoEmpaque: ['', []],
     });
   }
 
@@ -260,7 +260,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
     this.evidenciasForm = this.formBuilder.group({
       id: [transaccion.id, [Validators.required]],
       evidenciaFotoEmpaque: ['', [Validators.required]],
-      evidenciaVideoEmpaque: ['', [Validators.required]],
+      evidenciaVideoEmpaque: ['', []],
     });
   }
 
