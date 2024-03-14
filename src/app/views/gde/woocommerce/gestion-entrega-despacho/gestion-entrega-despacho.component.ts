@@ -6,7 +6,7 @@ import {Color} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
 import {PedidosService} from '../../../../services/mp/pedidos/pedidos.service';
 import {ParamService} from '../../../../services/mp/param/param.service';
-import {ParamService as ParamServiceGDE} from '../../../../services/gde/param/param.service';
+import {UsersService} from '../../../../services/admin/users.service';
 import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 
@@ -14,7 +14,7 @@ import {ProductosService} from '../../../../services/mdp/productos/productos.ser
   selector: 'app-gestion-entrega-despacho',
   templateUrl: './gestion-entrega-despacho.component.html',
   styleUrls: ['./gestion-entrega-despacho.component.css'],
-  providers: [DatePipe]
+  providers: [DatePipe, UsersService]
 })
 export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
@@ -48,7 +48,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
     private datePipe: DatePipe,
     private pedidosService: PedidosService,
     private paramService: ParamService,
-    private paramServiceGDE: ParamServiceGDE,
+    private usersService: UsersService,
     private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
   ) {
@@ -182,8 +182,8 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
   }
 
   obtenerCouriers(): void {
-    this.paramServiceGDE.obtenerListaPadres('COURIER').subscribe((info) => {
-      this.couriers = info;
+    this.usersService.obtenerListaUsuarios(1, 10, 50, 'Activo').subscribe((info) => {
+      this.couriers = info.info;
     });
   }
 
@@ -286,21 +286,13 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
   }
 
   seleccionarCourier(event): void {
-    this.paramServiceGDE.obtenerListaPadres(event.target.value).subscribe((info) => {
-      info.map((item) => {
-        if ('NOMBRE_COURIER' === item.nombre) {
-          this.autorizarForm.get('nombreCourier').setValue(item.valor);
-        }
-        if ('CORREO_COURIER' === item.nombre) {
-          this.autorizarForm.get('correoCourier').setValue(item.valor);
-        }
-        if ('CANAL_ENVIO_COURIER' === item.nombre) {
-          this.autorizarForm.get('canalEnvio').setValue(item.valor);
-        }
-        if ('CODIGO_COURIER' === item.nombre) {
-          this.autorizarForm.get('codigoCourier').setValue(item.valor);
-        }
-      });
+    this.couriers.forEach(item => {
+      if (event.target.value === item.username) {
+        this.autorizarForm.get('nombreCourier').setValue(`${item.nombres} ${item.apellidos}`);
+        this.autorizarForm.get('correoCourier').setValue(item.email);
+        this.autorizarForm.get('canalEnvio').setValue(item.username);
+        this.autorizarForm.get('codigoCourier').setValue(item.username);
+      }
     });
   }
 

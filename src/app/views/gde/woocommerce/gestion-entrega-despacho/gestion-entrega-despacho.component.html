@@ -663,9 +663,9 @@
                         <select id="basicSelect" class="form-control" formControlName="codigoCourier"
                                 (change)="seleccionarCourier($event)">
                             <option value="">- Seleccione -</option>
-                            <option [value]="item.nombre"
+                            <option [value]="item.username"
                                     *ngFor="let item of couriers"
-                            >{{item.valor}}</option>
+                            >{{item.username}}</option>
                         </select>
                         <div *ngIf="autorizarFForm.codigoCourier.errors"
                              class="invalid-feedback" style="display: block;">
@@ -677,7 +677,7 @@
                 </div>
                 <div class="col-12">
                     <div class="form-group">
-                        <label for="numeroPedido">Ingreso Numero Pedido</label>
+                        <label for="numeroPedido">Numero Pedido</label>
                         <input class="form-control form-control-lg" type="text" id="numeroPedido"
                                formControlName="numeroPedido" disabled/>
                         <div *ngIf="autorizarFForm.numeroPedido.errors"
@@ -735,7 +735,7 @@
                 </div>
                 <div class="col-12">
                     <div class="form-group">
-                        <label for="canalEnvio">Ingreso Numero Pedido</label>
+                        <label for="canalEnvio">Canal Envio</label>
                         <input class="form-control form-control-lg" type="text" id="canalEnvio"
                                formControlName="canalEnvio" disabled/>
                         <div *ngIf="autorizarFForm.canalEnvio.errors"
