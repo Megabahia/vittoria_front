@@ -57,6 +57,7 @@
                                 <th>Telefono</th>
                                 <th>Estado</th>
                                 <th>Ver</th>
+                                <th>Acciones</th>
                             </tr>
                             </thead>
 
@@ -79,6 +80,11 @@
                                        data-target="#verfactura">
                                         <i-feather name="eye" class="mr-25"></i-feather>
                                     </a>
+                                </td>
+                                <td>
+                                    <button (click)="procesarEnvio(facturacionModal, transaccion)" class="btn btn-sm btn-primary">
+                                        Subir Evidencia
+                                    </button>
                                 </td>
                             </tr>
                             </tbody>
@@ -637,53 +643,22 @@
         </button>
     </div>
     <div class="modal-body">
-        <form [formGroup]="autorizarForm">
+        <form [formGroup]="evidenciasForm">
             <div class="row">
                 <div class="col-12">
                     <div class="form-group">
-                        <label for="basicSelect">Courier</label>
-                        <select id="basicSelect" class="form-control" formControlName="codigoCourier"
-                                (change)="seleccionarCourier($event)">
-                            <option value="">- Seleccione -</option>
-                            <option [value]="item.nombre"
-                                    *ngFor="let item of couriers"
-                            >{{item.valor}}</option>
-                        </select>
-                        <div *ngIf="autorizarFForm.codigoCourier.errors"
-                             class="invalid-feedback" style="display: block;">
-                            <div *ngIf="autorizarFForm.codigoCourier.errors.required">
-                                Requerido
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label for="numeroPedido">Ingreso Numero Pedido</label>
-                        <input class="form-control form-control-lg" type="text" id="numeroPedido"
-                               formControlName="numeroPedido" disabled/>
-                        <div *ngIf="autorizarFForm.numeroPedido.errors"
-                             class="invalid-feedback" style="display: block;">
-                            <div *ngIf="autorizarFForm.numeroPedido.errors.required">
-                                Requerido
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label for="customFile">Cargar Archivo Guía</label>
+                        <label for="evidenciaFotoEmpaque">Cargar Foto Entrega</label>
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="customFile"
+                            <input type="file" class="custom-file-input" id="evidenciaFotoEmpaque"
                                    accept="image/png, image/gif, image/jpeg"
-                                   (change)="cargarArchivo($event, 'archivoGuia')"
-                                   formControlName="archivoGuia"/>
-                            <label class="custom-file-label" for="customFile">Selecionar
+                                   (change)="cargarArchivo($event, 'evidenciaFotoEmpaque')"
+                                   formControlName="evidenciaFotoEmpaque"/>
+                            <label class="custom-file-label" for="evidenciaFotoEmpaque" id="evidenciaFotoEmpaquelbl">Selecionar
                             </label>
                         </div>
-                        <div *ngIf="autorizarFForm.archivoGuia.errors"
+                        <div *ngIf="autorizarFForm.evidenciaFotoEmpaque.errors"
                              class="invalid-feedback" style="display: block;">
-                            <div *ngIf="autorizarFForm.archivoGuia.errors.required">
+                            <div *ngIf="autorizarFForm.evidenciaFotoEmpaque.errors.required">
                                 Requerido
                             </div>
                         </div>
@@ -691,38 +666,18 @@
                 </div>
                 <div class="col-12">
                     <div class="form-group">
-                        <label for="nombreCourier">Nombre Courier</label>
-                        <input class="form-control form-control-lg" type="text" id="nombreCourier"
-                               formControlName="nombreCourier" disabled/>
-                        <div *ngIf="autorizarFForm.nombreCourier.errors"
-                             class="invalid-feedback" style="display: block;">
-                            <div *ngIf="autorizarFForm.nombreCourier.errors.required">
-                                Requerido
-                            </div>
+                        <label for="evidenciaVideoEmpaque">Cargar Video Entrega</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="evidenciaVideoEmpaque"
+                                   accept="video/mp4,video/x-m4v,video/*"
+                                   (change)="cargarArchivo($event, 'evidenciaVideoEmpaque')"
+                                   formControlName="evidenciaVideoEmpaque"/>
+                            <label class="custom-file-label" for="evidenciaVideoEmpaque" id="evidenciaVideoEmpaquelbl">Selecionar
+                            </label>
                         </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label for="correoCourier">Correo Courier</label>
-                        <input class="form-control form-control-lg" type="text" id="correoCourier"
-                               formControlName="correoCourier" disabled/>
-                        <div *ngIf="autorizarFForm.correoCourier.errors"
+                        <div *ngIf="autorizarFForm.evidenciaVideoEmpaque.errors"
                              class="invalid-feedback" style="display: block;">
-                            <div *ngIf="autorizarFForm.correoCourier.errors.required">
-                                Requerido
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label for="canalEnvio">Ingreso Numero Pedido</label>
-                        <input class="form-control form-control-lg" type="text" id="canalEnvio"
-                               formControlName="canalEnvio" disabled/>
-                        <div *ngIf="autorizarFForm.canalEnvio.errors"
-                             class="invalid-feedback" style="display: block;">
-                            <div *ngIf="autorizarFForm.canalEnvio.errors.required">
+                            <div *ngIf="autorizarFForm.evidenciaVideoEmpaque.errors.required">
                                 Requerido
                             </div>
                         </div>

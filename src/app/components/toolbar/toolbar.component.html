@@ -335,26 +335,26 @@
                     <i data-feather="file-text"></i>
                     <span class="menu-title text-truncate" data-i18n="Invoice">GDE Gestión de entregas</span></a>
                 <ul class="menu-content">
-                    <li class="nav-item {{menuToolbar['gde']['param']}}">
+                    <li *ngIf="acciones.GDE.CREAR" class="nav-item {{menuToolbar['gde']['param']}}">
                         <a class="d-flex align-items-center" href="#/gde/parametrizaciones/list">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
                     </li>
-                    <li class="nav-item {{menuToolbar['gde']['gestEntrega']}}">
+                    <li *ngIf="acciones.GDE.CREAR" class="nav-item {{menuToolbar['gde']['gestEntrega']}}">
                         <a class="d-flex align-items-center" href="#/gde/gestionEntrega/list" data-toggle="tooltip"
                            data-placement="right" title="Gestión de entrega de la oferta">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Gestión de entrega de la oferta</span></a>
                     </li>
-                    <li class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceEmpacado']}}">
+                    <li *ngIf="acciones.GDE.CREAR" class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceEmpacado']}}">
                         <a class="d-flex align-items-center" href="#/gde/gestionEntrega/woocommerce/empacado" data-toggle="tooltip"
                            data-placement="right" title="Gestión de empacado woocommerce">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Gestión de empacado woocommerce</span></a>
                     </li>
-                    <li class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceDespacho']}}">
+                    <li *ngIf="acciones.GDE.CREAR" class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceDespacho']}}">
                         <a class="d-flex align-items-center" href="#/gde/gestionEntrega/woocommerce/despacho" data-toggle="tooltip"
                            data-placement="right" title="Gestión de despacho woocommerce">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Gestión de despacho woocommerce</span></a>
                     </li>
-                    <li class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceEnviado']}}">
+                    <li *ngIf="acciones.GDE.ESCRIBIR" class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceEnviado']}}">
                         <a class="d-flex align-items-center" href="#/gde/gestionEntrega/woocommerce/enviado" data-toggle="tooltip"
                            data-placement="right" title="Gestión de enviado woocommerce">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Gestión de enviado woocommerce</span></a>

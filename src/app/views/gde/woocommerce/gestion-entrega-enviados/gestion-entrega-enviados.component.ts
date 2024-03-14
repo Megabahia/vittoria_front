@@ -19,7 +19,7 @@ import {ProductosService} from '../../../../services/mdp/productos/productos.ser
 export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
-  public autorizarForm: FormGroup;
+  public evidenciasForm: FormGroup;
   menu;
   page = 1;
   pageSize = 3;
@@ -40,6 +40,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
     data: [], label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)'
   };
   public couriers = [];
+  usuario;
 
   constructor(
     private modalService: NgbModal,
@@ -51,14 +52,13 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
     private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
   ) {
+    this.usuario = JSON.parse(localStorage.getItem('currentUser'));
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
-    this.autorizarForm = this.formBuilder.group({
+    this.evidenciasForm = this.formBuilder.group({
       id: ['', [Validators.required]],
-      metodoConfirmacion: ['', [Validators.required]],
-      codigoConfirmacion: ['', [Validators.required]],
-      fechaHoraConfirmacion: ['', [Validators.required]],
-      tipoFacturacion: ['', [Validators.required]],
+      evidenciaFotoEmpaque: ['', [Validators.required]],
+      evidenciaVideoEmpaque: ['', [Validators.required]],
     });
   }
 
@@ -131,7 +131,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   }
 
   get autorizarFForm() {
-    return this.autorizarForm['controls'];
+    return this.evidenciasForm['controls'];
   }
 
   get notaPedidoForm() {
@@ -175,7 +175,8 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       page_size: this.pageSize,
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
-      estado: ['Despachado']
+      estado: ['Despachado'],
+      canalEnvio: 50 === this.usuario.usuario.idRol ? this.usuario.usuario.username : '',
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;
@@ -256,24 +257,19 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   procesarEnvio(modal, transaccion): void {
     this.archivo = new FormData();
     this.modalService.open(modal);
-    this.autorizarForm = this.formBuilder.group({
+    this.evidenciasForm = this.formBuilder.group({
       id: [transaccion.id, [Validators.required]],
-      numeroPedido: [transaccion.numeroPedido, [Validators.required]],
-      canalEnvio: ['', [Validators.required]],
-      codigoCourier: ['', [Validators.required]],
-      nombreCourier: ['', [Validators.required]],
-      correoCourier: ['', [Validators.required]],
-      archivoGuia: ['', [Validators.required]],
-      estado: ['Autorizado', [Validators.required]],
+      evidenciaFotoEmpaque: ['', [Validators.required]],
+      evidenciaVideoEmpaque: ['', [Validators.required]],
     });
   }
 
   procesarAutorizacionEnvio(): void {
     if (confirm('Esta seguro de despachar') === true) {
-      const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
-      const facturaFisicaLlaves: string[] = Object.keys(this.autorizarForm.value);
+      const facturaFisicaValores: string[] = Object.values(this.evidenciasForm.value);
+      const facturaFisicaLlaves: string[] = Object.keys(this.evidenciasForm.value);
       facturaFisicaLlaves.map((llaves, index) => {
-        if (facturaFisicaValores[index] && llaves !== 'archivoGuia') {
+        if (facturaFisicaValores[index] && llaves !== 'evidenciaFotoEmpaque' && llaves !== 'evidenciaVideoEmpaque') {
           this.archivo.append(llaves, facturaFisicaValores[index]);
         }
       });
@@ -288,16 +284,16 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
     this.paramServiceGDE.obtenerListaPadres(event.target.value).subscribe((info) => {
       info.map((item) => {
         if ('NOMBRE_COURIER' === item.nombre) {
-          this.autorizarForm.get('nombreCourier').setValue(item.valor);
+          this.evidenciasForm.get('nombreCourier').setValue(item.valor);
         }
         if ('CORREO_COURIER' === item.nombre) {
-          this.autorizarForm.get('correoCourier').setValue(item.valor);
+          this.evidenciasForm.get('correoCourier').setValue(item.valor);
         }
         if ('CANAL_ENVIO_COURIER' === item.nombre) {
-          this.autorizarForm.get('canalEnvio').setValue(item.valor);
+          this.evidenciasForm.get('canalEnvio').setValue(item.valor);
         }
         if ('CODIGO_COURIER' === item.nombre) {
-          this.autorizarForm.get('codigoCourier').setValue(item.valor);
+          this.evidenciasForm.get('codigoCourier').setValue(item.valor);
         }
       });
     });
