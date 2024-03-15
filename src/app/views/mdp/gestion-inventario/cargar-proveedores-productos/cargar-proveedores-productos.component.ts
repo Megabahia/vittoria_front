@@ -11,6 +11,7 @@ export class CargarProveedoresProductosComponent implements OnInit {
   menu;
   archivo: FormData = new FormData();
   enviando = false;
+  mostrarSpinner = false;
 
   constructor(
     private toaster: Toaster,
@@ -36,13 +37,13 @@ export class CargarProveedoresProductosComponent implements OnInit {
       this.toaster.open('Agrege un archivo', {type: 'warning'});
       return;
     }
-    this.enviando = true;
+    this.mostrarSpinner = true;
     this.gestionInventarioService.cargarProductosProveedores(this.archivo).subscribe((info) => {
-      this.enviando = false;
+      this.mostrarSpinner = false;
       this.toaster.open('Se cargo correctamente', {type: 'success'});
     }, (error) => {
       this.toaster.open('No es valido el archivo', {type: 'danger'});
-      this.enviando = false;
+      this.mostrarSpinner = false;
     });
   }
 }
