@@ -74,8 +74,7 @@
                                 <td>{{transaccion.facturacion.telefono}} </td>
                                 <td>{{transaccion.estado}} </td>
                                 <td>
-                                    <a (click)="obtenerTransaccion(transaccion.id)" data-toggle="modal"
-                                       data-target="#verfactura">
+                                    <a (click)="obtenerTransaccion(notaPedidoModal, transaccion.id)">
                                         <i-feather name="eye" class="mr-25"></i-feather>
                                     </a>
                                 </td>
@@ -97,8 +96,7 @@
                     <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
                                     [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
 
-                    <div class="modal fade" id="verfactura" tabindex="-1" role="dialog"
-                         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <ng-template #notaPedidoModal let-modal>
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <form [formGroup]="notaPedido">
@@ -670,7 +668,7 @@
                                         <div class="row p-2">
                                             <div class="col-12">
                                                 <button type="reset" class="btn btn-secondary"
-                                                        data-dismiss="modal">Cerrar
+                                                        (click)="modal.dismiss( 'Cross click')">Cerrar
                                                 </button>
                                                 <button class="btn btn-primary mx-1"
                                                         (click)="actualizar()"
@@ -684,7 +682,7 @@
                                 </form>
                             </div>
                         </div>
-                    </div>
+                    </ng-template>
                     <hr/>
                 </div>
             </section>

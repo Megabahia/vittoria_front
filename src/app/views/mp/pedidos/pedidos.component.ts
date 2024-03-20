@@ -196,7 +196,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     return this.datePipe.transform(fecha, 'yyyy-MM-dd');
   }
 
-  obtenerTransaccion(id): void {
+  obtenerTransaccion(modal, id): void {
+    this.modalService.open(modal);
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
       this.iniciarNotaPedido();
       info.articulos.map((item): void => {
