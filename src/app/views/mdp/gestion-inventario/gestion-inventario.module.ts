@@ -10,13 +10,15 @@ import {GestionInventarioRoutingModule} from './gestion-inventario-routing.modul
 import { CargarProveedoresProductosComponent } from './cargar-proveedores-productos/cargar-proveedores-productos.component';
 import { ProveedoresComponent } from './proveedores/proveedores.component';
 import { CargarStockComponent } from './cargar-stock/cargar-stock.component';
+import { ProductosComponent } from './productos/productos.component';
 
 
 @NgModule({
   declarations: [
     CargarProveedoresProductosComponent,
     ProveedoresComponent,
-    CargarStockComponent
+    CargarStockComponent,
+    ProductosComponent
   ],
   imports: [
     GestionInventarioRoutingModule,

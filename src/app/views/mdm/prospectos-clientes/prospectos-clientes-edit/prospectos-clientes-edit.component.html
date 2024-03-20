@@ -177,16 +177,16 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="canal">Canal</label>
-                                                <input type="text" class="form-control" name="canal" id="canal" formControlName="canal" />
-                                                <div *ngIf="submitted && f.canal.errors" class="invalid-feedback"
-                                                     style="display: block;">
-                                                    <div *ngIf="f.canal.errors.required">Canal es requerido</div>
-                                                </div>
-                                            </div>
-                                        </div>
+<!--                                        <div class="col-md-4">-->
+<!--                                            <div class="form-group">-->
+<!--                                                <label for="canal">Canal</label>-->
+<!--                                                <input type="text" class="form-control" name="canal" id="canal" formControlName="canal" />-->
+<!--                                                <div *ngIf="submitted && f.canal.errors" class="invalid-feedback"-->
+<!--                                                     style="display: block;">-->
+<!--                                                    <div *ngIf="f.canal.errors.required">Canal es requerido</div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
                                     </div>
                                     <hr>
                                     <h2>Datos de entrega del pedido</h2>
@@ -366,13 +366,7 @@
                                         <!-- Invoice Total starts -->
                                         <div class="card-body invoice-padding">
                                             <div class="row invoice-sales-total-wrapper">
-                                                <div class="col-md-6 order-md-1 order-2 mt-md-0 mt-3">
-                                                    <div class="d-flex align-items-center mb-1">
-                                                        <label for="salesperson" class="form-label">Persona de ventas:</label>
-                                                        <input type="text" class="form-control ml-50" id="salesperson" placeholder="Nombre vendedor" name="nombreVendedor" [value]="f?.nombreVendedor.value" disabled />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 d-flex justify-content-end order-md-2 order-1">
+                                                <div class="col-md-12 d-flex justify-content-end order-md-2 order-1">
                                                     <div class="invoice-total-wrapper">
                                                         <hr class="my-50" />
                                                         <div class="invoice-total-item">
@@ -380,6 +374,20 @@
                                                             <p class="invoice-total-amount">${{f?.total.value}}</p>
                                                         </div>
                                                     </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="salesperson" class="form-label">Canal de ventas:</label>
+                                                    <input type="text" class="form-control" id="salesperson" placeholder="Canal Venta" name="canalVenta" [value]="f?.canal.value" disabled />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="nombreVendedor" class="form-label">Nombre de vendedor:</label>
+                                                    <input type="text" class="form-control" name="nombreVendedor" id="nombreVendedor" [value]="f?.nombreVendedor.value" disabled/>
                                                 </div>
                                             </div>
                                         </div>
@@ -406,16 +414,6 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="nombreVendedor">Nombre del vendedor</label>
-                                                <input type="text" class="form-control" name="nombreVendedor" id="nombreVendedor" formControlName="nombreVendedor" />
-                                                <div *ngIf="submitted && f.nombreVendedor.errors" class="invalid-feedback"
-                                                     style="display: block;">
-                                                    <div *ngIf="f.nombreVendedor.errors.required">Nombre del vendedor es requerido</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
                                                 <label for="comentariosVendedor">Comentarios del vendedor</label>
                                                 <input type="text" class="form-control" id="comentariosVendedor" name="comentariosVendedor" formControlName="comentariosVendedor" />
                                                 <div *ngIf="submitted && f.comentariosVendedor.errors" class="invalid-feedback"
@@ -426,7 +424,8 @@
                                         </div>
                                         <div class="col-12 d-flex flex-sm-row flex-column mt-2">
                                             <a (click)="actualizarProspecto()" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1">Guardar cambios</a>
-                                            <button (click)="abrirModalEliminarProspecto()" class="btn btn-outline-secondary">Eliminar</button>
+<!--                                            <button (click)="abrirModalEliminarProspecto()" class="btn btn-outline-secondary">Eliminar</button>-->
+                                            <button (click)="regresar()" class="btn btn-outline-secondary">Cancelar</button>
                                         </div>
                                     </div>
                                 </form>

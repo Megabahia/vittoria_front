@@ -533,7 +533,7 @@
                                             <div class="col-12 d-flex flex-sm-row flex-column mt-2">
                                                 <a (click)="guardarDatosBasicos()" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar
                           y continuar</a>
-                                                <button type="reset" class="btn btn-outline-info mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Borrar</button>
+                                                <button (click)="recargarPagina()" class="btn btn-outline-info mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Volver</button>
                                             </div>
                                         </div>
                                     </form>
@@ -697,6 +697,7 @@
                                     <div class="col-12 m-2">
                                         <a class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar
                       y continuar</a>
+                                        <button (click)="recargarPagina()" class="btn btn-outline-info mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Volver</button>
                                     </div>
                                 </div>
                             </div>
@@ -857,6 +858,7 @@
                                                     </div>
 
                                                     <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarDatosFisicos()">Guardar</button>
+                                                    <button (click)="recargarPagina()" class="btn btn-outline-info mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Volver</button>
                                                     <button #dismissModalDF data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
                                                     <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                                                 </form>
@@ -929,6 +931,7 @@
                                 <div class="row">
                                     <div class="col-12 m-2">
                                         <a class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light" (click)="cambiarTab(3)">Guardar y continuar</a>
+                                        <button (click)="recargarPagina()" class="btn btn-outline-info mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Volver</button>
                                     </div>
                                 </div>
                             </div>
@@ -1008,6 +1011,7 @@
                                                         </div>
                                                     </div>
                                                     <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarDatosVirtuales()">Guardar</button>
+                                                    <button (click)="recargarPagina()" class="btn btn-outline-info mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Volver</button>
                                                     <button #dismissModalDV data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
 
                                                     <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
@@ -1067,6 +1071,7 @@
                                 <div class="row">
                                     <div class="col-12 m-2">
                                         <a class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light" (click)="cambiarTab(4)">Guardar y continuar</a>
+                                        <button (click)="recargarPagina()" class="btn btn-outline-info mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Volver</button>
                                     </div>
                                 </div>
                             </div>
@@ -1156,6 +1161,7 @@
                                                 </div>
 
                                                 <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal" aria-label="Close">Guardar</button>
+                                                <button (click)="recargarPagina()" class="btn btn-outline-info mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Volver</button>
                                                 <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                                             </div>
                                         </div>

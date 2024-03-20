@@ -1,6 +1,7 @@
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from 'src/environments/environment';
+import {Observable} from 'rxjs';
 
 const apiUrl: string = environment.apiUrl;
 
@@ -32,6 +33,7 @@ export interface Producto {
   lugarVentaProvincia;
   lugarVentaCiudad;
   courier;
+  estadoLanding;
 }
 
 export interface FichaTecnicaProducto {
@@ -79,6 +81,7 @@ export class ProductosService {
       lugarVentaProvincia: '',
       lugarVentaCiudad: '',
       courier: '',
+      estadoLanding: true,
     };
   }
 
@@ -174,5 +177,19 @@ export class ProductosService {
 
   obtenerProductoCodigo(codigo) {
     return this.http.get<any>(`${apiUrl}/mdp/productos/listOne/codigoProducto/${codigo}`);
+  }
+
+  exportar(filtros): Observable<any> {
+    const httpOptions = {
+      responseType: 'blob' as 'json',
+    };
+    let params = new HttpParams();
+    // Iterar sobre los campos y agregar solo aquellos que tengan un valor
+    for (const key in filtros) {
+      if (filtros[key]) {
+        params = params.append(key, filtros[key]);
+      }
+    }
+    return this.http.get<any>(`${apiUrl}/mdp/productos/exportar`, {params, ...httpOptions});
   }
 }

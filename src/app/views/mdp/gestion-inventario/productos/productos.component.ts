@@ -1,13 +1,17 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {ProductosService} from '../../../../../services/mdp/productos/productos.service';
+import {Toaster} from 'ngx-toast-notifications';
+import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
-import {environment} from '../../../../../../environments/environment';
+import {FormBuilder} from '@angular/forms';
+import {AuthService} from '../../../../services/admin/auth.service';
+import {environment} from '../../../../../environments/environment';
 
 @Component({
-  selector: 'app-productos-listar',
-  templateUrl: './productos-listar.component.html'
+  selector: 'app-productos',
+  templateUrl: './productos.component.html',
+  styleUrls: ['./productos.component.css']
 })
-export class ProductosListarComponent implements OnInit, AfterViewInit {
+export class ProductosComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   menu;
   vista = 'lista';
@@ -19,6 +23,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   idProducto = 0;
   nombreBuscar: string;
   codigoBarras: string;
+  enviando: boolean;
 
   constructor(
     private productosService: ProductosService,
@@ -64,11 +69,6 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     this.idProducto = 0;
   }
 
-  editarProducto(id): void {
-    this.idProducto = id;
-    this.vista = 'editar';
-  }
-
   abrirModal(modal, id): void {
     this.idProducto = id;
     this.modalService.open(modal);
@@ -81,19 +81,20 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     });
   }
 
-  copiarURL(inputTextValue): void {
-    const selectBox = document.createElement('textarea');
-    selectBox.style.position = 'fixed';
-    selectBox.value = `${environment.apiUrlFront}/#/pages/productos/${inputTextValue}`;
-    document.body.appendChild(selectBox);
-    selectBox.focus();
-    selectBox.select();
-    document.execCommand('copy');
-    document.body.removeChild(selectBox);
-  }
-
-  receiveMessage($event): void {
-    this.obtenerListaProductos();
-    this.vista = $event;
+  export(): void {
+    this.enviando = true;
+    this.productosService.exportar({
+      nombre: this.nombreBuscar,
+      codigoBarras: this.codigoBarras,
+    }).subscribe((data) => {
+      this.enviando = false;
+      const downloadURL = window.URL.createObjectURL(data);
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = 'productos.xlsx';
+      link.click();
+    }, (error) => {
+      this.enviando = false;
+    });
   }
 }

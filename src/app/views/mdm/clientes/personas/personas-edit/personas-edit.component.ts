@@ -17,6 +17,7 @@ import {Label, Color} from 'ng2-charts';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ProspectosService} from '../../../../../services/mdm/prospectosCli/prospectos.service';
 import {ValidacionesPropias} from '../../../../../utils/customer.validators';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-personas-edit',
@@ -194,12 +195,17 @@ export class PersonasEditComponent implements OnInit {
     private globalParam: ParamServiceADM,
     private _formBuilder: FormBuilder,
     private modalService: NgbModal,
+    private location: Location,
   ) {
     this.datosFisicos.cliente = this.idCliente;
     this.datosVirtuales.cliente = this.idCliente;
     this.pariente = this.clientesService.inicializarPariente();
     this.fechaInicioTransac.setMonth(this.fechaInicioTransac.getMonth() - 3);
     this.transaccion = this.clientesService.inicializarTransaccion();
+  }
+
+  recargarPagina(): void {
+    this.location.back();
   }
 
   ngOnInit() {

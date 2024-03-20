@@ -95,6 +95,7 @@ export class ProductosEditarComponent implements OnInit {
       lugarVentaProvincia: ['', []],
       lugarVentaCiudad: ['', []],
       courier: ['', [Validators.required]],
+      estadoLanding: [true, []],
     });
     this.fichaTecnicaForm = this._formBuilder.group({
       codigo: ['', [Validators.required]],
@@ -370,9 +371,17 @@ export class ProductosEditarComponent implements OnInit {
     this.productoForm.get('lugarVentaCiudad').updateValueAndValidity();
   }
 
+  seleccionarEstadoLanding(event): void {
+    this.producto.estadoLanding = event.currentTarget.checked;
+  }
+
   obtenerCiudad(): void {
     this.MDMparamService.obtenerListaHijos(this.productoForm.value.lugarVentaProvincia, 'PROVINCIA').subscribe((info) => {
       this.ciudadOpciones = info;
     });
+  }
+
+  volver(): void {
+    this.messageEvent.emit('lista');
   }
 }

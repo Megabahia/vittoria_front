@@ -58,6 +58,7 @@ export class ProspectosClientesEditComponent implements OnInit {
   tipoIdentificacion = [];
   submitted = false;
   iva;
+  usuario;
 
   constructor(
     private prospectosService: ProspectosService,
@@ -70,7 +71,7 @@ export class ProspectosClientesEditComponent implements OnInit {
     private router: Router,
     private toaster: Toaster,
   ) {
-    // this.obtenerIVA();
+    this.usuario = JSON.parse(localStorage.getItem('currentUser'));
   }
 
   ngOnInit(): void {
@@ -80,7 +81,7 @@ export class ProspectosClientesEditComponent implements OnInit {
       info.detalles.forEach((detalle, index) => {
         this.agregarItem();
       });
-      this.prospectoForm.patchValue({...info});
+      this.prospectoForm.patchValue({...info, canal: 'Contra-Entrega', nombreVendedor: `${this.usuario.usuario.nombres} ${this.usuario.usuario.apellidos}`});
       info.detalles.forEach((detalle, index) => {
         this.fDetalles.controls[index].get('codigo').setValue(detalle.codigo);
         this.obtenerProducto(index);
@@ -121,15 +122,16 @@ export class ProspectosClientesEditComponent implements OnInit {
       facebook: ['', []],
       twitter: ['', []],
       correo2: ['', []],
-      canal: ['', []],
+      canal: ['Contra-Entrega', []],
       tipoPrecio: ['', []],
-      nombreVendedor: ['', [Validators.required]],
+      nombreVendedor: [`${this.usuario.usuario.nombres} ${this.usuario.usuario.apellidos}`, [Validators.required]],
       detalles: this._formBuilder.array([], Validators.required),
       subTotal: ['', []],
       descuento: ['', []],
       iva: ['', []],
       total: ['', [Validators.required]],
     });
+    console.log('usuario', `${this.usuario.usuario.nombres} ${this.usuario.usuario.apellidos}`);
     this.mdmParamService.obtenerListaPadres('TIPO_IDENTIFICACION').subscribe((info) => {
       this.tipoIdentificacion = info;
     });
@@ -361,4 +363,8 @@ export class ProspectosClientesEditComponent implements OnInit {
   //     }
   //   );
   // }
+
+  regresar(): void {
+    this.messageEvent.emit('lista');
+  }
 }

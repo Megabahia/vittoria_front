@@ -71,7 +71,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.productoService.obtenerProductoFree(this.rutaActiva.snapshot.params.id, {estado: 'Activo'}).subscribe((info) => {
+    this.productoService.obtenerProductoFree(this.rutaActiva.snapshot.params.id, {estadoLanding: true}).subscribe((info) => {
       this.productoInactivo = false;
       this.producto = info;
       const cuentaForm = this._formBuilder.group({
@@ -123,6 +123,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       precio: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       detalles: this._formBuilder.array([]),
       courier: ['', []],
+      total: ['', []],
     });
   }
 
@@ -278,6 +279,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     const total = +new Decimal(this.producto.precioOferta).mul(cantidad).toFixed(2).toString();
     this.fDetalles.controls[0].get('total').setValue(total);
     this.pospectoForm.get('precio').setValue(this.producto.precioOferta * cantidad);
+    this.pospectoForm.get('total').setValue(this.producto.precioOferta * cantidad);
     this.pospectoForm.updateValueAndValidity();
   }
 }
