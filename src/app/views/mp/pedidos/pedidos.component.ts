@@ -102,7 +102,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         gps: ['', []],
         codigoVendedor: ['', [Validators.required]],
         nombreVendedor: ['', [Validators.required]],
-        comprobantePago: ['', [Validators.required]],
+        comprobantePago: ['', []],
       }),
       envio: this.formBuilder.group({
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
