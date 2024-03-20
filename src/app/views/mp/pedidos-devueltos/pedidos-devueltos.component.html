@@ -171,6 +171,9 @@
                                                             <div *ngIf="facturacionForm.correo.errors.required">
                                                                 Requerido
                                                             </div>
+                                                            <div *ngIf="facturacionForm.correo.errors.email">
+                                                                Correo Invalido
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-4">
@@ -182,6 +185,18 @@
                                                             <div *ngIf="facturacionForm.identificacion.errors.required">
                                                                 Requerido
                                                             </div>
+                                                            <div *ngIf="facturacionForm.identificacion.errors.minlength">
+                                                                Ingrese Minimo 10 digitos
+                                                            </div>
+                                                            <div *ngIf="facturacionForm.identificacion.errors.maxlength">
+                                                                Ingrese Maximo 10 digitos
+                                                            </div>
+                                                            <div *ngIf="facturacionForm.identificacion.errors.pattern">
+                                                                Ingrese solo numeros
+                                                            </div>
+                                                            <div *ngIf="facturacionForm.identificacion.errors.identificacionInvalid">
+                                                                Identificacion no valida
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-4">
@@ -192,6 +207,15 @@
                                                              class="invalid-feedback" style="display: block;">
                                                             <div *ngIf="facturacionForm.telefono.errors.required">
                                                                 Requerido
+                                                            </div>
+                                                            <div *ngIf="facturacionForm.telefono.errors.minlength">
+                                                                Ingrese minimo 10 digitos
+                                                            </div>
+                                                            <div *ngIf="facturacionForm.telefono.errors.maxlength">
+                                                                Ingrese maximo 10 digitos
+                                                            </div>
+                                                            <div *ngIf="facturacionForm.telefono.errors.pattern">
+                                                                Ingrese solo numeros
                                                             </div>
                                                         </div>
                                                     </div>
@@ -512,6 +536,18 @@
                                                             <div *ngIf="envioForm.identificacion.errors.required">
                                                                 Requerido
                                                             </div>
+                                                            <div *ngIf="envioForm.identificacion.errors.minlength">
+                                                                Ingrese minimo 10 digitos
+                                                            </div>
+                                                            <div *ngIf="envioForm.identificacion.errors.maxlength">
+                                                                Ingrese maximo 10 digitos
+                                                            </div>
+                                                            <div *ngIf="envioForm.identificacion.errors.pattern">
+                                                                Ingrese solo numeros
+                                                            </div>
+                                                            <div *ngIf="envioForm.identificacion.errors.identificacionInvalid">
+                                                                Identificacion no valida
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-4">
@@ -522,6 +558,15 @@
                                                              class="invalid-feedback" style="display: block;">
                                                             <div *ngIf="envioForm.telefono.errors.required">
                                                                 Requerido
+                                                            </div>
+                                                            <div *ngIf="envioForm.telefono.errors.minlength">
+                                                                Ingrese minimo 10 digitos
+                                                            </div>
+                                                            <div *ngIf="envioForm.telefono.errors.maxlength">
+                                                                Ingrese maximo 10 digitos
+                                                            </div>
+                                                            <div *ngIf="envioForm.telefono.errors.pattern">
+                                                                Ingrese solo numeros
                                                             </div>
                                                         </div>
                                                     </div>
@@ -622,9 +667,9 @@
                                                 <button type="reset" class="btn btn-secondary"
                                                         data-dismiss="modal">Cerrar
                                                 </button>
-                                                <button type="reset" class="btn btn-primary mx-1"
+                                                <button class="btn btn-primary mx-1"
                                                         (click)="actualizar()"
-                                                        data-dismiss="modal">Actualizar
+                                                >Actualizar
                                                 </button>
                                             </div>
                                         </div>

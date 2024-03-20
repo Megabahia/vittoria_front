@@ -9,6 +9,7 @@ import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../constats/mp/pedidos';
+import {ValidacionesPropias} from '../../../utils/customer.validators';
 
 @Component({
   selector: 'app-pedidos',
@@ -86,8 +87,11 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.required, Validators.email]],
-        identificacion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-        telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
+        identificacion: ['', [
+          Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$'),
+          ValidacionesPropias.cedulaValido
+        ]],
+        telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: ['', [Validators.required]],
         provincia: ['', [Validators.required]],
         ciudad: ['', [Validators.required]],
@@ -104,8 +108,11 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.required, Validators.email]],
-        identificacion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-        telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
+        identificacion: ['', [
+          Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$'),
+          ValidacionesPropias.cedulaValido
+        ]],
+        telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: ['', [Validators.required]],
         provincia: ['', [Validators.required]],
         ciudad: ['', [Validators.required]],
@@ -242,6 +249,10 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
   actualizar(): void {
     this.calcular();
+    if (this.notaPedido.invalid) {
+      console.log('form', this.notaPedido);
+      return;
+    }
     if (confirm('Esta seguro de actualizar los datos') === true) {
       this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();

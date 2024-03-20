@@ -208,7 +208,7 @@ export class PersonasEditComponent implements OnInit {
     this.location.back();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.barChartData = [this.datosTransferencias];
     this.barChartLabels = [];
 
@@ -507,7 +507,7 @@ export class PersonasEditComponent implements OnInit {
   }
 
   // ------------------
-  async guardarDatosBasicos() {
+  guardarDatosBasicos(): void {
 
     this.submittedDatosBasicosForm = true;
     if (this.datosBasicosForm.invalid) {

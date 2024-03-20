@@ -108,6 +108,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
         Validators.maxLength(10), ValidacionesPropias.cedulaValido
       ]],
       whatsapp: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10), Validators.maxLength(10)]],
+      telefono: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10), Validators.maxLength(10)]],
       correo1: ['', [Validators.required, Validators.email]],
       pais: ['', [Validators.required]],
       provincia: ['', [Validators.required]],
@@ -216,6 +217,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
   crearProspecto(): void {
     this.pospectoForm.get('nombreProducto').setValue(this.producto.nombre);
     this.pospectoForm.get('codigoProducto').setValue(this.producto.codigoBarras);
+    this.pospectoForm.get('telefono').setValue(this.pospectoForm.value.whatsapp);
     this.submitted = true;
     if (this.pospectoForm.invalid) {
       this.toaster.open('Llenar campos', {type: 'warning'});
