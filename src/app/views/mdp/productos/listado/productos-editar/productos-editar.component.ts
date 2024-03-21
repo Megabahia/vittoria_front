@@ -237,6 +237,7 @@ export class ProductosEditarComponent implements OnInit {
           this.idProducto = info.id;
           this.mensaje = 'Producto guardado';
           this.abrirModal(this.aviso);
+          this.messageEvent.emit('lista');
         },
         (error) => {
           let errores = Object.values(error);
