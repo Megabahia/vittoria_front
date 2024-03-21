@@ -84,16 +84,16 @@ export class PersonasEditComponent implements OnInit {
   fechaInicioTransac = new Date();
   fechaFinTransac = new Date();
   pageDF = 1;
-  pageSizeDF = 10;
+  pageSizeDF = 3;
   collectionSizeDF;
   pageDV = 1;
-  pageSizeDV = 10;
+  pageSizeDV = 3;
   collectionSizeDV;
   pageTA = 1;
-  pageSizeTA = 10;
+  pageSizeTA = 3;
   collectionSizeTA;
   pagePA = 1;
-  pageSizePA = 10;
+  pageSizePA = 3;
   collectionSizePA;
   datosBasicos: DatosBasicos = {
     tipoCliente: '',

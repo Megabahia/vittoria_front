@@ -16,7 +16,7 @@ export class SubcategoriasProductosComponent implements OnInit {
   paramForm: FormGroup;
   menu;
   page = 1;
-  pageSize: any = 10;
+  pageSize: any = 3;
   maxSize;
   submitted: boolean;
   collectionSize;

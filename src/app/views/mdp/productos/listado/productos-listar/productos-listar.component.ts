@@ -12,7 +12,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   menu;
   vista = 'lista';
   page = 1;
-  pageSize: any = 10;
+  pageSize: any = 3;
   maxSize;
   collectionSize;
   listaProductos;

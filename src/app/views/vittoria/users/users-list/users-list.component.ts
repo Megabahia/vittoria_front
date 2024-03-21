@@ -29,7 +29,7 @@ export class UsersListComponent implements OnInit, AfterViewInit {
   usuarios;
   idUsuario;
   page = 1;
-  pageSize: any;
+  pageSize = 3;
   maxSize;
   collectionSize;
   vista;
@@ -73,7 +73,6 @@ export class UsersListComponent implements OnInit, AfterViewInit {
       modulo: 'adm',
       seccion: 'user'
     };
-    this.pageSize = 10;
     this.vista = 'lista';
     this.obtenerEmpresas();
   }

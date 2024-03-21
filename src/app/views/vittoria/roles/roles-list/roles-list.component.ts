@@ -12,7 +12,7 @@ export class RolesListComponent implements OnInit {
   roles: Rol;
   collectionSize;
   page = 1;
-  pageSize: any;
+  pageSize = 3;
   vista;
   idRol;
   funcion;
@@ -28,7 +28,6 @@ export class RolesListComponent implements OnInit {
       modulo: 'adm',
       seccion: 'roles'
     };
-    this.pageSize = 10;
     this.vista = 'lista';
   }
 

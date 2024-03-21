@@ -16,7 +16,7 @@ export class NuevosProdComponent implements OnInit {
   menu;
   listaPredicciones;
   page = 1;
-  pageSize: any = 10;
+  pageSize: any = 3;
   maxSize;
   collectionSize;
   fecha = "";

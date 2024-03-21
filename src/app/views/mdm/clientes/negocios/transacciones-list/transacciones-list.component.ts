@@ -11,7 +11,7 @@ import { NegociosService, Transaccion } from '../../../../../services/mdm/person
 export class TransaccionesListComponent implements OnInit {
   menu;
   page = 1;
-  pageSize = 10;
+  pageSize = 3;
   collectionSize;
   listaTransacciones;
   inicio = new Date();

@@ -72,13 +72,13 @@ export class NegociosEditComponent implements OnInit {
   };
 
   pageDE = 1;
-  pageSizeDE = 10;
+  pageSizeDE = 3;
   collectionSizeDE;
   pagePE = 1;
-  pageSizePE = 10;
+  pageSizePE = 3;
   collectionSizePE;
   pageTA = 1;
-  pageSizeTA = 10;
+  pageSizeTA = 3;
   collectionSizeTA;
 
   fechaInicioTransac = new Date();
