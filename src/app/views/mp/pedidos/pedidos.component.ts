@@ -197,7 +197,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   }
 
   obtenerTransaccion(modal, id): void {
-    this.modalService.open(modal);
+    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
       this.iniciarNotaPedido();
       info.articulos.map((item): void => {
