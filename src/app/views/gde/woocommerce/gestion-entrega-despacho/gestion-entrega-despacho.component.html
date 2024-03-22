@@ -647,7 +647,7 @@
 
 <ng-template #facturacionModal let-modal>
     <div class="modal-header">
-        <h4 class="modal-title">Enviar</h4>
+        <h4 class="modal-title">Despachar</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -655,6 +655,73 @@
     <div class="modal-body">
         <form [formGroup]="autorizarForm">
             <div class="row">
+                <div class="card-body invoice-padding pt-0">
+                    <div formGroupName="envio">
+                        <h2>Datos Envió</h2>
+                        <div class="row">
+                            <div class="col-4">
+                                <label>Nombres</label>
+                                <input class="form-control" type="text"
+                                       formControlName="nombres" disabled>
+                            </div>
+                            <div class="col-4">
+                                <label>Apellidos</label>
+                                <input class="form-control" type="text"
+                                       formControlName="apellidos" disabled>
+                            </div>
+                            <div class="col-4">
+                                <label>Correo</label>
+                                <input class="form-control" type="text"
+                                       formControlName="correo" disabled>
+                            </div>
+                            <div class="col-4">
+                                <label>Numero Identificación</label>
+                                <input class="form-control" type="text"
+                                       formControlName="identificacion" disabled>
+                            </div>
+                            <div class="col-4">
+                                <label>Teléfono</label>
+                                <input class="form-control" type="text"
+                                       formControlName="telefono" disabled>
+                            </div>
+                            <div class="col-4">
+                                <label>Pais</label>
+                                <input class="form-control" type="text"
+                                       formControlName="pais" disabled>
+                            </div>
+                            <div class="col-4">
+                                <label>Provincia</label>
+                                <input class="form-control" type="text"
+                                       formControlName="provincia" disabled>
+                            </div>
+                            <div class="col-4">
+                                <label>Ciudad</label>
+                                <input class="form-control" type="text"
+                                       formControlName="ciudad" disabled>
+                            </div>
+                            <div class="col-4">
+                                <label>Calle Principal</label>
+                                <input class="form-control" type="text"
+                                       formControlName="callePrincipal" disabled>
+                            </div>
+                            <div class="col-4">
+                                <label>Número</label>
+                                <input class="form-control" type="text"
+                                       formControlName="numero" disabled>
+                            </div>
+                            <div class="col-4">
+                                <label>Calle Secundaria</label>
+                                <input class="form-control" type="text"
+                                       formControlName="calleSecundaria" disabled>
+                            </div>
+                            <div class="col-4">
+                                <label>Referencia</label>
+                                <input class="form-control" type="text"
+                                       formControlName="referencia" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-12">
                     <div class="form-group">
                         <label for="basicSelect">Courier</label>

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild, Output, EventEmitter} from '@angular/core';
+import {Component, Input, OnInit, ViewChild, Output, EventEmitter, AfterViewInit} from '@angular/core';
 import {Usuario, UsersService} from 'src/app/services/admin/users.service';
 import {ParamService, ParamService as ParamServiceADM} from 'src/app/services/admin/param.service';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
@@ -9,7 +9,7 @@ import {Router} from '@angular/router';
   selector: 'app-users-edit',
   templateUrl: './users-edit.component.html'
 })
-export class UsersEditComponent implements OnInit {
+export class UsersEditComponent implements OnInit, AfterViewInit {
   @Output() volver = new EventEmitter<string>();
   @Input() idUsuario;
   @Input() roles;
@@ -33,6 +33,8 @@ export class UsersEditComponent implements OnInit {
     instagram: '',
     username: '',
     pais: '',
+    provincia: '',
+    ciudad: '',
     idRol: 0,
     telefono: '',
     twitter: '',
@@ -41,6 +43,8 @@ export class UsersEditComponent implements OnInit {
     imagen: new FormData()
   };
   empresas = [];
+  provinciasOpciones;
+  ciudadesOpciones;
 
   constructor(
     private usersService: UsersService,
@@ -61,7 +65,7 @@ export class UsersEditComponent implements OnInit {
     return this.redesForm.controls;
   }
 
-  async ngOnInit() {
+  ngOnInit(): void {
     this.usuarioForm = this._formBuilder.group({
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
@@ -69,6 +73,8 @@ export class UsersEditComponent implements OnInit {
       email: ['', [Validators.required]],
       compania: ['', [Validators.required]],
       pais: ['', [Validators.required]],
+      provincia: ['', [Validators.required]],
+      ciudad: ['', [Validators.required]],
       telefono: ['', [Validators.required]],
       estado: ['', [Validators.required]],
       whatsapp: ['', [Validators.required]],
@@ -82,18 +88,21 @@ export class UsersEditComponent implements OnInit {
     this.obtenerEmpresas();
   }
 
-  async ngAfterViewInit() {
-    await this.usersService.obtenerUsuario(this.idUsuario).subscribe((result) => {
+  ngAfterViewInit(): void {
+    this.usersService.obtenerUsuario(this.idUsuario).subscribe((result) => {
       this.usuario = result;
+      this.usuarioForm.patchValue({...result});
       this.imagen = this.usuario.imagen;
+      this.obtenerProvincias();
+      this.obtenerCiudad();
     });
   }
 
-  regresar() {
+  regresar(): void {
     this.volver.emit();
   }
 
-  async actualizarUsuario() {
+  actualizarUsuario(): void {
     this.submitted = true;
 
     if (this.usuarioForm.invalid) {
@@ -105,7 +114,7 @@ export class UsersEditComponent implements OnInit {
       return;
     }
     delete this.usuario.imagen;
-    await this.usersService.actualizarUsuario(this.usuario).subscribe(() => {
+    this.usersService.actualizarUsuario(this.usuario).subscribe(() => {
         this.mensaje = 'Se actualizo correctamente';
         this.abrirModal(this.mensajeModal);
         this.router.navigate(['/admin/user']);
@@ -121,15 +130,15 @@ export class UsersEditComponent implements OnInit {
       });
   }
 
-  obtenerURLImagen(url) {
+  obtenerURLImagen(url): string {
     return this.globalParam.obtenerURL(url);
   }
 
-  abrirModal(modal) {
+  abrirModal(modal): void {
     this.modalService.open(modal);
   }
 
-  cerrarModal() {
+  cerrarModal(): void {
     this.modalService.dismissAll();
   }
 
@@ -160,5 +169,17 @@ export class UsersEditComponent implements OnInit {
       (error) => {
       }
     );
+  }
+
+  obtenerProvincias(): void {
+    this.paramService.obtenerListaHijos(this.usuarioForm.value.pais, 'PAIS').subscribe((info) => {
+      this.provinciasOpciones = info;
+    });
+  }
+
+  obtenerCiudad(): void {
+    this.paramService.obtenerListaHijos(this.usuarioForm.value.provincia, 'PROVINCIA').subscribe((info) => {
+      this.ciudadesOpciones = info;
+    });
   }
 }

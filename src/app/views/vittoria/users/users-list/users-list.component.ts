@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {NgbPagination, NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {nuevoUsuario, UsersService} from 'src/app/services/admin/users.service';
+import {NuevoUsuario, UsersService} from 'src/app/services/admin/users.service';
 import {FormGroup, Validators, FormBuilder} from '@angular/forms';
 import {ParamService} from '../../../../services/admin/param.service';
 
@@ -33,19 +33,23 @@ export class UsersListComponent implements OnInit, AfterViewInit {
   maxSize;
   collectionSize;
   vista;
-  nuevoUsuario: nuevoUsuario = {
+  nuevoUsuario: NuevoUsuario = {
     nombres: '',
     apellidos: '',
     username: '',
     email: '',
     compania: '',
     pais: '',
+    provincia: '',
+    ciudad: '',
     telefono: '',
     whatsapp: '',
     idRol: 0,
     estado: 'Activo'
   };
   empresas = [];
+  provinciasOpciones;
+  ciudadesOpciones;
 
   constructor(
     private servicioUsuarios: UsersService,
@@ -63,6 +67,8 @@ export class UsersListComponent implements OnInit, AfterViewInit {
       email: ['', [Validators.required, Validators.email]],
       compania: ['', [Validators.required]],
       pais: ['', [Validators.required]],
+      provincia: ['', [Validators.required]],
+      ciudad: ['', [Validators.required]],
       telefono: ['', [Validators.required, Validators.maxLength(10),
         Validators.minLength(10), Validators.pattern('^[0-9]*$')]],
       whatsapp: ['', [Validators.required, Validators.maxLength(10),
@@ -104,7 +110,9 @@ export class UsersListComponent implements OnInit, AfterViewInit {
 
   async obtenerListaUsuarios() {
 
-    await this.servicioUsuarios.obtenerListaUsuarios(this.page, this.pageSize, this.rolesOpciones, this.estadosOpciones)
+    await this.servicioUsuarios.obtenerListaUsuarios({
+      page: this.page - 1, page_size: this.pageSize, idRol: Number(this.rolesOpciones), estado: this.estadosOpciones
+    })
       .subscribe((result) => {
         this.collectionSize = result.cont;
         this.usuarios = result.info;
@@ -189,6 +197,18 @@ export class UsersListComponent implements OnInit, AfterViewInit {
       link.href = downloadURL;
       link.download = 'parametrizaciones.xls';
       link.click();
+    });
+  }
+
+  obtenerProvincias(): void {
+    this.paramService.obtenerListaHijos(this.usuarioForm.value.pais, 'PAIS').subscribe((info) => {
+      this.provinciasOpciones = info;
+    });
+  }
+
+  obtenerCiudad(): void {
+    this.paramService.obtenerListaHijos(this.usuarioForm.value.provincia, 'PROVINCIA').subscribe((info) => {
+      this.ciudadesOpciones = info;
     });
   }
 }

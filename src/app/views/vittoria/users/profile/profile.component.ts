@@ -36,6 +36,8 @@ export class ProfileComponent implements OnInit {
     instagram: '',
     username: '',
     pais: '',
+    provincia: '',
+    ciudad: '',
     idRol: 0,
     telefono: '',
     twitter: '',

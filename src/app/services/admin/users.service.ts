@@ -6,35 +6,39 @@ import {Observable} from 'rxjs';
 const apiUrl: string = environment.apiUrl;
 
 
-export interface nuevoUsuario {
-  nombres: string,
-  apellidos: string,
-  username: string,
-  email: string,
-  compania: string,
-  pais: string,
-  telefono: string,
-  whatsapp: string,
-  idRol: number,
-  estado: string
+export interface NuevoUsuario {
+  nombres: string;
+  apellidos: string;
+  username: string;
+  email: string;
+  compania: string;
+  pais: string;
+  provincia: string;
+  ciudad: string;
+  telefono: string;
+  whatsapp: string;
+  idRol: number;
+  estado: string;
 }
 
 export interface Usuario {
-  id: number,
-  nombres: string,
-  apellidos: string,
-  username: string,
-  email: string,
-  compania: string,
-  pais: string,
-  telefono: string,
-  idRol: number,
-  estado: string,
-  twitter: string,
-  instagram: string,
-  whatsapp: string,
-  facebook: string,
-  imagen: FormData,
+  id: number;
+  nombres: string;
+  apellidos: string;
+  username: string;
+  email: string;
+  compania: string;
+  pais: string;
+  provincia: string;
+  ciudad: string;
+  telefono: string;
+  idRol: number;
+  estado: string;
+  twitter: string;
+  instagram: string;
+  whatsapp: string;
+  facebook: string;
+  imagen: FormData;
 }
 
 @Injectable()
@@ -55,13 +59,11 @@ export class UsersService {
     return this.http.get<any>(`${apiUrl}/adm/param/list/estado/`, {});
   }
 
-  obtenerListaUsuarios(page, pageSize, idRol, estado): Observable<any> {
-    return this.http.post<any>(`${apiUrl}/adm/usuarios/list/`, {
-      page: page - 1, page_size: pageSize, estado, idRol: Number(idRol)
-    });
+  obtenerListaUsuarios(data): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/adm/usuarios/list/`, data);
   }
 
-  insertarUsuario(usuario: nuevoUsuario): Observable<any> {
+  insertarUsuario(usuario: NuevoUsuario): Observable<any> {
 
     return this.http.post<any>(`${apiUrl}/adm/usuarios/create/`, usuario);
   }
@@ -76,7 +78,7 @@ export class UsersService {
   }
 
   actualizarUsuario(usuario: Usuario): Observable<any> {
-    const usuarioActualizado: nuevoUsuario = usuario;
+    const usuarioActualizado: NuevoUsuario = usuario;
     return this.http.post<any>(`${apiUrl}/adm/usuarios/update/${usuario.id}`, usuarioActualizado);
   }
 

@@ -70,7 +70,6 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
     };
     this.barChartData = [this.datosTransferencias];
     this.obtenerOpciones();
-    this.obtenerCouriers();
   }
 
   ngAfterViewInit(): void {
@@ -181,8 +180,10 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  obtenerCouriers(): void {
-    this.usersService.obtenerListaUsuarios(1, 10, 50, 'Activo').subscribe((info) => {
+  obtenerCouriers(pais, provincia, ciudad): void {
+    this.usersService.obtenerListaUsuarios({
+      page: 0 , page_size: 10, idRol: 50, estado: 'Activo', pais, provincia, ciudad
+    }).subscribe((info) => {
       this.couriers = info.info;
     });
   }
@@ -254,7 +255,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
 
   procesarEnvio(modal, transaccion): void {
     this.archivo = new FormData();
-    this.modalService.open(modal);
+    this.modalService.open(modal, {size: 'lg'});
     this.autorizarForm = this.formBuilder.group({
       id: [transaccion.id, [Validators.required]],
       numeroPedido: [transaccion.numeroPedido, [Validators.required]],
@@ -264,7 +265,23 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       correoCourier: ['', [Validators.required]],
       archivoGuia: ['', [Validators.required]],
       estado: ['Despachado', [Validators.required]],
+      envio: this.formBuilder.group({
+        nombres: [transaccion.envio.nombres, []],
+        apellidos: [transaccion.envio.apellidos, []],
+        correo: [transaccion.envio.correo, []],
+        identificacion: [transaccion.envio.identificacion, []],
+        telefono: [transaccion.envio.telefono, []],
+        pais: [transaccion.envio.pais, []],
+        provincia: [transaccion.envio.provincia, []],
+        ciudad: [transaccion.envio.ciudad, []],
+        callePrincipal: [transaccion.envio.callePrincipal, []],
+        numero: [transaccion.envio.numero, []],
+        calleSecundaria: [transaccion.envio.calleSecundaria, []],
+        referencia: [transaccion.envio.referencia, []],
+        gps: [transaccion.envio.gps, []],
+      }),
     });
+    this.obtenerCouriers(transaccion.envio.pais, transaccion.envio.provincia, transaccion.envio.ciudad);
   }
 
   procesarAutorizacionEnvio(): void {
@@ -273,7 +290,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.autorizarForm.value);
       facturaFisicaLlaves.map((llaves, index) => {
-        if (facturaFisicaValores[index] && llaves !== 'archivoGuia') {
+        if (facturaFisicaValores[index] && llaves !== 'archivoGuia' && llaves !== 'envio') {
           this.archivo.append(llaves, facturaFisicaValores[index]);
         }
       });
