@@ -13,6 +13,7 @@ import { FlatpickrModule } from 'angularx-flatpickr';
 import {GestionEntregaNuevosComponent} from './woocommerce/gestion-entrega-nuevos/gestion-entrega-nuevos.component';
 import { GestionEntregaDespachoComponent } from './woocommerce/gestion-entrega-despacho/gestion-entrega-despacho.component';
 import { GestionEntregaEnviadosComponent } from './woocommerce/gestion-entrega-enviados/gestion-entrega-enviados.component';
+import {ShortenPipe} from '../../pipes/shorten-pipe.pipe';
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import { GestionEntregaEnviadosComponent } from './woocommerce/gestion-entrega-e
     GestionEntregaNuevosComponent,
     GestionEntregaDespachoComponent,
     GestionEntregaEnviadosComponent,
+    ShortenPipe,
   ],
   imports: [
     CommonModule,

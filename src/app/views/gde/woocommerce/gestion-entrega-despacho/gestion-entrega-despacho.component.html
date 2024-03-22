@@ -65,13 +65,13 @@
                             <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
                                 <td>{{transaccion.created_at | date: 'dd-MM-yyyy'}}</td>
                                 <td>{{transaccion.fechaHoraConfirmacion}}</td>
-                                <td>{{transaccion.canal}}</td>
-                                <td>{{transaccion.tipoFacturacion}}</td>
-                                <td>{{transaccion.numeroPedido}}</td>
-                                <td>{{transaccion.facturacion.nombres}} </td>
-                                <td>{{transaccion.facturacion.apellidos}}</td>
-                                <td>{{transaccion.metodoPago}}</td>
-                                <td>{{transaccion.urlMetodoPago}}</td>
+                                <td>{{transaccion.canal | shorten}}</td>
+                                <td>{{transaccion.tipoFacturacion | shorten}}</td>
+                                <td>{{transaccion.numeroPedido | shorten}}</td>
+                                <td>{{transaccion.facturacion.nombres | shorten}} </td>
+                                <td>{{transaccion.facturacion.apellidos | shorten}}</td>
+                                <td>{{transaccion.metodoPago | shorten}}</td>
+                                <td>{{transaccion.urlMetodoPago | shorten}}</td>
                                 <td>
                                     <a *ngIf="transaccion.fotoEmpaque"
                                        class="btn btn-sm btn-primary" [href]="transaccion.fotoEmpaque" target="_blank">
