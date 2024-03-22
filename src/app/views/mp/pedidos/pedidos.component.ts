@@ -40,6 +40,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   datosTransferencias = {
     data: [], label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)'
   };
+  archivo: FormData = new FormData();
 
   constructor(
     private modalService: NgbModal,
@@ -263,6 +264,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   }
 
   procesarEnvio(modal, transaccion): void {
+    this.archivo = new FormData();
     this.modalService.open(modal);
     const tipoFacturacion = transaccion.metodoPago === CONTRA_ENTREGA ? 'rimpePopular' : 'facturacionElectronica';
     this.autorizarForm = this.formBuilder.group({
@@ -272,13 +274,21 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       fechaHoraConfirmacion: [this.datePipe.transform(new Date(), 'yyyy-MM-ddThh:mm:ss.SSSZ'), [Validators.required]],
       tipoFacturacion: [tipoFacturacion, [Validators.required]],
       urlMetodoPago: ['', transaccion.metodoPago === PREVIO_PAGO ? [Validators.required] : []],
+      archivoMetodoPago: ['', []],
       estado: ['Autorizado', [Validators.required]],
     });
   }
 
   procesarAutorizacion(): void {
     if (confirm('Esta seguro de cambiar de estado') === true) {
-      this.pedidosService.actualizarPedido(this.autorizarForm.value).subscribe((info) => {
+      const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
+      const facturaFisicaLlaves: string[] = Object.keys(this.autorizarForm.value);
+      facturaFisicaLlaves.map((llaves, index) => {
+        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago') {
+          this.archivo.append(llaves, facturaFisicaValores[index]);
+        }
+      });
+      this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
       });
@@ -301,5 +311,13 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         this.obtenerTransacciones();
       });
     }
+  }
+
+  cargarArchivo(event, nombreCampo): void {
+    const doc = event.target.files[0];
+    const x = document.getElementById(nombreCampo + 'lbl');
+    x.innerHTML = '' + Date.now() + '_' + doc.name;
+    this.archivo.delete(nombreCampo);
+    this.archivo.append(nombreCampo, doc);
   }
 }

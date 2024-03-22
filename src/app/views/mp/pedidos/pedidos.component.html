@@ -763,6 +763,25 @@
                 </div>
                 <div class="col-12">
                     <div class="form-group">
+                        <label for="customFile">Cargar Metodo Pago</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFile"
+                                   accept="image/png, image/gif, image/jpeg"
+                                   (change)="cargarArchivo($event, 'archivoMetodoPago')"
+                                   formControlName="archivoMetodoPago"/>
+                            <label class="custom-file-label" for="customFile" id="archivoMetodoPagolbl">Selecionar
+                            </label>
+                        </div>
+                        <div *ngIf="autorizarFForm.archivoMetodoPago.errors"
+                             class="invalid-feedback" style="display: block;">
+                            <div *ngIf="autorizarFForm.archivoMetodoPago.errors.required">
+                                Requerido
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
                         <label>Fecha:</label>
                         <input class="form-control" formControlName="fechaHoraConfirmacion" disabled/>
                     </div>
