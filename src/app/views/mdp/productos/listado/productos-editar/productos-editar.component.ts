@@ -8,6 +8,7 @@ import {ParamService as MDMParamService} from 'src/app/services/mdm/param/param.
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import * as moment from 'moment';
 import {ValidacionesPropias} from '../../../../../utils/customer.validators';
+import {Toaster} from 'ngx-toast-notifications';
 
 @Component({
   selector: 'app-productos-editar',
@@ -46,6 +47,7 @@ export class ProductosEditarComponent implements OnInit {
   provincias = [];
   ciudadOpciones = [];
   habilitarEnvio = false;
+  invalidoTamanoVideo = false;
 
   constructor(
     private categoriasService: CategoriasService,
@@ -55,6 +57,7 @@ export class ProductosEditarComponent implements OnInit {
     private paramService: ParamService,
     private MDMparamService: MDMParamService,
     private _formBuilder: FormBuilder,
+    private toaster: Toaster,
   ) {
     this.producto = this.productosService.inicializarProducto();
     this.fichaTecnica = this.productosService.inicializarFichaTecnica();
@@ -192,7 +195,8 @@ export class ProductosEditarComponent implements OnInit {
     //   console.log(info);
     // });
     this.submittedProductoForm = true;
-    if (this.productoForm.invalid) {
+    if (this.productoForm.invalid || this.invalidoTamanoVideo) {
+      this.toaster.open('Llenar campos', {type: 'warning'});
       return;
     }
     const fechaCaducidad = moment(this.producto.fechaCaducidad, 'YYYY-MM-DD');
@@ -384,5 +388,14 @@ export class ProductosEditarComponent implements OnInit {
 
   volver(): void {
     this.messageEvent.emit('lista');
+  }
+
+  verificarPesoArchivo(event): void {
+    const file: File = event.target.files[0];
+    this.invalidoTamanoVideo = false;
+    if (10485760 > file.size) {
+      this.invalidoTamanoVideo = true;
+      this.toaster.open('Archivo pesado', {type: 'warning'});
+    }
   }
 }

@@ -322,7 +322,7 @@
                                                             </div>
                                                             <div class="col-md-1 my-lg-0 my-2 border-left">
                                                                 <p class="card-text col-title">Cantidad</p>
-                                                                <input type="number" class="form-control" value="0" placeholder="0" name="cantidad" formControlName="cantidad" (change)="calcularSubtotal()" />
+                                                                <input type="number" class="form-control sin-flechas" value="0" placeholder="0" name="cantidad" formControlName="cantidad" (change)="calcularSubtotal()" />
                                                                 <div *ngIf="submitted && cuenta.controls?.cantidad.errors" class="invalid-feedback" style="display: block;">
                                                                     <div *ngIf="cuenta.controls?.cantidad.errors.required">Requerido
                                                                     </div>
@@ -380,8 +380,8 @@
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label for="salesperson" class="form-label">Canal de ventas:</label>
-                                                    <input type="text" class="form-control" id="salesperson" placeholder="Canal Venta" name="canalVenta" [value]="f?.canal.value" disabled />
+                                                    <label for="canalOrigen" class="form-label">Canal de origen:</label>
+                                                    <input type="text" class="form-control" id="canalOrigen" name="canalOrigen" [value]="f?.canalOrigen.value" disabled />
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
@@ -419,6 +419,40 @@
                                                 <div *ngIf="submitted && f.comentariosVendedor.errors" class="invalid-feedback"
                                                      style="display: block;">
                                                     <div *ngIf="f.comentariosVendedor.errors.required">Comentarios del vendedor es requerido</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="canal">Canal Venta</label>
+                                                <select class="form-control select2" id="canal"
+                                                        name="canal" formControlName="canal">
+                                                    <option value="" selected>- Seleccionar -</option>
+                                                    <option value="{{canal.valor}}"
+                                                            *ngFor="let canal of canalesOpciones">
+                                                        {{canal.nombre}}
+                                                    </option>
+                                                </select>
+                                                <div *ngIf="submitted && f.canal.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.canal.errors.required">Canal Venta es requerido</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="metodoPago">Metodo Pago</label>
+                                                <select class="form-control select2" id="metodoPago"
+                                                        name="canal" formControlName="metodoPago">
+                                                    <option value="" selected>- Seleccionar -</option>
+                                                    <option value="{{metodoPago.valor}}"
+                                                            *ngFor="let metodoPago of metodoPagoOpciones">
+                                                        {{metodoPago.nombre}}
+                                                    </option>
+                                                </select>
+                                                <div *ngIf="submitted && f.metodoPago.errors" class="invalid-feedback"
+                                                     style="display: block;">
+                                                    <div *ngIf="f.metodoPago.errors.required">Metodo Pago es requerido</div>
                                                 </div>
                                             </div>
                                         </div>

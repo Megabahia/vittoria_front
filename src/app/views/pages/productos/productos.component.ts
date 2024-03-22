@@ -25,7 +25,6 @@ export class ProductosComponent implements OnInit, AfterViewInit {
   submitted = false;
   numRegex = /^-?\d*[.,]?\d{0,2}$/;
   cargando = false;
-  canalOpciones;
   paisOpciones;
   provinciaOpciones;
   ciudadOpciones;
@@ -93,6 +92,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       }
       this.fDetalles.push(cuentaForm);
       this.pospectoForm.get('precio').setValue(this.producto.precioOferta * 1);
+      this.pospectoForm.get('total').setValue(this.producto.precioOferta * 1);
       this.obtenerParametrosPagina();
       this.pospectoForm.get('courier').setValue(this.producto.courier);
     }, error => {
@@ -125,13 +125,12 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       detalles: this._formBuilder.array([]),
       courier: ['', []],
       total: ['', []],
+      canalOrigen: ['Landing-Producto', []]
     });
   }
 
   ngAfterViewInit(): void {
-    this.obtenerCanales();
     this.obtenerProspectos();
-    this.obtenerVendedores();
     this.obtenerTiposPrecio();
     this.obtenerTiposCliente();
     this.obtenerPaisOpciones();
@@ -161,12 +160,6 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  obtenerCanales(): void {
-    this.paramService.obtenerListaPadres('CANAL').subscribe((info) => {
-      this.canalOpciones = info;
-    });
-  }
-
   obtenerPaisOpciones(): void {
     // this.provincia = '';
     // this.ciudad = '';
@@ -188,12 +181,6 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     this.paramService.obtenerListaHijos(this.pospectoForm.value.provincia, 'PROVINCIA').subscribe((info) => {
       this.ciudadOpciones = info;
     });
-  }
-
-  obtenerVendedores(): void {
-    // this.prospectosService.obtenerVendedor('Vendedor').subscribe((info) => {
-    //   this.vendedorOpciones = info;
-    // });
   }
 
   obtenerProspectos(): void {

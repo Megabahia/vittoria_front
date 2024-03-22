@@ -7,29 +7,31 @@ const apiUrl: string = environment.apiUrl;
 
 
 export interface Prospecto {
-  nombres: string,
-  apellidos: string,
-  telefono: string,
-  tipoCliente: string,
-  whatsapp: string,
-  facebook: string,
-  twitter: string,
-  instagram: string,
-  correo1: string,
-  correo2: string,
-  pais: string,
-  provincia: string,
-  ciudad: string,
-  canal: string,
-  codigoProducto: string,
-  nombreProducto: string,
-  precio: number,
-  tipoPrecio: string,
-  nombreVendedor: string,
-  confirmacionProspecto: string,
-  imagen: string,
-  comentariosVendedor: string,
-  cantidad: string,
+  nombres: string;
+  apellidos: string;
+  telefono: string;
+  tipoCliente: string;
+  whatsapp: string;
+  facebook: string;
+  twitter: string;
+  instagram: string;
+  correo1: string;
+  correo2: string;
+  pais: string;
+  provincia: string;
+  ciudad: string;
+  canalOrigen: string;
+  canal: string;
+  metodoPago: string;
+  codigoProducto: string;
+  nombreProducto: string;
+  precio: number;
+  tipoPrecio: string;
+  nombreVendedor: string;
+  confirmacionProspecto: string;
+  imagen: string;
+  comentariosVendedor: string;
+  cantidad: string;
   tipoIdentificacion: string;
   identificacion: string;
 }
