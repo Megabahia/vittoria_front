@@ -5,6 +5,7 @@ import {FacturasLocalesComponent} from './canal-vittoria/facturas-locales/factur
 import {FacturasExternosComponent} from './canal-externo/facturas-externos/facturas-externos.component';
 import {FacturasExternasAutorizadasComponent} from './canal-externo/facturas-autorizadas/facturas-externas-autorizadas.component';
 import {FacturasAutorizadasComponent} from './canal-vittoria/facturas-autorizadas/facturas-autorizadas.component';
+import {FacturasWoocommerceComponent} from './canal-woocommerce/facturas-locales/facturas-woocommerce.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'canal-vittoria', pathMatch: 'full'},
@@ -32,6 +33,20 @@ const routes: Routes = [
       {
         path: 'facturadas',
         component: FacturasExternasAutorizadasComponent,
+        canActivate: [AuthGuard]
+      },
+    ]
+  },
+  {
+    path: 'canal-woocommerce', children: [
+      {
+        path: 'pendiente',
+        component: FacturasWoocommerceComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'facturadas',
+        component: FacturasAutorizadasComponent,
         canActivate: [AuthGuard]
       },
     ]

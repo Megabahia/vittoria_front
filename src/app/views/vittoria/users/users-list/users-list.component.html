@@ -125,7 +125,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [(pageSize)]="pageSize" [maxSize]="5" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+                    <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" [maxSize]="3" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
 
                     <ng-template #contenido let-modal>
                         <div class="modal-header">
@@ -182,21 +182,54 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label" for="basic-icon-default-uname">Compañía:</label>
-                                            <input type="text" name="compania" formControlName="compania" [(ngModel)]="nuevoUsuario.compania" id="basic-icon-default-uname" class="form-control dt-uname" />
+                                            <select class="select2 form-control form-control-lg" name="compania" formControlName="compania" [(ngModel)]="nuevoUsuario.compania">
+                                                <option value="" selected>- Seleccione -</option>
+                                                <option value="{{empresa.valor}}" *ngFor="let empresa of empresas">
+                                                    {{empresa.valor}}
+                                                </option>
+                                            </select>
                                             <div *ngIf="submitted && f.compania.errors" class="invalid-feedback" style="display: block;">
                                                 <div *ngIf="f.compania.errors.required">Compañia es requerida</div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label" for="basic-icon-default-uname">País:</label>
-                                            <select class="select2 form-control form-control-lg" name="pais" formControlName="pais" [(ngModel)]="nuevoUsuario.pais">
-                                            <option value="" selected>- Seleccione país -</option>
-                                            <option value="{{pais.nombre}}" *ngFor="let pais of paises">
-                                                {{pais.nombre}}
-                                              </option>
-                                 </select>
+                                            <select class="select2 form-control form-control-lg" name="pais" formControlName="pais"
+                                                    (change)="obtenerProvincias()"
+                                                    [(ngModel)]="nuevoUsuario.pais">
+                                                <option value="" selected>- Seleccione país -</option>
+                                                <option value="{{pais.nombre}}" *ngFor="let pais of paises">
+                                                    {{pais.nombre}}
+                                                </option>
+                                            </select>
                                             <div *ngIf="submitted && f.pais.errors" class="invalid-feedback" style="display: block;">
                                                 <div *ngIf="f.pais.errors.required">País es requerido</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="usuarioProvincia">Provincia</label>
+                                            <select class="select2 form-control form-control-lg" name="usuarioProvincia" formControlName="provincia"
+                                                    (change)="obtenerCiudad()"
+                                                    [(ngModel)]="nuevoUsuario.provincia" id="usuarioProvincia">
+                                                <option value="" selected>- Seleccione -</option>
+                                                <option value="{{pais.nombre}}" *ngFor="let pais of provinciasOpciones">
+                                                    {{pais.nombre}}
+                                                </option>
+                                            </select>
+                                            <div *ngIf="submitted && f.provincia.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="f.provincia.errors.required">Provincia es requerido</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="usuarioCiudad">Ciudad</label>
+                                            <select class="select2 form-control form-control-lg" name="usuarioCiudad" formControlName="ciudad" [(ngModel)]="nuevoUsuario.ciudad" id="usuarioCiudad">
+                                                <option value="" selected>- Seleccione -</option>
+                                                <option value="{{pais.nombre}}" *ngFor="let pais of ciudadesOpciones">
+                                                    {{pais.nombre}}
+                                                </option>
+                                            </select>
+                                            <div *ngIf="submitted && f.ciudad.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="f.ciudad.errors.required">Ciudad es requerido</div>
                                             </div>
                                         </div>
                                         <div class="form-group">

@@ -99,7 +99,7 @@ export class TransaccionesListComponent implements OnInit {
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;
-      this.obtenerGraficos();
+      // this.obtenerGraficos();
     });
   }
 

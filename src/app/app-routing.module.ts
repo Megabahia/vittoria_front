@@ -21,10 +21,16 @@ const routes: Routes = [
     path: 'mdo', loadChildren: () => import('./views/mdo/mdo.module').then(m => m.MdoModule)
   },
   {
+    path: 'mp', loadChildren: () => import('./views/mp/mp.module').then(m => m.MpModule)
+  },
+  {
     path: 'gdo', loadChildren: () => import('./views/gdo/gdo.module').then(m => m.GdoModule)
   },
   {
     path: 'gde', loadChildren: () => import('./views/gde/gde.module').then(m => m.GdeModule)
+  },
+  {
+    path: 'gcn', loadChildren: () => import('./views/gcn/gestion-centro-negocios.module').then(m => m.GestionCentroNegociosModule)
   },
   {
     path: 'servientrega', loadChildren: () => import('./views/servientrega/servientrega.module').then(m => m.ServientregaModule)

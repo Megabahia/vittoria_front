@@ -9,7 +9,18 @@
         <div class="content-body">
             <div class="card">
                 <h5 class="card-header">Administrar productos</h5>
-
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input class="form-control form-control-sm" type="text" placeholder="Nombre producto"
+                                   [(ngModel)]="nombreBuscar" (change)="obtenerListaProductos()">
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control form-control-sm" type="text" placeholder="Codigo producto"
+                                   [(ngModel)]="codigoBarras" (change)="obtenerListaProductos()">
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="card">
                 <div class="row m-75">

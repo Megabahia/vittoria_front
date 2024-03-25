@@ -69,7 +69,7 @@
                                 <th>Canal de compra</th>
                                 <th># productos comprados</th>
                                 <th>Monto</th>
-                                <th>Factura</th>
+                                <th>Pedido</th>
                                 <th>Acciones</th>
                             </tr>
                             </thead>
@@ -88,11 +88,15 @@
                                 <td>{{transaccion.numeroProductosComprados}} </td>
                                 <td> ${{transaccion.total}} </td>
                                 <td>
-                                    <a (click)="obtenerTransaccion(transaccion.id)" data-toggle="modal"
-                                       data-target="#verfactura">factura-{{transaccion.numeroFactura}}</a>
+                                    <button class="btn btn-primary"
+                                            (click)="obtenerTransaccion(transaccion.id)" data-toggle="modal"
+                                            data-target="#verfactura"
+                                    >Ver</button>
                                 </td>
                                 <td>
-                                    <a *ngIf="!transaccion.updated_at" (click)="procesarEnvio(transaccion.id)" >Procesar Envio</a>
+                                    <button class="btn btn-sm btn-primary"
+                                            *ngIf="!transaccion.updated_at" (click)="procesarEnvio(transaccion.id)"
+                                    >Procesar Envio</button>
                                 </td>
                             </tr>
                             </tbody>
@@ -246,13 +250,6 @@
                                             </div>
                                             <div class="col-md-5 text-right">
                                                 <div class="invoice-total-wrapper">
-                                                    <div class="invoice-total-item">
-                                                        <p class="invoice-total-title">Subtotal:
-                                                            ${{transaccion.subTotal}}</p>
-                                                    </div>
-                                                    <div class="invoice-total-item">
-                                                        <p class="invoice-total-title">IVA 12%: ${{transaccion.iva}}</p>
-                                                    </div>
                                                     <hr class="my-50"/>
                                                     <div class="invoice-total-item">
                                                         <p class="invoice-total-title text-primary font-weight-bold">

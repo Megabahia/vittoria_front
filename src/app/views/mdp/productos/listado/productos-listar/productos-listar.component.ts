@@ -12,11 +12,13 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   menu;
   vista = 'lista';
   page = 1;
-  pageSize: any = 10;
+  pageSize: any = 3;
   maxSize;
   collectionSize;
   listaProductos;
   idProducto = 0;
+  nombreBuscar: string;
+  codigoBarras: string;
 
   constructor(
     private productosService: ProductosService,
@@ -47,7 +49,9 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     this.productosService.obtenerListaProductos(
       {
         page: this.page - 1,
-        page_size: this.pageSize
+        page_size: this.pageSize,
+        nombre: this.nombreBuscar,
+        codigoBarras: this.codigoBarras,
       }
     ).subscribe((info) => {
       this.listaProductos = info.info;

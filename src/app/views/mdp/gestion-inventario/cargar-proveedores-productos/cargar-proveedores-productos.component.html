@@ -24,7 +24,12 @@
                                     <div class="input-group-append">
                                         <button (click)="cargarStock()"
                                                 class="input-group-text btn-primary"
-                                                [disabled]="enviando">Cargar</button>
+                                                [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+                                        >
+                                            <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                                                  aria-hidden="true"></span>
+                                            Cargar
+                                        </button>
                                     </div>
                                 </div>
                             </div>

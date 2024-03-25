@@ -17,6 +17,7 @@ import {Label, Color} from 'ng2-charts';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ProspectosService} from '../../../../../services/mdm/prospectosCli/prospectos.service';
 import {ValidacionesPropias} from '../../../../../utils/customer.validators';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-personas-edit',
@@ -83,16 +84,16 @@ export class PersonasEditComponent implements OnInit {
   fechaInicioTransac = new Date();
   fechaFinTransac = new Date();
   pageDF = 1;
-  pageSizeDF = 10;
+  pageSizeDF = 3;
   collectionSizeDF;
   pageDV = 1;
-  pageSizeDV = 10;
+  pageSizeDV = 3;
   collectionSizeDV;
   pageTA = 1;
-  pageSizeTA = 10;
+  pageSizeTA = 3;
   collectionSizeTA;
   pagePA = 1;
-  pageSizePA = 10;
+  pageSizePA = 3;
   collectionSizePA;
   datosBasicos: DatosBasicos = {
     tipoCliente: '',
@@ -194,6 +195,7 @@ export class PersonasEditComponent implements OnInit {
     private globalParam: ParamServiceADM,
     private _formBuilder: FormBuilder,
     private modalService: NgbModal,
+    private location: Location,
   ) {
     this.datosFisicos.cliente = this.idCliente;
     this.datosVirtuales.cliente = this.idCliente;
@@ -202,7 +204,11 @@ export class PersonasEditComponent implements OnInit {
     this.transaccion = this.clientesService.inicializarTransaccion();
   }
 
-  ngOnInit() {
+  recargarPagina(): void {
+    this.location.back();
+  }
+
+  ngOnInit(): void {
     this.barChartData = [this.datosTransferencias];
     this.barChartLabels = [];
 
@@ -501,7 +507,7 @@ export class PersonasEditComponent implements OnInit {
   }
 
   // ------------------
-  async guardarDatosBasicos() {
+  guardarDatosBasicos(): void {
 
     this.submittedDatosBasicosForm = true;
     if (this.datosBasicosForm.invalid) {

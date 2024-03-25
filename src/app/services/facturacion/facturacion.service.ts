@@ -32,4 +32,8 @@ export class FacturacionService {
   facturarLocales(data): Observable<any> {
     return this.http.post<any>(`${apiUrl}/facturacion/facturas/locales/facturar/`, data);
   }
+
+  facturarWoocommerce(data): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/facturacion/facturas/woocommerce/facturar/`, data);
+  }
 }

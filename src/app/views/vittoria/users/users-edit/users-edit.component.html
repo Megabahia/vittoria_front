@@ -116,14 +116,46 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="usuarioPais">País</label>
-                                                <select class="form-control" name="pais" formControlName="pais" [(ngModel)]="usuario.pais" id="role">
-                                                    <option value="" selected>- Seleccione país -</option>
+                                                <select class="form-control" name="usuarioPais" formControlName="pais"
+                                                        (change)="obtenerProvincias()"
+                                                        [(ngModel)]="usuario.pais" id="usuarioPais">
+                                                    <option value="" selected>- Seleccione -</option>
                                                     <option value="{{pais.nombre}}" *ngFor="let pais of paises">
                                                         {{pais.nombre}}
                                                       </option>
                                                 </select>
-                                                <div *ngIf="submitted && f.idRol.errors" class="invalid-feedback" style="display: block;">
-                                                    <div *ngIf="f.idRol.errors.required">Rol es requerido</div>
+                                                <div *ngIf="submitted && f.pais.errors" class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="f.pais.errors.required">Pais es requerido</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="usuarioProvincia">Provincia</label>
+                                                <select class="form-control" name="usuarioProvincia" formControlName="provincia"
+                                                        (change)="obtenerCiudad()"
+                                                        [(ngModel)]="usuario.provincia" id="usuarioProvincia">
+                                                    <option value="" selected>- Seleccione -</option>
+                                                    <option value="{{pais.nombre}}" *ngFor="let pais of provinciasOpciones">
+                                                        {{pais.nombre}}
+                                                      </option>
+                                                </select>
+                                                <div *ngIf="submitted && f.provincia.errors" class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="f.provincia.errors.required">Provincia es requerido</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="usuarioCiudad">Ciudad</label>
+                                                <select class="form-control" name="usuarioCiudad" formControlName="ciudad" [(ngModel)]="usuario.ciudad" id="usuarioCiudad">
+                                                    <option value="" selected>- Seleccione -</option>
+                                                    <option value="{{pais.nombre}}" *ngFor="let pais of ciudadesOpciones">
+                                                        {{pais.nombre}}
+                                                      </option>
+                                                </select>
+                                                <div *ngIf="submitted && f.ciudad.errors" class="invalid-feedback" style="display: block;">
+                                                    <div *ngIf="f.ciudad.errors.required">Ciudad es requerido</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -148,7 +180,12 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="company">Compañía</label>
-                                                <input type="text" class="form-control" name="compania" formControlName="compania" [(ngModel)]="usuario.compania" name="compania" />
+                                                <select class="select2 form-control form-control-lg" name="pais" formControlName="compania" [(ngModel)]="usuario.compania">
+                                                    <option value="" selected>- Seleccione -</option>
+                                                    <option value="{{empresa.valor}}" *ngFor="let empresa of empresas">
+                                                        {{empresa.valor}}
+                                                    </option>
+                                                </select>
                                                 <div *ngIf="submitted && f.compania.errors" class="invalid-feedback" style="display: block;">
                                                     <div *ngIf="f.compania.errors.required">Compañía es requerida</div>
                                                 </div>

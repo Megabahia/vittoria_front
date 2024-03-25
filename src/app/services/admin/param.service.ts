@@ -72,6 +72,10 @@ export class ParamService {
     return this.http.post<any>(`${apiUrl}/adm/param/list/tipo/todos/`, {tipo});
   }
 
+  obtenerListaHijos(nombre, tipo): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/mdm/param/list/filtro/nombre`, {tipo, nombre});
+  }
+
   obtenerURL(url): string {
     return `${apiUrl}${url}`;
   }

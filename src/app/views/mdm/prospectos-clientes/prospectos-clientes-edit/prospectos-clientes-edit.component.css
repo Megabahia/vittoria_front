@@ -1,0 +1,8 @@
+.sin-flechas::-webkit-inner-spin-button,
+.sin-flechas::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.sin-flechas {
+    -moz-appearance: textfield;
+}

@@ -21,7 +21,7 @@ export class StockComponent implements OnInit {
   subcategoria = "";
   subcategoriasOpciones;
   page = 1;
-  pageSize: any = 10;
+  pageSize: any = 3;
   maxSize;
   collectionSize;
   listaProductos;

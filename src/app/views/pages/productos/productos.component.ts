@@ -25,7 +25,6 @@ export class ProductosComponent implements OnInit, AfterViewInit {
   submitted = false;
   numRegex = /^-?\d*[.,]?\d{0,2}$/;
   cargando = false;
-  canalOpciones;
   paisOpciones;
   provinciaOpciones;
   ciudadOpciones;
@@ -71,7 +70,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.productoService.obtenerProductoFree(this.rutaActiva.snapshot.params.id, {estado: 'Activo'}).subscribe((info) => {
+    this.productoService.obtenerProductoFree(this.rutaActiva.snapshot.params.id, {estadoLanding: true}).subscribe((info) => {
       this.productoInactivo = false;
       this.producto = info;
       const cuentaForm = this._formBuilder.group({
@@ -93,6 +92,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       }
       this.fDetalles.push(cuentaForm);
       this.pospectoForm.get('precio').setValue(this.producto.precioOferta * 1);
+      this.pospectoForm.get('total').setValue(this.producto.precioOferta * 1);
       this.obtenerParametrosPagina();
       this.pospectoForm.get('courier').setValue(this.producto.courier);
     }, error => {
@@ -108,6 +108,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
         Validators.maxLength(10), ValidacionesPropias.cedulaValido
       ]],
       whatsapp: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10), Validators.maxLength(10)]],
+      telefono: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10), Validators.maxLength(10)]],
       correo1: ['', [Validators.required, Validators.email]],
       pais: ['', [Validators.required]],
       provincia: ['', [Validators.required]],
@@ -123,13 +124,13 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       precio: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       detalles: this._formBuilder.array([]),
       courier: ['', []],
+      total: ['', []],
+      canalOrigen: ['Landing-Producto', []]
     });
   }
 
   ngAfterViewInit(): void {
-    this.obtenerCanales();
     this.obtenerProspectos();
-    this.obtenerVendedores();
     this.obtenerTiposPrecio();
     this.obtenerTiposCliente();
     this.obtenerPaisOpciones();
@@ -159,12 +160,6 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  obtenerCanales(): void {
-    this.paramService.obtenerListaPadres('CANAL').subscribe((info) => {
-      this.canalOpciones = info;
-    });
-  }
-
   obtenerPaisOpciones(): void {
     // this.provincia = '';
     // this.ciudad = '';
@@ -188,12 +183,6 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  obtenerVendedores(): void {
-    // this.prospectosService.obtenerVendedor('Vendedor').subscribe((info) => {
-    //   this.vendedorOpciones = info;
-    // });
-  }
-
   obtenerProspectos(): void {
     this.paramService.obtenerListaPadres('CONFIRMACION_PROSPECTO').subscribe((info) => {
       this.confirmProspectoOpciones = info;
@@ -215,6 +204,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
   crearProspecto(): void {
     this.pospectoForm.get('nombreProducto').setValue(this.producto.nombre);
     this.pospectoForm.get('codigoProducto').setValue(this.producto.codigoBarras);
+    this.pospectoForm.get('telefono').setValue(this.pospectoForm.value.whatsapp);
     this.submitted = true;
     if (this.pospectoForm.invalid) {
       this.toaster.open('Llenar campos', {type: 'warning'});
@@ -278,6 +268,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     const total = +new Decimal(this.producto.precioOferta).mul(cantidad).toFixed(2).toString();
     this.fDetalles.controls[0].get('total').setValue(total);
     this.pospectoForm.get('precio').setValue(this.producto.precioOferta * cantidad);
+    this.pospectoForm.get('total').setValue(this.producto.precioOferta * cantidad);
     this.pospectoForm.updateValueAndValidity();
   }
 }

@@ -13,7 +13,7 @@ export class NegociosListComponent implements OnInit {
   vista = 'lista';
   idNegocio;
   page = 1;
-  pageSize = 10;
+  pageSize = 3;
   collectionSize;
   negocio;
   negocios;

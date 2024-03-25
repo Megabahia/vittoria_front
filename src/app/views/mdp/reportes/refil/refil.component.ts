@@ -14,7 +14,7 @@ export class RefilComponent implements OnInit {
   categoria="";
   subcategoria="";
   page = 1;
-  pageSize: any = 10;
+  pageSize: any = 3;
   maxSize;
   collectionSize;
   infoExportar;

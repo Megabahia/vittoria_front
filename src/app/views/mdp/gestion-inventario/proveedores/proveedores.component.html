@@ -64,7 +64,6 @@
                                 <th>Imagen</th>
                                 <th>Nombre Producto</th>
                                 <th>Proveedor</th>
-                                <th>Precio</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -77,10 +76,8 @@
                                 </td>
                                 <td> {{parametro.codigoBarras}} </td>
                                 <td> <img src="{{parametro?.imagenes[0].imagen}}" *ngIf="parametro?.imagenes.length > 0" width="100px"></td>
-<!--                                <td> <img src="https://appvittoria.s3.amazonaws.com/PRODUCTOS_EXTERNOS/FOTO_ORIGINAL/6914080380577.jpeg" width="100px"></td>-->
                                 <td> {{parametro.nombreProducto}}</td>
                                 <td> {{parametro.proveedor}}</td>
-                                <td> {{parametro.precioAdquisicion}}</td>
                             </tr>
                             </tbody>
                         </table>

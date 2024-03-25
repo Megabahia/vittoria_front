@@ -287,12 +287,12 @@ export class ProspectosClientesListComponent implements OnInit {
     this.vista = 'editar';
   }
 
-  eliminarProspecto(id) {
+  eliminarProspecto(id): void {
     this.idProspecto = id;
     this.abrirModal(this.eliminarProspectoMdl);
   }
 
-  eliminarProspectoModal() {
+  eliminarProspectoModal(): void {
     this.prospectosService.eliminarProspecto(this.idProspecto).subscribe((info) => {
       this.obtenerListaProspectos();
       this.cerrarModal();

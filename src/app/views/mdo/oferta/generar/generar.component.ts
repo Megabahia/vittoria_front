@@ -33,7 +33,7 @@ export class GenerarComponent implements OnInit {
 
   menu;
   page = 1;
-  pageSize: any = 10;
+  pageSize: any = 3;
   maxSize;
   collectionSize;
   fecha = '';

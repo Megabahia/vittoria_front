@@ -12,6 +12,7 @@ import {ValidacionesPropias} from '../../../../utils/customer.validators';
 import Decimal from 'decimal.js';
 
 @Component({
+  styleUrls: ['./prospectos-clientes-edit.component.css'],
   selector: 'app-prospectos-clientes-edit',
   templateUrl: './prospectos-clientes-edit.component.html',
 })
@@ -35,7 +36,9 @@ export class ProspectosClientesEditComponent implements OnInit {
     pais: '',
     provincia: '',
     ciudad: '',
+    canalOrigen: '',
     canal: '',
+    metodoPago: '',
     codigoProducto: '',
     nombreProducto: '',
     precio: 0,
@@ -58,6 +61,9 @@ export class ProspectosClientesEditComponent implements OnInit {
   tipoIdentificacion = [];
   submitted = false;
   iva;
+  usuario;
+  canalesOpciones = [];
+  metodoPagoOpciones = [];
 
   constructor(
     private prospectosService: ProspectosService,
@@ -70,17 +76,19 @@ export class ProspectosClientesEditComponent implements OnInit {
     private router: Router,
     private toaster: Toaster,
   ) {
-    this.obtenerIVA();
+    this.usuario = JSON.parse(localStorage.getItem('currentUser'));
   }
 
   ngOnInit(): void {
+    this.obtenerCanales();
+    this.obtenerMetodoPagoOpciones();
     this.prospectosService.obtenerProspecto(this.idUsuario).subscribe((info) => {
       this.prospecto = info;
       this.urlImagen = info.imagen;
       info.detalles.forEach((detalle, index) => {
         this.agregarItem();
       });
-      this.prospectoForm.patchValue({...info});
+      this.prospectoForm.patchValue({...info, nombreVendedor: `${this.usuario.usuario.nombres} ${this.usuario.usuario.apellidos}`});
       info.detalles.forEach((detalle, index) => {
         this.fDetalles.controls[index].get('codigo').setValue(detalle.codigo);
         this.obtenerProducto(index);
@@ -121,13 +129,15 @@ export class ProspectosClientesEditComponent implements OnInit {
       facebook: ['', []],
       twitter: ['', []],
       correo2: ['', []],
-      canal: ['', []],
+      canalOrigen: ['', []],
+      canal: ['', [Validators.required]],
+      metodoPago: ['', [Validators.required]],
       tipoPrecio: ['', []],
-      nombreVendedor: ['', [Validators.required]],
+      nombreVendedor: [`${this.usuario.usuario.nombres} ${this.usuario.usuario.apellidos}`, [Validators.required]],
       detalles: this._formBuilder.array([], Validators.required),
-      subTotal: ['', [Validators.required]],
+      subTotal: ['', []],
       descuento: ['', []],
-      iva: ['', [Validators.required]],
+      iva: ['', []],
       total: ['', [Validators.required]],
     });
     this.mdmParamService.obtenerListaPadres('TIPO_IDENTIFICACION').subscribe((info) => {
@@ -175,7 +185,7 @@ export class ProspectosClientesEditComponent implements OnInit {
     }).subscribe((info) => {
       if (info.codigoBarras) {
         this.fDetalles.controls[i].get('articulo').setValue(info.nombre);
-        this.fDetalles.controls[i].get('imagen').setValue(info.imagen.toString());
+        this.fDetalles.controls[i].get('imagen').setValue(info?.imagen?.toString());
         this.fDetalles.controls[i].get('valorUnitario').setValue(info.precioOferta);
         const total = new Decimal(info.precioOferta).mul(this.fDetalles.controls[i].get('cantidad').value).toFixed(2).toString();
         this.fDetalles.controls[i].get('total').setValue(total);
@@ -191,9 +201,8 @@ export class ProspectosClientesEditComponent implements OnInit {
   }
 
   calcularSubtotal(): void {
-    console.log('detallaes antes', this.prospectoForm.get('detalles').value);
     let detalles = this.prospectoForm.get('detalles').value;
-    let subtotal = 0;
+    let total = 0;
     let descuento = 0;
     let cantidad = 0;
     if (detalles) {
@@ -205,17 +214,17 @@ export class ProspectosClientesEditComponent implements OnInit {
 
         valor.valorDescuento = this.redondeoValor(precio * (porcentDescuento / 100));
         descuento += precio * (porcentDescuento / 100);
-        subtotal += precio;
+        total += precio;
         cantidad += valor.cantidad ? valor.cantidad : 0;
         valor.precio = this.redondear(precio);
         valor.total = valor.precio;
 
       });
       this.prospectoForm.get('detalles').patchValue(detalles);
-      this.prospectoForm.get('subTotal').patchValue(subtotal);
-      const iva = + new Decimal(subtotal).mul(this.iva.valor).toFixed(2).toString();
-      this.prospectoForm.get('iva').patchValue(iva);
-      const total = +new Decimal(iva).add(subtotal).toFixed(2).toString();
+      // this.prospectoForm.get('subTotal').patchValue(subtotal);
+      // const iva = + new Decimal(subtotal).mul(this.iva.valor).toFixed(2).toString();
+      // this.prospectoForm.get('iva').patchValue(iva);
+      // const total = +new Decimal(iva).add(subtotal).toFixed(2).toString();
       this.prospectoForm.get('total').patchValue(total);
     } else {
       this.prospectoForm.get('detalles').patchValue(detalles);
@@ -245,17 +254,13 @@ export class ProspectosClientesEditComponent implements OnInit {
     return valor;
   }
 
-  obtenerURLImagen(url) {
+  obtenerURLImagen(url): string {
     return this.globalParam.obtenerURL(url);
   }
 
-  async ngAfterViewInit() {
-
-  }
-
-  async subirImagen(event) {
-    let imagen = event.target.files[0];
-    let imagenForm = new FormData();
+  subirImagen(event): void {
+    const imagen = event.target.files[0];
+    const imagenForm = new FormData();
     imagenForm.append('imagen', imagen, imagen.name);
     this.prospectosService.insertarImagen(this.idUsuario, imagenForm).subscribe((data) => {
       this.urlImagen = data.imagen;
@@ -352,13 +357,19 @@ export class ProspectosClientesEditComponent implements OnInit {
     });
   }
 
-  async obtenerIVA() {
-    await this.mdpParamService.obtenerParametroNombreTipo('ACTIVO', 'TIPO_IVA').subscribe((info) => {
-        this.iva = info;
-      },
-      (error) => {
-        alert('Iva no configurado');
-      }
-    );
+  obtenerCanales(): void {
+    this.mdmParamService.obtenerListaPadres('CANAL').subscribe((info) => {
+      this.canalesOpciones = info;
+    });
+  }
+
+  obtenerMetodoPagoOpciones(): void {
+    this.mdmParamService.obtenerListaPadres('METODO_PAGO').subscribe((info) => {
+      this.metodoPagoOpciones = info;
+    });
+  }
+
+  regresar(): void {
+    this.messageEvent.emit('lista');
   }
 }

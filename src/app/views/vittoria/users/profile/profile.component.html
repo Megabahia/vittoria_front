@@ -166,7 +166,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="company">Compañía</label>
-                                                <input type="text" class="form-control" name="compania" formControlName="compania" [(ngModel)]="usuario.compania" name="compania" />
+                                                <input type="text" class="form-control" name="compania" formControlName="compania" [(ngModel)]="usuario.compania" name="compania" disabled/>
                                                 <div *ngIf="submitted && f.compania.errors" class="invalid-feedback" style="display: block;">
                                                     <div *ngIf="f.compania.errors.required">Compañía es requerida</div>
                                                 </div>
