@@ -6,9 +6,16 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class ShortenPipe implements PipeTransform {
 
   transform(value: string): string {
-    if (value.length > 15) {
+    // Verificar si el valor es null
+    if (value === null) {
+      return ''; // o cualquier otro valor predeterminado que desees
+    }
+
+    // Verificar si el valor es una cadena y tiene una longitud mayor a 15
+    if (typeof value === 'string' && value.length > 15) {
       return value.substr(0, 15) + '...';
     }
-    return value;
+
+    return value; // Devolver el valor original si no necesita ser truncado
   }
 }
