@@ -14,6 +14,7 @@ import {GestionEntregaNuevosComponent} from './woocommerce/gestion-entrega-nuevo
 import { GestionEntregaDespachoComponent } from './woocommerce/gestion-entrega-despacho/gestion-entrega-despacho.component';
 import { GestionEntregaEnviadosComponent } from './woocommerce/gestion-entrega-enviados/gestion-entrega-enviados.component';
 import {ShortenPipe} from '../../pipes/shorten-pipe.pipe';
+import {NgxPrintModule} from 'ngx-print';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import {ShortenPipe} from '../../pipes/shorten-pipe.pipe';
     ChartsModule,
     ReactiveFormsModule,
     FlatpickrModule.forRoot(),
-    GdeRoutingModule
+    GdeRoutingModule,
+    NgxPrintModule
   ]
 })
 export class GdeModule { }
