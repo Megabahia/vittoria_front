@@ -8,6 +8,7 @@ import {Color} from 'ng2-charts';
 import {ParamService} from '../../../../services/mp/param/param.service';
 import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
+import {Toaster} from 'ngx-toast-notifications';
 
 
 @Component({
@@ -39,6 +40,8 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     data: [], label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)'
   };
   mostrarSpinner = false;
+  fotoEmpaqueInvalid = false;
+  videoEmpaqueInvalid = false;
 
   constructor(
     private modalService: NgbModal,
@@ -48,6 +51,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     private paramService: ParamService,
     private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
+    private toaster: Toaster,
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
@@ -154,6 +158,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       valorUnitario: [0, [Validators.required]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
+      imagen: ['', []],
     });
   }
 
@@ -251,7 +256,6 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       id: [transaccion.id, [Validators.required]],
       confirmacionEnvio: ['', [Validators.required]],
       numeroPedido: [transaccion.numeroPedido, [Validators.required]],
-      canalEnvio: ['', [Validators.required]],
       fotoEmpaque: ['', [Validators.required]],
       videoEmpaque: ['', []],
       estado: ['Empacado', [Validators.required]],
@@ -259,6 +263,11 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
   }
 
   procesarAutorizacionEnvio(): void {
+    if (this.autorizarForm.invalid || this.fotoEmpaqueInvalid || this.videoEmpaqueInvalid) {
+      this.toaster.open('Campos vacios', {type: 'danger'});
+      console.log('form', this.autorizarForm);
+      return;
+    }
     if (confirm('Esta seguro de enviar') === true) {
       this.mostrarSpinner = true;
       const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
@@ -272,7 +281,10 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
         this.mostrarSpinner = false;
         this.modalService.dismissAll();
         this.obtenerTransacciones();
-      }, error => this.mostrarSpinner = false);
+      }, error => {
+        this.mostrarSpinner = false;
+        this.toaster.open(error, {type: 'danger'});
+      });
     }
   }
 
@@ -286,9 +298,28 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
 
   cargarArchivo(event, nombreCampo): void {
     const doc = event.target.files[0];
-    const x = document.getElementById(nombreCampo + 'lbl');
-    x.innerHTML = '' + Date.now() + '_' + doc.name;
-    this.archivo.delete(nombreCampo);
-    this.archivo.append(nombreCampo, doc);
+    const maxFileSize = 10485760; // 10 MB
+    let invalidFlag = false;
+
+    if (maxFileSize < doc.size) {
+      invalidFlag = true;
+      this.toaster.open('Archivo pesado', { type: 'warning' });
+    }
+
+    switch (nombreCampo) {
+      case 'fotoEmpaque':
+        this.fotoEmpaqueInvalid = invalidFlag;
+        break;
+      case 'videoEmpaque':
+        this.videoEmpaqueInvalid = invalidFlag;
+        break;
+    }
+
+    if (!invalidFlag) {
+      const x = document.getElementById(nombreCampo + 'lbl');
+      x.innerHTML = '' + Date.now() + '_' + doc.name;
+      this.archivo.delete(nombreCampo);
+      this.archivo.append(nombreCampo, doc);
+    }
   }
 }

@@ -457,7 +457,12 @@
                                             </div>
                                         </div>
                                         <div class="col-12 d-flex flex-sm-row flex-column mt-2">
-                                            <a (click)="actualizarProspecto()" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1">Guardar cambios</a>
+                                            <button (click)="actualizarProspecto()" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1"
+                                                    [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+                                                <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                                                      aria-hidden="true"></span>
+                                                Guardar cambios
+                                            </button>
 <!--                                            <button (click)="abrirModalEliminarProspecto()" class="btn btn-outline-secondary">Eliminar</button>-->
                                             <button (click)="regresar()" class="btn btn-outline-secondary">Cancelar</button>
                                         </div>

@@ -335,7 +335,7 @@
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-lg-3 col-12 my-lg-0 my-2">
+                                                                            <div class="col-lg-1 col-12 my-lg-0 my-2">
                                                                                 <p class="card-text col-title mb-md-50 mb-0">
                                                                                     Cantidad
                                                                                 </p>
@@ -393,6 +393,11 @@
                                                                                         Requerido
                                                                                     </div>
                                                                                 </div>
+                                                                            </div>
+                                                                            <div class="col-md-2 border-left">
+                                                                                <img class="img-detalle"
+                                                                                     src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
+                                                                                     *ngIf="detalle.controls?.imagen" width="100px" height="100px">
                                                                             </div>
                                                                         </div>
 
@@ -748,6 +753,19 @@
                         <div *ngIf="autorizarFForm.numeroPedido.errors"
                              class="invalid-feedback" style="display: block;">
                             <div *ngIf="autorizarFForm.numeroPedido.errors.required">
+                                Requerido
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="numeroGuia">Numero Guía</label>
+                        <input class="form-control form-control-lg" type="text" id="numeroGuia"
+                               formControlName="numeroGuia"/>
+                        <div *ngIf="autorizarFForm.numeroGuia.errors"
+                             class="invalid-feedback" style="display: block;">
+                            <div *ngIf="autorizarFForm.numeroGuia.errors.required">
                                 Requerido
                             </div>
                         </div>

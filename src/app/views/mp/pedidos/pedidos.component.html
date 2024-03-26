@@ -79,7 +79,7 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <button class="btn btn-primary"
+                                    <button *ngIf="transaccion.verificarPedido" class="btn btn-primary"
                                             (click)="procesarEnvio(facturacionModal, transaccion)">
                                         Autorizar
                                     </button>
@@ -354,7 +354,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="col-lg-3 col-12 my-lg-0 my-2">
+                                                                        <div class="col-lg-1 col-12 my-lg-0 my-2">
                                                                             <p class="card-text col-title mb-md-50 mb-0">
                                                                                 Cantidad
                                                                             </p>
@@ -411,6 +411,11 @@
                                                                                     Requerido
                                                                                 </div>
                                                                             </div>
+                                                                        </div>
+                                                                        <div class="col-md-2 border-left">
+                                                                            <img class="img-detalle"
+                                                                                 src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
+                                                                                 *ngIf="detalle.controls?.imagen" width="100px" height="100px">
                                                                         </div>
                                                                         <div class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
                                                                             <i-feather name="x"
@@ -679,7 +684,7 @@
                             </button>
                             <button class="btn btn-primary mx-1"
                                     (click)="actualizar()"
-                            >Actualizar
+                            >Confirmar Pedido
                             </button>
                         </div>
                     </ng-template>
@@ -791,7 +796,12 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
-        <button type="button" class="btn btn-primary" (click)="procesarAutorizacion()">Guardar</button>
+        <button type="button" class="btn btn-primary" (click)="procesarAutorizacion()"
+                [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+            <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                  aria-hidden="true"></span>
+            Guardar
+        </button>
     </div>
 </ng-template>
 
@@ -823,6 +833,10 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
-        <button type="button" class="btn btn-primary" (click)="procesarRechazar()">Guardar</button>
+        <button type="button" class="btn btn-primary" (click)="procesarRechazar()" [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+            <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                  aria-hidden="true"></span>
+            Guardar
+        </button>
     </div>
 </ng-template>

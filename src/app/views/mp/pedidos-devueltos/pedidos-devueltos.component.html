@@ -407,6 +407,11 @@
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
+                                                                            <div class="col-md-2 border-left">
+                                                                                <img class="img-detalle"
+                                                                                     src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
+                                                                                     *ngIf="detalle.controls?.imagen" width="100px" height="100px">
+                                                                            </div>
                                                                             <div class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
                                                                                 <i-feather name="x"
                                                                                            class="cursor-pointer font-medium-3"
