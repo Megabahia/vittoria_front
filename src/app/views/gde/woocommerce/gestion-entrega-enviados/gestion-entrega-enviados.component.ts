@@ -119,6 +119,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       subtotal: ['', []],
       iva: ['', []],
       numeroPedido: ['', []],
+      numeroGuia: ['', []],
       created_at: ['', []],
       metodoPago: ['', [Validators.required]],
     });
