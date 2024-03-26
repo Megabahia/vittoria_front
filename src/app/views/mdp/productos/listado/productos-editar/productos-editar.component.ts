@@ -393,7 +393,7 @@ export class ProductosEditarComponent implements OnInit {
   verificarPesoArchivo(event): void {
     const file: File = event.target.files[0];
     this.invalidoTamanoVideo = false;
-    if (10485760 > file.size) {
+    if (10485760 < file.size) {
       this.invalidoTamanoVideo = true;
       this.toaster.open('Archivo pesado', {type: 'warning'});
     }

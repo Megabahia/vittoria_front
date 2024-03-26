@@ -10,6 +10,8 @@ import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../constats/mp/pedidos';
 import {ValidacionesPropias} from '../../../utils/customer.validators';
+import {Toaster} from 'ngx-toast-notifications';
+import {error} from 'protractor';
 
 @Component({
   selector: 'app-pedidos',
@@ -41,6 +43,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     data: [], label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)'
   };
   archivo: FormData = new FormData();
+  invalidoTamanoVideo = false;
+  mostrarSpinner = false;
 
   constructor(
     private modalService: NgbModal,
@@ -50,6 +54,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     private paramService: ParamService,
     private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
+    private toaster: Toaster,
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
@@ -128,6 +133,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       numeroPedido: ['', [Validators.required]],
       created_at: ['', [Validators.required]],
       metodoPago: ['', [Validators.required]],
+      verificarPedido: [true, [Validators.required]],
     });
   }
 
@@ -168,6 +174,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       valorUnitario: [0, [Validators.required]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
+      imagen: ['', []],
     });
   }
 
@@ -204,7 +211,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       info.articulos.map((item): void => {
         this.agregarItem();
       });
-      this.notaPedido.patchValue({...info});
+      this.notaPedido.patchValue({...info, verificarPedido: true});
+      this.obtenerProducto(0);
     });
   }
 
@@ -215,8 +223,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  obtenerProducto(i): void {
-    this.productosService.obtenerProductoPorCodigo({
+  async obtenerProducto(i): Promise<any> {
+    await this.productosService.obtenerProductoPorCodigo({
       codigoBarras: this.detallesArray.value[i].codigo
     }).subscribe((info) => {
       if (info.codigoBarras) {
@@ -224,13 +232,13 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         console.log('dato', this.detallesArray.controls[i].get('articulo'));
         this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
         this.detallesArray.controls[i].get('cantidad').setValue(1);
-        this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
+        this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA.toFixed(2));
         this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
+        this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
         this.calcular();
       } else {
-        // this.comprobarProductos[i] = false;
-        // this.mensaje = 'No existe el producto a buscar';
-        // this.abrirModal(this.mensajeModal);
+        this.detallesArray.controls[i].get('articulo').setValue('');
+        this.toaster.open('No existe el producto a buscar', {type: 'danger'});
       }
     }, (error) => {
 
@@ -250,8 +258,11 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   }
 
   actualizar(): void {
-    this.calcular();
+    this.detallesArray.controls.map((producto, index) => {
+      this.obtenerProducto(index);
+    });
     if (this.notaPedido.invalid) {
+      this.toaster.open('Pedido Incompleto', {type: 'danger'});
       console.log('form', this.notaPedido);
       return;
     }
@@ -280,6 +291,10 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   }
 
   procesarAutorizacion(): void {
+    if (this.autorizarForm.invalid || this.invalidoTamanoVideo) {
+      this.toaster.open('Campos vacios', {type: 'danger'});
+      return;
+    }
     if (confirm('Esta seguro de cambiar de estado') === true) {
       const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.autorizarForm.value);
@@ -291,6 +306,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
+      }, (data) => {
+        this.toaster.open(data, {type: 'danger'});
       });
     }
   }
@@ -306,15 +323,25 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
   procesarRechazar(): void {
     if (confirm('Esta seguro de cambiar de estado') === true) {
+      this.mostrarSpinner = true;
       this.pedidosService.actualizarPedido(this.rechazoForm.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
+        this.mostrarSpinner = false;
+      }, () => {
+        this.mostrarSpinner = false;
       });
     }
   }
 
   cargarArchivo(event, nombreCampo): void {
     const doc = event.target.files[0];
+    this.invalidoTamanoVideo = false;
+    if (10485760 < doc.size) {
+      this.invalidoTamanoVideo = true;
+      this.toaster.open('Archivo pesado', {type: 'warning'});
+      return;
+    }
     const x = document.getElementById(nombreCampo + 'lbl');
     x.innerHTML = '' + Date.now() + '_' + doc.name;
     this.archivo.delete(nombreCampo);

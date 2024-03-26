@@ -9,6 +9,7 @@ import {ParamService} from '../../../../services/mp/param/param.service';
 import {UsersService} from '../../../../services/admin/users.service';
 import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
+import {Toaster} from 'ngx-toast-notifications';
 
 @Component({
   selector: 'app-gestion-entrega-despacho',
@@ -41,6 +42,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
   };
   public couriers = [];
   mostrarSpinner = false;
+  archivoGuiaInvalid = false;
 
   constructor(
     private modalService: NgbModal,
@@ -51,6 +53,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
     private usersService: UsersService,
     private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
+    private toaster: Toaster,
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
@@ -155,6 +158,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       valorUnitario: [0, [Validators.required]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
+      imagen: ['', []],
     });
   }
 
@@ -285,6 +289,11 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
   }
 
   procesarAutorizacionEnvio(): void {
+    if (this.autorizarForm.invalid || this.archivoGuiaInvalid) {
+      this.toaster.open('Campos vacios', {type: 'danger'});
+      console.log('form', this.autorizarForm);
+      return;
+    }
     if (confirm('Esta seguro de despachar') === true) {
       this.mostrarSpinner = true;
       const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
@@ -315,10 +324,26 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
 
   cargarArchivo(event, nombreCampo): void {
     const doc = event.target.files[0];
-    const x = document.getElementById(nombreCampo + 'lbl');
-    x.innerHTML = '' + Date.now() + '_' + doc.name;
-    this.archivo.delete(nombreCampo);
-    this.archivo.append(nombreCampo, doc);
+    const maxFileSize = 10485760; // 10 MB
+    let invalidFlag = false;
+
+    if (maxFileSize < doc.size) {
+      invalidFlag = true;
+      this.toaster.open('Archivo pesado', { type: 'warning' });
+    }
+
+    switch (nombreCampo) {
+      case 'archivoGuia':
+        this.archivoGuiaInvalid = invalidFlag;
+        break;
+    }
+
+    if (!invalidFlag) {
+      const x = document.getElementById(nombreCampo + 'lbl');
+      x.innerHTML = '' + Date.now() + '_' + doc.name;
+      this.archivo.delete(nombreCampo);
+      this.archivo.append(nombreCampo, doc);
+    }
   }
 }
 
