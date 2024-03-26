@@ -796,7 +796,12 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
-        <button type="button" class="btn btn-primary" (click)="procesarAutorizacion()">Guardar</button>
+        <button type="button" class="btn btn-primary" (click)="procesarAutorizacion()"
+                [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+            <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                  aria-hidden="true"></span>
+            Guardar
+        </button>
     </div>
 </ng-template>
 

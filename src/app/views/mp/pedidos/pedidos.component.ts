@@ -303,11 +303,14 @@ export class PedidosComponent implements OnInit, AfterViewInit {
           this.archivo.append(llaves, facturaFisicaValores[index]);
         }
       });
+      this.mostrarSpinner = true;
       this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
+        this.mostrarSpinner = false;
       }, (data) => {
         this.toaster.open(data, {type: 'danger'});
+        this.mostrarSpinner = false;
       });
     }
   }
