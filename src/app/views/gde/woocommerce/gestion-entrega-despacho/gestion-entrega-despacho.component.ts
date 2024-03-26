@@ -263,6 +263,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
     this.autorizarForm = this.formBuilder.group({
       id: [transaccion.id, [Validators.required]],
       numeroPedido: [transaccion.numeroPedido, [Validators.required]],
+      numeroGuia: [transaccion?.numeroGuia, [Validators.required]],
       canalEnvio: ['', [Validators.required]],
       codigoCourier: ['', [Validators.required]],
       nombreCourier: ['', [Validators.required]],

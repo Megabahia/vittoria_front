@@ -760,6 +760,19 @@
                 </div>
                 <div class="col-12">
                     <div class="form-group">
+                        <label for="numeroGuia">Numero Guía</label>
+                        <input class="form-control form-control-lg" type="text" id="numeroGuia"
+                               formControlName="numeroGuia"/>
+                        <div *ngIf="autorizarFForm.numeroGuia.errors"
+                             class="invalid-feedback" style="display: block;">
+                            <div *ngIf="autorizarFForm.numeroGuia.errors.required">
+                                Requerido
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
                         <label for="customFile">Cargar Archivo Guía</label>
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="customFile"
