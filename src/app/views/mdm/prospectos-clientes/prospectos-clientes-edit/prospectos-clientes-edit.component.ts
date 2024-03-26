@@ -64,6 +64,7 @@ export class ProspectosClientesEditComponent implements OnInit {
   usuario;
   canalesOpciones = [];
   metodoPagoOpciones = [];
+  mostrarSpinner = false;
 
   constructor(
     private prospectosService: ProspectosService,
@@ -292,11 +293,15 @@ export class ProspectosClientesEditComponent implements OnInit {
       console.log(this.prospectoForm);
       return;
     }
+    this.mostrarSpinner = true;
     this.prospectosService.actualizarProspecto(
       this.prospectoForm.value
     ).subscribe(() => {
       this.toaster.open('Actualizacion', {type: 'success'});
       this.messageEvent.emit('lista');
+      this.mostrarSpinner = false;
+    }, () => {
+      this.mostrarSpinner = false;
     });
   }
 
