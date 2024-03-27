@@ -26,6 +26,7 @@ export class CategoriasProductosComponent implements OnInit {
   mensaje: string;
   estados;
   currentUserValue;
+  mostrarSpinner = false;
 
   constructor(
     private modalService: NgbModal,
@@ -91,21 +92,24 @@ export class CategoriasProductosComponent implements OnInit {
     if (this.paramForm.invalid) {
       return;
     }
-    if (this.funcion == 'insertar') {
+    this.mostrarSpinner = true;
+    if (this.funcion === 'insertar') {
       await this.categoriasService.crearCategoria(this.categoria).subscribe(() => {
         this.obtenerListaCategorias();
         this.dismissModal.nativeElement.click();
         this.submitted = false;
         this.mensaje = 'Categoría guardada';
         this.abrirModal(this.aviso);
+        this.mostrarSpinner = false;
       });
-    } else if (this.funcion = 'editar') {
+    } else if (this.funcion === 'editar') {
       await this.categoriasService.actualizarCategoria(this.categoria).subscribe(() => {
         this.obtenerListaCategorias();
         this.dismissModal.nativeElement.click();
         this.submitted = false;
         this.mensaje = 'Categoría editada';
         this.abrirModal(this.aviso);
+        this.mostrarSpinner = false;
       });
     }
   }

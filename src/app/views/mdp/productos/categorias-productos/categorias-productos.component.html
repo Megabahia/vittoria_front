@@ -70,7 +70,12 @@
                                             <div *ngIf="f.estado.errors.required">Selección del estado de la categoría es requerida</div>
                                         </div>
                                     </div>
-                                    <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarCategoria()">Guardar</button>
+                                    <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarCategoria()"
+                                            [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+                                        <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                                              aria-hidden="true"></span>
+                                        Guardar
+                                    </button>
                                     <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
                                     <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                                 </form>
