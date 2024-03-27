@@ -34,6 +34,7 @@ export interface Producto {
   lugarVentaCiudad;
   courier;
   estadoLanding;
+  video?;
 }
 
 export interface FichaTecnicaProducto {
