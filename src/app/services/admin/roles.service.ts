@@ -35,6 +35,12 @@ export interface Rol {
       CREAR: number,
       BORRAR: number
     },
+    MP: {
+      LEER: number,
+      ESCRIBIR: number,
+      CREAR: number,
+      BORRAR: number
+    },
     GDO: {
       LEER: number,
       ESCRIBIR: number,
@@ -42,6 +48,12 @@ export interface Rol {
       BORRAR: number
     },
     GDE: {
+      LEER: number,
+      ESCRIBIR: number,
+      CREAR: number,
+      BORRAR: number
+    },
+    GCN: {
       LEER: number,
       ESCRIBIR: number,
       CREAR: number,
