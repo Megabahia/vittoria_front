@@ -408,7 +408,12 @@
                 <hr/>
                 <div class="row p-2">
                     <div class="col-12">
-                        <a (click)="guardarProducto()" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar</a>
+                        <button (click)="guardarProducto()" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light"
+                           [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+                            <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                                  aria-hidden="true"></span>
+                            Guardar
+                        </button>
                         <a (click)="volver()" class="btn btn-secondary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Cancelar</a>
                     </div>
                 </div>
