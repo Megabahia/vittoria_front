@@ -44,7 +44,7 @@ export class BuscarProductoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  obtenerListaProductos() {
+  obtenerListaProductos(): void {
     this.productosService.buscarListaProductos({
       nombre: this.nombre,
       codigoBarras: this.codigoBarras,
