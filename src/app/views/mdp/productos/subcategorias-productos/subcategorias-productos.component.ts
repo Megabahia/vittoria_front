@@ -1,6 +1,6 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {Subcategoria, SubcategoriasService} from '../../../../services/mdp/productos/subcategorias/subcategorias.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {CategoriasService} from 'src/app/services/mdp/productos/categorias/categorias.service';
 import {ParamService} from 'src/app/services/mdp/param/param.service';
@@ -10,7 +10,8 @@ import {AuthService} from '../../../../services/admin/auth.service';
   selector: 'app-subcategorias-productos',
   templateUrl: './subcategorias-productos.component.html'
 })
-export class SubcategoriasProductosComponent implements OnInit {
+export class SubcategoriasProductosComponent implements OnInit, AfterViewInit {
+  @ViewChild(NgbPagination) paginator: NgbPagination;
   @ViewChild('dismissModal') dismissModal;
   @ViewChild('aviso') aviso;
   paramForm: FormGroup;
@@ -46,12 +47,19 @@ export class SubcategoriasProductosComponent implements OnInit {
     return this.paramForm.controls;
   }
 
-  async ngAfterViewInit() {
-    await this.categoriasService.obtenerListaCategorias().subscribe((result) => {
+  ngAfterViewInit(): void {
+    this.iniciarPaginador();
+    this.categoriasService.obtenerListaCategorias().subscribe((result) => {
       this.categoriasPadre = result;
     });
-    await this.paramService.obtenerListaEstado().subscribe((result) => {
+    this.paramService.obtenerListaEstado().subscribe((result) => {
       this.estados = result;
+    });
+  }
+
+  iniciarPaginador(): void {
+    this.paginator.pageChange.subscribe(() => {
+      this.obtenerListaSubcategorias();
     });
   }
 
@@ -70,8 +78,8 @@ export class SubcategoriasProductosComponent implements OnInit {
     this.obtenerListaSubcategorias();
   }
 
-  async obtenerListaSubcategorias() {
-    await this.subcategoriasService.obtenerListaSubcategoria({
+  obtenerListaSubcategorias(): void {
+    this.subcategoriasService.obtenerListaSubcategoria({
       page: this.page - 1,
       page_size: this.pageSize
     }).subscribe((info) => {
