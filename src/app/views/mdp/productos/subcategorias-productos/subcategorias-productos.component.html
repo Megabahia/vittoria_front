@@ -81,7 +81,12 @@
                                         </div>
                                     </div>
                                 </form>
-                                <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarSubcategoria()">Guardar</button>
+                                <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarSubcategoria()"
+                                        [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+                                    <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                                          aria-hidden="true"></span>
+                                    Guardar
+                                </button>
                                 <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
                                 <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
                             </div>
