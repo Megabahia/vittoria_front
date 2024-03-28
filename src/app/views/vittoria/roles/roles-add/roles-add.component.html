@@ -361,9 +361,12 @@
 
                     <div class="row p-20">
                         <div class="col-12">
-                            <a (click)="guardarRol()"
-                               class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar
-                                cambios</a>
+                            <button (click)="guardarRol()"
+                               class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light"
+                                    [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+                                <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                                      aria-hidden="true"></span>
+                                Guardar cambios</button>
                             <button (click)="regresar()" class="btn btn-outline-secondary waves-effect">Volver</button>
                         </div>
                     </div>
