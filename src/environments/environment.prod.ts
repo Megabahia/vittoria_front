@@ -54,6 +54,18 @@ export const environment = {
         CREAR: 0,
         BORRAR: 0
       },
+      GDE_EMPACADO: {
+        LEER: 0,
+        ESCRIBIR: 0,
+        CREAR: 0,
+        BORRAR: 0
+      },
+      GDE_DESPACHO: {
+        LEER: 0,
+        ESCRIBIR: 0,
+        CREAR: 0,
+        BORRAR: 0
+      },
       SERVI: {
         LEER: 0,
         ESCRIBIR: 0,
