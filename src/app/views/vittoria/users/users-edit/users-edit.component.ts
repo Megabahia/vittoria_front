@@ -45,6 +45,7 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
   empresas = [];
   provinciasOpciones;
   ciudadesOpciones;
+  mostrarSpinner = false;
 
   constructor(
     private usersService: UsersService,
@@ -114,10 +115,13 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
       return;
     }
     delete this.usuario.imagen;
+    this.mostrarSpinner = true;
     this.usersService.actualizarUsuario(this.usuario).subscribe(() => {
         this.mensaje = 'Se actualizo correctamente';
         this.abrirModal(this.mensajeModal);
         this.router.navigate(['/admin/user']);
+        this.regresar();
+        this.mostrarSpinner = false;
       },
       (error) => {
         let errores = Object.values(error);
@@ -127,6 +131,7 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
           this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
         });
         this.abrirModal(this.mensajeModal);
+        this.mostrarSpinner = false;
       });
   }
 

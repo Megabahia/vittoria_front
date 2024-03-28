@@ -19,6 +19,7 @@ export class RolesAddComponent implements OnInit {
   permisosRol;
   roles: Rol;
   mensaje;
+  mostrarSpinner = false;
 
   constructor(
     private servicioRoles: RolesService,
@@ -63,11 +64,13 @@ export class RolesAddComponent implements OnInit {
     if (this.rolesForm.invalid) {
       return;
     }
+    this.mostrarSpinner = true;
     if (this.funcion === 'editar') {
       this.servicioRoles.editarRol(this.roles).subscribe((result) => {
           this.mensaje = 'Rol editado con éxito';
           this.abrirModal(this.mensajeModal);
           this.regresar();
+          this.mostrarSpinner = false;
         },
         (error) => {
           let errores = Object.values(error);
@@ -77,12 +80,14 @@ export class RolesAddComponent implements OnInit {
             this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
           });
           this.abrirModal(this.mensajeModal);
+          this.mostrarSpinner = false;
         });
     } else if (this.funcion === 'insertar') {
       this.servicioRoles.insertarRol(this.roles).subscribe((result) => {
           this.mensaje = 'Rol creado con éxito';
           this.abrirModal(this.mensajeModal);
           this.regresar();
+          this.mostrarSpinner = false;
         },
         (error) => {
           let errores = Object.values(error);
@@ -92,6 +97,7 @@ export class RolesAddComponent implements OnInit {
             this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
           });
           this.abrirModal(this.mensajeModal);
+          this.mostrarSpinner = false;
         });
     }
   }

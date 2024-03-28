@@ -1,6 +1,6 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {CategoriasService, Categoria} from '../../../../services/mdp/productos/categorias/categorias.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ParamService} from 'src/app/services/mdp/param/param.service';
 import {AuthService} from '../../../../services/admin/auth.service';
@@ -9,7 +9,8 @@ import {AuthService} from '../../../../services/admin/auth.service';
   selector: 'app-categorias-productos',
   templateUrl: './categorias-productos.component.html'
 })
-export class CategoriasProductosComponent implements OnInit {
+export class CategoriasProductosComponent implements OnInit, AfterViewInit {
+  @ViewChild(NgbPagination) paginator: NgbPagination;
   @ViewChild('dismissModal') dismissModal;
   @ViewChild('aviso') aviso;
   paramForm: FormGroup;
@@ -26,6 +27,7 @@ export class CategoriasProductosComponent implements OnInit {
   mensaje: string;
   estados;
   currentUserValue;
+  mostrarSpinner = false;
 
   constructor(
     private modalService: NgbModal,
@@ -42,9 +44,16 @@ export class CategoriasProductosComponent implements OnInit {
     return this.paramForm.controls;
   }
 
-  async ngAfterViewInit() {
-    await this.paramService.obtenerListaEstado().subscribe((result) => {
+  ngAfterViewInit(): void {
+    this.paramService.obtenerListaEstado().subscribe((result) => {
       this.estados = result;
+    });
+    this.iniciarPaginador();
+  }
+
+  iniciarPaginador(): void {
+    this.paginator.pageChange.subscribe(() => {
+      this.obtenerListaCategorias();
     });
   }
 
@@ -62,8 +71,8 @@ export class CategoriasProductosComponent implements OnInit {
     this.obtenerListaCategorias();
   }
 
-  async obtenerListaCategorias() {
-    await this.categoriasService.obtenerCategorias({
+  obtenerListaCategorias(): void {
+    this.categoriasService.obtenerCategorias({
       page: this.page - 1,
       page_size: this.pageSize
     }).subscribe((info) => {
@@ -72,52 +81,55 @@ export class CategoriasProductosComponent implements OnInit {
     });
   }
 
-  async crearCategoria() {
+  crearCategoria(): void {
     this.categoria = this.categoriasService.inicializarCategoria();
     this.funcion = 'insertar';
     this.submitted = false;
   }
 
-  async editarCategoria(id) {
+  editarCategoria(id): void {
     this.funcion = 'editar';
     this.submitted = false;
-    await this.categoriasService.obtenerCategoria(id).subscribe((info) => {
+    this.categoriasService.obtenerCategoria(id).subscribe((info) => {
       this.categoria = info;
     });
   }
 
-  async guardarCategoria() {
+  guardarCategoria(): void {
     this.submitted = true;
     if (this.paramForm.invalid) {
       return;
     }
-    if (this.funcion == 'insertar') {
-      await this.categoriasService.crearCategoria(this.categoria).subscribe(() => {
+    this.mostrarSpinner = true;
+    if (this.funcion === 'insertar') {
+      this.categoriasService.crearCategoria(this.categoria).subscribe(() => {
         this.obtenerListaCategorias();
         this.dismissModal.nativeElement.click();
         this.submitted = false;
         this.mensaje = 'Categoría guardada';
         this.abrirModal(this.aviso);
+        this.mostrarSpinner = false;
       });
-    } else if (this.funcion = 'editar') {
-      await this.categoriasService.actualizarCategoria(this.categoria).subscribe(() => {
+    } else if (this.funcion === 'editar') {
+      this.categoriasService.actualizarCategoria(this.categoria).subscribe(() => {
         this.obtenerListaCategorias();
         this.dismissModal.nativeElement.click();
         this.submitted = false;
         this.mensaje = 'Categoría editada';
         this.abrirModal(this.aviso);
+        this.mostrarSpinner = false;
       });
     }
   }
 
-  abrirModal(modal, id = null) {
+  abrirModal(modal, id = null): void {
     this.idCategoria = id;
     this.modalService.open(modal);
   }
 
-  async cerrarModal() {
+  cerrarModal(): void {
     this.modalService.dismissAll();
-    await this.categoriasService.eliminarCategoria(this.idCategoria).subscribe(() => {
+    this.categoriasService.eliminarCategoria(this.idCategoria).subscribe(() => {
       this.obtenerListaCategorias();
     });
   }

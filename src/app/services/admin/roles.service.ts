@@ -1,12 +1,15 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../.././../environments/environment';
-const  apiUrl:string = environment.apiUrl 
-const  roles:Rol  = environment.roles;
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../.././../environments/environment';
+import {Observable} from 'rxjs';
+
+const apiUrl: string = environment.apiUrl;
+const roles: Rol = environment.roles;
+
 export interface Rol {
 
   rol: {
-    id:number,
+    id: number,
     codigo: string,
     nombre: string
   },
@@ -35,6 +38,12 @@ export interface Rol {
       CREAR: number,
       BORRAR: number
     },
+    MP: {
+      LEER: number,
+      ESCRIBIR: number,
+      CREAR: number,
+      BORRAR: number
+    },
     GDO: {
       LEER: number,
       ESCRIBIR: number,
@@ -42,6 +51,24 @@ export interface Rol {
       BORRAR: number
     },
     GDE: {
+      LEER: number,
+      ESCRIBIR: number,
+      CREAR: number,
+      BORRAR: number
+    },
+    GDE_EMPACADO: {
+      LEER: number,
+      ESCRIBIR: number,
+      CREAR: number,
+      BORRAR: number
+    },
+    GDE_DESPACHO: {
+      LEER: number,
+      ESCRIBIR: number,
+      CREAR: number,
+      BORRAR: number
+    },
+    GCN: {
       LEER: number,
       ESCRIBIR: number,
       CREAR: number,
@@ -68,6 +95,7 @@ export interface Rol {
   };
 
 }
+
 @Injectable({
   providedIn: 'root'
 })
@@ -75,13 +103,16 @@ export class RolesService {
 
   constructor(
     private http: HttpClient
-  ) { }
+  ) {
+  }
+
   obtenerListaRoles(page, page_size) {
     return this.http.post<any>(`${apiUrl}/adm/roles/list/`, {
       page, page_size
     });
   }
-  obtenerRol(id) {
+
+  obtenerRol(id): Observable<Rol> {
     return this.http.get<Rol>(`${apiUrl}/adm/roles/listOne/${id}`);
   }
 
@@ -89,18 +120,22 @@ export class RolesService {
     return this.http.get<any>(`${apiUrl}/adm/roles/list/padres/`
     );
   }
-  obtenerNuevoRol() {
+
+  obtenerNuevoRol(): Rol {
     return roles;
   }
-  editarRol(rol:Rol){
-    return this.http.post<Rol>(`${apiUrl}/adm/roles/update/${rol.rol.id}`,rol
+
+  editarRol(rol: Rol): Observable<Rol> {
+    return this.http.post<Rol>(`${apiUrl}/adm/roles/update/${rol.rol.id}`, rol
     );
   }
-  insertarRol(rol:Rol){
-    return this.http.post<Rol>(`${apiUrl}/adm/roles/create/`,rol
+
+  insertarRol(rol: Rol): Observable<Rol> {
+    return this.http.post<Rol>(`${apiUrl}/adm/roles/create/`, rol
     );
   }
-  eliminarRol(id){
+
+  eliminarRol(id): Observable<Rol> {
     return this.http.delete<Rol>(`${apiUrl}/adm/roles/delete/${id}`
     );
   }

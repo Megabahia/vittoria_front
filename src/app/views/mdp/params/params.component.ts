@@ -37,6 +37,7 @@ export class ParamsComponent implements OnInit {
   padres;
   currentUserValue;
   archivo: FormData = new FormData();
+  mostrarSpinner = false;
 
   // @ViewChild('padres') padres;
   constructor(
@@ -144,6 +145,7 @@ export class ParamsComponent implements OnInit {
     if (this.paramForm.invalid) {
       return;
     }
+    this.mostrarSpinner = true;
     if (this.funcion === 'insertar') {
       await this.paramService.insertarParametro({
         nombre: this.nombre,
@@ -160,6 +162,7 @@ export class ParamsComponent implements OnInit {
         this.submitted = false;
         this.idParametro = result.id;
         this.actualizarArchivoParametro();
+        this.mostrarSpinner = false;
       });
     } else if (this.funcion === 'editar') {
       await this.paramService.editarParametro(
@@ -179,6 +182,7 @@ export class ParamsComponent implements OnInit {
         this.submitted = false;
         this.idParametro = result.id;
         this.actualizarArchivoParametro();
+        this.mostrarSpinner = false;
       });
     }
   }

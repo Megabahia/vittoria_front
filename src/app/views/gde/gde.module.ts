@@ -15,6 +15,7 @@ import { GestionEntregaDespachoComponent } from './woocommerce/gestion-entrega-d
 import { GestionEntregaEnviadosComponent } from './woocommerce/gestion-entrega-enviados/gestion-entrega-enviados.component';
 import {ShortenPipe} from '../../pipes/shorten-pipe.pipe';
 import {NgxPrintModule} from 'ngx-print';
+import { GestionEntregaDevolucionComponent } from './woocommerce/gestion-entrega-devolucion/gestion-entrega-devolucion.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import {NgxPrintModule} from 'ngx-print';
     GestionEntregaDespachoComponent,
     GestionEntregaEnviadosComponent,
     ShortenPipe,
+    GestionEntregaDevolucionComponent,
   ],
   imports: [
     CommonModule,

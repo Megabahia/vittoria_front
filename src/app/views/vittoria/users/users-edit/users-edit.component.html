@@ -257,7 +257,11 @@
 
 
                                         <div class="col-12 d-flex flex-sm-row flex-column mt-2">
-                                            <a class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1" (click)="actualizarUsuario()">Guardar cambios</a>
+                                            <button class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1" (click)="actualizarUsuario()"
+                                                    [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+                                                <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                                                      aria-hidden="true"></span>
+                                                Guardar cambios</button>
                                             <button (click)="regresar()" class="btn btn-outline-secondary">Volver</button>
                                         </div>
                                     </div>

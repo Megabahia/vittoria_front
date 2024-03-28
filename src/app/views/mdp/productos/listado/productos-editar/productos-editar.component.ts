@@ -48,6 +48,7 @@ export class ProductosEditarComponent implements OnInit {
   ciudadOpciones = [];
   habilitarEnvio = false;
   invalidoTamanoVideo = false;
+  mostrarSpinner = false;
 
   constructor(
     private categoriasService: CategoriasService,
@@ -221,11 +222,13 @@ export class ProductosEditarComponent implements OnInit {
       this.datosProducto.append('imagenes[' + pos + ']id', pos.toString());
       this.datosProducto.append('imagenes[' + pos + ']imagen', valor);
     });
+    this.mostrarSpinner = true;
     if (this.idProducto !== 0) {
       this.productosService.actualizarProducto(this.datosProducto, this.idProducto).subscribe((info) => {
           this.mensaje = 'Producto actualizado';
           this.abrirModal(this.aviso);
           this.messageEvent.emit('lista');
+          this.mostrarSpinner = false;
         },
         (error) => {
           let errores = Object.values(error);
@@ -235,6 +238,7 @@ export class ProductosEditarComponent implements OnInit {
             this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
           });
           this.abrirModal(this.aviso);
+          this.mostrarSpinner = false;
         });
     } else {
       this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
@@ -242,6 +246,7 @@ export class ProductosEditarComponent implements OnInit {
           this.mensaje = 'Producto guardado';
           this.abrirModal(this.aviso);
           this.messageEvent.emit('lista');
+          this.mostrarSpinner = false;
         },
         (error) => {
           let errores = Object.values(error);
@@ -251,6 +256,7 @@ export class ProductosEditarComponent implements OnInit {
             this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
           });
           this.abrirModal(this.aviso);
+          this.mostrarSpinner = false;
         });
     }
   }

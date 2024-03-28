@@ -169,6 +169,37 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td>MP Motor de Pedidos</td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="MP-read"
+                                                   [(ngModel)]="roles.acciones.MP.LEER"/>
+                                            <label class="custom-control-label" for="MP-read"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="MP-write"
+                                                   [(ngModel)]="roles.acciones.MP.ESCRIBIR"/>
+                                            <label class="custom-control-label" for="MP-write"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="MP-create"
+                                                   [(ngModel)]="roles.acciones.MP.CREAR"/>
+                                            <label class="custom-control-label" for="MP-create"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="MP-delete"
+                                                   [(ngModel)]="roles.acciones.MP.BORRAR"/>
+                                            <label class="custom-control-label" for="MP-delete"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td>GDO Gestión de Ofertas</td>
                                     <td>
                                         <div class="custom-control custom-checkbox">
@@ -227,6 +258,99 @@
                                             <input type="checkbox" class="custom-control-input" id="GDE-delete"
                                                    [(ngModel)]="roles.acciones.GDE.BORRAR"/>
                                             <label class="custom-control-label" for="GDE-delete"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>GDE Gestión de Empacador</td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GDE_EMPACADO-read"
+                                                   [(ngModel)]="roles.acciones.GDE_EMPACADO.LEER"/>
+                                            <label class="custom-control-label" for="GDE_EMPACADO-read"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GDE_EMPACADO-write"
+                                                   [(ngModel)]="roles.acciones.GDE_EMPACADO.ESCRIBIR"/>
+                                            <label class="custom-control-label" for="GDE_EMPACADO-write"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GDE_EMPACADO-create"
+                                                   [(ngModel)]="roles.acciones.GDE_EMPACADO.CREAR"/>
+                                            <label class="custom-control-label" for="GDE_EMPACADO-create"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GDE_EMPACADO-delete"
+                                                   [(ngModel)]="roles.acciones.GDE_EMPACADO.BORRAR"/>
+                                            <label class="custom-control-label" for="GDE_EMPACADO-delete"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>GDE Gestión de Despachor</td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GDE_DESPACHO-read"
+                                                   [(ngModel)]="roles.acciones.GDE_DESPACHO.LEER"/>
+                                            <label class="custom-control-label" for="GDE_DESPACHO-read"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GDE_DESPACHO-write"
+                                                   [(ngModel)]="roles.acciones.GDE_DESPACHO.ESCRIBIR"/>
+                                            <label class="custom-control-label" for="GDE_DESPACHO-write"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GDE_DESPACHO-create"
+                                                   [(ngModel)]="roles.acciones.GDE_DESPACHO.CREAR"/>
+                                            <label class="custom-control-label" for="GDE_DESPACHO-create"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GDE_DESPACHO-delete"
+                                                   [(ngModel)]="roles.acciones.GDE_DESPACHO.BORRAR"/>
+                                            <label class="custom-control-label" for="GDE_DESPACHO-delete"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>GCN Gestión de centro negocios</td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GCN-read"
+                                                   [(ngModel)]="roles.acciones.GCN.LEER"/>
+                                            <label class="custom-control-label" for="GCN-read"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GCN-write"
+                                                   [(ngModel)]="roles.acciones.GCN.ESCRIBIR"/>
+                                            <label class="custom-control-label" for="GCN-write"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GCN-create"
+                                                   [(ngModel)]="roles.acciones.GCN.CREAR"/>
+                                            <label class="custom-control-label" for="GCN-create"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="GCN-delete"
+                                                   [(ngModel)]="roles.acciones.GCN.BORRAR"/>
+                                            <label class="custom-control-label" for="GCN-delete"></label>
                                         </div>
                                     </td>
                                 </tr>
@@ -299,9 +423,12 @@
 
                     <div class="row p-20">
                         <div class="col-12">
-                            <a (click)="guardarRol()"
-                               class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Guardar
-                                cambios</a>
+                            <button (click)="guardarRol()"
+                               class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light"
+                                    [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+                                <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                                      aria-hidden="true"></span>
+                                Guardar cambios</button>
                             <button (click)="regresar()" class="btn btn-outline-secondary waves-effect">Volver</button>
                         </div>
                     </div>
