@@ -35,6 +35,8 @@ export interface Producto {
   courier;
   estadoLanding;
   video?;
+  precioLanding;
+  precioLandingOferta;
 }
 
 export interface FichaTecnicaProducto {
@@ -83,6 +85,8 @@ export class ProductosService {
       lugarVentaCiudad: '',
       courier: '',
       estadoLanding: true,
+      precioLanding: 0,
+      precioLandingOferta: 0,
     };
   }
 
