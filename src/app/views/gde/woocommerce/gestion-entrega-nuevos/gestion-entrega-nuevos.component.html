@@ -80,6 +80,11 @@
                                     </a>
                                 </td>
                                 <td>
+                                    <button class="btn btn-sm btn-info"
+                                            (click)="generarGuia(seleccionarGuiaModal, transaccion.id)"
+                                    >
+                                        Generar Guia
+                                    </button>
                                     <button class="btn btn-primary"
                                             (click)="procesarEnvio(facturacionModal, transaccion)">
                                         Empacar
@@ -626,8 +631,8 @@
                                                 <button type="reset" class="btn btn-secondary"
                                                         data-dismiss="modal">Cerrar
                                                 </button>
-                                                <button class="btn btn-primary" type="button" [useExistingCss]="true" printSectionId="verfactura"
-                                                        ngxPrint>Imprimir</button>
+                                                <button #printButton class="btn btn-primary" type="button" [useExistingCss]="true"
+                                                        printSectionId="verfactura" ngxPrint>Imprimir</button>
                                             </div>
                                         </div>
 
@@ -731,5 +736,36 @@
                   aria-hidden="true"></span>
             Guardar
         </button>
+    </div>
+</ng-template>
+
+
+<ng-template #seleccionarGuiaModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Enviar</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="generarGuiaForm">
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="generarGuia">Generar guia</label>
+                        <select id="generarGuia" class="form-control" formControlName="generarGuia">
+                            <option value="">- Seleccione -</option>
+                            <option value="Servi Entrega">Servi Entrega</option>
+                            <option value="Motorizado">Motorizado</option>
+                            <option value="Bus">Bus</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.dismiss('Cross click')">Cerrar</button>
+        <button (click)="seleccionarGuia()" class="btn btn-primary" type="button">Imprimir</button>
     </div>
 </ng-template>
