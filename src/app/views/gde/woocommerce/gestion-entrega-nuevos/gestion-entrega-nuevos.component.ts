@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {PedidosService} from '../../../../services/mp/pedidos/pedidos.service';
 import {DatePipe} from '@angular/common';
 import {FormGroup, FormBuilder, Validators, FormArray} from '@angular/forms';
@@ -17,9 +17,11 @@ import {Toaster} from 'ngx-toast-notifications';
   providers: [DatePipe]
 })
 export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
+  @ViewChild('printButton') printButtonRef!: ElementRef;
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
+  public generarGuiaForm: FormGroup;
   menu;
   page = 1;
   pageSize = 3;
@@ -61,6 +63,9 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       codigoConfirmacion: ['', [Validators.required]],
       fechaHoraConfirmacion: ['', [Validators.required]],
       tipoFacturacion: ['', [Validators.required]],
+    });
+    this.generarGuiaForm = this.formBuilder.group({
+      generarGuia: ['', [Validators.required]],
     });
   }
 
@@ -131,6 +136,10 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     });
   }
 
+  get generarGuiaFForm() {
+    return this.generarGuiaForm['controls'];
+  }
+
   get autorizarFForm() {
     return this.autorizarForm['controls'];
   }
@@ -195,6 +204,17 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info});
+    });
+  }
+
+  generarGuia(modal, id): void {
+    this.pedidosService.obtenerPedido(id).subscribe((info) => {
+      this.iniciarNotaPedido();
+      info.articulos.map((item): void => {
+        this.agregarItem();
+      });
+      this.notaPedido.patchValue({...info});
+      this.modalService.open(modal);
     });
   }
 
@@ -321,5 +341,16 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       this.archivo.delete(nombreCampo);
       this.archivo.append(nombreCampo, doc);
     }
+  }
+
+  seleccionarGuia(): void {
+    if (this.generarGuiaForm.invalid){
+      return alert('Seleccione un metodo');
+    }
+    if ('Servi Entrega' === this.generarGuiaForm.value.generarGuia) {
+      window.open('https://www.servientrega.com.ec/', '_blank');
+      return;
+    }
+    this.printButtonRef.nativeElement.click();
   }
 }
