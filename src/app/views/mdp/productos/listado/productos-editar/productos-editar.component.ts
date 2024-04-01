@@ -100,6 +100,8 @@ export class ProductosEditarComponent implements OnInit {
       lugarVentaCiudad: ['', []],
       courier: ['', [Validators.required]],
       estadoLanding: [true, []],
+      precioLanding: ['', [Validators.required, Validators.pattern(this.numRegex)]],
+      precioLandingOferta: ['', [Validators.required, Validators.pattern(this.numRegex)]],
     });
     this.fichaTecnicaForm = this._formBuilder.group({
       codigo: ['', [Validators.required]],

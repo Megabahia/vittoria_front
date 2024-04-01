@@ -116,6 +116,22 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label>Precio Landing</label>
+                                    <input type="text" class="form-control" formControlName="precioLanding" [(ngModel)]="producto.precioLanding">
+                                    <div *ngIf="submittedProductoForm && fp.precioLanding.errors" class="invalid-feedback" style="display: block;">
+                                        <div *ngIf="fp.precioLanding.errors.required">Precio Landing es requerido</div>
+                                        <div *ngIf="fp.precioLanding.errors.pattern">Solo se aceptan números decimales</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Precio Landing Oferta</label>
+                                    <input type="text" class="form-control" formControlName="precioLandingOferta" [(ngModel)]="producto.precioLandingOferta">
+                                    <div *ngIf="submittedProductoForm && fp.precioLandingOferta.errors" class="invalid-feedback" style="display: block;">
+                                        <div *ngIf="fp.precioLandingOferta.errors.required">Precio Landing Oferta es requerido</div>
+                                        <div *ngIf="fp.precioLandingOferta.errors.pattern">Solo se aceptan números decimales</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label>Envio a nivel nacional</label>
                                     <div class="custom-control custom-switch custom-switch-success">
                                         <input type="checkbox" class="custom-control-input" id="envioNivelNacional"
