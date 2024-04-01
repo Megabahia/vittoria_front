@@ -75,15 +75,15 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       this.producto = info;
       const cuentaForm = this._formBuilder.group({
         articulo: [this.producto.nombre, []],
-        valorUnitario: [this.producto.precioOferta, []],
+        valorUnitario: [this.producto.precioLandingOferta, []],
         cantidad: [1, []],
-        precio: [this.producto.precioOferta, []],
+        precio: [this.producto.precioLandingOferta, []],
         codigo: [this.producto.codigoBarras, []],
         informacionAdicional: ['compra desde la url', []],
         descuento: [0, []],
         impuesto: [0, []],
         valorDescuento: [0, []],
-        total: [this.producto.precioOferta * 1, []],
+        total: [this.producto.precioLandingOferta * 1, []],
       });
       if (!this.producto.envioNivelNacional) {
         this.pospectoForm.get('provincia').setValue(this.producto.lugarVentaProvincia);
@@ -91,8 +91,8 @@ export class ProductosComponent implements OnInit, AfterViewInit {
         this.pospectoForm.get('ciudad').setValue(this.producto.lugarVentaCiudad);
       }
       this.fDetalles.push(cuentaForm);
-      this.pospectoForm.get('precio').setValue(this.producto.precioOferta * 1);
-      this.pospectoForm.get('total').setValue(this.producto.precioOferta * 1);
+      this.pospectoForm.get('precio').setValue(this.producto.precioLandingOferta * 1);
+      this.pospectoForm.get('total').setValue(this.producto.precioLandingOferta * 1);
       this.obtenerParametrosPagina();
       this.pospectoForm.get('courier').setValue(this.producto.courier);
     }, error => {
@@ -264,11 +264,11 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     cantidad = operacion === 'sumar' ? Math.min(cantidad + 1, this.producto.stock) : Math.max(cantidad - 1, 0);
     cantidadControl.setValue(cantidad);
     this.fDetalles.controls[0].get('cantidad').setValue(cantidad);
-    this.fDetalles.controls[0].get('precio').setValue(this.producto.precioOferta);
-    const total = +new Decimal(this.producto.precioOferta).mul(cantidad).toFixed(2).toString();
+    this.fDetalles.controls[0].get('precio').setValue(this.producto.precioLandingOferta);
+    const total = +new Decimal(this.producto.precioLandingOferta).mul(cantidad).toFixed(2).toString();
     this.fDetalles.controls[0].get('total').setValue(total);
-    this.pospectoForm.get('precio').setValue(this.producto.precioOferta * cantidad);
-    this.pospectoForm.get('total').setValue(this.producto.precioOferta * cantidad);
+    this.pospectoForm.get('precio').setValue(this.producto.precioLandingOferta * cantidad);
+    this.pospectoForm.get('total').setValue(this.producto.precioLandingOferta * cantidad);
     this.pospectoForm.updateValueAndValidity();
   }
 }

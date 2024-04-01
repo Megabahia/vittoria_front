@@ -36,12 +36,12 @@
                 <div class="d-flex justify-content-center">
                     <div class="ecommerce-details-price d-flex flex-wrap mt-1">
                         <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
-                            Precio Normal: $ {{producto.precioVentaA}}</h5>
+                            Precio Normal: $ {{producto.precioLanding}}</h5>
                     </div>
                 </div>
                 <div class="d-flex justify-content-center">
                     <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h2 class="item-price mr-1 text-danger">
-                        Precio Oferta: $ {{producto.precioOferta}}</h2>
+                        Precio Oferta: $ {{producto.precioLandingOferta}}</h2>
                     </div>
                 </div>
                 <div class="col-12 d-flex justify-content-center my-1">
@@ -109,12 +109,12 @@
                     <div class="d-flex justify-content-center">
                         <div class="ecommerce-details-price d-flex flex-wrap mt-1">
                             <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
-                                Precio Normal: $ {{producto.precioVentaA}}</h5>
+                                Precio Normal: $ {{producto.precioLanding}}</h5>
                         </div>
                     </div>
                     <div class="d-flex justify-content-center">
                         <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h2 class="item-price mr-1 text-danger">
-                            Precio Oferta: $ {{producto.precioOferta}}</h2>
+                            Precio Oferta: $ {{producto.precioLandingOferta}}</h2>
                         </div>
                     </div>
 
@@ -206,11 +206,11 @@
             </div>
             <div class="d-flex justify-content-center">
                 <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
-                    Precio Normal: $ {{producto.precioVentaA}}</h5>
+                    Precio Normal: $ {{producto.precioLanding}}</h5>
             </div>
             <div class="d-flex justify-content-center">
                 <h2 class="item-price mr-1 text-danger">
-                    Precio Oferta: $ {{producto.precioOferta}}</h2>
+                    Precio Oferta: $ {{producto.precioLandingOferta}}</h2>
             </div>
             <ng-container formArrayName="detalles">
                 <ng-container *ngFor="let cuenta of pospectoForm.get('detalles')['controls']; let i = index">
