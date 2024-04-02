@@ -55,7 +55,7 @@
                                 <th>Comprobante Pago</th>
                                 <th>Telefono</th>
                                 <th>Estado</th>
-                                <th>Ver</th>
+                                <th>Ver Pedido</th>
                                 <th>Acciones</th>
                             </tr>
                             </thead>
@@ -64,13 +64,15 @@
                             <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
                                 <td>{{transaccion.created_at | date: 'dd-MM-yyyy'}}</td>
                                 <td>{{transaccion.fechaHoraConfirmacion}}</td>
-                                <td>{{transaccion.canal}}</td>
-                                <td>{{transaccion.tipoFacturacion}}</td>
-                                <td>{{transaccion.numeroPedido}}</td>
-                                <td>{{transaccion.facturacion.nombres}} </td>
-                                <td>{{transaccion.facturacion.apellidos}}</td>
-                                <td>{{transaccion.metodoPago}}</td>
-                                <td>{{transaccion.urlMetodoPago}}</td>
+                                <td [title]="transaccion.canal">{{transaccion.canal | shorten}}</td>
+                                <td [title]="transaccion.tipoFacturacion">{{transaccion.tipoFacturacion | shorten}}</td>
+                                <td [title]="transaccion.numeroPedido">{{transaccion.numeroPedido | shorten}}</td>
+                                <td [title]="transaccion.facturacion.nombres">{{transaccion.facturacion.nombres | shorten}} </td>
+                                <td [title]="transaccion.facturacion.apellidos">{{transaccion.facturacion.apellidos | shorten}}</td>
+                                <td [title]="transaccion.metodoPago">{{transaccion.metodoPago | shorten}}</td>
+                                <td [title]="transaccion.urlMetodoPago">
+                                    <a *ngIf="transaccion.urlMetodoPago" [href]="transaccion.urlMetodoPago" target="_blank">Ver</a>
+                                </td>
                                 <td>{{transaccion.facturacion.telefono}} </td>
                                 <td>{{transaccion.estado}} </td>
                                 <td>
@@ -393,7 +395,7 @@
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-md-2 border-left">
-                                                                                <img class="img-detalle"
+                                                                                <img class="img-detalle" alt="producto"
                                                                                      src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
                                                                                      *ngIf="detalle.controls?.imagen" width="100px" height="100px">
                                                                             </div>
