@@ -116,6 +116,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       }),
       articulos: this.formBuilder.array([]),
       total: ['', []],
+      envioTotal: ['', []],
       subtotal: ['', []],
       iva: ['', []],
       numeroPedido: ['', []],
@@ -243,6 +244,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       total += parseFloat(detalles[index].get('precio').value);
     });
+    total += this.notaPedido.get('envioTotal').value;
     this.notaPedido.get('total').setValue(total);
   }
 

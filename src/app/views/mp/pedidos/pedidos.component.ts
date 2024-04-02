@@ -130,6 +130,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
+      envioTotal: ['', [Validators.required]],
       numeroPedido: ['', [Validators.required]],
       created_at: ['', [Validators.required]],
       metodoPago: ['', [Validators.required]],
@@ -254,6 +255,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       total += parseFloat(detalles[index].get('precio').value);
     });
+    total += this.notaPedido.get('envioTotal').value;
     this.notaPedido.get('total').setValue(total);
   }
 
