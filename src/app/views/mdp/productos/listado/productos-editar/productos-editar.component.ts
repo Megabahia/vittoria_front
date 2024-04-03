@@ -88,6 +88,7 @@ export class ProductosEditarComponent implements OnInit {
       precioVentaC: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       precioVentaD: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       precioVentaE: ['', [Validators.required, Validators.pattern(this.numRegex)]],
+      precioVentaF: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       precioVentaBultos: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       estado: ['', [Validators.required]],
       variableRefil: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],

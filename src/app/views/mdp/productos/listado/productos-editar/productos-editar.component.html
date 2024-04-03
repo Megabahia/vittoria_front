@@ -73,45 +73,45 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Precio de venta A</label>
+                                    <label>Precio de venta A TodoMegacentro</label>
                                     <input type="text" class="form-control" formControlName="precioVentaA" [(ngModel)]="producto.precioVentaA">
                                     <div *ngIf="submittedProductoForm && fp.precioVentaA.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.precioVentaA.errors.required">Precio de venta A es requerido</div>
-                                        <div *ngIf="fp.precioVentaA.errors.pattern">Precio de venta B es requerido</div>
+                                        <div *ngIf="fp.precioVentaA.errors.required">Precio de venta A TodoMegacentro es requerido</div>
+                                        <div *ngIf="fp.precioVentaA.errors.pattern">Solo se aceptan números decimales</div>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Precio de venta B</label>
+                                    <label>Precio de venta B TodoMegacentro</label>
                                     <input type="text" class="form-control" formControlName="precioVentaB" [(ngModel)]="producto.precioVentaB">
                                     <div *ngIf="submittedProductoForm && fp.precioVentaB.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.precioVentaB.errors.required">Precio de venta B es requerido</div>
+                                        <div *ngIf="fp.precioVentaB.errors.required">Precio de venta B TodoMegacentro es requerido</div>
                                         <div *ngIf="fp.precioVentaB.errors.pattern">Solo se aceptan números decimales</div>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Precio de venta C</label>
+                                    <label>Precio de venta C MD Mayorista 3 unidades</label>
                                     <input type="text" class="form-control" formControlName="precioVentaC" [(ngModel)]="producto.precioVentaC">
                                     <div *ngIf="submittedProductoForm && fp.precioVentaC.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.precioVentaC.errors.required">Precio de venta C es requerido</div>
+                                        <div *ngIf="fp.precioVentaC.errors.required">Precio de venta C MD Mayorista 3 unidades es requerido</div>
                                         <div *ngIf="fp.precioVentaC.errors.pattern">Solo se aceptan números decimales</div>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Precio de venta D</label>
+                                    <label>Precio de venta D MD mayorista 6 unidades</label>
                                     <input type="text" class="form-control" formControlName="precioVentaD" [(ngModel)]="producto.precioVentaD">
                                     <div *ngIf="submittedProductoForm && fp.precioVentaD.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.precioVentaD.errors.required">Precio de venta D es requerido</div>
+                                        <div *ngIf="fp.precioVentaD.errors.required">Precio de venta D MD mayorista 6 unidades es requerido</div>
                                         <div *ngIf="fp.precioVentaD.errors.pattern">Solo se aceptan números decimales</div>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Precio Oferta</label>
+                                    <label>Precio Portal MD</label>
                                     <input type="text" class="form-control" formControlName="precioOferta" [(ngModel)]="producto.precioOferta">
                                     <div *ngIf="submittedProductoForm && fp.precioOferta.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.precioOferta.errors.required">Precio de venta D es requerido</div>
+                                        <div *ngIf="fp.precioOferta.errors.required">Precio Portal MD es requerido</div>
                                         <div *ngIf="fp.precioOferta.errors.pattern">Solo se aceptan números decimales</div>
                                     </div>
                                 </div>
@@ -218,20 +218,28 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Precio de venta E</label>
+                                    <label>Precio de venta E MD mayorista 9 unidades</label>
                                     <input type="text" class="form-control" formControlName="precioVentaE" [(ngModel)]="producto.precioVentaE">
                                     <div *ngIf="submittedProductoForm && fp.precioVentaE.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.precioVentaE.errors.required">Precio de venta E es requerido</div>
+                                        <div *ngIf="fp.precioVentaE.errors.required">Precio de venta E MD mayorista 9 unidades es requerido</div>
                                         <div *ngIf="fp.precioVentaE.errors.pattern">Solo se aceptan números decimales</div>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Precio de venta por bultos</label>
+                                    <label>Precio de venta MD contra entrega</label>
                                     <input type="text" class="form-control" formControlName="precioVentaBultos" [(ngModel)]="producto.precioVentaBultos">
                                     <div *ngIf="submittedProductoForm && fp.precioVentaBultos.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.precioVentaBultos.errors.required">Precio de venta por bultos</div>
+                                        <div *ngIf="fp.precioVentaBultos.errors.required">Precio de venta MD contra entrega es requerido</div>
                                         <div *ngIf="fp.precioVentaBultos.errors.pattern">Solo se aceptan números decimales</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Precio de venta MD aliados</label>
+                                    <input type="text" class="form-control" formControlName="precioVentaF" [(ngModel)]="producto.precioVentaF">
+                                    <div *ngIf="submittedProductoForm && fp.precioVentaF.errors" class="invalid-feedback" style="display: block;">
+                                        <div *ngIf="fp.precioVentaF.errors.required">Precio de venta MD aliados es requerido</div>
+                                        <div *ngIf="fp.precioVentaF.errors.pattern">Solo se aceptan números decimales</div>
                                     </div>
                                 </div>
                                 <div class="form-group">

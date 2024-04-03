@@ -368,6 +368,9 @@
                                                                                 <div *ngIf="detalle.controls.cantidad.errors.required">
                                                                                     Requerido
                                                                                 </div>
+                                                                                <div *ngIf="detalle.controls.cantidad.errors.max">
+                                                                                    Fuera de stock
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-lg-2 col-12 my-lg-0 my-2">
@@ -489,6 +492,10 @@
                                             <div class="col-md-5 text-right">
                                                 <div class="invoice-total-wrapper">
                                                     <hr class="my-50"/>
+                                                    <div class="invoice-total-item">
+                                                        <p class="invoice-total-title text-primary font-weight-bold">
+                                                            Total Envio: ${{notaPedido.controls.envioTotal.value}}</p>
+                                                    </div>
                                                     <div class="invoice-total-item">
                                                         <p class="invoice-total-title text-primary font-weight-bold">
                                                             Total: ${{notaPedido.controls.total.value}}</p>

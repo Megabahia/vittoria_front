@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ChartDataSets} from 'chart.js';
@@ -17,7 +17,7 @@ import {ValidacionesPropias} from '../../../utils/customer.validators';
   styleUrls: ['./pedidos-devueltos.component.css'],
   providers: [DatePipe],
 })
-export class PedidosDevueltosComponent implements OnInit {
+export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
@@ -100,8 +100,8 @@ export class PedidosDevueltosComponent implements OnInit {
         calleSecundaria: ['', [Validators.required]],
         referencia: ['', [Validators.required]],
         gps: ['', []],
-        codigoVendedor: ['', [Validators.required]],
-        nombreVendedor: ['', [Validators.required]],
+        codigoVendedor: ['', []],
+        nombreVendedor: ['', []],
         comprobantePago: ['', []],
       }),
       envio: this.formBuilder.group({
@@ -124,6 +124,7 @@ export class PedidosDevueltosComponent implements OnInit {
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
+      envioTotal: ['', [Validators.required]],
       numeroPedido: ['', [Validators.required]],
       created_at: ['', [Validators.required]],
       metodoPago: ['', [Validators.required]],
@@ -245,6 +246,7 @@ export class PedidosDevueltosComponent implements OnInit {
       detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       total += parseFloat(detalles[index].get('precio').value);
     });
+    total += this.notaPedido.get('envioTotal').value;
     this.notaPedido.get('total').setValue(total);
   }
 

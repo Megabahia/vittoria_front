@@ -56,7 +56,7 @@
                                 <th>Evidencia Empacado</th>
                                 <th>Telefono</th>
                                 <th>Estado</th>
-                                <th>Ver</th>
+                                <th>Ver Pedido</th>
                                 <th>Acciones</th>
                             </tr>
                             </thead>
@@ -65,13 +65,15 @@
                             <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
                                 <td>{{transaccion.created_at | date: 'dd-MM-yyyy'}}</td>
                                 <td>{{transaccion.fechaHoraConfirmacion}}</td>
-                                <td>{{transaccion.canal | shorten}}</td>
-                                <td>{{transaccion.tipoFacturacion | shorten}}</td>
-                                <td>{{transaccion.numeroPedido | shorten}}</td>
-                                <td>{{transaccion.facturacion.nombres | shorten}} </td>
-                                <td>{{transaccion.facturacion.apellidos | shorten}}</td>
-                                <td>{{transaccion.metodoPago | shorten}}</td>
-                                <td>{{transaccion.urlMetodoPago | shorten}}</td>
+                                <td [title]="transaccion.canal">{{transaccion.canal | shorten}}</td>
+                                <td [title]="transaccion.tipoFacturacion">{{transaccion.tipoFacturacion | shorten}}</td>
+                                <td [title]="transaccion.numeroPedido">{{transaccion.numeroPedido | shorten}}</td>
+                                <td [title]="transaccion.facturacion.nombres">{{transaccion.facturacion.nombres | shorten}} </td>
+                                <td [title]="transaccion.facturacion.apellidos">{{transaccion.facturacion.apellidos | shorten}}</td>
+                                <td [title]="transaccion.metodoPago">{{transaccion.metodoPago | shorten}}</td>
+                                <td [title]="transaccion.urlMetodoPago">
+                                    <a *ngIf="transaccion.urlMetodoPago" [href]="transaccion.urlMetodoPago" target="_blank">Ver</a>
+                                </td>
                                 <td>
                                     <a *ngIf="transaccion.fotoEmpaque"
                                        class="btn btn-sm btn-primary" [href]="transaccion.fotoEmpaque" target="_blank">
@@ -395,7 +397,7 @@
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-md-2 border-left">
-                                                                                <img class="img-detalle"
+                                                                                <img class="img-detalle" alt="producto"
                                                                                      src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
                                                                                      *ngIf="detalle.controls?.imagen" width="100px" height="100px">
                                                                             </div>
@@ -457,6 +459,10 @@
                                                         <hr class="my-50"/>
                                                         <div class="invoice-total-item">
                                                             <p class="invoice-total-title text-primary font-weight-bold">
+                                                                Total Envio: ${{notaPedido.controls.envioTotal.value}}</p>
+                                                        </div>
+                                                        <div class="invoice-total-item">
+                                                            <p class="invoice-total-title text-primary font-weight-bold">
                                                                 Total: ${{notaPedido.controls.total.value}}</p>
                                                         </div>
                                                     </div>
@@ -466,7 +472,7 @@
                                         <!-- Invoice Total ends -->
 
                                         <hr class="invoice-spacing mt-0"/>
-                                        <h2>Datos Envió</h2>
+                                        <h2>Datos Entrega</h2>
                                         <div class="card-body invoice-padding pt-0">
                                             <div formGroupName="envio">
                                                 <div class="row">
@@ -662,7 +668,7 @@
             <div class="row">
                 <div class="card-body invoice-padding pt-0">
                     <div formGroupName="envio">
-                        <h2>Datos Envió</h2>
+                        <h2>Datos Entrega</h2>
                         <div class="row">
                             <div class="col-4">
                                 <label>Nombres</label>

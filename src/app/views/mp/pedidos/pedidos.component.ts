@@ -106,8 +106,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         calleSecundaria: ['', [Validators.required]],
         referencia: ['', [Validators.required]],
         gps: ['', []],
-        codigoVendedor: ['', [Validators.required]],
-        nombreVendedor: ['', [Validators.required]],
+        codigoVendedor: ['', []],
+        nombreVendedor: ['', []],
         comprobantePago: ['', []],
       }),
       envio: this.formBuilder.group({
@@ -130,10 +130,12 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
+      envioTotal: ['', [Validators.required]],
       numeroPedido: ['', [Validators.required]],
       created_at: ['', [Validators.required]],
       metodoPago: ['', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
+      canal: ['', []],
     });
   }
 
@@ -223,25 +225,31 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async obtenerProducto(i): Promise<any> {
-    await this.productosService.obtenerProductoPorCodigo({
-      codigoBarras: this.detallesArray.value[i].codigo
-    }).subscribe((info) => {
-      if (info.codigoBarras) {
-        // this.detallesArray.value[i].codigo = info.codigo;
-        console.log('dato', this.detallesArray.controls[i].get('articulo'));
-        this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
-        this.detallesArray.controls[i].get('cantidad').setValue(1);
-        this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA.toFixed(2));
-        this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
-        this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
-        this.calcular();
-      } else {
-        this.detallesArray.controls[i].get('articulo').setValue('');
-        this.toaster.open('No existe el producto a buscar', {type: 'danger'});
-      }
-    }, (error) => {
-
+  async obtenerProducto(i): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.productosService.obtenerProductoPorCodigo({
+        codigoBarras: this.detallesArray.value[i].codigo
+      }).subscribe((info) => {
+        if (info.codigoBarras) {
+          this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+          this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
+          const precioProducto = this.notaPedido.get('canal').value
+            .includes('Contra-Entrega') ? info.precioLandingOferta : info.precioVentaA;
+          this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
+          this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
+          this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
+          this.detallesArray.controls[i].get('cantidad').setValidators([
+            Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
+          ]);
+          this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
+          this.calcular();
+          resolve(); // Resuelve la promesa una vez completadas todas las asignaciones
+        } else {
+          this.detallesArray.controls[i].get('articulo').setValue('');
+          this.toaster.open('No existe el producto a buscar', {type: 'danger'});
+          reject(new Error('No existe el producto a buscar')); // Rechaza la promesa si no se encuentra el producto
+        }
+      });
     });
   }
 
@@ -250,17 +258,18 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     let total = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
-      const cantidad = parseFloat(detalles[index].get('cantidad').value);
+      const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
       detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       total += parseFloat(detalles[index].get('precio').value);
     });
+    total += this.notaPedido.get('envioTotal').value;
     this.notaPedido.get('total').setValue(total);
   }
 
-  actualizar(): void {
-    this.detallesArray.controls.map((producto, index) => {
-      this.obtenerProducto(index);
-    });
+  async actualizar(): Promise<void> {
+    await Promise.all(this.detallesArray.controls.map((producto, index) => {
+      return this.obtenerProducto(index);
+    }));
     if (this.notaPedido.invalid) {
       this.toaster.open('Pedido Incompleto', {type: 'danger'});
       console.log('form', this.notaPedido);

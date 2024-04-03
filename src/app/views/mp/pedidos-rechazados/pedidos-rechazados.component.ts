@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ChartDataSets} from 'chart.js';
@@ -16,7 +16,7 @@ import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../constats/mp/pedidos';
   styleUrls: ['./pedidos-rechazados.component.css'],
   providers: [DatePipe],
 })
-export class PedidosRechazadosComponent implements OnInit {
+export class PedidosRechazadosComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
@@ -113,6 +113,7 @@ export class PedidosRechazadosComponent implements OnInit {
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
+      envioTotal: ['', [Validators.required]],
       subtotal: ['', [Validators.required]],
       iva: ['', [Validators.required]],
       numeroPedido: ['', [Validators.required]],
@@ -233,17 +234,14 @@ export class PedidosRechazadosComponent implements OnInit {
 
   calcular(): void {
     const detalles = this.detallesArray.controls;
-    let subtotal = 0;
+    let total = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value);
       detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
-      subtotal += parseFloat(detalles[index].get('precio').value);
+      total += parseFloat(detalles[index].get('precio').value);
     });
-    this.notaPedido.get('subtotal').setValue(subtotal);
-    const iva = +(subtotal * this.iva.valor).toFixed(2);
-    const total = iva + subtotal;
-    this.notaPedido.get('iva').setValue(iva);
+    total += this.notaPedido.get('envioTotal').value;
     this.notaPedido.get('total').setValue(total);
   }
 

@@ -133,7 +133,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="usuarioPais">País</label>
+                                                <label for="usuarioPais">País Courier</label>
                                                 <select class="form-control" name="pais" formControlName="pais" [(ngModel)]="usuario.pais" id="role">
                                                     <option value="" selected>- Seleccione país -</option>
                                                     <option value="{{pais.nombre}}" *ngFor="let pais of paises">
@@ -141,7 +141,7 @@
                                                     </option>
                                                 </select>
                                                 <div *ngIf="submitted && f.idRol.errors" class="invalid-feedback" style="display: block;">
-                                                    <div *ngIf="f.idRol.errors.required">Rol es requerido</div>
+                                                    <div *ngIf="f.idRol.errors.required">País Courier es requerido</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -165,10 +165,10 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="company">Compañía</label>
+                                                <label for="company">Centro de negocios</label>
                                                 <input type="text" class="form-control" name="compania" formControlName="compania" [(ngModel)]="usuario.compania" name="compania" disabled/>
                                                 <div *ngIf="submitted && f.compania.errors" class="invalid-feedback" style="display: block;">
-                                                    <div *ngIf="f.compania.errors.required">Compañía es requerida</div>
+                                                    <div *ngIf="f.compania.errors.required">Centro de negocios es requerida</div>
                                                 </div>
                                             </div>
                                         </div>
