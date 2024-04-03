@@ -20,6 +20,7 @@ export interface Producto {
   precioVentaC;
   precioVentaD;
   precioVentaE;
+  precioVentaF;
   precioVentaBultos;
   parametrizacion;
   estado;
@@ -71,6 +72,7 @@ export class ProductosService {
       precioVentaC: 0,
       precioVentaD: 0,
       precioVentaE: 0,
+      precioVentaF: 0,
       precioVentaBultos: 0,
       parametrizacion: 0,
       estado: '',
