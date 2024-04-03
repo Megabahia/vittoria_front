@@ -135,6 +135,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       created_at: ['', [Validators.required]],
       metodoPago: ['', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
+      canal: ['', []],
     });
   }
 
@@ -232,8 +233,10 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         if (info.codigoBarras) {
           this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-          this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA.toFixed(2));
-          this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
+          const precioProducto = this.notaPedido.get('canal').value
+            .includes('Contra-Entrega') ? info.precioLandingOferta : info.precioVentaA;
+          this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
+          this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
           this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
           this.detallesArray.controls[i].get('cantidad').setValidators([
             Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)

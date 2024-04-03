@@ -187,8 +187,8 @@ export class ProspectosClientesEditComponent implements OnInit {
       if (info.codigoBarras) {
         this.fDetalles.controls[i].get('articulo').setValue(info.nombre);
         this.fDetalles.controls[i].get('imagen').setValue(info?.imagen?.toString());
-        this.fDetalles.controls[i].get('valorUnitario').setValue(info.precioOferta);
-        const total = new Decimal(info.precioOferta).mul(this.fDetalles.controls[i].get('cantidad').value).toFixed(2).toString();
+        this.fDetalles.controls[i].get('valorUnitario').setValue(info.precioLandingOferta);
+        const total = new Decimal(info.precioLandingOferta).mul(this.fDetalles.controls[i].get('cantidad').value).toFixed(2).toString();
         this.fDetalles.controls[i].get('total').setValue(total);
         this.calcularSubtotal();
       } else {
