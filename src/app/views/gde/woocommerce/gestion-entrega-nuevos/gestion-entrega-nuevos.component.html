@@ -761,9 +761,7 @@
                         <label for="generarGuia">Generar guia</label>
                         <select id="generarGuia" class="form-control" formControlName="generarGuia">
                             <option value="">- Seleccione -</option>
-                            <option value="Servi Entrega">Servi Entrega</option>
-                            <option value="Motorizado">Motorizado</option>
-                            <option value="Bus">Bus</option>
+                            <option [value]="item.valor" *ngFor="let item of guias">{{item.valor}}</option>
                         </select>
                     </div>
                 </div>

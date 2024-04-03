@@ -7,6 +7,7 @@ import {ChartDataSets} from 'chart.js';
 import {Color} from 'ng2-charts';
 import {ParamService} from '../../../../services/mp/param/param.service';
 import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
+import {ParamService as ParamServiceGE} from '../../../../services/gde/param/param.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
 
@@ -44,6 +45,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
   mostrarSpinner = false;
   fotoEmpaqueInvalid = false;
   videoEmpaqueInvalid = false;
+  guias = [];
 
   constructor(
     private modalService: NgbModal,
@@ -52,6 +54,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     private pedidosService: PedidosService,
     private paramService: ParamService,
     private paramServiceMDP: ParamServiceMDP,
+    private paramServiceGE: ParamServiceGE,
     private productosService: ProductosService,
     private toaster: Toaster,
   ) {
@@ -76,6 +79,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     };
     this.barChartData = [this.datosTransferencias];
     this.obtenerOpciones();
+    this.obtenerGuias();
   }
 
   ngAfterViewInit(): void {
@@ -179,6 +183,12 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
   removerItem(i): void {
     this.detallesArray.removeAt(i);
     this.calcular();
+  }
+
+  obtenerGuias(): void {
+    this.paramServiceGE.obtenerListaPadres('COMBO_GENERAR_GUIA').subscribe((info) => {
+      this.guias = info;
+    });
   }
 
   obtenerTransacciones(): void {
