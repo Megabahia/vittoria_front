@@ -100,8 +100,8 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
         calleSecundaria: ['', [Validators.required]],
         referencia: ['', [Validators.required]],
         gps: ['', []],
-        codigoVendedor: ['', [Validators.required]],
-        nombreVendedor: ['', [Validators.required]],
+        codigoVendedor: ['', []],
+        nombreVendedor: ['', []],
         comprobantePago: ['', []],
       }),
       envio: this.formBuilder.group({
