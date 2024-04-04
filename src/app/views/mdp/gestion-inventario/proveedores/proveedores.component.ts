@@ -21,7 +21,7 @@ export class ProveedoresComponent implements OnInit, AfterViewInit {
   productos;
   tiposOpciones = '';
   tipos;
-  nombreBuscar;
+  codigoProductoBuscar;
   proveedor = '';
   valor;
   currentUserValue;
@@ -63,7 +63,7 @@ export class ProveedoresComponent implements OnInit, AfterViewInit {
       page: this.page - 1,
       page_size: this.pageSize,
       tipo: this.tiposOpciones,
-      codigoBarras: this.nombreBuscar,
+      codigoBarras: this.codigoProductoBuscar,
       proveedor: this.proveedor,
     }).subscribe((result) => {
       this.productos = result.info;

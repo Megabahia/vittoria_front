@@ -40,6 +40,13 @@
 
                     </div>
                     <div class="col-lg-12 col-xl-6 text-right">
+                        <button class="btn btn-success waves-effect waves-float waves-light mx-1"
+                                type="button" (click)="reporteProductosStock()"
+                                [ngClass]="{'loading': enviando}" [disabled]="enviando">
+                            <span *ngIf="enviando" class="spinner-border spinner-border-sm" role="status"
+                                  aria-hidden="true"></span>
+                            Exportar a Excel
+                        </button>
                         <a (click)="crearProducto()" class="btn btn-icon btn-primary">
                             <i data-feather="plus" class="mr-25"></i>
                             <span>Añadir</span>

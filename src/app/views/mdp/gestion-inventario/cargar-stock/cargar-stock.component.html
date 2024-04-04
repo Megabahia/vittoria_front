@@ -9,7 +9,10 @@
             <!-- users list start -->
             <section class="app-user-list">
                 <div class="card">
-                    <h5 class="card-header justify-content-center">Cargar stock de productos desde un archivo XLSX</h5>
+                    <h5 class="card-header justify-content-center">
+                        Cargar stock de productos desde un archivo XLSX
+                        <a href="assets/files/Plantilla_Productos.xlsx" target="_blank">Plantilla</a>
+                    </h5>
                     <div class="card-body">
                         <div class="row justify-content-center">
                             <div class="col-md-6">
@@ -22,7 +25,11 @@
                                     <div class="input-group-append">
                                         <button (click)="cargarStock()"
                                                 class="input-group-text btn-primary"
-                                                [disabled]="enviando">Cargar</button>
+                                                [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+                                            <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                                                  aria-hidden="true"></span>
+                                            Cargar
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -30,13 +37,17 @@
                     </div>
                 </div>
                 <div class="card">
-                    <h5 class="card-header justify-content-center">Renegar reporte de productos de stock</h5>
+                    <h5 class="card-header justify-content-center">Genegar reporte de productos de stock</h5>
                     <div class="card-body">
                         <div class="row justify-content-center text-center">
                             <div class="col-md-12">
                                 <button (click)="reporteProductosStock()"
                                         class="btn btn-primary"
-                                        [disabled]="enviando">Cargar</button>
+                                        [ngClass]="{'loading': enviando}" [disabled]="enviando">
+                                    <span *ngIf="enviando" class="spinner-border spinner-border-sm" role="status"
+                                          aria-hidden="true"></span>
+                                    Generar
+                                </button>
                             </div>
                         </div>
                     </div>

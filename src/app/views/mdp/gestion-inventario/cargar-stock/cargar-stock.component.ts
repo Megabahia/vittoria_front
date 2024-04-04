@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Toaster} from 'ngx-toast-notifications';
 import {GestionInventarioService} from '../../../../services/mdp/gestion-inventario/gestion-inventario.service';
+import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 
 @Component({
   selector: 'app-cargar-stock',
@@ -11,10 +12,12 @@ export class CargarStockComponent implements OnInit {
   menu;
   archivo: FormData = new FormData();
   enviando = false;
+  mostrarSpinner = false;
 
   constructor(
     private toaster: Toaster,
     private gestionInventarioService: GestionInventarioService,
+    private productosService: ProductosService,
   ) {
   }
 
@@ -36,24 +39,24 @@ export class CargarStockComponent implements OnInit {
       this.toaster.open('Agrege un archivo', {type: 'warning'});
       return;
     }
-    this.enviando = true;
+    this.mostrarSpinner = true;
     this.gestionInventarioService.cargarStock(this.archivo).subscribe((info) => {
       this.toaster.open('Se cargo correctamente', {type: 'success'});
-      this.enviando = false;
+      this.mostrarSpinner = false;
     }, (error) => {
       this.toaster.open('No es valido el archivo', {type: 'danger'});
-      this.enviando = false;
+      this.mostrarSpinner = false;
     });
   }
 
   reporteProductosStock(): void {
     this.enviando = true;
-    this.gestionInventarioService.reporteProductosStock().subscribe((data) => {
+    this.productosService.exportar({}).subscribe((data) => {
       this.enviando = false;
       const downloadURL = window.URL.createObjectURL(data);
       const link = document.createElement('a');
       link.href = downloadURL;
-      link.download = 'productosStock.xls';
+      link.download = 'productosStock.xlsx';
       link.click();
     }, (error) => {
       this.enviando = false;
