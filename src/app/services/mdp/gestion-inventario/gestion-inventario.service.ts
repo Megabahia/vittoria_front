@@ -19,7 +19,7 @@ export class GestionInventarioService {
   }
 
   filtrarProductosProveedores(datos): Observable<any> {
-    return this.http.post<any>(`${apiUrl}/mdp/gestion-inventario/proveedores/list/`, datos);
+    return this.http.post<any>(`${apiUrl}/mdp/productos/list/`, datos);
   }
 
   obtenerProveedores(): Observable<any> {

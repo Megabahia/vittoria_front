@@ -19,6 +19,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   idProducto = 0;
   nombreBuscar: string;
   codigoBarras: string;
+  enviando = false;
 
   constructor(
     private productosService: ProductosService,
@@ -95,5 +96,19 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   receiveMessage($event): void {
     this.obtenerListaProductos();
     this.vista = $event;
+  }
+
+  reporteProductosStock(): void {
+    this.enviando = true;
+    this.productosService.exportar({}).subscribe((data) => {
+      this.enviando = false;
+      const downloadURL = window.URL.createObjectURL(data);
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = 'productosStock.xlsx';
+      link.click();
+    }, (error) => {
+      this.enviando = false;
+    });
   }
 }
