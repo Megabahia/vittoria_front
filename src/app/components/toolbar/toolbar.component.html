@@ -38,6 +38,12 @@
                     <i data-feather="circle"></i>
                     <span class="menu-item text-truncate" data-i18n="List">Parametrizaciones</span></a>
             </li>
+            <li class="nav-item {{menuToolbar['adm']['integracionesWoocommerce']}}" *ngIf="acciones.ADM.LEER">
+                <a class="d-flex align-items-center" [routerLink]="['/admin/integraciones-woocommerce']" data-toggle="tooltip"
+                   data-placement="right" title="Integraciones Woocommerce">
+                    <i data-feather="circle"></i>
+                    <span class="menu-item text-truncate" data-i18n="List">Integraciones Woocommerce</span></a>
+            </li>
             <li class="navigation-header">Módulos de sistema</li>
             <li class="nav-item" *ngIf="acciones.MDM.LEER">
                 <a class="d-flex align-items-center collapsed_menu_item">
