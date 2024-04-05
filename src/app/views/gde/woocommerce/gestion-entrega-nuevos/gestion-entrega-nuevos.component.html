@@ -82,12 +82,12 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-info"
+                                    <button class="btn btn-sm btn-info" *ngIf="!transaccion.verificarGeneracionGuia"
                                             (click)="generarGuia(seleccionarGuiaModal, transaccion.id)"
                                     >
                                         Generar Guia
                                     </button>
-                                    <button class="btn btn-primary"
+                                    <button class="btn btn-primary" *ngIf="transaccion.verificarGeneracionGuia"
                                             (click)="procesarEnvio(facturacionModal, transaccion)">
                                         Empacar
                                     </button>
@@ -461,7 +461,7 @@
                                                         </div>
                                                         <div class="invoice-total-item">
                                                             <p class="invoice-total-title text-primary font-weight-bold">
-                                                                Total: ${{notaPedido.controls.total.value}}</p>
+                                                                Total a pagar por el cliente: ${{notaPedido.controls.total.value}}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -765,11 +765,378 @@
                         </select>
                     </div>
                 </div>
+                <div class="col-12">
+                    <ng-container *ngTemplateOutlet="templatePedido"></ng-container>
+                </div>
             </div>
         </form>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" (click)="modal.dismiss('Cross click')">Cerrar</button>
-        <button (click)="seleccionarGuia()" class="btn btn-primary" type="button">Imprimir</button>
+        <button (click)="seleccionarGuia()" class="btn btn-primary" type="button">Imprimir guia</button>
     </div>
+</ng-template>
+
+<ng-template #templatePedido>
+    <form [formGroup]="notaPedido">
+        <div class="card invoice-preview-card">
+            <!-- Header starts -->
+            <div class="card-body invoice-padding pb-0">
+                <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+                    <div>
+                        <div class="d-flex align-items-center mb-1">
+                            <span class="title mr-1">Fecha Pedido:</span>
+                            <input type="text"
+                                   class="form-control invoice-edit-input date-picker"
+                                   value="{{notaPedido.controls?.created_at.value | date: 'dd-MM-yyyy'}}"
+                                   disabled/>
+                        </div>
+                    </div>
+                    <div class="invoice-number-date mt-md-0 mt-2">
+                        <div class="d-flex align-items-center mb-1">
+                            <h4 class="invoice-title mr-1">Numero Pedido</h4>
+                            <div class="input-group input-group-merge invoice-edit-input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i-feather name="hash"
+                                                   class="edit-user"></i-feather>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control invoice-edit-input"
+                                       placeholder="{{notaPedido.controls?.numeroPedido.value}}"
+                                       disabled/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="invoice-number-date mt-md-0 mt-2">
+                        <div class="d-flex align-items-center mb-1">
+                            <h4 class="invoice-title mr-1">Numero Guía</h4>
+                            <div class="input-group input-group-merge invoice-edit-input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i-feather name="hash"></i-feather>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control"
+                                       placeholder="{{notaPedido.controls?.numeroGuia.value}}"
+                                       disabled/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Header ends -->
+            <hr class="invoice-spacing"/>
+            <div class="col-4">
+                <label>Método Pago</label>
+                <input class="form-control" type="text"
+                       formControlName="metodoPago" disabled>
+                <div *ngIf="notaPedidoForm.metodoPago.errors"
+                     class="invalid-feedback" style="display: block;">
+                    <div *ngIf="notaPedidoForm.metodoPago.errors.required">
+                        Requerido
+                    </div>
+                </div>
+            </div>
+            <!-- Address and Contact ends -->
+            <hr class="invoice-spacing"/>
+            <!-- Product Details starts -->
+            <div class="card-body invoice-padding">
+                <div formArrayName="articulos">
+                    <form class="source-item">
+                        <div data-repeater-list="group-a"
+                             *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
+                            <div class="row" [formGroup]="detalle">
+                                <div class="repeater-wrapper" data-repeater-item>
+                                    <div class="row">
+                                        <div class="col-12 d-flex product-details-border position-relative pr-0">
+                                            <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                                <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                    <p class="card-text col-title mb-md-50 mb-0">
+                                                        Código Producto
+                                                    </p>
+                                                    <input class="form-control" type="text"
+                                                           (change)="obtenerProducto(i)"
+                                                           formControlName="codigo"
+                                                           disabled>
+                                                    <div *ngIf="detalle.controls.codigo.errors"
+                                                         class="invalid-feedback"
+                                                         style="display: block;">
+                                                        <div *ngIf="detalle.controls.codigo.errors.required">
+                                                            Requerido
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                                    <p class="card-text col-title mb-md-50 mb-0">
+                                                        Cantidad
+                                                    </p>
+                                                    <input type="text" class="form-control"
+                                                           formControlName="cantidad"
+                                                           (change)="calcular()"
+                                                           disabled
+                                                    />
+                                                    <div *ngIf="detalle.controls.cantidad.errors"
+                                                         class="invalid-feedback"
+                                                         style="display: block;" disabled>
+                                                        <div *ngIf="detalle.controls.cantidad.errors.required">
+                                                            Requerido
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                                    <p class="card-text col-title mb-md-50 mb-0">
+                                                        Nombre
+                                                    </p>
+                                                    <input type="text" class="form-control"
+                                                           formControlName="articulo"
+                                                           disabled
+                                                    />
+                                                    <div *ngIf="detalle.controls.articulo.errors"
+                                                         class="invalid-feedback"
+                                                         style="display: block;">
+                                                        <div *ngIf="detalle.controls.articulo.errors.required">
+                                                            Requerido
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                                    <p class="card-text col-title mb-md-50 mb-0">
+                                                        Valor Unitario
+                                                    </p>
+                                                    <label>{{detalle.controls.valorUnitario.value}}</label>
+                                                    <div *ngIf="detalle.controls.valorUnitario.errors"
+                                                         class="invalid-feedback"
+                                                         style="display: block;">
+                                                        <div *ngIf="detalle.controls.valorUnitario.errors.required">
+                                                            Requerido
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                                    <p class="card-text col-title mb-md-50 mb-0">
+                                                        Total
+                                                    </p>
+                                                    <label>{{detalle.controls.precio.value}}</label>
+                                                    <div *ngIf="detalle.controls.precio.errors"
+                                                         class="invalid-feedback"
+                                                         style="display: block;">
+                                                        <div *ngIf="detalle.controls.precio.errors.required">
+                                                            Requerido
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2 border-left">
+                                                    <img class="img-detalle" alt="producto"
+                                                         src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
+                                                         *ngIf="detalle.controls?.imagen" width="100px" height="100px">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div *ngIf="notaPedidoForm.articulos.errors"
+                         class="invalid-feedback" style="display: block;">
+                        <div *ngIf="notaPedidoForm.articulos.errors?.required">
+                            Artciulos es requerido
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body invoice-padding">
+
+            </div>
+            <!-- Product Details ends -->
+            <hr class="invoice-spacing"/>
+            <!-- Invoice Total starts -->
+            <div class="card-body invoice-padding">
+                <div class="row">
+                    <div class="col-md-7"></div>
+                    <div class="col-md-5 text-right">
+                        <div class="invoice-total-wrapper">
+                            <hr class="my-50"/>
+                            <div class="invoice-total-item">
+                                <p class="invoice-total-title text-primary font-weight-bold">
+                                    Total Envio: ${{notaPedido.controls.envioTotal.value}}
+                                </p>
+                            </div>
+                            <div class="invoice-total-item">
+                                <h4 class="text-danger font-weight-bold">
+                                    Total a pagar por el cliente: ${{notaPedido.controls.total.value}}
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Invoice Total ends -->
+
+            <hr class="invoice-spacing mt-0"/>
+            <div class="card-body invoice-padding pt-0">
+                <h2>Datos Entrega</h2>
+                <div formGroupName="envio">
+                    <div class="row">
+                        <div class="col-4">
+                            <label>Nombres</label>
+                            <input class="form-control" type="text"
+                                   formControlName="nombres" disabled>
+                            <div *ngIf="envioForm.nombres.errors"
+                                 class="invalid-feedback" style="display: block;">
+                                <div *ngIf="envioForm.nombres.errors.required">
+                                    Requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label>Apellidos</label>
+                            <input class="form-control" type="text"
+                                   formControlName="apellidos" disabled>
+                            <div *ngIf="envioForm.apellidos.errors"
+                                 class="invalid-feedback" style="display: block;">
+                                <div *ngIf="envioForm.apellidos.errors.required">
+                                    Requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label>Correo</label>
+                            <input class="form-control" type="text"
+                                   formControlName="correo" disabled>
+                            <div *ngIf="envioForm.correo.errors"
+                                 class="invalid-feedback" style="display: block;">
+                                <div *ngIf="envioForm.correo.errors.required">
+                                    Requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label>Numero Identificación</label>
+                            <input class="form-control" type="text"
+                                   formControlName="identificacion" disabled>
+                            <div *ngIf="envioForm.identificacion.errors"
+                                 class="invalid-feedback" style="display: block;">
+                                <div *ngIf="envioForm.identificacion.errors.required">
+                                    Requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label>Teléfono</label>
+                            <input class="form-control" type="text"
+                                   formControlName="telefono" disabled>
+                            <div *ngIf="envioForm.telefono.errors"
+                                 class="invalid-feedback" style="display: block;">
+                                <div *ngIf="envioForm.telefono.errors.required">
+                                    Requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label>Pais</label>
+                            <input class="form-control" type="text"
+                                   formControlName="pais" disabled>
+                            <div *ngIf="envioForm.pais.errors"
+                                 class="invalid-feedback" style="display: block;">
+                                <div *ngIf="envioForm.pais.errors.required">
+                                    Requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label>Provincia</label>
+                            <input class="form-control" type="text"
+                                   formControlName="provincia" disabled>
+                            <div *ngIf="envioForm.provincia.errors"
+                                 class="invalid-feedback" style="display: block;">
+                                <div *ngIf="envioForm.provincia.errors.required">
+                                    Requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label>Ciudad</label>
+                            <input class="form-control" type="text"
+                                   formControlName="ciudad" disabled>
+                            <div *ngIf="envioForm.ciudad.errors"
+                                 class="invalid-feedback" style="display: block;">
+                                <div *ngIf="envioForm.ciudad.errors.required">
+                                    Requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label>Calle Principal</label>
+                            <input class="form-control" type="text"
+                                   formControlName="callePrincipal" disabled>
+                            <div *ngIf="envioForm.callePrincipal.errors"
+                                 class="invalid-feedback" style="display: block;">
+                                <div *ngIf="envioForm.callePrincipal.errors.required">
+                                    Requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label>Número</label>
+                            <input class="form-control" type="text"
+                                   formControlName="numero" disabled>
+                            <div *ngIf="envioForm.numero.errors"
+                                 class="invalid-feedback" style="display: block;">
+                                <div *ngIf="envioForm.numero.errors.required">
+                                    Requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label>Calle Secundaria</label>
+                            <input class="form-control" type="text"
+                                   formControlName="calleSecundaria" disabled>
+                            <div *ngIf="envioForm.calleSecundaria.errors"
+                                 class="invalid-feedback" style="display: block;">
+                                <div *ngIf="envioForm.calleSecundaria.errors.required">
+                                    Requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label>Referencia</label>
+                            <input class="form-control" type="text"
+                                   formControlName="referencia" disabled>
+                            <div *ngIf="envioForm.referencia.errors"
+                                 class="invalid-feedback" style="display: block;">
+                                <div *ngIf="envioForm.referencia.errors.required">
+                                    Requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label>GPS</label>
+                            <input class="form-control" type="text"
+                                   formControlName="gps" disabled>
+                            <div *ngIf="envioForm.gps.errors"
+                                 class="invalid-feedback" style="display: block;">
+                                <div *ngIf="envioForm.gps.errors.required">
+                                    Requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label>Canal Envio</label>
+                            <input class="form-control" type="text"
+                                   formControlName="canalEnvio" disabled>
+                            <div *ngIf="envioForm.canalEnvio.errors"
+                                 class="invalid-feedback" style="display: block;">
+                                <div *ngIf="envioForm.canalEnvio.errors.required">
+                                    Requerido
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 </ng-template>
