@@ -14,6 +14,7 @@ import { RolesAddComponent } from './roles/roles-add/roles-add.component';
 import { ParamsListComponent } from './params/params-list/params-list.component';
 import { NgxCaptchaModule } from 'ngx-captcha';
 import { ProfileComponent } from './users/profile/profile.component';
+import { IntegracionWoocommerceComponent } from './integracion-woocommerce/integracion-woocommerce.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { ProfileComponent } from './users/profile/profile.component';
     RolesAddComponent,
     ParamsListComponent,
     ProfileComponent,
+    IntegracionWoocommerceComponent,
   ],
   imports: [
     CommonModule,

@@ -13,7 +13,8 @@ export class ToolbarComponent implements OnInit, OnChanges {
       user: '',
       index: '',
       roles: '',
-      param: ''
+      param: '',
+      integracionesWoocommerce: '',
     },
     mdm: {
       param: '',

@@ -37,6 +37,7 @@
         "ngx-toast-notifications": "^1.3.0",
         "rxjs": "~6.6.0",
         "tslib": "^2.0.0",
+        "uuid": "^9.0.1",
         "validate-document-ecuador": "^1.0.3",
         "xlsx": "^0.17.0",
         "zone.js": "~0.11.3"

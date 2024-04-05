@@ -10,6 +10,7 @@ import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/pa
 import {ParamService as ParamServiceGE} from '../../../../services/gde/param/param.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
+import { v4 as uuidv4 } from 'uuid';
 
 
 @Component({
@@ -79,7 +80,6 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     };
     this.barChartData = [this.datosTransferencias];
     this.obtenerOpciones();
-    this.obtenerGuias();
   }
 
   ngAfterViewInit(): void {
@@ -132,6 +132,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       numeroPedido: ['', []],
       created_at: ['', []],
       metodoPago: ['', [Validators.required]],
+      numeroGuia: [uuidv4(), []],
     });
   }
 
@@ -187,7 +188,11 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
 
   obtenerGuias(): void {
     this.paramServiceGE.obtenerListaPadres('COMBO_GENERAR_GUIA').subscribe((info) => {
-      this.guias = info;
+      if (this.notaPedido.value.metodoPago.includes('Contra-Entrega')) {
+        this.guias = info.filter((item) => item.valor === 'Motorizado');
+      } else {
+        this.guias = info;
+      }
     });
   }
 
@@ -224,8 +229,9 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       info.articulos.map((item): void => {
         this.agregarItem();
       });
-      this.notaPedido.patchValue({...info});
-      this.modalService.open(modal);
+      this.notaPedido.patchValue({...info, numeroGuia: uuidv4()});
+      this.obtenerGuias();
+      this.modalService.open(modal, {size: 'lg'});
     });
   }
 
@@ -291,6 +297,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       fotoEmpaque: ['', [Validators.required]],
       videoEmpaque: ['', []],
       estado: ['Empacado', [Validators.required]],
+      fechaEmpacado: [ this.transformarFecha(new Date()), []],
     });
   }
 
@@ -363,6 +370,11 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       window.open('https://www.servientrega.com.ec/', '_blank');
       return;
     }
-    this.printButtonRef.nativeElement.click();
+    this.pedidosService.actualizarPedido({
+      id: this.notaPedido.value.id, verificarGeneracionGuia: true,
+      numeroGuia: this.notaPedido.value.numeroGuia,
+    }).subscribe((info) => {
+      this.printButtonRef.nativeElement.click();
+    });
   }
 }
