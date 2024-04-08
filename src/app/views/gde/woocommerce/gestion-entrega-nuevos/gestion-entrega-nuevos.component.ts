@@ -12,6 +12,10 @@ import {ProductosService} from '../../../../services/mdp/productos/productos.ser
 import {Toaster} from 'ngx-toast-notifications';
 import { v4 as uuidv4 } from 'uuid';
 
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 
 @Component({
   selector: 'app-gestion-entrega',
@@ -231,6 +235,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       });
       this.notaPedido.patchValue({...info, numeroGuia: uuidv4()});
       this.obtenerGuias();
+
       this.modalService.open(modal, {size: 'lg'});
     });
   }
@@ -374,7 +379,135 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       id: this.notaPedido.value.id, verificarGeneracionGuia: true,
       numeroGuia: this.notaPedido.value.numeroGuia,
     }).subscribe((info) => {
-      this.printButtonRef.nativeElement.click();
+      //this.printButtonRef.nativeElement.click();
+      this.createPDF();
     });
+  }
+
+  createPDF(){
+
+    const tableRaws=this.notaPedido.value.articulos.map(articulo=>[
+      { text: articulo.codigo, fontSize: 5 },
+      { text: articulo.cantidad, fontSize: 5 },
+      { text: articulo.articulo, fontSize: 5 },
+      { text: articulo.valorUnitario, fontSize: 5 },
+      { text: articulo.precio, fontSize: 5 },
+    ]);
+
+    const tableData = [
+      [{ text: 'Código', style: 'bold', fontSize: 8 },
+        { text: 'Cantidad', style: 'bold', fontSize: 8 },
+        { text: 'Nombre', style: 'bold', fontSize: 8 },
+        { text: 'Valor unitario', style: 'bold', fontSize: 8 },
+        { text: 'Total', style: 'bold', fontSize: 8 }],
+      ...tableRaws
+    ];
+
+    const pdfDefinition: any = {
+      pageSize: 'A7',
+      content: [
+        {
+          columns: [
+            { text: 'Fecha pedido: ', style: 'bold', fontSize: 5 },
+            { text: this.notaPedido.value.created_at, fontSize: 5 },
+          ]
+        },
+        {
+          columns: [
+            { text: 'Número pedido: ', style: 'bold', fontSize: 5 },
+            { text: this.notaPedido.value.numeroPedido, fontSize: 5 },
+
+          ],
+        },
+        {
+          columns: [
+            { text: 'Número guía:', style: 'bold', fontSize: 5 },
+            { text: this.notaPedido.value.numeroGuia, fontSize: 5 }
+          ]
+        },
+        {
+          columns: [
+            { text: 'Método de pago:', style: 'bold', fontSize: 5 },
+            { text: this.notaPedido.value.metodoPago, fontSize: 5 }
+          ]
+        },
+        '\n',
+
+        { text: 'Productos', style: 'bold', fontSize: 8 },
+        {
+          table: {
+            headerRows: 1,
+            body: tableData,
+            fontSize: 5,
+          },
+        },
+        {
+          text: 'Total envío: $'+ this.notaPedido.value.envioTotal, style: 'bold', fontSize: 5, margin: [0, 5, 0, 0]
+        },
+        {
+          text: 'Total a pagar por el cliente: $'+this.notaPedido.value.total, style: 'bold', fontSize: 5,
+        },
+        '\n',
+        {
+          text:'Datos entrega',style:'bold',fontSize:8
+        },
+        {
+          columns: [
+            { text: 'Nombres: '+this.notaPedido.value.facturacion.nombres, fontSize: 5 },
+            { text: 'Apellidos: '+this.notaPedido.value.facturacion.apellidos, fontSize: 5 },
+          ],
+        },
+        {
+          columns: [
+            { text: 'Correo: '+this.notaPedido.value.facturacion.correo, fontSize: 5 },
+
+            { text: 'Número de identificación: '+this.notaPedido.value.facturacion.identificacion, fontSize: 5 },
+
+          ],
+        },
+        {
+          columns: [
+            { text: 'Teléfono: '+this.notaPedido.value.facturacion.telefono, fontSize: 5 },
+            { text: 'País: '+this.notaPedido.value.facturacion.pais, fontSize: 5 },
+
+          ],
+        },
+        {
+          columns: [
+            { text: 'Provincia: '+this.notaPedido.value.facturacion.provincia, fontSize: 5 },
+            { text: 'Ciudad: '+this.notaPedido.value.facturacion.ciudad, fontSize: 5 },
+
+          ],
+        },
+        {
+          columns: [
+            { text: 'Calle principal: '+this.notaPedido.value.facturacion.callePrincipal, fontSize: 5 },
+            { text: 'Número: '+this.notaPedido.value.facturacion.numero, fontSize: 5 },
+
+          ],
+        },
+        {
+          columns: [
+            { text: 'Calle secundaria : '+this.notaPedido.value.facturacion.calleSecundaria, fontSize: 5 },
+            { text: 'Referencia: '+this.notaPedido.value.facturacion.referencia, fontSize: 5 },
+
+
+          ],
+        },
+        {
+          columns: [
+            { text: 'GPS: '+this.notaPedido.value.facturacion.gps, fontSize: 5 },
+            /*{ text: 'Canal envío : '+this.notaPedido.value.envio.canal, fontSize: 5 },*/
+
+          ],
+        },
+
+      ],
+      pageMargins: [5, 5, 5, 5]
+    };
+
+    const pdf = pdfMake.createPdf(pdfDefinition);
+    pdf.open();
+
   }
 }
