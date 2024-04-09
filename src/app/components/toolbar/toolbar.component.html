@@ -311,7 +311,7 @@
                     <i data-feather="file-text"></i>
                     <span class="menu-title text-truncate" data-i18n="Invoice">MP Motor de pedidos</span></a>
                 <ul class="menu-content">
-                    <li class="nav-item {{menuToolbar['mp']['param']}}">
+                    <li class="nav-item {{menuToolbar['mp']['param']}}" *ngIf="usuario.usuario.idRol !== 51">
                         <a class="d-flex align-items-center" href="#/mp/parametrizaciones/list" data-toggle="tooltip"
                            data-placement="right" title="Parametrizaciones MP">
                             <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
@@ -397,8 +397,8 @@
                             <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas por vendedor</span>
                         </a>
                     </li>
-                    <li class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}">
-                        <a class="d-flex align-items-center" href="#/gcn/reporte-ventas-centro-negocio/list" data-toggle="tooltip"
+                    <li class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}" *ngIf="usuario.usuario.idRol!==52 || usuario.usuario.idRol===54">
+                        <a  class="d-flex align-items-center" href="#/gcn/reporte-ventas-centro-negocio/list" data-toggle="tooltip"
                            data-placement="right" title="Reporte de ventas del centro de negocio">
                             <i data-feather="circle"></i>
                             <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas del centro de negocio</span>
