@@ -11,6 +11,7 @@ import {ParamsComponent} from './params/params.component';
 import { PedidosComponent } from './pedidos/pedidos.component';
 import { PedidosDevueltosComponent } from './pedidos-devueltos/pedidos-devueltos.component';
 import { PedidosRechazadosComponent } from './pedidos-rechazados/pedidos-rechazados.component';
+import {GdeModule} from '../gde/gde.module';
 
 
 
@@ -30,7 +31,8 @@ import { PedidosRechazadosComponent } from './pedidos-rechazados/pedidos-rechaza
     ChartsModule,
     ReactiveFormsModule,
     FlatpickrModule.forRoot(),
-    NgxDropzoneModule
+    NgxDropzoneModule,
+    GdeModule
   ]
 })
 export class MpModule { }
