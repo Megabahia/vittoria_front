@@ -29,6 +29,9 @@ import { GestionEntregaDevolucionComponent } from './woocommerce/gestion-entrega
     ShortenPipe,
     GestionEntregaDevolucionComponent,
   ],
+  exports: [
+    ShortenPipe
+  ],
   imports: [
     CommonModule,
     NgbModule,
