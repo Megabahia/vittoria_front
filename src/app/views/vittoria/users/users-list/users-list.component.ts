@@ -113,7 +113,6 @@ export class UsersListComponent implements OnInit, AfterViewInit {
     await this.servicioUsuarios.obtenerListaUsuarios({
       page: this.page - 1, page_size: this.pageSize, idRol: Number(this.rolesOpciones), estado: this.estadosOpciones
     })
-
       .subscribe((result) => {
         this.collectionSize = result.cont;
         this.usuarios = result.info;
