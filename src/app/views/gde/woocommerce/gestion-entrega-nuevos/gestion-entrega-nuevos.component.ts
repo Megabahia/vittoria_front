@@ -38,7 +38,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
   transaccion: any;
   opciones;
   archivo: FormData = new FormData();
-
+  fileToUpload: File | null = null;
 
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -51,6 +51,9 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
   fotoEmpaqueInvalid = false;
   videoEmpaqueInvalid = false;
   guias = [];
+
+  mostrarDiv = false;
+
 
   constructor(
     private modalService: NgbModal,
@@ -660,7 +663,58 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     };
 
     const pdf = pdfMake.createPdf(pdfDefinition);
+    pdf.getBlob((blob: Blob) => {
+      const archivoPDF = new File([blob], `${this.notaPedido.value.facturacion.nombres}.pdf`, { type: 'application/pdf' });
+
+      // Crea un nuevo FormData y adjunta el archivo PDF
+      const formData = new FormData();
+      formData.append('archivoGuia', archivoPDF);
+
+      // Agrega cualquier otro dato necesario al FormData
+      formData.append('id', this.notaPedido.value.id);
+
+      // Llama al método de actualización del servicio con el FormData
+      this.pedidosService.actualizarPedidoFormData(formData)
+        .subscribe();
+    });
     pdf.open();
 
   }
+
+  onSelectChange(event: any) {
+    const selectedValue = event.target.value;
+    if (selectedValue === 'Servi Entrega') {
+      this.mostrarDiv = true;
+    } else {
+      this.mostrarDiv = false;
+    }
+  }
+
+  /*guardarGuia(){
+    const formData = new FormData();
+    formData.append('archivoGuia', this.archivoPDF);
+    formData.append('id',this.notaPedido.value.id);
+    this.pedidosService.actualizarPedidoFormData(formData)
+      .subscribe(response=>console.log('PDF Guardado con éxito:', response));
+
+  }*/
+
+  onFileSelected(event: any) {
+    this.fileToUpload = event.target.files.item(0);
+  }
+
+  guardarGuiaServiEntrega(){
+    if(this.archivo){
+      const formData = new FormData();
+      formData.append('guiServiEntrega', this.fileToUpload, this.fileToUpload.name);
+      formData.append('id',this.notaPedido.value.id);
+      this.pedidosService.actualizarPedidoFormData(formData)
+        .subscribe(response=>console.log('Pedido actualizado con éxito:', response));
+
+    } else {
+  console.error('No se ha seleccionado ningún archivo.');
+}
+
+  }
+
 }

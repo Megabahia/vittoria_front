@@ -348,5 +348,15 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       this.archivo.append(nombreCampo, doc);
     }
   }
+
+  verGuia(id:void){
+    this.pedidosService.obtenerPedido(id).subscribe((info) => {
+      if(info.archivoGuia===null){
+       window.alert('No existe guías en este pedido');
+      }else{
+        window.open(info.archivoGuia, '_blank');
+      }
+    });
+}
 }
 

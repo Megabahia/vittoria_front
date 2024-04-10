@@ -58,6 +58,7 @@
                                 <th>Telefono</th>
                                 <th>Estado</th>
                                 <th>Ver Pedido</th>
+                              <th>Ver Guía</th>
                                 <th>Acciones</th>
                             </tr>
                             </thead>
@@ -94,6 +95,11 @@
                                         <i-feather name="eye" class="mr-25"></i-feather>
                                     </a>
                                 </td>
+                              <td>
+                                <a  (click)="verGuia(transaccion.id)" >
+                                  <i-feather name="file-text" class="mr-25"></i-feather>
+                                </a>
+                              </td>
                                 <td>
                                     <button class="btn btn-primary"
                                             (click)="procesarEnvio(facturacionModal, transaccion)">
