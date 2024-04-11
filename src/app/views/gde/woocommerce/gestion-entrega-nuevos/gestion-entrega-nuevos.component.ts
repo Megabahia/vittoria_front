@@ -702,7 +702,9 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       this.pedidosService.actualizarPedidoFormData(formData)
         .subscribe(()=> {
           window.alert('Archivo guardado.');
+
           this.modalService.dismissAll();
+          this.obtenerTransacciones();
         });
 
     } else {
