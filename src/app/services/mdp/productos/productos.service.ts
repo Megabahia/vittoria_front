@@ -114,6 +114,10 @@ export class ProductosService {
     return this.http.post<any>(`${apiUrl}/mdp/productos/search/producto/codigo/`, codigo);
   }
 
+  enviarGmailInconsistencias(id){
+    return this.http.get<any>(`${apiUrl}/api/v3/orders/notificacion/${id}`);
+  }
+
   crearProducto(datos) {
     return this.http.post<any>(`${apiUrl}/mdp/productos/create/`, datos);
   }
