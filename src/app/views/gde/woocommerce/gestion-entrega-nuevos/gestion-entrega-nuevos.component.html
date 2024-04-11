@@ -759,7 +759,7 @@
                 <div class="col-12">
                     <div class="form-group">
                         <label for="generarGuia">Generar guia</label>
-                        <select id="generarGuia" class="form-control" formControlName="generarGuia">
+                        <select id="generarGuia" class="form-control" formControlName="generarGuia" (change)="onSelectChange($event)">
                             <option value="">- Seleccione -</option>
                             <option [value]="item.valor" *ngFor="let item of guias">{{item.valor}}</option>
                         </select>
@@ -774,7 +774,7 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-light" (click)="modal.dismiss('Cross click')">Cerrar</button>
         <button (click)="seleccionarGuia()" class="btn btn-primary" type="button">Imprimir guia</button>
-
+      <button (click)="guardarGuiaServiEntrega()" class="btn btn-primary" type="button" *ngIf="mostrarDiv">Guardar guía</button>
     </div>
 
 <ng-template #templatePedido>
@@ -1137,6 +1137,12 @@
                     </div>
                 </div>
             </div>
+          <hr class="invoice-spacing mt-0"/>
+          <div class="ml-2 mb-2" *ngIf="mostrarDiv">
+            <label>Archivo Servientrega</label>
+            <input class="form-control-file" type="file" (change)="onFileSelected($event)">
+          </div>
+
         </div>
     </form>
 </ng-template>
