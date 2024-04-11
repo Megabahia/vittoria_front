@@ -690,15 +690,6 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /*guardarGuia(){
-    const formData = new FormData();
-    formData.append('archivoGuia', this.archivoPDF);
-    formData.append('id',this.notaPedido.value.id);
-    this.pedidosService.actualizarPedidoFormData(formData)
-      .subscribe(response=>console.log('PDF Guardado con éxito:', response));
-
-  }*/
-
   onFileSelected(event: any) {
     this.fileToUpload = event.target.files.item(0);
   }
@@ -709,7 +700,10 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       formData.append('guiServiEntrega', this.fileToUpload, this.fileToUpload.name);
       formData.append('id',this.notaPedido.value.id);
       this.pedidosService.actualizarPedidoFormData(formData)
-        .subscribe(response=>console.log('Pedido actualizado con éxito:', response));
+        .subscribe(()=> {
+          window.alert('Archivo guardado.');
+          this.modalService.dismissAll();
+        });
 
     } else {
   console.error('No se ha seleccionado ningún archivo.');
