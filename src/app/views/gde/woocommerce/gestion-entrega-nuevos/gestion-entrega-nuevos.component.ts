@@ -699,12 +699,12 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       const formData = new FormData();
       formData.append('guiServiEntrega', this.fileToUpload, this.fileToUpload.name);
       formData.append('id',this.notaPedido.value.id);
+      formData.append('verificarGeneracionGuia','1');
       this.pedidosService.actualizarPedidoFormData(formData)
         .subscribe(()=> {
           window.alert('Archivo guardado.');
-
-          this.modalService.dismissAll();
           this.obtenerTransacciones();
+          this.modalService.dismissAll();
         });
 
     } else {
