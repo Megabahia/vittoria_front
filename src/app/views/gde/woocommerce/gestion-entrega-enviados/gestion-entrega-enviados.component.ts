@@ -265,6 +265,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       id: [transaccion.id, [Validators.required]],
       evidenciaFotoEmpaque: ['', [Validators.required]],
       evidenciaVideoEmpaque: ['', []],
+      estado: ['Envio', []],
     });
   }
 
