@@ -73,7 +73,8 @@
                                 <td>{{transaccion.metodoPago}}</td>
                                 <td>{{transaccion.urlMetodoPago}}</td>
                                 <td>{{transaccion.facturacion.telefono}} </td>
-                                <td>{{transaccion.estado}} </td>
+                                <td [ngStyle]="{'color': transaccion.estado === 'Devolucion' || transaccion.estado === 'Rechazado' ? 'red' :
+                                transaccion.estado === 'Despachado' || transaccion.estado === 'Empacado'|| transaccion.estado === 'Pendiente' ? 'yellow' : 'green'}">{{transaccion.estado}} </td>
                                 <td>
                                     <a (click)="obtenerTransaccion(transaccion.id)" data-toggle="modal"
                                        data-target="#verfactura">
