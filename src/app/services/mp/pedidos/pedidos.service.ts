@@ -23,6 +23,10 @@ export class PedidosService {
   constructor(private http: HttpClient) {
   }
 
+  crearNuevoPedidoContacto(datos): Observable<any>{
+    return this.http.post<any>(`${apiUrl}/api/v3/orders/contact`, datos);
+  }
+
   obtenerListaPedidos(datos): Observable<any> {
     return this.http.post<any>(`${apiUrl}/api/v3/orders/list`, datos);
   }

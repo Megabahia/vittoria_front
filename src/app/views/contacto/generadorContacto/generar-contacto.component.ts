@@ -13,12 +13,11 @@ import {ValidacionesPropias} from '../../../utils/customer.validators';
 import {Toaster} from 'ngx-toast-notifications';
 
 @Component({
-  selector: 'app-pedidos',
-  templateUrl: './pedidos.component.html',
-  styleUrls: ['./pedidos.component.css'],
+  selector: 'app-generar-contacto',
+  templateUrl: './generar-contacto.component.html',
   providers: [DatePipe]
 })
-export class PedidosComponent implements OnInit, AfterViewInit {
+export class GenerarContactoComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
@@ -51,7 +50,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     private datePipe: DatePipe,
     private pedidosService: PedidosService,
     private paramService: ParamService,
-    private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
     private toaster: Toaster,
   ) {
@@ -134,7 +132,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       created_at: ['', [Validators.required]],
       metodoPago: ['', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
-      canal: ['', []],
+      canal: ['Contacto Local', []],
     });
   }
 
@@ -194,7 +192,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       page_size: this.pageSize,
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
-      estado: ['Pendiente']
+      estado: ['Pendiente'],
+      canal: 'Contacto Local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;
@@ -217,11 +216,26 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     });
   }
 
+  crearNuevoPedidoContacto(modal): void {
+    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+  }
+
 
   obtenerOpciones(): void {
     this.paramService.obtenerListaPadres('PEDIDO_ESTADO').subscribe((info) => {
       this.opciones = info;
     });
+  }
+  async guardarPedidoPorContacto(): Promise<void> {
+    await Promise.all(this.detallesArray.controls.map((producto, index) => {
+      return this.obtenerProducto(index);
+    }));
+
+    if (confirm('Esta seguro de guardar los datos') === true) {
+      this.pedidosService.crearNuevoPedidoContacto(this.notaPedido.value).subscribe((info) => {
+        console.log(info);
+      });
+    }
   }
 
   async obtenerProducto(i): Promise<void> {
@@ -232,7 +246,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         valorUnitario:this.detallesArray.controls[i].value.valorUnitario
       };
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
-        if(info.mensaje==''){
+        //if(info.mensaje==''){
           if (info.codigoBarras) {
             this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
             this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
@@ -253,10 +267,10 @@ export class PedidosComponent implements OnInit, AfterViewInit {
             this.toaster.open('Producto no existente, agregue un producto que se encuentre en la lista de productos.', {type: 'danger'});
             reject(new Error('No existe el producto a buscar')); // Rechaza la promesa si no se encuentra el producto
           }// Resuelve la promesa una vez completadas todas las asignaciones
-        }else{
+        /*}else{
           this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
           window.alert('Existen inconsistencias con los precios de los productos.');
-        }
+        }*/
       });
     });
   }
@@ -278,11 +292,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
-    if (this.notaPedido.invalid) {
-      this.toaster.open('Pedido Incompleto', {type: 'danger'});
-      console.log('form', this.notaPedido);
-      return;
-    }
+
     if (confirm('Esta seguro de actualizar los datos') === true) {
       this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
@@ -291,21 +301,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  procesarEnvio(modal, transaccion): void {
-    this.archivo = new FormData();
-    this.modalService.open(modal);
-    const tipoFacturacion = transaccion.metodoPago === CONTRA_ENTREGA ? 'rimpePopular' : 'facturacionElectronica';
-    this.autorizarForm = this.formBuilder.group({
-      id: [transaccion.id, [Validators.required]],
-      metodoConfirmacion: ['', [Validators.required]],
-      codigoConfirmacion: ['', transaccion.metodoPago === PREVIO_PAGO ? [Validators.required] : []],
-      fechaHoraConfirmacion: [this.datePipe.transform(new Date(), 'yyyy-MM-ddThh:mm:ss.SSSZ'), [Validators.required]],
-      tipoFacturacion: [tipoFacturacion, [Validators.required]],
-      urlMetodoPago: ['', transaccion.metodoPago === PREVIO_PAGO ? [Validators.required] : []],
-      archivoMetodoPago: ['', []],
-      estado: ['Autorizado', [Validators.required]],
-    });
-  }
 
   procesarAutorizacion(): void {
     if (this.autorizarForm.invalid || this.invalidoTamanoVideo) {
@@ -327,28 +322,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         this.mostrarSpinner = false;
       }, (data) => {
         this.toaster.open(data, {type: 'danger'});
-        this.mostrarSpinner = false;
-      });
-    }
-  }
-
-  procesarRechazo(modal, transaccion): void {
-    this.modalService.open(modal);
-    this.rechazoForm = this.formBuilder.group({
-      id: [transaccion.id, [Validators.required]],
-      motivo: ['', [Validators.required]],
-      estado: ['Rechazado', [Validators.required]],
-    });
-  }
-
-  procesarRechazar(): void {
-    if (confirm('Esta seguro de cambiar de estado') === true) {
-      this.mostrarSpinner = true;
-      this.pedidosService.actualizarPedido(this.rechazoForm.value).subscribe((info) => {
-        this.modalService.dismissAll();
-        this.obtenerTransacciones();
-        this.mostrarSpinner = false;
-      }, () => {
         this.mostrarSpinner = false;
       });
     }

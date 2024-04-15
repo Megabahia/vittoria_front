@@ -44,6 +44,20 @@
                     <i data-feather="circle"></i>
                     <span class="menu-item text-truncate" data-i18n="List">Integraciones Woocommerce</span></a>
             </li>
+          <li class="nav-item" *ngIf="acciones.ADM.LEER">
+            <a class="d-flex align-items-center" title="Contactos para local">
+              <i data-feather="file-text"></i>
+              <span class="menu-title text-truncate" data-i18n="User"x>Contactos para local</span></a>
+            <ul class="menu-content">
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['/contacto/generarContacto']" data-toggle="tooltip"
+                   data-placement="right" title="Generador de contacto">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Generador de contacto</span>
+                </a>
+              </li>
+            </ul>
+          </li>
             <li class="navigation-header">Módulos de sistema</li>
             <li class="nav-item" *ngIf="acciones.MDM.LEER">
                 <a class="d-flex align-items-center collapsed_menu_item">
