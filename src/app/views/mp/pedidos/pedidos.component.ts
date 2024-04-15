@@ -238,8 +238,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
             this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
             this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
             this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-            const precioProducto = this.notaPedido.get('canal').value
-              .includes('Contra-Entrega') ? info.precioLandingOferta : info.precioVentaA;
+            const precioProducto = info.precio;
             this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
             this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
             this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
