@@ -217,7 +217,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
       this.obtenerProducto(0);
-      console.log(this.notaPedido.value);
 
     });
   }
