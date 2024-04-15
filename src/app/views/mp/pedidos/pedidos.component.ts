@@ -227,13 +227,13 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
   async obtenerProducto(i): Promise<void> {
     return new Promise((resolve, reject) => {
-      let data= {
+      const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
-        canal:this.notaPedido.value.canal,
-        valorUnitario:this.detallesArray.controls[i].value.valorUnitario
+        canal: this.notaPedido.value.canal,
+        valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
-        if(info.mensaje==''){
+        if (info.mensaje === '') {
           if (info.codigoBarras) {
             this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
             this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
