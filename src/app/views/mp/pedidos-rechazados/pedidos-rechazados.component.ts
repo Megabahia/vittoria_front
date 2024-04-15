@@ -241,8 +241,8 @@ export class PedidosRechazadosComponent implements OnInit, AfterViewInit {
       detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       total += parseFloat(detalles[index].get('precio').value);
     });
-    total += (this.notaPedido.get('envioTotal').value).toFixed(2);
-    this.notaPedido.get('total').setValue(total);
+    total += this.notaPedido.get('envioTotal').value;
+    this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 
   actualizar(): void {
