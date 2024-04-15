@@ -177,6 +177,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
       imagen: ['', []],
+      caracteristicas: ['', []],
     });
   }
 
@@ -208,6 +209,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
   obtenerTransaccion(modal, id): void {
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
       this.iniciarNotaPedido();
       info.articulos.map((item): void => {
@@ -215,6 +217,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
       this.obtenerProducto(0);
+      console.log(this.notaPedido.value);
+
     });
   }
 
