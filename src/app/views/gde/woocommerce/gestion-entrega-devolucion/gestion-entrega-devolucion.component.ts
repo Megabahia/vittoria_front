@@ -9,6 +9,7 @@ import {ParamService} from '../../../../services/mp/param/param.service';
 import {ParamService as ParamServiceGDE} from '../../../../services/gde/param/param.service';
 import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
+import {Toaster} from 'ngx-toast-notifications';
 
 @Component({
   selector: 'app-gestion-entrega-devolucion',
@@ -51,6 +52,7 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
     private paramServiceGDE: ParamServiceGDE,
     private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
+    private toaster: Toaster,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('currentUser'));
     this.inicio.setMonth(this.inicio.getMonth() - 3);
@@ -214,25 +216,39 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
     });
   }
 
-  obtenerProducto(i): void {
-    this.productosService.obtenerProductoPorCodigo({
-      codigoBarras: this.detallesArray.value[i].codigo
-    }).subscribe((info) => {
-      if (info.codigoBarras) {
-        // this.detallesArray.value[i].codigo = info.codigo;
-        console.log('dato', this.detallesArray.controls[i].get('articulo'));
-        this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
-        this.detallesArray.controls[i].get('cantidad').setValue(1);
-        this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
-        this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
-        this.calcular();
-      } else {
-        // this.comprobarProductos[i] = false;
-        // this.mensaje = 'No existe el producto a buscar';
-        // this.abrirModal(this.mensajeModal);
-      }
-    }, (error) => {
-
+  async obtenerProducto(i): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const data = {
+        codigoBarras: this.detallesArray.value[i].codigo,
+        canal: this.notaPedido.value.canal,
+        valorUnitario: this.detallesArray.controls[i].value.valorUnitario
+      };
+      this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
+        if (info.mensaje === '') {
+          if (info.codigoBarras) {
+            this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
+            this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+            this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
+            const precioProducto = info.precio;
+            this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
+            this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
+            this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
+            this.detallesArray.controls[i].get('cantidad').setValidators([
+              Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
+            ]);
+            this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
+            this.calcular();
+            resolve();
+          } else {
+            this.detallesArray.controls[i].get('articulo').setValue('');
+            this.toaster.open('Producto no existente, agregue un producto que se encuentre en la lista de productos.', {type: 'danger'});
+            reject(new Error('No existe el producto a buscar')); // Rechaza la promesa si no se encuentra el producto
+          }// Resuelve la promesa una vez completadas todas las asignaciones
+        }else{
+          this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
+          window.alert('Existen inconsistencias con los precios de los productos.');
+        }
+      });
     });
   }
 
