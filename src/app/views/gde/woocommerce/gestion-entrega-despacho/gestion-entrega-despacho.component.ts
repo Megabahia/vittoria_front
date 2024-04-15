@@ -245,7 +245,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       total += parseFloat(detalles[index].get('precio').value);
     });
-    total += this.notaPedido.get('envioTotal').value;
+    total += (this.notaPedido.get('envioTotal').value).toFixed(2);
     this.notaPedido.get('total').setValue(total);
   }
 
