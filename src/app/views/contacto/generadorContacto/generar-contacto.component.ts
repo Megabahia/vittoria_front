@@ -108,8 +108,8 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
         comprobantePago: ['', []],
       }),
       articulos: this.formBuilder.array([], Validators.required),
-      total: ['0', [Validators.required]],
-      envioTotal: ['0', [Validators.required]],
+      total: ['', [Validators.required]],
+      envioTotal: [0, [Validators.required]],
       numeroPedido: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['', [Validators.required]],
@@ -222,8 +222,8 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     if (confirm('Esta seguro de guardar los datos') === true) {
       this.pedidosService.crearNuevoPedidoContacto(this.notaPedido.value).subscribe((info) => {
 
-        //this.modalService.dismissAll();
-        //this.obtenerTransacciones();
+        this.modalService.dismissAll();
+        this.obtenerTransacciones();
       });
     }
   }
@@ -340,7 +340,14 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
 
     return fechaActual;
 
-    //return `${dia}-${mes}-${anio}`;
+  }
+
+  formatearFecha(): string {
+    const fechaActual = new Date();
+    const dia = fechaActual.getDate().toString().padStart(2, '0');
+    const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+    const anio = fechaActual.getFullYear().toString();
+    return `${dia}-${mes}-${anio}`;
   }
 
   generarID(): string {

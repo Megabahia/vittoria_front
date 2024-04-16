@@ -334,7 +334,8 @@
                                           Nombre
                                         </p>
 
-                                        <label>{{detalle.controls.articulo.value}}</label>
+                                        <label class="d-block text-wrap">{{detalle.controls.articulo.value}}</label>
+
                                         <div *ngIf="detalle.controls.articulo.errors"
                                              class="invalid-feedback"
                                              style="display: block;">
@@ -347,8 +348,7 @@
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Características
                                         </p>
-
-                                        <label >{{detalle.controls.caracteristicas.value}}</label>
+                                        <label [innerHTML]="detalle.controls.caracteristicas.value"></label>
 
                                       </div>
                                       <div class="col-lg-2 col-12 my-lg-0 my-2">
@@ -506,9 +506,9 @@
                 <div class="d-flex align-items-center mb-1">
                   <span class="title mr-1">Fecha Pedido:</span>
                   <input type="text"
-                         value="{{'dd-MM-yyyy'}}"
+                         placeholder={{formatearFecha()}}
                          class="form-control invoice-edit-input date-picker"
-                         formControlName="created_at"
+                         disabled
                          />
                 </div>
               </div>
@@ -856,7 +856,7 @@
                 <div class="col-md-6">
                   <label for="codigoVendedor" class="form-label">Codigo
                     Vendedor:</label>
-                  <input type="text" class="form-control" id="codigoVendedor"
+                  <input type="text" class="form-control" id="codigoVendedor" formControlName="codigoVendedor"
                         />
                   <div *ngIf="facturacionForm.codigoVendedor.errors"
                        class="invalid-feedback" style="display: block;">
@@ -868,7 +868,7 @@
                 <div class="col-md-6">
                   <label for="nombreVendedor" class="form-label">Nombre
                     Vendedor:</label>
-                  <input type="text" class="form-control" id="nombreVendedor"
+                  <input type="text" class="form-control" id="nombreVendedor" formControlName="nombreVendedor"
                          />
                   <div *ngIf="facturacionForm.nombreVendedor.errors"
                        class="invalid-feedback" style="display: block;">
