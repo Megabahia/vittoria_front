@@ -501,6 +501,7 @@
                   <span class="title mr-1">Fecha Pedido:</span>
                   <input type="text"
                          class="form-control invoice-edit-input date-picker"
+                         formControlName="fechaPedido"
                          />
                 </div>
               </div>
@@ -518,6 +519,7 @@
                 <div class="col-4">
                   <label>Nombres</label>
                   <input class="form-control" type="text"
+                         formControlName="nombres"
                          >
                   <div *ngIf="facturacionForm.nombres.errors"
                        class="invalid-feedback" style="display: block;">
@@ -529,6 +531,7 @@
                 <div class="col-4">
                   <label>Apellidos</label>
                   <input class="form-control" type="text"
+                         formControlName="apellidos"
                          >
                   <div *ngIf="facturacionForm.apellidos.errors"
                        class="invalid-feedback" style="display: block;">
@@ -540,6 +543,7 @@
                 <div class="col-4">
                   <label>Correo</label>
                   <input class="form-control" type="text"
+                         formControlName="correo"
                         >
                   <div *ngIf="facturacionForm.correo.errors"
                        class="invalid-feedback" style="display: block;">
@@ -554,6 +558,7 @@
                 <div class="col-4">
                   <label>Numero Identificación</label>
                   <input class="form-control" type="text"
+                         formControlName="identificacion"
                          >
                   <div *ngIf="facturacionForm.identificacion.errors"
                        class="invalid-feedback" style="display: block;">
@@ -577,6 +582,7 @@
                 <div class="col-4">
                   <label>Teléfono</label>
                   <input class="form-control" type="text"
+                         formControlName="telefono"
                          >
                   <div *ngIf="facturacionForm.telefono.errors"
                        class="invalid-feedback" style="display: block;">
@@ -597,6 +603,7 @@
                 <div class="col-4">
                   <label>Pais</label>
                   <input class="form-control" type="text"
+                         formControlName="pais"
                          >
                   <div *ngIf="facturacionForm.pais.errors"
                        class="invalid-feedback" style="display: block;">
@@ -608,6 +615,7 @@
                 <div class="col-4">
                   <label>Provincia</label>
                   <input class="form-control" type="text"
+                         formControlName="provincia"
                          >
                   <div *ngIf="facturacionForm.provincia.errors"
                        class="invalid-feedback" style="display: block;">
@@ -619,6 +627,7 @@
                 <div class="col-4">
                   <label>Ciudad</label>
                   <input class="form-control" type="text"
+                         formControlName="ciudad"
                          >
                   <div *ngIf="facturacionForm.ciudad.errors"
                        class="invalid-feedback" style="display: block;">
@@ -630,6 +639,7 @@
                 <div class="col-4">
                   <label>Calle Principal</label>
                   <input class="form-control" type="text"
+                         formControlName="callePrincipal"
                          >
                   <div *ngIf="facturacionForm.callePrincipal.errors"
                        class="invalid-feedback" style="display: block;">
@@ -641,6 +651,7 @@
                 <div class="col-4">
                   <label>Número</label>
                   <input class="form-control" type="text"
+                         formControlName="numeroCasa"
                          >
                   <div *ngIf="facturacionForm.numero.errors"
                        class="invalid-feedback" style="display: block;">
@@ -652,6 +663,7 @@
                 <div class="col-4">
                   <label>Calle Secundaria</label>
                   <input class="form-control" type="text"
+                         formControlName="calleSecundaria"
                         >
                   <div *ngIf="facturacionForm.calleSecundaria.errors"
                        class="invalid-feedback" style="display: block;">
@@ -663,6 +675,7 @@
                 <div class="col-4">
                   <label>Referencia</label>
                   <input class="form-control" type="text"
+                         formControlName="referencia"
                          >
                   <div *ngIf="facturacionForm.referencia.errors"
                        class="invalid-feedback" style="display: block;">
@@ -674,6 +687,7 @@
                 <div class="col-4">
                   <label>GPS</label>
                   <input class="form-control" type="text"
+                         formControlName="gps"
                          >
                   <div *ngIf="facturacionForm.gps.errors"
                        class="invalid-feedback" style="display: block;">
@@ -688,6 +702,7 @@
           <div class="col-4">
             <label>Metodo Pago</label>
             <input class="form-control" type="text"
+                   formControlName="metodoPago"
                    >
             <div *ngIf="notaPedidoForm.metodoPago.errors"
                  class="invalid-feedback" style="display: block;">

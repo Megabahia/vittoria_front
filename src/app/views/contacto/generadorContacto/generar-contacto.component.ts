@@ -66,6 +66,20 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
       id: ['', [Validators.required]],
       motivo: ['', [Validators.required]],
       estado: ['Rechazado', [Validators.required]],
+      fechaPedido: ['', [Validators.required]],
+      /*nombre: ['', [Validators.required]],
+      apellidos: ['', [Validators.required]],
+      correo: ['', [Validators.required]],
+      identificacion: ['', [Validators.required]],
+      telefono: ['', [Validators.required]],
+      provincia: ['', [Validators.required]],
+      ciudad: ['', [Validators.required]],
+      callePrincipal: ['', [Validators.required]],
+      numeroCasa: ['', [Validators.required]],
+      calleSecundaria: ['', [Validators.required]],
+      referencia: ['', [Validators.required]],
+      gps: ['', [Validators.required]],
+      canal: ['Contacto Local'],*/
     });
   }
 
@@ -80,7 +94,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.iniciarPaginador();
-    this.obtenerTransacciones();
+    //this.obtenerTransacciones();
   }
 
   iniciarNotaPedido(): void {
@@ -226,13 +240,14 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
       this.opciones = info;
     });
   }
+
   async guardarPedidoPorContacto(): Promise<void> {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
 
     if (confirm('Esta seguro de guardar los datos') === true) {
-      this.pedidosService.crearNuevoPedidoContacto(this.notaPedido.value).subscribe((info) => {
+      this.pedidosService.crearNuevoPedidoContacto(this.rechazoForm.value).subscribe((info) => {
         console.log(info);
       });
     }
