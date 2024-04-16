@@ -4,21 +4,19 @@ import {Color, Label} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
 import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
 import {ParamService} from '../../../services/mp/param/param.service';
-import {ParamService as ParamServiceMDP} from '../../../services/mdp/param/param.service';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
-import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../constats/mp/pedidos';
 import {ValidacionesPropias} from '../../../utils/customer.validators';
 import {Toaster} from 'ngx-toast-notifications';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
-  selector: 'app-pedidos',
-  templateUrl: './pedidos.component.html',
-  styleUrls: ['./pedidos.component.css'],
+  selector: 'app-generar-contacto',
+  templateUrl: './generar-contacto.component.html',
   providers: [DatePipe]
 })
-export class PedidosComponent implements OnInit, AfterViewInit {
+export class GenerarContactoComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
@@ -51,7 +49,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     private datePipe: DatePipe,
     private pedidosService: PedidosService,
     private paramService: ParamService,
-    private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
     private toaster: Toaster,
   ) {
@@ -68,6 +65,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       id: ['', [Validators.required]],
       motivo: ['', [Validators.required]],
       estado: ['Rechazado', [Validators.required]],
+      fechaPedido: ['', [Validators.required]],
     });
   }
 
@@ -109,32 +107,18 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         nombreVendedor: ['', []],
         comprobantePago: ['', []],
       }),
-      envio: this.formBuilder.group({
-        nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
-        apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
-        correo: ['', [Validators.required, Validators.email]],
-        identificacion: ['', [
-          Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$'),
-          ValidacionesPropias.cedulaValido
-        ]],
-        telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
-        pais: ['', [Validators.required]],
-        provincia: ['', [Validators.required]],
-        ciudad: ['', [Validators.required]],
-        callePrincipal: ['', [Validators.required]],
-        numero: ['', [Validators.required]],
-        calleSecundaria: ['', [Validators.required]],
-        referencia: ['', [Validators.required]],
-        gps: ['', []],
-      }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
-      envioTotal: ['', [Validators.required]],
-      numeroPedido: ['', [Validators.required]],
-      created_at: ['', [Validators.required]],
+      envioTotal: [0, [Validators.required]],
+      numeroPedido: [this.generarID(), [Validators.required]],
+      created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
-      canal: ['', []],
+      canal: ['Contacto Local', []],
+      estado: ['Pendiente', []],
+      envio: ['', []],
+      envios: ['', []],
+      json: ['', []],
     });
   }
 
@@ -195,7 +179,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       page_size: this.pageSize,
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
-      estado: ['Pendiente']
+      estado: ['Pendiente'],
+      canal: 'Contacto Local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;
@@ -208,16 +193,18 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
   obtenerTransaccion(modal, id): void {
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
-
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
       this.iniciarNotaPedido();
       info.articulos.map((item): void => {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
-      this.obtenerProducto(0);
-
     });
+  }
+
+  crearNuevoPedidoContacto(modal): void {
+    this.iniciarNotaPedido();
+    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
   }
 
 
@@ -227,20 +214,35 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     });
   }
 
+  async guardarPedidoPorContacto(): Promise<void> {
+    await Promise.all(this.detallesArray.controls.map((producto, index) => {
+      return this.obtenerProducto(index);
+    }));
+
+    if (confirm('Esta seguro de guardar los datos') === true) {
+      this.pedidosService.crearNuevoPedidoContacto(this.notaPedido.value).subscribe((info) => {
+
+        this.modalService.dismissAll();
+        this.obtenerTransacciones();
+      });
+    }
+  }
+
   async obtenerProducto(i): Promise<void> {
     return new Promise((resolve, reject) => {
-      const data = {
+      let data= {
         codigoBarras: this.detallesArray.value[i].codigo,
-        canal: this.notaPedido.value.canal,
-        valorUnitario: this.detallesArray.controls[i].value.valorUnitario
+        canal:this.notaPedido.value.canal,
+        valorUnitario:this.detallesArray.controls[i].value.valorUnitario
       };
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
-        if (info.mensaje === '') {
+        //if(info.mensaje==''){
           if (info.codigoBarras) {
             this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
             this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
             this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-            const precioProducto = info.precio;
+            const precioProducto = this.notaPedido.get('canal').value
+              .includes('Contra-Entrega') ? info.precioLandingOferta : info.precioVentaA;
             this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
             this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
             this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
@@ -255,10 +257,10 @@ export class PedidosComponent implements OnInit, AfterViewInit {
             this.toaster.open('Producto no existente, agregue un producto que se encuentre en la lista de productos.', {type: 'danger'});
             reject(new Error('No existe el producto a buscar')); // Rechaza la promesa si no se encuentra el producto
           }// Resuelve la promesa una vez completadas todas las asignaciones
-        }else{
+        /*}else{
           this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
           window.alert('Existen inconsistencias con los precios de los productos.');
-        }
+        }*/
       });
     });
   }
@@ -273,18 +275,14 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       total += parseFloat(detalles[index].get('precio').value);
     });
     total += this.notaPedido.get('envioTotal').value;
-    this.notaPedido.get('total').setValue(total.toFixed(2));
+    this.notaPedido.get('total').setValue(total);
   }
 
   async actualizar(): Promise<void> {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
-    if (this.notaPedido.invalid) {
-      this.toaster.open('Pedido Incompleto', {type: 'danger'});
-      console.log('form', this.notaPedido);
-      return;
-    }
+
     if (confirm('Esta seguro de actualizar los datos') === true) {
       this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
@@ -293,21 +291,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  procesarEnvio(modal, transaccion): void {
-    this.archivo = new FormData();
-    this.modalService.open(modal);
-    const tipoFacturacion = transaccion.metodoPago === CONTRA_ENTREGA ? 'rimpePopular' : 'facturacionElectronica';
-    this.autorizarForm = this.formBuilder.group({
-      id: [transaccion.id, [Validators.required]],
-      metodoConfirmacion: ['', [Validators.required]],
-      codigoConfirmacion: ['', transaccion.metodoPago === PREVIO_PAGO ? [Validators.required] : []],
-      fechaHoraConfirmacion: [this.datePipe.transform(new Date(), 'yyyy-MM-ddThh:mm:ss.SSSZ'), [Validators.required]],
-      tipoFacturacion: [tipoFacturacion, [Validators.required]],
-      urlMetodoPago: ['', transaccion.metodoPago === PREVIO_PAGO ? [Validators.required] : []],
-      archivoMetodoPago: ['', []],
-      estado: ['Autorizado', [Validators.required]],
-    });
-  }
 
   procesarAutorizacion(): void {
     if (this.autorizarForm.invalid || this.invalidoTamanoVideo) {
@@ -334,28 +317,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  procesarRechazo(modal, transaccion): void {
-    this.modalService.open(modal);
-    this.rechazoForm = this.formBuilder.group({
-      id: [transaccion.id, [Validators.required]],
-      motivo: ['', [Validators.required]],
-      estado: ['Rechazado', [Validators.required]],
-    });
-  }
-
-  procesarRechazar(): void {
-    if (confirm('Esta seguro de cambiar de estado') === true) {
-      this.mostrarSpinner = true;
-      this.pedidosService.actualizarPedido(this.rechazoForm.value).subscribe((info) => {
-        this.modalService.dismissAll();
-        this.obtenerTransacciones();
-        this.mostrarSpinner = false;
-      }, () => {
-        this.mostrarSpinner = false;
-      });
-    }
-  }
-
   cargarArchivo(event, nombreCampo): void {
     const doc = event.target.files[0];
     this.invalidoTamanoVideo = false;
@@ -368,5 +329,28 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     x.innerHTML = '' + Date.now() + '_' + doc.name;
     this.archivo.delete(nombreCampo);
     this.archivo.append(nombreCampo, doc);
+  }
+
+  obtenerFechaActual(): Date {
+    //const fecha= new Date();
+    //const dia= fecha.getDate().toString().padStart(2, '0');
+    //const mes= (fecha.getMonth() + 1).toString().padStart(2, '0');
+    //const anio= fecha.getFullYear().toString();
+    const fechaActual = new Date();
+
+    return fechaActual;
+
+  }
+
+  formatearFecha(): string {
+    const fechaActual = new Date();
+    const dia = fechaActual.getDate().toString().padStart(2, '0');
+    const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+    const anio = fechaActual.getFullYear().toString();
+    return `${dia}-${mes}-${anio}`;
+  }
+
+  generarID(): string {
+    return uuidv4();
   }
 }

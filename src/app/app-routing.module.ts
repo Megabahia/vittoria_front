@@ -9,6 +9,9 @@ const routes: Routes = [
     path: 'admin', loadChildren: () => import('./views/vittoria/admin.module').then(m => m.AdminModule)
   },
   {
+    path: 'contacto', loadChildren: () => import('./views/contacto/cpl.module').then(m => m.CplModule)
+  },
+  {
     path: 'auth', loadChildren: () => import('./views/auth/auth.module').then(m => m.AuthModule)
   },
   {
