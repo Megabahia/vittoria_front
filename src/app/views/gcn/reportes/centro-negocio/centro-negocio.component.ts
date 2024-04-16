@@ -24,6 +24,7 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
   pageSize = 3;
   collectionSize;
   listaTransacciones;
+  suma_total;
   inicio = new Date();
   fin = new Date();
   transaccion: any;
@@ -176,13 +177,14 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
       compania: this.usuario.usuario.compania,
+      rol: this.usuario.usuario.idRol
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;
+      this.suma_total = info.suma_total.total__sum.toFixed(2);
       this.totalVentas = this.listaTransacciones.reduce((acumulador, valorActual) => {
         return acumulador += valorActual.total;
       }, 0);
-      console.log('total', this.totalVentas);
     });
   }
 
