@@ -4,13 +4,12 @@ import {Color, Label} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
 import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
 import {ParamService} from '../../../services/mp/param/param.service';
-import {ParamService as ParamServiceMDP} from '../../../services/mdp/param/param.service';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
-import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../constats/mp/pedidos';
 import {ValidacionesPropias} from '../../../utils/customer.validators';
 import {Toaster} from 'ngx-toast-notifications';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-generar-contacto',
@@ -67,19 +66,6 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
       motivo: ['', [Validators.required]],
       estado: ['Rechazado', [Validators.required]],
       fechaPedido: ['', [Validators.required]],
-      /*nombre: ['', [Validators.required]],
-      apellidos: ['', [Validators.required]],
-      correo: ['', [Validators.required]],
-      identificacion: ['', [Validators.required]],
-      telefono: ['', [Validators.required]],
-      provincia: ['', [Validators.required]],
-      ciudad: ['', [Validators.required]],
-      callePrincipal: ['', [Validators.required]],
-      numeroCasa: ['', [Validators.required]],
-      calleSecundaria: ['', [Validators.required]],
-      referencia: ['', [Validators.required]],
-      gps: ['', [Validators.required]],
-      canal: ['Contacto Local'],*/
     });
   }
 
@@ -94,7 +80,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.iniciarPaginador();
-    //this.obtenerTransacciones();
+    this.obtenerTransacciones();
   }
 
   iniciarNotaPedido(): void {
@@ -121,32 +107,18 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
         nombreVendedor: ['', []],
         comprobantePago: ['', []],
       }),
-      envio: this.formBuilder.group({
-        nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
-        apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
-        correo: ['', [Validators.required, Validators.email]],
-        identificacion: ['', [
-          Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$'),
-          ValidacionesPropias.cedulaValido
-        ]],
-        telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
-        pais: ['', [Validators.required]],
-        provincia: ['', [Validators.required]],
-        ciudad: ['', [Validators.required]],
-        callePrincipal: ['', [Validators.required]],
-        numero: ['', [Validators.required]],
-        calleSecundaria: ['', [Validators.required]],
-        referencia: ['', [Validators.required]],
-        gps: ['', []],
-      }),
       articulos: this.formBuilder.array([], Validators.required),
-      total: ['', [Validators.required]],
-      envioTotal: ['', [Validators.required]],
-      numeroPedido: ['', [Validators.required]],
-      created_at: ['', [Validators.required]],
+      total: ['0', [Validators.required]],
+      envioTotal: ['0', [Validators.required]],
+      numeroPedido: [this.generarID(), [Validators.required]],
+      created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
       canal: ['Contacto Local', []],
+      estado: ['Pendiente', []],
+      envio: ['', []],
+      envios: ['', []],
+      json: ['', []],
     });
   }
 
@@ -188,6 +160,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
       imagen: ['', []],
+      caracteristicas: ['', []],
     });
   }
 
@@ -226,11 +199,11 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
-      this.obtenerProducto(0);
     });
   }
 
   crearNuevoPedidoContacto(modal): void {
+    this.iniciarNotaPedido();
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
   }
 
@@ -247,8 +220,10 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     }));
 
     if (confirm('Esta seguro de guardar los datos') === true) {
-      this.pedidosService.crearNuevoPedidoContacto(this.rechazoForm.value).subscribe((info) => {
-        console.log(info);
+      this.pedidosService.crearNuevoPedidoContacto(this.notaPedido.value).subscribe((info) => {
+
+        //this.modalService.dismissAll();
+        //this.obtenerTransacciones();
       });
     }
   }
@@ -354,5 +329,21 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     x.innerHTML = '' + Date.now() + '_' + doc.name;
     this.archivo.delete(nombreCampo);
     this.archivo.append(nombreCampo, doc);
+  }
+
+  obtenerFechaActual(): Date {
+    //const fecha= new Date();
+    //const dia= fecha.getDate().toString().padStart(2, '0');
+    //const mes= (fecha.getMonth() + 1).toString().padStart(2, '0');
+    //const anio= fecha.getFullYear().toString();
+    const fechaActual = new Date();
+
+    return fechaActual;
+
+    //return `${dia}-${mes}-${anio}`;
+  }
+
+  generarID(): string {
+    return uuidv4();
   }
 }

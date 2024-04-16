@@ -86,7 +86,7 @@
                             <span class="title mr-1">Fecha Pedido:</span>
                             <input type="text"
                                    class="form-control invoice-edit-input date-picker"
-                                   value="{{notaPedido.controls?.created_at.value | date: 'dd-MM-yyyy'}}"
+                                   value="{{notaPedido.controls.created_at.value | date: 'dd-MM-yyyy'}}"
                                    disabled/>
                           </div>
                         </div>
@@ -295,11 +295,11 @@
                                 <div class="row">
                                   <div class="col-12 d-flex product-details-border position-relative pr-0">
                                     <div class="row w-100 pr-lg-0 pr-1 py-2">
-                                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                      <div class="col-lg-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                         <p class="card-text col-title mb-md-50 mb-0">
-                                          Código Producto
+                                          Código
                                         </p>
-                                        <input class="form-control" type="text"
+                                        <input class="form-control" type="text" formControlName="codigo"
                                                (change)="obtenerProducto(i)"
                                                >
                                         <div *ngIf="detalle.controls.codigo.errors"
@@ -314,7 +314,7 @@
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Cantidad
                                         </p>
-                                        <input type="text" class="form-control"
+                                        <input type="text" class="form-control" formControlName="cantidad"
 
                                                (change)="calcular()"
                                         />
@@ -329,14 +329,12 @@
                                           </div>
                                         </div>
                                       </div>
-                                      <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                      <div class="col-lg-4 col-12 my-lg-0 my-2">
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Nombre
                                         </p>
-                                        <input type="text" class="form-control"
 
-                                               disabled
-                                        />
+                                        <label>{{detalle.controls.articulo.value}}</label>
                                         <div *ngIf="detalle.controls.articulo.errors"
                                              class="invalid-feedback"
                                              style="display: block;">
@@ -347,7 +345,15 @@
                                       </div>
                                       <div class="col-lg-2 col-12 my-lg-0 my-2">
                                         <p class="card-text col-title mb-md-50 mb-0">
-                                          Valor Unitario
+                                          Características
+                                        </p>
+
+                                        <label >{{detalle.controls.caracteristicas.value}}</label>
+
+                                      </div>
+                                      <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                        <p class="card-text col-title mb-md-50 mb-0">
+                                          Precio
                                         </p>
                                         <label>{{detalle.controls.valorUnitario.value}}</label>
                                         <div *ngIf="detalle.controls.valorUnitario.errors"
@@ -500,8 +506,9 @@
                 <div class="d-flex align-items-center mb-1">
                   <span class="title mr-1">Fecha Pedido:</span>
                   <input type="text"
+                         value="{{'dd-MM-yyyy'}}"
                          class="form-control invoice-edit-input date-picker"
-                         formControlName="fechaPedido"
+                         formControlName="created_at"
                          />
                 </div>
               </div>
@@ -651,7 +658,7 @@
                 <div class="col-4">
                   <label>Número</label>
                   <input class="form-control" type="text"
-                         formControlName="numeroCasa"
+                         formControlName="numero"
                          >
                   <div *ngIf="facturacionForm.numero.errors"
                        class="invalid-feedback" style="display: block;">
