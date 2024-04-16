@@ -334,22 +334,22 @@
                                                                 <div class="row">
                                                                     <div class="col-12 d-flex product-details-border position-relative pr-0">
                                                                         <div class="row w-100 pr-lg-0 pr-1 py-2">
-                                                                            <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
-                                                                                <p class="card-text col-title mb-md-50 mb-0">
-                                                                                    Código Producto
-                                                                                </p>
-                                                                                <input class="form-control" type="text"
-                                                                                       (change)="obtenerProducto(i)"
-                                                                                       formControlName="codigo">
-                                                                                <div *ngIf="detalle.controls.codigo.errors"
-                                                                                     class="invalid-feedback"
-                                                                                     style="display: block;">
-                                                                                    <div *ngIf="detalle.controls.codigo.errors.required">
-                                                                                        Requerido
-                                                                                    </div>
-                                                                                </div>
+                                                                          <div class="col-lg-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                                            <p class="card-text col-title mb-md-50 mb-0">
+                                                                              Código
+                                                                            </p>
+                                                                            <input class="form-control" type="text"
+                                                                                   (change)="obtenerProducto(i)"
+                                                                                   formControlName="codigo" >
+                                                                            <div *ngIf="detalle.controls.codigo.errors"
+                                                                                 class="invalid-feedback"
+                                                                                 style="display: block;">
+                                                                              <div *ngIf="detalle.controls.codigo.errors.required">
+                                                                                Requerido
+                                                                              </div>
                                                                             </div>
-                                                                            <div class="col-lg-3 col-12 my-lg-0 my-2">
+                                                                          </div>
+                                                                            <div class="col-lg-1 col-12 my-lg-0 my-2">
                                                                                 <p class="card-text col-title mb-md-50 mb-0">
                                                                                     Cantidad
                                                                                 </p>
@@ -365,14 +365,12 @@
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                                                            <div class="col-lg-4 col-12 my-lg-0 my-2">
                                                                                 <p class="card-text col-title mb-md-50 mb-0">
                                                                                     Nombre
                                                                                 </p>
-                                                                                <input type="text" class="form-control"
-                                                                                       formControlName="articulo"
-                                                                                       disabled
-                                                                                />
+                                                                              <label class="d-block text-wrap">{{detalle.controls.articulo.value}}</label>
+
                                                                                 <div *ngIf="detalle.controls.articulo.errors"
                                                                                      class="invalid-feedback"
                                                                                      style="display: block;">
@@ -381,9 +379,16 @@
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
+                                                                          <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                                                            <p class="card-text col-title mb-md-50 mb-0">
+                                                                              Características
+                                                                            </p>
+                                                                            <label [innerHTML]="detalle.controls.caracteristicas.value"></label>
+
+                                                                          </div>
                                                                             <div class="col-lg-2 col-12 my-lg-0 my-2">
                                                                                 <p class="card-text col-title mb-md-50 mb-0">
-                                                                                    Valor Unitario
+                                                                                    Precio
                                                                                 </p>
                                                                                 <label>{{detalle.controls.valorUnitario.value}}</label>
                                                                                 <div *ngIf="detalle.controls.valorUnitario.errors"

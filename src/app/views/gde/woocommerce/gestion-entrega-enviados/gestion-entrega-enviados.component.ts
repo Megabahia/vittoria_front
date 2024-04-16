@@ -160,6 +160,8 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
       imagen: ['', []],
+      caracteristicas: ['', []],
+
     });
   }
 
