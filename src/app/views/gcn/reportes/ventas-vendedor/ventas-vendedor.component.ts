@@ -176,6 +176,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
       codigoVendedor: this.usuario.usuario.username,
+      rol: this.usuario.usuario.idRol
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;
