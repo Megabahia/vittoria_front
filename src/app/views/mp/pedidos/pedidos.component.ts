@@ -4,7 +4,7 @@ import {Color, Label} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
 import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
 import {ParamService} from '../../../services/mp/param/param.service';
-import {ParamService as ParamServiceMDP} from '../../../services/mdp/param/param.service';
+import {ParamService as ParamServiceMDP} from '../../../services/admin/param.service';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
@@ -32,7 +32,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   fin = new Date();
   transaccion: any;
   opciones;
-
+  ciudadPresenteFacturacion;
+  ciudadPresenteEnvio;
 
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -208,8 +209,35 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
   obtenerTransaccion(modal, id): void {
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
-
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
+      this.ciudadPresenteFacturacion=true;
+      this.ciudadPresenteEnvio=true;
+      this.paramServiceMDP.obtenerListaHijos(info.facturacion.provincia,'PROVINCIA')
+        .subscribe((infoFacturacion) => {
+           const estaPresenteFacturacion = infoFacturacion.some((ciudad)=>
+             ciudad.nombre === info.facturacion.ciudad
+           );
+           if (!estaPresenteFacturacion) {
+             this.toaster.open("La ciudad no se encuentra en la provincia en los datos de factura.", {
+               type: 'danger'
+             });
+             this.ciudadPresenteFacturacion = false
+           }
+          }
+        );
+      this.paramServiceMDP.obtenerListaHijos(info.envio.provincia,'PROVINCIA')
+        .subscribe((infoEnvio) => {
+            const estaPresenteEnvio = infoEnvio.some((ciudad)=>
+              ciudad.nombre === info.envio.ciudad
+            );
+            if (!estaPresenteEnvio) {
+              this.toaster.open("La ciudad no se encuentra en la provincia en los datos de envio.", {
+                type: 'danger'
+              });
+              this.ciudadPresenteEnvio = false
+            }
+          }
+        );
       this.iniciarNotaPedido();
       info.articulos.map((item): void => {
         this.agregarItem();
@@ -280,7 +308,15 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
-    if (this.notaPedido.invalid) {
+    if (!this.ciudadPresenteFacturacion) {
+      this.toaster.open('Ciudad no coincide en datos de facturación.', {type: 'danger'});
+      return;
+    }
+    if (!this.ciudadPresenteEnvio) {
+      this.toaster.open('Ciudad no coincide en datos de envio.', {type: 'danger'});
+      return;
+    }
+    if (this.notaPedido.invalid || !this.ciudadPresenteFacturacion || !this.ciudadPresenteEnvio) {
       this.toaster.open('Pedido Incompleto', {type: 'danger'});
       console.log('form', this.notaPedido);
       return;
