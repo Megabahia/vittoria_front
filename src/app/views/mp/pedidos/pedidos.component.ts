@@ -260,7 +260,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
         canal: this.notaPedido.value.canal,
-        valorUnitario: this.detallesArray.controls[i].value.valorUnitario
+        valorUnitario: this.detallesArray.controls[i].value.valorUnitario.toFixed(2)
       };
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
         if (info.mensaje === '') {
