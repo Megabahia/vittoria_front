@@ -16,7 +16,7 @@
                                     <select class="form-control select2" name="categoria" formControlName="categoria" (change)="obtenerListaSubcategorias()" [(ngModel)]="producto.categoria">
                                         <option value="" selected>- Seleccionar -</option>
                                         <option *ngFor="let categoriasOp of categoriasOpciones" value="{{categoriasOp.id}}">{{categoriasOp.nombre}}</option>
-    
+
                                     </select>
                                     <div *ngIf="submittedProductoForm && fp.categoria.errors" class="invalid-feedback" style="display: block;">
                                         <div *ngIf="fp.categoria.errors.required">Categoría es requerida
@@ -28,7 +28,7 @@
                                     <select class="form-control select2" name="subCategoria" formControlName="subCategoria" [(ngModel)]="producto.subCategoria">
                                         <option value="" selected>- Seleccionar -</option>
                                  <option *ngFor="let subcategoriasOp of subcategoriasOpciones" value="{{subcategoriasOp.id}}">{{subcategoriasOp.nombre}}</option>
-    
+
                                </select>
                                     <div *ngIf="submittedProductoForm && fp.subCategoria.errors" class="invalid-feedback" style="display: block;">
                                         <div *ngIf="fp.subCategoria.errors.required">Subcategoría es requerida
@@ -44,6 +44,11 @@
                                         <div *ngIf="fp.codigoBarras.errors.maxlength">Ingreso maximo de caracteres 150</div>
                                     </div>
                                 </div>
+                              <div class="form-group">
+                                <label>Código de producto padre</label>
+                                <input type="text" class="form-control" name="idPadre" formControlName="idPadre" [(ngModel)]="producto.idPadre">
+
+                              </div>
                                 <div class="form-group">
                                     <label>Fecha de Elaboración </label>
                                     <input class="form-control invoice-edit-input date-picker" mwlFlatpickr type="text" formControlName="fechaElaboracion" [(ngModel)]="producto.fechaElaboracion">

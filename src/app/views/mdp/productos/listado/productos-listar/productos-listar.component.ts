@@ -79,7 +79,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     this.modalService.dismissAll();
     this.productosService.eliminarProducto(this.idProducto).subscribe(() => {
       this.obtenerListaProductos();
-    });
+    },error => window.alert(error));
   }
 
   copiarURL(inputTextValue): void {
