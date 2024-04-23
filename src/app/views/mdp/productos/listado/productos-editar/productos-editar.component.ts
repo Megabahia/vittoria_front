@@ -50,6 +50,8 @@ export class ProductosEditarComponent implements OnInit {
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
 
+  listaProductos;
+  codigoBarras:string;
   constructor(
     private categoriasService: CategoriasService,
     private subcategoriasService: SubcategoriasService,
@@ -76,6 +78,7 @@ export class ProductosEditarComponent implements OnInit {
     this.productoForm = this._formBuilder.group({
       categoria: ['', [Validators.required]],
       subCategoria: ['', [Validators.required]],
+      idPadre: [''],
       nombre: ['', [Validators.required, Validators.maxLength(150)]],
       descripcion: ['', [Validators.required]],
       codigoBarras: ['', [Validators.required, Validators.maxLength(150)]],

@@ -99,6 +99,7 @@
                                 <th>Nombre</th>
                                 <th>Categoría</th>
                                 <th>Subcategoría</th>
+                                <th>Producto padre</th>
                                 <th>Stock</th>
                                 <th>Estado</th>
                                 <th>Acciones</th>
@@ -123,6 +124,7 @@
                                 <td>{{producto.nombre | slice:0:30}}</td>
                                 <td>{{producto.categoria}}</td>
                                 <td>{{producto.subCategoria}}</td>
+                                <td>{{producto.idPadre}}</td>
                                 <td>{{producto.stock}} (Unidades)</td>
                                 <td><span class="text-capitalize badge {{producto.estado=='Activo' ? 'badge-light-success': 'badge-secondary' }} badge-pill">{{producto.estado}}</span></td>
                                 <td>

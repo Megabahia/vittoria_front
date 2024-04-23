@@ -38,6 +38,7 @@ export interface Producto {
   video?;
   precioLanding;
   precioLandingOferta;
+  idPadre;
 }
 
 export interface FichaTecnicaProducto {
@@ -89,6 +90,7 @@ export class ProductosService {
       estadoLanding: true,
       precioLanding: 0,
       precioLandingOferta: 0,
+      idPadre:''
     };
   }
 
