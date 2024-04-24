@@ -9,6 +9,7 @@ import {FlatpickrModule} from 'angularx-flatpickr';
 import {GdeRoutingModule} from '../gde/gde-routing.module';
 import {GestionCentroNegociosRoutingModule} from './gestion-centro-negocios-routing.module';
 import { CentroNegocioComponent } from './reportes/centro-negocio/centro-negocio.component';
+import {GdeModule} from "../gde/gde.module";
 
 
 
@@ -17,15 +18,16 @@ import { CentroNegocioComponent } from './reportes/centro-negocio/centro-negocio
     VentasVendedorComponent,
     CentroNegocioComponent
   ],
-  imports: [
-    CommonModule,
-    NgbModule,
-    SharedModule,
-    FormsModule,
-    ChartsModule,
-    ReactiveFormsModule,
-    FlatpickrModule.forRoot(),
-    GestionCentroNegociosRoutingModule,
-  ]
+    imports: [
+        CommonModule,
+        NgbModule,
+        SharedModule,
+        FormsModule,
+        ChartsModule,
+        ReactiveFormsModule,
+        FlatpickrModule.forRoot(),
+        GestionCentroNegociosRoutingModule,
+        GdeModule,
+    ]
 })
 export class GestionCentroNegociosModule { }

@@ -169,7 +169,6 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
   }
 
   obtenerTransacciones(): void {
-    console.log('user', this.usuario);
     this.pedidosService.obtenerListaPedidos({
       page: this.page - 1,
       page_size: this.pageSize,
@@ -193,9 +192,9 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
       info.articulos.map((item): void => {
         this.agregarItem();
       });
-      const iva = +(info.total * this.iva.valor).toFixed(2);
-      const total = iva + info.total;
-      this.notaPedido.patchValue({...info, subtotal: info.subtotal, iva, total});
+      //const iva = +(info.total * this.iva.valor).toFixed(2);
+      const total = info.total;
+      this.notaPedido.patchValue({...info, subtotal: info.subtotal, total});
     });
   }
 

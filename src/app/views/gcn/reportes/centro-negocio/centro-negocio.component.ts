@@ -198,9 +198,9 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
       info.articulos.map((item): void => {
         this.agregarItem();
       });
-      const iva = +(info.total * this.iva.valor).toFixed(2);
-      const total = iva + info.total;
-      this.notaPedido.patchValue({...info, subtotal: info.subtotal, iva, total});
+      //const iva = +(info.total * this.iva.valor).toFixed(2);
+      const total = info.total;
+      this.notaPedido.patchValue({...info, subtotal: info.subtotal, total});
     });
   }
 
