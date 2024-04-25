@@ -32,8 +32,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   fin = new Date();
   transaccion: any;
   opciones;
-  ciudadPresenteFacturacion;
-  ciudadPresenteEnvio;
+  ciudadPresenteFacturacion=true;
+  ciudadPresenteEnvio=true;
 
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -210,34 +210,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   obtenerTransaccion(modal, id): void {
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
-      this.ciudadPresenteFacturacion=true;
-      this.ciudadPresenteEnvio=true;
-      this.paramServiceMDP.obtenerListaHijos(info.facturacion.provincia,'PROVINCIA')
-        .subscribe((infoFacturacion) => {
-           const estaPresenteFacturacion = infoFacturacion.some((ciudad)=>
-             ciudad.nombre === info.facturacion.ciudad
-           );
-           if (!estaPresenteFacturacion) {
-             this.toaster.open("La ciudad no se encuentra en la provincia en los datos de factura.", {
-               type: 'danger'
-             });
-             this.ciudadPresenteFacturacion = false
-           }
-          }
-        );
-      this.paramServiceMDP.obtenerListaHijos(info.envio.provincia,'PROVINCIA')
-        .subscribe((infoEnvio) => {
-            const estaPresenteEnvio = infoEnvio.some((ciudad)=>
-              ciudad.nombre === info.envio.ciudad
-            );
-            if (!estaPresenteEnvio) {
-              this.toaster.open("La ciudad no se encuentra en la provincia en los datos de envio.", {
-                type: 'danger'
-              });
-              this.ciudadPresenteEnvio = false
-            }
-          }
-        );
+      this.validarCiudadEnProvincia(info.facturacion.provincia, info.facturacion.ciudad, info.envio.provincia, info.envio.ciudad);
+
       this.iniciarNotaPedido();
       info.articulos.map((item): void => {
         this.agregarItem();
@@ -308,19 +282,18 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
-    if (!this.ciudadPresenteFacturacion) {
-      this.toaster.open('Ciudad no coincide en datos de facturación.', {type: 'danger'});
-      return;
-    }
-    if (!this.ciudadPresenteEnvio) {
-      this.toaster.open('Ciudad no coincide en datos de envio.', {type: 'danger'});
-      return;
-    }
-    if (this.notaPedido.invalid || !this.ciudadPresenteFacturacion || !this.ciudadPresenteEnvio) {
+    this.validarCiudadEnProvincia(this.notaPedido.value.facturacion.provincia, this.notaPedido.value.facturacion.ciudad, this.notaPedido.value.envio.provincia, this.notaPedido.value.envio.ciudad);
+
+    if (this.notaPedido.invalid) {
       this.toaster.open('Pedido Incompleto', {type: 'danger'});
       console.log('form', this.notaPedido);
       return;
     }
+
+    if(!this.ciudadPresenteFacturacion || !this.ciudadPresenteEnvio){
+      return;
+    }
+
     if (confirm('Esta seguro de actualizar los datos') === true) {
       this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
@@ -404,5 +377,41 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     x.innerHTML = '' + Date.now() + '_' + doc.name;
     this.archivo.delete(nombreCampo);
     this.archivo.append(nombreCampo, doc);
+  }
+
+  validarCiudadEnProvincia(provinciaFacturacion, ciudadFacturacion, provinciaEnvio, ciudadEnvio):void{
+
+    this.paramServiceMDP.obtenerListaHijos(provinciaFacturacion,'PROVINCIA')
+      .subscribe((infoFacturacion) => {
+          const estaPresenteFacturacion = infoFacturacion.some((ciudad)=>
+            ciudad.nombre === ciudadFacturacion
+          );
+          if (!estaPresenteFacturacion) {
+            this.toaster.open("La ciudad no se encuentra en la provincia en los datos de factura.", {
+              type: 'danger'
+            });
+            this.ciudadPresenteFacturacion = false;
+          }else{
+            this.ciudadPresenteFacturacion = true;
+
+          }
+        }
+      );
+    this.paramServiceMDP.obtenerListaHijos(provinciaEnvio,'PROVINCIA')
+      .subscribe((infoEnvio) => {
+          const estaPresenteEnvio = infoEnvio.some((ciudad)=>
+            ciudad.nombre === ciudadEnvio
+          );
+          if (!estaPresenteEnvio) {
+            this.toaster.open("La ciudad no se encuentra en la provincia en los datos de envio.", {
+              type: 'danger'
+            });
+            this.ciudadPresenteEnvio = false;
+          }else{
+            this.ciudadPresenteEnvio = true;
+
+          }
+        }
+      );
   }
 }

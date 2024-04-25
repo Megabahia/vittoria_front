@@ -641,8 +641,7 @@
                                                 <button type="reset" class="btn btn-secondary"
                                                         data-dismiss="modal">Cerrar
                                                 </button>
-                                                <button #printButton class="btn btn-primary" type="button" [useExistingCss]="true"
-                                                        printSectionId="verfactura" ngxPrint>Imprimir</button>
+                                                <button #printButton class="btn btn-primary" type="button" (click)="imprimirEmpacado()">Imprimir</button>
                                             </div>
                                         </div>
 
@@ -764,7 +763,7 @@
                     <div class="form-group">
                         <label for="generarGuia">Generar guia</label>
                         <select id="generarGuia" class="form-control" formControlName="generarGuia" (change)="onSelectChange($event)">
-                            <option value="">- Seleccione -</option>
+                            <option  value="">- Seleccione -</option>
                             <option [value]="item.valor" *ngFor="let item of guias">{{item.valor}}</option>
                         </select>
                     </div>

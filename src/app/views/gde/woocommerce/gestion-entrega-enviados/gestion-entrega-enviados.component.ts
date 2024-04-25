@@ -30,8 +30,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   transaccion: any;
   opciones;
   archivo: FormData = new FormData();
-
-
+  pedido;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -59,6 +58,8 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       id: ['', [Validators.required]],
       evidenciaFotoEmpaque: ['', [Validators.required]],
       evidenciaVideoEmpaque: ['', []],
+      tipoPago: ['', [Validators.required]],
+      evidenciaPago: ['', [Validators.required]]
     });
   }
 
@@ -267,8 +268,12 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       id: [transaccion.id, [Validators.required]],
       evidenciaFotoEmpaque: ['', [Validators.required]],
       evidenciaVideoEmpaque: ['', []],
+      tipoPago: ['', [Validators.required]],
+      evidenciaPago: ['', [Validators.required]],
       estado: ['Envio', []],
     });
+    this.obtenerTransaccion(transaccion.id)
+    this.pedido = transaccion;
   }
 
   procesarAutorizacionEnvio(): void {

@@ -53,7 +53,6 @@
                                 <th>Nombres Facturación</th>
                                 <th>Apellidos Facturación</th>
                                 <th>Metodo Pago</th>
-                                <th>Comprobante Pago</th>
                                 <th>Telefono</th>
                                 <th>Estado</th>
                                 <th>Ver Pedido</th>
@@ -72,9 +71,7 @@
                                 <td [title]="transaccion.facturacion.nombres">{{transaccion.facturacion.nombres | shorten}} </td>
                                 <td [title]="transaccion.facturacion.apellidos">{{transaccion.facturacion.apellidos | shorten}}</td>
                                 <td [title]="transaccion.metodoPago">{{transaccion.metodoPago | shorten}}</td>
-                                <td [title]="transaccion.urlMetodoPago">
-                                    <a *ngIf="transaccion.urlMetodoPago" [href]="transaccion.urlMetodoPago" target="_blank">Ver</a>
-                                </td>
+
                                 <td>{{transaccion.facturacion.telefono}} </td>
                                 <td>{{transaccion.estado}} </td>
                                 <td>
@@ -676,9 +673,48 @@
     <div class="modal-body">
         <form [formGroup]="evidenciasForm">
             <div class="row">
-                <div class="col-12">
+              <div class="col-12" *ngIf="pedido.metodoPago.includes('Contra-Entrega')">
+                <div class="form-group">
+                  <label for="tipoPago">Método de pago</label>
+                  <select id="tipoPago" class="form-control" formControlName="tipoPago">
+                    <option value="" selected disabled>- Seleccione -</option>
+                    <option value="efectivo">Efectivo</option>
+                    <option value="transferencia">Transferencia</option>
+                  </select>
+                  <div *ngIf="autorizarFForm.tipoPago.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="autorizarFForm.tipoPago.errors.required">
+                      Requerido
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="form-group" *ngIf="pedido.metodoPago.includes('Contra-Entrega')">
+
+                  <label for="evidenciaPagolbl">Cargar evidencia pago</label>
+
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="evidenciaPago"
+                           accept="image/png, image/gif, image/jpeg"
+                           (change)="cargarArchivo($event, 'evidenciaPago')"
+                           formControlName="evidenciaPago"/>
+                    <label class="custom-file-label" for="evidenciaPago" id="evidenciaPagolbl">Selecionar
+                    </label>
+                    <div *ngIf="autorizarFForm.evidenciaPago.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="autorizarFForm.evidenciaPago.errors.required">
+                        Requerido
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
                     <div class="form-group">
+
                         <label for="evidenciaFotoEmpaque">Cargar Foto Entrega</label>
+
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="evidenciaFotoEmpaque"
                                    accept="image/png, image/gif, image/jpeg"

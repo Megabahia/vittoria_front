@@ -271,7 +271,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       codigoCourier: ['', [Validators.required]],
       nombreCourier: ['', [Validators.required]],
       correoCourier: ['', [Validators.required]],
-      archivoGuia: ['', [Validators.required]],
+      archivoGuia: [''],
       estado: ['Despachado', [Validators.required]],
       envio: this.formBuilder.group({
         nombres: [transaccion.envio.nombres, []],
@@ -288,6 +288,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
         referencia: [transaccion.envio.referencia, []],
         gps: [transaccion.envio.gps, []],
       }),
+
     });
     this.obtenerCouriers(transaccion.envio.pais, transaccion.envio.provincia, transaccion.envio.ciudad);
   }
@@ -350,8 +351,8 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
     }
   }
 
-  verGuia(id:void){
-    this.pedidosService.obtenerPedido(id).subscribe((info) => {
+  verGuia(id?:any){
+    this.pedidosService.obtenerPedido(id ? id : this.autorizarForm.value.id).subscribe((info) => {
       if(info.archivoGuia===null){
        window.alert('No existe guías en este pedido');
       }else{
