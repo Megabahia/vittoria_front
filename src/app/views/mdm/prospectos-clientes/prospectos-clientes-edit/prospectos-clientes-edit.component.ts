@@ -182,7 +182,9 @@ export class ProspectosClientesEditComponent implements OnInit {
   obtenerProducto(i): void {
     this.productosServicer.obtenerProductoPorCodigo({
       codigoBarras: this.fDetalles.controls[i].get('codigo').value,
-      lugarVentaCiudad: this.prospectoForm.get('ciudad').value
+      lugarVentaCiudad: this.prospectoForm.get('ciudad').value,
+      canal: this.prospectoForm.get('canalOrigen').value,
+      valorUnitario: this.fDetalles.controls[i].get('precio').value,
     }).subscribe((info) => {
       if (info.codigoBarras) {
         this.fDetalles.controls[i].get('articulo').setValue(info.nombre);
