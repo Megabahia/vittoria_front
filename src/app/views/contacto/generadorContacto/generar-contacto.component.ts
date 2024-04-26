@@ -1,15 +1,19 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {Color, Label} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
 import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
 import {ParamService} from '../../../services/mp/param/param.service';
+import {ParamService as ParamServiceAdm} from '../../../services/admin/param.service';
+
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {ValidacionesPropias} from '../../../utils/customer.validators';
 import {Toaster} from 'ngx-toast-notifications';
 import { v4 as uuidv4 } from 'uuid';
+import {ClientesService} from "../../../services/mdm/personas/clientes/clientes.service";
+import {ProspectosService} from "../../../services/mdm/prospectosCli/prospectos.service";
 
 @Component({
   selector: 'app-generar-contacto',
@@ -18,6 +22,7 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class GenerarContactoComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
+  @Input() paises;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
   public rechazoForm: FormGroup;
@@ -30,7 +35,16 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
   fin = new Date();
   transaccion: any;
   opciones;
+  pais= 'Ecuador';
+  ciudad = '';
+  provincia = '';
+  ciudadOpciones;
+  provinciaOpciones;
 
+  listaProspectos;
+  clientes;
+  cliente;
+  cedula
 
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -44,11 +58,15 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
   mostrarSpinner = false;
 
   constructor(
+    private prospectosService: ProspectosService,
+
+    private clientesService: ClientesService,
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
     private pedidosService: PedidosService,
     private paramService: ParamService,
+    private paramServiceAdm: ParamServiceAdm,
     private productosService: ProductosService,
     private toaster: Toaster,
   ) {
@@ -76,11 +94,16 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     };
     this.barChartData = [this.datosTransferencias];
     this.obtenerOpciones();
+    this.obtenerProspectos()
+    this.obtenerListaClientes()
+    this.obtenerProvincias();
+    this.obtenerCiudad();
   }
 
   ngAfterViewInit(): void {
     this.iniciarPaginador();
     this.obtenerTransacciones();
+
   }
 
   iniciarNotaPedido(): void {
@@ -90,19 +113,16 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.required, Validators.email]],
-        identificacion: ['', [
-          Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$'),
-          ValidacionesPropias.cedulaValido
-        ]],
+        identificacion: [''],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
-        pais: ['', [Validators.required]],
+        pais: [this.pais, [Validators.required]],
         provincia: ['', [Validators.required]],
         ciudad: ['', [Validators.required]],
-        callePrincipal: ['', [Validators.required]],
-        numero: ['', [Validators.required]],
-        calleSecundaria: ['', [Validators.required]],
-        referencia: ['', [Validators.required]],
-        gps: ['', []],
+        //callePrincipal: ['', [Validators.required]],
+        //numero: ['', [Validators.required]],
+        //calleSecundaria: ['', [Validators.required]],
+        //referencia: ['', [Validators.required]],
+        //gps: ['', []],
         codigoVendedor: ['', []],
         nombreVendedor: ['', []],
         comprobantePago: ['', []],
@@ -112,7 +132,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
       envioTotal: [0, [Validators.required]],
       numeroPedido: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
-      metodoPago: ['', [Validators.required]],
+      metodoPago: ['Contra-Entrega', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
       canal: ['Contacto Local', []],
       estado: ['Pendiente', []],
@@ -199,12 +219,14 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
+
     });
   }
 
   crearNuevoPedidoContacto(modal): void {
     this.iniciarNotaPedido();
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+
   }
 
 
@@ -283,7 +305,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
       return this.obtenerProducto(index);
     }));
 
-    if (confirm('Esta seguro de actualizar los datos') === true) {
+    if (confirm('Esta seguro de guardar los datos') === true) {
       this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
@@ -352,5 +374,41 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
 
   generarID(): string {
     return uuidv4();
+  }
+
+  obtenerProvincias(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.pais, 'PAIS').subscribe((info) => {
+      this.provinciaOpciones = info;
+    });
+  }
+
+  obtenerCiudad(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.notaPedido.value.facturacion.provincia, 'PROVINCIA').subscribe((info) => {
+      this.ciudadOpciones = info;
+    });
+  }
+
+  async obtenerListaClientes() {
+    this.clientesService.obtenerListaClientes(
+      {
+        nombreCompleto: this.cliente,
+        cedula: this.cedula,
+        inicio: this.inicio,
+        fin: this.fin,
+        page: this.page - 1,
+        page_size: this.pageSize
+      }).subscribe((info) => {
+      this.collectionSize = info.cont;
+      this.clientes = info.info;
+      console.log('CLIENTES', this.clientes)
+    });
+  }
+
+  async obtenerProspectos() {
+    await this.prospectosService.obtenerFiltro('CONFIRMACION_PROSPECTO').subscribe((info) => {
+      this.listaProspectos = info;
+      console.log('CLIENTESProspecto', this.listaProspectos)
+
+    });
   }
 }

@@ -2,7 +2,7 @@
     <div class="content-wrapper">
         <div class="content-body">
           <div class="card d-inline-flex p-2">
-            <h1>Generar contacto</h1>
+            <h1>Punto de entrega</h1>
             <button class="btn btn-primary mx-1"
                     (click)="crearNuevoPedidoContacto(notaPedidoModalAdd)"
             >Crear nuevo
@@ -32,9 +32,6 @@
                   <th>Nombres Facturación</th>
                   <th>Apellidos Facturación</th>
                   <th>Metodo Pago</th>
-                  <th>Provincia Envio</th>
-                  <th>Ciudad Envio</th>
-                  <th>comprobantePago</th>
                   <th>Telefono</th>
                   <th>Estado</th>
                   <th>Ver</th>
@@ -50,9 +47,6 @@
                   <td [title]="transaccion.facturacion.nombres">{{transaccion.facturacion.nombres | shorten}} </td>
                   <td [title]="transaccion.facturacion.apellidos">{{transaccion.facturacion.apellidos | shorten}}</td>
                   <td [title]="transaccion.metodoPago">{{transaccion.metodoPago | shorten}}</td>
-                  <td [title]="transaccion.envio.provincia">{{transaccion.envio.provincia | shorten}}</td>
-                  <td [title]="transaccion.envio.ciudad">{{transaccion.envio.ciudad | shorten}}</td>
-                  <td [title]="transaccion.facturacion.comprobantePago">{{transaccion.facturacion.comprobantePago | shorten}}</td>
                   <td>{{transaccion.facturacion.telefono}} </td>
                   <td>{{transaccion.estado}} </td>
                   <td>
@@ -98,7 +92,7 @@
 
                     <!-- Address and Contact starts -->
                     <div class="card-body invoice-padding pt-0">
-                      <h4 class="invoice-title mb-2">Datos para la factura</h4>
+                      <h4 class="invoice-title mb-2">Datos para el punto de entrega</h4>
                       <div formGroupName="facturacion">
                         <div class="row">
                           <div class="col-4">
@@ -141,24 +135,7 @@
                             <label>Numero Identificación</label>
                             <input class="form-control" type="text"
                                    formControlName="identificacion">
-                            <div *ngIf="facturacionForm.identificacion.errors"
-                                 class="invalid-feedback" style="display: block;">
-                              <div *ngIf="facturacionForm.identificacion.errors.required">
-                                Requerido
-                              </div>
-                              <div *ngIf="facturacionForm.identificacion.errors.minlength">
-                                Ingrese Minimo 10 digitos
-                              </div>
-                              <div *ngIf="facturacionForm.identificacion.errors.maxlength">
-                                Ingrese Maximo 10 digitos
-                              </div>
-                              <div *ngIf="facturacionForm.identificacion.errors.pattern">
-                                Ingrese solo numeros
-                              </div>
-                              <div *ngIf="facturacionForm.identificacion.errors.identificacionInvalid">
-                                Identificacion no valida
-                              </div>
-                            </div>
+
                           </div>
                           <div class="col-4">
                             <label>Teléfono</label>
@@ -213,62 +190,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
-                            <label>Calle Principal</label>
-                            <input class="form-control" type="text"
-                                   formControlName="callePrincipal">
-                            <div *ngIf="facturacionForm.callePrincipal.errors"
-                                 class="invalid-feedback" style="display: block;">
-                              <div *ngIf="facturacionForm.callePrincipal.errors.required">
-                                Requerido
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-4">
-                            <label>Número</label>
-                            <input class="form-control" type="text"
-                                   formControlName="numero">
-                            <div *ngIf="facturacionForm.numero.errors"
-                                 class="invalid-feedback" style="display: block;">
-                              <div *ngIf="facturacionForm.numero.errors.required">
-                                Requerido
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-4">
-                            <label>Calle Secundaria</label>
-                            <input class="form-control" type="text"
-                                   formControlName="calleSecundaria">
-                            <div *ngIf="facturacionForm.calleSecundaria.errors"
-                                 class="invalid-feedback" style="display: block;">
-                              <div *ngIf="facturacionForm.calleSecundaria.errors.required">
-                                Requerido
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-4">
-                            <label>Referencia</label>
-                            <input class="form-control" type="text"
-                                   formControlName="referencia">
-                            <div *ngIf="facturacionForm.referencia.errors"
-                                 class="invalid-feedback" style="display: block;">
-                              <div *ngIf="facturacionForm.referencia.errors.required">
-                                Requerido
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-4">
-                            <label>GPS</label>
-                            <input class="form-control" type="text"
-                                   formControlName="gps">
-                            <div *ngIf="facturacionForm.gps.errors"
-                                 class="invalid-feedback" style="display: block;">
-                              <div *ngIf="facturacionForm.gps.errors.required">
-                                Requerido
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                       </div>
                       </div>
                     </div>
                     <div class="col-4">
@@ -491,7 +413,7 @@
 
   <ng-template #notaPedidoModalAdd let-modal>
     <div class="modal-header">
-      <h4 class="modal-title">Nota Venta</h4>
+        <h4 class="modal-title">Datos para le punto de entrega</h4>
       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -504,7 +426,7 @@
             <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
               <div>
                 <div class="d-flex align-items-center mb-1">
-                  <span class="title mr-1">Fecha Pedido:</span>
+                  <span class="title mr-1">Fecha de contacto:</span>
                   <input type="text"
                          placeholder={{formatearFecha()}}
                          class="form-control invoice-edit-input date-picker"
@@ -520,7 +442,7 @@
 
           <!-- Address and Contact starts -->
           <div class="card-body invoice-padding pt-0">
-            <h4 class="invoice-title mb-2">Datos para la factura</h4>
+            <h4 class="invoice-title mb-2">Datos para el punto de entrega</h4>
             <div formGroupName="facturacion">
               <div class="row">
                 <div class="col-4">
@@ -548,7 +470,7 @@
                   </div>
                 </div>
                 <div class="col-4">
-                  <label>Correo</label>
+                  <label>Correo electrónico</label>
                   <input class="form-control" type="text"
                          formControlName="correo"
                         >
@@ -567,27 +489,9 @@
                   <input class="form-control" type="text"
                          formControlName="identificacion"
                          >
-                  <div *ngIf="facturacionForm.identificacion.errors"
-                       class="invalid-feedback" style="display: block;">
-                    <div *ngIf="facturacionForm.identificacion.errors.required">
-                      Requerido
-                    </div>
-                    <div *ngIf="facturacionForm.identificacion.errors.minlength">
-                      Ingrese Minimo 10 digitos
-                    </div>
-                    <div *ngIf="facturacionForm.identificacion.errors.maxlength">
-                      Ingrese Maximo 10 digitos
-                    </div>
-                    <div *ngIf="facturacionForm.identificacion.errors.pattern">
-                      Ingrese solo numeros
-                    </div>
-                    <div *ngIf="facturacionForm.identificacion.errors.identificacionInvalid">
-                      Identificacion no valida
-                    </div>
-                  </div>
                 </div>
                 <div class="col-4">
-                  <label>Teléfono</label>
+                  <label>Número de WhatsApp</label>
                   <input class="form-control" type="text"
                          formControlName="telefono"
                          >
@@ -608,22 +512,22 @@
                   </div>
                 </div>
                 <div class="col-4">
-                  <label>Pais</label>
+                  <label>País</label>
                   <input class="form-control" type="text"
-                         formControlName="pais"
-                         >
-                  <div *ngIf="facturacionForm.pais.errors"
-                       class="invalid-feedback" style="display: block;">
-                    <div *ngIf="facturacionForm.pais.errors.required">
-                      Requerido
-                    </div>
-                  </div>
+                         formControlName="pais" disabled
+                  >
+
                 </div>
                 <div class="col-4">
-                  <label>Provincia</label>
-                  <input class="form-control" type="text"
-                         formControlName="provincia"
-                         >
+                  <label for="provinciaContacto">Provincia</label>
+                  <select class="form-control" name="provinciaContacto" formControlName="provincia"
+                          (change)="obtenerCiudad()"
+                          [(ngModel)]="provincia" id="provinciaContacto">
+                    <option value="" selected>- Seleccione -</option>
+                    <option value="{{pais.nombre}}" *ngFor="let pais of provinciaOpciones">
+                      {{pais.nombre}}
+                    </option>
+                  </select>
                   <div *ngIf="facturacionForm.provincia.errors"
                        class="invalid-feedback" style="display: block;">
                     <div *ngIf="facturacionForm.provincia.errors.required">
@@ -632,10 +536,13 @@
                   </div>
                 </div>
                 <div class="col-4">
-                  <label>Ciudad</label>
-                  <input class="form-control" type="text"
-                         formControlName="ciudad"
-                         >
+                  <label for="usuarioCiudad">Ciudad</label>
+                  <select class="form-control" name="usuarioCiudad" formControlName="ciudad" [(ngModel)]="ciudad" id="usuarioCiudad">
+                    <option value="" selected>- Seleccione -</option>
+                    <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
+                      {{ciudad.nombre}}
+                    </option>
+                  </select>
                   <div *ngIf="facturacionForm.ciudad.errors"
                        class="invalid-feedback" style="display: block;">
                     <div *ngIf="facturacionForm.ciudad.errors.required">
@@ -643,73 +550,14 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-4">
-                  <label>Calle Principal</label>
-                  <input class="form-control" type="text"
-                         formControlName="callePrincipal"
-                         >
-                  <div *ngIf="facturacionForm.callePrincipal.errors"
-                       class="invalid-feedback" style="display: block;">
-                    <div *ngIf="facturacionForm.callePrincipal.errors.required">
-                      Requerido
-                    </div>
-                  </div>
-                </div>
-                <div class="col-4">
-                  <label>Número</label>
-                  <input class="form-control" type="text"
-                         formControlName="numero"
-                         >
-                  <div *ngIf="facturacionForm.numero.errors"
-                       class="invalid-feedback" style="display: block;">
-                    <div *ngIf="facturacionForm.numero.errors.required">
-                      Requerido
-                    </div>
-                  </div>
-                </div>
-                <div class="col-4">
-                  <label>Calle Secundaria</label>
-                  <input class="form-control" type="text"
-                         formControlName="calleSecundaria"
-                        >
-                  <div *ngIf="facturacionForm.calleSecundaria.errors"
-                       class="invalid-feedback" style="display: block;">
-                    <div *ngIf="facturacionForm.calleSecundaria.errors.required">
-                      Requerido
-                    </div>
-                  </div>
-                </div>
-                <div class="col-4">
-                  <label>Referencia</label>
-                  <input class="form-control" type="text"
-                         formControlName="referencia"
-                         >
-                  <div *ngIf="facturacionForm.referencia.errors"
-                       class="invalid-feedback" style="display: block;">
-                    <div *ngIf="facturacionForm.referencia.errors.required">
-                      Requerido
-                    </div>
-                  </div>
-                </div>
-                <div class="col-4">
-                  <label>GPS</label>
-                  <input class="form-control" type="text"
-                         formControlName="gps"
-                         >
-                  <div *ngIf="facturacionForm.gps.errors"
-                       class="invalid-feedback" style="display: block;">
-                    <div *ngIf="facturacionForm.gps.errors.required">
-                      Requerido
-                    </div>
-                  </div>
-                </div>
+
               </div>
             </div>
           </div>
           <div class="col-4">
             <label>Metodo Pago</label>
             <input class="form-control" type="text"
-                   formControlName="metodoPago"
+                   formControlName="metodoPago" disabled
                    >
             <div *ngIf="notaPedidoForm.metodoPago.errors"
                  class="invalid-feedback" style="display: block;">
