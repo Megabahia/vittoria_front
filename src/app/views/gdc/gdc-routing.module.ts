@@ -2,13 +2,13 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../../guard/auth.guard';
 import {GdcComponent} from "./gdc.component";
-import {PedidosComponent} from "../mp/pedidos/pedidos.component";
+import {ContactoComponent} from "./contactos/contacto.component";
 
 const routes: Routes = [{
   path: '', component: GdcComponent, children: [
 
     {
-      path: 'pedidos-nuevos', component: PedidosComponent, canActivate: [AuthGuard]
+      path: 'contacto', component: ContactoComponent, canActivate: [AuthGuard]
     },
 
   ]

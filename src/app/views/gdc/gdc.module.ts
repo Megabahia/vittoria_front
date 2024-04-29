@@ -9,12 +9,14 @@ import {NgxDropzoneModule} from 'ngx-dropzone';
 import {GdcRoutingModule} from './gdc-routing.module';
 import {GdeModule} from '../gde/gde.module';
 import {GdcComponent} from "./gdc.component";
+import {ContactoComponent} from "./contactos/contacto.component";
 
 
 
 @NgModule({
   declarations: [
-    GdcComponent
+    GdcComponent,
+    ContactoComponent
   ],
   imports: [
     CommonModule,
