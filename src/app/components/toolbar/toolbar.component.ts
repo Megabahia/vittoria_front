@@ -46,6 +46,9 @@ export class ToolbarComponent implements OnInit, OnChanges {
       param: '',
       pedidos: '',
     },
+    gdc: {
+      contactos: '',
+    },
     gde: {
       param: '',
       gestEntrega: ''

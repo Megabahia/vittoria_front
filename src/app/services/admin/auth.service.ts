@@ -27,6 +27,7 @@ export interface Acciones {
   MDO: Mdo;
   GDO: Gdo;
   GDE: Gde;
+  GDC: Gdc;
   SERVI: Servi;
   TODOMEGA: Todomega;
 }
@@ -86,6 +87,14 @@ export interface Todomega {
   CREAR: number;
   BORRAR: number;
 }
+
+export interface Gdc {
+  LEER: number;
+  ESCRIBIR: number;
+  CREAR: number;
+  BORRAR: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })

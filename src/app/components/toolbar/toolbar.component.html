@@ -405,23 +405,21 @@
                     <i data-feather="file-text"></i>
                     <span class="menu-title text-truncate" data-i18n="Invoice">GCN Gestión de centro de negocios</span></a>
                 <ul class="menu-content">
-                    <li class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}">
-                        <a class="d-flex align-items-center" href="#/gcn/reporte-ventas-vendedor/list" data-toggle="tooltip"
-                           data-placement="right" title="Reporte de ventas por vendedor">
-                            <i data-feather="circle"></i>
-                            <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas por vendedor</span>
-                        </a>
-                    </li>
-                    <li class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}" *ngIf="usuario.usuario.idRol!==52 || usuario.usuario.idRol===54">
-                        <a  class="d-flex align-items-center" href="#/gcn/reporte-ventas-centro-negocio/list" data-toggle="tooltip"
-                           data-placement="right" title="Reporte de ventas del centro de negocio">
-                            <i data-feather="circle"></i>
-                            <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas del centro de negocio</span>
-                        </a>
-                    </li>
+
                 </ul>
             </li>
-
+          <li class="nav-item" *ngIf="acciones.ADM.LEER">
+            <a class="d-flex align-items-center">
+              <i data-feather="file-text"></i>
+              <span class="menu-title text-truncate" data-i18n="Invoice">GDC Gestor de contacto</span></a>
+            <ul class="menu-content">
+              <li class="nav-item">
+                <a class="d-flex align-items-center" href="#/mp/pedidos-nuevos" data-toggle="tooltip"
+                   data-placement="right" title="Pedidos Nuevos">
+                  <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Pedidos Nuevos</span></a>
+              </li>
+            </ul>
+          </li>
             <li class="navigation-header">Módulos de servientrega</li>
             <li class="nav-item" *ngIf="acciones.SERVI.LEER">
                 <a class="d-flex align-items-center">

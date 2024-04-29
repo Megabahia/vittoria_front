@@ -9,11 +9,12 @@ import {ParamService as ParamServiceAdm} from '../../../services/admin/param.ser
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
-import {ValidacionesPropias} from '../../../utils/customer.validators';
 import {Toaster} from 'ngx-toast-notifications';
 import { v4 as uuidv4 } from 'uuid';
 import {ClientesService} from "../../../services/mdm/personas/clientes/clientes.service";
 import {ProspectosService} from "../../../services/mdm/prospectosCli/prospectos.service";
+import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
+import {logger} from "codelyzer/util/logger";
 
 @Component({
   selector: 'app-generar-contacto',
@@ -30,7 +31,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
   page = 1;
   pageSize = 3;
   collectionSize;
-  listaTransacciones;
+  listaContactos;
   inicio = new Date();
   fin = new Date();
   transaccion: any;
@@ -65,6 +66,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
     private pedidosService: PedidosService,
+    private contactosService: ContactosService,
     private paramService: ParamService,
     private paramServiceAdm: ParamServiceAdm,
     private productosService: ProductosService,
@@ -94,15 +96,13 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     };
     this.barChartData = [this.datosTransferencias];
     this.obtenerOpciones();
-    this.obtenerProspectos()
-    this.obtenerListaClientes()
     this.obtenerProvincias();
     this.obtenerCiudad();
   }
 
   ngAfterViewInit(): void {
     this.iniciarPaginador();
-    this.obtenerTransacciones();
+    this.obtenerContactos();
 
   }
 
@@ -144,7 +144,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
 
   iniciarPaginador(): void {
     this.paginator.pageChange.subscribe(() => {
-      this.obtenerTransacciones();
+      this.obtenerContactos();
     });
   }
 
@@ -193,8 +193,8 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     this.calcular();
   }
 
-  obtenerTransacciones(): void {
-    this.pedidosService.obtenerListaPedidos({
+  obtenerContactos(): void {
+    this.contactosService.obtenerListaContactos({
       page: this.page - 1,
       page_size: this.pageSize,
       inicio: this.inicio,
@@ -203,7 +203,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
       canal: 'Contacto Local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
-      this.listaTransacciones = info.info;
+      this.listaContactos = info.info;
     });
   }
 
@@ -211,9 +211,9 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     return this.datePipe.transform(fecha, 'yyyy-MM-dd');
   }
 
-  obtenerTransaccion(modal, id): void {
+  obtenerContacto(modal, id): void {
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
-    this.pedidosService.obtenerPedido(id).subscribe((info) => {
+    this.contactosService.obtenerContacto(id).subscribe((info) => {
       this.iniciarNotaPedido();
       info.articulos.map((item): void => {
         this.agregarItem();
@@ -223,10 +223,9 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  crearNuevoPedidoContacto(modal): void {
+  crearNuevoContacto(modal): void {
     this.iniciarNotaPedido();
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
-
   }
 
 
@@ -236,17 +235,16 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async guardarPedidoPorContacto(): Promise<void> {
+  async guardarPorContacto(): Promise<void> {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
-
     if (confirm('Esta seguro de guardar los datos') === true) {
-      this.pedidosService.crearNuevoPedidoContacto(this.notaPedido.value).subscribe((info) => {
-
+      this.contactosService.crearNuevoContacto(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
-        this.obtenerTransacciones();
-      });
+        this.obtenerContactos();
+      }, error => this.toaster.open(error, {type: 'danger'})
+    );
     }
   }
 
@@ -308,7 +306,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     if (confirm('Esta seguro de guardar los datos') === true) {
       this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
-        this.obtenerTransacciones();
+        this.obtenerContactos();
       });
     }
   }
@@ -330,7 +328,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
       this.mostrarSpinner = true;
       this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
         this.modalService.dismissAll();
-        this.obtenerTransacciones();
+        this.obtenerContactos();
         this.mostrarSpinner = false;
       }, (data) => {
         this.toaster.open(data, {type: 'danger'});
@@ -388,27 +386,4 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async obtenerListaClientes() {
-    this.clientesService.obtenerListaClientes(
-      {
-        nombreCompleto: this.cliente,
-        cedula: this.cedula,
-        inicio: this.inicio,
-        fin: this.fin,
-        page: this.page - 1,
-        page_size: this.pageSize
-      }).subscribe((info) => {
-      this.collectionSize = info.cont;
-      this.clientes = info.info;
-      console.log('CLIENTES', this.clientes)
-    });
-  }
-
-  async obtenerProspectos() {
-    await this.prospectosService.obtenerFiltro('CONFIRMACION_PROSPECTO').subscribe((info) => {
-      this.listaProspectos = info;
-      console.log('CLIENTESProspecto', this.listaProspectos)
-
-    });
-  }
 }
