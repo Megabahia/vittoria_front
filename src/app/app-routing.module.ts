@@ -12,6 +12,9 @@ const routes: Routes = [
     path: 'contacto', loadChildren: () => import('./views/contacto/cpl.module').then(m => m.CplModule)
   },
   {
+    path: 'gdc', loadChildren: () => import('./views/gdc/gdc.module').then(m => m.GdcModule)
+  },
+  {
     path: 'auth', loadChildren: () => import('./views/auth/auth.module').then(m => m.AuthModule)
   },
   {
