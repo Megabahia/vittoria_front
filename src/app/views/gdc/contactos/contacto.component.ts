@@ -302,14 +302,14 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
-
-    if (confirm('Esta seguro de guardar los datos') === true) {
-      this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
+        if (confirm('Esta seguro de guardar los datos') === true) {
+      this.contactosService.actualizarContacto(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerContactos();
       });
     }
   }
+
 
 
   procesarAutorizacion(): void {
@@ -385,5 +385,11 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       this.ciudadOpciones = info;
     });
   }
+
+  validarDatos(): void {
+    this.contactosService.validarCamposContacto(this.notaPedido.value).subscribe((info) => {
+    }, error => this.toaster.open(error, {type: 'danger'}));
+  }
+
 
 }
