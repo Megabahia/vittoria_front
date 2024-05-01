@@ -18,15 +18,15 @@ import {logger} from "codelyzer/util/logger";
 import {ValidacionesPropias} from "../../../utils/customer.validators";
 
 @Component({
-  selector: 'app-contacto',
-  templateUrl: './contacto.component.html',
+  selector: 'app-ventas',
+  templateUrl: './ventas.component.html',
   providers: [DatePipe]
 })
-export class ContactoComponent implements OnInit, AfterViewInit {
+export class VentasComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @Input() paises;
   public notaPedido: FormGroup;
-  public facturarForm: FormGroup;
+  public autorizarForm: FormGroup;
   public rechazoForm: FormGroup;
   menu;
   page = 1;
@@ -45,13 +45,12 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   verificarContacto=false;
   whatsapp = '';
   correo = ''
-  mostrarInputComprobante = false;
 
   listaProspectos;
   clientes;
   cliente;
-  cedula;
-  factura;
+  cedula
+
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -76,7 +75,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
-    this.facturarForm = this.formBuilder.group({
+    this.autorizarForm = this.formBuilder.group({
       id: ['', [Validators.required]],
       metodoConfirmacion: ['', [Validators.required]],
       codigoConfirmacion: ['', [Validators.required]],
@@ -144,9 +143,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       envio: ['', []],
       envios: ['', []],
       json: ['', []],
-      numeroComprobante: [''],
-      tipoPago: ['']
-
     });
   }
 
@@ -157,7 +153,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   }
 
   get autorizarFForm() {
-    return this.facturarForm['controls'];
+    return this.autorizarForm['controls'];
   }
 
   get rechazarFForm() {
@@ -225,12 +221,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
     this.contactosService.obtenerContacto(id).subscribe((info) => {
       this.iniciarNotaPedido();
-      if (info.tipoPago === 'rimpePopular') {
-        this.mostrarInputComprobante = true;
-      }
-      if (info.tipoPago === 'facturaElectronica'){
-        this.mostrarInputComprobante = false;
-      }
       info.articulos.map((item): void => {
         this.agregarItem();
       });
@@ -270,7 +260,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         canal: this.notaPedido.value.canal,
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
-
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
         //if(info.mensaje==''){
         if (info.codigoBarras) {
@@ -329,13 +318,13 @@ export class ContactoComponent implements OnInit, AfterViewInit {
 
 
   procesarFactura(modal, transaccion): void {
-    if (this.facturarForm.invalid || this.invalidoTamanoVideo) {
+    if (this.autorizarForm.invalid || this.invalidoTamanoVideo) {
       this.toaster.open('Campos vacios', {type: 'danger'});
       return;
     }
     if (confirm('Esta seguro de cambiar de estado') === true) {
-      const facturaFisicaValores: string[] = Object.values(this.facturarForm.value);
-      const facturaFisicaLlaves: string[] = Object.keys(this.facturarForm.value);
+      const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
+      const facturaFisicaLlaves: string[] = Object.keys(this.autorizarForm.value);
       facturaFisicaLlaves.map((llaves, index) => {
         if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago') {
           this.archivo.append(llaves, facturaFisicaValores[index]);
@@ -407,13 +396,5 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     }, error => this.toaster.open(error, {type: 'danger'}));
   }
 
-  onSelectChange(event: any) {
-    const selectedValue = event.target.value;
-    if (selectedValue === 'rimpePopular') {
-      this.mostrarInputComprobante = true;
-    } else {
-      this.mostrarInputComprobante = false;
-    }
-  }
 
 }

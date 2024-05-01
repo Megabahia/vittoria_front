@@ -286,7 +286,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
     if (this.notaPedido.invalid) {
       this.toaster.open('Pedido Incompleto', {type: 'danger'});
-      console.log('form', this.notaPedido);
       return;
     }
 
