@@ -25,4 +25,11 @@ export class ContactosService {
     return this.http.get<any>(`${apiUrl}/gdc/contact/listOne/${id}`);
   }
 
+  actualizarContacto(datos): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/gdc/contact/update/${datos.id}`, datos);
+  }
+
+  validarCamposContacto(datos): Observable<any>{
+    return this.http.post<any>(`${apiUrl}/gdc/contact/validate/contact`, datos);
+  }
 }

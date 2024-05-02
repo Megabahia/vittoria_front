@@ -10,13 +10,15 @@ import {GdcRoutingModule} from './gdc-routing.module';
 import {GdeModule} from '../gde/gde.module';
 import {GdcComponent} from "./gdc.component";
 import {ContactoComponent} from "./contactos/contacto.component";
+import {VentasComponent} from "./ventas/ventas.component";
 
 
 
 @NgModule({
   declarations: [
     GdcComponent,
-    ContactoComponent
+    ContactoComponent,
+    VentasComponent
   ],
   imports: [
     CommonModule,

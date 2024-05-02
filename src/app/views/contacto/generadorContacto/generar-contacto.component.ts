@@ -10,7 +10,7 @@ import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 import {ClientesService} from "../../../services/mdm/personas/clientes/clientes.service";
 import {ProspectosService} from "../../../services/mdm/prospectosCli/prospectos.service";
 import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
@@ -36,7 +36,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
   fin = new Date();
   transaccion: any;
   opciones;
-  pais= 'Ecuador';
+  pais = 'Ecuador';
   ciudad = '';
   provincia = '';
   ciudadOpciones;
@@ -46,6 +46,8 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
   clientes;
   cliente;
   cedula
+
+  usuarioActual;
 
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -59,9 +61,6 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
   mostrarSpinner = false;
 
   constructor(
-    private prospectosService: ProspectosService,
-
-    private clientesService: ClientesService,
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
@@ -107,6 +106,8 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
   }
 
   iniciarNotaPedido(): void {
+    this.usuarioActual = JSON.parse(localStorage.getItem('currentUser'));
+
     this.notaPedido = this.formBuilder.group({
       id: ['', [Validators.required]],
       facturacion: this.formBuilder.group({
@@ -123,8 +124,8 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
         //calleSecundaria: ['', [Validators.required]],
         //referencia: ['', [Validators.required]],
         //gps: ['', []],
-        codigoVendedor: ['', []],
-        nombreVendedor: ['', []],
+        codigoVendedor: [this.usuarioActual.usuario.username, []],
+        nombreVendedor: [this.usuarioActual.full_name, []],
         comprobantePago: ['', []],
       }),
       articulos: this.formBuilder.array([], Validators.required),
@@ -185,11 +186,17 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
   }
 
   agregarItem(): void {
-    this.detallesArray.push(this.crearDetalleGrupo());
+    if (this.detallesArray.value.length < 3) {
+      this.detallesArray.push(this.crearDetalleGrupo());
+    } else {
+      this.toaster.open('Solo puede ingresar 3 productos', {type: 'danger'});
+    }
+
   }
 
   removerItem(i): void {
     this.detallesArray.removeAt(i);
+
     this.calcular();
   }
 
@@ -241,42 +248,42 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     }));
     if (confirm('Esta seguro de guardar los datos') === true) {
       this.contactosService.crearNuevoContacto(this.notaPedido.value).subscribe((info) => {
-        this.modalService.dismissAll();
-        this.obtenerContactos();
-      }, error => this.toaster.open(error, {type: 'danger'})
-    );
+          this.modalService.dismissAll();
+          this.obtenerContactos();
+        }, error => this.toaster.open(error, {type: 'danger'})
+      );
     }
   }
 
   async obtenerProducto(i): Promise<void> {
     return new Promise((resolve, reject) => {
-      let data= {
+      let data = {
         codigoBarras: this.detallesArray.value[i].codigo,
-        canal:this.notaPedido.value.canal,
-        valorUnitario:this.detallesArray.controls[i].value.valorUnitario
+        canal: this.notaPedido.value.canal,
+        valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
         //if(info.mensaje==''){
-          if (info.codigoBarras) {
-            this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
-            this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
-            this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-            const precioProducto = this.notaPedido.get('canal').value
-              .includes('Contra-Entrega') ? info.precioLandingOferta : info.precioVentaA;
-            this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
-            this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
-            this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
-            this.detallesArray.controls[i].get('cantidad').setValidators([
-              Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
-            ]);
-            this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
-            this.calcular();
-            resolve();
-          } else {
-            this.detallesArray.controls[i].get('articulo').setValue('');
-            this.toaster.open('Producto no existente, agregue un producto que se encuentre en la lista de productos.', {type: 'danger'});
-            reject(new Error('No existe el producto a buscar')); // Rechaza la promesa si no se encuentra el producto
-          }// Resuelve la promesa una vez completadas todas las asignaciones
+        if (info.codigoBarras) {
+          this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
+          this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+          this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
+          const precioProducto = this.notaPedido.get('canal').value
+            .includes('Contra-Entrega') ? info.precioLandingOferta : info.precioVentaA;
+          this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
+          this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
+          this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
+          this.detallesArray.controls[i].get('cantidad').setValidators([
+            Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
+          ]);
+          this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
+          this.calcular();
+          resolve();
+        } else {
+          this.detallesArray.controls[i].get('articulo').setValue('');
+          this.toaster.open('Producto no existente, agregue un producto que se encuentre en la lista de productos.', {type: 'danger'});
+          reject(new Error('No existe el producto a buscar')); // Rechaza la promesa si no se encuentra el producto
+        }// Resuelve la promesa una vez completadas todas las asignaciones
         /*}else{
           this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
           window.alert('Existen inconsistencias con los precios de los productos.');
@@ -384,6 +391,11 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     this.paramServiceAdm.obtenerListaHijos(this.notaPedido.value.facturacion.provincia, 'PROVINCIA').subscribe((info) => {
       this.ciudadOpciones = info;
     });
+  }
+
+  validarDatos(): void {
+    this.contactosService.validarCamposContacto(this.notaPedido.value).subscribe((info) => {
+    }, error => this.toaster.open(error, {type: 'danger'}));
   }
 
 }
