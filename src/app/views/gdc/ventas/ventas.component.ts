@@ -25,6 +25,7 @@ import {ValidacionesPropias} from "../../../utils/customer.validators";
 export class VentasComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @Input() paises;
+
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
   public rechazoForm: FormGroup;
@@ -45,8 +46,9 @@ export class VentasComponent implements OnInit, AfterViewInit {
   verificarContacto=false;
   whatsapp = '';
   correo = ''
+  usuarioActual;
 
-  listaProspectos;
+  cedulaABuscar= ''
   clientes;
   cliente;
   cedula
@@ -67,6 +69,7 @@ export class VentasComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
     private pedidosService: PedidosService,
+    private clientesService: ClientesService,
     private contactosService: ContactosService,
     private paramService: ParamService,
     private paramServiceAdm: ParamServiceAdm,
@@ -104,20 +107,18 @@ export class VentasComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.iniciarPaginador();
     this.obtenerContactos();
-
   }
 
   iniciarNotaPedido(): void {
+    this.usuarioActual = JSON.parse(localStorage.getItem('currentUser'));
+
     this.notaPedido = this.formBuilder.group({
       id: ['', [Validators.required]],
       facturacion: this.formBuilder.group({
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.required, Validators.email]],
-        identificacion: ['', [
-          Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$'),
-          ValidacionesPropias.cedulaValido
-        ]],
+        identificacion: [''],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: [this.pais, [Validators.required]],
         provincia: ['', [Validators.required]],
@@ -127,8 +128,8 @@ export class VentasComponent implements OnInit, AfterViewInit {
         //calleSecundaria: ['', [Validators.required]],
         //referencia: ['', [Validators.required]],
         //gps: ['', []],
-        codigoVendedor: ['', []],
-        nombreVendedor: ['', []],
+        codigoVendedor: [this.usuarioActual.usuario.username, []],
+        nombreVendedor: [this.usuarioActual.full_name, []],
         comprobantePago: ['', []],
       }),
       articulos: this.formBuilder.array([], Validators.required),
@@ -212,23 +213,7 @@ export class VentasComponent implements OnInit, AfterViewInit {
       this.listaContactos = info.info;
     });
   }
-
-  transformarFecha(fecha): string {
-    return this.datePipe.transform(fecha, 'yyyy-MM-dd');
-  }
-
-  obtenerContacto(modal, id): void {
-    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
-    this.contactosService.obtenerContacto(id).subscribe((info) => {
-      this.iniciarNotaPedido();
-      info.articulos.map((item): void => {
-        this.agregarItem();
-      });
-      this.notaPedido.patchValue({...info, verificarPedido: true});
-    });
-  }
-
-  crearNuevoContacto(modal): void {
+  crearNuevaVenta(modal): void {
     this.iniciarNotaPedido();
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
   }
@@ -317,44 +302,6 @@ export class VentasComponent implements OnInit, AfterViewInit {
   }
 
 
-  procesarFactura(modal, transaccion): void {
-    if (this.autorizarForm.invalid || this.invalidoTamanoVideo) {
-      this.toaster.open('Campos vacios', {type: 'danger'});
-      return;
-    }
-    if (confirm('Esta seguro de cambiar de estado') === true) {
-      const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
-      const facturaFisicaLlaves: string[] = Object.keys(this.autorizarForm.value);
-      facturaFisicaLlaves.map((llaves, index) => {
-        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago') {
-          this.archivo.append(llaves, facturaFisicaValores[index]);
-        }
-      });
-      this.mostrarSpinner = true;
-      this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
-        this.modalService.dismissAll();
-        this.obtenerContactos();
-        this.mostrarSpinner = false;
-      }, (data) => {
-        this.toaster.open(data, {type: 'danger'});
-        this.mostrarSpinner = false;
-      });
-    }
-  }
-
-  cargarArchivo(event, nombreCampo): void {
-    const doc = event.target.files[0];
-    this.invalidoTamanoVideo = false;
-    if (10485760 < doc.size) {
-      this.invalidoTamanoVideo = true;
-      this.toaster.open('Archivo pesado', {type: 'warning'});
-      return;
-    }
-    const x = document.getElementById(nombreCampo + 'lbl');
-    x.innerHTML = '' + Date.now() + '_' + doc.name;
-    this.archivo.delete(nombreCampo);
-    this.archivo.append(nombreCampo, doc);
-  }
 
   obtenerFechaActual(): Date {
     //const fecha= new Date();
@@ -366,7 +313,6 @@ export class VentasComponent implements OnInit, AfterViewInit {
     return fechaActual;
 
   }
-
   formatearFecha(): string {
     const fechaActual = new Date();
     const dia = fechaActual.getDate().toString().padStart(2, '0');
@@ -396,5 +342,20 @@ export class VentasComponent implements OnInit, AfterViewInit {
     }, error => this.toaster.open(error, {type: 'danger'}));
   }
 
+  obtenerClienteCedula():void{
+    this.clientesService.obtenerClientePorCedula({cedula: this.cedulaABuscar}).subscribe((info) => {
+      this.notaPedido.get('facturacion').get('nombres').setValue(info.nombres)
+      this.notaPedido.get('facturacion').get('apellidos').setValue(info.apellidos)
+      this.notaPedido.get('facturacion').get('correo').setValue(info.correo)
+      this.notaPedido.get('facturacion').get('identificacion').setValue(info.cedula)
+      this.notaPedido.get('facturacion').get('telefono').setValue(info.telefono)
+      this.notaPedido.get('facturacion').get('provincia').setValue(info.provinciaNacimiento)
+      this.notaPedido.get('facturacion').get('ciudad').setValue(info.ciudadNacimiento)
+
+      console.log(this.notaPedido.value.facturacion)
+      console.log(info.ciudadNacimiento)
+    },error => this.toaster.open(error, {type: 'danger'}));
+  }
 
 }
+
