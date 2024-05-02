@@ -86,7 +86,6 @@
                   <label>Correo electrónico</label>
                   <input class="form-control" type="text"
                          formControlName="correo"
-                         (change)="validarDatos()"
                   >
                   <div *ngIf="facturacionForm.correo.errors"
                        class="invalid-feedback" style="display: block;">
@@ -102,14 +101,12 @@
                   <label>Numero Identificación</label>
                   <input class="form-control" type="text"
                          formControlName="identificacion"
-                         (change)="validarDatos()"
                   >
                 </div>
                 <div class="col-4">
                   <label>Número de WhatsApp</label>
                   <input class="form-control" type="text"
                          formControlName="telefono"
-                         (change)="validarDatos()"
                   >
                   <div *ngIf="facturacionForm.telefono.errors"
                        class="invalid-feedback" style="display: block;">
