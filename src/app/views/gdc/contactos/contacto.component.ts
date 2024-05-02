@@ -139,8 +139,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['Contra-Entrega', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
-      canal: ['Contacto Local', []],
-      estado: ['Pendiente', []],
+      canal: ['Contacto Local'],
+      estado: ['Facturado'],
       envio: ['', []],
       envios: ['', []],
       json: ['', []],
@@ -209,7 +209,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       page_size: this.pageSize,
       //inicio: this.inicio,
       //fin: this.transformarFecha(this.fin),
-      //estado: ['Pendiente'],
+      estado: ['Pendiente'],
       canal: 'Contacto Local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
@@ -224,13 +224,13 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   obtenerContacto(modal, id): void {
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
     this.contactosService.obtenerContacto(id).subscribe((info) => {
-      this.iniciarNotaPedido();
       if (info.tipoPago === 'rimpePopular') {
         this.mostrarInputComprobante = true;
       }
       if (info.tipoPago === 'facturaElectronica'){
         this.mostrarInputComprobante = false;
       }
+      this.iniciarNotaPedido();
       info.articulos.map((item): void => {
         this.agregarItem();
       });
