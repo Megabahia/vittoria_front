@@ -43,12 +43,12 @@ export class VentasComponent implements OnInit, AfterViewInit {
   provincia = '';
   ciudadOpciones;
   provinciaOpciones;
-  verificarContacto=false;
+  verificarContacto = false;
   whatsapp = '';
   correo = ''
   usuarioActual;
 
-  cedulaABuscar= ''
+  cedulaABuscar = ''
   clientes;
   cliente;
   cedula
@@ -118,7 +118,10 @@ export class VentasComponent implements OnInit, AfterViewInit {
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.required, Validators.email]],
-        identificacion: [''],
+        identificacion: ['', [
+          Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$'),
+          ValidacionesPropias.cedulaValido
+        ]],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: [this.pais, [Validators.required]],
         provincia: ['', [Validators.required]],
@@ -213,6 +216,7 @@ export class VentasComponent implements OnInit, AfterViewInit {
       this.listaContactos = info.info;
     });
   }
+
   crearNuevaVenta(modal): void {
     this.iniciarNotaPedido();
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
@@ -225,14 +229,14 @@ export class VentasComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async guardarPorContacto(): Promise<void> {
+  async guardarVenta(): Promise<void> {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
     if (confirm('Esta seguro de guardar los datos') === true) {
-      this.contactosService.crearNuevoContacto(this.notaPedido.value).subscribe((info) => {
+
+      this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
           this.modalService.dismissAll();
-          this.obtenerContactos();
         }, error => this.toaster.open(error, {type: 'danger'})
       );
     }
@@ -302,7 +306,6 @@ export class VentasComponent implements OnInit, AfterViewInit {
   }
 
 
-
   obtenerFechaActual(): Date {
     //const fecha= new Date();
     //const dia= fecha.getDate().toString().padStart(2, '0');
@@ -313,6 +316,7 @@ export class VentasComponent implements OnInit, AfterViewInit {
     return fechaActual;
 
   }
+
   formatearFecha(): string {
     const fechaActual = new Date();
     const dia = fechaActual.getDate().toString().padStart(2, '0');
@@ -342,20 +346,33 @@ export class VentasComponent implements OnInit, AfterViewInit {
     }, error => this.toaster.open(error, {type: 'danger'}));
   }
 
-  obtenerClienteCedula():void{
-    this.clientesService.obtenerClientePorCedula({cedula: this.cedulaABuscar}).subscribe((info) => {
-      this.notaPedido.get('facturacion').get('nombres').setValue(info.nombres)
-      this.notaPedido.get('facturacion').get('apellidos').setValue(info.apellidos)
-      this.notaPedido.get('facturacion').get('correo').setValue(info.correo)
-      this.notaPedido.get('facturacion').get('identificacion').setValue(info.cedula)
-      this.notaPedido.get('facturacion').get('telefono').setValue(info.telefono)
-      this.notaPedido.get('facturacion').get('provincia').setValue(info.provinciaNacimiento)
-      this.notaPedido.get('facturacion').get('ciudad').setValue(info.ciudadNacimiento)
+  obtenerClienteCedula(): void {
+    if (this.cedulaABuscar !== '') {
+      this.clientesService.obtenerClientePorCedula({cedula: this.cedulaABuscar}).subscribe((info) => {
+        this.notaPedido.get('facturacion').get('nombres').setValue(info.nombres)
+        this.notaPedido.get('facturacion').get('apellidos').setValue(info.apellidos)
+        this.notaPedido.get('facturacion').get('correo').setValue(info.correo)
+        this.notaPedido.get('facturacion').get('identificacion').setValue(info.cedula)
+        this.notaPedido.get('facturacion').get('telefono').setValue(info.telefono)
+        this.notaPedido.get('facturacion').get('provincia').setValue(info.provinciaNacimiento)
+        this.notaPedido.get('facturacion').get('ciudad').setValue(info.ciudadNacimiento)
+        this.notaPedido.get('facturacion').get('identificacion').disable();
 
-      console.log(this.notaPedido.value.facturacion)
-      console.log(info.ciudadNacimiento)
-    },error => this.toaster.open(error, {type: 'danger'}));
+      }, error => {
+        this.toaster.open(error.error, {type: 'danger'})
+        this.notaPedido.get('facturacion').get('nombres').setValue('')
+        this.notaPedido.get('facturacion').get('apellidos').setValue('')
+        this.notaPedido.get('facturacion').get('correo').setValue('')
+        this.notaPedido.get('facturacion').get('identificacion').setValue('')
+        this.notaPedido.get('facturacion').get('telefono').setValue('')
+        this.notaPedido.get('facturacion').get('provincia').setValue('')
+        this.notaPedido.get('facturacion').get('ciudad').setValue('')
+        this.notaPedido.get('facturacion').get('identificacion').enable();
+
+      })
+    }
   }
+
 
 }
 

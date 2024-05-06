@@ -457,29 +457,68 @@
           </div>
           <div class="modal-content">
             <form [formGroup]="notaPedido">
-              <div class="card invoice-preview-card">
                 <div class="card-body invoice-padding">
-                  <div class="col-12">
-                    <div class="form-group">
-                      <label for="tipoPago">Factura</label>
-                      <select id="tipoPago" class="form-control" formControlName="tipoPago"
-                              (change)="onSelectChange($event)">
-                        <option value="" disabled selected>- Seleccione -</option>
-                        <option value="facturaElectronica">Factura electrónica</option>
-                        <option value="rimpePopular">Rimpe popular</option>
-                      </select>
+                  <div class="row">
+
+                    <div class="col-6">
+                      <div class="form-group">
+                        <label for="tipoPago">Factura</label>
+                        <select id="tipoPago" class="form-control" formControlName="tipoPago"
+                                (change)="onSelectChange($event)">
+                          <option value="" disabled selected>- Seleccione -</option>
+                          <option value="facturaElectronica">Factura electrónica</option>
+                          <option value="rimpePopular">Rimpe popular</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-6" *ngIf="mostrarInputComprobante">
+                      <div class="form-group">
+                        <label for="numeroComprobante">Ingreso número de comprobante</label>
+                        <input class="form-control" type="text" id="numeroComprobante"
+                               formControlName="numeroComprobante"/>
+                      </div>
                     </div>
                   </div>
-                  <div class="col-12" *ngIf="mostrarInputComprobante">
-                    <div class="form-group">
-                      <label for="numeroComprobante">Ingreso Numero Comprobante</label>
-                      <input class="form-control" type="text" id="numeroComprobante"
-                             formControlName="numeroComprobante"/>
+                  <div class="row">
+                    <div class="col-4">
+                      <label for="formaPago">Forma de pago</label>
+                      <select id="formaPago" class="form-control" formControlName="formaPago"
+                              (change)="onSelectChangeFormaPago($event)">
+                        <option value="" selected disabled>- Seleccione -</option>
+                        <option value="transferencia">Transferencia</option>
+                        <option value="efectivo">Efectivo</option>
+                      </select>
+                      <div *ngIf="notaPedidoForm.formaPago.errors"
+                           class="invalid-feedback" style="display: block;">
+                        <div *ngIf="notaPedidoForm.formaPago.errors.required">
+                          Requerido
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-4" *ngIf="mostrarCargarArchivo">
+                      <label>Comprobante de pago</label>
+                      <input class="form-control-file" type="file" (change)="onFileSelected($event)">
+                    </div>
+
+                    <div class="col-4" *ngIf="mostrarInputTransaccion">
+                      <div class="form-group">
+                        <label for="numTransaccionTransferencia">Número de transacción</label>
+                        <input class="form-control" type="text" id="numTransaccionTransferencia"
+                               formControlName="numTransaccionTransferencia"/>
+                      </div>
+                    </div>
+
+                    <div class="col-4" *ngIf="mostrarInputCobro">
+                      <div class="form-group">
+                        <label for="totalCobroEfectivo">Total de cobro</label>
+                        <input class="form-control" type="text" id="totalCobroEfectivo"
+                               formControlName="totalCobroEfectivo"/>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-              </div>
             </form>
 
           </div>
