@@ -329,38 +329,19 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       return this.obtenerProducto(index);
     }));
     if (confirm('Esta seguro de guardar los datos') === true) {
+      const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
+      const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
+      facturaFisicaLlaves.map((llaves, index) => {
+        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago' && llaves !== 'facturacion' && llaves !== 'articulos' ) {
+          this.archivo.append(llaves, facturaFisicaValores[index]);
+        }
+      });
 
-      this.contactosService.actualizarContacto(this.notaPedido.value).subscribe((info) => {
+      this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerContactos();
         this.verificarContacto = true;
       }, error => this.toaster.open(error, {type: 'danger'}));
-    }
-  }
-
-
-  procesarFactura(modal, transaccion): void {
-    if (this.facturarForm.invalid || this.invalidoTamanoVideo) {
-      this.toaster.open('Campos vacios', {type: 'danger'});
-      return;
-    }
-    if (confirm('Esta seguro de cambiar de estado') === true) {
-      const facturaFisicaValores: string[] = Object.values(this.facturarForm.value);
-      const facturaFisicaLlaves: string[] = Object.keys(this.facturarForm.value);
-      facturaFisicaLlaves.map((llaves, index) => {
-        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago') {
-          this.archivo.append(llaves, facturaFisicaValores[index]);
-        }
-      });
-      this.mostrarSpinner = true;
-      this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
-        this.modalService.dismissAll();
-        this.obtenerContactos();
-        this.mostrarSpinner = false;
-      }, (data) => {
-        this.toaster.open(data, {type: 'danger'});
-        this.mostrarSpinner = false;
-      });
     }
   }
 
@@ -445,8 +426,11 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onFileSelected(event: any) {
-    this.fileToUpload = event.target.files.item(0);
+  onFileSelected(event: any): void {
+    this.archivo.delete('archivoFormaPago');
+    this.archivo.append('archivoFormaPago', event.target.files.item(0), event.target.files.item(0).name);
+    console.log('formdata', this.archivo.get('archivoFormaPago'));
+    // this.fileToUpload = event.target.files.item(0);
   }
 
   guardarComprobanteTransferencia(): void {
