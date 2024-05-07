@@ -24,12 +24,18 @@
     <div class="card-body invoice-padding pt-0">
       <h4 class="invoice-title mb-2">Filtro de cliente</h4>
       <div class="row">
-        <div class="col-4">
+        <div class="col-sm-2">
           <label>Número Identificación</label>
+        </div>
+        <div class="col-4">
           <input class="form-control" type="text"
                  [(ngModel)]="cedulaABuscar"
-                 (change)="obtenerClienteCedula()"
           >
+        </div>
+        <div class="col-4">
+          <button class="btn btn-primary" (click)="obtenerClienteCedula()">
+            <i-feather name='search' class="edit-user"></i-feather>
+          </button>
         </div>
       </div>
     </div>
@@ -102,6 +108,24 @@
                   <input class="form-control" type="text"
                          formControlName="identificacion"
                   >
+                  <div *ngIf="facturacionForm.identificacion.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="facturacionForm.identificacion.errors.required">
+                      Requerido
+                    </div>
+                    <div *ngIf="facturacionForm.identificacion.errors.minlength">
+                      Ingrese minimo 10 digitos
+                    </div>
+                    <div *ngIf="facturacionForm.identificacion.errors.maxlength">
+                      Ingrese maximo 10 digitos
+                    </div>
+                    <div *ngIf="facturacionForm.identificacion.errors.pattern">
+                      Ingrese solo numeros
+                    </div>
+                    <div *ngIf="facturacionForm.identificacion.errors.identificacionInvalid">
+                      Identificacion no valida
+                    </div>
+                  </div>
                 </div>
                 <div class="col-4">
                   <label>Número de WhatsApp</label>
@@ -168,6 +192,7 @@
               </div>
             </div>
           </div>
+
           <div class="col-4">
             <label>Metodo Pago</label>
             <input class="form-control" type="text"
@@ -373,7 +398,7 @@
               (click)="modal.dismiss( 'Cross click')">Cerrar
       </button>
       <button class="btn btn-primary mx-1"
-              (click)="guardarPorContacto()"
+              (click)="guardarVenta()"
       >Guardar
       </button>
     </div>
