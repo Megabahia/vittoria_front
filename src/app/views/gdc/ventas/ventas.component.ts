@@ -347,6 +347,7 @@ export class VentasComponent implements OnInit, AfterViewInit {
   }
 
   obtenerClienteCedula(): void {
+
     if (this.cedulaABuscar !== '') {
       this.clientesService.obtenerClientePorCedula({cedula: this.cedulaABuscar}).subscribe((info) => {
         this.notaPedido.get('facturacion').get('nombres').setValue(info.nombres)
