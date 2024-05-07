@@ -22,7 +22,7 @@ export class ContactosService {
   }
 
   crearNuevaVenta(datos): Observable<any>{
-    return this.http.post<any>(`${apiUrl}/gdc/contact/create/venta`, datos);
+    return this.http.post<any>(`${apiUrl}/gdc/contact/venta`, datos);
   }
 
   obtenerContacto(id): Observable<any> {
@@ -34,6 +34,7 @@ export class ContactosService {
   }
 
   actualizarVentaFormData(datos: FormData): Observable<any> {
+    console.log('DATOS GET', datos.get('id'))
     return this.http.post<any>(`${apiUrl}/gdc/contact/update/${datos.get('id')}`, datos);
   }
 

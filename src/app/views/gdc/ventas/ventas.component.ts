@@ -234,7 +234,6 @@ export class VentasComponent implements OnInit, AfterViewInit {
       return this.obtenerProducto(index);
     }));
     if (confirm('Esta seguro de guardar los datos') === true) {
-
       this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
           this.modalService.dismissAll();
         }, error => this.toaster.open(error, {type: 'danger'})

@@ -50,7 +50,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   mostrarInputTransaccion = false;
   mostrarInputCobro = false;
   fileToUpload: File | null = null;
-
+  totalPagar;
   listaProspectos;
   clientes;
   cliente;
@@ -232,15 +232,32 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     this.contactosService.obtenerContacto(id).subscribe((info) => {
       if (info.tipoPago === 'rimpePopular') {
         this.mostrarInputComprobante = true;
-      }
-      if (info.tipoPago === 'facturaElectronica') {
+      } else if (info.tipoPago === 'facturaElectronica') {
+        this.mostrarInputComprobante = false;
+      } else {
         this.mostrarInputComprobante = false;
       }
+      if (info.formaPago === 'transferencia') {
+        this.mostrarInputTransaccion = true;
+        this.mostrarCargarArchivo = true;
+        this.mostrarInputCobro = false;
+
+      } else if (info.formaPago === 'efectivo') {
+        this.mostrarInputTransaccion = false;
+        this.mostrarCargarArchivo = false;
+        this.mostrarInputCobro = true;
+      } else {
+        this.mostrarInputTransaccion = false;
+        this.mostrarCargarArchivo = false;
+        this.mostrarInputCobro = false;
+      }
+      this.totalPagar = info.total;
       this.iniciarNotaPedido();
       info.articulos.map((item): void => {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
+      console.log('ABRIR MODAL',this.notaPedido)
     });
   }
 
@@ -329,19 +346,34 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       return this.obtenerProducto(index);
     }));
     if (confirm('Esta seguro de guardar los datos') === true) {
+      console.log('INICIO',this.notaPedido.value)
       const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
       facturaFisicaLlaves.map((llaves, index) => {
-        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago' && llaves !== 'facturacion' && llaves !== 'articulos' ) {
+        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago' && llaves !== 'facturacion' && llaves !== 'articulos') {
+          this.archivo.delete(llaves);
           this.archivo.append(llaves, facturaFisicaValores[index]);
         }
       });
 
-      this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
-        this.modalService.dismissAll();
-        this.obtenerContactos();
-        this.verificarContacto = true;
-      }, error => this.toaster.open(error, {type: 'danger'}));
+
+      if (this.mostrarInputCobro) {
+        if (Number(this.totalPagar) !== Number(this.notaPedido.value.totalCobroEfectivo)) {
+          this.toaster.open('El precio total ingresado no coincide', {type: 'danger'})
+        }else{
+          this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
+            this.modalService.dismissAll();
+            this.obtenerContactos();
+            this.verificarContacto = true;
+          }, error => this.toaster.open(error, {type: 'danger'}))
+        }
+      } else {
+        this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
+          this.modalService.dismissAll();
+          this.obtenerContactos();
+          this.verificarContacto = true;
+        }, error => this.toaster.open(error, {type: 'danger'}))
+      }
     }
   }
 
@@ -434,7 +466,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   }
 
   guardarComprobanteTransferencia(): void {
-    if(this.archivo){
+    if (this.archivo) {
       const formData = new FormData();
       formData.append('archivoFormaPago', this.fileToUpload, this.fileToUpload.name);
       console.log(formData)
