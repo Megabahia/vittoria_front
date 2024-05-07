@@ -257,7 +257,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
-      console.log('ABRIR MODAL',this.notaPedido)
+      console.log('ABRIR MODAL', this.notaPedido)
     });
   }
 
@@ -346,7 +346,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       return this.obtenerProducto(index);
     }));
     if (confirm('Esta seguro de guardar los datos') === true) {
-      console.log('INICIO',this.notaPedido.value)
       const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
       facturaFisicaLlaves.map((llaves, index) => {
@@ -356,11 +355,10 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         }
       });
 
-
       if (this.mostrarInputCobro) {
         if (Number(this.totalPagar) !== Number(this.notaPedido.value.totalCobroEfectivo)) {
           this.toaster.open('El precio total ingresado no coincide', {type: 'danger'})
-        }else{
+        } else {
           this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
             this.modalService.dismissAll();
             this.obtenerContactos();
@@ -374,6 +372,21 @@ export class ContactoComponent implements OnInit, AfterViewInit {
           this.verificarContacto = true;
         }, error => this.toaster.open(error, {type: 'danger'}))
       }
+    }
+  }
+
+
+  async actualizarContacto(): Promise<void> {
+    await Promise.all(this.detallesArray.controls.map((producto, index) => {
+      return this.obtenerProducto(index);
+    }));
+    if (confirm('Esta seguro de guardar los datos') === true) {
+
+      this.contactosService.actualizarContacto(this.notaPedido.value).subscribe((info) => {
+        this.modalService.dismissAll();
+        this.obtenerContactos();
+        this.verificarContacto = true;
+      }, error => this.toaster.open(error, {type: 'danger'}))
     }
   }
 

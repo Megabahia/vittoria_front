@@ -34,7 +34,6 @@ export class ContactosService {
   }
 
   actualizarVentaFormData(datos: FormData): Observable<any> {
-    console.log('DATOS GET', datos.get('id'))
     return this.http.post<any>(`${apiUrl}/gdc/contact/update/${datos.get('id')}`, datos);
   }
 

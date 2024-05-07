@@ -234,6 +234,7 @@ export class VentasComponent implements OnInit, AfterViewInit {
       return this.obtenerProducto(index);
     }));
     if (confirm('Esta seguro de guardar los datos') === true) {
+      console.log('GUARDAR VENTA',this.notaPedido.value)
       this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
           this.modalService.dismissAll();
         }, error => this.toaster.open(error, {type: 'danger'})
@@ -355,7 +356,7 @@ export class VentasComponent implements OnInit, AfterViewInit {
         this.notaPedido.get('facturacion').get('telefono').setValue(info.telefono)
         this.notaPedido.get('facturacion').get('provincia').setValue(info.provinciaNacimiento)
         this.notaPedido.get('facturacion').get('ciudad').setValue(info.ciudadNacimiento)
-        this.notaPedido.get('facturacion').get('identificacion').disable();
+        //this.notaPedido.get('facturacion').get('identificacion').disable();
 
       }, error => {
         this.toaster.open(error.error, {type: 'danger'})
@@ -366,7 +367,7 @@ export class VentasComponent implements OnInit, AfterViewInit {
         this.notaPedido.get('facturacion').get('telefono').setValue('')
         this.notaPedido.get('facturacion').get('provincia').setValue('')
         this.notaPedido.get('facturacion').get('ciudad').setValue('')
-        this.notaPedido.get('facturacion').get('identificacion').enable();
+        //this.notaPedido.get('facturacion').get('identificacion').enable();
 
       })
     }
