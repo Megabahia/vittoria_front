@@ -10,6 +10,7 @@ import {ParamService as ParamServiceMDP} from '../../../services/mdp/param/param
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../constats/mp/pedidos';
 import {ValidacionesPropias} from '../../../utils/customer.validators';
+import {Toaster} from "ngx-toast-notifications";
 
 @Component({
   selector: 'app-pedidos-devueltos',
@@ -42,6 +43,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
   };
 
   constructor(
+    private toaster: Toaster,
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
@@ -259,6 +261,12 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       return;
     }
     if (confirm('Esta seguro de actualizar los datos') === true) {
+
+      if(this.notaPedido.invalid){
+        this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
+        return;
+      }
+
       this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();

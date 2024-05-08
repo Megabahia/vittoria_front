@@ -113,7 +113,7 @@ export class VentasComponent implements OnInit, AfterViewInit {
     this.usuarioActual = JSON.parse(localStorage.getItem('currentUser'));
 
     this.notaPedido = this.formBuilder.group({
-      id: ['', [Validators.required]],
+      id: [''],
       facturacion: this.formBuilder.group({
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
@@ -234,7 +234,11 @@ export class VentasComponent implements OnInit, AfterViewInit {
       return this.obtenerProducto(index);
     }));
     if (confirm('Esta seguro de guardar los datos') === true) {
-      console.log('GUARDAR VENTA',this.notaPedido.value)
+      console.log(this.notaPedido)
+      if(this.notaPedido.invalid){
+        this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
+        return;
+      }
       this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
           this.modalService.dismissAll();
         }, error => this.toaster.open(error, {type: 'danger'})
@@ -347,7 +351,9 @@ export class VentasComponent implements OnInit, AfterViewInit {
   }
 
   obtenerClienteCedula(): void {
+
     if (this.cedulaABuscar !== '') {
+
       this.clientesService.obtenerClientePorCedula({cedula: this.cedulaABuscar}).subscribe((info) => {
         this.notaPedido.get('facturacion').get('nombres').setValue(info.nombres)
         this.notaPedido.get('facturacion').get('apellidos').setValue(info.apellidos)
@@ -356,8 +362,9 @@ export class VentasComponent implements OnInit, AfterViewInit {
         this.notaPedido.get('facturacion').get('telefono').setValue(info.telefono)
         this.notaPedido.get('facturacion').get('provincia').setValue(info.provinciaNacimiento)
         this.notaPedido.get('facturacion').get('ciudad').setValue(info.ciudadNacimiento)
-        //this.notaPedido.get('facturacion').get('identificacion').disable();
 
+        this.obtenerCiudad()
+        //this.notaPedido.get('facturacion').get('identificacion').disable();
       }, error => {
         this.toaster.open(error.error, {type: 'danger'})
         this.notaPedido.get('facturacion').get('nombres').setValue('')
@@ -367,8 +374,9 @@ export class VentasComponent implements OnInit, AfterViewInit {
         this.notaPedido.get('facturacion').get('telefono').setValue('')
         this.notaPedido.get('facturacion').get('provincia').setValue('')
         this.notaPedido.get('facturacion').get('ciudad').setValue('')
-        //this.notaPedido.get('facturacion').get('identificacion').enable();
+        this.obtenerCiudad()
 
+        //this.notaPedido.get('facturacion').get('identificacion').enable();
       })
     }
   }

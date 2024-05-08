@@ -173,9 +173,9 @@
                   </div>
                 </div>
                 <div class="col-4">
-                  <label for="usuarioCiudad">Ciudad</label>
-                  <select class="form-control" name="usuarioCiudad" formControlName="ciudad" [(ngModel)]="ciudad"
-                          id="usuarioCiudad">
+                  <label for="ciudadContacto">Ciudad</label>
+                  <select class="form-control" name="ciudadContacto" formControlName="ciudad"
+                          [(ngModel)]="ciudad" id="ciudadContacto">
                     <option value="" selected>- Seleccione -</option>
                     <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
                       {{ ciudad.nombre }}
@@ -265,6 +265,9 @@
                                 </div>
                                 <div *ngIf="detalle.controls.cantidad.errors.max">
                                   Fuera de stock
+                                </div>
+                                <div *ngIf="detalle.controls.cantidad.errors.min">
+                                  Ingrese minimo 1
                                 </div>
                               </div>
                             </div>
