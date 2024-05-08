@@ -266,6 +266,9 @@
                                 <div *ngIf="detalle.controls.cantidad.errors.max">
                                   Fuera de stock
                                 </div>
+                                <div *ngIf="detalle.controls.cantidad.errors.min">
+                                  Ingrese minimo 1
+                                </div>
                               </div>
                             </div>
 

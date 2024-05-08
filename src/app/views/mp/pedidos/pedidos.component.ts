@@ -288,7 +288,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       this.toaster.open('Pedido Incompleto', {type: 'danger'});
       return;
     }
-
     if(!this.ciudadPresenteFacturacion || !this.ciudadPresenteEnvio){
       return;
     }

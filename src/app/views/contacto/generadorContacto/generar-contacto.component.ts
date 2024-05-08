@@ -109,7 +109,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     this.usuarioActual = JSON.parse(localStorage.getItem('currentUser'));
 
     this.notaPedido = this.formBuilder.group({
-      id: ['', [Validators.required]],
+      id: [''],
       facturacion: this.formBuilder.group({
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
@@ -218,18 +218,6 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     return this.datePipe.transform(fecha, 'yyyy-MM-dd');
   }
 
-  obtenerContacto(modal, id): void {
-    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
-    this.contactosService.obtenerContacto(id).subscribe((info) => {
-      this.iniciarNotaPedido();
-      info.articulos.map((item): void => {
-        this.agregarItem();
-      });
-      this.notaPedido.patchValue({...info, verificarPedido: true});
-
-    });
-  }
-
   crearNuevoContacto(modal): void {
     this.iniciarNotaPedido();
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
@@ -247,6 +235,10 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
       return this.obtenerProducto(index);
     }));
     if (confirm('Esta seguro de guardar los datos') === true) {
+      if(this.notaPedido.invalid){
+        this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
+        return;
+      }
       this.contactosService.crearNuevoContacto(this.notaPedido.value).subscribe((info) => {
           this.modalService.dismissAll();
           this.obtenerContactos();
@@ -311,6 +303,10 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     }));
 
     if (confirm('Esta seguro de guardar los datos') === true) {
+      if(this.notaPedido.invalid){
+        this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
+        return;
+      }
       this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerContactos();
@@ -333,6 +329,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
         }
       });
       this.mostrarSpinner = true;
+
       this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerContactos();

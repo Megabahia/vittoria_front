@@ -286,7 +286,6 @@
                                       Cantidad
                                     </p>
                                     <input type="text" class="form-control" formControlName="cantidad"
-
                                            (change)="calcular()"
                                     />
                                     <div *ngIf="detalle.controls.cantidad.errors"
@@ -297,6 +296,9 @@
                                       </div>
                                       <div *ngIf="detalle.controls.cantidad.errors.max">
                                         Fuera de stock
+                                      </div>
+                                      <div *ngIf="detalle.controls.cantidad.errors.min">
+                                        Ingrese minimo 1
                                       </div>
                                     </div>
                                   </div>
