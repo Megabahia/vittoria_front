@@ -11,6 +11,8 @@ import {ProductosService} from '../../../services/mdp/productos/productos.servic
 import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../constats/mp/pedidos';
 import {ValidacionesPropias} from '../../../utils/customer.validators';
 import {Toaster} from "ngx-toast-notifications";
+import {logger} from "codelyzer/util/logger";
+import {ParamService as ParamServiceAdm} from "../../../services/admin/param.service";
 
 @Component({
   selector: 'app-pedidos-devueltos',
@@ -32,7 +34,8 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
   fin = new Date();
   transaccion: any;
   opciones;
-
+  ciudadPresenteFacturacion = true;
+  ciudadPresenteEnvio = true;
 
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -49,7 +52,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
     private datePipe: DatePipe,
     private pedidosService: PedidosService,
     private paramService: ParamService,
-    private paramServiceMDP: ParamServiceMDP,
+    private paramServiceAdm: ParamServiceAdm,
     private productosService: ProductosService,
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
@@ -130,6 +133,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       numeroPedido: ['', [Validators.required]],
       created_at: ['', [Validators.required]],
       metodoPago: ['', [Validators.required]],
+      canal: ['', []],
     });
   }
 
@@ -171,8 +175,8 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       valorUnitario: [0, [Validators.required]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
+      imagen: [''],
       caracteristicas: ['', []],
-
     });
   }
 
@@ -204,6 +208,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
 
   obtenerTransaccion(id): void {
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
+      this.validarCiudadEnProvincia(info.facturacion.provincia, info.facturacion.ciudad, info.envio.provincia, info.envio.ciudad);
       this.iniciarNotaPedido();
       info.articulos.map((item): void => {
         this.agregarItem();
@@ -220,16 +225,22 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
   }
 
   obtenerProducto(i): void {
-    this.productosService.obtenerProductoPorCodigo({
-      codigoBarras: this.detallesArray.value[i].codigo
-    }).subscribe((info) => {
+    console.log(this.notaPedido.value.articulos)
+    const data = {
+      codigoBarras: this.detallesArray.value[i].codigo,
+      canal: this.notaPedido.value.canal,
+      valorUnitario: Number(this.detallesArray.controls[i].value.valorUnitario).toFixed(2)
+    };
+    this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
       if (info.codigoBarras) {
         // this.detallesArray.value[i].codigo = info.codigo;
         console.log('dato', this.detallesArray.controls[i].get('articulo'));
+        console.log(info)
         this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
         this.detallesArray.controls[i].get('cantidad').setValue(1);
         this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
         this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
+        this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
         this.calcular();
       } else {
         // this.comprobarProductos[i] = false;
@@ -256,17 +267,17 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
 
   actualizar(): void {
     this.calcular();
-    if (this.notaPedido.invalid) {
-      console.log('form', this.notaPedido);
-      return;
-    }
+    this.validarCiudadEnProvincia(
+      this.notaPedido.value.facturacion.provincia,
+      this.notaPedido.value.facturacion.ciudad,
+      this.notaPedido.value.envio.provincia,
+      this.notaPedido.value.envio.ciudad
+    );
     if (confirm('Esta seguro de actualizar los datos') === true) {
-
-      if(this.notaPedido.invalid){
-        this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
+      if (this.notaPedido.invalid || !this.ciudadPresenteFacturacion || !this.ciudadPresenteEnvio) {
+        this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
         return;
       }
-
       this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
@@ -299,6 +310,10 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
 
   procesarAutorizacion(): void {
     if (confirm('Esta seguro de cambiar de estado') === true) {
+      if (this.autorizarForm.value.metodoConfirmacion === '') {
+        this.toaster.open('Seleccione el método de confirmación.', {type: 'warning'});
+        return;
+      }
       this.pedidosService.actualizarPedido(this.autorizarForm.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
@@ -313,5 +328,39 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
         this.obtenerTransacciones();
       });
     }
+  }
+
+  validarCiudadEnProvincia(provinciaFacturacion, ciudadFacturacion, provinciaEnvio, ciudadEnvio): void {
+    this.paramServiceAdm.obtenerListaHijos('Imbabura', 'PROVINCIA')
+      .subscribe((infoFacturacion) => {
+          const estaPresenteFacturacion = infoFacturacion.some((ciudad) =>
+            ciudad.nombre.trim().toLowerCase() === ciudadFacturacion.trim().toLowerCase()
+          );
+          if (!estaPresenteFacturacion) {
+            this.toaster.open("La ciudad no se encuentra en la provincia en los datos de factura.", {
+              type: 'danger'
+            });
+            this.ciudadPresenteFacturacion = false;
+          } else {
+            this.ciudadPresenteFacturacion = true;
+
+          }
+        }
+      );
+    this.paramServiceAdm.obtenerListaHijos(provinciaEnvio, 'PROVINCIA')
+      .subscribe((infoEnvio) => {
+          const estaPresenteEnvio = infoEnvio.some((ciudad) =>
+            ciudad.nombre.trim().toLowerCase() === ciudadEnvio.trim().toLowerCase()
+          );
+          if (!estaPresenteEnvio) {
+            this.toaster.open("La ciudad no se encuentra en la provincia en los datos de envio.", {
+              type: 'danger'
+            });
+            this.ciudadPresenteEnvio = false;
+          } else {
+            this.ciudadPresenteEnvio = true;
+          }
+        }
+      );
   }
 }

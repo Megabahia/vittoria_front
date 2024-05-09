@@ -9,6 +9,7 @@ import {ParamService} from '../../../../services/mp/param/param.service';
 import {ParamService as ParamServiceGDE} from '../../../../services/gde/param/param.service';
 import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
+import {Toaster} from "ngx-toast-notifications";
 
 @Component({
   selector: 'app-gestion-entrega-enviados',
@@ -42,6 +43,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   usuario;
 
   constructor(
+    private toaster: Toaster,
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
@@ -285,6 +287,10 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
           this.archivo.append(llaves, facturaFisicaValores[index]);
         }
       });
+      if(this.evidenciasForm.value.evidenciaFotoEmpaque === ''){
+        this.toaster.open('Complete los campos requeridos.',{type:'warning'})
+        return;
+      }
       this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
