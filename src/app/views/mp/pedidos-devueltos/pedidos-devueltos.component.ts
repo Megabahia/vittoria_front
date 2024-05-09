@@ -334,7 +334,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
     this.paramServiceAdm.obtenerListaHijos('Imbabura', 'PROVINCIA')
       .subscribe((infoFacturacion) => {
           const estaPresenteFacturacion = infoFacturacion.some((ciudad) =>
-            ciudad.nombre.trim().toLowerCase() === ciudadFacturacion.trim().toLowerCase()
+            ciudad.nombre === ciudadFacturacion
           );
           if (!estaPresenteFacturacion) {
             this.toaster.open("La ciudad no se encuentra en la provincia en los datos de factura.", {
@@ -350,7 +350,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
     this.paramServiceAdm.obtenerListaHijos(provinciaEnvio, 'PROVINCIA')
       .subscribe((infoEnvio) => {
           const estaPresenteEnvio = infoEnvio.some((ciudad) =>
-            ciudad.nombre.trim().toLowerCase() === ciudadEnvio.trim().toLowerCase()
+            ciudad.nombre === ciudadEnvio
           );
           if (!estaPresenteEnvio) {
             this.toaster.open("La ciudad no se encuentra en la provincia en los datos de envio.", {
