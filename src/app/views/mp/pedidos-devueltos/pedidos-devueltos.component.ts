@@ -331,7 +331,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
   }
 
   validarCiudadEnProvincia(provinciaFacturacion, ciudadFacturacion, provinciaEnvio, ciudadEnvio): void {
-    this.paramServiceAdm.obtenerListaHijos('Imbabura', 'PROVINCIA')
+    this.paramServiceAdm.obtenerListaHijos(provinciaFacturacion, 'PROVINCIA')
       .subscribe((infoFacturacion) => {
           const estaPresenteFacturacion = infoFacturacion.some((ciudad) =>
             ciudad.nombre === ciudadFacturacion
