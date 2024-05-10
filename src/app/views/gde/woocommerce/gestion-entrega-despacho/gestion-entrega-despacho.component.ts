@@ -226,6 +226,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
         this.detallesArray.controls[i].get('cantidad').setValue(1);
         this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
         this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
+        this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
         this.calcular();
       } else {
         // this.comprobarProductos[i] = false;

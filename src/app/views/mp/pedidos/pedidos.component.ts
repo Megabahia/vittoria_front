@@ -217,8 +217,10 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
-      this.obtenerProducto(0);
 
+      info.articulos.forEach((item, index) => {
+        this.obtenerProducto(index);
+      });
     });
   }
 
@@ -237,6 +239,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         valorUnitario: Number(this.detallesArray.controls[i].value.valorUnitario).toFixed(2)
       };
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
+        console.log(info)
         if (info.mensaje === '') {
           if (info.codigoBarras) {
             this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
@@ -245,7 +248,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
             const precioProducto = info.precio;
             this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
             this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
-            this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
+            this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
             this.detallesArray.controls[i].get('cantidad').setValidators([
               Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
             ]);

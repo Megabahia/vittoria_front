@@ -183,7 +183,6 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
-
     });
   }
 
