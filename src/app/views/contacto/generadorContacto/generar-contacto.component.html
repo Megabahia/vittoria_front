@@ -491,6 +491,24 @@
                          formControlName="identificacion"
                          (change)="validarDatos()"
                   >
+                  <div *ngIf="facturacionForm.identificacion.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="facturacionForm.identificacion.errors.required">
+                      Requerido
+                    </div>
+                    <div *ngIf="facturacionForm.identificacion.errors.minlength">
+                      Ingrese minimo 10 digitos
+                    </div>
+                    <div *ngIf="facturacionForm.identificacion.errors.maxlength">
+                      Ingrese maximo 10 digitos
+                    </div>
+                    <div *ngIf="facturacionForm.identificacion.errors.pattern">
+                      Ingrese solo numeros
+                    </div>
+                    <div *ngIf="facturacionForm.identificacion.errors.identificacionInvalid">
+                      Identificacion no valida
+                    </div>
+                  </div>
                 </div>
                 <div class="col-4">
                   <label>Número de WhatsApp</label>

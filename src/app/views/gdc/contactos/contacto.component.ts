@@ -345,6 +345,10 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
+    if(this.notaPedido.invalid){
+      this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
+      return;
+    }
     if (confirm('Esta seguro de guardar los datos') === true) {
       const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
@@ -381,7 +385,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       return this.obtenerProducto(index);
     }));
     if (confirm('Esta seguro de guardar los datos') === true) {
-      console.log(this.notaPedido)
       if(this.notaPedido.invalid){
         this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
         return;

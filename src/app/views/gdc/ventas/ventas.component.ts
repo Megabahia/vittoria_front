@@ -233,12 +233,11 @@ export class VentasComponent implements OnInit, AfterViewInit {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
+    if(this.notaPedido.invalid){
+      this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
+      return;
+    }
     if (confirm('Esta seguro de guardar los datos') === true) {
-      console.log(this.notaPedido)
-      if(this.notaPedido.invalid){
-        this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
-        return;
-      }
       this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
           this.modalService.dismissAll();
         }, error => this.toaster.open(error, {type: 'danger'})
