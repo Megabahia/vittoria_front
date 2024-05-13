@@ -15,6 +15,7 @@ import {ClientesService} from "../../../services/mdm/personas/clientes/clientes.
 import {ProspectosService} from "../../../services/mdm/prospectosCli/prospectos.service";
 import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
 import {logger} from "codelyzer/util/logger";
+import {ValidacionesPropias} from "../../../utils/customer.validators";
 
 @Component({
   selector: 'app-generar-contacto',
@@ -114,7 +115,10 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.required, Validators.email]],
-        identificacion: [''],
+        identificacion: ['',[
+          Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$'),
+          ValidacionesPropias.cedulaValido
+        ]],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: [this.pais, [Validators.required]],
         provincia: ['', [Validators.required]],
