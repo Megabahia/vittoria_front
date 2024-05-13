@@ -150,7 +150,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       json: ['', []],
       numeroComprobante: [''],
       tipoPago: [''],
-      formaPago: ['',[Validators.required]],
+      formaPago: [''],
       numTransaccionTransferencia: [''],
       totalCobroEfectivo: ['']
     });
@@ -385,7 +385,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       return this.obtenerProducto(index);
     }));
     if (confirm('Esta seguro de guardar los datos') === true) {
-      console.log(this.notaPedido)
       if(this.notaPedido.invalid){
         this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
         return;
