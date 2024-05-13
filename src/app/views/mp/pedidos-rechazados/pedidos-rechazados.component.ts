@@ -119,6 +119,7 @@ export class PedidosRechazadosComponent implements OnInit, AfterViewInit {
       numeroPedido: ['', [Validators.required]],
       created_at: ['', [Validators.required]],
       metodoPago: ['', [Validators.required]],
+      canal: ['', []],
     });
   }
 
@@ -156,7 +157,7 @@ export class PedidosRechazadosComponent implements OnInit, AfterViewInit {
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
       caracteristicas: ['', []],
-
+      imagen: ['', []],
     });
   }
 
@@ -194,8 +195,17 @@ export class PedidosRechazadosComponent implements OnInit, AfterViewInit {
       });
       const iva = +(info.total * this.iva.valor).toFixed(2);
       const total = iva + info.total;
-      this.notaPedido.patchValue({...info, subtotal: info.subtotal, iva, total});
+      this.notaPedido.patchValue({...info, subtotal: info.subtotal, iva, total, canal: this.cortarUrlHastaCom(info.canal)});
     });
+  }
+
+  cortarUrlHastaCom(url: string): string {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      const match = url.match(/https?:\/\/[^\/]+\.com/);
+      return match ? match[0] : url;  // Devuelve la URL cortada o la original si no se encuentra .com
+    }
+    console.log(url)
+    return url
   }
 
 

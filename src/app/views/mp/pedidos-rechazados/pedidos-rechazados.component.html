@@ -1,455 +1,463 @@
 <div class="app-content content ">
-    <div class="content-overlay"></div>
-    <div class="header-navbar-shadow"></div>
-    <div class="content-wrapper">
-        <div class="content-header row">
-        </div>
-        <div class="content-body">
-            <!-- users list start -->
-            <section class="app-user-list">
-                <!-- users filter start -->
-                <div class="card">
-                    <h5 class="card-header">Filtros de búsqueda</h5>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="inicio">
-                            </div>
-                            <div class="col-md-4">
-                                <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="fin">
-                            </div>
-                            <div class="col-md-4">
-                                <button class="btn btn-primary" (click)="obtenerTransacciones()">
-                                    <i-feather name='search' class="edit-user"></i-feather>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-datatable table-responsive pt-0">
-                        <div class="row m-75">
-                            <div class="col-lg-12 col-xl-6">
-                                <label>Mostrar</label>
-                                <select class="form-control-sm" [(ngModel)]="pageSize"
-                                        (change)="obtenerTransacciones()">
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-
-                            </div>
-                        </div>
-                        <table class="user-list-table table">
-                            <thead class="thead-light">
-                            <tr>
-                                <th>Fecha Pedido</th>
-                                <th>Canal Venta</th>
-                                <th>Numero Pedido</th>
-                                <th>Nombres Facturación</th>
-                                <th>Apellidos Facturación</th>
-                                <th>Metodo Pago</th>
-                                <th>Provincia Envio</th>
-                                <th>Ciudad Envio</th>
-                                <th>Telefono</th>
-                                <th>Estado</th>
-                                <th>Ver</th>
-                                <th>Motivo</th>
-                            </tr>
-                            </thead>
-
-                            <tbody>
-                            <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
-                                <td>{{transaccion.created_at | date: 'dd-MM-yyyy'}}</td>
-                                <td>{{transaccion.canal}}</td>
-                                <td>{{transaccion.numeroPedido}}</td>
-                                <td>{{transaccion.facturacion.nombres}} </td>
-                                <td>{{transaccion.facturacion.apellidos}}</td>
-                                <td>{{transaccion.metodoPago}}</td>
-                                <td>{{transaccion.envio.provincia}}</td>
-                                <td>{{transaccion.envio.ciudad}}</td>
-                                <td>{{transaccion.facturacion.telefono}} </td>
-                                <td>{{transaccion.estado}} </td>
-                                <td>
-                                    <a (click)="obtenerTransaccion(transaccion.id)" data-toggle="modal"
-                                       data-target="#verfactura">
-                                        <i-feather name="eye" class="mr-25"></i-feather>
-                                    </a>
-                                </td>
-                                <td>{{transaccion.motivo}} </td>
-                            </tr>
-                            </tbody>
-                        </table>
-
-                    </div>
-                    <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
-                                    [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
-
-                    <div class="modal fade" id="verfactura" tabindex="-1" role="dialog"
-                         aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <form [formGroup]="notaPedido">
-                                    <div class="card invoice-preview-card">
-                                        <!-- Header starts -->
-                                        <div class="card-body invoice-padding pb-0">
-                                            <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
-                                                <div>
-                                                    <div class="d-flex align-items-center mb-1">
-                                                        <span class="title mr-1">Fecha Pedido:</span>
-                                                        <input type="text"
-                                                               class="form-control invoice-edit-input date-picker"
-                                                               value="{{notaPedido.controls?.created_at.value | date: 'dd-MM-yyyy'}}"
-                                                               disabled/>
-                                                    </div>
-                                                </div>
-                                                <div class="invoice-number-date mt-md-0 mt-2">
-                                                    <div class="d-flex align-items-center mb-1">
-                                                        <h4 class="invoice-title mr-1">Numero Pedido</h4>
-                                                        <div class="input-group input-group-merge invoice-edit-input-group">
-                                                            <div class="input-group-prepend">
-                                                                <div class="input-group-text">
-                                                                    <i-feather name="hash"
-                                                                               class="edit-user"></i-feather>
-                                                                </div>
-                                                            </div>
-                                                            <input type="text" class="form-control invoice-edit-input"
-                                                                   placeholder="{{notaPedido.controls?.numeroPedido.value}}"
-                                                                   disabled/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Header ends -->
-
-                                        <hr class="invoice-spacing"/>
-
-                                        <!-- Address and Contact starts -->
-                                        <div class="card-body invoice-padding pt-0">
-                                            <h4 class="invoice-title mb-2">Datos para la factura</h4>
-                                            <div formGroupName="facturacion">
-                                                <div class="row">
-                                                    <div class="col-4">
-                                                        <label>Nombres</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="nombres" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Apellidos</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="apellidos" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Correo</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="correo" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Numero Identificación</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="identificacion" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Teléfono</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="telefono" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Pais</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="pais" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Provincia</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="provincia" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Ciudad</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="ciudad" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Calle Principal</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="callePrincipal" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Número</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="numero" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Calle Secundaria</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="calleSecundaria" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Referencia</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="referencia" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>GPS</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="gps" disabled>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <label>Metodo Pago</label>
-                                            <input class="form-control" type="text"
-                                                   formControlName="metodoPago" disabled>
-                                        </div>
-                                        <!-- Address and Contact ends -->
-                                        <hr class="invoice-spacing"/>
-                                        <!-- Product Details starts -->
-                                        <div class="card-body invoice-padding">
-                                            <div formArrayName="articulos">
-                                                <form class="source-item">
-                                                    <div data-repeater-list="group-a"
-                                                         *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
-                                                        <div class="row" [formGroup]="detalle">
-                                                            <div class="repeater-wrapper" data-repeater-item>
-                                                                <div class="row">
-                                                                    <div class="col-12 d-flex product-details-border position-relative pr-0">
-                                                                        <div class="row w-100 pr-lg-0 pr-1 py-2">
-                                                                            <div class="col-lg-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
-                                                                                <p class="card-text col-title mb-md-50 mb-0">
-                                                                                  Código                                                                                </p>
-                                                                                <input class="form-control" type="text"
-                                                                                       (change)="obtenerProducto(i)"
-                                                                                       formControlName="codigo"
-                                                                                       disabled>
-                                                                                <div *ngIf="detalle.controls.codigo.errors"
-                                                                                     class="invalid-feedback"
-                                                                                     style="display: block;">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-lg-1 col-12 my-lg-0 my-2">
-                                                                                <p class="card-text col-title mb-md-50 mb-0">
-                                                                                    Cantidad
-                                                                                </p>
-                                                                                <input type="text" class="form-control"
-                                                                                       formControlName="cantidad"
-                                                                                       (change)="calcular()"
-                                                                                       disabled
-                                                                                />
-                                                                            </div>
-                                                                            <div class="col-lg-4 col-12 my-lg-0 my-2">
-                                                                                <p class="card-text col-title mb-md-50 mb-0">
-                                                                                    Nombre
-                                                                                </p>
-                                                                              <label class="d-block text-wrap">{{detalle.controls.articulo.value}}</label>
-                                                                              <div *ngIf="detalle.controls.articulo.errors"
-                                                                                   class="invalid-feedback"
-                                                                                   style="display: block;">
-                                                                                <div *ngIf="detalle.controls.articulo.errors.required">
-                                                                                  Requerido
-                                                                                </div>
-                                                                              </div>
-                                                                            </div>
-                                                                          <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                                                            <p class="card-text col-title mb-md-50 mb-0">
-                                                                              Características
-                                                                            </p>
-                                                                            <label [innerHTML]="detalle.controls.caracteristicas.value"></label>
-
-                                                                          </div>
-                                                                            <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                                                                <p class="card-text col-title mb-md-50 mb-0">
-                                                                                    Precio
-                                                                                </p>
-                                                                                <label>{{detalle.controls.valorUnitario.value}}</label>
-                                                                                <div *ngIf="detalle.controls.valorUnitario.errors"
-                                                                                     class="invalid-feedback"
-                                                                                     style="display: block;">
-                                                                                    <div *ngIf="detalle.controls.valorUnitario.errors.required">
-                                                                                        Requerido
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-lg-1 col-12 my-lg-0 my-2">
-                                                                                <p class="card-text col-title mb-md-50 mb-0">
-                                                                                    Total
-                                                                                </p>
-                                                                                <label>{{detalle.controls.precio.value}}</label>
-                                                                                <div *ngIf="detalle.controls.precio.errors"
-                                                                                     class="invalid-feedback"
-                                                                                     style="display: block;">
-                                                                                    <div *ngIf="detalle.controls.precio.errors.required">
-                                                                                        Requerido
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-2 border-left">
-                                                                                <img class="img-detalle"
-                                                                                     src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
-                                                                                     *ngIf="detalle.controls?.imagen" width="100px" height="100px">
-                                                                            </div>
-                                                                        </div>
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                                <div *ngIf="notaPedidoForm.articulos.errors"
-                                                     class="invalid-feedback" style="display: block;">
-                                                    <div *ngIf="notaPedidoForm.articulos.errors?.required">
-                                                        Artciulos es requerido
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-body invoice-padding">
-
-                                        </div>
-                                        <!-- Product Details ends -->
-                                        <hr class="invoice-spacing"/>
-                                        <!-- Invoice Total starts -->
-                                        <div class="card-body invoice-padding">
-                                            <div formGroupName="facturacion">
-                                                <div class="row mb-1">
-                                                    <div class="col-md-6">
-                                                        <label for="codigoVendedor" class="form-label">Codigo
-                                                            Vendedor:</label>
-                                                        <input type="text" class="form-control" id="codigoVendedor"
-                                                               formControlName="codigoVendedor" disabled/>
-                                                        <div *ngIf="facturacionForm.codigoVendedor.errors"
-                                                             class="invalid-feedback" style="display: block;">
-                                                            <div *ngIf="facturacionForm.codigoVendedor.errors.required">
-                                                                Requerido
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label for="nombreVendedor" class="form-label">Nombre
-                                                            Vendedor:</label>
-                                                        <input type="text" class="form-control" id="nombreVendedor"
-                                                               formControlName="nombreVendedor" disabled/>
-                                                        <div *ngIf="facturacionForm.nombreVendedor.errors"
-                                                             class="invalid-feedback" style="display: block;">
-                                                            <div *ngIf="facturacionForm.nombreVendedor.errors.required">
-                                                                Requerido
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-7"></div>
-                                                <div class="col-md-5 text-right">
-                                                    <div class="invoice-total-wrapper">
-                                                        <hr class="my-50"/>
-                                                        <div class="invoice-total-item">
-                                                            <p class="invoice-total-title text-primary font-weight-bold">
-                                                                Total Envio: ${{notaPedido.controls.envioTotal.value}}</p>
-                                                        </div>
-                                                        <div class="invoice-total-item">
-                                                            <p class="invoice-total-title text-primary font-weight-bold">
-                                                                Total a pagar por el cliente: ${{notaPedido.controls.total.value}}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Invoice Total ends -->
-
-                                        <hr class="invoice-spacing mt-0"/>
-                                        <h2>Datos Envió</h2>
-                                        <div class="card-body invoice-padding pt-0">
-                                            <div formGroupName="envio">
-                                                <div class="row">
-                                                    <div class="col-4">
-                                                        <label>Nombres</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="nombres" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Apellidos</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="apellidos" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Correo</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="correo" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Numero Identificación</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="identificacion" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Teléfono</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="telefono" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Pais</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="pais" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Provincia</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="provincia" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Ciudad</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="ciudad" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Calle Principal</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="callePrincipal" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Número</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="numero" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Calle Secundaria</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="calleSecundaria" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>Referencia</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="referencia" disabled>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <label>GPS</label>
-                                                        <input class="form-control" type="text"
-                                                               formControlName="gps" disabled>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row p-2">
-                                            <div class="col-12">
-                                                <button type="reset" class="btn btn-secondary"
-                                                        data-dismiss="modal">Cerrar
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <hr/>
-                </div>
-            </section>
-            <!-- users list ends -->
-        </div>
+  <div class="content-overlay"></div>
+  <div class="header-navbar-shadow"></div>
+  <div class="content-wrapper">
+    <div class="content-header row">
     </div>
+    <div class="content-body">
+      <!-- users list start -->
+      <section class="app-user-list">
+        <!-- users filter start -->
+        <div class="card">
+          <h5 class="card-header">Filtros de búsqueda</h5>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="inicio">
+              </div>
+              <div class="col-md-4">
+                <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="fin">
+              </div>
+              <div class="col-md-4">
+                <button class="btn btn-primary" (click)="obtenerTransacciones()">
+                  <i-feather name='search' class="edit-user"></i-feather>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-datatable table-responsive pt-0">
+            <div class="row m-75">
+              <div class="col-lg-12 col-xl-6">
+                <label>Mostrar</label>
+                <select class="form-control-sm" [(ngModel)]="pageSize"
+                        (change)="obtenerTransacciones()">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+
+              </div>
+            </div>
+            <table class="user-list-table table">
+              <thead class="thead-light">
+              <tr>
+                <th>Fecha Pedido</th>
+                <th>Canal Venta</th>
+                <th>Numero Pedido</th>
+                <th>Nombres Facturación</th>
+                <th>Apellidos Facturación</th>
+                <th>Metodo Pago</th>
+                <th>Provincia Envio</th>
+                <th>Ciudad Envio</th>
+                <th>Telefono</th>
+                <th>Estado</th>
+                <th>Ver</th>
+                <th>Motivo</th>
+              </tr>
+              </thead>
+
+              <tbody>
+              <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
+                <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
+                <td>{{ transaccion.canal }}</td>
+                <td>{{ transaccion.numeroPedido }}</td>
+                <td>{{ transaccion.facturacion.nombres }}</td>
+                <td>{{ transaccion.facturacion.apellidos }}</td>
+                <td>{{ transaccion.metodoPago }}</td>
+                <td>{{ transaccion.envio.provincia }}</td>
+                <td>{{ transaccion.envio.ciudad }}</td>
+                <td>{{ transaccion.facturacion.telefono }}</td>
+                <td>{{ transaccion.estado }}</td>
+                <td>
+                  <a (click)="obtenerTransaccion(transaccion.id)" data-toggle="modal"
+                     data-target="#verfactura">
+                    <i-feather name="eye" class="mr-25"></i-feather>
+                  </a>
+                </td>
+                <td>{{ transaccion.motivo }}</td>
+              </tr>
+              </tbody>
+            </table>
+
+          </div>
+          <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
+                          [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+
+          <div class="modal fade" id="verfactura" tabindex="-1" role="dialog"
+               aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+              <div class="modal-content">
+                <form [formGroup]="notaPedido">
+                  <div class="card invoice-preview-card">
+                    <!-- Header starts -->
+                    <div class="card-body invoice-padding pb-0">
+                      <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+                        <div>
+                          <div class="d-flex align-items-center mb-1">
+                            <span class="title mr-1">Fecha Pedido:</span>
+                            <input type="text"
+                                   class="form-control invoice-edit-input date-picker"
+                                   value="{{notaPedido.controls?.created_at.value | date: 'dd-MM-yyyy'}}"
+                                   disabled/>
+                          </div>
+                        </div>
+                        <div class="invoice-number-date mt-md-0 mt-2">
+                          <div class="d-flex align-items-center mb-1">
+                            <h4 class="invoice-title mr-1">Numero Pedido</h4>
+                            <div class="input-group input-group-merge invoice-edit-input-group">
+                              <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                  <i-feather name="hash"
+                                             class="edit-user"></i-feather>
+                                </div>
+                              </div>
+                              <input type="text" class="form-control invoice-edit-input"
+                                     placeholder="{{notaPedido.controls?.numeroPedido.value}}"
+                                     disabled/>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Header ends -->
+
+                    <hr class="invoice-spacing"/>
+
+                    <!-- Address and Contact starts -->
+                    <div class="card-body invoice-padding pt-0">
+                      <h4 class="invoice-title mb-2">Datos para la factura</h4>
+                      <div formGroupName="facturacion">
+                        <div class="row">
+                          <div class="col-3">
+                            <label>Nombres</label>
+                            <input class="form-control" type="text"
+                                   formControlName="nombres" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Apellidos</label>
+                            <input class="form-control" type="text"
+                                   formControlName="apellidos" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Correo</label>
+                            <input class="form-control" type="text"
+                                   formControlName="correo" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Numero Identificación</label>
+                            <input class="form-control" type="text"
+                                   formControlName="identificacion" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Teléfono</label>
+                            <input class="form-control" type="text"
+                                   formControlName="telefono" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Pais</label>
+                            <input class="form-control" type="text"
+                                   formControlName="pais" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Provincia</label>
+                            <input class="form-control" type="text"
+                                   formControlName="provincia" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Ciudad</label>
+                            <input class="form-control" type="text"
+                                   formControlName="ciudad" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Calle Principal</label>
+                            <input class="form-control" type="text"
+                                   formControlName="callePrincipal" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Número</label>
+                            <input class="form-control" type="text"
+                                   formControlName="numero" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Calle Secundaria</label>
+                            <input class="form-control" type="text"
+                                   formControlName="calleSecundaria" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Referencia</label>
+                            <input class="form-control" type="text"
+                                   formControlName="referencia" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>GPS</label>
+                            <input class="form-control" type="text"
+                                   formControlName="gps" disabled>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <label>Metodo Pago</label>
+                      <input class="form-control" type="text"
+                             formControlName="metodoPago" disabled>
+                    </div>
+                    <div class="col-3 mt-2">
+                      <label>Canal: </label>
+                      <label> {{ notaPedido.value.canal }}</label>
+
+                    </div>
+                    <!-- Address and Contact ends -->
+                    <hr class="invoice-spacing"/>
+                    <!-- Product Details starts -->
+                    <div class="card-body invoice-padding">
+                      <div formArrayName="articulos">
+                        <form class="source-item">
+                          <div data-repeater-list="group-a"
+                               *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
+                            <ng-container class="row" [formGroup]="detalle">
+                              <div class="repeater-wrapper" data-repeater-item>
+                                <div class="row">
+
+                                  <div class="col-lg-1 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Código </p>
+                                    <input class="form-control" type="text"
+                                           (change)="obtenerProducto(i)"
+                                           formControlName="codigo"
+                                           disabled>
+                                    <div *ngIf="detalle.controls.codigo.errors"
+                                         class="invalid-feedback"
+                                         style="display: block;">
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Cantidad
+                                    </p>
+                                    <input type="text" class="form-control"
+                                           formControlName="cantidad"
+                                           (change)="calcular()"
+                                           disabled
+                                    />
+                                  </div>
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Nombre
+                                    </p>
+                                    <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
+                                    <div *ngIf="detalle.controls.articulo.errors"
+                                         class="invalid-feedback"
+                                         style="display: block;">
+                                      <div *ngIf="detalle.controls.articulo.errors.required">
+                                        Requerido
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Características
+                                    </p>
+                                    <label [innerHTML]="detalle.controls.caracteristicas.value"></label>
+
+                                  </div>
+                                  <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Precio
+                                    </p>
+                                    <label>{{ detalle.controls.valorUnitario.value }}</label>
+                                    <div *ngIf="detalle.controls.valorUnitario.errors"
+                                         class="invalid-feedback"
+                                         style="display: block;">
+                                      <div *ngIf="detalle.controls.valorUnitario.errors.required">
+                                        Requerido
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Total
+                                    </p>
+                                    <label>{{ detalle.controls.precio.value }}</label>
+                                    <div *ngIf="detalle.controls.precio.errors"
+                                         class="invalid-feedback"
+                                         style="display: block;">
+                                      <div *ngIf="detalle.controls.precio.errors.required">
+                                        Requerido
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Bodega
+                                    </p>
+                                    <label class="d-block text-wrap">LABEL</label>
+                                  </div>
+                                  <div class="col-md-2 border-left">
+                                    <img class="img-detalle"
+                                         src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
+                                         *ngIf="detalle.controls?.imagen" width="100px" height="100px">
+                                  </div>
+
+                                </div>
+                              </div>
+                            </ng-container>
+                          </div>
+                        </form>
+                        <div *ngIf="notaPedidoForm.articulos.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="notaPedidoForm.articulos.errors?.required">
+                            Artciulos es requerido
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body invoice-padding">
+
+                    </div>
+                    <!-- Product Details ends -->
+                    <hr class="invoice-spacing"/>
+                    <!-- Invoice Total starts -->
+                    <div class="card-body invoice-padding">
+                      <div formGroupName="facturacion">
+                        <div class="row mb-1 d-flex justify-content-between">
+                          <div class="col-md-5">
+                            <label for="codigoVendedor" class="form-label">Codigo
+                              Vendedor:</label>
+                            <input type="text" class="form-control" id="codigoVendedor"
+                                   formControlName="codigoVendedor" disabled/>
+                            <div *ngIf="facturacionForm.codigoVendedor.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="facturacionForm.codigoVendedor.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-5">
+                            <label for="nombreVendedor" class="form-label">Nombre
+                              Vendedor:</label>
+                            <input type="text" class="form-control" id="nombreVendedor"
+                                   formControlName="nombreVendedor" disabled/>
+                            <div *ngIf="facturacionForm.nombreVendedor.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="facturacionForm.nombreVendedor.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-7"></div>
+                        <div class="col-md-5 text-right">
+                          <div class="invoice-total-wrapper">
+                            <hr class="my-50"/>
+                            <div class="invoice-total-item">
+                              <p class="invoice-total-title text-primary font-weight-bold">
+                                Total Envio: ${{ notaPedido.controls.envioTotal.value }}</p>
+                            </div>
+                            <div class="invoice-total-item">
+                              <p class="invoice-total-title text-primary font-weight-bold">
+                                Total a pagar por el cliente: ${{ notaPedido.controls.total.value }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Invoice Total ends -->
+
+                    <hr class="invoice-spacing mt-0"/>
+                    <h2>Datos Envió</h2>
+                    <div class="card-body invoice-padding pt-0">
+                      <div formGroupName="envio">
+                        <div class="row">
+                          <div class="col-3">
+                            <label>Nombres</label>
+                            <input class="form-control" type="text"
+                                   formControlName="nombres" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Apellidos</label>
+                            <input class="form-control" type="text"
+                                   formControlName="apellidos" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Correo</label>
+                            <input class="form-control" type="text"
+                                   formControlName="correo" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Numero Identificación</label>
+                            <input class="form-control" type="text"
+                                   formControlName="identificacion" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Teléfono</label>
+                            <input class="form-control" type="text"
+                                   formControlName="telefono" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Pais</label>
+                            <input class="form-control" type="text"
+                                   formControlName="pais" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Provincia</label>
+                            <input class="form-control" type="text"
+                                   formControlName="provincia" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Ciudad</label>
+                            <input class="form-control" type="text"
+                                   formControlName="ciudad" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Calle Principal</label>
+                            <input class="form-control" type="text"
+                                   formControlName="callePrincipal" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Número</label>
+                            <input class="form-control" type="text"
+                                   formControlName="numero" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Calle Secundaria</label>
+                            <input class="form-control" type="text"
+                                   formControlName="calleSecundaria" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>Referencia</label>
+                            <input class="form-control" type="text"
+                                   formControlName="referencia" disabled>
+                          </div>
+                          <div class="col-3">
+                            <label>GPS</label>
+                            <input class="form-control" type="text"
+                                   formControlName="gps" disabled>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row p-2">
+                      <div class="col-12">
+                        <button type="reset" class="btn btn-secondary"
+                                data-dismiss="modal">Cerrar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <hr/>
+        </div>
+      </section>
+      <!-- users list ends -->
+    </div>
+  </div>
 </div>

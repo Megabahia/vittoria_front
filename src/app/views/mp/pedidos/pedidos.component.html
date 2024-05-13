@@ -147,7 +147,7 @@
                     <h4 class="invoice-title mb-2">Datos para la factura</h4>
                     <div formGroupName="facturacion">
                       <div class="row">
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Nombres</label>
                           <input class="form-control" type="text"
                                  formControlName="nombres">
@@ -158,7 +158,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Apellidos</label>
                           <input class="form-control" type="text"
                                  formControlName="apellidos">
@@ -169,7 +169,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Correo</label>
                           <input class="form-control" type="text"
                                  formControlName="correo">
@@ -183,7 +183,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Numero Identificación</label>
                           <input class="form-control" type="text"
                                  formControlName="identificacion">
@@ -206,7 +206,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Teléfono</label>
                           <input class="form-control" type="text"
                                  formControlName="telefono">
@@ -226,7 +226,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Pais</label>
                           <input class="form-control" type="text"
                                  formControlName="pais">
@@ -237,7 +237,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Provincia</label>
                           <input class="form-control" type="text"
                                  formControlName="provincia">
@@ -248,7 +248,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Ciudad</label>
                           <input class="form-control" type="text"
                                  formControlName="ciudad">
@@ -259,7 +259,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Calle Principal</label>
                           <input class="form-control" type="text"
                                  formControlName="callePrincipal">
@@ -270,7 +270,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Número</label>
                           <input class="form-control" type="text"
                                  formControlName="numero">
@@ -281,7 +281,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Calle Secundaria</label>
                           <input class="form-control" type="text"
                                  formControlName="calleSecundaria">
@@ -292,7 +292,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Referencia</label>
                           <input class="form-control" type="text"
                                  formControlName="referencia">
@@ -303,7 +303,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>GPS</label>
                           <input class="form-control" type="text"
                                  formControlName="gps">
@@ -317,7 +317,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-4">
+                  <div class="col-3">
                     <label>Metodo Pago</label>
                     <input class="form-control" type="text"
                            formControlName="metodoPago" disabled>
@@ -328,122 +328,124 @@
                       </div>
                     </div>
                   </div>
+                  <div class="col-3 mt-2">
+                    <label>Canal: </label>
+                    <label> {{ notaPedido.value.canal }}</label>
+                  </div>
                   <!-- Address and Contact ends -->
                   <hr class="invoice-spacing"/>
                   <!-- Product Details starts -->
-                  <div class="card-body invoice-padding">
+                  <div class="card-body invoice-padding bg-light-secondary">
                     <div formArrayName="articulos">
                       <form class="source-item">
                         <div data-repeater-list="group-a"
                              *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
-                          <div class="row" [formGroup]="detalle">
+                          <ng-container [formGroup]="detalle">
                             <div class="repeater-wrapper" data-repeater-item>
                               <div class="row">
-                                <div class="col-12 d-flex product-details-border position-relative pr-0">
-                                  <div class="row w-100 pr-lg-0 pr-1 py-2">
-                                    <div class="col-lg-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
-                                      <p class="card-text col-title mb-md-50 mb-0">
-                                        Código
-                                      </p>
-                                      <input class="form-control" type="text"
-                                             (change)="obtenerProducto(i)"
-                                             formControlName="codigo">
-                                      <div *ngIf="detalle.controls.codigo.errors"
-                                           class="invalid-feedback"
-                                           style="display: block;">
-                                        <div *ngIf="detalle.controls.codigo.errors.required">
-                                          Requerido
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="col-lg-1 col-12 my-lg-0 my-2">
-                                      <p class="card-text col-title mb-md-50 mb-0">
-                                        Cantidad
-                                      </p>
-                                      <input type="text" class="form-control"
-                                             formControlName="cantidad"
-                                             (change)="calcular()"
-                                      />
-                                      <div *ngIf="detalle.controls.cantidad.errors"
-                                           class="invalid-feedback"
-                                           style="display: block;">
-                                        <div *ngIf="detalle.controls.cantidad.errors.required">
-                                          Requerido
-                                        </div>
-                                        <div *ngIf="detalle.controls.cantidad.errors.max">
-                                          Fuera de stock
-                                        </div>
-                                        <div *ngIf="detalle.controls.cantidad.errors.min">
-                                          Ingrese minimo 1
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="col-lg-4 col-12 my-lg-0 my-2">
-                                      <p class="card-text col-title mb-md-50 mb-0">
-                                        Nombre
-                                      </p>
-                                      <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
-                                      <div *ngIf="detalle.controls.articulo.errors"
-                                           class="invalid-feedback"
-                                           style="display: block;">
-                                        <div *ngIf="detalle.controls.articulo.errors.required">
-                                          Requerido
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                      <p class="card-text col-title mb-md-50 mb-0">
-                                        Características
-                                      </p>
-                                      <label [innerHTML]="detalle.controls.caracteristicas.value"></label>
-
-                                    </div>
-
-                                    <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                      <p class="card-text col-title mb-md-50 mb-0">
-                                        Precio
-                                      </p>
-                                      <label>{{ detalle.controls.valorUnitario.value }}</label>
-
-                                    </div>
-                                    <div class="col-lg-1 col-12 my-lg-0 my-2">
-                                      <p class="card-text col-title mb-md-50 mb-0">
-                                        Total
-                                      </p>
-                                      <label>{{ detalle.controls.precio.value }}</label>
-                                      <div *ngIf="detalle.controls.precio.errors"
-                                           class="invalid-feedback"
-                                           style="display: block;">
-                                        <div *ngIf="detalle.controls.precio.errors.required">
-                                          Requerido
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-2 border-left">
-                                      <img class="img-detalle"
-                                           src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
-                                           *ngIf="detalle.controls?.imagen" width="100px" height="100px">
-                                    </div>
-                                    <div
-                                      class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
-                                      <i-feather name="x"
-                                                 class="cursor-pointer font-medium-3"
-                                                 data-repeater-delete
-                                                 (click)="removerItem(i)"></i-feather>
-
+                                <div class="col-lg-1 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                  <p class="card-text col-title mb-md-50 mb-0">
+                                    Código
+                                  </p>
+                                  <input class="form-control" type="text"
+                                         (change)="obtenerProducto(i)"
+                                         formControlName="codigo">
+                                  <div *ngIf="detalle.controls.codigo.errors"
+                                       class="invalid-feedback"
+                                       style="display: block;">
+                                    <div *ngIf="detalle.controls.codigo.errors.required">
+                                      Requerido
                                     </div>
                                   </div>
+                                </div>
+                                <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                  <p class="card-text col-title mb-md-50 mb-0">
+                                    Cantidad
+                                  </p>
+                                  <input type="text" class="form-control"
+                                         formControlName="cantidad"
+                                         (change)="calcular()"
+                                  />
+                                  <div *ngIf="detalle.controls.cantidad.errors"
+                                       class="invalid-feedback"
+                                       style="display: block;">
+                                    <div *ngIf="detalle.controls.cantidad.errors.required">
+                                      Requerido
+                                    </div>
+                                    <div *ngIf="detalle.controls.cantidad.errors.max">
+                                      Fuera de stock
+                                    </div>
+                                    <div *ngIf="detalle.controls.cantidad.errors.min">
+                                      Ingrese minimo 1
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                  <p class="card-text col-title mb-md-50 mb-0">
+                                    Nombre
+                                  </p>
+                                  <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
+                                  <div *ngIf="detalle.controls.articulo.errors"
+                                       class="invalid-feedback"
+                                       style="display: block;">
+                                    <div *ngIf="detalle.controls.articulo.errors.required">
+                                      Requerido
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                  <p class="card-text col-title mb-md-50 mb-0">
+                                    Características
+                                  </p>
+                                  <label [innerHTML]="detalle.controls.caracteristicas.value"></label>
+                                </div>
+                                <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                  <p class="card-text col-title mb-md-50 mb-0">
+                                    Precio
+                                  </p>
+                                  <label>{{ detalle.controls.valorUnitario.value }}</label>
+                                </div>
+                                <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                  <p class="card-text col-title mb-md-50 mb-0">
+                                    Total
+                                  </p>
+                                  <label>{{ detalle.controls.precio.value }}</label>
+                                  <div *ngIf="detalle.controls.precio.errors"
+                                       class="invalid-feedback"
+                                       style="display: block;">
+                                    <div *ngIf="detalle.controls.precio.errors.required">
+                                      Requerido
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                  <p class="card-text col-title mb-md-50 mb-0">
+                                    Bodega
+                                  </p>
+                                  <label class="d-block text-wrap">LABEL</label>
+                                </div>
+                                <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                  <img
+                                    src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
+                                    *ngIf="detalle.controls?.imagen" width="100px" height="100px" alt="">
+                                </div>
 
+                                <div
+                                  class="d-flex flex-column align-items-center justify-content-between border-left border-left-black invoice-product-actions py-50">
+                                  <i-feather name="x"
+                                             class="cursor-pointer font-medium-3"
+                                             data-repeater-delete
+                                             (click)="removerItem(i)"></i-feather>
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </ng-container>
                         </div>
                       </form>
                       <div *ngIf="notaPedidoForm.articulos.errors"
                            class="invalid-feedback" style="display: block;">
                         <div *ngIf="notaPedidoForm.articulos.errors?.required">
-                          Artciulos es requerido
+                          Artículos es requerido
                         </div>
                       </div>
                     </div>
@@ -458,15 +460,14 @@
                     </div>
                   </div>
                   <div class="card-body invoice-padding">
-
                   </div>
                   <!-- Product Details ends -->
                   <hr class="invoice-spacing"/>
                   <!-- Invoice Total starts -->
                   <div class="card-body invoice-padding">
                     <div formGroupName="facturacion">
-                      <div class="row mb-1">
-                        <div class="col-md-6">
+                      <div class="row mb-1 d-flex justify-content-between">
+                        <div class="col-md-5">
                           <label for="codigoVendedor" class="form-label">Codigo
                             Vendedor:</label>
                           <input type="text" class="form-control" id="codigoVendedor"
@@ -478,7 +479,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                           <label for="nombreVendedor" class="form-label">Nombre
                             Vendedor:</label>
                           <input type="text" class="form-control" id="nombreVendedor"
@@ -516,7 +517,7 @@
                   <div class="card-body invoice-padding pt-0">
                     <div formGroupName="envio">
                       <div class="row">
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Nombres</label>
                           <input class="form-control" type="text"
                                  formControlName="nombres">
@@ -527,7 +528,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Apellidos</label>
                           <input class="form-control" type="text"
                                  formControlName="apellidos">
@@ -538,7 +539,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Correo</label>
                           <input class="form-control" type="text"
                                  formControlName="correo">
@@ -552,7 +553,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Numero Identificación</label>
                           <input class="form-control" type="text"
                                  formControlName="identificacion">
@@ -575,7 +576,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Teléfono</label>
                           <input class="form-control" type="text"
                                  formControlName="telefono">
@@ -595,7 +596,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Pais</label>
                           <input class="form-control" type="text"
                                  formControlName="pais">
@@ -606,7 +607,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Provincia</label>
                           <input class="form-control" type="text"
                                  formControlName="provincia">
@@ -617,7 +618,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Ciudad</label>
                           <input class="form-control" type="text"
                                  formControlName="ciudad">
@@ -628,7 +629,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Calle Principal</label>
                           <input class="form-control" type="text"
                                  formControlName="callePrincipal">
@@ -639,7 +640,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Número</label>
                           <input class="form-control" type="text"
                                  formControlName="numero">
@@ -650,7 +651,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Calle Secundaria</label>
                           <input class="form-control" type="text"
                                  formControlName="calleSecundaria">
@@ -661,7 +662,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>Referencia</label>
                           <input class="form-control" type="text"
                                  formControlName="referencia">
@@ -672,7 +673,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label>GPS</label>
                           <input class="form-control" type="text"
                                  formControlName="gps">
@@ -686,7 +687,6 @@
                       </div>
                     </div>
                   </div>
-
                 </div>
               </form>
             </div>

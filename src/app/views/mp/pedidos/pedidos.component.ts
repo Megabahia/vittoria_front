@@ -34,6 +34,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   opciones;
   ciudadPresenteFacturacion=true;
   ciudadPresenteEnvio=true;
+  isValidoBodega: boolean = false;
+  bodega;
 
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -208,7 +210,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   }
 
   obtenerTransaccion(modal, id): void {
-    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+    this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
       this.validarCiudadEnProvincia(info.facturacion.provincia, info.facturacion.ciudad, info.envio.provincia, info.envio.ciudad);
 
@@ -216,12 +218,20 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       info.articulos.map((item): void => {
         this.agregarItem();
       });
-      this.notaPedido.patchValue({...info, verificarPedido: true});
+      this.notaPedido.patchValue({...info, verificarPedido: true, canal: this.cortarUrlHastaCom(info.canal)});
 
       info.articulos.forEach((item, index) => {
         this.obtenerProducto(index);
       });
     });
+  }
+
+  cortarUrlHastaCom(url: string): string {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      const match = url.match(/https?:\/\/[^\/]+\.com/);
+      return match ? match[0] : url;  // Devuelve la URL cortada o la original si no se encuentra .com
+    }
+    return url;
   }
 
 
@@ -239,10 +249,12 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         valorUnitario: Number(this.detallesArray.controls[i].value.valorUnitario).toFixed(2)
       };
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
-        console.log(info)
         if (info.mensaje === '') {
           if (info.codigoBarras) {
             this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
+
+            const datoBodega=this.getBodega(info.codigoBarras);
+
             this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
             this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
             const precioProducto = info.precio;
@@ -266,6 +278,17 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         }
       });
     });
+  }
+
+  private getBodega(codigoBarras: string): void {
+    if (codigoBarras.endsWith('MD')) {
+      this.bodega= 'MEGA DESCUENTO';
+    } else if (codigoBarras.endsWith('MB')) {
+     this.bodega=  'MEGA BAHÍA';
+    } else if (codigoBarras.endsWith('XX')) { // Añade más condiciones según sea necesario
+      this.bodega= 'OTRO VALOR';
+    }
+    this.bodega= 'DESCONOCIDO'; // Default o puedes dejarlo vacío si prefieres
   }
 
   calcular(): void {
@@ -415,4 +438,5 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         }
       );
   }
+
 }
