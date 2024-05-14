@@ -158,6 +158,7 @@ export class PedidosRechazadosComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       caracteristicas: ['', []],
       imagen: ['', []],
+      bodega: ['', []]
     });
   }
 
@@ -195,7 +196,13 @@ export class PedidosRechazadosComponent implements OnInit, AfterViewInit {
       });
       const iva = +(info.total * this.iva.valor).toFixed(2);
       const total = iva + info.total;
-      this.notaPedido.patchValue({...info, subtotal: info.subtotal, iva, total, canal: this.cortarUrlHastaCom(info.canal)});
+      this.notaPedido.patchValue({
+        ...info,
+        subtotal: info.subtotal,
+        iva,
+        total,
+        canal: this.cortarUrlHastaCom(info.canal)
+      });
     });
   }
 
@@ -223,25 +230,55 @@ export class PedidosRechazadosComponent implements OnInit, AfterViewInit {
   }
 
   obtenerProducto(i): void {
-    this.productosService.obtenerProductoPorCodigo({
-      codigoBarras: this.detallesArray.value[i].codigo
-    }).subscribe((info) => {
-      if (info.codigoBarras) {
-        // this.detallesArray.value[i].codigo = info.codigo;
-        console.log('dato', this.detallesArray.controls[i].get('articulo'));
-        this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
-        this.detallesArray.controls[i].get('cantidad').setValue(1);
-        this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
-        this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
-        this.calcular();
-      } else {
-        // this.comprobarProductos[i] = false;
-        // this.mensaje = 'No existe el producto a buscar';
-        // this.abrirModal(this.mensajeModal);
-      }
-    }, (error) => {
+    const codigoBodega = this.detallesArray.value[i].codigo.slice(-2);
 
+    this.paramService.obtenerListaValor({valor: codigoBodega}).subscribe((param) => {
+      if (this.detallesArray.value[i].codigo.endsWith('MD')) {
+        this.productosService.obtenerProductoPorCodigo({
+          codigoBarras: this.detallesArray.value[i].codigo
+        }).subscribe((info) => {
+          if (info.codigoBarras) {
+            // this.detallesArray.value[i].codigo = info.codigo;
+            console.log('dato', this.detallesArray.controls[i].get('articulo'));
+            this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+            this.detallesArray.controls[i].get('cantidad').setValue(1);
+            this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
+            this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
+            this.detallesArray.controls[i].get('bodega').setValue(param[0].nombre);
+            this.calcular();
+          } else {
+            // this.comprobarProductos[i] = false;
+            // this.mensaje = 'No existe el producto a buscar';
+            // this.abrirModal(this.mensajeModal);
+          }
+        }, (error) => {
+
+        });
+      } else {
+        this.productosService.obtenerProductoPorCodigo({
+          codigoBarras: this.detallesArray.value[i].codigo
+        }).subscribe((info) => {
+          if (info.codigoBarras) {
+            // this.detallesArray.value[i].codigo = info.codigo;
+            console.log('dato', this.detallesArray.controls[i].get('articulo'));
+            this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+            this.detallesArray.controls[i].get('cantidad').setValue(1);
+            this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
+            this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
+            this.detallesArray.controls[i].get('bodega').setValue('DESCONOCIDO');
+            this.calcular();
+          } else {
+            // this.comprobarProductos[i] = false;
+            // this.mensaje = 'No existe el producto a buscar';
+            // this.abrirModal(this.mensajeModal);
+          }
+        }, (error) => {
+
+        });
+      }
     });
+
+
   }
 
   calcular(): void {
