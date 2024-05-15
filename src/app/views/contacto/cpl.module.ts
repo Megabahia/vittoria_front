@@ -13,12 +13,14 @@ import {GenerarContactoComponent} from "./generadorContacto/generar-contacto.com
 import {ShortenPipe} from "../../pipes/shorten-pipe.pipe";
 import {GdeModule} from "../gde/gde.module";
 import {FeatherModule} from "angular-feather";
+import {GenerarVentasComponent} from "./generarVentas/generar-ventas.component";
 
 
 @NgModule({
   declarations: [
     CplComponent,
-    GenerarContactoComponent
+    GenerarContactoComponent,
+    GenerarVentasComponent
   ],
   imports: [
     CommonModule,

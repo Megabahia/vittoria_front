@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
-import {Color, Label} from 'ng2-charts';
+import {ChartDataSets} from 'chart.js';
+import {Color} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
 import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
 import {ParamService} from '../../../services/mp/param/param.service';
@@ -12,19 +12,18 @@ import {ProductosService} from '../../../services/mdp/productos/productos.servic
 import {Toaster} from 'ngx-toast-notifications';
 import {v4 as uuidv4} from 'uuid';
 import {ClientesService} from "../../../services/mdm/personas/clientes/clientes.service";
-import {ProspectosService} from "../../../services/mdm/prospectosCli/prospectos.service";
 import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
-import {logger} from "codelyzer/util/logger";
 import {ValidacionesPropias} from "../../../utils/customer.validators";
 
 @Component({
-  selector: 'app-generar-contacto',
-  templateUrl: './generar-contacto.component.html',
+  selector: 'app-generar-ventas',
+  templateUrl: './generar-ventas.component.html',
   providers: [DatePipe]
 })
-export class GenerarContactoComponent implements OnInit, AfterViewInit {
+export class GenerarVentasComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @Input() paises;
+
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
   public rechazoForm: FormGroup;
@@ -42,13 +41,15 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
   provincia = '';
   ciudadOpciones;
   provinciaOpciones;
+  verificarContacto = false;
+  whatsapp = '';
+  correo = ''
+  usuarioActual;
 
-  listaProspectos;
+  cedulaABuscar = ''
   clientes;
   cliente;
   cedula
-
-  usuarioActual;
 
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -66,6 +67,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
     private pedidosService: PedidosService,
+    private clientesService: ClientesService,
     private contactosService: ContactosService,
     private paramService: ParamService,
     private paramServiceAdm: ParamServiceAdm,
@@ -103,7 +105,6 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.iniciarPaginador();
     this.obtenerContactos();
-
   }
 
   iniciarNotaPedido(): void {
@@ -122,11 +123,6 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
         pais: [this.pais, [Validators.required]],
         provincia: ['', [Validators.required]],
         ciudad: ['', [Validators.required]],
-        //callePrincipal: ['', [Validators.required]],
-        //numero: ['', [Validators.required]],
-        //calleSecundaria: ['', [Validators.required]],
-        //referencia: ['', [Validators.required]],
-        //gps: ['', []],
         codigoVendedor: [this.usuarioActual.usuario.username, []],
         nombreVendedor: [this.usuarioActual.full_name, []],
         comprobantePago: ['', []],
@@ -189,27 +185,23 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
   }
 
   agregarItem(): void {
-    if (this.detallesArray.value.length < 3) {
-      this.detallesArray.push(this.crearDetalleGrupo());
-    } else {
-      this.toaster.open('Solo puede ingresar 3 productos', {type: 'danger'});
-    }
-
+    this.detallesArray.push(this.crearDetalleGrupo());
   }
 
   removerItem(i): void {
     this.detallesArray.removeAt(i);
-
     this.calcular();
   }
 
   obtenerContactos(): void {
     this.contactosService.obtenerListaContactos({
+      telefono: this.whatsapp,
+      correo: this.correo,
       page: this.page - 1,
       page_size: this.pageSize,
-      inicio: this.inicio,
-      fin: this.transformarFecha(this.fin),
-      estado: ['Pendiente'],
+      //inicio: this.inicio,
+      //fin: this.transformarFecha(this.fin),
+      //estado: ['Pendiente'],
       canal: 'Contacto Local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
@@ -217,11 +209,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  transformarFecha(fecha): string {
-    return this.datePipe.transform(fecha, 'yyyy-MM-dd');
-  }
-
-  crearNuevoContacto(modal): void {
+  crearNuevaVenta(modal): void {
     this.iniciarNotaPedido();
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
   }
@@ -233,18 +221,17 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async guardarPorContacto(): Promise<void> {
+  async guardarVenta(): Promise<void> {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
+    if(this.notaPedido.invalid){
+      this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
+      return;
+    }
     if (confirm('Esta seguro de guardar los datos') === true) {
-      if(this.notaPedido.invalid){
-        this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
-        return;
-      }
-      this.contactosService.crearNuevoContacto(this.notaPedido.value).subscribe((info) => {
+      this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
           this.modalService.dismissAll();
-          this.obtenerContactos();
         }, error => this.toaster.open(error, {type: 'danger'})
       );
     }
@@ -304,59 +291,15 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
-
     if (confirm('Esta seguro de guardar los datos') === true) {
-      if(this.notaPedido.invalid){
-        this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
-        return;
-      }
-      this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
+      this.contactosService.actualizarContacto(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerContactos();
-      });
+        this.verificarContacto = true;
+      }, error => this.toaster.open(error, {type: 'danger'}));
     }
   }
 
-
-  procesarAutorizacion(): void {
-    if (this.autorizarForm.invalid || this.invalidoTamanoVideo) {
-      this.toaster.open('Campos vacios', {type: 'danger'});
-      return;
-    }
-    if (confirm('Esta seguro de cambiar de estado') === true) {
-      const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
-      const facturaFisicaLlaves: string[] = Object.keys(this.autorizarForm.value);
-      facturaFisicaLlaves.map((llaves, index) => {
-        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago') {
-          this.archivo.append(llaves, facturaFisicaValores[index]);
-        }
-      });
-      this.mostrarSpinner = true;
-
-      this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
-        this.modalService.dismissAll();
-        this.obtenerContactos();
-        this.mostrarSpinner = false;
-      }, (data) => {
-        this.toaster.open(data, {type: 'danger'});
-        this.mostrarSpinner = false;
-      });
-    }
-  }
-
-  cargarArchivo(event, nombreCampo): void {
-    const doc = event.target.files[0];
-    this.invalidoTamanoVideo = false;
-    if (10485760 < doc.size) {
-      this.invalidoTamanoVideo = true;
-      this.toaster.open('Archivo pesado', {type: 'warning'});
-      return;
-    }
-    const x = document.getElementById(nombreCampo + 'lbl');
-    x.innerHTML = '' + Date.now() + '_' + doc.name;
-    this.archivo.delete(nombreCampo);
-    this.archivo.append(nombreCampo, doc);
-  }
 
   obtenerFechaActual(): Date {
     //const fecha= new Date();
@@ -398,4 +341,37 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     }, error => this.toaster.open(error, {type: 'danger'}));
   }
 
+  obtenerClienteCedula(): void {
+
+    if (this.cedulaABuscar !== '') {
+
+      this.clientesService.obtenerClientePorCedula({cedula: this.cedulaABuscar}).subscribe((info) => {
+        this.notaPedido.get('facturacion').get('nombres').setValue(info.nombres)
+        this.notaPedido.get('facturacion').get('apellidos').setValue(info.apellidos)
+        this.notaPedido.get('facturacion').get('correo').setValue(info.correo)
+        this.notaPedido.get('facturacion').get('identificacion').setValue(info.cedula)
+        this.notaPedido.get('facturacion').get('telefono').setValue(info.telefono)
+        this.notaPedido.get('facturacion').get('provincia').setValue(info.provinciaNacimiento)
+        this.notaPedido.get('facturacion').get('ciudad').setValue(info.ciudadNacimiento)
+
+        this.obtenerCiudad()
+        //this.notaPedido.get('facturacion').get('identificacion').disable();
+      }, error => {
+        this.toaster.open(error.error, {type: 'danger'})
+        this.notaPedido.get('facturacion').get('nombres').setValue('')
+        this.notaPedido.get('facturacion').get('apellidos').setValue('')
+        this.notaPedido.get('facturacion').get('correo').setValue('')
+        this.notaPedido.get('facturacion').get('identificacion').setValue('')
+        this.notaPedido.get('facturacion').get('telefono').setValue('')
+        this.notaPedido.get('facturacion').get('provincia').setValue('')
+        this.notaPedido.get('facturacion').get('ciudad').setValue('')
+        this.obtenerCiudad()
+
+        //this.notaPedido.get('facturacion').get('identificacion').enable();
+      })
+    }
+  }
+
+
 }
+
