@@ -53,6 +53,10 @@ export class ParamService {
     return this.http.get<any>(`${apiUrl}/mp/param/list/estado/`);
   }
 
+  obtenerListaValor(valor): Observable<any>{
+    return this.http.post<any>(`${apiUrl}/mp/param/list/valor/`, valor);
+  }
+
   exportar(): Observable<any> {
     const httpOptions = {
       responseType: 'blob' as 'json'

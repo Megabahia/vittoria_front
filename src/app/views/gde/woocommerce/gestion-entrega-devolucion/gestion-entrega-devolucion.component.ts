@@ -125,7 +125,8 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
       numeroGuia: ['', []],
       created_at: ['', []],
       metodoPago: ['', [Validators.required]],
-      estado: ['', []]
+      estado: ['', []],
+      canal: ['', []]
     });
   }
 
@@ -164,7 +165,7 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
-
+      bodega: ['', []]
     });
   }
 
@@ -207,7 +208,7 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
       info.articulos.map((item): void => {
         this.agregarItem();
       });
-      this.notaPedido.patchValue({...info});
+      this.notaPedido.patchValue({...info, canal: this.cortarUrlHastaCom(info.canal)});
     });
   }
 
@@ -219,38 +220,69 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
   }
 
   async obtenerProducto(i): Promise<void> {
+
     return new Promise((resolve, reject) => {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
         canal: this.notaPedido.value.canal,
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario.toFixed(2)
       };
-      this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
-        if (info.mensaje === '') {
-          if (info.codigoBarras) {
-            this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
-            this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
-            this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-            const precioProducto = info.precio;
-            this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
-            this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
-            this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
-            this.detallesArray.controls[i].get('cantidad').setValidators([
-              Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
-            ]);
-            this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
-            this.calcular();
-            resolve();
-          } else {
-            this.detallesArray.controls[i].get('articulo').setValue('');
-            this.toaster.open('Producto no existente, agregue un producto que se encuentre en la lista de productos.', {type: 'danger'});
-            reject(new Error('No existe el producto a buscar')); // Rechaza la promesa si no se encuentra el producto
-          }// Resuelve la promesa una vez completadas todas las asignaciones
-        }else{
-          this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
-          window.alert('Existen inconsistencias con los precios de los productos.');
+
+      const codigoBodega = this.detallesArray.value[i].codigo.slice(-2);
+
+      this.paramService.obtenerListaValor({valor: codigoBodega}).subscribe((param) => {
+        if (this.detallesArray.value[i].codigo.endsWith('MD')) {
+          this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
+            if (info.mensaje === '') {
+              if (info.codigoBarras) {
+                this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
+                this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+                this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
+                const precioProducto = info.precio;
+                this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
+                this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
+                this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
+                this.detallesArray.controls[i].get('bodega').setValue(param[0].nombre);
+
+                this.detallesArray.controls[i].get('cantidad').setValidators([
+                  Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
+                ]);
+                this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
+                this.calcular();
+                resolve();
+              } else {
+                this.detallesArray.controls[i].get('articulo').setValue('');
+                this.toaster.open('Producto no existente, agregue un producto que se encuentre en la lista de productos.', {type: 'danger'});
+                reject(new Error('No existe el producto a buscar')); // Rechaza la promesa si no se encuentra el producto
+              }// Resuelve la promesa una vez completadas todas las asignaciones
+            } else {
+              this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
+              window.alert('Existen inconsistencias con los precios de los productos.');
+            }
+          });
+        } else {
+          this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
+            if (info.codigoBarras) {
+              this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
+              this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+              this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
+              const precioProducto = info.precio;
+              this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
+              this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
+              this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
+              this.detallesArray.controls[i].get('bodega').setValue('DESCONOCIDO');
+              this.detallesArray.controls[i].get('cantidad').setValidators([
+                Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
+              ]);
+              this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
+              this.calcular();
+              resolve();
+            }
+          });
         }
-      });
+      })
+
+
     });
   }
 
@@ -292,4 +324,13 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
   cargarArchivo(event, nombreCampo): void {
     this.archivo.append(nombreCampo, event.target.files[0]);
   }
+
+  cortarUrlHastaCom(url: string): string {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      const match = url.match(/https?:\/\/[^\/]+\.com/);
+      return match ? match[0] : url;  // Devuelve la URL cortada o la original si no se encuentra .com
+    }
+    return url;
+  }
+
 }

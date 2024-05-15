@@ -126,6 +126,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       numeroGuia: ['', []],
       created_at: ['', []],
       metodoPago: ['', [Validators.required]],
+      canal: ['', []]
     });
   }
 
@@ -164,7 +165,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
-
+      bodega: ['', []]
     });
   }
 
@@ -207,7 +208,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       info.articulos.map((item): void => {
         this.agregarItem();
       });
-      this.notaPedido.patchValue({...info});
+      this.notaPedido.patchValue({...info, canal: this.cortarUrlHastaCom(info.canal)});
     });
   }
 
@@ -219,25 +220,57 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   }
 
   obtenerProducto(i): void {
-    this.productosService.obtenerProductoPorCodigo({
-      codigoBarras: this.detallesArray.value[i].codigo
-    }).subscribe((info) => {
-      if (info.codigoBarras) {
-        // this.detallesArray.value[i].codigo = info.codigo;
-        console.log('dato', this.detallesArray.controls[i].get('articulo'));
-        this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
-        this.detallesArray.controls[i].get('cantidad').setValue(1);
-        this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
-        this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
-        this.calcular();
-      } else {
-        // this.comprobarProductos[i] = false;
-        // this.mensaje = 'No existe el producto a buscar';
-        // this.abrirModal(this.mensajeModal);
-      }
-    }, (error) => {
 
-    });
+    const codigoBodega = this.detallesArray.value[i].codigo.slice(-2);
+
+    this.paramService.obtenerListaValor({valor: codigoBodega}).subscribe((param) => {
+      if (this.detallesArray.value[i].codigo.endsWith('MD')) {
+        this.productosService.obtenerProductoPorCodigo({
+          codigoBarras: this.detallesArray.value[i].codigo
+        }).subscribe((info) => {
+          if (info.codigoBarras) {
+            // this.detallesArray.value[i].codigo = info.codigo;
+            console.log('dato', this.detallesArray.controls[i].get('articulo'));
+            this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+            this.detallesArray.controls[i].get('cantidad').setValue(1);
+            this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
+            this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
+            this.detallesArray.controls[i].get('bodega').setValue(param[0].nombre);
+
+            this.calcular();
+          } else {
+            // this.comprobarProductos[i] = false;
+            // this.mensaje = 'No existe el producto a buscar';
+            // this.abrirModal(this.mensajeModal);
+          }
+        }, (error) => {
+
+        });
+      } else {
+        this.productosService.obtenerProductoPorCodigo({
+          codigoBarras: this.detallesArray.value[i].codigo
+        }).subscribe((info) => {
+          if (info.codigoBarras) {
+            // this.detallesArray.value[i].codigo = info.codigo;
+            console.log('dato', this.detallesArray.controls[i].get('articulo'));
+            this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+            this.detallesArray.controls[i].get('cantidad').setValue(1);
+            this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
+            this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
+            this.detallesArray.controls[i].get('bodega').setValue('DESCONOCIDO');
+
+            this.calcular();
+          } else {
+            // this.comprobarProductos[i] = false;
+            // this.mensaje = 'No existe el producto a buscar';
+            // this.abrirModal(this.mensajeModal);
+          }
+        }, (error) => {
+
+        });
+      }
+    })
+
   }
 
   calcular(): void {
@@ -287,8 +320,8 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
           this.archivo.append(llaves, facturaFisicaValores[index]);
         }
       });
-      if(this.evidenciasForm.value.evidenciaFotoEmpaque === ''){
-        this.toaster.open('Complete los campos requeridos.',{type:'warning'})
+      if (this.evidenciasForm.value.evidenciaFotoEmpaque === '') {
+        this.toaster.open('Complete los campos requeridos.', {type: 'warning'})
         return;
       }
       this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
@@ -320,4 +353,13 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   cargarArchivo(event, nombreCampo): void {
     this.archivo.append(nombreCampo, event.target.files[0]);
   }
+
+  cortarUrlHastaCom(url: string): string {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      const match = url.match(/https?:\/\/[^\/]+\.com/);
+      return match ? match[0] : url;  // Devuelve la URL cortada o la original si no se encuentra .com
+    }
+    return url;
+  }
+
 }

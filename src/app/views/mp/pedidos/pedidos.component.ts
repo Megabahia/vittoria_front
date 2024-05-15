@@ -32,8 +32,9 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   fin = new Date();
   transaccion: any;
   opciones;
-  ciudadPresenteFacturacion=true;
-  ciudadPresenteEnvio=true;
+  ciudadPresenteFacturacion = true;
+  ciudadPresenteEnvio = true;
+  codigoBodega = '';
 
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -79,6 +80,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     };
     this.barChartData = [this.datosTransferencias];
     this.obtenerOpciones();
+
   }
 
   ngAfterViewInit(): void {
@@ -178,6 +180,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
+      bodega: ['', []]
     });
   }
 
@@ -208,7 +211,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   }
 
   obtenerTransaccion(modal, id): void {
-    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+    this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
       this.validarCiudadEnProvincia(info.facturacion.provincia, info.facturacion.ciudad, info.envio.provincia, info.envio.ciudad);
 
@@ -216,12 +219,20 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       info.articulos.map((item): void => {
         this.agregarItem();
       });
-      this.notaPedido.patchValue({...info, verificarPedido: true});
+      this.notaPedido.patchValue({...info, verificarPedido: true, canal: this.cortarUrlHastaCom(info.canal)});
 
       info.articulos.forEach((item, index) => {
         this.obtenerProducto(index);
       });
     });
+  }
+
+  cortarUrlHastaCom(url: string): string {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      const match = url.match(/https?:\/\/[^\/]+\.com/);
+      return match ? match[0] : url;  // Devuelve la URL cortada o la original si no se encuentra .com
+    }
+    return url;
   }
 
 
@@ -238,35 +249,64 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         canal: this.notaPedido.value.canal,
         valorUnitario: Number(this.detallesArray.controls[i].value.valorUnitario).toFixed(2)
       };
-      this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
-        console.log(info)
-        if (info.mensaje === '') {
-          if (info.codigoBarras) {
-            this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
-            this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
-            this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-            const precioProducto = info.precio;
-            this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
-            this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
-            this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
-            this.detallesArray.controls[i].get('cantidad').setValidators([
-              Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
-            ]);
-            this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
-            this.calcular();
-            resolve();
-          } else {
-            this.detallesArray.controls[i].get('articulo').setValue('');
-            this.toaster.open('Producto no existente, agregue un producto que se encuentre en la lista de productos.', {type: 'danger'});
-            reject(new Error('No existe el producto a buscar')); // Rechaza la promesa si no se encuentra el producto
-          }// Resuelve la promesa una vez completadas todas las asignaciones
-        }else{
-          this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
-          window.alert('Existen inconsistencias con los precios de los productos.');
+      const codigoBodega = this.detallesArray.value[i].codigo.slice(-2);
+
+      this.paramService.obtenerListaValor({valor: codigoBodega}).subscribe((param) => {
+        if (this.detallesArray.value[i].codigo.endsWith('MD')) {
+          this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
+            if (info.mensaje === '') {
+              if (info.codigoBarras) {
+                this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
+                this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+                this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
+                const precioProducto = info.precio;
+                this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
+                this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
+                this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
+                this.detallesArray.controls[i].get('bodega').setValue(param[0].nombre);
+
+                this.detallesArray.controls[i].get('cantidad').setValidators([
+                  Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
+                ]);
+                this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
+                this.calcular();
+                resolve();
+              } else {
+                this.detallesArray.controls[i].get('articulo').setValue('');
+                this.toaster.open('Producto no existente, agregue un producto que se encuentre en la lista de productos.', {type: 'danger'});
+                reject(new Error('No existe el producto a buscar')); // Rechaza la promesa si no se encuentra el producto
+              }// Resuelve la promesa una vez completadas todas las asignaciones
+
+            } else {
+              this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
+              window.alert('Existen inconsistencias con los precios de los productos.');
+            }
+          });
+        } else {
+          this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
+            if (info.codigoBarras) {
+              this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
+              this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+              this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
+              const precioProducto = info.precio;
+              this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
+              this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
+              this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
+              this.detallesArray.controls[i].get('cantidad').setValidators([
+                Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
+              ]);
+              this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
+              this.detallesArray.controls[i].get('bodega').setValue('DESCONOCIDO');
+
+              this.calcular();
+              resolve();
+            }
+          });
         }
       });
     });
   }
+
 
   calcular(): void {
     const detalles = this.detallesArray.controls;
@@ -291,7 +331,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       this.toaster.open('Pedido Incompleto', {type: 'danger'});
       return;
     }
-    if(!this.ciudadPresenteFacturacion || !this.ciudadPresenteEnvio){
+    if (!this.ciudadPresenteFacturacion || !this.ciudadPresenteEnvio) {
       return;
     }
 
@@ -380,11 +420,11 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     this.archivo.append(nombreCampo, doc);
   }
 
-  validarCiudadEnProvincia(provinciaFacturacion, ciudadFacturacion, provinciaEnvio, ciudadEnvio):void{
+  validarCiudadEnProvincia(provinciaFacturacion, ciudadFacturacion, provinciaEnvio, ciudadEnvio): void {
 
-    this.paramServiceMDP.obtenerListaHijos(provinciaFacturacion,'PROVINCIA')
+    this.paramServiceMDP.obtenerListaHijos(provinciaFacturacion, 'PROVINCIA')
       .subscribe((infoFacturacion) => {
-          const estaPresenteFacturacion = infoFacturacion.some((ciudad)=>
+          const estaPresenteFacturacion = infoFacturacion.some((ciudad) =>
             ciudad.nombre === ciudadFacturacion
           );
           if (!estaPresenteFacturacion) {
@@ -392,15 +432,15 @@ export class PedidosComponent implements OnInit, AfterViewInit {
               type: 'danger'
             });
             this.ciudadPresenteFacturacion = false;
-          }else{
+          } else {
             this.ciudadPresenteFacturacion = true;
 
           }
         }
       );
-    this.paramServiceMDP.obtenerListaHijos(provinciaEnvio,'PROVINCIA')
+    this.paramServiceMDP.obtenerListaHijos(provinciaEnvio, 'PROVINCIA')
       .subscribe((infoEnvio) => {
-          const estaPresenteEnvio = infoEnvio.some((ciudad)=>
+          const estaPresenteEnvio = infoEnvio.some((ciudad) =>
             ciudad.nombre === ciudadEnvio
           );
           if (!estaPresenteEnvio) {
@@ -408,11 +448,12 @@ export class PedidosComponent implements OnInit, AfterViewInit {
               type: 'danger'
             });
             this.ciudadPresenteEnvio = false;
-          }else{
+          } else {
             this.ciudadPresenteEnvio = true;
 
           }
         }
       );
   }
+
 }

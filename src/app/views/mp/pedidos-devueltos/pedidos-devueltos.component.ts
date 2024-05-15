@@ -177,6 +177,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       imagen: [''],
       caracteristicas: ['', []],
+      bodega: ['', []]
     });
   }
 
@@ -213,8 +214,16 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       info.articulos.map((item): void => {
         this.agregarItem();
       });
-      this.notaPedido.patchValue({...info});
+      this.notaPedido.patchValue({...info, canal: this.cortarUrlHastaCom(info.canal)});
     });
+  }
+
+  cortarUrlHastaCom(url: string): string {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      const match = url.match(/https?:\/\/[^\/]+\.com/);
+      return match ? match[0] : url;  // Devuelve la URL cortada o la original si no se encuentra .com
+    }
+    return url;
   }
 
 
@@ -231,6 +240,56 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       canal: this.notaPedido.value.canal,
       valorUnitario: Number(this.detallesArray.controls[i].value.valorUnitario).toFixed(2)
     };
+
+    const codigoBodega = this.detallesArray.value[i].codigo.slice(-2);
+
+    this.paramService.obtenerListaValor({valor: codigoBodega}).subscribe((param) => {
+      if (this.detallesArray.value[i].codigo.endsWith('MD')) {
+        this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
+          if (info.codigoBarras) {
+            // this.detallesArray.value[i].codigo = info.codigo;
+            console.log('dato', this.detallesArray.controls[i].get('articulo'));
+            this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+            this.detallesArray.controls[i].get('cantidad').setValue(1);
+            this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
+            this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
+            this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
+            this.detallesArray.controls[i].get('bodega').setValue(param[0].nombre);
+
+            this.calcular();
+          } else {
+            // this.comprobarProductos[i] = false;
+            // this.mensaje = 'No existe el producto a buscar';
+            // this.abrirModal(this.mensajeModal);
+          }
+        }, (error) => {
+
+        });
+
+      } else {
+        this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
+          if (info.codigoBarras) {
+            // this.detallesArray.value[i].codigo = info.codigo;
+            console.log('dato', this.detallesArray.controls[i].get('articulo'));
+            this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+            this.detallesArray.controls[i].get('cantidad').setValue(1);
+            this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
+            this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
+            this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
+            this.detallesArray.controls[i].get('bodega').setValue('DESCONOCIDO');
+
+            this.calcular();
+          } else {
+            // this.comprobarProductos[i] = false;
+            // this.mensaje = 'No existe el producto a buscar';
+            // this.abrirModal(this.mensajeModal);
+          }
+        }, (error) => {
+        });
+      }
+    })
+
+
     this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
       if (info.codigoBarras) {
         // this.detallesArray.value[i].codigo = info.codigo;

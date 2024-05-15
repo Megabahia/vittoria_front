@@ -141,6 +141,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       created_at: ['', []],
       metodoPago: ['', [Validators.required]],
       numeroGuia: [uuidv4(), []],
+      canal: ['', []]
     });
   }
 
@@ -183,6 +184,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
+      bodega: ['', []]
     });
   }
 
@@ -228,7 +230,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       info.articulos.map((item): void => {
         this.agregarItem();
       });
-      this.notaPedido.patchValue({...info});
+      this.notaPedido.patchValue({...info, canal: this.cortarUrlHastaCom(info.canal)});
     });
   }
 
@@ -253,25 +255,56 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
   }
 
   obtenerProducto(i): void {
-    this.productosService.obtenerProductoPorCodigo({
-      codigoBarras: this.detallesArray.value[i].codigo
-    }).subscribe((info) => {
-      if (info.codigoBarras) {
-        // this.detallesArray.value[i].codigo = info.codigo;
-        console.log('dato', this.detallesArray.controls[i].get('articulo'));
-        this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
-        this.detallesArray.controls[i].get('cantidad').setValue(1);
-        this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
-        this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
-        this.calcular();
-      } else {
-        // this.comprobarProductos[i] = false;
-        // this.mensaje = 'No existe el producto a buscar';
-        // this.abrirModal(this.mensajeModal);
-      }
-    }, (error) => {
 
-    });
+    const codigoBodega = this.detallesArray.value[i].codigo.slice(-2);
+
+    this.paramService.obtenerListaValor({valor: codigoBodega}).subscribe((param) => {
+      if (this.detallesArray.value[i].codigo.endsWith('MD')) {
+        this.productosService.obtenerProductoPorCodigo({
+          codigoBarras: this.detallesArray.value[i].codigo
+        }).subscribe((info) => {
+          if (info.codigoBarras) {
+            // this.detallesArray.value[i].codigo = info.codigo;
+            console.log('dato', this.detallesArray.controls[i].get('articulo'));
+            this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+            this.detallesArray.controls[i].get('cantidad').setValue(1);
+            this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
+            this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
+            this.detallesArray.controls[i].get('bodega').setValue(param[0].nombre);
+
+            this.calcular();
+          } else {
+            // this.comprobarProductos[i] = false;
+            // this.mensaje = 'No existe el producto a buscar';
+            // this.abrirModal(this.mensajeModal);
+          }
+        }, (error) => {
+
+        });
+      } else {
+        this.productosService.obtenerProductoPorCodigo({
+          codigoBarras: this.detallesArray.value[i].codigo
+        }).subscribe((info) => {
+          if (info.codigoBarras) {
+            // this.detallesArray.value[i].codigo = info.codigo;
+            console.log('dato', this.detallesArray.controls[i].get('articulo'));
+            this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+            this.detallesArray.controls[i].get('cantidad').setValue(1);
+            this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
+            this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
+            this.detallesArray.controls[i].get('bodega').setValue('DESCONOCIDO');
+
+            this.calcular();
+          } else {
+            // this.comprobarProductos[i] = false;
+            // this.mensaje = 'No existe el producto a buscar';
+            // this.abrirModal(this.mensajeModal);
+          }
+        }, (error) => {
+        });
+      }
+    })
+
   }
 
   calcular(): void {
@@ -389,6 +422,14 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       this.obtenerTransacciones();
       this.modalService.dismissAll();
     });
+  }
+
+  cortarUrlHastaCom(url: string): string {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      const match = url.match(/https?:\/\/[^\/]+\.com/);
+      return match ? match[0] : url;  // Devuelve la URL cortada o la original si no se encuentra .com
+    }
+    return url;
   }
 
   createPDF() {
@@ -627,6 +668,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     }
 
   }
+
 
   imprimirEmpacado() {
 
