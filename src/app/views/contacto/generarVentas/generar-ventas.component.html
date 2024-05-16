@@ -2,10 +2,10 @@
   <div class="content-wrapper">
     <div class="content-body">
       <div class="card d-inline-flex p-2">
-        <h1>Generar venta</h1>
+        <h1>Generar pedido</h1>
         <button class="btn btn-primary mx-1"
                 (click)="crearNuevaVenta(notaPedidoModalAdd)"
-        >Nueva venta
+        >Nuevo Pedido
         </button>
       </div>
     </div>
@@ -122,7 +122,7 @@
                     <div *ngIf="facturacionForm.identificacion.errors.pattern">
                       Ingrese solo numeros
                     </div>
-                    <div *ngIf="facturacionForm.identificacion.errors.identificacionInvalid">
+                    <div *ngIf="facturacionForm.identificacion.errors.cedulaValido">
                       Identificacion no valida
                     </div>
                   </div>
@@ -276,7 +276,12 @@
                               <p class="card-text col-title mb-md-50 mb-0">
                                 Valor Unitario
                               </p>
-                              <label>{{ detalle.controls.valorUnitario.value }}</label>
+                              <select class="form-control" formControlName="valorUnitario" (change)="calcular()">
+                                <option value="" selected disabled>Seleccione</option>
+                                <option *ngFor="let producto of preciosProducto" [value]="producto.valor">
+                                  {{producto.clave.slice(-1)}} - ${{ producto.valor }}
+                                </option>
+                              </select>
                               <div *ngIf="detalle.controls.valorUnitario.errors"
                                    class="invalid-feedback"
                                    style="display: block;">
