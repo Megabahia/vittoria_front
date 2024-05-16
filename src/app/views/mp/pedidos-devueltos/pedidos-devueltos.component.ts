@@ -25,6 +25,8 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
   public rechazoForm: FormGroup;
+  datosProducto: FormData = new FormData();
+
   menu;
   page = 1;
   pageSize = 3;
@@ -170,6 +172,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
 
   crearDetalleGrupo(): any {
     return this.formBuilder.group({
+      id: [''],
       codigo: ['', [Validators.required]],
       articulo: ['', [Validators.required]],
       valorUnitario: [0, [Validators.required]],
@@ -248,7 +251,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
         this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
           if (info.codigoBarras) {
             // this.detallesArray.value[i].codigo = info.codigo;
-            console.log('dato', this.detallesArray.controls[i].get('articulo'));
+            this.detallesArray.controls[i].get('id').setValue(info.id);
             this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
             this.detallesArray.controls[i].get('cantidad').setValue(1);
             this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
@@ -271,13 +274,13 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
           if (info.codigoBarras) {
             // this.detallesArray.value[i].codigo = info.codigo;
             console.log('dato', this.detallesArray.controls[i].get('articulo'));
+            this.detallesArray.controls[i].get('id').setValue(info.id);
             this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
             this.detallesArray.controls[i].get('cantidad').setValue(1);
             this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
             this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
             this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
             this.detallesArray.controls[i].get('bodega').setValue('DESCONOCIDO');
-
             this.calcular();
           } else {
             // this.comprobarProductos[i] = false;
@@ -421,5 +424,32 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
           }
         }
       );
+  }
+
+  cargarImagen(i, event: any): void {
+    this.datosProducto = new FormData();
+
+    const id = this.detallesArray.controls[i].get('id').value;
+    const archivo = event.target.files[0];
+    if (archivo) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const nuevaImagen = e.target.result;
+        this.detallesArray.controls[i].get('imagen').setValue(nuevaImagen);
+        this.datosProducto.append('imagenes[' + 0 + ']id', '0');
+        this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
+        this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
+
+        try {
+          this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
+            this.toaster.open('Imagen actualizada con éxito',{type:"info"});
+          },error => this.toaster.open('Error al actualizar la imagen.', {type:"danger"}));
+        } catch (error) {
+          this.toaster.open('Error al actualizar la imagen.', {type:"danger"});
+        }
+      };
+      reader.readAsDataURL(archivo);
+
+    }
   }
 }

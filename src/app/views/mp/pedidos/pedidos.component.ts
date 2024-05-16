@@ -23,6 +23,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
   public rechazoForm: FormGroup;
+  datosProducto: FormData = new FormData();
+
   menu;
   page = 1;
   pageSize = 3;
@@ -34,7 +36,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   opciones;
   ciudadPresenteFacturacion = true;
   ciudadPresenteEnvio = true;
-  codigoBodega = '';
 
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -173,6 +174,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
   crearDetalleGrupo(): any {
     return this.formBuilder.group({
+      id: [''],
       codigo: ['', [Validators.required]],
       articulo: ['', [Validators.required]],
       valorUnitario: [0, [Validators.required]],
@@ -257,6 +259,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
             if (info.mensaje === '') {
               if (info.codigoBarras) {
                 this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
+                this.detallesArray.controls[i].get('id').setValue(info.id);
                 this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
                 this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
                 const precioProducto = info.precio;
@@ -286,6 +289,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
           this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
             if (info.codigoBarras) {
               this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
+              this.detallesArray.controls[i].get('id').setValue(info.id);
               this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
               this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
               const precioProducto = info.precio;
@@ -455,5 +459,33 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         }
       );
   }
+
+  cargarImagen(i, event: any): void {
+    this.datosProducto = new FormData();
+
+    const id = this.detallesArray.controls[i].get('id').value;
+    const archivo = event.target.files[0];
+    if (archivo) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const nuevaImagen = e.target.result;
+        this.detallesArray.controls[i].get('imagen').setValue(nuevaImagen);
+        this.datosProducto.append('imagenes[' + 0 + ']id', '0');
+        this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
+        this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
+
+        try {
+          this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
+            this.toaster.open('Imagen actualizada con éxito',{type:"info"});
+          },error => this.toaster.open('Error al actualizar la imagen.', {type:"danger"}));
+        } catch (error) {
+          this.toaster.open('Error al actualizar la imagen.', {type:"danger"});
+        }
+      };
+      reader.readAsDataURL(archivo);
+
+    }
+  }
+
 
 }

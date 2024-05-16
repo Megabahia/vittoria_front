@@ -680,7 +680,11 @@
                             <div class="col-md-2 border-left">
                               <img class="img-detalle"
                                    src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
-                                   *ngIf="detalle.controls?.imagen" width="100px" height="100px">
+                                   *ngIf="detalle.controls?.imagen" width="100px" height="100px" alt="">
+                              <div *ngIf="!detalle.controls?.imagen.value">
+                                <button (click)="fileInput.click()">Seleccionar imagen</button>
+                                <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png" style="display: none;">
+                              </div>
                             </div>
                             <div
                               class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
