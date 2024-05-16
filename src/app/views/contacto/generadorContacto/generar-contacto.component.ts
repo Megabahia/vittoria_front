@@ -11,10 +11,7 @@ import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
 import {v4 as uuidv4} from 'uuid';
-import {ClientesService} from "../../../services/mdm/personas/clientes/clientes.service";
-import {ProspectosService} from "../../../services/mdm/prospectosCli/prospectos.service";
 import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
-import {logger} from "codelyzer/util/logger";
 import {ValidacionesPropias} from "../../../utils/customer.validators";
 
 @Component({
@@ -28,6 +25,8 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
   public rechazoForm: FormGroup;
+  datosProducto: FormData = new FormData();
+
   menu;
   page = 1;
   pageSize = 3;
@@ -178,6 +177,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
 
   crearDetalleGrupo(): any {
     return this.formBuilder.group({
+      id: [''],
       codigo: ['', [Validators.required]],
       articulo: ['', [Validators.required]],
       valorUnitario: [0, [Validators.required]],
@@ -261,6 +261,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
         //if(info.mensaje==''){
         if (info.codigoBarras) {
           this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
+          this.detallesArray.controls[i].get('id').setValue(info.id);
           this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
           const precioProducto = this.notaPedido.get('canal').value
@@ -396,6 +397,33 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
   validarDatos(): void {
     this.contactosService.validarCamposContacto(this.notaPedido.value).subscribe((info) => {
     }, error => this.toaster.open(error, {type: 'danger'}));
+  }
+
+  cargarImagen(i, event: any): void {
+    this.datosProducto = new FormData();
+
+    const id = this.detallesArray.controls[i].get('id').value;
+    const archivo = event.target.files[0];
+    if (archivo) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const nuevaImagen = e.target.result;
+        this.detallesArray.controls[i].get('imagen').setValue(nuevaImagen);
+        this.datosProducto.append('imagenes[' + 0 + ']id', '0');
+        this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
+        this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
+
+        try {
+          this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
+            this.toaster.open('Imagen actualizada con éxito',{type:"info"});
+          },error => this.toaster.open('Error al actualizar la imagen.', {type:"danger"}));
+        } catch (error) {
+          this.toaster.open('Error al actualizar la imagen.', {type:"danger"});
+        }
+      };
+      reader.readAsDataURL(archivo);
+
+    }
   }
 
 }
