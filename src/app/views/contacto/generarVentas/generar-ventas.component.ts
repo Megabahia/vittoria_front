@@ -47,8 +47,7 @@ export class GenerarVentasComponent implements OnInit, AfterViewInit {
   whatsapp = '';
   correo = ''
   usuarioActual;
-  preciosProducto;
-  selectedPrecio: number;
+  selectedPrecio;
   cedulaABuscar = ''
   clientes;
   cliente;
@@ -229,6 +228,7 @@ export class GenerarVentasComponent implements OnInit, AfterViewInit {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
+    console.log(this.notaPedido.value)
     if(this.notaPedido.invalid){
       this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
       return;
@@ -256,7 +256,7 @@ export class GenerarVentasComponent implements OnInit, AfterViewInit {
           this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
           this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
-          const precioProducto = 0;
+          const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
           this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
           this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
           this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);

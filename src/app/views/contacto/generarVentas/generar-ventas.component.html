@@ -122,7 +122,7 @@
                     <div *ngIf="facturacionForm.identificacion.errors.pattern">
                       Ingrese solo numeros
                     </div>
-                    <div *ngIf="facturacionForm.identificacion.errors.cedulaValido">
+                    <div *ngIf="facturacionForm.identificacion.errors.identificacionInvalid">
                       Identificacion no valida
                     </div>
                   </div>
@@ -277,8 +277,7 @@
                                 Valor Unitario
                               </p>
                               <select class="form-control" formControlName="valorUnitario" (change)="calcular()">
-                                <option value="" selected disabled>Seleccione</option>
-                                  {{detalle.controls.precios.value | json}}
+                                <option selected disabled>- Seleccione -</option>
                                 <option *ngFor="let producto of detalle.controls.precios.value" [value]="producto.valor">
                                   {{producto.clave.slice(-1)}} - ${{ producto.valor }}
                                 </option>
