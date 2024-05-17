@@ -477,7 +477,6 @@
                   >
                   <div *ngIf="facturacionForm.correo.errors"
                        class="invalid-feedback" style="display: block;">
-
                     <div *ngIf="facturacionForm.correo.errors.email">
                       Correo Invalido
                     </div>
@@ -491,7 +490,6 @@
                   >
                   <div *ngIf="facturacionForm.identificacion.errors"
                        class="invalid-feedback" style="display: block;">
-
                     <div *ngIf="facturacionForm.identificacion.errors.minlength">
                       Ingrese minimo 10 digitos
                     </div>
@@ -501,7 +499,7 @@
                     <div *ngIf="facturacionForm.identificacion.errors.pattern">
                       Ingrese solo numeros
                     </div>
-                    <div *ngIf="facturacionForm.identificacion.errors.identificacionInvalid">
+                    <div *ngIf="facturacionForm.identificacion.errors.cedulaValido">
                       Identificacion no valida
                     </div>
                   </div>

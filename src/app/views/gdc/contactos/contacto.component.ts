@@ -20,6 +20,7 @@ import {ValidacionesPropias} from "../../../utils/customer.validators";
 @Component({
   selector: 'app-contacto',
   templateUrl: './contacto.component.html',
+  styleUrls:['contacto.component.css'],
   providers: [DatePipe]
 })
 export class ContactoComponent implements OnInit, AfterViewInit {
@@ -260,7 +261,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
-      console.log('ABRIR MODAL', this.notaPedido)
+
     });
   }
 
@@ -300,7 +301,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         canal: this.notaPedido.value.canal,
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
-
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
         //if(info.mensaje==''){
         if (info.codigoBarras) {
@@ -308,8 +308,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
           this.detallesArray.controls[i].get('id').setValue(info.id);
           this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-          const precioProducto = this.notaPedido.get('canal').value
-            .includes('Contra-Entrega') ? info.precioLandingOferta : info.precioVentaA;
+          const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value) || info.precioVentaA;
           this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
           this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
           this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
@@ -486,7 +485,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   onFileSelected(event: any): void {
     this.archivo.delete('archivoFormaPago');
     this.archivo.append('archivoFormaPago', event.target.files.item(0), event.target.files.item(0).name);
-    console.log('formdata', this.archivo.get('archivoFormaPago'));
     // this.fileToUpload = event.target.files.item(0);
   }
 
@@ -494,7 +492,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     if (this.archivo) {
       const formData = new FormData();
       formData.append('archivoFormaPago', this.fileToUpload, this.fileToUpload.name);
-      console.log(formData)
     }
   }
 
@@ -503,7 +500,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       const formData = new FormData();
       formData.append('archivoFormaPago', 'asjfasijfnaskfjasfiasn');
       formData.append('id', '555555');
-      console.log(formData)
       //this.contactosService.actualizarVentaFormData(formData)
       //  .subscribe(() => {
       //    this.modalService.dismissAll();
