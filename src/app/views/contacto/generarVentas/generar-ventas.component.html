@@ -278,7 +278,8 @@
                               </p>
                               <select class="form-control" formControlName="valorUnitario" (change)="calcular()">
                                 <option value="" selected disabled>Seleccione</option>
-                                <option *ngFor="let producto of preciosProducto" [value]="producto.valor">
+                                  {{detalle.controls.precios.value | json}}
+                                <option *ngFor="let producto of detalle.controls.precios.value" [value]="producto.valor">
                                   {{producto.clave.slice(-1)}} - ${{ producto.valor }}
                                 </option>
                               </select>

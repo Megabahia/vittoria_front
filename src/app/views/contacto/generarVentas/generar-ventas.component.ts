@@ -185,6 +185,7 @@ export class GenerarVentasComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
+      precios: [[], []],
     });
   }
 
@@ -250,12 +251,12 @@ export class GenerarVentasComponent implements OnInit, AfterViewInit {
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
         //if(info.mensaje==''){
         if (info.codigoBarras) {
-          this.preciosProducto = this.extraerPrecios(info);
           this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
           this.detallesArray.controls[i].get('id').setValue(info.id);
           this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-          const precioProducto = this.selectedPrecio;
+          this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
+          const precioProducto = 0;
           this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
           this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
           this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
