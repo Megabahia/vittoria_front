@@ -20,6 +20,7 @@ import {ValidacionesPropias} from "../../../utils/customer.validators";
 @Component({
   selector: 'app-contacto',
   templateUrl: './contacto.component.html',
+  styleUrls:['contacto.component.css'],
   providers: [DatePipe]
 })
 export class ContactoComponent implements OnInit, AfterViewInit {
@@ -260,7 +261,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
-      console.log('ABRIR MODAL', this.notaPedido)
+
     });
   }
 
@@ -484,7 +485,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   onFileSelected(event: any): void {
     this.archivo.delete('archivoFormaPago');
     this.archivo.append('archivoFormaPago', event.target.files.item(0), event.target.files.item(0).name);
-    console.log('formdata', this.archivo.get('archivoFormaPago'));
     // this.fileToUpload = event.target.files.item(0);
   }
 
@@ -492,7 +492,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     if (this.archivo) {
       const formData = new FormData();
       formData.append('archivoFormaPago', this.fileToUpload, this.fileToUpload.name);
-      console.log(formData)
     }
   }
 
@@ -501,7 +500,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       const formData = new FormData();
       formData.append('archivoFormaPago', 'asjfasijfnaskfjasfiasn');
       formData.append('id', '555555');
-      console.log(formData)
       //this.contactosService.actualizarVentaFormData(formData)
       //  .subscribe(() => {
       //    this.modalService.dismissAll();
