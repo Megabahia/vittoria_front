@@ -6,9 +6,9 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-4 d-flex align-items-center">
-              <select class="custom-select">
+              <select class="custom-select" (change)="onSelectChangeBodega($event)">
                 <option selected>- Seleccione una bodega -</option>
-                <option value="{{item.valor}}" *ngFor="let item of datosParamFiltrados">{{ item.nombre }}</option>
+                <option *ngFor="let item of datosParamFiltrados" [value]="item.nombre">{{ item.nombre }}</option>
               </select>
             </div>
             <div class="col-md-4">
@@ -67,7 +67,7 @@
               </td>
               <td>{{ transaccion.estado }}</td>
               <td>
-                <button class="btn btn-primary"
+                <button *ngIf="transaccion.verificarPedido" class="btn btn-primary"
                         (click)="procesarEnvio(facturacionModal, transaccion)">
                   PEDIR A BODEGA
                 </button>

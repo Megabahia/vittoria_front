@@ -45,6 +45,8 @@ export class BodegaComponent implements OnInit, AfterViewInit {
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
 
+  bodegaSeleccionada;
+
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -192,12 +194,12 @@ export class BodegaComponent implements OnInit, AfterViewInit {
   }
 
   obtenerTransacciones(): void {
-    this.pedidosService.obtenerListaPedidos({
+    this.pedidosService.obtenerListaPedidosBodega({
       page: this.page - 1,
       page_size: this.pageSize,
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
-      estado: ['Pendiente']
+      bodega: this.bodegaSeleccionada
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;
@@ -459,8 +461,21 @@ export class BodegaComponent implements OnInit, AfterViewInit {
       page: this.page - 1,
       page_size: 50
     }).subscribe((result) => {
-      this.datosParamFiltrados = result.info.filter(dato => dato.tipo.trim().toLowerCase().endsWith('.com'));
+      const nombresUnicos = new Set();  // Set para rastrear nombres únicos
+      this.datosParamFiltrados = result.info.filter(item => {
+        const tipoValido = item.tipo.trim().toLowerCase().endsWith('.com');
+        const nombre = item.nombre.trim().toLowerCase();
+        if (tipoValido && !nombresUnicos.has(nombre)) {
+          nombresUnicos.add(nombre);
+          return true;
+        }
+        return false;
+      });
     });
+  }
+
+  onSelectChangeBodega(e: any){
+    this.bodegaSeleccionada = e.target.value;
   }
 
 
