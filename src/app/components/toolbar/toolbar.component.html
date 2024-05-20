@@ -461,6 +461,20 @@
           </li>
         </ul>
       </li>
+      <li class="nav-item" *ngIf="acciones.ADM.LEER">
+        <a class="d-flex align-items-center">
+          <i data-feather="file-text"></i>
+          <span class="menu-title text-truncate" data-i18n="Invoice">GDB Gestión de bodega</span></a>
+        <ul class="menu-content">
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['gdb/bodega']" data-toggle="tooltip"
+               data-placement="right" title="Bodega">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Bodega</span>
+            </a>
+          </li>
+        </ul>
+      </li>
       <li class="navigation-header">Módulos de servientrega</li>
       <li class="nav-item" *ngIf="acciones.SERVI.LEER">
         <a class="d-flex align-items-center">
