@@ -286,26 +286,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
             }
           });
         } else {
-          this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
-            if (info.codigoBarras) {
-              this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
-              this.detallesArray.controls[i].get('id').setValue(info.id);
-              this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
-              this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-              const precioProducto = info.precio;
-              this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
-              this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
-              this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
-              this.detallesArray.controls[i].get('cantidad').setValidators([
-                Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
-              ]);
-              this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
-              this.detallesArray.controls[i].get('bodega').setValue('DESCONOCIDO');
-
-              this.calcular();
-              resolve();
-            }
-          });
+          resolve();
         }
       });
     });
@@ -330,7 +311,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       return this.obtenerProducto(index);
     }));
     this.validarCiudadEnProvincia(this.notaPedido.value.facturacion.provincia, this.notaPedido.value.facturacion.ciudad, this.notaPedido.value.envio.provincia, this.notaPedido.value.envio.ciudad);
-
     if (this.notaPedido.invalid) {
       this.toaster.open('Pedido Incompleto', {type: 'danger'});
       return;
@@ -338,7 +318,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     if (!this.ciudadPresenteFacturacion || !this.ciudadPresenteEnvio) {
       return;
     }
-
     if (confirm('Esta seguro de actualizar los datos') === true) {
       this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
