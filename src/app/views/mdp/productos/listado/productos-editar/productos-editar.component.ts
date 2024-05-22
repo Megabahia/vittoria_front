@@ -98,6 +98,7 @@ export class ProductosEditarComponent implements OnInit {
       fechaCaducidad: ['', [Validators.required]],
       fechaElaboracion: ['', [Validators.required]],
       caracteristicas: ['', [Validators.required]],
+      proveedor: ['', [Validators.required]],
       precioOferta: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       envioNivelNacional: [true, []],
       lugarVentaProvincia: ['', []],

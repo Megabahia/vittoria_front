@@ -11,13 +11,12 @@ import {ProductosService} from '../../../services/mdp/productos/productos.servic
 import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../constats/mp/pedidos';
 import {ValidacionesPropias} from '../../../utils/customer.validators';
 import {Toaster} from 'ngx-toast-notifications';
-
 @Component({
-  selector: 'app-bodega',
-  templateUrl: './bodega.component.html',
+  selector: 'app-vittoria',
+  templateUrl: './vittoria.component.html',
   providers: [DatePipe]
 })
-export class BodegaComponent implements OnInit, AfterViewInit {
+export class VittoriaComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
@@ -26,7 +25,7 @@ export class BodegaComponent implements OnInit, AfterViewInit {
   page = 1;
   pageSize = 3;
   collectionSize;
-  listaTransacciones: any[] = [];
+  listaTransacciones;
   inicio = new Date();
   fin = new Date();
   transaccion: any;
@@ -34,6 +33,7 @@ export class BodegaComponent implements OnInit, AfterViewInit {
   ciudadPresenteFacturacion = true;
   ciudadPresenteEnvio = true;
   datosParamFiltrados: any[] = [];
+
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -44,8 +44,9 @@ export class BodegaComponent implements OnInit, AfterViewInit {
   archivo: FormData = new FormData();
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
-  mostrarDatos;
+
   bodegaSeleccionada;
+
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -195,13 +196,13 @@ export class BodegaComponent implements OnInit, AfterViewInit {
   obtenerTransacciones(): void {
     this.pedidosService.obtenerListaPedidosBodega({
       page: this.page - 1,
-      page_size: 3,
+      page_size: this.pageSize,
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
-      bodega: this.bodegaSeleccionada,
-      estado: 'Autorizado'
+      bodega: this.bodegaSeleccionada
     }).subscribe((info) => {
-      this.listaTransacciones = info;
+      this.collectionSize = info.cont;
+      this.listaTransacciones = info.info;
     });
   }
 
@@ -209,25 +210,22 @@ export class BodegaComponent implements OnInit, AfterViewInit {
     return this.datePipe.transform(fecha, 'yyyy-MM-dd');
   }
 
-  obtenerTransaccionBodega(modal, bodega, id): void {
+  obtenerTransaccion(modal, id): void {
     this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
-    const data = {
-      bodega: bodega
-    };
-    this.pedidosService.obtenerDetalleBodega(data, id).subscribe((info) => {
-      this.mostrarDatos = info.mostrar_datos;
-      //this.validarCiudadEnProvincia(info.facturacion.provincia, info.facturacion.ciudad, info.envio.provincia, info.envio.ciudad);
-      //this.iniciarNotaPedido();
-      //info.articulos.map((item): void => {
-      //  this.agregarItem();
-      //});
-      //this.notaPedido.patchValue({...info, verificarPedido: true, canal: this.cortarUrlHastaCom(info.canal)});
-      //info.articulos.forEach((item, index) => {
-      //  this.obtenerProducto(index);
-      //});
+    this.pedidosService.obtenerPedido(id).subscribe((info) => {
+      this.validarCiudadEnProvincia(info.facturacion.provincia, info.facturacion.ciudad, info.envio.provincia, info.envio.ciudad);
+
+      this.iniciarNotaPedido();
+      info.articulos.map((item): void => {
+        this.agregarItem();
+      });
+      this.notaPedido.patchValue({...info, verificarPedido: true, canal: this.cortarUrlHastaCom(info.canal)});
+
+      info.articulos.forEach((item, index) => {
+        this.obtenerProducto(index);
+      });
     });
   }
-
 
   cortarUrlHastaCom(url: string): string {
     if (url.startsWith('http://') || url.startsWith('https://')) {
@@ -476,7 +474,7 @@ export class BodegaComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onSelectChangeBodega(e: any) {
+  onSelectChangeBodega(e: any){
     this.bodegaSeleccionada = e.target.value;
   }
 
