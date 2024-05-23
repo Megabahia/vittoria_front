@@ -45,7 +45,12 @@ export class BodegaComponent implements OnInit, AfterViewInit {
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
   mostrarDatos;
-  bodegaSeleccionada;
+  bodegaSeleccionada
+
+  datosTodoProductos;
+  datosTodoPedido
+  mensajePedidoBodega;
+  bodega;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -172,14 +177,15 @@ export class BodegaComponent implements OnInit, AfterViewInit {
 
   crearDetalleGrupo(): any {
     return this.formBuilder.group({
-      codigo: ['', [Validators.required]],
-      articulo: ['', [Validators.required]],
+      codigoBarras: ['', [Validators.required]],
+      nombre: ['', [Validators.required]],
       valorUnitario: [0, [Validators.required]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
-      bodega: ['', []]
+      bodega: ['', []],
+      total: [0, []]
     });
   }
 
@@ -216,15 +222,13 @@ export class BodegaComponent implements OnInit, AfterViewInit {
     };
     this.pedidosService.obtenerDetalleBodega(data, id).subscribe((info) => {
       this.mostrarDatos = info.mostrar_datos;
-      //this.validarCiudadEnProvincia(info.facturacion.provincia, info.facturacion.ciudad, info.envio.provincia, info.envio.ciudad);
-      //this.iniciarNotaPedido();
-      //info.articulos.map((item): void => {
-      //  this.agregarItem();
-      //});
-      //this.notaPedido.patchValue({...info, verificarPedido: true, canal: this.cortarUrlHastaCom(info.canal)});
-      //info.articulos.forEach((item, index) => {
-      //  this.obtenerProducto(index);
-      //});
+      this.pedidosService.obtenerPedido(id).subscribe((infoPedido) => {
+        this.iniciarNotaPedido();
+        info.info.map((item): void => {
+          this.agregarItem();
+        });
+        this.notaPedido.patchValue({...infoPedido, articulos: info.info, verificarPedido: true, canal: this.cortarUrlHastaCom(infoPedido.canal)});
+      });
     });
   }
 
@@ -323,6 +327,7 @@ export class BodegaComponent implements OnInit, AfterViewInit {
     this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 
+
   async actualizar(): Promise<void> {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
@@ -345,45 +350,49 @@ export class BodegaComponent implements OnInit, AfterViewInit {
     }
   }
 
-  procesarEnvio(modal, transaccion): void {
-    this.archivo = new FormData();
+  procesarEnvio(modal, bodega, pedidoId): void {
     this.modalService.open(modal);
-    const tipoFacturacion = transaccion.metodoPago === CONTRA_ENTREGA ? 'rimpePopular' : 'facturacionElectronica';
-    this.autorizarForm = this.formBuilder.group({
-      id: [transaccion.id, [Validators.required]],
-      metodoConfirmacion: ['', [Validators.required]],
-      codigoConfirmacion: ['', transaccion.metodoPago === PREVIO_PAGO ? [Validators.required] : []],
-      fechaHoraConfirmacion: [this.datePipe.transform(new Date(), 'yyyy-MM-ddThh:mm:ss.SSSZ'), [Validators.required]],
-      tipoFacturacion: [tipoFacturacion, [Validators.required]],
-      urlMetodoPago: ['', transaccion.metodoPago === PREVIO_PAGO ? [Validators.required] : []],
-      archivoMetodoPago: ['', []],
-      estado: ['Autorizado', [Validators.required]],
+    const data = {
+      bodega: bodega
+    };
+    this.bodega = bodega;
+    this.pedidosService.obtenerDetalleBodega(data, pedidoId).subscribe((info) => {
+      this.mostrarDatos = info.mostrar_datos;
+      if(!info.mostrar_datos){
+        this.mensajePedidoBodega = 'Varias bodegas.';
+      }else{
+        this.mensajePedidoBodega = 'Una sola bodega.';
+      }
+      this.datosTodoProductos = info.info;
+      this.pedidosService.obtenerPedido(pedidoId).subscribe((infoPedido) => {
+        this.datosTodoPedido = infoPedido;
+      });
     });
   }
 
   procesarAutorizacion(): void {
-    if (this.autorizarForm.invalid || this.invalidoTamanoVideo) {
-      this.toaster.open('Campos vacios', {type: 'danger'});
-      return;
-    }
-    if (confirm('Esta seguro de cambiar de estado') === true) {
-      const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
-      const facturaFisicaLlaves: string[] = Object.keys(this.autorizarForm.value);
-      facturaFisicaLlaves.map((llaves, index) => {
-        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago') {
-          this.archivo.append(llaves, facturaFisicaValores[index]);
-        }
-      });
-      this.mostrarSpinner = true;
-      this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
-        this.modalService.dismissAll();
-        this.obtenerTransacciones();
-        this.mostrarSpinner = false;
-      }, (data) => {
-        this.toaster.open(data, {type: 'danger'});
-        this.mostrarSpinner = false;
-      });
-    }
+    //if (this.autorizarForm.invalid || this.invalidoTamanoVideo) {
+     // this.toaster.open('Campos vacios', {type: 'danger'});
+      //return;
+    //}
+    //if (confirm('Esta seguro de cambiar de estado') === true) {
+    //  const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
+    // const facturaFisicaLlaves: string[] = Object.keys(this.autorizarForm.value);
+    // facturaFisicaLlaves.map((llaves, index) => {
+    //   if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago') {
+    //     this.archivo.append(llaves, facturaFisicaValores[index]);
+    //   }
+    // });
+    // this.mostrarSpinner = true;
+    // this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
+    //   this.modalService.dismissAll();
+    //   this.obtenerTransacciones();
+    //   this.mostrarSpinner = false;
+    // }, (data) => {
+    //   this.toaster.open(data, {type: 'danger'});
+    //   this.mostrarSpinner = false;
+    // });
+    //}
   }
 
   procesarRechazo(modal, transaccion): void {

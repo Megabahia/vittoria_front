@@ -67,8 +67,8 @@
               </td>
               <td>{{ transaccion.estado }}</td>
               <td>
-                <button *ngIf="transaccion.verificarPedido" class="btn btn-primary"
-                        (click)="procesarEnvio(facturacionModal, transaccion)">
+                <button class="btn btn-primary"
+                        (click)="procesarEnvio(facturacionModal, transaccion.bodega, transaccion.pedido)">
                   PEDIR A BODEGA
                 </button>
               </td>
@@ -330,12 +330,11 @@
                                   Código
                                 </p>
                                 <input class="form-control" type="text"
-                                       (change)="obtenerProducto(i)"
-                                       formControlName="codigo">
-                                <div *ngIf="detalle.controls.codigo.errors"
+                                       formControlName="codigoBarras" disabled>
+                                <div *ngIf="detalle.controls.codigoBarras.errors"
                                      class="invalid-feedback"
                                      style="display: block;">
-                                  <div *ngIf="detalle.controls.codigo.errors.required">
+                                  <div *ngIf="detalle.controls.codigoBarras.errors.required">
                                     Requerido
                                   </div>
                                 </div>
@@ -347,6 +346,7 @@
                                 <input type="text" class="form-control"
                                        formControlName="cantidad"
                                        (change)="calcular()"
+                                       disabled
                                 />
                                 <div *ngIf="detalle.controls.cantidad.errors"
                                      class="invalid-feedback"
@@ -366,11 +366,11 @@
                                 <p class="card-text col-title mb-md-50 mb-0">
                                   Nombre
                                 </p>
-                                <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
-                                <div *ngIf="detalle.controls.articulo.errors"
+                                <label class="d-block text-wrap">{{ detalle.controls.nombre.value }}</label>
+                                <div *ngIf="detalle.controls.nombre.errors"
                                      class="invalid-feedback"
                                      style="display: block;">
-                                  <div *ngIf="detalle.controls.articulo.errors.required">
+                                  <div *ngIf="detalle.controls.nombre.errors.required">
                                     Requerido
                                   </div>
                                 </div>
@@ -385,7 +385,7 @@
                                 <p class="card-text col-title mb-md-50 mb-0">
                                   Precio
                                 </p>
-                                <label>{{ detalle.controls.valorUnitario.value }}</label>
+                                <label>{{ detalle.controls.precio.value }}</label>
                               </div>
                               <div class="col-lg-1 col-12 my-lg-0 my-2">
                                 <p class="card-text col-title mb-md-50 mb-0">
@@ -674,10 +674,10 @@
             <button type="reset" class="btn btn-secondary"
                     (click)="modal.dismiss( 'Cross click')">Cerrar
             </button>
-            <button class="btn btn-primary mx-1"
-                    (click)="actualizar()"
-            >Confirmar Pedido
-            </button>
+            <!--<button class="btn btn-primary mx-1"
+                    (click)="activarPedidoBodega()"
+            >Confirmar
+            </button>-->
           </div>
         </ng-template>
         <hr/>
@@ -688,7 +688,7 @@
 
 <ng-template #facturacionModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title">Autorizar</h4>
+    <h4 class="modal-title">Pedido a bodega</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -697,6 +697,48 @@
     <form [formGroup]="autorizarForm">
       <div class="row">
         <div class="col-12">
+          <div class="form-group">
+            <label>Tipo de pedido</label>
+            <div>
+              <label>{{ mensajePedidoBodega }}</label>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-group">
+            <label>Número de pedido</label>
+            <div>
+              <label>{{ datosTodoPedido?.numeroPedido }}</label>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-group">
+            <label>Fecha de pedido</label>
+            <div>
+              <label>{{ datosTodoPedido?.created_at | date: 'dd-MM-yyyy'}}</label>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-group">
+            <label>BODEGA </label>
+            <div>
+              <label>{{ bodega }}</label>
+            </div>
+          </div>
+        </div>
+        <div class="col-12" *ngIf="!mostrarDatos">
+          <div class="form-group">
+            <label for="basicSelect">Consolidar</label>
+            <select id="basicSelect" class="form-control">
+              <option value="">- Seleccione -</option>
+              <option >Consolidar</option>
+            </select>
+
+          </div>
+        </div>
+        <!--<div class="col-12">
           <div class="form-group">
             <label for="basicSelect">Confirmación y Autorización</label>
             <select id="basicSelect" class="form-control" formControlName="metodoConfirmacion">
@@ -781,6 +823,7 @@
             <input class="form-control" formControlName="fechaHoraConfirmacion" disabled/>
           </div>
         </div>
+        -->
       </div>
     </form>
   </div>
@@ -790,7 +833,7 @@
             [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
             <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
                   aria-hidden="true"></span>
-      Guardar
+      Confirmar pedido bodega
     </button>
   </div>
 </ng-template>
