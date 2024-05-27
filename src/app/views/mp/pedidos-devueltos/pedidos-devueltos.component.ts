@@ -38,7 +38,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
   opciones;
   ciudadPresenteFacturacion = true;
   ciudadPresenteEnvio = true;
-
+  horaPedido
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -212,6 +212,8 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
 
   obtenerTransaccion(id): void {
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
+      this.horaPedido = this.extraerHora(info.created_at);
+
       this.validarCiudadEnProvincia(info.facturacion.provincia, info.facturacion.ciudad, info.envio.provincia, info.envio.ciudad);
       this.iniciarNotaPedido();
       info.articulos.map((item): void => {
@@ -451,5 +453,10 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       reader.readAsDataURL(archivo);
 
     }
+  }
+
+  extraerHora(dateTimeString: string): string {
+    const date = new Date(dateTimeString);
+    return date.toTimeString().split(' ')[0];
   }
 }

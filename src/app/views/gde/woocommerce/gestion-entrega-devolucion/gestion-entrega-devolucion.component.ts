@@ -31,7 +31,7 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
   transaccion: any;
   opciones;
   archivo: FormData = new FormData();
-
+  horaPedido;
 
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -205,6 +205,8 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
   obtenerTransaccion(id): void {
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
       this.iniciarNotaPedido();
+      this.horaPedido = this.extraerHora(info.created_at);
+
       info.articulos.map((item): void => {
         this.agregarItem();
       });
@@ -331,6 +333,11 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
       return match ? match[0] : url;  // Devuelve la URL cortada o la original si no se encuentra .com
     }
     return url;
+  }
+
+  extraerHora(dateTimeString: string): string {
+    const date = new Date(dateTimeString);
+    return date.toTimeString().split(' ')[0];
   }
 
 }

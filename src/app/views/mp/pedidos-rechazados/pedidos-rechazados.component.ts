@@ -29,7 +29,7 @@ export class PedidosRechazadosComponent implements OnInit, AfterViewInit {
   fin = new Date();
   transaccion: any;
   opciones;
-
+  horaPedido;
 
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -190,6 +190,8 @@ export class PedidosRechazadosComponent implements OnInit, AfterViewInit {
 
   obtenerTransaccion(id): void {
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
+      this.horaPedido = this.extraerHora(info.created_at);
+
       this.iniciarNotaPedido();
       info.articulos.map((item): void => {
         this.agregarItem();
@@ -325,5 +327,10 @@ export class PedidosRechazadosComponent implements OnInit, AfterViewInit {
         this.obtenerTransacciones();
       });
     }
+  }
+
+  extraerHora(dateTimeString: string): string {
+    const date = new Date(dateTimeString);
+    return date.toTimeString().split(' ')[0];
   }
 }

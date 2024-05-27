@@ -34,7 +34,7 @@ export class PedidosBodegaComponent implements OnInit, AfterViewInit {
   ciudadPresenteFacturacion = true;
   ciudadPresenteEnvio = true;
   datosParamFiltrados: any[] = [];
-
+  horaPedido
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -220,6 +220,9 @@ export class PedidosBodegaComponent implements OnInit, AfterViewInit {
     this.pedidosService.obtenerDetalleBodega(data, id).subscribe((info) => {
       this.pedidosService.obtenerPedido(id).subscribe((infoPedido) => {
         this.iniciarNotaPedido();
+        this.horaPedido = this.extraerHora(infoPedido.created_at);
+
+
         info.info.map((item): void => {
           this.agregarItem();
         });
@@ -484,5 +487,9 @@ export class PedidosBodegaComponent implements OnInit, AfterViewInit {
     this.bodegaSeleccionada = e.target.value;
   }
 
+  extraerHora(dateTimeString: string): string {
+    const date = new Date(dateTimeString);
+    return date.toTimeString().split(' ')[0];
+  }
 
 }
