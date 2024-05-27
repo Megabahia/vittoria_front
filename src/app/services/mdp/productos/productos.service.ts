@@ -39,6 +39,7 @@ export interface Producto {
   precioLanding;
   precioLandingOferta;
   idPadre;
+  proveedor;
 }
 
 export interface FichaTecnicaProducto {
@@ -82,6 +83,7 @@ export class ProductosService {
       fechaCaducidad: '',
       fechaElaboracion: '',
       caracteristicas: '',
+      proveedor: '',
       precioOferta: '',
       envioNivelNacional: true,
       lugarVentaProvincia: '',
