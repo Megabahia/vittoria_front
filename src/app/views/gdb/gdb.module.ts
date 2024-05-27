@@ -10,14 +10,14 @@ import {GdbRoutingModule} from './gdb-routing.module';
 import {GdeModule} from '../gde/gde.module';
 import {GdbComponent} from "./gdb.component";
 import {BodegaComponent} from "./bodega/bodega.component"
-import {VittoriaComponent} from "./canal-vittoria/vittoria.component";
+import {PedidosBodegaComponent} from "./pedidos-bodega/pedidos-bodega.component";
 
 
 @NgModule({
   declarations: [
     GdbComponent,
     BodegaComponent,
-    VittoriaComponent
+    PedidosBodegaComponent
   ],
   imports: [
     CommonModule,

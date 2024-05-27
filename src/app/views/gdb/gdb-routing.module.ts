@@ -3,7 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../../guard/auth.guard';
 import {GdbComponent} from "./gdb.component";
 import {BodegaComponent} from "./bodega/bodega.component";
-import {VittoriaComponent} from "./canal-vittoria/vittoria.component";
+import {PedidosBodegaComponent} from "./pedidos-bodega/pedidos-bodega.component";
 
 const routes: Routes = [{
   path: '', component: GdbComponent, children: [
@@ -11,7 +11,7 @@ const routes: Routes = [{
       path: 'bodega', component: BodegaComponent, canActivate: [AuthGuard]
     },
     {
-      path: 'canal-vittoria', component: VittoriaComponent, canActivate: [AuthGuard]
+      path: 'pedidos-bodega', component: PedidosBodegaComponent, canActivate: [AuthGuard]
     },
   ]
 }];
