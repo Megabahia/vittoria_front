@@ -16,6 +16,8 @@ const routes: Routes = [
   },
   {
     path: 'gdb', loadChildren: () => import('./views/gdb/gdb.module').then(m => m.GdbModule)
+  },{
+    path: 'gdp', loadChildren: () => import('./views/gdp/gdp.module').then(m => m.GdpModule)
   },
   {
     path: 'auth', loadChildren: () => import('./views/auth/auth.module').then(m => m.AuthModule)

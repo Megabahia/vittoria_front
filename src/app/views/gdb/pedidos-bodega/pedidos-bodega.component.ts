@@ -13,7 +13,7 @@ import {ValidacionesPropias} from '../../../utils/customer.validators';
 import {Toaster} from 'ngx-toast-notifications';
 
 @Component({
-  selector: 'app-pedidos-bodega',
+  selector: 'app-pedidos',
   templateUrl: './pedidos-bodega.component.html',
   providers: [DatePipe]
 })
