@@ -11,12 +11,6 @@
                 <option *ngFor="let item of datosParamFiltrados" [value]="item.nombre">{{ item.nombre }}</option>
               </select>
             </div>
-            <div class="col-md-4">
-              <label>Inicio: </label>
-              <input class="form-control mb-2" mwlFlatpickr type="text" [(ngModel)]="inicio">
-              <label>Fin: </label>
-              <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="fin">
-            </div>
             <div class="col-md-4 d-flex align-items-center justify-content-center">
               <button class="btn btn-primary" (click)="obtenerTransacciones()">
                 <i-feather name='search' class="edit-user"></i-feather>
@@ -49,29 +43,29 @@
               <th>Nombre de bodega</th>
               <th>Ver</th>
               <th>Estado</th>
-              <th>Acciones</th>
+              <!--<th>Acciones</th>-->
             </tr>
             </thead>
 
             <tbody>
             <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
-              <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
-              <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido  | shorten }}</td>
-              <td [title]="transaccion.canal">{{ transaccion.canal | shorten }}</td>
-              <td>BODEGA</td>
+              <td>{{ transaccion.fechaPedido | date: 'dd-MM-yyyy' }}</td>
+              <td [title]="transaccion.pedido">{{ transaccion.pedido  | shorten }}</td>
+              <td>{{ transaccion.canalPedido | shorten }}</td>
+              <td>{{ transaccion.bodega }}</td>
 
               <td>
-                <a (click)="obtenerTransaccion(notaPedidoModal, transaccion.id)">
+                <a (click)="obtenerTransaccionBodega(notaPedidoModal, transaccion.bodega ,transaccion.pedido)">
                   <i-feather name="eye" class="mr-25"></i-feather>
                 </a>
               </td>
               <td>{{ transaccion.estado }}</td>
-              <td>
+              <!--<td>
                 <button *ngIf="transaccion.verificarPedido" class="btn btn-primary"
                         (click)="procesarEnvio(facturacionModal, transaccion)">
                   PEDIR A BODEGA
                 </button>
-              </td>
+              </td>-->
             </tr>
             </tbody>
           </table>
@@ -330,12 +324,11 @@
                                   Código
                                 </p>
                                 <input class="form-control" type="text"
-                                       (change)="obtenerProducto(i)"
-                                       formControlName="codigo">
-                                <div *ngIf="detalle.controls.codigo.errors"
+                                       formControlName="codigoBarras" disabled>
+                                <div *ngIf="detalle.controls.codigoBarras.errors"
                                      class="invalid-feedback"
                                      style="display: block;">
-                                  <div *ngIf="detalle.controls.codigo.errors.required">
+                                  <div *ngIf="detalle.controls.codigoBarras.errors.required">
                                     Requerido
                                   </div>
                                 </div>
@@ -346,7 +339,7 @@
                                 </p>
                                 <input type="text" class="form-control"
                                        formControlName="cantidad"
-                                       (change)="calcular()"
+                                       disabled
                                 />
                                 <div *ngIf="detalle.controls.cantidad.errors"
                                      class="invalid-feedback"
@@ -366,11 +359,11 @@
                                 <p class="card-text col-title mb-md-50 mb-0">
                                   Nombre
                                 </p>
-                                <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
-                                <div *ngIf="detalle.controls.articulo.errors"
+                                <label class="d-block text-wrap">{{ detalle.controls.nombre.value }}</label>
+                                <div *ngIf="detalle.controls.nombre.errors"
                                      class="invalid-feedback"
                                      style="display: block;">
-                                  <div *ngIf="detalle.controls.articulo.errors.required">
+                                  <div *ngIf="detalle.controls.nombre.errors.required">
                                     Requerido
                                   </div>
                                 </div>
@@ -385,7 +378,7 @@
                                 <p class="card-text col-title mb-md-50 mb-0">
                                   Precio
                                 </p>
-                                <label>{{ detalle.controls.valorUnitario.value }}</label>
+                                <label>{{ detalle.controls.precio.value }}</label>
                               </div>
                               <div class="col-lg-1 col-12 my-lg-0 my-2">
                                 <p class="card-text col-title mb-md-50 mb-0">

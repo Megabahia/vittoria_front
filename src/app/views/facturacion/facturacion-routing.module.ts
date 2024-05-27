@@ -8,9 +8,9 @@ import {FacturasAutorizadasComponent} from './canal-vittoria/facturas-autorizada
 import {FacturasWoocommerceComponent} from './canal-woocommerce/facturas-locales/facturas-woocommerce.component';
 
 const routes: Routes = [
-  {path: '', redirectTo: 'canal-vittoria', pathMatch: 'full'},
+  {path: '', redirectTo: 'pedidos-bodega', pathMatch: 'full'},
   {
-    path: 'canal-vittoria', children: [
+    path: 'pedidos-bodega', children: [
       {
         path: 'pendiente',
         component: FacturasLocalesComponent,

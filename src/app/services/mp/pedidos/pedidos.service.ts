@@ -35,6 +35,10 @@ export class PedidosService {
     return this.http.post<any>(`${apiUrl}/api/v3/orders/listOne/bodega/${id}`, datos);
   }
 
+  actualizarProductoBodega(datos): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/api/v3/orders/update/bodega/${datos.id}`, datos);
+  }
+
   actualizarPedido(datos): Observable<any> {
     return this.http.post<any>(`${apiUrl}/api/v3/orders/update/${datos.id}`, datos);
   }

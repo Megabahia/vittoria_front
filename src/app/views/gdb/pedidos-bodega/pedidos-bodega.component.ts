@@ -11,12 +11,13 @@ import {ProductosService} from '../../../services/mdp/productos/productos.servic
 import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../constats/mp/pedidos';
 import {ValidacionesPropias} from '../../../utils/customer.validators';
 import {Toaster} from 'ngx-toast-notifications';
+
 @Component({
-  selector: 'app-vittoria',
-  templateUrl: './vittoria.component.html',
+  selector: 'app-pedidos-bodega',
+  templateUrl: './pedidos-bodega.component.html',
   providers: [DatePipe]
 })
-export class VittoriaComponent implements OnInit, AfterViewInit {
+export class PedidosBodegaComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
@@ -25,7 +26,7 @@ export class VittoriaComponent implements OnInit, AfterViewInit {
   page = 1;
   pageSize = 3;
   collectionSize;
-  listaTransacciones;
+  listaTransacciones: any[] = [];
   inicio = new Date();
   fin = new Date();
   transaccion: any;
@@ -173,14 +174,15 @@ export class VittoriaComponent implements OnInit, AfterViewInit {
 
   crearDetalleGrupo(): any {
     return this.formBuilder.group({
-      codigo: ['', [Validators.required]],
-      articulo: ['', [Validators.required]],
+      codigoBarras: ['', [Validators.required]],
+      nombre: ['', [Validators.required]],
       valorUnitario: [0, [Validators.required]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
-      bodega: ['', []]
+      bodega: ['', []],
+      total: [0, []]
     });
   }
 
@@ -199,10 +201,10 @@ export class VittoriaComponent implements OnInit, AfterViewInit {
       page_size: this.pageSize,
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
-      bodega: this.bodegaSeleccionada
+      bodega: this.bodegaSeleccionada,
+      estado: 'Pedido'
     }).subscribe((info) => {
-      this.collectionSize = info.cont;
-      this.listaTransacciones = info.info;
+      this.listaTransacciones = info;
     });
   }
 
@@ -210,19 +212,23 @@ export class VittoriaComponent implements OnInit, AfterViewInit {
     return this.datePipe.transform(fecha, 'yyyy-MM-dd');
   }
 
-  obtenerTransaccion(modal, id): void {
+  obtenerTransaccionBodega(modal, bodega, id): void {
     this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
-    this.pedidosService.obtenerPedido(id).subscribe((info) => {
-      this.validarCiudadEnProvincia(info.facturacion.provincia, info.facturacion.ciudad, info.envio.provincia, info.envio.ciudad);
-
-      this.iniciarNotaPedido();
-      info.articulos.map((item): void => {
-        this.agregarItem();
-      });
-      this.notaPedido.patchValue({...info, verificarPedido: true, canal: this.cortarUrlHastaCom(info.canal)});
-
-      info.articulos.forEach((item, index) => {
-        this.obtenerProducto(index);
+    const data = {
+      bodega: bodega
+    };
+    this.pedidosService.obtenerDetalleBodega(data, id).subscribe((info) => {
+      this.pedidosService.obtenerPedido(id).subscribe((infoPedido) => {
+        this.iniciarNotaPedido();
+        info.info.map((item): void => {
+          this.agregarItem();
+        });
+        this.notaPedido.patchValue({
+          ...infoPedido,
+          articulos: info.info,
+          verificarPedido: true,
+          canal: this.cortarUrlHastaCom(infoPedido.canal)
+        });
       });
     });
   }
@@ -355,7 +361,7 @@ export class VittoriaComponent implements OnInit, AfterViewInit {
       tipoFacturacion: [tipoFacturacion, [Validators.required]],
       urlMetodoPago: ['', transaccion.metodoPago === PREVIO_PAGO ? [Validators.required] : []],
       archivoMetodoPago: ['', []],
-      estado: ['Autorizado', [Validators.required]],
+      estado: ['Pedido', [Validators.required]],
     });
   }
 
@@ -474,7 +480,7 @@ export class VittoriaComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onSelectChangeBodega(e: any){
+  onSelectChangeBodega(e: any) {
     this.bodegaSeleccionada = e.target.value;
   }
 

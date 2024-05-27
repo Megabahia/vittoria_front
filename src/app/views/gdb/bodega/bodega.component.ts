@@ -46,11 +46,12 @@ export class BodegaComponent implements OnInit, AfterViewInit {
   mostrarSpinner = false;
   mostrarDatos;
   bodegaSeleccionada
-
+  datosProductoBodega
   datosTodoProductos;
   datosTodoPedido
   mensajePedidoBodega;
   bodega;
+
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -227,7 +228,12 @@ export class BodegaComponent implements OnInit, AfterViewInit {
         info.info.map((item): void => {
           this.agregarItem();
         });
-        this.notaPedido.patchValue({...infoPedido, articulos: info.info, verificarPedido: true, canal: this.cortarUrlHastaCom(infoPedido.canal)});
+        this.notaPedido.patchValue({
+          ...infoPedido,
+          articulos: info.info,
+          verificarPedido: true,
+          canal: this.cortarUrlHastaCom(infoPedido.canal)
+        });
       });
     });
   }
@@ -357,13 +363,15 @@ export class BodegaComponent implements OnInit, AfterViewInit {
     };
     this.bodega = bodega;
     this.pedidosService.obtenerDetalleBodega(data, pedidoId).subscribe((info) => {
+
       this.mostrarDatos = info.mostrar_datos;
-      if(!info.mostrar_datos){
+      if (!info.mostrar_datos) {
         this.mensajePedidoBodega = 'Varias bodegas.';
-      }else{
+      } else {
         this.mensajePedidoBodega = 'Una sola bodega.';
       }
       this.datosTodoProductos = info.info;
+      this.datosProductoBodega = info.info;
       this.pedidosService.obtenerPedido(pedidoId).subscribe((infoPedido) => {
         this.datosTodoPedido = infoPedido;
       });
@@ -372,27 +380,19 @@ export class BodegaComponent implements OnInit, AfterViewInit {
 
   procesarAutorizacion(): void {
     //if (this.autorizarForm.invalid || this.invalidoTamanoVideo) {
-     // this.toaster.open('Campos vacios', {type: 'danger'});
-      //return;
+    // this.toaster.open('Campos vacios', {type: 'danger'});
+    //return;
     //}
-    //if (confirm('Esta seguro de cambiar de estado') === true) {
-    //  const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
-    // const facturaFisicaLlaves: string[] = Object.keys(this.autorizarForm.value);
-    // facturaFisicaLlaves.map((llaves, index) => {
-    //   if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago') {
-    //     this.archivo.append(llaves, facturaFisicaValores[index]);
-    //   }
-    // });
-    // this.mostrarSpinner = true;
-    // this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
-    //   this.modalService.dismissAll();
-    //   this.obtenerTransacciones();
-    //   this.mostrarSpinner = false;
-    // }, (data) => {
-    //   this.toaster.open(data, {type: 'danger'});
-    //   this.mostrarSpinner = false;
-    // });
-    //}
+    if (confirm('Esta seguro de cambiar de estado') === true) {
+      this.datosProductoBodega.map((item) => {
+          item.estado = 'Pedido';
+          this.pedidosService.actualizarProductoBodega(item).subscribe((info) => {
+            this.modalService.dismissAll();
+            this.obtenerTransacciones();
+          });
+        }
+      );
+    }
   }
 
   procesarRechazo(modal, transaccion): void {
