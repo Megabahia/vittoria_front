@@ -29,7 +29,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
   transaccion: any;
   opciones;
   archivo: FormData = new FormData();
-
+  horaPedido;
 
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -189,6 +189,8 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
   obtenerTransaccion(id): void {
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
       this.iniciarNotaPedido();
+      this.horaPedido = this.extraerHora(info.created_at);
+
       info.articulos.map((item): void => {
         this.agregarItem();
       });
@@ -252,5 +254,10 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
 
   cargarArchivo(event, nombreCampo): void {
     this.archivo.append(nombreCampo, event.target.files[0]);
+  }
+
+  extraerHora(dateTimeString: string): string {
+    const date = new Date(dateTimeString);
+    return date.toTimeString().split(' ')[0];
   }
 }

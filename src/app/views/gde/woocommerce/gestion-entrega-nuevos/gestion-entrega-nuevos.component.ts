@@ -40,7 +40,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
   opciones;
   archivo: FormData = new FormData();
   fileToUpload: File | null = null;
-
+  horaPedido;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -226,7 +226,9 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
 
   obtenerTransaccion(id): void {
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
+
       this.iniciarNotaPedido();
+      this.horaPedido = this.extraerHora(info.created_at);
       info.articulos.map((item): void => {
         this.agregarItem();
       });
@@ -765,4 +767,8 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
 
   }
 
+  extraerHora(dateTimeString: string): string {
+    const date = new Date(dateTimeString);
+    return date.toTimeString().split(' ')[0];
+  }
 }

@@ -36,7 +36,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   opciones;
   ciudadPresenteFacturacion = true;
   ciudadPresenteEnvio = true;
-
+  horaPedido;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -215,6 +215,9 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   obtenerTransaccion(modal, id): void {
     this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
+
+      this.horaPedido = this.extraerHora(info.created_at);
+
       this.validarCiudadEnProvincia(info.facturacion.provincia, info.facturacion.ciudad, info.envio.provincia, info.envio.ciudad);
 
       this.iniciarNotaPedido();
@@ -466,5 +469,9 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     }
   }
 
+  extraerHora(dateTimeString: string): string {
+    const date = new Date(dateTimeString);
+    return date.toTimeString().split(' ')[0];
+  }
 
 }

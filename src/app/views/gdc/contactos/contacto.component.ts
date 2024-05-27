@@ -54,7 +54,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   mostrarInputCobro = false;
   fileToUpload: File | null = null;
   totalPagar;
-  listaProspectos;
+  horaPedido;
   clientes;
   cliente;
   cedula;
@@ -257,6 +257,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       }
       this.totalPagar = info.total;
       this.iniciarNotaPedido();
+      this.horaPedido = this.extraerHora(info.created_at);
+
       info.articulos.map((item): void => {
         this.agregarItem();
       });
@@ -536,6 +538,11 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       reader.readAsDataURL(archivo);
 
     }
+  }
+
+  extraerHora(dateTimeString: string): string {
+    const date = new Date(dateTimeString);
+    return date.toTimeString().split(' ')[0];
   }
 
 }

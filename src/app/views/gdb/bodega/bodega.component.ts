@@ -51,7 +51,7 @@ export class BodegaComponent implements OnInit, AfterViewInit {
   datosTodoPedido
   mensajePedidoBodega;
   bodega;
-
+  horaPedido;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -225,6 +225,8 @@ export class BodegaComponent implements OnInit, AfterViewInit {
       this.mostrarDatos = info.mostrar_datos;
       this.pedidosService.obtenerPedido(id).subscribe((infoPedido) => {
         this.iniciarNotaPedido();
+        this.horaPedido = this.extraerHora(infoPedido.created_at);
+
         info.info.map((item): void => {
           this.agregarItem();
         });
@@ -489,5 +491,8 @@ export class BodegaComponent implements OnInit, AfterViewInit {
     this.bodegaSeleccionada = e.target.value;
   }
 
-
+  extraerHora(dateTimeString: string): string {
+    const date = new Date(dateTimeString);
+    return date.toTimeString().split(' ')[0];
+  }
 }
