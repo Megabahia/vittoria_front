@@ -11,13 +11,12 @@ import {ProductosService} from '../../../services/mdp/productos/productos.servic
 import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../constats/mp/pedidos';
 import {ValidacionesPropias} from '../../../utils/customer.validators';
 import {Toaster} from 'ngx-toast-notifications';
-
 @Component({
-  selector: 'app-bodega',
-  templateUrl: './bodega.component.html',
+  selector: 'app-vittoria',
+  templateUrl: './vittoria.component.html',
   providers: [DatePipe]
 })
-export class BodegaComponent implements OnInit, AfterViewInit {
+export class VittoriaComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
@@ -26,7 +25,7 @@ export class BodegaComponent implements OnInit, AfterViewInit {
   page = 1;
   pageSize = 3;
   collectionSize;
-  listaTransacciones: any[] = [];
+  listaTransacciones;
   inicio = new Date();
   fin = new Date();
   transaccion: any;
@@ -34,6 +33,7 @@ export class BodegaComponent implements OnInit, AfterViewInit {
   ciudadPresenteFacturacion = true;
   ciudadPresenteEnvio = true;
   datosParamFiltrados: any[] = [];
+
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -44,13 +44,9 @@ export class BodegaComponent implements OnInit, AfterViewInit {
   archivo: FormData = new FormData();
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
-  mostrarDatos;
-  bodegaSeleccionada
 
-  datosTodoProductos;
-  datosTodoPedido
-  mensajePedidoBodega;
-  bodega;
+  bodegaSeleccionada;
+
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -177,15 +173,14 @@ export class BodegaComponent implements OnInit, AfterViewInit {
 
   crearDetalleGrupo(): any {
     return this.formBuilder.group({
-      codigoBarras: ['', [Validators.required]],
-      nombre: ['', [Validators.required]],
+      codigo: ['', [Validators.required]],
+      articulo: ['', [Validators.required]],
       valorUnitario: [0, [Validators.required]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
-      bodega: ['', []],
-      total: [0, []]
+      bodega: ['', []]
     });
   }
 
@@ -201,13 +196,13 @@ export class BodegaComponent implements OnInit, AfterViewInit {
   obtenerTransacciones(): void {
     this.pedidosService.obtenerListaPedidosBodega({
       page: this.page - 1,
-      page_size: 3,
+      page_size: this.pageSize,
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
-      bodega: this.bodegaSeleccionada,
-      estado: 'Autorizado'
+      bodega: this.bodegaSeleccionada
     }).subscribe((info) => {
-      this.listaTransacciones = info;
+      this.collectionSize = info.cont;
+      this.listaTransacciones = info.info;
     });
   }
 
@@ -215,23 +210,22 @@ export class BodegaComponent implements OnInit, AfterViewInit {
     return this.datePipe.transform(fecha, 'yyyy-MM-dd');
   }
 
-  obtenerTransaccionBodega(modal, bodega, id): void {
+  obtenerTransaccion(modal, id): void {
     this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
-    const data = {
-      bodega: bodega
-    };
-    this.pedidosService.obtenerDetalleBodega(data, id).subscribe((info) => {
-      this.mostrarDatos = info.mostrar_datos;
-      this.pedidosService.obtenerPedido(id).subscribe((infoPedido) => {
-        this.iniciarNotaPedido();
-        info.info.map((item): void => {
-          this.agregarItem();
-        });
-        this.notaPedido.patchValue({...infoPedido, articulos: info.info, verificarPedido: true, canal: this.cortarUrlHastaCom(infoPedido.canal)});
+    this.pedidosService.obtenerPedido(id).subscribe((info) => {
+      this.validarCiudadEnProvincia(info.facturacion.provincia, info.facturacion.ciudad, info.envio.provincia, info.envio.ciudad);
+
+      this.iniciarNotaPedido();
+      info.articulos.map((item): void => {
+        this.agregarItem();
+      });
+      this.notaPedido.patchValue({...info, verificarPedido: true, canal: this.cortarUrlHastaCom(info.canal)});
+
+      info.articulos.forEach((item, index) => {
+        this.obtenerProducto(index);
       });
     });
   }
-
 
   cortarUrlHastaCom(url: string): string {
     if (url.startsWith('http://') || url.startsWith('https://')) {
@@ -327,7 +321,6 @@ export class BodegaComponent implements OnInit, AfterViewInit {
     this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 
-
   async actualizar(): Promise<void> {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
@@ -350,49 +343,45 @@ export class BodegaComponent implements OnInit, AfterViewInit {
     }
   }
 
-  procesarEnvio(modal, bodega, pedidoId): void {
+  procesarEnvio(modal, transaccion): void {
+    this.archivo = new FormData();
     this.modalService.open(modal);
-    const data = {
-      bodega: bodega
-    };
-    this.bodega = bodega;
-    this.pedidosService.obtenerDetalleBodega(data, pedidoId).subscribe((info) => {
-      this.mostrarDatos = info.mostrar_datos;
-      if(!info.mostrar_datos){
-        this.mensajePedidoBodega = 'Varias bodegas.';
-      }else{
-        this.mensajePedidoBodega = 'Una sola bodega.';
-      }
-      this.datosTodoProductos = info.info;
-      this.pedidosService.obtenerPedido(pedidoId).subscribe((infoPedido) => {
-        this.datosTodoPedido = infoPedido;
-      });
+    const tipoFacturacion = transaccion.metodoPago === CONTRA_ENTREGA ? 'rimpePopular' : 'facturacionElectronica';
+    this.autorizarForm = this.formBuilder.group({
+      id: [transaccion.id, [Validators.required]],
+      metodoConfirmacion: ['', [Validators.required]],
+      codigoConfirmacion: ['', transaccion.metodoPago === PREVIO_PAGO ? [Validators.required] : []],
+      fechaHoraConfirmacion: [this.datePipe.transform(new Date(), 'yyyy-MM-ddThh:mm:ss.SSSZ'), [Validators.required]],
+      tipoFacturacion: [tipoFacturacion, [Validators.required]],
+      urlMetodoPago: ['', transaccion.metodoPago === PREVIO_PAGO ? [Validators.required] : []],
+      archivoMetodoPago: ['', []],
+      estado: ['Autorizado', [Validators.required]],
     });
   }
 
   procesarAutorizacion(): void {
-    //if (this.autorizarForm.invalid || this.invalidoTamanoVideo) {
-     // this.toaster.open('Campos vacios', {type: 'danger'});
-      //return;
-    //}
-    //if (confirm('Esta seguro de cambiar de estado') === true) {
-    //  const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
-    // const facturaFisicaLlaves: string[] = Object.keys(this.autorizarForm.value);
-    // facturaFisicaLlaves.map((llaves, index) => {
-    //   if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago') {
-    //     this.archivo.append(llaves, facturaFisicaValores[index]);
-    //   }
-    // });
-    // this.mostrarSpinner = true;
-    // this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
-    //   this.modalService.dismissAll();
-    //   this.obtenerTransacciones();
-    //   this.mostrarSpinner = false;
-    // }, (data) => {
-    //   this.toaster.open(data, {type: 'danger'});
-    //   this.mostrarSpinner = false;
-    // });
-    //}
+    if (this.autorizarForm.invalid || this.invalidoTamanoVideo) {
+      this.toaster.open('Campos vacios', {type: 'danger'});
+      return;
+    }
+    if (confirm('Esta seguro de cambiar de estado') === true) {
+      const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
+      const facturaFisicaLlaves: string[] = Object.keys(this.autorizarForm.value);
+      facturaFisicaLlaves.map((llaves, index) => {
+        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago') {
+          this.archivo.append(llaves, facturaFisicaValores[index]);
+        }
+      });
+      this.mostrarSpinner = true;
+      this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
+        this.modalService.dismissAll();
+        this.obtenerTransacciones();
+        this.mostrarSpinner = false;
+      }, (data) => {
+        this.toaster.open(data, {type: 'danger'});
+        this.mostrarSpinner = false;
+      });
+    }
   }
 
   procesarRechazo(modal, transaccion): void {
@@ -485,7 +474,7 @@ export class BodegaComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onSelectChangeBodega(e: any) {
+  onSelectChangeBodega(e: any){
     this.bodegaSeleccionada = e.target.value;
   }
 

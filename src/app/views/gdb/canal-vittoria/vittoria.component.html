@@ -46,7 +46,7 @@
               <th>Fecha Pedido</th>
               <th>Numero Pedido</th>
               <th>Canal Venta</th>
-              <th>Bodega</th>
+              <th>Nombre de bodega</th>
               <th>Ver</th>
               <th>Estado</th>
               <th>Acciones</th>
@@ -55,20 +55,20 @@
 
             <tbody>
             <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
-              <td>{{ transaccion.fechaPedido | date: 'dd-MM-yyyy' }}</td>
-              <td [title]="transaccion.pedido">{{ transaccion.pedido  | shorten }}</td>
-              <td>{{ transaccion.canalPedido | shorten }}</td>
-              <td>{{ transaccion.bodega }}</td>
+              <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
+              <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido  | shorten }}</td>
+              <td [title]="transaccion.canal">{{ transaccion.canal | shorten }}</td>
+              <td>BODEGA</td>
 
               <td>
-                <a (click)="obtenerTransaccionBodega(notaPedidoModal, transaccion.bodega ,transaccion.pedido)">
+                <a (click)="obtenerTransaccion(notaPedidoModal, transaccion.id)">
                   <i-feather name="eye" class="mr-25"></i-feather>
                 </a>
               </td>
               <td>{{ transaccion.estado }}</td>
               <td>
-                <button class="btn btn-primary"
-                        (click)="procesarEnvio(facturacionModal, transaccion.bodega, transaccion.pedido)">
+                <button *ngIf="transaccion.verificarPedido" class="btn btn-primary"
+                        (click)="procesarEnvio(facturacionModal, transaccion)">
                   PEDIR A BODEGA
                 </button>
               </td>
@@ -125,7 +125,7 @@
                 <hr class="invoice-spacing"/>
 
                 <!-- Address and Contact starts -->
-                <div class="card-body invoice-padding pt-0" *ngIf="mostrarDatos">
+                <div class="card-body invoice-padding pt-0">
                   <h4 class="invoice-title mb-2">Datos para la factura</h4>
                   <div formGroupName="facturacion">
                     <div class="row">
@@ -299,7 +299,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-3" *ngIf="mostrarDatos">
+                <div class="col-3">
                   <label>Metodo Pago</label>
                   <input class="form-control" type="text"
                          formControlName="metodoPago" disabled>
@@ -330,11 +330,12 @@
                                   Código
                                 </p>
                                 <input class="form-control" type="text"
-                                       formControlName="codigoBarras" disabled>
-                                <div *ngIf="detalle.controls.codigoBarras.errors"
+                                       (change)="obtenerProducto(i)"
+                                       formControlName="codigo">
+                                <div *ngIf="detalle.controls.codigo.errors"
                                      class="invalid-feedback"
                                      style="display: block;">
-                                  <div *ngIf="detalle.controls.codigoBarras.errors.required">
+                                  <div *ngIf="detalle.controls.codigo.errors.required">
                                     Requerido
                                   </div>
                                 </div>
@@ -346,7 +347,6 @@
                                 <input type="text" class="form-control"
                                        formControlName="cantidad"
                                        (change)="calcular()"
-                                       disabled
                                 />
                                 <div *ngIf="detalle.controls.cantidad.errors"
                                      class="invalid-feedback"
@@ -366,11 +366,11 @@
                                 <p class="card-text col-title mb-md-50 mb-0">
                                   Nombre
                                 </p>
-                                <label class="d-block text-wrap">{{ detalle.controls.nombre.value }}</label>
-                                <div *ngIf="detalle.controls.nombre.errors"
+                                <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
+                                <div *ngIf="detalle.controls.articulo.errors"
                                      class="invalid-feedback"
                                      style="display: block;">
-                                  <div *ngIf="detalle.controls.nombre.errors.required">
+                                  <div *ngIf="detalle.controls.articulo.errors.required">
                                     Requerido
                                   </div>
                                 </div>
@@ -385,7 +385,7 @@
                                 <p class="card-text col-title mb-md-50 mb-0">
                                   Precio
                                 </p>
-                                <label>{{ detalle.controls.precio.value }}</label>
+                                <label>{{ detalle.controls.valorUnitario.value }}</label>
                               </div>
                               <div class="col-lg-1 col-12 my-lg-0 my-2">
                                 <p class="card-text col-title mb-md-50 mb-0">
@@ -424,14 +424,14 @@
                         </ng-container>
                       </div>
                     </form>
-                    <!--<div *ngIf="notaPedidoForm.articulos.errors"
+                    <div *ngIf="notaPedidoForm.articulos.errors"
                          class="invalid-feedback" style="display: block;">
                       <div *ngIf="notaPedidoForm.articulos.errors?.required">
                         Artículos es requerido
                       </div>
-                    </div>-->
+                    </div>
                   </div>
-                  <!--<div class="row mt-1">
+                  <div class="row mt-1">
                     <div class="col-12 px-0">
                       <button type="button" class="btn btn-primary btn-sm btn-add-new"
                               data-repeater-create>
@@ -439,12 +439,14 @@
                         <span class="align-middle" (click)="agregarItem()">Añadir producto</span>
                       </button>
                     </div>
-                  </div>-->
+                  </div>
+                </div>
+                <div class="card-body invoice-padding">
                 </div>
                 <!-- Product Details ends -->
                 <hr class="invoice-spacing"/>
                 <!-- Invoice Total starts -->
-                <div class="card-body invoice-padding" *ngIf="mostrarDatos">
+                <div class="card-body invoice-padding">
                   <div formGroupName="facturacion">
                     <div class="row mb-1 d-flex justify-content-between">
                       <div class="col-md-5">
@@ -492,9 +494,9 @@
                 </div>
                 <!-- Invoice Total ends -->
 
-                <div class="card-body invoice-padding pt-0" *ngIf="mostrarDatos">
-                  <hr class="invoice-spacing mt-0"/>
-                  <h2>Datos Envió</h2>
+                <hr class="invoice-spacing mt-0"/>
+                <h2>Datos Envió</h2>
+                <div class="card-body invoice-padding pt-0">
                   <div formGroupName="envio">
                     <div class="row">
                       <div class="col-3">
@@ -674,10 +676,10 @@
             <button type="reset" class="btn btn-secondary"
                     (click)="modal.dismiss( 'Cross click')">Cerrar
             </button>
-            <!--<button class="btn btn-primary mx-1"
-                    (click)="activarPedidoBodega()"
-            >Confirmar
-            </button>-->
+            <button class="btn btn-primary mx-1"
+                    (click)="actualizar()"
+            >Confirmar Pedido
+            </button>
           </div>
         </ng-template>
         <hr/>
@@ -688,7 +690,7 @@
 
 <ng-template #facturacionModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title">Pedido a bodega</h4>
+    <h4 class="modal-title">Autorizar</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -697,48 +699,6 @@
     <form [formGroup]="autorizarForm">
       <div class="row">
         <div class="col-12">
-          <div class="form-group">
-            <label>Tipo de pedido</label>
-            <div>
-              <label>{{ mensajePedidoBodega }}</label>
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-group">
-            <label>Número de pedido</label>
-            <div>
-              <label>{{ datosTodoPedido?.numeroPedido }}</label>
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-group">
-            <label>Fecha de pedido</label>
-            <div>
-              <label>{{ datosTodoPedido?.created_at | date: 'dd-MM-yyyy'}}</label>
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-group">
-            <label>BODEGA </label>
-            <div>
-              <label>{{ bodega }}</label>
-            </div>
-          </div>
-        </div>
-        <div class="col-12" *ngIf="!mostrarDatos">
-          <div class="form-group">
-            <label for="basicSelect">Consolidar</label>
-            <select id="basicSelect" class="form-control">
-              <option value="">- Seleccione -</option>
-              <option >Consolidar</option>
-            </select>
-
-          </div>
-        </div>
-        <!--<div class="col-12">
           <div class="form-group">
             <label for="basicSelect">Confirmación y Autorización</label>
             <select id="basicSelect" class="form-control" formControlName="metodoConfirmacion">
@@ -823,7 +783,6 @@
             <input class="form-control" formControlName="fechaHoraConfirmacion" disabled/>
           </div>
         </div>
-        -->
       </div>
     </form>
   </div>
@@ -833,7 +792,7 @@
             [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
             <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
                   aria-hidden="true"></span>
-      Confirmar pedido bodega
+      Guardar
     </button>
   </div>
 </ng-template>

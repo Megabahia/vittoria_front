@@ -289,6 +289,14 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                  <label>Proveedor</label>
+                                  <input type="text" class="form-control" formControlName="proveedor" [(ngModel)]="producto.proveedor">
+                                  <div *ngIf="submittedProductoForm && fp.proveedor.errors" class="invalid-feedback" style="display: block;">
+                                    <div *ngIf="fp.proveedor.errors.required">Proveedor es requerido
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="form-group">
                                     <label>Video</label>
                                     <input type="file" accept="video/mp4,video/x-m4v,video/*" class="form-control"
                                            (change)="verificarPesoArchivo($event)"
