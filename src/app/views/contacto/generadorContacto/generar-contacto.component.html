@@ -486,6 +486,7 @@
                   <label>Numero Identificación</label>
                   <input class="form-control" type="text"
                          formControlName="identificacion"
+                         (keyup)="validarCedulaInicial($event)"
                          (change)="validarDatos()"
                   >
                   <div *ngIf="facturacionForm.identificacion.errors"
@@ -499,7 +500,7 @@
                     <div *ngIf="facturacionForm.identificacion.errors.pattern">
                       Ingrese solo numeros
                     </div>
-                    <div *ngIf="facturacionForm.identificacion.errors.cedulaValido">
+                    <div *ngIf="facturacionForm.identificacion.errors.identificacionInvalid">
                       Identificacion no valida
                     </div>
                   </div>

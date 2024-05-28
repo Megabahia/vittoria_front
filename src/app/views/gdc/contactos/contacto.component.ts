@@ -20,7 +20,7 @@ import {ValidacionesPropias} from "../../../utils/customer.validators";
 @Component({
   selector: 'app-contacto',
   templateUrl: './contacto.component.html',
-  styleUrls:['contacto.component.css'],
+  styleUrls: ['contacto.component.css'],
   providers: [DatePipe]
 })
 export class ContactoComponent implements OnInit, AfterViewInit {
@@ -350,8 +350,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
-    if(this.notaPedido.invalid){
-      this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
+    if (this.notaPedido.invalid) {
+      this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
     }
     if (confirm('Esta seguro de guardar los datos') === true) {
@@ -363,6 +363,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
           this.archivo.append(llaves, facturaFisicaValores[index]);
         }
       });
+      this.archivo.append('estado', 'Facturado');
 
       if (this.mostrarInputCobro) {
         if (Number(this.totalPagar) !== Number(this.notaPedido.value.totalCobroEfectivo)) {
@@ -390,8 +391,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       return this.obtenerProducto(index);
     }));
     if (confirm('Esta seguro de guardar los datos') === true) {
-      if(this.notaPedido.invalid){
-        this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
+      if (this.notaPedido.invalid) {
+        this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
         return;
       }
 
@@ -529,10 +530,10 @@ export class ContactoComponent implements OnInit, AfterViewInit {
 
         try {
           this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
-            this.toaster.open('Imagen actualizada con éxito',{type:"info"});
-          },error => this.toaster.open('Error al actualizar la imagen.', {type:"danger"}));
+            this.toaster.open('Imagen actualizada con éxito', {type: "info"});
+          }, error => this.toaster.open('Error al actualizar la imagen.', {type: "danger"}));
         } catch (error) {
-          this.toaster.open('Error al actualizar la imagen.', {type:"danger"});
+          this.toaster.open('Error al actualizar la imagen.', {type: "danger"});
         }
       };
       reader.readAsDataURL(archivo);

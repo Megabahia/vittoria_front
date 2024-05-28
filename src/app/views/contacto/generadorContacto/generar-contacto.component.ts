@@ -46,7 +46,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
   clientes;
   cliente;
   cedula
-
+  cedulaValida;
   usuarioActual;
 
   public barChartData: ChartDataSets[] = [];
@@ -114,9 +114,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.email]],
-        identificacion: ['', [Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$'),
-          ValidacionesPropias.cedulaValido
-        ]],
+        identificacion: [''],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: [this.pais, [Validators.required]],
         provincia: ['', [Validators.required]],
@@ -233,8 +231,8 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
       return this.obtenerProducto(index);
     }));
     if (confirm('Esta seguro de guardar los datos') === true) {
-      if(this.notaPedido.invalid){
-        this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
+      if (this.notaPedido.invalid) {
+        this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
         return;
       }
       this.contactosService.crearNuevoContacto(this.notaPedido.value).subscribe((info) => {
@@ -302,8 +300,8 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     }));
 
     if (confirm('Esta seguro de guardar los datos') === true) {
-      if(this.notaPedido.invalid){
-        this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
+      if (this.notaPedido.invalid) {
+        this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
         return;
       }
       this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
@@ -410,10 +408,10 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
 
         try {
           this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
-            this.toaster.open('Imagen actualizada con éxito',{type:"info"});
-          },error => this.toaster.open('Error al actualizar la imagen.', {type:"danger"}));
+            this.toaster.open('Imagen actualizada con éxito', {type: "info"});
+          }, error => this.toaster.open('Error al actualizar la imagen.', {type: "danger"}));
         } catch (error) {
-          this.toaster.open('Error al actualizar la imagen.', {type:"danger"});
+          this.toaster.open('Error al actualizar la imagen.', {type: "danger"});
         }
       };
       reader.readAsDataURL(archivo);
@@ -421,4 +419,15 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
     }
   }
 
+
+  validarCedulaInicial(e) {
+    if (e.target.value === '') {
+      this.notaPedido.get('facturacion').get('identificacion').setValidators([]);
+    } else {
+      this.notaPedido.get('facturacion').get('identificacion').setValidators([Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$'),
+        ValidacionesPropias.cedulaValido
+      ]);
+    }
+    this.notaPedido.get('facturacion').get('identificacion').updateValueAndValidity();
+  }
 }
