@@ -430,8 +430,7 @@
               <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas por vendedor</span>
             </a>
           </li>
-          <li class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}"
-              *ngIf="usuario.usuario.idRol!==52 || usuario.usuario.idRol===54">
+          <li *ngIf="usuario.usuario.idRol !== 58 && usuario.usuario.idRol !== 52 || usuario.usuario.idRol === 54" class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}">
             <a class="d-flex align-items-center" href="#/gcn/reporte-ventas-centro-negocio/list" data-toggle="tooltip"
                data-placement="right" title="Reporte de ventas del centro de negocio">
               <i data-feather="circle"></i>
@@ -483,7 +482,8 @@
           </li>
         </ul>
       </li>
-      <li class="nav-item" *ngIf="usuario.usuario.idRol === 58 || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 54">
+      <li class="nav-item"
+          *ngIf="usuario.usuario.idRol === 58 || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 54">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice">GDP Gestión de pedidos</span></a>
