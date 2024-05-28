@@ -58,13 +58,13 @@
               <span class="menu-item text-truncate" data-i18n="List">Generador de contacto</span>
             </a>
           </li>
-          <li class="nav-item">
+          <!--<li class="nav-item">
             <a class="d-flex align-items-center" [routerLink]="['/contacto/generarVenta']" data-toggle="tooltip"
                data-placement="right" title="Generador de pedidos">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Generador de pedidos</span>
             </a>
-          </li>
+          </li>-->
         </ul>
       </li>
       <li class="nav-item" *ngIf="acciones.MDM.LEER">
@@ -461,6 +461,7 @@
           </li>
         </ul>
       </li>
+
       <li class="nav-item" *ngIf="acciones.ADM.LEER">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
@@ -474,10 +475,25 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="d-flex align-items-center" [routerLink]="['gdb/pedidos-bodega']" data-toggle="tooltip"
+            <a class="d-flex align-items-center" [routerLink]="['gdb/pedidos']" data-toggle="tooltip"
                data-placement="right" title="Vittoria">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Pedidos a bodega</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item" *ngIf="usuario.usuario.idRol === 58 || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 54">
+        <a class="d-flex align-items-center">
+          <i data-feather="file-text"></i>
+          <span class="menu-title text-truncate" data-i18n="Invoice">GDP Gestión de pedidos</span></a>
+        <ul class="menu-content">
+
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['/gdp/pedidos']" data-toggle="tooltip"
+               data-placement="right" title="Generador de pedidos">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Generador de pedidos</span>
             </a>
           </li>
         </ul>

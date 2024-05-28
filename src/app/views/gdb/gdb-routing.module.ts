@@ -11,7 +11,7 @@ const routes: Routes = [{
       path: 'bodega', component: BodegaComponent, canActivate: [AuthGuard]
     },
     {
-      path: 'pedidos-bodega', component: PedidosBodegaComponent, canActivate: [AuthGuard]
+      path: 'pedidos', component: PedidosBodegaComponent, canActivate: [AuthGuard]
     },
   ]
 }];
