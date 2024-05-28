@@ -131,7 +131,7 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
       metodoPago: ['Contra-Entrega', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
       canal: ['Contacto Local', []],
-      estado: ['Pendiente', []],
+      estado: ['Pendiente de entrega', []],
       envio: ['', []],
       envios: ['', []],
       json: ['', []],
@@ -237,7 +237,6 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
       }
       this.contactosService.crearNuevoContacto(this.notaPedido.value).subscribe((info) => {
           this.modalService.dismissAll();
-          this.obtenerContactos();
         }, error => this.toaster.open(error, {type: 'danger'})
       );
     }

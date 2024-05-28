@@ -219,7 +219,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       page_size: this.pageSize,
       //inicio: this.inicio,
       //fin: this.transformarFecha(this.fin),
-      estado: ['Pendiente'],
+      estado: ['Pendiente de entrega'],
       canal: 'Contacto Local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
@@ -382,6 +382,9 @@ export class ContactoComponent implements OnInit, AfterViewInit {
           this.verificarContacto = true;
         }, error => this.toaster.open(error, {type: 'danger'}))
       }
+
+      this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
+      });
     }
   }
 
