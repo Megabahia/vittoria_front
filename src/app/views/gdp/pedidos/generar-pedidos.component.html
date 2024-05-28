@@ -107,6 +107,8 @@
                   <label>Numero Identificación</label>
                   <input class="form-control" type="text"
                          formControlName="identificacion"
+                         (keyup)="validarCedulaInicial($event)"
+
                   >
                   <div *ngIf="facturacionForm.identificacion.errors"
                        class="invalid-feedback" style="display: block;">
@@ -237,10 +239,8 @@
                               <p class="card-text col-title mb-md-50 mb-0">
                                 Nombre
                               </p>
-                              <input type="text" class="form-control"
-                                     formControlName="articulo"
-                                     disabled
-                              />
+                              <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
+
                               <div *ngIf="detalle.controls.articulo.errors"
                                    class="invalid-feedback"
                                    style="display: block;">

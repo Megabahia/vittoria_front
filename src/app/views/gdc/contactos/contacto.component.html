@@ -43,6 +43,8 @@
             <tr>
               <th>Fecha Pedido</th>
               <th>Canal Venta</th>
+              <th>Código vendedor</th>
+              <th>Nombre vendedor</th>
               <th>Numero Pedido</th>
               <th>Nombres Facturación</th>
               <th>Apellidos Facturación</th>
@@ -58,22 +60,26 @@
             <tr *ngFor="let transaccion  of listaContactos; let i = index">
               <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
               <td [title]="transaccion.canal">{{ transaccion.canal | shorten }}</td>
+              <td>{{ transaccion.facturacion.codigoVendedor }}</td>
+              <td>{{ transaccion.facturacion.nombreVendedor }}</td>
               <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido  | shorten }}</td>
               <td [title]="transaccion.facturacion.nombres">{{ transaccion.facturacion.nombres | shorten }}</td>
               <td [title]="transaccion.facturacion.apellidos">{{ transaccion.facturacion.apellidos | shorten }}</td>
               <td [title]="transaccion.metodoPago">{{ transaccion.metodoPago | shorten }}</td>
               <td>{{ transaccion.facturacion.telefono }}</td>
               <td>{{ transaccion.estado }}</td>
+
               <td>
                 <a (click)="obtenerContacto(notaPedidoModal, transaccion.id)">
                   <i-feather name="eye" class="mr-25"></i-feather>
                 </a>
               </td>
               <td>
-                <button *ngIf="transaccion.verificarPedido" class="btn btn-primary"
+                <button *ngIf="transaccion.verificarPedido && transaccion.estado !== 'Facturado'" class="btn btn-primary"
                         (click)="obtenerContacto(facturacionModal, transaccion.id)">
                   Facturar
                 </button>
+                <p *ngIf="transaccion.estado === 'Facturado'">Facturado</p>
               </td>
             </tr>
             </tbody>
@@ -104,7 +110,7 @@
                                value="{{notaPedido.controls.created_at.value | date: 'dd-MM-yyyy'}}"
                                disabled/>
                         <span class="title mr-1 ml-3 text-danger">Hora: </span>
-                        <span class="text-danger mr-3">{{horaPedido}}</span>
+                        <span class="text-danger mr-3">{{ horaPedido }}</span>
 
                       </div>
                     </div>
@@ -275,7 +281,7 @@
                                     </p>
                                     <input class="form-control" type="text" formControlName="codigo"
                                            (change)="obtenerProducto(i)"
-                                           [ngClass]="{'disabled-input': detalle.controls.codigo.value != ''}" >
+                                           [ngClass]="{'disabled-input': detalle.controls.codigo.value != ''}">
 
                                     <div *ngIf="detalle.controls.codigo.errors"
                                          class="invalid-feedback"
@@ -360,7 +366,8 @@
                                          *ngIf="detalle.controls?.imagen" width="100px" height="100px" alt="">
                                     <div *ngIf="!detalle.controls?.imagen.value">
                                       <button (click)="fileInput.click()">Seleccionar imagen</button>
-                                      <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png" style="display: none;">
+                                      <input #fileInput type="file" (change)="cargarImagen(i,$event)"
+                                             accept=".jpg,.jpeg,.png" style="display: none;">
                                     </div>
                                   </div>
                                   <div
@@ -477,7 +484,7 @@
           <div class="modal-content">
 
             <div class="card-body">
-              <h5 class="text-danger">Total a pagar: ${{notaPedido.controls.total.value}}</h5>
+              <h5 class="text-danger">Total a pagar: ${{ notaPedido.controls.total.value}}</h5>
             </div>
             <form [formGroup]="notaPedido">
               <div class="card-body invoice-padding">

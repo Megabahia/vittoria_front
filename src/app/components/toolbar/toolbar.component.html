@@ -439,7 +439,7 @@
           </li>
         </ul>
       </li>
-      <li class="nav-item" *ngIf="acciones.ADM.LEER">
+      <li class="nav-item" *ngIf="usuario.usuario.idRol === 59 || usuario.usuario.idRol === 1">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice">GDC Gestión de contacto y venta</span></a>
