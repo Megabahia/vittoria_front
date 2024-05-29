@@ -11,6 +11,7 @@ import {GdeModule} from '../gde/gde.module';
 import {GdcComponent} from "./gdc.component";
 import {ContactoComponent} from "./contactos/contacto.component";
 import {VentasComponent} from "./ventas/ventas.component";
+import {EntregadosComponent} from "./entregados/entregados.component";
 
 
 
@@ -18,7 +19,8 @@ import {VentasComponent} from "./ventas/ventas.component";
   declarations: [
     GdcComponent,
     ContactoComponent,
-    VentasComponent
+    VentasComponent,
+    EntregadosComponent
   ],
   imports: [
     CommonModule,
