@@ -135,7 +135,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       metodoPago: ['Contra-Entrega', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
       canal: ['Contacto Local', []],
-      estado: ['Pendiente', []],
+      estado: ['Pendiente de entrega', []],
       envio: ['', []],
       envios: ['', []],
       json: ['', []],
