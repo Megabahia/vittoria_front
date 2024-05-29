@@ -1,0 +1,6 @@
+.disabled-input{
+    background-color: #ced4da;
+    border: 1px solid #ced4da;
+    cursor: not-allowed;
+    pointer-events: none;
+}

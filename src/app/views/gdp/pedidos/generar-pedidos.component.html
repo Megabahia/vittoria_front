@@ -226,7 +226,8 @@
                               </p>
                               <input class="form-control" type="text"
                                      (change)="obtenerProducto(i)"
-                                     formControlName="codigo">
+                                     formControlName="codigo"
+                                     [ngClass]="{'disabled-input': detalle.controls.codigo.value != ''}">
                               <div *ngIf="detalle.controls.codigo.errors"
                                    class="invalid-feedback"
                                    style="display: block;">
