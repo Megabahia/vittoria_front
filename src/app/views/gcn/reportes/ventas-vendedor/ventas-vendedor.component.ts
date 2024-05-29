@@ -7,6 +7,8 @@ import {DatePipe} from '@angular/common';
 import {PedidosService} from '../../../../services/mp/pedidos/pedidos.service';
 import {ParamService} from '../../../../services/mp/param/param.service';
 import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
+import {ParamService as ParamServiceAdm} from '../../../../services/admin/param.service';
+
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 
 @Component({
@@ -30,7 +32,9 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
   opciones;
   archivo: FormData = new FormData();
   horaPedido;
-
+  parametroIva;
+  comision;
+  totalComision;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -48,6 +52,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
     private pedidosService: PedidosService,
     private paramService: ParamService,
     private paramServiceMDP: ParamServiceMDP,
+    private paramServiceAdm: ParamServiceAdm,
     private productosService: ProductosService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('currentUser'));
@@ -59,6 +64,12 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
       codigoConfirmacion: ['', [Validators.required]],
       fechaHoraConfirmacion: ['', [Validators.required]],
       tipoFacturacion: ['', [Validators.required]],
+    });
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
+      this.parametroIva = parseFloat(result.info[0].valor);
+    });
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'COMISION', 'Comision').subscribe((result) => {
+      this.comision = parseFloat(result.info[0].valor);
     });
   }
 
@@ -259,5 +270,15 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
   extraerHora(dateTimeString: string): string {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(' ')[0];
+  }
+
+  calculoComision(estado, total) {
+    let variable2;
+    if (estado === 'Entregado') {
+      variable2=total/this.parametroIva;
+      return (variable2*this.comision).toFixed(2);
+    }else{
+      return '--';
+    }
   }
 }
