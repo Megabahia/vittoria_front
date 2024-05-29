@@ -18,6 +18,7 @@ import {ValidacionesPropias} from "../../../utils/customer.validators";
 @Component({
   selector: 'app-generar-ventas',
   templateUrl: './generar-pedidos.component.html',
+  styleUrls: ['generar-pedido.components.css'],
   providers: [DatePipe]
 })
 export class GenerarPedidosComponent implements OnInit, AfterViewInit {

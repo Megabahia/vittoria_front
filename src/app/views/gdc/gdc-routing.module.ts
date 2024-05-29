@@ -4,6 +4,7 @@ import {AuthGuard} from '../../guard/auth.guard';
 import {GdcComponent} from "./gdc.component";
 import {ContactoComponent} from "./contactos/contacto.component";
 import {VentasComponent} from "./ventas/ventas.component";
+import {EntregadosComponent} from "./entregados/entregados.component";
 
 const routes: Routes = [{
   path: '', component: GdcComponent, children: [
@@ -12,6 +13,9 @@ const routes: Routes = [{
     },
     {
       path: 'ventas', component: VentasComponent, canActivate: [AuthGuard]
+    },
+    {
+      path: 'entregados', component: EntregadosComponent, canActivate: [AuthGuard]
     },
   ]
 }];

@@ -11,19 +11,16 @@ import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
 import {v4 as uuidv4} from 'uuid';
-import {ClientesService} from "../../../services/mdm/personas/clientes/clientes.service";
-import {ProspectosService} from "../../../services/mdm/prospectosCli/prospectos.service";
+
 import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
-import {logger} from "codelyzer/util/logger";
 import {ValidacionesPropias} from "../../../utils/customer.validators";
 
 @Component({
-  selector: 'app-contacto',
-  templateUrl: './contacto.component.html',
-  styleUrls: ['contacto.component.css'],
+  selector: 'app-despachos-entregados',
+  templateUrl: './entregados.component.html',
   providers: [DatePipe]
 })
-export class ContactoComponent implements OnInit, AfterViewInit {
+export class EntregadosComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @Input() paises;
   public notaPedido: FormGroup;
@@ -219,7 +216,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       page_size: this.pageSize,
       //inicio: this.inicio,
       //fin: this.transformarFecha(this.fin),
-      estado: ['Pendiente de entrega'],
+      estado: ['Entregado'],
       canal: 'Contacto Local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
