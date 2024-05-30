@@ -401,6 +401,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       }
 
       this.contactosService.actualizarContacto(this.notaPedido.value).subscribe((info) => {
+        console.log(info)
         this.modalService.dismissAll();
         this.obtenerContactos();
         this.verificarContacto = true;
