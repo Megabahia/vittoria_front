@@ -333,7 +333,9 @@ export class VentasComponent implements OnInit, AfterViewInit {
   }
 
   generarID(): string {
-    return uuidv4();
+    const numeroAleatorio = Math.floor(Math.random() * 1000000);
+
+    return numeroAleatorio.toString().padStart(8, '0');
   }
 
   obtenerProvincias(): void {
