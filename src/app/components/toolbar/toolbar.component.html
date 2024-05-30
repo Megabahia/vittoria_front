@@ -13,7 +13,7 @@
     <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
       <li class="nav-item {{menuToolbar['adm']['index']}}">
         <a class="d-flex align-items-center" [routerLink]="['/']" data-toggle="tooltip"
-           data-placement="right" title="Inicio">
+           data-placement="auto" title="Inicio">
           <i data-feather="home"></i>
           <span class="menu-title text-truncate" title="Inicio" data-i18n="Dashboards">Inicio</span>
         </a>
@@ -21,26 +21,26 @@
       <li class="navigation-header">Administración</li>
       <li class="nav-item {{menuToolbar['adm']['user']}}" *ngIf="acciones.ADM.LEER">
         <a class="d-flex align-items-center" [routerLink]="['/admin/user']" data-toggle="tooltip"
-           data-placement="right" title="Creación de los usuario del sistema">
+           data-placement="auto" title="Creación de los usuario del sistema">
           <i data-feather="user"></i>
           <span class="menu-title text-truncate" data-i18n="User">Usuarios</span>
         </a>
       </li>
       <li class="nav-item {{menuToolbar['adm']['roles']}}" *ngIf="acciones.ADM.LEER">
         <a class="d-flex align-items-center" [routerLink]="['/admin/roles']" data-toggle="tooltip"
-           data-placement="right" title="Creación de los roles del sistema">
+           data-placement="auto" title="Creación de los roles del sistema">
           <i data-feather="check-square"></i>
           <span class="menu-title text-truncate" data-i18n="Todo">Rol de usuarios</span></a>
       </li>
       <li class="nav-item {{menuToolbar['adm']['param']}}" *ngIf="acciones.ADM.LEER">
         <a class="d-flex align-items-center" [routerLink]="['/admin/param']" data-toggle="tooltip"
-           data-placement="right" title="Parametrizaciones de administración">
+           data-placement="auto" title="Parametrizaciones de administración">
           <i data-feather="circle"></i>
           <span class="menu-item text-truncate" data-i18n="List">Parametrizaciones</span></a>
       </li>
       <li class="nav-item {{menuToolbar['adm']['integracionesWoocommerce']}}" *ngIf="acciones.ADM.LEER">
         <a class="d-flex align-items-center" [routerLink]="['/admin/integraciones-woocommerce']" data-toggle="tooltip"
-           data-placement="right" title="Integraciones Woocommerce">
+           data-placement="auto" title="Integraciones Woocommerce">
           <i data-feather="circle"></i>
           <span class="menu-item text-truncate" data-i18n="List">Integraciones Woocommerce</span></a>
       </li>
@@ -53,7 +53,7 @@
         <ul class="menu-content">
           <li class="nav-item">
             <a class="d-flex align-items-center" [routerLink]="['/contacto/generarContacto']" data-toggle="tooltip"
-               data-placement="right" title="Generador de contacto">
+               data-placement="auto" title="Generador de contacto">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Generador de contacto</span>
             </a>
@@ -74,7 +74,7 @@
         <ul class="menu-content ng-star-inserted">
           <li class="nav-item {{menuToolbar['mdm']['param']}}">
             <a class="d-flex align-items-center" [routerLink]="['/mdm/parametrizaciones']" data-toggle="tooltip"
-               data-placement="right" title="Parametrizaciones MDM">
+               data-placement="auto" title="Parametrizaciones MDM">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Parametrizaciones</span></a>
           </li>
@@ -86,7 +86,7 @@
               <li class="nav-item {{menuToolbar['mdm']['prospectosCli']}}">
                 <a class="d-flex align-items-center" [routerLink]="['/mdm/prospectosClientes']"
                    data-toggle="tooltip"
-                   data-placement="right" title="Admin prospectos clientes">
+                   data-placement="auto" title="Admin prospectos clientes">
                   <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Admin Prospectos Clientes</span></a>
               </li>
               <!-- <li class="nav-item {{menuToolbar['mdm']['addXLSX']}}">
@@ -111,7 +111,7 @@
                   <li class="nav-item {{menuToolbar['mdm']['clientesList']}}">
                     <a class="d-flex align-items-center"
                        [routerLink]="['/mdm/clientes/personas/list']"
-                       data-toggle="tooltip" data-placement="right"
+                       data-toggle="tooltip" data-placement="auto"
                        title="Administrar de los clientes">
                       <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                          data-i18n="List">Administración</span></a>
@@ -119,14 +119,14 @@
                   <li class="nav-item {{menuToolbar['mdm']['clientesTransac']}}">
                     <a class="d-flex align-items-center"
                        [routerLink]="['/mdm/clientes/personas/transacciones']"
-                       data-toggle="tooltip" data-placement="right" title="Transacciones de compra">
+                       data-toggle="tooltip" data-placement="auto" title="Transacciones de compra">
                       <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                          data-i18n="Preview">Transacciones de compra</span></a>
                   </li>
                   <li class="nav-item {{menuToolbar['mdm']['clientesTransacAdd']}}">
                     <a class="d-flex align-items-center"
                        [routerLink]="['/mdm/clientes/personas/transacciones/add']"
-                       data-toggle="tooltip" data-placement="right"
+                       data-toggle="tooltip" data-placement="auto"
                        title="Generar transacciones de compra">
                       <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                          data-i18n="Edit">Generar transación</span></a>
@@ -150,21 +150,21 @@
                   <li class="nav-item {{menuToolbar['mdm']['negociosList']}}">
                     <a class="d-flex align-items-center" href="#/mdm/clientes/negocios/list"
                        data-toggle="tooltip"
-                       data-placement="right" title="Administrar todos los negocios">
+                       data-placement="auto" title="Administrar todos los negocios">
                       <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                          data-i18n="List">Administración</span></a>
                   </li>
                   <li class="nav-item {{menuToolbar['mdm']['negociosTransac']}}">
                     <a class="d-flex align-items-center"
                        href="#/mdm/clientes/negocios/transacciones/list"
-                       data-toggle="tooltip" data-placement="right" title="Transacciones de compra">
+                       data-toggle="tooltip" data-placement="auto" title="Transacciones de compra">
                       <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                          data-i18n="Preview">Transacciones de compra</span></a>
                   </li>
                   <li class="nav-item {{menuToolbar['mdm']['negociosTransacAdd']}}">
                     <a class="d-flex align-items-center"
                        href="#/mdm/clientes/negocios/transacciones/add"
-                       data-toggle="tooltip" data-placement="right"
+                       data-toggle="tooltip" data-placement="auto"
                        title="Generar transacciones de compra">
                       <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                          data-i18n="Edit">Generar transación</span></a>
@@ -189,109 +189,109 @@
           <span class="menu-title text-truncate" data-i18n="Invoice">MDP Master Data Products</span></a>
         <ul class="menu-content ng-star-inserted">
           <li class="nav-item has-sub ng-star-inserted">
-            <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="right"
+            <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Administración de proveedores">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración de proveedores</span></a>
             <ul class="menu-content">
               <li class="nav-item {{menuToolbar['mdp']['param']}}">
                 <a class="d-flex align-items-center" href="#/mdp/gestion-proveedores/cargar-productos"
                    data-toggle="tooltip"
-                   data-placement="right" title="Cargar Proveedores">
+                   data-placement="auto" title="Cargar Proveedores">
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Cargar</span></a>
               </li>
               <li class="nav-item {{menuToolbar['mdp']['param']}}">
                 <a class="d-flex align-items-center" href="#/mdp/gestion-proveedores/buscar-productos"
                    data-toggle="tooltip"
-                   data-placement="right" title="Buscar Proveedores">
+                   data-placement="auto" title="Buscar Proveedores">
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Buscar</span></a>
               </li>
             </ul>
           </li>
           <li class="nav-item has-sub ng-star-inserted">
-            <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="right"
+            <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Administración de inventario">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración de inventario</span></a>
             <ul class="menu-content">
               <li class="nav-item {{menuToolbar['mdp']['param']}}">
                 <a class="d-flex align-items-center" href="#/mdp/gestion-proveedores/cargar-stock-productos"
                    data-toggle="tooltip"
-                   data-placement="right" title="Cargar Stock Productos">
+                   data-placement="auto" title="Cargar Stock Productos">
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Cargar</span></a>
               </li>
               <li class="nav-item {{menuToolbar['mdp']['param']}}">
                 <a class="d-flex align-items-center" href="#/mdp/gestion-proveedores/productos" data-toggle="tooltip"
-                   data-placement="right" title="Listar Productos">
+                   data-placement="auto" title="Listar Productos">
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Productos</span></a>
               </li>
             </ul>
           </li>
           <li class="nav-item has-sub ng-star-inserted">
-            <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="right"
+            <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Administración de productos">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración productos</span></a>
             <ul class="menu-content">
               <li class="nav-item {{menuToolbar['mdp']['param']}}">
                 <a class="d-flex align-items-center" href="#/mdp/parametrizaciones" data-toggle="tooltip"
-                   data-placement="right" title="Parametrizaciones Administracion">
+                   data-placement="auto" title="Parametrizaciones Administracion">
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
               </li>
               <li class="nav-item {{menuToolbar['mdp']['cat']}}">
                 <a class="d-flex align-items-center" href="#/mdp/categorias" data-toggle="tooltip"
-                   data-placement="right" title="Administrar categorias">
+                   data-placement="auto" title="Administrar categorias">
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Administración de categorias</span></a>
               </li>
               <li class="nav-item {{menuToolbar['mdp']['subCat']}}">
                 <a class="d-flex align-items-center" href="#/mdp/subcategorias" data-toggle="tooltip"
-                   data-placement="right" title="Administrar subcategorías">
+                   data-placement="auto" title="Administrar subcategorías">
                   <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración subcategorías</span></a>
               </li>
               <li class="nav-item {{menuToolbar['mdp']['prodList']}}">
                 <a class="d-flex align-items-center" href="#/mdp/productos" data-toggle="tooltip"
-                   data-placement="right" title="Listado de productos">
+                   data-placement="auto" title="Listado de productos">
                   <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Listado de productos</span></a>
               </li>
               <li class="nav-item {{menuToolbar['mdp']['prodBusq']}}">
                 <a class="d-flex align-items-center" href="#/mdp/productos/search" data-toggle="tooltip"
-                   data-placement="right" title="Buscar productos">
+                   data-placement="auto" title="Buscar productos">
                   <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                      data-i18n="List">Buscar productos</span></a>
               </li>
               <li class="nav-item {{menuToolbar['mdp']['stockAct']}}">
                 <a class="d-flex align-items-center" href="#/mdp/productos/actualizarStock" data-toggle="tooltip"
-                   data-placement="right" title="Actualizar Stock de productos">
+                   data-placement="auto" title="Actualizar Stock de productos">
                   <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                      data-i18n="List">Actualizar Stock</span></a>
               </li>
               <li class="nav-item {{menuToolbar['mdp']['abastRep']}}">
                 <a class="d-flex align-items-center" href="#/mdp/reportes/abastecimiento" data-toggle="tooltip"
-                   data-placement="right" title="Reporte de abastecimiento">
+                   data-placement="auto" title="Reporte de abastecimiento">
                   <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reporte de abastecimiento</span></a>
               </li>
               <li class="nav-item {{menuToolbar['mdp']['stockRep']}}">
                 <a class="d-flex align-items-center" href="#/mdp/reportes/stock" data-toggle="tooltip"
-                   data-placement="right" title="Reporte de stock">
+                   data-placement="auto" title="Reporte de stock">
                   <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                      data-i18n="List">Reporte de stock</span></a>
               </li>
               <li class="nav-item {{menuToolbar['mdp']['caduRep']}}">
                 <a class="d-flex align-items-center" href="#/mdp/reportes/caducidad" data-toggle="tooltip"
-                   data-placement="right" title="Reporte de caducidad de productos">
+                   data-placement="auto" title="Reporte de caducidad de productos">
                   <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reporte de caducidad de productos</span></a>
               </li>
               <li class="nav-item {{menuToolbar['mdp']['rotaRep']}}">
                 <a class="d-flex align-items-center" href="#/mdp/reportes/rotacion" data-toggle="tooltip"
-                   data-placement="right" title="Reporte de rotación de productos">
+                   data-placement="auto" title="Reporte de rotación de productos">
                   <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reporte de rotación de productos</span></a>
               </li>
               <li class="nav-item {{menuToolbar['mdp']['refilRep']}}">
                 <a class="d-flex align-items-center" href="#/mdp/reportes/refil" data-toggle="tooltip"
-                   data-placement="right" title="Reporte refil">
+                   data-placement="auto" title="Reporte refil">
                   <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                      data-i18n="List">Reporte de refil</span></a>
               </li>
@@ -306,27 +306,27 @@
         <ul class="menu-content">
           <li class="nav-item {{menuToolbar['mdo']['param']}}">
             <a class="d-flex align-items-center" href="#/mdo/parametrizaciones/list" data-toggle="tooltip"
-               data-placement="right" title="Parametrizaciones MDO">
+               data-placement="auto" title="Parametrizaciones MDO">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
           </li>
           <li class="nav-item {{menuToolbar['mdo']['predCross']}}">
             <a class="d-flex align-items-center" href="#/mdo/predicciones/cross" data-toggle="tooltip"
-               data-placement="right" title="Predicciones para crosseling">
+               data-placement="auto" title="Predicciones para crosseling">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Predicciones para crosseling</span></a>
           </li>
           <li class="nav-item {{menuToolbar['mdo']['predRefil']}}">
             <a class="d-flex align-items-center" href="#/mdo/predicciones/refil" data-toggle="tooltip"
-               data-placement="right" title="Predicciones para refil">
+               data-placement="auto" title="Predicciones para refil">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Predicciones para refil</span></a>
           </li>
           <li class="nav-item {{menuToolbar['mdo']['predNueProd']}}">
             <a class="d-flex align-items-center" href="#/mdo/predicciones/nuevos" data-toggle="tooltip"
-               data-placement="right" title="Predicciones para nuevos productos">
+               data-placement="auto" title="Predicciones para nuevos productos">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Predicciones para nuevos productos</span></a>
           </li>
           <li class="nav-item {{menuToolbar['mdo']['genOferta']}}">
             <a class="d-flex align-items-center" href="#/mdo/oferta/generar" data-toggle="tooltip"
-               data-placement="right" title="Generar oferta para cliente">
+               data-placement="auto" title="Generar oferta para cliente">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Generar oferta para cliente</span></a>
           </li>
         </ul>
@@ -338,23 +338,23 @@
         <ul class="menu-content">
           <li class="nav-item {{menuToolbar['mp']['param']}}" *ngIf="usuario.usuario.idRol !== 51">
             <a class="d-flex align-items-center" href="#/mp/parametrizaciones/list" data-toggle="tooltip"
-               data-placement="right" title="Parametrizaciones MP">
+               data-placement="auto" title="Parametrizaciones MP">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
           </li>
           <li class="nav-item {{menuToolbar['mp']['pedidos']}}">
             <a class="d-flex align-items-center" href="#/mp/pedidos-nuevos" data-toggle="tooltip"
-               data-placement="right" title="Pedidos Nuevos">
+               data-placement="auto" title="Pedidos Nuevos">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Pedidos Nuevos</span></a>
           </li>
           <li class="nav-item {{menuToolbar['mp']['pedidos-devueltos']}}">
             <a class="d-flex align-items-center" href="#/mp/pedidos-devueltos" data-toggle="tooltip"
-               data-placement="right" title="Pedidos Devueltos">
+               data-placement="auto" title="Pedidos Devueltos">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Pedidos Devueltos</span></a>
           </li>
           <li class="nav-item {{menuToolbar['mp']['pedidos-rechazados']}}">
             <a class="d-flex align-items-center" href="#/mp/pedidos-rechazados" data-toggle="tooltip"
-               data-placement="right" title="Pedidos Rechazados">
+               data-placement="auto" title="Pedidos Rechazados">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Pedidos Rechazados</span></a>
           </li>
@@ -373,7 +373,7 @@
           </li>
           <li class="nav-item {{menuToolbar['gdo']['gestOferta']}}">
             <a class="d-flex align-items-center" href="#/gdo/gestionOferta/list" data-toggle="tooltip"
-               data-placement="right" title="Gestión de la oferta">
+               data-placement="auto" title="Gestión de la oferta">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Gestión de la oferta</span></a>
           </li>
@@ -393,27 +393,27 @@
           <li *ngIf="acciones.GDE.CREAR || acciones.GDE_EMPACADO.CREAR"
               class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceEmpacado']}}">
             <a class="d-flex align-items-center" href="#/gde/gestionEntrega/woocommerce/empacado" data-toggle="tooltip"
-               data-placement="right" title="Gestión de empacado">
+               data-placement="auto" title="Gestión de empacado">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Gestión de empacado</span></a>
           </li>
           <li *ngIf="acciones.GDE.CREAR || acciones.GDE_DESPACHO.CREAR"
               class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceDespacho']}}">
             <a class="d-flex align-items-center" href="#/gde/gestionEntrega/woocommerce/despacho" data-toggle="tooltip"
-               data-placement="right" title="Gestión de despacho">
+               data-placement="auto" title="Gestión de despacho">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Gestión de despacho</span></a>
           </li>
           <li *ngIf="acciones.GDE.ESCRIBIR" class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceEnviado']}}">
             <a class="d-flex align-items-center" href="#/gde/gestionEntrega/woocommerce/enviado" data-toggle="tooltip"
-               data-placement="right" title="Gestión de enviado">
+               data-placement="auto" title="Gestión de enviado">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Gestión de enviado</span></a>
           </li>
           <li *ngIf="acciones.GDE.CREAR" class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceDevolucion']}}">
             <a class="d-flex align-items-center" href="#/gde/gestionEntrega/woocommerce/devolucion-paquetes"
                data-toggle="tooltip"
-               data-placement="right" title="Gestión de devolución de paquetes">
+               data-placement="auto" title="Gestión de devolución de paquetes">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Gestión de devolución de paquetes</span></a>
           </li>
         </ul>
@@ -425,14 +425,14 @@
         <ul class="menu-content">
           <li class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}">
             <a class="d-flex align-items-center" href="#/gcn/reporte-ventas-vendedor/list" data-toggle="tooltip"
-               data-placement="right" title="Reporte de ventas por vendedor">
+               data-placement="auto" title="Reporte de ventas por vendedor">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas por vendedor</span>
             </a>
           </li>
           <li *ngIf="usuario.usuario.idRol !== 58 && usuario.usuario.idRol !== 52 || usuario.usuario.idRol === 54" class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}">
             <a class="d-flex align-items-center" href="#/gcn/reporte-ventas-centro-negocio/list" data-toggle="tooltip"
-               data-placement="right" title="Reporte de ventas del centro de negocio">
+               data-placement="auto" title="Reporte de ventas del centro de negocio">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas del centro de negocio</span>
             </a>
@@ -446,21 +446,21 @@
         <ul class="menu-content">
           <li class="nav-item">
             <a class="d-flex align-items-center" [routerLink]="['gdc/contacto']" data-toggle="tooltip"
-               data-placement="right" title="Contacto">
+               data-placement="auto" title="Contacto">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Despachar contactos</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="d-flex align-items-center" [routerLink]="['gdc/ventas']" data-toggle="tooltip"
-               data-placement="right" title="Ventas">
+               data-placement="auto" title="Ventas">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Generar ventas</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="d-flex align-items-center" [routerLink]="['gdc/entregados']" data-toggle="tooltip"
-               data-placement="right" title="Despachos entregados">
+               data-placement="auto" title="Despachos entregados">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Despachos entregados</span>
             </a>
@@ -475,14 +475,14 @@
         <ul class="menu-content">
           <li class="nav-item">
             <a class="d-flex align-items-center" [routerLink]="['gdb/bodega']" data-toggle="tooltip"
-               data-placement="right" title="Bodega">
+               data-placement="auto" title="Bodega">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Bodega</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="d-flex align-items-center" [routerLink]="['gdb/pedidos']" data-toggle="tooltip"
-               data-placement="right" title="Vittoria">
+               data-placement="auto" title="Vittoria">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Pedidos a bodega</span>
             </a>
@@ -498,7 +498,7 @@
 
           <li class="nav-item">
             <a class="d-flex align-items-center" [routerLink]="['/gdp/pedidos']" data-toggle="tooltip"
-               data-placement="right" title="Generador de pedidos">
+               data-placement="auto" title="Generador de pedidos">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Generador de pedidos</span>
             </a>
@@ -513,58 +513,58 @@
         <ul class="menu-content">
           <li class="nav-item {{menuToolbar['servi']['ciudades']}}">
             <a class="d-flex align-items-center" href="#/servientrega/ciudades" data-toggle="tooltip"
-               data-placement="right" title="Ciudades">
+               data-placement="auto" title="Ciudades">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Ciudades</span></a>
           </li>
           <li class="nav-item {{menuToolbar['servi']['guias']}}">
             <a class="d-flex align-items-center" href="#/servientrega/guias/crear" data-toggle="tooltip"
-               data-placement="right" title="Generación de guías">
+               data-placement="auto" title="Generación de guías">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Generación de guías</span></a>
           </li>
           <li class="nav-item {{menuToolbar['servi']['guias']}}">
             <a class="d-flex align-items-center" href="#/servientrega/guias/retorno" data-toggle="tooltip"
-               data-placement="right" title="Generación de guías de retorno">
+               data-placement="auto" title="Generación de guías de retorno">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Generación de guías de retorno</span></a>
           </li>
           <li class="nav-item {{menuToolbar['servi']['guias']}}">
             <a class="d-flex align-items-center" href="#/servientrega/guias/recaudo" data-toggle="tooltip"
-               data-placement="right" title="Generación de guías de recaudo">
+               data-placement="auto" title="Generación de guías de recaudo">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Generación de guías de recaudo</span></a>
           </li>
           <li class="nav-item {{menuToolbar['servi']['guias']}}">
             <a class="d-flex align-items-center" href="#/servientrega/guias/pdf-a4" data-toggle="tooltip"
-               data-placement="right" title="Generación de guías de PDF A4">
+               data-placement="auto" title="Generación de guías de PDF A4">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Generación de guías de PDF A4</span></a>
           </li>
           <li class="nav-item {{menuToolbar['servi']['guias']}}">
             <a class="d-flex align-items-center" href="#/servientrega/guias/digital-pdf"
                data-toggle="tooltip"
-               data-placement="right" title="Generación de guías digital PDF">
+               data-placement="auto" title="Generación de guías digital PDF">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Generación de guías digital PDF</span></a>
           </li>
           <li class="nav-item {{menuToolbar['servi']['guias']}}">
             <a class="d-flex align-items-center" href="#/servientrega/guias/sticker" data-toggle="tooltip"
-               data-placement="right" title="Generación de guías formato Sticker">
+               data-placement="auto" title="Generación de guías formato Sticker">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Generación de guías formato Sticker</span></a>
           </li>
           <li class="nav-item {{menuToolbar['servi']['guias']}}">
             <a class="d-flex align-items-center" href="#/servientrega/guias/manifiesto-pdf"
                data-toggle="tooltip"
-               data-placement="right" title="Generación de manifiesto PDF">
+               data-placement="auto" title="Generación de manifiesto PDF">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Generación de manifiesto PDF</span></a>
           </li>
           <li class="nav-item {{menuToolbar['servi']['guias']}}">
             <a class="d-flex align-items-center" href="#/servientrega/guias/rotulos-formato-pdf"
                data-toggle="tooltip"
-               data-placement="right" title="Generación de Rotulos formato PDF">
+               data-placement="auto" title="Generación de Rotulos formato PDF">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Generación de Rotulos formato PDF</span></a>
           </li>
@@ -578,14 +578,14 @@
         <ul class="menu-content">
           <li class="nav-item {{menuToolbar['facturacion']['locales']}}">
             <a class="d-flex align-items-center" href="#/facturacion/canal-vittoria/pendiente" data-toggle="tooltip"
-               data-placement="right" title="Pendiente">
+               data-placement="auto" title="Pendiente">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Pendiente</span>
             </a>
           </li>
           <li class="nav-item {{menuToolbar['facturacion']['externas']}}">
             <a class="d-flex align-items-center" href="#/facturacion/canal-vittoria/facturadas" data-toggle="tooltip"
-               data-placement="right" title="Factura Electronica">
+               data-placement="auto" title="Factura Electronica">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Factura Electronica</span></a>
           </li>
@@ -598,14 +598,14 @@
         <ul class="menu-content">
           <li class="nav-item {{menuToolbar['facturacion']['locales']}}">
             <a class="d-flex align-items-center" href="#/facturacion/canal-externas/pendiente" data-toggle="tooltip"
-               data-placement="right" title="Pendiente">
+               data-placement="auto" title="Pendiente">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Pendientes</span>
             </a>
           </li>
           <li class="nav-item {{menuToolbar['facturacion']['externas']}}">
             <a class="d-flex align-items-center" href="#/facturacion/canal-externas/facturadas" data-toggle="tooltip"
-               data-placement="right" title="Factura Electronica">
+               data-placement="auto" title="Factura Electronica">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Factura Electronica</span></a>
           </li>
@@ -618,7 +618,7 @@
         <ul class="menu-content">
           <li class="nav-item {{menuToolbar['facturacion']['locales']}}">
             <a class="d-flex align-items-center" href="#/facturacion/canal-woocommerce/pendiente" data-toggle="tooltip"
-               data-placement="right" title="Pendientes">
+               data-placement="auto" title="Pendientes">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Pendientes</span>
             </a>
@@ -638,14 +638,14 @@
         <ul class="menu-content">
           <li class="nav-item {{menuToolbar['reportes']['productos']}}">
             <a class="d-flex align-items-center" [routerLink]="['/reportes/productos']" data-toggle="tooltip"
-               data-placement="right" title="Reporte Productos Comprados">
+               data-placement="auto" title="Reporte Productos Comprados">
               <i data-feather="list"></i>
               <span class="menu-title text-truncate" data-i18n="List">Reporte Productos Comprados</span>
             </a>
           </li>
           <li class="nav-item {{menuToolbar['reportes']['clientes']}}">
             <a class="d-flex align-items-center" [routerLink]="['/reportes/clientes']" data-toggle="tooltip"
-               data-placement="right" title="Reporte Clientes Compras">
+               data-placement="auto" title="Reporte Clientes Compras">
               <i data-feather="list"></i>
               <span class="menu-title text-truncate" data-i18n="List">Reporte Clientes Compras</span>
             </a>
@@ -660,7 +660,7 @@
         <ul class="menu-content">
           <li class="nav-item {{menuToolbar['todomegacentro']['inicio']}}">
             <a class="d-flex align-items-center" href="#/todomegacentro/inicio" data-toggle="tooltip"
-               data-placement="right" title="Inicio">
+               data-placement="auto" title="Inicio">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Inicio</span></a>
           </li>
