@@ -274,9 +274,15 @@
 
                             <div class="col-lg-2 col-12 my-lg-0 my-2">
                               <p class="card-text col-title mb-md-50 mb-0">
-                                Valor Unitario
+                                Precio
                               </p>
-                              <label>{{ detalle.controls.valorUnitario.value }}</label>
+                              <select class="form-control" formControlName="valorUnitario" (change)="calcular()">
+                                <option value="" selected disabled>- Seleccione -</option>
+                                <option *ngFor="let producto of detalle.controls.precios.value"
+                                        [value]="producto.valor.toFixed(2)">
+                                  {{ producto.clave.slice(-1) }} - ${{ producto.valor }}
+                                </option>
+                              </select>
                               <div *ngIf="detalle.controls.valorUnitario.errors"
                                    class="invalid-feedback"
                                    style="display: block;">

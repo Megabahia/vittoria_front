@@ -278,7 +278,7 @@
                                 Valor Unitario
                               </p>
                               <select class="form-control" formControlName="valorUnitario" (change)="calcular()">
-                                <option selected disabled>- Seleccione -</option>
+                                <option value="" selected disabled>- Seleccione -</option>
                                 <option *ngFor="let producto of detalle.controls.precios.value" [value]="producto.valor">
                                   {{producto.clave.slice(-1)}} - ${{ producto.valor }}
                                 </option>
