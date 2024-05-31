@@ -33,6 +33,8 @@ export class UsersListComponent implements OnInit, AfterViewInit {
   maxSize;
   collectionSize;
   vista;
+  email: string = '';
+  companiaBuscar:string=''
   nuevoUsuario: NuevoUsuario = {
     nombres: '',
     apellidos: '',
@@ -112,7 +114,7 @@ export class UsersListComponent implements OnInit, AfterViewInit {
 
     await this.servicioUsuarios.obtenerListaUsuarios({
       page: this.page - 1, page_size: this.pageSize, idRol: Number(this.rolesOpciones), estado: this.estadosOpciones,
-      state: 1
+      state: 1, email: this.email, compania: this.companiaBuscar
     })
       .subscribe((result) => {
         this.collectionSize = result.cont;
