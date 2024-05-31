@@ -145,7 +145,7 @@ export class VentasComponent implements OnInit, AfterViewInit {
       metodoPago: ['Contra-Entrega', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
       canal: ['Contacto Local', []],
-      estado: ['Pendiente', []],
+      estado: ['Pendiente de entrega', []],
       envio: ['', []],
       envios: ['', []],
       json: ['', []],
@@ -192,6 +192,7 @@ export class VentasComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
+      precios: [[], []]
     });
   }
 
@@ -262,8 +263,8 @@ export class VentasComponent implements OnInit, AfterViewInit {
           this.detallesArray.controls[i].get('id').setValue(info.id);
           this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-          const precioProducto = this.notaPedido.get('canal').value
-            .includes('Contra-Entrega') ? info.precioLandingOferta : info.precioVentaA;
+          this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
+          const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
           this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
           this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
           this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
@@ -411,6 +412,16 @@ export class VentasComponent implements OnInit, AfterViewInit {
       reader.readAsDataURL(archivo);
 
     }
+  }
+
+  extraerPrecios(info: any) {
+    const precios = [];
+    Object.keys(info).forEach(clave => {
+      if (clave.startsWith('precioVenta')) {
+        precios.push({clave: clave, valor: info[clave]});
+      }
+    });
+    return precios;
   }
 
 }

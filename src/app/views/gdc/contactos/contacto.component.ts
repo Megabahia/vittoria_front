@@ -47,7 +47,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   provinciaOpciones;
   verificarContacto = false;
   whatsapp = '';
-  correo = ''
+  correo = '';
+  numPedido = ''
   mostrarInputComprobante = false;
   mostrarCargarArchivo = false;
   mostrarInputTransaccion = false;
@@ -199,6 +200,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
+      precios: [[], []]
     });
   }
 
@@ -215,6 +217,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     this.contactosService.obtenerListaContactos({
       telefono: this.whatsapp,
       correo: this.correo,
+      numeroPedido: this.numPedido,
       page: this.page - 1,
       page_size: this.pageSize,
       //inicio: this.inicio,
@@ -224,7 +227,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaContactos = info.info;
-      this.toaster.open('Lista actualizada',{ type: 'success'});
+      this.toaster.open('Lista actualizada', {type: 'success'});
     });
   }
 
@@ -311,7 +314,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
           this.detallesArray.controls[i].get('id').setValue(info.id);
           this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-          const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value) || info.precioVentaA;
+          this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
+          const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
           this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
           this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
           this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
@@ -552,4 +556,13 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     return date.toTimeString().split(' ')[0];
   }
 
+  extraerPrecios(info: any) {
+    const precios = [];
+    Object.keys(info).forEach(clave => {
+      if (clave.startsWith('precioVenta')) {
+        precios.push({clave: clave, valor: info[clave]});
+      }
+    });
+    return precios;
+  }
 }
