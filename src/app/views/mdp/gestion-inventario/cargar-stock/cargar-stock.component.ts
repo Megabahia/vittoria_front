@@ -63,7 +63,7 @@ export class CargarStockComponent implements OnInit {
   }
 
   cargarStock(): void {
-    let mensajeError='';
+    let mensajeError = '';
     if (this.archivo.get('archivo') === null) {
       this.toaster.open('Agrege un archivo', {type: 'warning'});
       return;
@@ -73,11 +73,13 @@ export class CargarStockComponent implements OnInit {
     this.archivo.append('resetearStock', this.resetearStock === true ? 'true' : 'false');
     this.gestionInventarioService.cargarStock(this.archivo).subscribe((info) => {
       info.errores.map((mensaje) => {
-        mensajeError += mensaje.error +'\n';
+        mensajeError += mensaje.error + '\n';
       });
       window.alert('Correctos: ' + info.correctos + '\nIncorrectos ' + info.incorrectos + '\n' + 'Errores: \n' + mensajeError);
       this.toaster.open('Se cargo correctamente', {type: 'success'});
       this.mostrarSpinner = false;
+      this.archivo.delete('archivo');
+
     }, (error) => {
       this.toaster.open('No es valido el archivo', {type: 'danger'});
       this.mostrarSpinner = false;

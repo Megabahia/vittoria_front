@@ -51,6 +51,7 @@ export class CargarStockMegabahiaComponent implements OnInit {
       // Leer el archivo como texto o como binario, según sea necesario
       reader.readAsArrayBuffer(file);
     } else {
+      this.archivo.delete('archivo');
       this.toaster.open('No se ha seleccionado ningún archivo', {type: 'danger'});
     }
   }
@@ -96,6 +97,8 @@ export class CargarStockMegabahiaComponent implements OnInit {
       this.toaster.open('Se cargo correctamente', {type: 'success'});
 
       this.mostrarSpinner2 = false;
+      this.archivo.delete('archivo');
+
     }, (error) => {
       this.toaster.open('No es valido el archivo', {type: 'danger'});
       this.mostrarSpinner2 = false;
