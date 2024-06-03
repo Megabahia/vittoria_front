@@ -13,6 +13,7 @@ export class CargarStockComponent implements OnInit {
   archivo: FormData = new FormData();
   enviando = false;
   mostrarSpinner = false;
+  mostrarSpinner2 = false;
   resetearStock = false;
 
   constructor(
@@ -34,6 +35,12 @@ export class CargarStockComponent implements OnInit {
     this.archivo.append('archivo', event.target.files[0]);
   }
 
+  cargarArchivoMegabahia(event): void {
+    this.archivo = new FormData();
+
+    this.archivo.append('archivo', event.target.files[0]);
+  }
+
   cargarStock(): void {
     console.log('enviado', this.archivo.get('archivo'));
     if (this.archivo.get('archivo') === null) {
@@ -49,6 +56,25 @@ export class CargarStockComponent implements OnInit {
     }, (error) => {
       this.toaster.open('No es valido el archivo', {type: 'danger'});
       this.mostrarSpinner = false;
+    });
+  }
+
+  cargarStockMegabahia(): void {
+    console.log('enviado', this.archivo.get('archivo'));
+    if (this.archivo.get('archivo') === null) {
+      this.toaster.open('Agrege un archivo', {type: 'warning'});
+      return;
+    }
+    this.mostrarSpinner2 = true;
+    this.archivo.delete('resetearStock');
+    this.archivo.append('resetearStock', this.resetearStock === true ? 'true' : 'false');
+    this.gestionInventarioService.cargarStockMegabahia(this.archivo).subscribe((info) => {
+      this.toaster.open('Se cargo correctamente', {type: 'success'});
+
+      this.mostrarSpinner2 = false;
+    }, (error) => {
+      this.toaster.open('No es valido el archivo', {type: 'danger'});
+      this.mostrarSpinner2 = false;
     });
   }
 
