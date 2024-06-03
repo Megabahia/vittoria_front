@@ -4,11 +4,10 @@ import {GestionInventarioService} from '../../../../services/mdp/gestion-inventa
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 
 @Component({
-  selector: 'app-cargar-stock',
-  templateUrl: './cargar-stock.component.html',
-  styleUrls: ['./cargar-stock.component.css']
+  selector: 'app-cargar-stock-megabahia',
+  templateUrl: './cargar-stock-megabahia.component.html',
 })
-export class CargarStockComponent implements OnInit {
+export class CargarStockMegabahiaComponent implements OnInit {
   menu;
   archivo: FormData = new FormData();
   enviando = false;
@@ -63,7 +62,7 @@ export class CargarStockComponent implements OnInit {
   }
 
   cargarStock(): void {
-    let mensajeError='';
+    console.log('enviado', this.archivo.get('archivo'));
     if (this.archivo.get('archivo') === null) {
       this.toaster.open('Agrege un archivo', {type: 'warning'});
       return;
@@ -72,10 +71,6 @@ export class CargarStockComponent implements OnInit {
     this.archivo.delete('resetearStock');
     this.archivo.append('resetearStock', this.resetearStock === true ? 'true' : 'false');
     this.gestionInventarioService.cargarStock(this.archivo).subscribe((info) => {
-      info.errores.map((mensaje) => {
-        mensajeError += mensaje.error +'\n';
-      });
-      window.alert('Correctos: ' + info.correctos + '\nIncorrectos ' + info.incorrectos + '\n' + 'Errores: \n' + mensajeError);
       this.toaster.open('Se cargo correctamente', {type: 'success'});
       this.mostrarSpinner = false;
     }, (error) => {
@@ -95,9 +90,9 @@ export class CargarStockComponent implements OnInit {
     this.archivo.append('resetearStock', this.resetearStock2 === true ? 'true' : 'false');
     this.gestionInventarioService.cargarStockMegabahia(this.archivo).subscribe((info) => {
       info.errores.map((mensaje) => {
-        mensajeError = mensaje.error;
+        mensajeError += mensaje.error + '\n';
       });
-      window.alert('Correctos: ' + info.correctos + '\nIncorrectos ' + info.incorrectos + '\n' + 'Errores: \n' + mensajeError + '\n');
+      window.alert('Correctos: ' + info.correctos + '\nIncorrectos ' + info.incorrectos + '\n' + 'Errores: \n' + mensajeError);
       this.toaster.open('Se cargo correctamente', {type: 'success'});
 
       this.mostrarSpinner2 = false;

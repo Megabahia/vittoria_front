@@ -11,6 +11,7 @@ import { CargarProveedoresProductosComponent } from './cargar-proveedores-produc
 import { ProveedoresComponent } from './proveedores/proveedores.component';
 import { CargarStockComponent } from './cargar-stock/cargar-stock.component';
 import { ProductosComponent } from './productos/productos.component';
+import {CargarStockMegabahiaComponent} from "./cargar-stock-megabahia/cargar-stock-megabahia.component";
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { ProductosComponent } from './productos/productos.component';
     CargarProveedoresProductosComponent,
     ProveedoresComponent,
     CargarStockComponent,
-    ProductosComponent
+    ProductosComponent,
+    CargarStockMegabahiaComponent
   ],
   imports: [
     GestionInventarioRoutingModule,
