@@ -15,6 +15,7 @@ export class CargarStockComponent implements OnInit {
   mostrarSpinner = false;
   mostrarSpinner2 = false;
   resetearStock = false;
+  resetearStock2 = false;
 
   constructor(
     private toaster: Toaster,
@@ -67,7 +68,7 @@ export class CargarStockComponent implements OnInit {
     }
     this.mostrarSpinner2 = true;
     this.archivo.delete('resetearStock');
-    this.archivo.append('resetearStock', this.resetearStock === true ? 'true' : 'false');
+    this.archivo.append('resetearStock', this.resetearStock2 === true ? 'true' : 'false');
     this.gestionInventarioService.cargarStockMegabahia(this.archivo).subscribe((info) => {
       this.toaster.open('Se cargo correctamente', {type: 'success'});
 
