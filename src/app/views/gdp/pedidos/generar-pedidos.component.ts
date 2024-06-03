@@ -178,7 +178,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       id: [''],
       codigo: ['', [Validators.required]],
       articulo: ['', [Validators.required]],
-      valorUnitario: [0, [Validators.required]],
+      valorUnitario: [0, [Validators.required, Validators.min(1)]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
       imagen: ['', []],
@@ -227,8 +227,13 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
-    if(this.notaPedido.invalid){
-      this.toaster.open('Revise que los campos estén correctos',{type:'danger'});
+    if (this.notaPedido.value.valorUnitario === 0) {
+      this.toaster.open('Seleccione un precio que sea mayor a 0.', {type: 'danger'});
+      return;
+    }
+
+    if (this.notaPedido.invalid) {
+      this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
     }
     if (confirm('Esta seguro de guardar los datos') === true) {
@@ -281,7 +286,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     const precios = [];
     Object.keys(info).forEach(clave => {
       if (clave.startsWith('precioVenta')) {
-        precios.push({ clave: clave, valor: info[clave] });
+        precios.push({clave: clave, valor: info[clave]});
       }
     });
     return precios;
@@ -403,10 +408,10 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
         try {
           this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
-            this.toaster.open('Imagen actualizada con éxito',{type:"info"});
-          },error => this.toaster.open('Error al actualizar la imagen.', {type:"danger"}));
+            this.toaster.open('Imagen actualizada con éxito', {type: "info"});
+          }, error => this.toaster.open('Error al actualizar la imagen.', {type: "danger"}));
         } catch (error) {
-          this.toaster.open('Error al actualizar la imagen.', {type:"danger"});
+          this.toaster.open('Error al actualizar la imagen.', {type: "danger"});
         }
       };
       reader.readAsDataURL(archivo);

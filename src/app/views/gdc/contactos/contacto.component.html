@@ -348,7 +348,7 @@
                                       Precio
                                     </p>
                                     <select class="form-control" formControlName="valorUnitario" (change)="calcular()">
-                                      <option value="" selected disabled>- Seleccione -</option>
+                                      <option value="" selected>- Seleccione -</option>
                                       <option *ngFor="let producto of detalle.controls.precios.value"
                                               [value]="producto.valor.toFixed(2)">
                                         {{ producto.clave.slice(-1) }} - ${{ producto.valor }}
@@ -359,6 +359,9 @@
                                          style="display: block;">
                                       <div *ngIf="detalle.controls.valorUnitario.errors.required">
                                         Requerido
+                                      </div>
+                                      <div *ngIf="detalle.controls.valorUnitario.errors.min">
+                                        Selecione un precio mayor a 0
                                       </div>
                                     </div>
                                   </div>
