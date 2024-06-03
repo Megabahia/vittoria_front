@@ -654,12 +654,21 @@
                               <p class="card-text col-title mb-md-50 mb-0">
                                 Valor Unitario
                               </p>
-                              <label>{{ detalle.controls.valorUnitario.value }}</label>
+                              <select class="form-control" formControlName="valorUnitario" (change)="calcular()">
+                                <option selected value="">- Seleccione -</option>
+                                <option *ngFor="let producto of detalle.controls.precios.value"
+                                        [value]="producto.valor">
+                                  {{ producto.clave.slice(-1) }} - ${{ producto.valor }}
+                                </option>
+                              </select>
                               <div *ngIf="detalle.controls.valorUnitario.errors"
                                    class="invalid-feedback"
                                    style="display: block;">
                                 <div *ngIf="detalle.controls.valorUnitario.errors.required">
                                   Requerido
+                                </div>
+                                <div *ngIf="detalle.controls.valorUnitario.errors.min">
+                                  Selecione un precio mayor a 0
                                 </div>
                               </div>
                             </div>
@@ -682,7 +691,8 @@
                                    *ngIf="detalle.controls?.imagen" width="100px" height="100px" alt="">
                               <div *ngIf="!detalle.controls?.imagen.value">
                                 <button (click)="fileInput.click()">Seleccionar imagen</button>
-                                <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png" style="display: none;">
+                                <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png"
+                                       style="display: none;">
                               </div>
                             </div>
                             <div

@@ -173,11 +173,12 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
       id: [''],
       codigo: ['', [Validators.required]],
       articulo: ['', [Validators.required]],
-      valorUnitario: [0, [Validators.required]],
+      valorUnitario: [0, [Validators.required, Validators.min(1)]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
+      precios: [[], []],
     });
   }
 
@@ -256,8 +257,8 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
           this.detallesArray.controls[i].get('id').setValue(info.id);
           this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-          const precioProducto = this.notaPedido.get('canal').value
-            .includes('Contra-Entrega') ? info.precioLandingOferta : info.precioVentaA;
+          this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
+          const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
           this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
           this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
           this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
@@ -278,6 +279,16 @@ export class GenerarContactoComponent implements OnInit, AfterViewInit {
         }*/
       });
     });
+  }
+
+  extraerPrecios(info: any) {
+    const precios = [];
+    Object.keys(info).forEach(clave => {
+      if (clave.startsWith('precioVenta')) {
+        precios.push({ clave: clave, valor: info[clave] });
+      }
+    });
+    return precios;
   }
 
   calcular(): void {
