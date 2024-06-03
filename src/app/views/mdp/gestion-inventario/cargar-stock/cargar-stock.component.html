@@ -33,38 +33,7 @@
                                     </div>
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="customCheck2" [(ngModel)]="resetearStock"/>
-                                        <label class="custom-control-label" for="customCheck2">Resetear</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div><div class="card">
-                    <h5 class="card-header justify-content-center">
-                        Cargar productos desde Megabahía desde un archivo XLSX
-                        <a href="../../../../../assets/files/Plantilla_Productos_Megabahia.xlsx" target="_blank">Plantilla</a>
-                    </h5>
-                    <div class="card-body">
-                        <div class="row justify-content-center">
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="inputGroupFile"
-                                               accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" (change)="cargarArchivoMegabahia($event)">
-                                        <label class="custom-file-label" for="inputGroupFile">Seleccionar archivo XLSX</label>
-                                    </div>
-                                    <div class="input-group-append">
-                                        <button (click)="cargarStockMegabahia()"
-                                                class="input-group-text btn-primary"
-                                                [ngClass]="{'loading': mostrarSpinner2}" [disabled]="mostrarSpinner2">
-                                            <span *ngIf="mostrarSpinner2" class="spinner-border spinner-border-sm" role="status"
-                                                  aria-hidden="true"></span>
-                                            Cargar
-                                        </button>
-                                    </div>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck" [(ngModel)]="resetearStock"/>
-                                        <label class="custom-control-label" for="customCheck">Resetear</label>
+                                        <label class="custom-control-label" for="customCheck2">Resetear stock</label>
                                     </div>
                                 </div>
                             </div>

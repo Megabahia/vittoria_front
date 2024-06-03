@@ -188,7 +188,7 @@
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice">MDP Master Data Products</span></a>
         <ul class="menu-content ng-star-inserted">
-          <li class="nav-item has-sub ng-star-inserted">
+          <li class="nav-item has-sub ng-star-inserted" *ngIf="usuario.usuario.idRol !== 59">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Administración de proveedores">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración de proveedores</span></a>
@@ -214,14 +214,21 @@
                title="Administración de inventario">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración de inventario</span></a>
             <ul class="menu-content">
-              <li class="nav-item {{menuToolbar['mdp']['param']}}">
+              <li class="nav-item {{menuToolbar['mdp']['param']}}" *ngIf="usuario.usuario.idRol !== 59">
                 <a class="d-flex align-items-center" href="#/mdp/gestion-proveedores/cargar-stock-productos"
                    data-toggle="tooltip"
                    data-placement="auto" title="Cargar Stock Productos">
                   <i data-feather="circle"></i>
-                  <span class="menu-item text-truncate" data-i18n="List">Cargar</span></a>
+                  <span class="menu-item text-truncate" data-i18n="List">Cargar Megadescuento</span></a>
               </li>
-              <li class="nav-item {{menuToolbar['mdp']['param']}}">
+              <li class="nav-item {{menuToolbar['mdp']['param']}}" >
+                <a class="d-flex align-items-center" href="#/mdp/gestion-proveedores/cargar-stock-megabahia"
+                   data-toggle="tooltip"
+                   data-placement="auto" title="Cargar Stock Productos">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Cargar Megabahía</span></a>
+              </li>
+              <li class="nav-item {{menuToolbar['mdp']['param']}}" *ngIf="usuario.usuario.idRol !== 59">
                 <a class="d-flex align-items-center" href="#/mdp/gestion-proveedores/productos" data-toggle="tooltip"
                    data-placement="auto" title="Listar Productos">
                   <i data-feather="circle"></i>
@@ -229,7 +236,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item has-sub ng-star-inserted">
+          <li class="nav-item has-sub ng-star-inserted" *ngIf="usuario.usuario.idRol !== 59">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Administración de productos">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración productos</span></a>
