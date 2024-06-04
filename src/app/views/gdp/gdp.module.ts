@@ -10,6 +10,7 @@ import {GdpRoutingModule} from './gdp-routing.module';
 import {GdeModule} from '../gde/gde.module';
 import {GdpComponent} from "./gdp.component";
 import {GenerarPedidosComponent} from "./pedidos/generar-pedidos.component";
+import {QRCodeModule} from "angularx-qrcode";
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import {GenerarPedidosComponent} from "./pedidos/generar-pedidos.component";
     ReactiveFormsModule,
     FlatpickrModule.forRoot(),
     NgxDropzoneModule,
-    GdeModule
+    GdeModule,
+    QRCodeModule
   ]
 })
 export class GdpModule { }

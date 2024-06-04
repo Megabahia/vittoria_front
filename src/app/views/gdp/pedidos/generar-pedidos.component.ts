@@ -14,6 +14,9 @@ import {v4 as uuidv4} from 'uuid';
 import {ClientesService} from "../../../services/mdm/personas/clientes/clientes.service";
 import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
 import {ValidacionesPropias} from "../../../utils/customer.validators";
+import {environment} from "../../../../environments/environment";
+import html2canvas from 'html2canvas';
+import {element} from "protractor";
 
 @Component({
   selector: 'app-generar-ventas',
@@ -53,7 +56,10 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   clientes;
   cliente;
   cedula
-
+  parametroDireccion;
+  descuentoCupon;
+  myAngularxCode;
+  fotoCupon;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -92,6 +98,14 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       estado: ['Rechazado', [Validators.required]],
       fechaPedido: ['', [Validators.required]],
     });
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'DIRECCION', 'Dirección').subscribe((result) => {
+      this.parametroDireccion = result.info[0].valor;
+    });
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'CUPON', 'Descuento cupón').subscribe((result) => {
+      this.descuentoCupon = result.info[0].valor;
+    });
+
   }
 
   ngOnInit(): void {
@@ -140,6 +154,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       envio: ['', []],
       envios: ['', []],
       json: ['', []],
+      fotoCupon:['',[]]
     });
   }
 
@@ -178,7 +193,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       id: [''],
       codigo: ['', [Validators.required]],
       articulo: ['', [Validators.required]],
-      valorUnitario: [0, [Validators.required, Validators.min(1)]],
+      valorUnitario: [0, [Validators.required, Validators.min(0.01)]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
       imagen: ['', []],
@@ -223,7 +238,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async guardarVenta(): Promise<void> {
+  async guardarVenta(notaPedidoModal): Promise<void> {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
@@ -238,7 +253,12 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     }
     if (confirm('Esta seguro de guardar los datos') === true) {
       this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
+          console.log(info)
           this.modalService.dismissAll();
+          this.notaPedido.patchValue({...info});
+          this.abrirModalCupon(notaPedidoModal);
+          this.captureScreen();
+
         }, error => this.toaster.open(error, {type: 'danger'})
       );
     }
@@ -309,13 +329,25 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
-    if (confirm('Esta seguro de guardar los datos') === true) {
-      this.contactosService.actualizarContacto(this.notaPedido.value).subscribe((info) => {
-        this.modalService.dismissAll();
-        this.obtenerContactos();
-        this.verificarContacto = true;
-      }, error => this.toaster.open(error, {type: 'danger'}));
+    if (this.notaPedido.invalid) {
+      this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
+      return;
     }
+    const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
+    const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
+    facturaFisicaLlaves.map((llaves, index) => {
+      if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago' && llaves !== 'facturacion' && llaves !== 'articulos') {
+        this.archivo.delete(llaves);
+        this.archivo.append(llaves, facturaFisicaValores[index]);
+      }
+    });
+    console.log('FOTO CUPON: ',this.fotoCupon)
+    this.archivo.append('fotoCupon', this.fotoCupon);
+
+    this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
+      console.log(info)
+    }, error => this.toaster.open(error, {type: 'danger'}))
+
   }
 
 
@@ -430,6 +462,36 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     this.notaPedido.get('facturacion').get('identificacion').updateValueAndValidity();
   }
 
+  fechaValidez(): string {
+    const fecha = new Date(this.notaPedido.value.created_at);
+    const dia = fecha.getDate() + 5;
+    const mes = fecha.getMonth() + 1;
+    const anio = fecha.getFullYear();
 
+    return dia + '-' + mes + '-' + anio;
+  }
+
+  abrirModalCupon(modal): void {
+    this.modalService.open(modal, {size: 'lg', backdrop: 'static'})
+    const apiUrl: string = `${environment.apiUrlFront}/#/gdc/contacto`;
+    this.myAngularxCode = apiUrl;
+  }
+
+  captureScreen() {
+    const data = document.getElementById('notaPedidoContent'); // Asegúrate de que este ID está en el div que quieres capturar
+    if (data) {
+      setTimeout(() => {
+        html2canvas(data).then(canvas => {
+          const imgData = canvas.toDataURL('image/png');
+          const link = document.createElement('a');
+          link.href = imgData;
+          this.fotoCupon = link.href
+          //link.download = `pedido_${this.notaPedido.value.numeroPedido}.png`;
+          this.actualizar();
+          link.click();
+        });
+      }, 3000);
+    }
+  }
 }
 
