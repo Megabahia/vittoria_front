@@ -15,6 +15,7 @@ export class CargarStockMegabahiaComponent implements OnInit {
   mostrarSpinner2 = false;
   resetearStock = false;
   resetearStock2 = false;
+  resumen = '';
 
   constructor(
     private toaster: Toaster,
@@ -81,6 +82,7 @@ export class CargarStockMegabahiaComponent implements OnInit {
   }
 
   cargarStockMegabahia(): void {
+    this.resumen = '';
     let mensajeError = '';
     if (this.archivo.get('archivo') === null) {
       this.toaster.open('Agrege un archivo', {type: 'warning'});
@@ -91,9 +93,9 @@ export class CargarStockMegabahiaComponent implements OnInit {
     this.archivo.append('resetearStock', this.resetearStock2 === true ? 'true' : 'false');
     this.gestionInventarioService.cargarStockMegabahia(this.archivo).subscribe((info) => {
       info.errores.map((mensaje) => {
-        mensajeError += mensaje.error + '\n';
+        mensajeError += mensaje.error + '<br>';
       });
-      window.alert('Correctos: ' + info.correctos + '\nIncorrectos ' + info.incorrectos + '\n' + 'Errores: \n' + mensajeError);
+      this.resumen = 'Correctos: ' + info.correctos + '<br> Incorrectos ' + info.incorrectos + '<br></br>' + 'Errores: <br>' + mensajeError;
       this.toaster.open('Se cargo correctamente', {type: 'success'});
 
       this.mostrarSpinner2 = false;
