@@ -16,6 +16,7 @@ export class CargarStockComponent implements OnInit {
   mostrarSpinner2 = false;
   resetearStock = false;
   resetearStock2 = false;
+  resumen = '';
 
   constructor(
     private toaster: Toaster,
@@ -63,6 +64,7 @@ export class CargarStockComponent implements OnInit {
   }
 
   cargarStock(): void {
+    this.resumen = '';
     let mensajeError = '';
     if (this.archivo.get('archivo') === null) {
       this.toaster.open('Agrege un archivo', {type: 'warning'});
@@ -73,9 +75,9 @@ export class CargarStockComponent implements OnInit {
     this.archivo.append('resetearStock', this.resetearStock === true ? 'true' : 'false');
     this.gestionInventarioService.cargarStock(this.archivo).subscribe((info) => {
       info.errores.map((mensaje) => {
-        mensajeError += mensaje.error + '\n';
+        mensajeError += mensaje.error + '<br>';
       });
-      window.alert('Correctos: ' + info.correctos + '\nIncorrectos ' + info.incorrectos + '\n' + 'Errores: \n' + mensajeError);
+      this.resumen = 'Correctos: ' + info.correctos + '<br> Incorrectos ' + info.incorrectos + '<br></br>' + 'Errores: <br>' + mensajeError;
       this.toaster.open('Se cargo correctamente', {type: 'success'});
       this.mostrarSpinner = false;
       this.archivo.delete('archivo');
@@ -97,9 +99,9 @@ export class CargarStockComponent implements OnInit {
     this.archivo.append('resetearStock', this.resetearStock2 === true ? 'true' : 'false');
     this.gestionInventarioService.cargarStockMegabahia(this.archivo).subscribe((info) => {
       info.errores.map((mensaje) => {
-        mensajeError = mensaje.error;
+        mensajeError += mensaje.error + '<br>';
       });
-      window.alert('Correctos: ' + info.correctos + '\nIncorrectos ' + info.incorrectos + '\n' + 'Errores: \n' + mensajeError + '\n');
+      this.resumen = 'Correctos: ' + info.correctos + '<br> Incorrectos ' + info.incorrectos + '<br></br>' + 'Errores: <br>' + mensajeError;
       this.toaster.open('Se cargo correctamente', {type: 'success'});
 
       this.mostrarSpinner2 = false;
