@@ -279,8 +279,9 @@
                               </p>
                               <select class="form-control" formControlName="valorUnitario" (change)="calcular()">
                                 <option value="" selected>- Seleccione -</option>
-                                <option *ngFor="let producto of detalle.controls.precios.value" [value]="producto.valor">
-                                  {{producto.clave.slice(-1)}} - ${{ producto.valor }}
+                                <option *ngFor="let producto of detalle.controls.precios.value"
+                                        [value]="producto.valor">
+                                  {{ producto.clave.slice(-1) }} - ${{ producto.valor }}
                                 </option>
                               </select>
                               <div *ngIf="detalle.controls.valorUnitario.errors"
@@ -290,7 +291,7 @@
                                   Requerido
                                 </div>
                                 <div *ngIf="detalle.controls.valorUnitario.errors.min">
-                                    Selecione un precio mayor a 0
+                                  Selecione un precio mayor a 0
                                 </div>
                               </div>
                             </div>
@@ -313,7 +314,8 @@
                                    *ngIf="detalle.controls?.imagen" width="100px" height="100px" alt="">
                               <div *ngIf="!detalle.controls?.imagen.value">
                                 <button (click)="fileInput.click()">Seleccionar imagen</button>
-                                <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png" style="display: none;">
+                                <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png"
+                                       style="display: none;">
                               </div>
                             </div>
                             <div
@@ -414,9 +416,135 @@
               (click)="modal.dismiss( 'Cross click')">Cerrar
       </button>
       <button class="btn btn-primary mx-1"
-              (click)="guardarVenta()"
+              (click)="guardarVenta(notaPedidoModal)"
       >Guardar
       </button>
     </div>
   </ng-template>
 
+  <ng-template #notaPedidoModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Cupón</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-content" id="notaPedidoContent">
+      <form [formGroup]="notaPedido">
+        <!-- Header starts -->
+        <div class="card-body invoice-padding pb-0 mb-2">
+          <div class="d-flex justify-content-center flex-md-row flex-column invoice-spacing mt-0">
+            <img width="120" height="120" src="../../../../assets/images/logo/todomegacentro.png" alt="">
+          </div>
+          <div class="d-flex align-items-end justify-content-end mb-1">
+            <span class="title mr-1">Fecha Pedido:</span>
+            <span class="text-danger mr-3">{{ notaPedido.controls.created_at.value | date: 'dd-MM-yyyy' }}</span>
+          </div>
+        </div>
+        <!-- Address and Contact starts -->
+        <div class="card-body invoice-padding pt-0">
+          <h3>
+            Sr.(a)(ita). {{ notaPedido.value.facturacion.nombres }} {{ notaPedido.value.facturacion.apellidos }}</h3>
+          <span>Muchas gracias por confiar en nosotros, su pedido estará listo para que usted pase retirando en nuestro punto de entrega.</span>
+          <br/>
+          <span>Dirección: <a href="{{parametroDireccion}}" target="_blank">Ver dirección</a></span>
+        </div>
+
+        <!-- Address and Contact ends -->
+        <h4 class="text-center" [ngStyle]="{'color':'blue'}">Su pedido #{{ notaPedido.value.numeroPedido }}</h4>
+        <!-- Product Details starts -->
+        <div class="card-body invoice-padding">
+          <div formArrayName="articulos">
+            <form class="source-item">
+              <div data-repeater-list="group-a"
+                   *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
+                <ng-container [formGroup]="detalle">
+                  <div class="repeater-wrapper" data-repeater-item>
+                    <div class="row">
+                      <div class="col-lg-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                        <p class="card-text col-title mb-md-50 mb-0">
+                          Código
+                        </p>
+                        <label class="d-block text-wrap">{{ detalle.controls.codigo.value }}</label>
+
+                      </div>
+                      <div class="col-lg-2 col-12 my-lg-0 my-2">
+                        <p class="card-text col-title mb-md-50 mb-0">
+                          Nombre
+                        </p>
+                        <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
+
+                      </div>
+                      <div class="col-lg-2 col-12 my-lg-0 my-2">
+                        <p class="card-text col-title mb-md-50 mb-0">
+                          Características
+                        </p>
+                        <label [innerHTML]="detalle.controls.caracteristicas.value"></label>
+                      </div>
+                      <div class="col-lg-2 col-12 my-lg-0 my-2">
+                        <p class="card-text col-title mb-md-50 mb-0">
+                          Cantidad
+                        </p>
+                        <label class="d-block text-wrap">{{ detalle.controls.cantidad.value }}</label>
+                      </div>
+                      <div class="col-lg-1 col-12 my-lg-0 my-2">
+                        <p class="card-text col-title mb-md-50 mb-0">
+                          Precio
+                        </p>
+                        <label>{{ detalle.controls.valorUnitario.value }}</label>
+                      </div>
+                      <div class="col-lg-1 col-12 my-lg-0 my-2">
+                        <p class="card-text col-title mb-md-50 mb-0">
+                          Total
+                        </p>
+                        <label>{{ detalle.controls.precio.value }}</label>
+
+                      </div>
+
+                      <div class="col-lg-2 col-12 my-lg-0 my-2">
+                        <img
+                          src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
+                          *ngIf="detalle.controls?.imagen" width="100px" height="100px" alt="">
+                      </div>
+
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </form>
+          </div>
+
+          <h4 class="text-danger text-center p-2">Presentando esta imagen, cuando usted retire su
+            pedido usted OBTIENE un {{ descuentoCupon }} de ¡DESCUENTO ADICIONAL!
+          </h4>
+
+          <div class="d-flex justify-content-around align-items-center py-3">
+            <span class="w-50 text-danger">Fecha máxima para obtener descuento: (5 días después del pedido)</span>
+            <qrcode [qrdata]="myAngularxCode" width="150" [errorCorrectionLevel]="'M'"></qrcode>
+            <span class="w-75">
+                Número de Pedido: {{ notaPedido.value.numeroPedido }}<br>
+                Fecha Validez: {{ fechaValidez() }}<br>
+                Número de WhatsApp Cliente: {{ notaPedido.value.facturacion.telefono }}<br>
+              <!--<button type="button" shareButton="whatsapp"
+                      [url]="actualizarMetaEtiquetasWhatsapp()"
+                      class="btn btn-primary"><i
+                data-feather="whatsapp"></i></button>-->
+                <a (click)="openWhatsApp($event)"
+                   *ngIf="imagenCargada">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png"
+                    alt="wsp"
+                    width="30" height="30">
+                </a>
+            </span>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="reset" class="btn btn-secondary"
+              (click)="modal.dismiss( 'Cross click')">Cerrar
+      </button>
+    </div>
+  </ng-template>
+</div>

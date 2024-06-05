@@ -14,6 +14,9 @@ import {v4 as uuidv4} from 'uuid';
 import {ClientesService} from "../../../services/mdm/personas/clientes/clientes.service";
 import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
 import {ValidacionesPropias} from "../../../utils/customer.validators";
+import {environment} from "../../../../environments/environment";
+import html2canvas from 'html2canvas';
+import {element} from "protractor";
 
 @Component({
   selector: 'app-generar-ventas',
@@ -53,7 +56,12 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   clientes;
   cliente;
   cedula
-
+  parametroDireccion;
+  descuentoCupon;
+  myAngularxCode;
+  fotoCupon;
+  idContacto
+  imagenCargada = false
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -92,6 +100,14 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       estado: ['Rechazado', [Validators.required]],
       fechaPedido: ['', [Validators.required]],
     });
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'DIRECCION', 'Dirección').subscribe((result) => {
+      this.parametroDireccion = result.info[0].valor;
+    });
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'CUPON', 'Descuento cupón').subscribe((result) => {
+      this.descuentoCupon = result.info[0].valor;
+    });
+
   }
 
   ngOnInit(): void {
@@ -140,6 +156,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       envio: ['', []],
       envios: ['', []],
       json: ['', []],
+      fotoCupon: ['', []]
     });
   }
 
@@ -178,7 +195,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       id: [''],
       codigo: ['', [Validators.required]],
       articulo: ['', [Validators.required]],
-      valorUnitario: [0, [Validators.required, Validators.min(1)]],
+      valorUnitario: [0, [Validators.required, Validators.min(0.01)]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
       imagen: ['', []],
@@ -209,6 +226,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaContactos = info.info;
+      this.idContacto = info.info[0].id;
     });
   }
 
@@ -223,7 +241,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async guardarVenta(): Promise<void> {
+  async guardarVenta(notaPedidoModal): Promise<void> {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
@@ -239,6 +257,13 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     if (confirm('Esta seguro de guardar los datos') === true) {
       this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
           this.modalService.dismissAll();
+          this.obtenerContactos();
+
+          this.notaPedido.patchValue({...info, id: this.idContacto});
+          this.abrirModalCupon(notaPedidoModal);
+          this.captureScreen();
+          this.imagenCargada = true
+
         }, error => this.toaster.open(error, {type: 'danger'})
       );
     }
@@ -306,16 +331,13 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   }
 
   async actualizar(): Promise<void> {
-    await Promise.all(this.detallesArray.controls.map((producto, index) => {
-      return this.obtenerProducto(index);
-    }));
-    if (confirm('Esta seguro de guardar los datos') === true) {
-      this.contactosService.actualizarContacto(this.notaPedido.value).subscribe((info) => {
-        this.modalService.dismissAll();
-        this.obtenerContactos();
-        this.verificarContacto = true;
-      }, error => this.toaster.open(error, {type: 'danger'}));
-    }
+
+    this.archivo.append('id', this.idContacto)
+    this.archivo.append('fotoCupon', this.fotoCupon);
+    this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
+      this.notaPedido.patchValue({...info})
+    }, error => this.toaster.open(error, {type: 'danger'}))
+
   }
 
 
@@ -430,6 +452,59 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     this.notaPedido.get('facturacion').get('identificacion').updateValueAndValidity();
   }
 
+  fechaValidez(): string {
+    const fecha = new Date(this.notaPedido.value.created_at);
+    const dia = fecha.getDate() + 5;
+    const mes = fecha.getMonth() + 1;
+    const anio = fecha.getFullYear();
+
+    return dia + '-' + mes + '-' + anio;
+  }
+
+  abrirModalCupon(modal): void {
+    this.modalService.open(modal, {size: 'lg', backdrop: 'static'})
+    const apiUrl: string = `${environment.apiUrlFront}/#/gdc/contacto`;
+    this.myAngularxCode = apiUrl;
+  }
+
+  captureScreen() {
+    const data = document.getElementById('notaPedidoContent');
+    if (data) {
+      setTimeout(() => {
+        html2canvas(data, {
+          scale: 2,
+          backgroundColor: null,
+        }).then(canvas => {
+          const imgData = canvas.toDataURL('image/png');
+          this.fotoCupon = this.base64ToFile(imgData, `pedido_${this.notaPedido.value.numeroPedido}.png`, 'image/png');
+          this.actualizar();
+        });
+      }, 3000);
+    }
+  }
+
+  base64ToFile(base64, filename, contentType) {
+    const arr = base64.split(',');
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, {type: contentType});
+  }
+
+  openWhatsApp(event: Event): void {
+    event.preventDefault();
+    const numero=this.notaPedido.value.facturacion.telefono
+    const modifiedNumber = (numero.startsWith('0') ? numero.substring(1) : numero);
+    const internationalNumber = '593' + modifiedNumber;
+    const message = encodeURIComponent('Hola, este es su cupón de compra.');
+    //const imageUrl = encodeURIComponent(imagen);  // URL de la imagen que deseas enviar
+    const whatsappUrl = `https://web.whatsapp.com/send/?phone=${internationalNumber}&text=${this.notaPedido.value.fotoCupon}`;
+    console.log(whatsappUrl)
+    window.open(whatsappUrl, '_blank');  // Abrir WhatsApp en una nueva pestaña
+  }
 
 }
 
