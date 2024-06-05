@@ -61,6 +61,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   myAngularxCode;
   fotoCupon;
   idContacto
+  imagenCargada = false
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -226,7 +227,6 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       this.collectionSize = info.cont;
       this.listaContactos = info.info;
       this.idContacto = info.info[0].id;
-      console.log(this.idContacto)
     });
   }
 
@@ -262,6 +262,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
           this.notaPedido.patchValue({...info, id: this.idContacto});
           this.abrirModalCupon(notaPedidoModal);
           this.captureScreen();
+          this.imagenCargada = true
 
         }, error => this.toaster.open(error, {type: 'danger'})
       );
@@ -333,9 +334,8 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
     this.archivo.append('id', this.idContacto)
     this.archivo.append('fotoCupon', this.fotoCupon);
-
     this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
-      console.log(info)
+      this.notaPedido.patchValue({...info})
     }, error => this.toaster.open(error, {type: 'danger'}))
 
   }
@@ -471,10 +471,12 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     const data = document.getElementById('notaPedidoContent');
     if (data) {
       setTimeout(() => {
-        html2canvas(data).then(canvas => {
+        html2canvas(data, {
+          scale: 2,
+          backgroundColor: null,
+        }).then(canvas => {
           const imgData = canvas.toDataURL('image/png');
           this.fotoCupon = this.base64ToFile(imgData, `pedido_${this.notaPedido.value.numeroPedido}.png`, 'image/png');
-          console.log(this.fotoCupon)
           this.actualizar();
         });
       }, 3000);
@@ -490,6 +492,18 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       u8arr[n] = bstr.charCodeAt(n);
     }
     return new File([u8arr], filename, {type: contentType});
+  }
+
+  openWhatsApp(event: Event): void {
+    event.preventDefault();
+    const numero=this.notaPedido.value.facturacion.telefono
+    const modifiedNumber = (numero.startsWith('0') ? numero.substring(1) : numero);
+    const internationalNumber = '593' + modifiedNumber;
+    const message = encodeURIComponent('Hola, este es su cupón de compra.');
+    //const imageUrl = encodeURIComponent(imagen);  // URL de la imagen que deseas enviar
+    const whatsappUrl = `https://web.whatsapp.com/send/?phone=${internationalNumber}&text=${this.notaPedido.value.fotoCupon}`;
+    console.log(whatsappUrl)
+    window.open(whatsappUrl, '_blank');  // Abrir WhatsApp en una nueva pestaña
   }
 
 }

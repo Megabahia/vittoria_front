@@ -434,7 +434,7 @@
         <!-- Header starts -->
         <div class="card-body invoice-padding pb-0 mb-2">
           <div class="d-flex justify-content-center flex-md-row flex-column invoice-spacing mt-0">
-              <img width="120" height="120" src="../../../../assets/images/logo/todomegacentro.png" alt="">
+            <img width="120" height="120" src="../../../../assets/images/logo/todomegacentro.png" alt="">
           </div>
           <div class="d-flex align-items-end justify-content-end mb-1">
             <span class="title mr-1">Fecha Pedido:</span>
@@ -525,9 +525,16 @@
                 Número de Pedido: {{ notaPedido.value.numeroPedido }}<br>
                 Fecha Validez: {{ fechaValidez() }}<br>
                 Número de WhatsApp Cliente: {{ notaPedido.value.facturacion.telefono }}<br>
-                <a href="">
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png" alt="wsp"
-                  width="30" height="30">
+              <!--<button type="button" shareButton="whatsapp"
+                      [url]="actualizarMetaEtiquetasWhatsapp()"
+                      class="btn btn-primary"><i
+                data-feather="whatsapp"></i></button>-->
+                <a (click)="openWhatsApp($event)"
+                   *ngIf="imagenCargada">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png"
+                    alt="wsp"
+                    width="30" height="30">
                 </a>
             </span>
           </div>
