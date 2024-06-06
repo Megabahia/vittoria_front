@@ -8,6 +8,7 @@
         >Nuevo Pedido
         </button>
       </div>
+
     </div>
   </div>
 
@@ -433,115 +434,122 @@
       <form [formGroup]="notaPedido">
         <!-- Header starts -->
         <div class="card-body invoice-padding pb-0 mb-2">
-          <div class="d-flex justify-content-center flex-md-row flex-column invoice-spacing mt-0">
-            <img width="120" height="120" src="../../../../assets/images/logo/todomegacentro.png" alt="">
+          <div class="d-flex flex-md-row flex-column justify-content-md-between align-items-start invoice-spacing mt-0">
+            <div class="mb-md-0 mb-3 text-center text-md-left"> <!-- Centrado en móviles, izquierda en escritorio -->
+              <img src="../../../../assets/images/cupon/logo_cupon.png" alt="Logo"
+                   style="max-width: 100%; height: auto; max-height: 120px;">
+            </div>
+            <div class="text-center text-md-right"> <!-- Centrado en móviles, derecha en escritorio -->
+              <qrcode [qrdata]="myAngularxCode" width="100" [errorCorrectionLevel]="'M'"></qrcode>
+            </div>
           </div>
-          <div class="d-flex align-items-end justify-content-end mb-1">
-            <span class="title mr-1">Fecha Pedido:</span>
-            <span class="text-danger mr-3">{{ notaPedido.controls.created_at.value | date: 'dd-MM-yyyy' }}</span>
+          <div class="d-flex flex-column justify-content-end align-items-end">
+            <div>
+              <span class="title" style="margin-right: 10px">Fecha pedido:</span>
+              <span>{{ notaPedido.controls.created_at.value | date: 'dd-MM-yyyy' }}</span>
+            </div>
+            <div>
+              <span class="title text-danger" style="margin-right: 25px">Válido hasta:</span>
+              <span class="text-danger">{{ fechaValidez() }}</span>
+            </div>
           </div>
         </div>
         <!-- Address and Contact starts -->
         <div class="card-body invoice-padding pt-0">
-          <h3>
-            Sr.(a)(ita). {{ notaPedido.value.facturacion.nombres }} {{ notaPedido.value.facturacion.apellidos }}</h3>
+          <h4>
+            Sr.(a)(ita). {{ notaPedido.value.facturacion.nombres }} {{ notaPedido.value.facturacion.apellidos }}</h4>
+          <span>Teléfono: {{ notaPedido.value.facturacion.telefono }}</span>
+          <a (click)="openWhatsApp($event)"
+             *ngIf="imagenCargada">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png"
+              alt="wsp"
+              width="30" height="30">
+          </a>
+          <br>
           <span>Muchas gracias por confiar en nosotros, su pedido estará listo para que usted pase retirando en nuestro punto de entrega.</span>
           <br/>
-          <span>Dirección: <a href="{{parametroDireccion}}" target="_blank">Ver dirección</a></span>
+          <span *ngIf="verDireccion">Dirección: <a href="{{parametroDireccion}}"
+                                                   target="_blank">Ver dirección</a></span>
         </div>
 
         <!-- Address and Contact ends -->
         <h4 class="text-center" [ngStyle]="{'color':'blue'}">Su pedido #{{ notaPedido.value.numeroPedido }}</h4>
+        <hr>
         <!-- Product Details starts -->
         <div class="card-body invoice-padding">
-          <div formArrayName="articulos">
-            <form class="source-item">
-              <div data-repeater-list="group-a"
-                   *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
+          <div formArrayName="articulos" class="container">
+            <div class="row">
+              <!-- Cada tarjeta toma 6 columnas en pantallas medianas, dos tarjetas por fila -->
+              <div class="col-10 col-md-6"
+                   *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index">
                 <ng-container [formGroup]="detalle">
-                  <div class="repeater-wrapper" data-repeater-item>
+                  <div class="card p-1">
+                    <div class="row mb-1">
+                      <div class="col-8">
+                        <p class="card-text"><strong>Código:</strong> {{ detalle.controls.codigo.value }}</p>
+                      </div>
+                    </div>
                     <div class="row">
-                      <div class="col-lg-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
-                        <p class="card-text col-title mb-md-50 mb-0">
-                          Código
-                        </p>
-                        <label class="d-block text-wrap">{{ detalle.controls.codigo.value }}</label>
-
+                      <!-- Columna para la imagen -->
+                      <div class="col-md-4">
+                        <img src="{{ detalle.controls?.imagen.value || './assets/images/no_existe.png' }}"
+                             class="img-fluid" style="height: 100px; width: 100px; object-fit: cover;">
                       </div>
-                      <div class="col-lg-2 col-12 my-lg-0 my-2">
-                        <p class="card-text col-title mb-md-50 mb-0">
-                          Nombre
-                        </p>
-                        <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
-
+                      <!-- Columna para información al lado de la imagen -->
+                      <div class="col-md-8">
+                        <div class="d-flex flex-row">
+                          <div class="px-1 w-100">
+                            <p class="card-text font-weight-bold">{{ detalle.controls.articulo.value | shorten }}</p>
+                            <p class="card-text">
+                              <strong>Cantidad:</strong> {{ detalle.controls.cantidad.value }}
+                              <br>
+                              <strong>Precio:</strong> ${{ detalle.controls.valorUnitario.value }}
+                            </p>
+                          </div>
+                        </div>
+                        <!-- Columna para características y total, ubicada debajo -->
                       </div>
-                      <div class="col-lg-2 col-12 my-lg-0 my-2">
-                        <p class="card-text col-title mb-md-50 mb-0">
-                          Características
-                        </p>
-                        <label [innerHTML]="detalle.controls.caracteristicas.value"></label>
+                    </div>
+                    <div class="row mt-1">
+                      <div class="col-12">
+                        <p class="card-text">
+                          <strong>Características:</strong>{{ detalle.controls.caracteristicas.value }}</p>
+                        <p class="card-text"><strong>Total:</strong> ${{ detalle.controls.precio.value }}</p>
                       </div>
-                      <div class="col-lg-2 col-12 my-lg-0 my-2">
-                        <p class="card-text col-title mb-md-50 mb-0">
-                          Cantidad
-                        </p>
-                        <label class="d-block text-wrap">{{ detalle.controls.cantidad.value }}</label>
-                      </div>
-                      <div class="col-lg-1 col-12 my-lg-0 my-2">
-                        <p class="card-text col-title mb-md-50 mb-0">
-                          Precio
-                        </p>
-                        <label>{{ detalle.controls.valorUnitario.value }}</label>
-                      </div>
-                      <div class="col-lg-1 col-12 my-lg-0 my-2">
-                        <p class="card-text col-title mb-md-50 mb-0">
-                          Total
-                        </p>
-                        <label>{{ detalle.controls.precio.value }}</label>
-
-                      </div>
-
-                      <div class="col-lg-2 col-12 my-lg-0 my-2">
-                        <img
-                          src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
-                          *ngIf="detalle.controls?.imagen" width="100px" height="100px" alt="">
-                      </div>
-
                     </div>
                   </div>
                 </ng-container>
               </div>
-            </form>
+            </div>
           </div>
-
-          <h4 class="text-danger text-center p-2">Presentando esta imagen, cuando usted retire su
+          <h5 class="text-danger text-center px-2">Presentando esta imagen, cuando usted retire su
             pedido usted OBTIENE un {{ descuentoCupon }} de ¡DESCUENTO ADICIONAL!
-          </h4>
+          </h5>
 
-          <div class="d-flex justify-content-around align-items-center py-3">
-            <span class="w-50 text-danger">Fecha máxima para obtener descuento: (5 días después del pedido)</span>
-            <qrcode [qrdata]="myAngularxCode" width="150" [errorCorrectionLevel]="'M'"></qrcode>
+          <div class="d-flex justify-content-around align-items-centers">
+            <!--<span class="w-50 text-danger">Fecha máxima para obtener su descuento ADICIONAL: {{ fechaValidez() }}</span>-->
+            <!--<qrcode [qrdata]="myAngularxCode" width="150" [errorCorrectionLevel]="'M'"></qrcode>-->
             <span class="w-75">
-                Número de Pedido: {{ notaPedido.value.numeroPedido }}<br>
-                Fecha Validez: {{ fechaValidez() }}<br>
-                Número de WhatsApp Cliente: {{ notaPedido.value.facturacion.telefono }}<br>
+
               <!--<button type="button" shareButton="whatsapp"
                       [url]="actualizarMetaEtiquetasWhatsapp()"
                       class="btn btn-primary"><i
                 data-feather="whatsapp"></i></button>-->
-                <a (click)="openWhatsApp($event)"
-                   *ngIf="imagenCargada">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png"
-                    alt="wsp"
-                    width="30" height="30">
-                </a>
+
             </span>
           </div>
         </div>
       </form>
     </div>
     <div class="modal-footer">
+      <button type="button" class="btn btn-primary" *ngIf="imagenCargada" (click)="descargarImagen()">
+        Descargar imagen
+      </button>
+      <!--<a *ngIf="imagenCargada" [href]="notaPedido.value.fotoCupon"
+         download="pedido_{{notaPedido.value.numeroPedido}}.png"
+         class="btn btn-primary" role="button">Descargar imagen</a>-->
+
       <button type="reset" class="btn btn-secondary"
               (click)="modal.dismiss( 'Cross click')">Cerrar
       </button>

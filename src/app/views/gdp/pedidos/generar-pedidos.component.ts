@@ -17,6 +17,7 @@ import {ValidacionesPropias} from "../../../utils/customer.validators";
 import {environment} from "../../../../environments/environment";
 import html2canvas from 'html2canvas';
 import {element} from "protractor";
+import {Download} from "angular-feather/icons";
 
 @Component({
   selector: 'app-generar-ventas',
@@ -61,7 +62,10 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   myAngularxCode;
   fotoCupon;
   idContacto
-  imagenCargada = false
+  imagenCargada = false;
+  diasValidosCupon;
+  verDireccion = true;
+  fotoCuponDescarga;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -106,6 +110,9 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     });
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'CUPON', 'Descuento cupón').subscribe((result) => {
       this.descuentoCupon = result.info[0].valor;
+    });
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'CUPON VALIDO', 'Cupón válido').subscribe((result) => {
+      this.diasValidosCupon = parseInt(result.info[0].valor);
     });
 
   }
@@ -257,12 +264,12 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     if (confirm('Esta seguro de guardar los datos') === true) {
       this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
           this.modalService.dismissAll();
-          this.obtenerContactos();
-
           this.notaPedido.patchValue({...info, id: this.idContacto});
+          this.obtenerContactos();
           this.abrirModalCupon(notaPedidoModal);
+          this.myAngularxCode = info.numeroPedido;
+
           this.captureScreen();
-          this.imagenCargada = true
 
         }, error => this.toaster.open(error, {type: 'danger'})
       );
@@ -331,15 +338,16 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   }
 
   async actualizar(): Promise<void> {
-
+    this.archivo.delete('id');
+    this.archivo.delete('fotoCupon');
     this.archivo.append('id', this.idContacto)
     this.archivo.append('fotoCupon', this.fotoCupon);
+
     this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
       this.notaPedido.patchValue({...info})
     }, error => this.toaster.open(error, {type: 'danger'}))
 
   }
-
 
   obtenerFechaActual(): Date {
     //const fecha= new Date();
@@ -454,17 +462,18 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
   fechaValidez(): string {
     const fecha = new Date(this.notaPedido.value.created_at);
-    const dia = fecha.getDate() + 5;
+    const dia = fecha.getDate() + this.diasValidosCupon;
     const mes = fecha.getMonth() + 1;
     const anio = fecha.getFullYear();
 
-    return dia + '-' + mes + '-' + anio;
+    return dia.toString().padStart(2, '0') + '-' + mes.toString().padStart(2, '0') + '-' + anio;
   }
 
+
   abrirModalCupon(modal): void {
+    this.imagenCargada = false
+
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'})
-    const apiUrl: string = `${environment.apiUrlFront}/#/gdc/contacto`;
-    this.myAngularxCode = apiUrl;
   }
 
   captureScreen() {
@@ -475,11 +484,14 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
           scale: 2,
           backgroundColor: null,
         }).then(canvas => {
+          canvas.style.filter = 'brightness(150%)';
           const imgData = canvas.toDataURL('image/png');
           this.fotoCupon = this.base64ToFile(imgData, `pedido_${this.notaPedido.value.numeroPedido}.png`, 'image/png');
+          this.notaPedido.value.fotoCupon = imgData;
           this.actualizar();
         });
       }, 3000);
+      this.imagenCargada = true
     }
   }
 
@@ -496,14 +508,17 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
   openWhatsApp(event: Event): void {
     event.preventDefault();
-    const numero=this.notaPedido.value.facturacion.telefono
+    const numero = this.notaPedido.value.facturacion.telefono
     const modifiedNumber = (numero.startsWith('0') ? numero.substring(1) : numero);
     const internationalNumber = '593' + modifiedNumber;
     const message = encodeURIComponent('Hola, este es su cupón de compra.');
     //const imageUrl = encodeURIComponent(imagen);  // URL de la imagen que deseas enviar
     const whatsappUrl = `https://web.whatsapp.com/send/?phone=${internationalNumber}&text=${this.notaPedido.value.fotoCupon}`;
-    console.log(whatsappUrl)
     window.open(whatsappUrl, '_blank');  // Abrir WhatsApp en una nueva pestaña
+  }
+
+  descargarImagen(): void {
+    window.open(this.notaPedido.value.fotoCupon, 'Download');
   }
 
 }
