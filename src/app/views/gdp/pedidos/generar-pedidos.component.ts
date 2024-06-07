@@ -343,7 +343,9 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     this.archivo.append('fotoCupon', this.fotoCupon);
 
     this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
-      this.notaPedido.patchValue({...info})
+      this.notaPedido.patchValue({...info});
+      this.toaster.open('Captura realizada correctamente', {type: 'info'})
+      this.imagenCargada = true;
     }, error => this.toaster.open(error, {type: 'danger'}))
 
   }
@@ -490,7 +492,6 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
           this.actualizar();
         });
       }, 3000);
-      this.imagenCargada = true;
     }
   }
 
@@ -513,7 +514,6 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     const message = encodeURIComponent(`Presentando esta imagen, cuando usted retire su pedido, OBTIENE un ${this.descuentoCupon} de ¡DESCUENTO ADICIONAL!\n${this.notaPedido.value.fotoCupon}`);
     //const imageUrl = encodeURIComponent(imagen);  // URL de la imagen que deseas enviar
     const whatsappUrl = `https://web.whatsapp.com/send/?phone=${internationalNumber}&text=${message}`;
-    console.log(whatsappUrl)
     window.open(whatsappUrl, '_blank');  // Abrir WhatsApp en una nueva pestaña
   }
 
