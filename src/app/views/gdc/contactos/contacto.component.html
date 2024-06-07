@@ -310,6 +310,7 @@
                                     <div *ngIf="detalle.controls.cantidad.errors"
                                          class="invalid-feedback"
                                          style="display: block;">
+
                                       <div *ngIf="detalle.controls.cantidad.errors.required">
                                         Requerido
                                       </div>
@@ -378,6 +379,9 @@
                                     <div *ngIf="detalle.controls.descuento.errors"
                                          class="invalid-feedback"
                                          style="display: block;">
+                                      <div *ngIf="detalle.controls.descuento.errors.required">
+                                        Requerido
+                                      </div>
                                       <div *ngIf="detalle.controls.descuento.errors.pattern">
                                         Ingrese solo números
                                       </div>

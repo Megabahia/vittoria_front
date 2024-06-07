@@ -198,7 +198,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       valorUnitario: [0, [Validators.required, Validators.min(0.01)]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
-      descuento: [0, [Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]*$')]],
+      descuento: [0, [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]*$')]],
       imagen: ['', []],
       caracteristicas: ['', []],
       precios: [[], []],
@@ -356,7 +356,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       total += parseFloat(detalles[index].get('precio').value);
     });
     total += this.notaPedido.get('envioTotal').value;
-    this.notaPedido.get('total').setValue(total);
+    this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 
   async actualizar(): Promise<void> {
