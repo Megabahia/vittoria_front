@@ -343,6 +343,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     this.archivo.append('fotoCupon', this.fotoCupon);
 
     this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
+      delete info.articulos;
       this.notaPedido.patchValue({...info});
       this.toaster.open('Captura realizada correctamente', {type: 'info'})
       this.imagenCargada = true;
