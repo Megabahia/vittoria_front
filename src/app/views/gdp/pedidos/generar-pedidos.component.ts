@@ -204,7 +204,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       valorUnitario: [0, [Validators.required, Validators.min(0.01)]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
-      imagen: ['', []],
+      imagen: ['https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png', []],
       caracteristicas: ['', []],
       precios: [[], []],
     });
