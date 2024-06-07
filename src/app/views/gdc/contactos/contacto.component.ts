@@ -198,9 +198,10 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       valorUnitario: [0, [Validators.required, Validators.min(0.01)]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
+      descuento: [0, [Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]*$')]],
       imagen: ['', []],
       caracteristicas: ['', []],
-      precios: [[], []]
+      precios: [[], []],
     });
   }
 
@@ -236,7 +237,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   }
 
   obtenerContacto(modal, id): void {
-    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+    this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
     this.contactosService.obtenerContacto(id).subscribe((info) => {
       if (info.tipoPago === 'rimpePopular') {
         this.mostrarInputComprobante = true;
@@ -344,7 +345,14 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
-      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      // tslint:disable-next-line:radix
+      const descuento = parseInt(detalles[index].get('descuento').value);
+      if (descuento > 0 && descuento <= 100) {
+        const totalDescuento = (valorUnitario * descuento) / 100;
+        detalles[index].get('precio').setValue((((valorUnitario - totalDescuento) * cantidad)).toFixed(2));
+      } else {
+        detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      }
       total += parseFloat(detalles[index].get('precio').value);
     });
     total += this.notaPedido.get('envioTotal').value;

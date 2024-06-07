@@ -65,7 +65,6 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   imagenCargada = false;
   diasValidosCupon;
   verDireccion = true;
-  fotoCuponDescarga;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -267,7 +266,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
           this.notaPedido.patchValue({...info, id: this.idContacto});
           this.obtenerContactos();
           this.abrirModalCupon(notaPedidoModal);
-          this.myAngularxCode = info.numeroPedido;
+          this.myAngularxCode = `Número de pedido: ${info.numeroPedido}`;
 
           this.captureScreen();
 
@@ -491,7 +490,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
           this.actualizar();
         });
       }, 3000);
-      this.imagenCargada = true
+      this.imagenCargada = true;
     }
   }
 
@@ -511,9 +510,10 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     const numero = this.notaPedido.value.facturacion.telefono
     const modifiedNumber = (numero.startsWith('0') ? numero.substring(1) : numero);
     const internationalNumber = '593' + modifiedNumber;
-    const message = encodeURIComponent('Hola, este es su cupón de compra.');
+    const message = encodeURIComponent(`Presentando esta imagen, cuando usted retire su pedido, OBTIENE un ${this.descuentoCupon} de ¡DESCUENTO ADICIONAL!\n${this.notaPedido.value.fotoCupon}`);
     //const imageUrl = encodeURIComponent(imagen);  // URL de la imagen que deseas enviar
-    const whatsappUrl = `https://web.whatsapp.com/send/?phone=${internationalNumber}&text=${this.notaPedido.value.fotoCupon}`;
+    const whatsappUrl = `https://web.whatsapp.com/send/?phone=${internationalNumber}&text=${message}`;
+    console.log(whatsappUrl)
     window.open(whatsappUrl, '_blank');  // Abrir WhatsApp en una nueva pestaña
   }
 
