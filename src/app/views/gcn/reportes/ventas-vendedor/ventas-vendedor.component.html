@@ -74,7 +74,7 @@
                 <td [ngStyle]="{'color': transaccion.estado === 'Devolucion' || transaccion.estado === 'Rechazado' || transaccion.estado === 'Pendiente de entrega' ? 'red' :
                                 transaccion.estado === 'Despachado' || transaccion.estado === 'Empacado'|| transaccion.estado === 'Pendiente' ? 'yellow' : 'green'}">{{ transaccion.estado }}
                 </td>
-                <td [ngStyle]="{'color':'blue'}">${{ calculoComision(transaccion.estado, transaccion.total)}}</td>
+                <td [ngStyle]="{'color':'blue'}">${{ calculoComision(transaccion.estado, transaccion.total) }}</td>
                 <td>{{ transaccion.facturacion.codigoVendedor }}</td>
                 <td>{{ transaccion.facturacion.nombreVendedor }}</td>
                 <td>{{ transaccion.companiaVendedor }}</td>
@@ -380,6 +380,12 @@
                                           </div>
                                         </div>
                                       </div>
+                                      <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                        <p class="card-text col-title mb-md-50 mb-0">
+                                          Descuento
+                                        </p>
+                                        <label class="d-block text-wrap">{{ detalle.controls.descuento.value }}%</label>
+                                      </div>
                                       <div class="col-lg-1 col-12 my-lg-0 my-2">
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Total
@@ -392,6 +398,11 @@
                                             Requerido
                                           </div>
                                         </div>
+                                      </div>
+                                      <div class="col-md-2 border-left">
+                                        <img class="img-detalle"
+                                             src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
+                                             *ngIf="detalle.controls?.imagen" width="100px" height="100px" alt="">
                                       </div>
                                     </div>
 

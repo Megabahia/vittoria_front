@@ -196,6 +196,7 @@ export class EntregadosComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
+      descuento:[0,[]]
     });
   }
 
