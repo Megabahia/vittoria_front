@@ -311,7 +311,7 @@
                             </div>
                             <div class="col-md-2 border-left">
                               <img class="img-detalle"
-                                   src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png'}}"
+                                   src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
                                    *ngIf="detalle.controls?.imagen" width="100px" height="100px" alt="">
                               <div *ngIf="!detalle.controls?.imagen.value">
                                 <button (click)="fileInput.click()">Seleccionar imagen</button>
@@ -435,7 +435,7 @@
         <!-- Header starts -->
         <div class="card-body invoice-padding pb-0 mb-2">
           <div class="d-flex flex-md-row flex-column justify-content-md-between align-items-start invoice-spacing mt-0">
-            <div class="mb-md-0 mb-3 text-center text-md-left">
+            <div class="mb-md-0 mb-3 text-center text-md-left"> <!-- Centrado en móviles, izquierda en escritorio -->
               <img src="../../../../assets/images/cupon/logo_cupon.png" alt="Logo"
                    style="max-width: 100%; height: auto; max-height: 120px;">
             </div>
@@ -502,7 +502,7 @@
                     <div class="row">
                       <!-- Columna para la imagen -->
                       <div class="col-md-4">
-                        <img src="{{ detalle.controls?.imagen.value }}"
+                        <img src="{{ detalle.controls?.imagen.value || './assets/images/no_existe.png' }}"
                              class="img-fluid" style="height: 100px; width: 100px; object-fit: cover;">
                       </div>
                       <!-- Columna para información al lado de la imagen -->
