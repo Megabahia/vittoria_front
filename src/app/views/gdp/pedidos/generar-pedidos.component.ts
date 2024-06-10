@@ -104,7 +104,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       fechaPedido: ['', [Validators.required]],
     });
 
-    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'DIRECCION', 'Dirección').subscribe((result) => {
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'DIRECCIÓN', 'Dirección').subscribe((result) => {
       this.parametroDireccion = result.info[0].valor;
     });
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'CUPON', 'Descuento cupón').subscribe((result) => {
@@ -204,7 +204,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       valorUnitario: [0, [Validators.required, Validators.min(0.01)]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
-      imagen: ['', []],
+      imagen: ['', [Validators.required]],
       caracteristicas: ['', []],
       precios: [[], []],
     });
@@ -266,7 +266,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
           this.notaPedido.patchValue({...info, id: this.idContacto});
           this.obtenerContactos();
           this.abrirModalCupon(notaPedidoModal);
-          this.myAngularxCode = `Número de pedido: ${info.numeroPedido}`;
+          this.myAngularxCode = `Numero de pedido: ${info.numeroPedido}`;
 
           this.captureScreen();
 
@@ -512,7 +512,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     const numero = this.notaPedido.value.facturacion.telefono
     const modifiedNumber = (numero.startsWith('0') ? numero.substring(1) : numero);
     const internationalNumber = '593' + modifiedNumber;
-    const message = encodeURIComponent(`Presentando esta imagen, cuando usted retire su pedido, OBTIENE un ${this.descuentoCupon} de ¡DESCUENTO ADICIONAL!\n${this.notaPedido.value.fotoCupon}`);
+    const message = encodeURIComponent(`Sr.(a)(ita). ${this.notaPedido.value.facturacion.nombres} ${this.notaPedido.value.facturacion.apellidos}\n\nMuchas gracias por confiar en nosotros, su pedido estará listo para que usted pase retirando en nuestro punto de entrega.\n\nEncuéntranos en QUITO: Av. 10 de Agosto N39-201 y José Arizaga, Sector La Y, frente al Hipermercado CORAL y junto a la Clínica AXXIS.\n\n${this.parametroDireccion}\n\n*Cuando usted retire su pedido, presentando la siguiente imagen usted  OBTIENE un 10% de ¡DESCUENTO ADICIONAL!*\n\n${this.notaPedido.value.fotoCupon}`);
     //const imageUrl = encodeURIComponent(imagen);  // URL de la imagen que deseas enviar
     const whatsappUrl = `https://web.whatsapp.com/send/?phone=${internationalNumber}&text=${message}`;
     window.open(whatsappUrl, '_blank');  // Abrir WhatsApp en una nueva pestaña

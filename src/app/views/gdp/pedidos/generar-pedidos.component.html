@@ -318,6 +318,13 @@
                                 <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png"
                                        style="display: none;">
                               </div>
+                              <div *ngIf="detalle.controls.imagen.errors"
+                                   class="invalid-feedback"
+                                   style="display: block;">
+                                <div *ngIf="detalle.controls.imagen.errors.required">
+                                  Requerido
+                                </div>
+                              </div>
                             </div>
                             <div
                               class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
@@ -439,7 +446,8 @@
               <img src="../../../../assets/images/cupon/logo_cupon.png" alt="Logo"
                    style="max-width: 100%; height: auto; max-height: 120px;">
             </div>
-            <div class="text-center text-md-right d-flex flex-column justify-content-end align-items-center"> <!-- Centrado en móviles, derecha en escritorio -->
+            <div class="text-center text-md-right d-flex flex-column justify-content-end align-items-center">
+              <!-- Centrado en móviles, derecha en escritorio -->
               <div>
                 <span class="title" style="margin-right: 10px">Fecha pedido:</span>
                 <span>{{ notaPedido.controls.created_at.value | date: 'dd-MM-yyyy' }}</span>
@@ -470,11 +478,16 @@
           <br>
           <span>Muchas gracias por confiar en nosotros, su pedido estará listo para que usted pase retirando en nuestro punto de entrega.</span>
           <br/>
+          <br/>
           <span *ngIf="verDireccion">
-            Encuentranos en QUITO: Av. 10 de Agosto N39-201 y José Arizaga, Sector La Y, frente al Hipermercado CORAL y junto a la Clínica AXXIS.
+            Encuéntranos en QUITO: Av. 10 de Agosto N39-201 y José Arizaga, Sector La Y, frente al Hipermercado CORAL y junto a la Clínica AXXIS.
             <br>
-            <a href="{{parametroDireccion}}" target="_blank">Ver dirección</a>
+            <br>
+            <span>Dirección en mapa: </span>
+            <a href="{{parametroDireccion}}" target="_blank">{{ parametroDireccion }}</a>
           </span>
+          <br>
+          <span>Horario de Atención: Lunes a Sábado de 08:45 am a 18:15 pm</span>
         </div>
 
         <!-- Address and Contact ends -->
