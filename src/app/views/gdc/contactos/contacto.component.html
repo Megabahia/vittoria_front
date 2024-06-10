@@ -373,9 +373,13 @@
                                     <p class="card-text col-title mb-md-50 mb-0">
                                       Descuento
                                     </p>
-                                    <input type="text" class="form-control" formControlName="descuento"
-                                           (change)="calcular()"
-                                    />
+                                    <div class="input-group">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text" id="descuentoPorcentaje">%</span>
+                                      </div>
+                                      <input type="text" class="form-control" aria-describedby="descuentoPorcentaje"
+                                             formControlName="descuento" (change)="calcular()">
+                                    </div>
                                     <div *ngIf="detalle.controls.descuento.errors"
                                          class="invalid-feedback"
                                          style="display: block;">
@@ -435,7 +439,7 @@
                     <div *ngIf="notaPedidoForm.articulos.errors"
                          class="invalid-feedback" style="display: block;">
                       <div *ngIf="notaPedidoForm.articulos.errors?.required">
-                        Artciulos es requerido
+                        Artículos es requerido
                       </div>
                     </div>
                   </div>

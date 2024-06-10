@@ -167,6 +167,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
       valorUnitario: [0, [Validators.required]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
+      caracteristicas:['',[]],
       descuento: [0,[]],
       imagen: ['', []]
     });
@@ -277,8 +278,8 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
   calculoComision(estado, total) {
     let variable2;
     if (estado === 'Entregado') {
-      variable2=total/this.parametroIva;
-      return (variable2*this.comision).toFixed(2);
+      variable2 = total/this.parametroIva;
+      return (variable2 * this.comision).toFixed(2);
     }else{
       return '--';
     }

@@ -100,7 +100,7 @@
 
           <div class="modal fade" id="verfactura" tabindex="-1" role="dialog"
                aria-labelledby="myLargeModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-xl">
               <div class="modal-content">
                 <form [formGroup]="notaPedido">
                   <div class="card invoice-preview-card">
@@ -146,7 +146,7 @@
                       <h4 class="invoice-title mb-2">Datos para la factura</h4>
                       <div formGroupName="facturacion">
                         <div class="row">
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Nombres</label>
                             <input class="form-control" type="text"
                                    formControlName="nombres" disabled>
@@ -157,7 +157,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Apellidos</label>
                             <input class="form-control" type="text"
                                    formControlName="apellidos" disabled>
@@ -168,7 +168,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Correo</label>
                             <input class="form-control" type="text"
                                    formControlName="correo" disabled>
@@ -179,7 +179,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Numero Identificación</label>
                             <input class="form-control" type="text"
                                    formControlName="identificacion" disabled>
@@ -190,7 +190,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Teléfono</label>
                             <input class="form-control" type="text"
                                    formControlName="telefono" disabled>
@@ -201,7 +201,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Pais</label>
                             <input class="form-control" type="text"
                                    formControlName="pais" disabled>
@@ -212,7 +212,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Provincia</label>
                             <input class="form-control" type="text"
                                    formControlName="provincia" disabled>
@@ -223,7 +223,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Ciudad</label>
                             <input class="form-control" type="text"
                                    formControlName="ciudad" disabled>
@@ -234,7 +234,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Calle Principal</label>
                             <input class="form-control" type="text"
                                    formControlName="callePrincipal" disabled>
@@ -245,7 +245,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Número</label>
                             <input class="form-control" type="text"
                                    formControlName="numero" disabled>
@@ -256,7 +256,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Calle Secundaria</label>
                             <input class="form-control" type="text"
                                    formControlName="calleSecundaria" disabled>
@@ -267,7 +267,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Referencia</label>
                             <input class="form-control" type="text"
                                    formControlName="referencia" disabled>
@@ -278,7 +278,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>GPS</label>
                             <input class="form-control" type="text"
                                    formControlName="gps" disabled>
@@ -292,7 +292,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-3">
                       <label>Método Pago</label>
                       <input class="form-control" type="text"
                              formControlName="metodoPago" disabled>
@@ -311,12 +311,12 @@
                         <form class="source-item">
                           <div data-repeater-list="group-a"
                                *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
-                            <div class="row" [formGroup]="detalle">
+                            <ng-container class="row" [formGroup]="detalle">
                               <div class="repeater-wrapper" data-repeater-item>
                                 <div class="row">
                                   <div class="col-12 d-flex product-details-border position-relative pr-0">
                                     <div class="row w-100 pr-lg-0 pr-1 py-2">
-                                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                      <div class="col-lg-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Código
                                         </p>
@@ -332,7 +332,7 @@
                                           </div>
                                         </div>
                                       </div>
-                                      <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                      <div class="col-lg-1 col-12 my-lg-0 my-2">
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Cantidad
                                         </p>
@@ -349,16 +349,12 @@
                                           </div>
                                         </div>
                                       </div>
-                                      <div class="col-lg-4 col-12 my-lg-0 my-2">
+                                      <div class="col-lg-2 col-12 my-lg-0 my-2">
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Nombre
                                         </p>
                                         <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
 
-                                        <!--<input type="text" class="form-control"
-                                                 formControlName="articulo"
-                                                 disabled
-                                          />-->
                                         <div *ngIf="detalle.controls.articulo.errors"
                                              class="invalid-feedback"
                                              style="display: block;">
@@ -369,7 +365,13 @@
                                       </div>
                                       <div class="col-lg-2 col-12 my-lg-0 my-2">
                                         <p class="card-text col-title mb-md-50 mb-0">
-                                          Valor Unitario
+                                          Características
+                                        </p>
+                                        <label [innerHTML]="detalle.controls.caracteristicas.value"></label>
+                                      </div>
+                                      <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                        <p class="card-text col-title mb-md-50 mb-0">
+                                          Precio
                                         </p>
                                         <label>{{ detalle.controls.valorUnitario.value }}</label>
                                         <div *ngIf="detalle.controls.valorUnitario.errors"
@@ -380,17 +382,17 @@
                                           </div>
                                         </div>
                                       </div>
-                                      <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                      <div class="col-lg-2 col-12 my-lg-0 my-2 text-danger">
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Descuento
                                         </p>
-                                        <label class="d-block text-wrap">{{ detalle.controls.descuento.value }}%</label>
+                                        <label class="d-block text-wrap text-danger">{{ detalle.controls.descuento.value }}%</label>
                                       </div>
-                                      <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                      <div class="col-lg-1 col-12 my-lg-0 my-2 text-danger">
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Total
                                         </p>
-                                        <label>{{ detalle.controls.precio.value }}</label>
+                                        <label class="text-danger"> {{ detalle.controls.precio.value }}</label>
                                         <div *ngIf="detalle.controls.precio.errors"
                                              class="invalid-feedback"
                                              style="display: block;">
@@ -405,19 +407,13 @@
                                              *ngIf="detalle.controls?.imagen" width="100px" height="100px" alt="">
                                       </div>
                                     </div>
-
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            </ng-container>
                           </div>
                         </form>
-                        <div *ngIf="notaPedidoForm.articulos.errors"
-                             class="invalid-feedback" style="display: block;">
-                          <div *ngIf="notaPedidoForm.articulos.errors?.required">
-                            Artciulos es requerido
-                          </div>
-                        </div>
+
                       </div>
                     </div>
                     <div class="card-body invoice-padding">
@@ -428,8 +424,8 @@
                     <!-- Invoice Total starts -->
                     <div class="card-body invoice-padding">
                       <div formGroupName="facturacion">
-                        <div class="row mb-1">
-                          <div class="col-md-6">
+                        <div class="row mb-1 d-flex justify-content-between">
+                          <div class="col-md-5">
                             <label for="codigoVendedor" class="form-label">Codigo
                               Vendedor:</label>
                             <input type="text" class="form-control" id="codigoVendedor"
@@ -441,7 +437,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-md-6">
+                          <div class="col-md-5">
                             <label for="nombreVendedor" class="form-label">Nombre
                               Vendedor:</label>
                             <input type="text" class="form-control" id="nombreVendedor"
@@ -483,7 +479,7 @@
                     <div class="card-body invoice-padding pt-0">
                       <div formGroupName="envio">
                         <div class="row">
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Nombres</label>
                             <input class="form-control" type="text"
                                    formControlName="nombres" disabled>
@@ -494,7 +490,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Apellidos</label>
                             <input class="form-control" type="text"
                                    formControlName="apellidos" disabled>
@@ -505,7 +501,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Correo</label>
                             <input class="form-control" type="text"
                                    formControlName="correo" disabled>
@@ -516,7 +512,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Numero Identificación</label>
                             <input class="form-control" type="text"
                                    formControlName="identificacion" disabled>
@@ -527,7 +523,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Teléfono</label>
                             <input class="form-control" type="text"
                                    formControlName="telefono" disabled>
@@ -538,7 +534,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Pais</label>
                             <input class="form-control" type="text"
                                    formControlName="pais" disabled>
@@ -549,7 +545,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Provincia</label>
                             <input class="form-control" type="text"
                                    formControlName="provincia" disabled>
@@ -560,7 +556,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Ciudad</label>
                             <input class="form-control" type="text"
                                    formControlName="ciudad" disabled>
@@ -571,7 +567,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Calle Principal</label>
                             <input class="form-control" type="text"
                                    formControlName="callePrincipal" disabled>
@@ -582,7 +578,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Número</label>
                             <input class="form-control" type="text"
                                    formControlName="numero" disabled>
@@ -593,7 +589,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Calle Secundaria</label>
                             <input class="form-control" type="text"
                                    formControlName="calleSecundaria" disabled>
@@ -604,7 +600,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Referencia</label>
                             <input class="form-control" type="text"
                                    formControlName="referencia" disabled>
@@ -615,7 +611,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>GPS</label>
                             <input class="form-control" type="text"
                                    formControlName="gps" disabled>
@@ -626,7 +622,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-3">
                             <label>Canal Envio</label>
                             <input class="form-control" type="text"
                                    formControlName="canalEnvio" disabled>
