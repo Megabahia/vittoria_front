@@ -104,7 +104,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       fechaPedido: ['', [Validators.required]],
     });
 
-    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'DIRECCION', 'Dirección').subscribe((result) => {
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'DIRECCIÓN', 'Dirección').subscribe((result) => {
       this.parametroDireccion = result.info[0].valor;
     });
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'CUPON', 'Descuento cupón').subscribe((result) => {
