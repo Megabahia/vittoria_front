@@ -60,6 +60,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   cliente;
   cedula;
   factura;
+  comprobante
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -123,10 +124,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.required, Validators.email]],
-        identificacion: ['', [
-          Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$'),
-          ValidacionesPropias.cedulaValido
-        ]],
+        tipoIdentificacion: ['', [Validators.required]],
+        identificacion: ['', []],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: [this.pais, [Validators.required]],
         provincia: ['', [Validators.required]],
@@ -228,7 +227,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaContactos = info.info;
-      this.toaster.open('Lista actualizada', {type: 'success'});
+      //this.toaster.open('Lista actualizada', {type: 'success'});
     });
   }
 
@@ -359,6 +358,19 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 
+  /*validarComprobante(numComrpobante){
+    this.obtenerContactos();
+
+    this.listaContactos.map((num)=> {
+      console.log('1', num.numeroComprobante)
+      console.log('2', numComrpobante)
+
+      if (num.numeroComprobante === numComrpobante){
+        this.toaster.open('El número de comprobante ya existe', {type: 'danger'});
+      }
+    });
+  }*/
+
   async actualizar(): Promise<void> {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
@@ -482,6 +494,26 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       this.mostrarInputComprobante = true;
     } else {
       this.mostrarInputComprobante = false;
+    }
+  }
+
+  onSelectChangeIdentificacion(event: any) {
+    const selectedValue = event.target.value;
+    if (selectedValue === 'identificacion') {
+      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.cedulaValido]
+      );
+      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
+    } else if (selectedValue === 'ruc') {
+      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.rucValido]
+      )
+      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
+    } else {
+      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.pattern('^[0-9]*$')]
+      )
+      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
     }
   }
 
