@@ -511,7 +511,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
     } else {
       this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
-        [Validators.required, Validators.pattern('^[0-9]*$')]
+        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.cedulaValido]
       )
       this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
     }
