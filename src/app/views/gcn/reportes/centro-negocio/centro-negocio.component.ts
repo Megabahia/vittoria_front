@@ -8,6 +8,7 @@ import {PedidosService} from '../../../../services/mp/pedidos/pedidos.service';
 import {ParamService} from '../../../../services/mp/param/param.service';
 import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
+import {ParamService as ParamServiceAdm} from '../../../../services/admin/param.service';
 
 @Component({
   selector: 'app-centro-negocio',
@@ -31,7 +32,13 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
   opciones;
   archivo: FormData = new FormData();
   horaPedido;
-
+  totalIva;
+  parametroIva;
+  listaEstados;
+  estadoSeleccionado='';
+  listaUsuariosCompania;
+  comision;
+  usuarioSeleccionado='';
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -51,6 +58,7 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
     private paramService: ParamService,
     private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
+    private paramServiceAdm: ParamServiceAdm,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('currentUser'));
     this.inicio.setMonth(this.inicio.getMonth() - 3);
@@ -61,6 +69,14 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
       codigoConfirmacion: ['', [Validators.required]],
       fechaHoraConfirmacion: ['', [Validators.required]],
       tipoFacturacion: ['', [Validators.required]],
+    });
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
+      this.parametroIva = parseFloat(result.info[0].valor);
+    });
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'COMISION', 'Comision').subscribe((result) => {
+      this.comision = parseFloat(result.info[0].valor);
     });
   }
 
@@ -177,11 +193,15 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
       compania: this.usuario.usuario.compania,
-      rol: this.usuario.usuario.idRol
+      rol: this.usuario.usuario.idRol,
+      estado: this.estadoSeleccionado,
+      usuarioVendedor: this.usuarioSeleccionado
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;
-      this.suma_total = info.suma_total.total__sum.toFixed(2);
+      this.listaEstados = info.estados;
+      this.listaUsuariosCompania = info.usuarios;
+      this.suma_total = info.suma_total.subtotal__sum.toFixed(2);
       this.totalVentas = this.listaTransacciones.reduce((acumulador, valorActual) => {
         return acumulador += valorActual.total;
       }, 0);
@@ -203,6 +223,8 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
       //const iva = +(info.total * this.iva.valor).toFixed(2);
       const total = info.total;
       this.notaPedido.patchValue({...info, subtotal: info.subtotal, total});
+
+      this.calcular()
     });
   }
 
@@ -245,17 +267,19 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let subtotal = 0;
+    let subtotalPedido = 0;
+
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value);
       detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       subtotal += parseFloat(detalles[index].get('precio').value);
     });
-    this.notaPedido.get('subtotal').setValue(subtotal);
-    const iva = +(subtotal * this.iva.valor).toFixed(2);
-    const total = iva + subtotal;
-    this.notaPedido.get('iva').setValue(iva);
-    this.notaPedido.get('total').setValue(total);
+
+    subtotalPedido = subtotal / this.parametroIva;
+    this.totalIva = (subtotal - subtotalPedido).toFixed(2);
+    this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
+    this.notaPedido.get('total').setValue(subtotal.toFixed(2));
   }
 
   cargarArchivo(event, nombreCampo): void {
@@ -266,4 +290,25 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(' ')[0];
   }
+
+  onSelectChange(event: any) {
+    this.estadoSeleccionado = event.target.value;
+    this.obtenerTransacciones()
+  }
+
+  onSelectChangeUsers(event: any) {
+    this.usuarioSeleccionado = event.target.value;
+    this.obtenerTransacciones();
+  }
+
+  calculoComision(estado, total) {
+    let variable2;
+    if (estado === 'Entregado') {
+      variable2 = total/this.parametroIva;
+      return (variable2 * this.comision).toFixed(2);
+    }else{
+      return '--';
+    }
+  }
+
 }
