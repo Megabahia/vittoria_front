@@ -6,8 +6,10 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-3">
-              <input type="text" class="form-control form-control-sm" placeholder="Correo"
-                     [(ngModel)]="correo">
+              <input type="text" class="form-control form-control-sm" placeholder="Nombre"
+                     [(ngModel)]="nombre">
+              <input type="text" class="form-control form-control-sm" placeholder="Apellido"
+                     [(ngModel)]="apellido">
             </div>
             <div class="col-md-3">
               <input type="text" class="form-control form-control-sm" placeholder="Número de WhatsApp"
@@ -214,8 +216,12 @@
                           </div>
                           <div *ngIf="facturacionForm.identificacion.errors.identificacionInvalid">
                             Identificacion no valida
-                          </div><div *ngIf="facturacionForm.identificacion.errors.rucInvalid">
+                          </div>
+                          <div *ngIf="facturacionForm.identificacion.errors.rucInvalid">
                             RUC no valido
+                          </div>
+                          <div *ngIf="facturacionForm.identificacion.errors.minlength">
+                            Mínimo 5 caracteres
                           </div>
                         </div>
                       </div>
@@ -556,6 +562,14 @@
                         </div>
                         <div class="invoice-total-item">
                           <p class="invoice-total-title text-primary font-weight-bold">
+                            Subtotal: ${{ notaPedido.controls.subtotal.value }}</p>
+                        </div>
+                        <div class="invoice-total-item">
+                          <p class="invoice-total-title text-primary font-weight-bold">
+                            IVA (15%): ${{ totalIva }}</p>
+                        </div>
+                        <div class="invoice-total-item">
+                          <p class="invoice-total-title text-danger font-weight-bold">
                             Total a pagar por el cliente: ${{ notaPedido.controls.total.value }}</p>
                         </div>
                       </div>
@@ -599,6 +613,7 @@
                               (change)="onSelectChange($event)">
                         <option value="" disabled selected>- Seleccione -</option>
                         <option value="facturaElectronica">Factura electrónica</option>
+                        <option value="facturaElectronicaMegaBahia">Factura electrónica - MegaBahía</option>
                         <option value="rimpePopular">Rimpe popular</option>
                       </select>
                     </div>

@@ -47,7 +47,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   provinciaOpciones;
   verificarContacto = false;
   whatsapp = '';
-  correo = '';
+  nombre = '';
+  apellido = ''
   numPedido = ''
   mostrarInputComprobante = false;
   mostrarCargarArchivo = false;
@@ -60,7 +61,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   cliente;
   cedula;
   factura;
-  comprobante
+  totalIva;
+  parametroIva
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -97,6 +99,10 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       motivo: ['', [Validators.required]],
       estado: ['Rechazado', [Validators.required]],
       fechaPedido: ['', [Validators.required]],
+    });
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
+      this.parametroIva = parseFloat(result.info[0].valor);
     });
   }
 
@@ -141,6 +147,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
+      subtotal: [0],
       envioTotal: [0, [Validators.required]],
       numeroPedido: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
@@ -216,7 +223,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   obtenerContactos(): void {
     this.contactosService.obtenerListaContactos({
       telefono: this.whatsapp,
-      correo: this.correo,
+      nombre: this.nombre,
+      apellido: this.apellido,
       numeroPedido: this.numPedido,
       page: this.page - 1,
       page_size: this.pageSize,
@@ -227,6 +235,10 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaContactos = info.info;
+      this.whatsapp = ''
+      this.nombre = ''
+      this.apellido = ''
+      this.numPedido = ''
       //this.toaster.open('Lista actualizada', {type: 'success'});
     });
   }
@@ -267,7 +279,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
-
+      this.calcular()
     });
   }
 
@@ -341,6 +353,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
+    let subtotalPedido = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
@@ -355,6 +368,9 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       total += parseFloat(detalles[index].get('precio').value);
     });
     total += this.notaPedido.get('envioTotal').value;
+    subtotalPedido = total / this.parametroIva;
+    this.totalIva = (total - subtotalPedido).toFixed(2);
+    this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
     this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 
@@ -490,7 +506,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
 
   onSelectChange(event: any) {
     const selectedValue = event.target.value;
-    if (selectedValue === 'rimpePopular') {
+    if (selectedValue === 'rimpePopular' || selectedValue === 'facturaElectronicaMegaBahia') {
       this.mostrarInputComprobante = true;
     } else {
       this.mostrarInputComprobante = false;
@@ -511,7 +527,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
     } else {
       this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
-        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.cedulaValido]
+        [Validators.required, Validators.minLength(5)]
       )
       this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
     }
@@ -536,9 +552,11 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   }
 
   onFileSelected(event: any): void {
-    this.archivo.delete('archivoFormaPago');
-    this.archivo.append('archivoFormaPago', event.target.files.item(0), event.target.files.item(0).name);
-    // this.fileToUpload = event.target.files.item(0);
+    if (this.mostrarCargarArchivo) {
+      this.archivo.append('archivoFormaPago', event.target.files.item(0), event.target.files.item(0).name);
+    } else {
+      this.archivo.delete('archivoFormaPago');
+    }
   }
 
   guardarComprobanteTransferencia(): void {

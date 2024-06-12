@@ -34,7 +34,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
   horaPedido;
   parametroIva;
   comision;
-  totalComision;
+  totalIva;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -169,7 +169,8 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       caracteristicas:['',[]],
       descuento: [0,[]],
-      imagen: ['', []]
+      imagen: ['', []],
+
     });
   }
 
@@ -211,6 +212,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
       //const iva = +(info.total * this.iva.valor).toFixed(2);
       const total = info.total;
       this.notaPedido.patchValue({...info, subtotal: info.subtotal, total});
+      this.calcular();
     });
   }
 
@@ -250,20 +252,28 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
     });
   }
 
+
   calcular(): void {
     const detalles = this.detallesArray.controls;
-    let subtotal = 0;
+    let total = 0;
+    let subtotalPedido = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
-      const cantidad = parseFloat(detalles[index].get('cantidad').value);
-      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
-      subtotal += parseFloat(detalles[index].get('precio').value);
+      const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
+      // tslint:disable-next-line:radix
+      const descuento = parseInt(detalles[index].get('descuento').value);
+      if (descuento > 0 && descuento <= 100) {
+        const totalDescuento = (valorUnitario * descuento) / 100;
+        detalles[index].get('precio').setValue((((valorUnitario - totalDescuento) * cantidad)).toFixed(2));
+      } else {
+        detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      }
+      total += parseFloat(detalles[index].get('precio').value);
     });
-    this.notaPedido.get('subtotal').setValue(subtotal);
-    const iva = +(subtotal * this.iva.valor).toFixed(2);
-    const total = iva + subtotal;
-    this.notaPedido.get('iva').setValue(iva);
-    this.notaPedido.get('total').setValue(total);
+    subtotalPedido = total / this.parametroIva;
+    this.totalIva = (total - subtotalPedido).toFixed(2);
+    this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
+    this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 
   cargarArchivo(event, nombreCampo): void {
