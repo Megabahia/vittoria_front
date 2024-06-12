@@ -48,7 +48,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   verificarContacto = false;
   whatsapp = '';
   nombre = '';
-  apellido=''
+  apellido = ''
   numPedido = ''
   mostrarInputComprobante = false;
   mostrarCargarArchivo = false;
@@ -235,10 +235,10 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaContactos = info.info;
-      this.whatsapp=''
-      this.nombre=''
-      this.apellido=''
-      this.numPedido=''
+      this.whatsapp = ''
+      this.nombre = ''
+      this.apellido = ''
+      this.numPedido = ''
       //this.toaster.open('Lista actualizada', {type: 'success'});
     });
   }
@@ -527,7 +527,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
     } else {
       this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
-        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.cedulaValido]
+        [Validators.required, Validators.minLength(5)]
       )
       this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
     }
@@ -552,9 +552,11 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   }
 
   onFileSelected(event: any): void {
-    this.archivo.delete('archivoFormaPago');
-    this.archivo.append('archivoFormaPago', event.target.files.item(0), event.target.files.item(0).name);
-    // this.fileToUpload = event.target.files.item(0);
+    if (this.mostrarCargarArchivo) {
+      this.archivo.append('archivoFormaPago', event.target.files.item(0), event.target.files.item(0).name);
+    } else {
+      this.archivo.delete('archivoFormaPago');
+    }
   }
 
   guardarComprobanteTransferencia(): void {

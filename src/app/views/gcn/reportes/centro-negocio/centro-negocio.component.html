@@ -47,7 +47,7 @@
               </div>
             </div>
           </div>
-          <h5 class="card-header">Total de ventas de pedidos Entregados (Subtotal) ${{ suma_total }}</h5>
+          <h5 class="px-2 pb-2">Total de ventas de pedidos <u>Entregados</u> (Subtotal) ${{ suma_total }}</h5>
         </div>
         <div class="card">
           <div class="card-datatable table-responsive pt-0">
@@ -328,12 +328,12 @@
                         <form class="source-item">
                           <div data-repeater-list="group-a"
                                *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
-                            <div class="row" [formGroup]="detalle">
+                            <ng-container class="row" [formGroup]="detalle">
                               <div class="repeater-wrapper" data-repeater-item>
                                 <div class="row">
                                   <div class="col-12 d-flex product-details-border position-relative pr-0">
                                     <div class="row w-100 pr-lg-0 pr-1 py-2">
-                                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                      <div class="col-lg-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Código
                                         </p>
@@ -349,7 +349,7 @@
                                           </div>
                                         </div>
                                       </div>
-                                      <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                      <div class="col-lg-1 col-12 my-lg-0 my-2">
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Cantidad
                                         </p>
@@ -366,7 +366,7 @@
                                           </div>
                                         </div>
                                       </div>
-                                      <div class="col-lg-4 col-12 my-lg-0 my-2">
+                                      <div class="col-lg-2 col-12 my-lg-0 my-2">
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Nombre
                                         </p>
@@ -386,7 +386,7 @@
                                       </div>
                                       <div class="col-lg-2 col-12 my-lg-0 my-2">
                                         <p class="card-text col-title mb-md-50 mb-0">
-                                          Valor Unitario
+                                          Precio
                                         </p>
                                         <label>{{ detalle.controls.valorUnitario.value }}</label>
                                         <div *ngIf="detalle.controls.valorUnitario.errors"
@@ -396,6 +396,14 @@
                                             Requerido
                                           </div>
                                         </div>
+                                      </div>
+                                      <div class="col-lg-2 col-12 my-lg-0 my-2 text-danger">
+                                        <p class="card-text col-title mb-md-50 mb-0">
+                                          Descuento
+                                        </p>
+                                        <label
+                                          class="d-block text-wrap text-danger">{{ detalle.controls.descuento.value }}
+                                          %</label>
                                       </div>
                                       <div class="col-lg-1 col-12 my-lg-0 my-2">
                                         <p class="card-text col-title mb-md-50 mb-0">
@@ -410,12 +418,17 @@
                                           </div>
                                         </div>
                                       </div>
+                                      <div class="col-md-2 border-left">
+                                        <img class="img-detalle"
+                                             src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
+                                             *ngIf="detalle.controls?.imagen" width="100px" height="100px" alt="">
+                                      </div>
                                     </div>
 
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            </ng-container>
                           </div>
                         </form>
                         <div *ngIf="notaPedidoForm.articulos.errors"

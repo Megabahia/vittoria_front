@@ -216,8 +216,12 @@
                           </div>
                           <div *ngIf="facturacionForm.identificacion.errors.identificacionInvalid">
                             Identificacion no valida
-                          </div><div *ngIf="facturacionForm.identificacion.errors.rucInvalid">
+                          </div>
+                          <div *ngIf="facturacionForm.identificacion.errors.rucInvalid">
                             RUC no valido
+                          </div>
+                          <div *ngIf="facturacionForm.identificacion.errors.minlength">
+                            Mínimo 5 caracteres
                           </div>
                         </div>
                       </div>
