@@ -36,7 +36,7 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
   parametroIva;
   listaEstados;
   estadoSeleccionado='';
-  listaUsuariosCompania;
+  listaUsuariosCompania = [];
   comision;
   usuarioSeleccionado='';
   public barChartData: ChartDataSets[] = [];
@@ -203,7 +203,7 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;
       this.listaEstados = info.estados;
-      this.listaUsuariosCompania = info.usuarios;
+      this.listaUsuariosCompania = this.listaUsuariosCompania.length === 0 ? info.usuarios : this.listaUsuariosCompania;
       this.suma_total = info.suma_total.subtotal__sum.toFixed(2);
       this.totalVentas = this.listaTransacciones.reduce((acumulador, valorActual) => {
         return acumulador += valorActual.total;
