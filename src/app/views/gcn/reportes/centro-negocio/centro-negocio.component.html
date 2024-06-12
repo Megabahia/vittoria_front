@@ -26,7 +26,7 @@
               <div class="col-md-4 mt-3">
                 <div class="form-group">
                   <select class="form-control"
-                          (change)="onSelectChange($event)">
+                          [(ngModel)]="estadoSeleccionado">
                     <option value="" selected>- Seleccione estado-</option>
                     <option value="{{estado}}" *ngFor="let estado of listaEstados">
                       {{ estado }}
@@ -37,7 +37,7 @@
               <div class="col-md-4 mt-3">
                 <div class="form-group">
                   <select class="form-control"
-                          (change)="onSelectChangeUsers($event)">
+                          [(ngModel)]="usuarioSeleccionado">
                     <option value="" selected>- Seleccione usuario-</option>
                     <option value="{{usuario.username}}" *ngFor="let usuario of listaUsuariosCompania">
                       {{ usuario.username }}
@@ -47,7 +47,7 @@
               </div>
             </div>
           </div>
-          <h5 class="px-2 pb-2">Total de ventas de pedidos <u>Entregados</u> (Subtotal) ${{ suma_total }}</h5>
+          <!--<h5 class="px-2 pb-2">Total de ventas de pedidos <u>Entregados</u> (Subtotal) ${{ suma_total }}</h5>-->
         </div>
         <div class="card">
           <div class="card-datatable table-responsive pt-0">
