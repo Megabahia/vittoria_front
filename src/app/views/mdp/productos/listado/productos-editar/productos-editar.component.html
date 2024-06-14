@@ -296,6 +296,14 @@
                                     </div>
                                   </div>
                                 </div>
+                              <div class="form-group">
+                                <label for="canal">Canal</label>
+                                <select class="form-control select2" name="canal" formControlName="canal" [(ngModel)]="producto.canal">
+                                  <option value="" selected>- Seleccionar -</option>
+                                  <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{canalOp.nombre}}</option>
+
+                                </select>
+                                </div>
                                 <div class="form-group">
                                     <label>Video</label>
                                     <input type="file" accept="video/mp4,video/x-m4v,video/*" class="form-control"
@@ -314,12 +322,12 @@
                                                [(ngModel)]="producto.estadoLanding"
                                                (change)="seleccionarEstadoLanding($event)"
                                         />
-                                        Activo
+                                        Inactivo
                                         <label class="custom-control-label" for="estadoLanding">
                                             <span class="switch-icon-left"><i data-feather="check"></i></span>
                                             <span class="switch-icon-right"><i data-feather="x"></i></span>
                                         </label>
-                                        Inactivo
+                                        Activo
                                     </div>
                                 </div>
                             </div>
