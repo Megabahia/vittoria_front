@@ -4,6 +4,8 @@ import {CategoriasService} from '../../../../../services/mdp/productos/categoria
 import {Producto, ProductosService} from '../../../../../services/mdp/productos/productos.service';
 import {SubcategoriasService} from '../../../../../services/mdp/productos/subcategorias/subcategorias.service';
 import {ParamService} from 'src/app/services/mdp/param/param.service';
+import {ParamService as AdmParamService} from '../../../../../services/admin/param.service';
+
 import {ParamService as MDMParamService} from 'src/app/services/mdm/param/param.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import * as moment from 'moment';
@@ -35,6 +37,7 @@ export class ProductosEditarComponent implements OnInit {
   submittedFichaTecnicaForm = false;
   opcion;
   categoriasOpciones;
+  canalOpciones;
   subcategoriasOpciones;
   fichaTecnica;
   fichaTecnicaLista;
@@ -51,13 +54,19 @@ export class ProductosEditarComponent implements OnInit {
   mostrarSpinner = false;
 
   listaProductos;
-  codigoBarras:string;
+  codigoBarras: string;
+  page = 1;
+  pageSize: any = 3;
+  tiposOpciones = '';
+  nombreBuscar;
+
   constructor(
     private categoriasService: CategoriasService,
     private subcategoriasService: SubcategoriasService,
     private productosService: ProductosService,
     private modalService: NgbModal,
     private paramService: ParamService,
+    private paramServiceAdm: AdmParamService,
     private MDMparamService: MDMParamService,
     private _formBuilder: FormBuilder,
     private toaster: Toaster,
@@ -79,6 +88,7 @@ export class ProductosEditarComponent implements OnInit {
       categoria: ['', [Validators.required]],
       subCategoria: ['', [Validators.required]],
       idPadre: [''],
+      canal: [''],
       nombre: ['', [Validators.required, Validators.maxLength(150)]],
       descripcion: ['', [Validators.required]],
       codigoBarras: ['', [Validators.required, Validators.maxLength(150)]],
@@ -107,6 +117,7 @@ export class ProductosEditarComponent implements OnInit {
       estadoLanding: [true, []],
       precioLanding: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       precioLandingOferta: ['', [Validators.required, Validators.pattern(this.numRegex)]],
+      woocommerceId: ['']
     });
     this.fichaTecnicaForm = this._formBuilder.group({
       codigo: ['', [Validators.required]],
@@ -135,6 +146,7 @@ export class ProductosEditarComponent implements OnInit {
         this.obtenerCiudad();
         this.productoForm.get('lugarVentaCiudad').setValue(this.producto.lugarVentaCiudad);
       }
+      this.obtenerListaParametros();
       this.obtenerListaSubcategorias();
     });
   }
@@ -142,6 +154,12 @@ export class ProductosEditarComponent implements OnInit {
   async obtenerCourierOpciones() {
     await this.paramService.obtenerListaPadres('COURIER').subscribe((info) => {
       this.couriers = info;
+    });
+  }
+
+  async obtenerListaParametros(): Promise<void> {
+    await this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar).subscribe((result) => {
+      this.canalOpciones = result.data;
     });
   }
 

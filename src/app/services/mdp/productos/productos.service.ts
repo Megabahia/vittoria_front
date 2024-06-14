@@ -7,6 +7,7 @@ const apiUrl: string = environment.apiUrl;
 
 export interface Producto {
   id;
+  canal;
   categoria;
   subCategoria;
   nombre;
@@ -61,6 +62,7 @@ export class ProductosService {
   inicializarProducto(): Producto {
     return {
       id: 0,
+      canal:'',
       categoria: '',
       subCategoria: '',
       nombre: '',
