@@ -158,7 +158,9 @@ export class PedidosRechazadosComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       caracteristicas: ['', []],
       imagen: ['', []],
-      bodega: ['', []]
+      bodega: ['', []],
+      canal:[''],
+      woocommerceId:['']
     });
   }
 

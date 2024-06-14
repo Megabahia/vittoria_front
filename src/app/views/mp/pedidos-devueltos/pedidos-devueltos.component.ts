@@ -180,7 +180,9 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       imagen: [''],
       caracteristicas: ['', []],
-      bodega: ['', []]
+      bodega: ['', []],
+      canal:[''],
+      woocommerceId:['']
     });
   }
 

@@ -182,7 +182,9 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
-      bodega: ['', []]
+      bodega: ['', []],
+      canal: [''],
+      woocommerceId: ['']
     });
   }
 
@@ -270,6 +272,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
                 this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
                 this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
                 this.detallesArray.controls[i].get('bodega').setValue(param[0].nombre);
+                this.detallesArray.controls[i].get('canal').setValue(info.canal)
+                this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
 
                 this.detallesArray.controls[i].get('cantidad').setValidators([
                   Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
@@ -289,7 +293,27 @@ export class PedidosComponent implements OnInit, AfterViewInit {
             }
           });
         } else {
-          resolve();
+
+          this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
+            console.log('INFO', info)
+            this.detallesArray.controls[i].get('id').setValue(info.id);
+            this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+            this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
+            const precioProducto = info.precio;
+            this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
+            this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
+            this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
+            this.detallesArray.controls[i].get('bodega').setValue('');
+            this.detallesArray.controls[i].get('canal').setValue(info.canal)
+            this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
+
+            this.detallesArray.controls[i].get('cantidad').setValidators([
+              Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
+            ]);
+            this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
+            this.calcular();
+            resolve();
+          });
         }
       });
     });
@@ -458,10 +482,10 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
         try {
           this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
-            this.toaster.open('Imagen actualizada con éxito',{type:"info"});
-          },error => this.toaster.open('Error al actualizar la imagen.', {type:"danger"}));
+            this.toaster.open('Imagen actualizada con éxito', {type: "info"});
+          }, error => this.toaster.open('Error al actualizar la imagen.', {type: "danger"}));
         } catch (error) {
-          this.toaster.open('Error al actualizar la imagen.', {type:"danger"});
+          this.toaster.open('Error al actualizar la imagen.', {type: "danger"});
         }
       };
       reader.readAsDataURL(archivo);
