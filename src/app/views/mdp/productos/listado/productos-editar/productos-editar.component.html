@@ -300,7 +300,7 @@
                                 <label for="canal">Canal</label>
                                 <select class="form-control select2" name="canal" formControlName="canal" [(ngModel)]="producto.canal">
                                   <option value="" selected>- Seleccionar -</option>
-                                  <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{canalOp.nombre}}</option>
+                                  <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{canalOp.valor}}</option>
 
                                 </select>
                                 </div>

@@ -47,7 +47,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   archivo: FormData = new FormData();
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
-
+  canalPedido;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -227,7 +227,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true, canal: this.cortarUrlHastaCom(info.canal)});
-
+      this.canalPedido = this.cortarUrl(info.canal);
+      console.log('CNAL INFO', this.canalPedido)
       info.articulos.forEach((item, index) => {
         this.obtenerProducto(index);
       });
@@ -238,6 +239,14 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     if (url.startsWith('http://') || url.startsWith('https://')) {
       const match = url.match(/https?:\/\/[^\/]+\.com/);
       return match ? match[0] : url;  // Devuelve la URL cortada o la original si no se encuentra .com
+    }
+    return url;
+  }
+
+  cortarUrl(url: string): string {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      const match = url.match(/https?:\/\/([^\/]+\.com)/);
+      return match ? match[1] : url;  // Devuelve la parte de la URL después del protocolo hasta .com
     }
     return url;
   }
@@ -253,6 +262,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     return new Promise((resolve, reject) => {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
+        canalProducto: this.canalPedido,
         canal: this.notaPedido.value.canal,
         valorUnitario: Number(this.detallesArray.controls[i].value.valorUnitario).toFixed(2)
       };
