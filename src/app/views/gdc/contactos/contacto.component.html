@@ -341,6 +341,16 @@
                 <hr class="invoice-spacing"/>
                 <!-- Product Details starts -->
                 <div class="card-body invoice-padding bg-light-secondary">
+                  <div>
+                    <label for="canalProducto">Canal de producto</label>
+                    <select class="form-control"
+                            (change)="onSelectChangeCanalProducto($event)" id="canalProducto">
+                      <option value="" selected disabled>- Seleccione -</option>
+                      <option value="{{canal}}" *ngFor="let canal of listaCanalesProducto">
+                        {{ canal }}
+                      </option>
+                    </select>
+                  </div>
                   <div formArrayName="articulos">
                     <form class="source-item">
                       <div data-repeater-list="group-a"
@@ -386,7 +396,7 @@
                                       <div *ngIf="detalle.controls.cantidad.errors.min">
                                         Ingrese minimo 1
                                       </div>
-                                      <div *ngIf="detalle.controls.descuento.errors.pattern">
+                                      <div *ngIf="detalle.controls.cantidad.errors.pattern">
                                         Ingrese solo números
                                       </div>
                                     </div>

@@ -212,6 +212,16 @@
           <hr class="invoice-spacing"/>
           <!-- Product Details starts -->
           <div class="card-body invoice-padding">
+            <div>
+              <label for="canalProducto">Canal de producto</label>
+              <select class="form-control"
+                      (change)="onSelectChange($event)" id="canalProducto">
+                <option value="" selected disabled>- Seleccione -</option>
+                <option value="{{canal}}" *ngFor="let canal of listaCanalesProducto">
+                  {{ canal }}
+                </option>
+              </select>
+            </div>
             <div formArrayName="articulos">
               <form class="source-item">
                 <div data-repeater-list="group-a"
