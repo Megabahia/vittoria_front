@@ -52,7 +52,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   whatsapp = '';
   correo = ''
   usuarioActual;
-  canalSeleccionado='';
+  canalSeleccionado='megabahia.megadescuento.com';
   cedulaABuscar = ''
   clientes;
   cliente;
@@ -208,7 +208,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       imagen: ['', [Validators.required]],
       caracteristicas: ['', []],
       precios: [[], []],
-      canal: [''],
+      canal: ['megabahia.megadescuento.com'],
       woocommerceId: ['']
     });
   }
@@ -240,6 +240,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   }
 
   crearNuevaVenta(modal): void {
+    this.canalSeleccionado='megabahia.megadescuento.com';
     this.iniciarNotaPedido();
     this.obtenerListaProductos();
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});

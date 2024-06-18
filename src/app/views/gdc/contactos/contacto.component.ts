@@ -75,6 +75,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   archivo: FormData = new FormData();
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
+  canalPrincipal = '';
 
   constructor(
     private modalService: NgbModal,
@@ -279,6 +280,9 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       this.totalPagar = info.total;
       this.iniciarNotaPedido();
       this.horaPedido = this.extraerHora(info.created_at);
+
+      this.canalPrincipal = info.articulos[0].canal;
+      this.canalSeleccionado = this.canalPrincipal;
 
       info.articulos.map((item): void => {
         this.agregarItem();
@@ -601,8 +605,4 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     return precios;
   }
 
-  onSelectChangeCanalProducto(e: any) {
-    const value = e.target.value;
-    this.canalSeleccionado = value;
-  }
 }

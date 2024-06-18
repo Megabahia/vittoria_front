@@ -216,8 +216,8 @@
               <label for="canalProducto">Canal de producto</label>
               <select class="form-control"
                       (change)="onSelectChange($event)" id="canalProducto">
-                <option value="" selected disabled>- Seleccione -</option>
-                <option value="{{canal}}" *ngFor="let canal of listaCanalesProducto">
+                <option value="" disabled>- Seleccione -</option>
+                <option [value]="canal" *ngFor="let canal of listaCanalesProducto" [selected]="canal === 'megabahia.megadescuento.com'">
                   {{ canal }}
                 </option>
               </select>
