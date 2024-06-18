@@ -14,7 +14,7 @@ export class CargarStockMegabahiaComponent implements OnInit {
   mostrarSpinner = false;
   mostrarSpinner2 = false;
   resetearStock = false;
-  resetearStock2 = false;
+  resetearStock2 = true;
   resumen = '';
 
   constructor(
