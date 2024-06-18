@@ -212,7 +212,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       caracteristicas: ['', []],
       precios: [[], []],
       canal: [''],
-      woocommerceId: [0]
+      woocommerceId: ['']
     });
   }
 
@@ -512,7 +512,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
 
   onSelectChangeIdentificacion(event: any) {
     const selectedValue = event.target.value;
-    if (selectedValue === 'identificacion') {
+    if (selectedValue === 'cedula') {
       this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
         [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.cedulaValido]
       );

@@ -66,6 +66,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   diasValidosCupon;
   verDireccion = true;
   listaCanalesProducto;
+  tipoIdentificacion;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -142,7 +143,8 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.email]],
-        identificacion: [''],
+        identificacion: ['', []],
+        tipoIdentificacion: [this.tipoIdentificacion, [Validators.required]],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: [this.pais, [Validators.required]],
         provincia: ['', [Validators.required]],
@@ -240,7 +242,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   }
 
   crearNuevaVenta(modal): void {
-    this.canalSeleccionado='megabahia.megadescuento.com';
+    this.canalSeleccionado = 'megabahia.megadescuento.com';
     this.iniciarNotaPedido();
     this.obtenerListaProductos();
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
@@ -551,6 +553,28 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   onSelectChange(e: any) {
     const value = e.target.value;
     this.canalSeleccionado = value;
+  }
+
+  onSelectChangeIdentificacion(event: any) {
+    const selectedValue = event.target.value;
+    if (selectedValue === 'cedula') {
+      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.cedulaValido]
+      );
+      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
+    } else if (selectedValue === 'ruc') {
+      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.rucValido]
+      )
+      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
+    } else {
+      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.minLength(5)]
+      )
+      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
+    }
+    this.tipoIdentificacion=selectedValue
+
   }
 
 }
