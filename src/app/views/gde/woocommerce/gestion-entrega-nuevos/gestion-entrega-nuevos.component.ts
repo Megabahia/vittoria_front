@@ -146,7 +146,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       numeroPedido: ['', []],
       created_at: ['', []],
       metodoPago: ['', [Validators.required]],
-      numeroGuia: [uuidv4(), []],
+      numeroGuia: [, []],
       canal: ['', []]
     });
   }
@@ -246,11 +246,12 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
 
   generarGuia(modal, id): void {
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
+      console.log(info)
       this.iniciarNotaPedido();
       info.articulos.map((item): void => {
         this.agregarItem();
       });
-      this.notaPedido.patchValue({...info, numeroGuia: uuidv4()});
+      this.notaPedido.patchValue({...info});
       this.obtenerGuias();
 
       this.modalService.open(modal, {size: 'lg'});
