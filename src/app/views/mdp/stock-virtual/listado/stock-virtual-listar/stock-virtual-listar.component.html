@@ -1,0 +1,193 @@
+<div class="app-content content " *ngIf="vista=='lista'">
+  <div class="content-overlay"></div>
+  <div class="header-navbar-shadow"></div>
+  <div class="content-wrapper">
+    <div class="content-header row">
+    </div>
+    <div class="content-body">
+      <div class="card">
+        <h5 class="card-header">Administrar stock virtual</h5>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <input class="form-control form-control-sm" type="text" placeholder="Codigo producto"
+                     [(ngModel)]="codigoBarras">
+            </div>
+            <div class="col-md-4">
+              <input class="form-control form-control-sm" type="text" placeholder="Nombre producto"
+                     [(ngModel)]="nombreBuscar">
+            </div>
+            <!--<div class="col-md-4">
+              <button class="btn btn-primary" (click)="obtenerListaProductos()">
+                <i-feather name='search' class="edit-user"></i-feather>
+              </button>
+            </div>-->
+          </div>
+          <div class="row mt-2">
+            <div class="col-md-4">
+              <select class="form-control select2" name="canal" (change)="onSelectChange($event)"
+                      [(ngModel)]="canalSeleccionado">
+                <option value="" selected>- Seleccione canal a buscar-</option>
+                <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
+
+              </select>
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-primary" (click)="obtenerListaProductos()">
+                <i-feather name='search' class="edit-user"></i-feather>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row m-75">
+          <div class="col-lg-12 col-xl-6">
+            <label>Mostrar</label>
+            <select class="form-control-sm" [(ngModel)]="pageSize" (change)="obtenerListaProductos()">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+
+          </div>
+          <div class="col-lg-12 col-xl-6 text-right">
+            <button class="btn btn-success waves-effect waves-float waves-light mx-1"
+                    type="button" (click)="reporteProductosStock()"
+                    [ngClass]="{'loading': enviando}" [disabled]="enviando">
+                            <span *ngIf="enviando" class="spinner-border spinner-border-sm" role="status"
+                                  aria-hidden="true"></span>
+              Exportar a Excel
+            </button>
+            <a (click)="crearProducto()" class="btn btn-icon btn-primary">
+              <i data-feather="plus" class="mr-25"></i>
+              <span>Añadir</span>
+            </a>
+
+          </div>
+        </div>
+        <div class="modal modal-slide-in new-user-modal fade" id="addcampo">
+          <div class="modal-dialog">
+            <div class="modal-content pt-0">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+              <div class="modal-header mb-1">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo campo</h5>
+              </div>
+              <div class="modal-body flex-grow-1">
+                <div class="form-group">
+                  <label class="form-label">Código:</label>
+                  <input type="text" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Nombre:</label>
+                  <input type="text" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Valor:</label>
+                  <input type="text" class="form-control"/>
+                </div>
+
+
+                <button class="btn btn-primary mr-1" data-toggle="modal" data-target="#exito" data-dismiss="modal"
+                        aria-label="Close">Guardar
+                </button>
+                <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-datatable table-responsive pt-0">
+          <table class="user-list-table table table-striped">
+            <thead class="thead-light">
+            <tr>
+              <th>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="customCheck2"/>
+                  <label class="custom-control-label" for="customCheck2"></label>
+                </div>
+              </th>
+              <th>Canal</th>
+              <th>Código de barras</th>
+              <th>URL</th>
+              <th>Categoría</th>
+              <th>Subcategoría</th>
+              <th>Nombre</th>
+              <th>Imagen</th>
+              <th>Stock real</th>
+              <th>Stock virtual</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+            </thead>
+
+            <tbody data-repeater-list="invoice">
+            <tr data-repeater-item *ngFor="let producto of listaProductos; let i = index">
+              <td>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="customCheck2{{i}}"/>
+                  <label class="custom-control-label" for="customCheck2{{i}}"></label>
+                </div>
+              </td>
+              <td>{{ producto.canal | shorten }}</td>
+              <td>{{ producto.codigoBarras }}</td>
+              <td>
+                <button class="btn btn-outline-primary"
+                        (click)="copiarURL(producto.id)" rippleEffect
+                >Copiar Url
+                </button>
+              </td>
+              <td>{{ producto.categoria }}</td>
+              <td>{{ producto.subCategoria }}</td>
+              <td>{{ producto.nombre | slice:0:30 }}</td>
+              <td>
+                <img src="{{ producto.imagenes[0].imagen != '' ? producto.imagenes[0].imagen : './assets/images/no_existe.png'}}" alt="Imagen del producto" width="70" height="70"
+                     style="width: 100px;height: 100px;object-fit: cover;">
+              </td>
+              <td>{{ producto.stock }} (Unidades)</td>
+              <td>{{ producto.stock }} (Unidades)</td>
+              <td><span
+                class="text-capitalize badge {{producto.estado=='Activo' ? 'badge-light-success': 'badge-secondary' }} badge-pill">{{ producto.estado }}</span>
+              </td>
+              <td>
+                <a (click)="editarProducto(producto.id)">
+                  <i-feather name='edit-2'></i-feather>
+                </a>
+                <a (click)="abrirModal(contenido,producto.id)" data-repeater-delete>
+                  <i-feather name='trash'></i-feather>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <ngb-pagination #paginator [collectionSize]="collectionSize " [(page)]="page " [(pageSize)]="pageSize "
+                        [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+
+        <hr/>
+
+
+      </div>
+
+    </div>
+  </div>
+</div>
+<ng-template #contenido let-modal>
+  <div class="modal-header ">
+    <h4 class="modal-title ">Mensaje</h4>
+    <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
+      <span aria-hidden="true ">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <p>Confirma eliminar</p>
+  </div>
+  <div class="modal-footer ">
+    <button type="button " class="btn btn-light " (click)="cerrarModal()">SI</button>
+  </div>
+</ng-template>
+<app-productos-editar *ngIf="vista=='editar'" [idProducto]="idProducto"
+                      (messageEvent)="receiveMessage($event)"></app-productos-editar>
+

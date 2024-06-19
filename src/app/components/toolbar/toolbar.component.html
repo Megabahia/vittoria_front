@@ -305,6 +305,21 @@
               </li>
             </ul>
           </li>
+          <li class="nav-item has-sub ng-star-inserted">
+            <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
+               title="Administración de stock virtual">
+              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración de stock virtual</span></a>
+            <ul class="menu-content">
+
+              <li class="nav-item {{menuToolbar['mdp']['prodStockVirtualList']}}">
+                <a class="d-flex align-items-center" href="#/mdp/stock-virtual" data-toggle="tooltip"
+                   data-placement="auto" title="Listado de stock virtual">
+                  <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Listado de stock virtual</span></a>
+              </li>
+
+            </ul>
+          </li>
+
         </ul>
       </li>
       <li class="nav-item" *ngIf="acciones.MDO.LEER">
