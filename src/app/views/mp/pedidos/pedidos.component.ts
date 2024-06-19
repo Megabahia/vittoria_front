@@ -222,12 +222,12 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       this.validarCiudadEnProvincia(info.facturacion.provincia, info.facturacion.ciudad, info.envio.provincia, info.envio.ciudad);
 
       this.iniciarNotaPedido();
+
       info.articulos.map((item): void => {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true, canal: this.cortarUrlHastaCom(info.canal)});
-      this.canalPedido = this.cortarUrl(info.canal);
-      console.log('CNAL INFO', this.canalPedido)
+
       info.articulos.forEach((item, index) => {
         this.obtenerProducto(index);
       });
@@ -235,21 +235,12 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   }
 
   cortarUrlHastaCom(url: string): string {
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      const match = url.match(/https?:\/\/[^\/]+\.com/);
-      return match ? match[0] : url;  // Devuelve la URL cortada o la original si no se encuentra .com
+    const match = url.match(/https?:\/\/[^\/]+\.com/);
+    if (match) {
+      return match[0].replace(/https?:\/\//, '');
     }
-    return url;
+    return url.replace(/https?:\/\//, '');
   }
-
-  cortarUrl(url: string): string {
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      const match = url.match(/https?:\/\/([^\/]+\.com)/);
-      return match ? match[1] : url;  // Devuelve la parte de la URL después del protocolo hasta .com
-    }
-    return url;
-  }
-
 
   obtenerOpciones(): void {
     this.paramService.obtenerListaPadres('PEDIDO_ESTADO').subscribe((info) => {
@@ -261,7 +252,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     return new Promise((resolve, reject) => {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
-        canalProducto: this.canalPedido,
+        canalProducto: this.notaPedido.value.canal,
         canal: this.notaPedido.value.canal,
         valorUnitario: Number(this.detallesArray.controls[i].value.valorUnitario).toFixed(2)
       };
