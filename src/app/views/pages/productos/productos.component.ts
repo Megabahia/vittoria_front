@@ -125,7 +125,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       detalles: this._formBuilder.array([]),
       courier: ['', []],
       total: ['', []],
-      canalOrigen: ['Landing-Producto', []]
+      canalOrigen: [this.cortarUrlLanding(window.location.href), []]
     });
   }
 
@@ -270,5 +270,14 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     this.pospectoForm.get('precio').setValue(this.producto.precioLandingOferta * cantidad);
     this.pospectoForm.get('total').setValue(this.producto.precioLandingOferta * cantidad);
     this.pospectoForm.updateValueAndValidity();
+  }
+
+  cortarUrlLanding(url: string): string {
+    const withoutProtocol = url.replace(/(^\w+:|^)\/\//, '');  // Elimina el protocolo
+    const domainSlashIndex = withoutProtocol.indexOf('/');  // Encuentra el primer slash después del dominio
+    if (domainSlashIndex !== -1) {
+      return withoutProtocol.substring(0, domainSlashIndex);  // Corta hasta el primer slash después del dominio
+    }
+    return withoutProtocol;  // Devuelve la URL sin cambios si no hay slash
   }
 }

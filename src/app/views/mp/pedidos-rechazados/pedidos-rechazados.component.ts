@@ -9,6 +9,7 @@ import {ParamService} from '../../../services/mp/param/param.service';
 import {ParamService as ParamServiceMDP} from '../../../services/mdp/param/param.service';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../constats/mp/pedidos';
+import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
 
 @Component({
   selector: 'app-pedidos-rechazados',
@@ -81,7 +82,8 @@ export class PedidosRechazadosComponent implements OnInit, AfterViewInit {
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.required, Validators.email]],
-        identificacion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
+        identificacion: ['', []],
+        tipoIdentificacion: ['', [Validators.required]],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
         pais: ['', [Validators.required]],
         provincia: ['', [Validators.required]],
@@ -99,7 +101,8 @@ export class PedidosRechazadosComponent implements OnInit, AfterViewInit {
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.required, Validators.email]],
-        identificacion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
+        identificacion: ['', []],
+        tipoIdentificacion: ['', [Validators.required]],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
         pais: ['', [Validators.required]],
         provincia: ['', [Validators.required]],
@@ -335,4 +338,5 @@ export class PedidosRechazadosComponent implements OnInit, AfterViewInit {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(' ')[0];
   }
+
 }

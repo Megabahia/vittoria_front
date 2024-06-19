@@ -55,6 +55,10 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
 
   mostrarDiv = false;
 
+  counter = 0;
+  lastYear = 0;
+  lastMonth = 0;
+  guiaNumber = '';
 
   constructor(
     private modalService: NgbModal,
@@ -103,6 +107,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
         apellidos: ['', []],
         correo: ['', []],
         identificacion: ['', []],
+        tipoIdentificacion: ['', []],
         telefono: ['', []],
         pais: ['', []],
         provincia: ['', []],
@@ -121,6 +126,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
         apellidos: ['', []],
         correo: ['', []],
         identificacion: ['', []],
+        tipoIdentificacion: ['', [Validators.required]],
         telefono: ['', []],
         pais: ['', []],
         provincia: ['', []],
@@ -140,7 +146,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       numeroPedido: ['', []],
       created_at: ['', []],
       metodoPago: ['', [Validators.required]],
-      numeroGuia: [uuidv4(), []],
+      numeroGuia: [, []],
       canal: ['', []]
     });
   }
@@ -240,11 +246,12 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
 
   generarGuia(modal, id): void {
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
+      console.log(info)
       this.iniciarNotaPedido();
       info.articulos.map((item): void => {
         this.agregarItem();
       });
-      this.notaPedido.patchValue({...info, numeroGuia: uuidv4()});
+      this.notaPedido.patchValue({...info});
       this.obtenerGuias();
 
       this.modalService.open(modal, {size: 'lg'});
@@ -322,16 +329,6 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     });
     total += this.notaPedido.get('envioTotal').value;
     this.notaPedido.get('total').setValue(total.toFixed(2));
-  }
-
-  actualizar(): void {
-    this.calcular();
-    if (confirm('Esta seguro de actualizar los datos') === true) {
-      this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
-        this.modalService.dismissAll();
-        this.obtenerTransacciones();
-      });
-    }
   }
 
   procesarEnvio(modal, transaccion): void {
@@ -773,4 +770,32 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(' ')[0];
   }
+
+  getCurrentDate(): string {
+    const today = new Date();
+    const day = today.getDate().toString().padStart(2, '0');
+    const month = (today.getMonth() + 1).toString().padStart(2, '0'); // getMonth() es 0-indexado
+    const year = today.getFullYear().toString();
+
+    return `${day}-${month}-${year}`;
+  }
+
+  generarNumeroGuia(dateStr: string): void {
+    const [day, month, year] = dateStr.split('-').map(Number);
+    const yearLastTwoDigits = year % 100;
+    const monthPadded = month.toString().padStart(2, '0');
+
+    // Reset the counter if it's a new month or year
+    if (this.lastYear !== yearLastTwoDigits || this.lastMonth !== month) {
+      this.counter = 0; // Reset the counter
+      this.lastYear = yearLastTwoDigits;
+      this.lastMonth = month;
+    }
+
+    this.counter++; // Increment the counter
+    this.guiaNumber = `${yearLastTwoDigits}${monthPadded}${this.counter.toString().padStart(4, '0')}`;
+
+  }
+
+
 }

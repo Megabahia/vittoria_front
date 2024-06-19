@@ -187,25 +187,46 @@
                           </div>
                         </div>
                         <div class="col-3">
+                          <div class="form-group">
+                            <label for="tipoIdentificacion">Tipo de Identificación</label>
+                            <select id="tipoIdentificacion" class="form-control" formControlName="tipoIdentificacion"
+                                    (change)="onSelectChangeIdentificacion($event)">
+                              <option value="" disabled>- Seleccione -</option>
+                              <option value="cedula" selected>Cédula</option>
+                              <option value="ruc">RUC</option>
+                              <option value="pasaporte">Pasaporte</option>
+                            </select>
+                            <div *ngIf="facturacionForm.tipoIdentificacion.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="facturacionForm.tipoIdentificacion.errors.required">
+                                Requerido
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-3">
                           <label>Numero Identificación</label>
                           <input class="form-control" type="text"
-                                 formControlName="identificacion">
+                                 formControlName="identificacion"
+                                 (change)="validarDatos()"
+                          >
                           <div *ngIf="facturacionForm.identificacion.errors"
                                class="invalid-feedback" style="display: block;">
                             <div *ngIf="facturacionForm.identificacion.errors.required">
                               Requerido
-                            </div>
-                            <div *ngIf="facturacionForm.identificacion.errors.minlength">
-                              Ingrese Minimo 10 digitos
-                            </div>
-                            <div *ngIf="facturacionForm.identificacion.errors.maxlength">
-                              Ingrese Maximo 10 digitos
                             </div>
                             <div *ngIf="facturacionForm.identificacion.errors.pattern">
                               Ingrese solo numeros
                             </div>
                             <div *ngIf="facturacionForm.identificacion.errors.identificacionInvalid">
                               Identificacion no valida
+                            </div>
+                            <div *ngIf="facturacionForm.identificacion.errors.rucInvalid">
+                              RUC no valido
+                            </div>
+                            <div *ngIf="facturacionForm.identificacion.errors.minlength">
+                              Mínimo 5 caracteres
                             </div>
                           </div>
                         </div>
@@ -562,19 +583,34 @@
                           </div>
                         </div>
                         <div class="col-3">
+                          <div class="form-group">
+                            <label for="tipoIdentificacionEnvio">Tipo de Identificación</label>
+                            <select id="tipoIdentificacionEnvio" class="form-control" formControlName="tipoIdentificacion"
+                                    (change)="onSelectChangeIdentificacionEnvio($event)">
+                              <option value="" disabled>- Seleccione -</option>
+                              <option value="cedula" selected>Cédula</option>
+                              <option value="ruc">RUC</option>
+                              <option value="pasaporte">Pasaporte</option>
+                            </select>
+                            <div *ngIf="envioForm.tipoIdentificacion.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="envioForm.tipoIdentificacion.errors.required">
+                                Requerido
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-3">
                           <label>Numero Identificación</label>
                           <input class="form-control" type="text"
-                                 formControlName="identificacion">
+                                 formControlName="identificacion"
+                                 (change)="validarDatos()"
+                          >
                           <div *ngIf="envioForm.identificacion.errors"
                                class="invalid-feedback" style="display: block;">
                             <div *ngIf="envioForm.identificacion.errors.required">
                               Requerido
-                            </div>
-                            <div *ngIf="envioForm.identificacion.errors.minlength">
-                              Ingrese minimo 10 digitos
-                            </div>
-                            <div *ngIf="envioForm.identificacion.errors.maxlength">
-                              Ingrese maximo 10 digitos
                             </div>
                             <div *ngIf="envioForm.identificacion.errors.pattern">
                               Ingrese solo numeros
@@ -582,8 +618,15 @@
                             <div *ngIf="envioForm.identificacion.errors.identificacionInvalid">
                               Identificacion no valida
                             </div>
+                            <div *ngIf="envioForm.identificacion.errors.rucInvalid">
+                              RUC no valido
+                            </div>
+                            <div *ngIf="envioForm.identificacion.errors.minlength">
+                              Mínimo 5 caracteres
+                            </div>
                           </div>
                         </div>
+
                         <div class="col-3">
                           <label>Teléfono</label>
                           <input class="form-control" type="text"
