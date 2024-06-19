@@ -105,28 +105,46 @@
                   </div>
                 </div>
                 <div class="col-4">
+                  <div class="form-group">
+                    <label for="tipoIdentificacion">Tipo de Identificación</label>
+                    <select id="tipoIdentificacion" class="form-control" formControlName="tipoIdentificacion"
+                            (change)="onSelectChangeIdentificacion($event)">
+                      <option value="" disabled>- Seleccione -</option>
+                      <option value="cedula" selected>Cédula</option>
+                      <option value="ruc">RUC</option>
+                      <option value="pasaporte">Pasaporte</option>
+                    </select>
+                    <div *ngIf="facturacionForm.tipoIdentificacion.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="facturacionForm.tipoIdentificacion.errors.required">
+                        Requerido
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4">
                   <label>Numero Identificación</label>
                   <input class="form-control" type="text"
                          formControlName="identificacion"
-                         (keyup)="validarCedulaInicial($event)"
-
+                         (change)="validarDatos()"
                   >
                   <div *ngIf="facturacionForm.identificacion.errors"
                        class="invalid-feedback" style="display: block;">
                     <div *ngIf="facturacionForm.identificacion.errors.required">
                       Requerido
                     </div>
-                    <div *ngIf="facturacionForm.identificacion.errors.minlength">
-                      Ingrese minimo 10 digitos
-                    </div>
-                    <div *ngIf="facturacionForm.identificacion.errors.maxlength">
-                      Ingrese maximo 10 digitos
-                    </div>
                     <div *ngIf="facturacionForm.identificacion.errors.pattern">
                       Ingrese solo numeros
                     </div>
                     <div *ngIf="facturacionForm.identificacion.errors.identificacionInvalid">
                       Identificacion no valida
+                    </div>
+                    <div *ngIf="facturacionForm.identificacion.errors.rucInvalid">
+                      RUC no valido
+                    </div>
+                    <div *ngIf="facturacionForm.identificacion.errors.minlength">
+                      Mínimo 5 caracteres
                     </div>
                   </div>
                 </div>
@@ -212,6 +230,16 @@
           <hr class="invoice-spacing"/>
           <!-- Product Details starts -->
           <div class="card-body invoice-padding">
+            <div>
+              <label for="canalProducto">Canal de producto</label>
+              <select class="form-control"
+                      (change)="onSelectChange($event)" id="canalProducto" disabled>
+                <option value="" disabled>- Seleccione -</option>
+                <option [value]="canal" *ngFor="let canal of listaCanalesProducto" [selected]="canal === 'megabahia.megadescuento.com'">
+                  {{ canal }}
+                </option>
+              </select>
+            </div>
             <div formArrayName="articulos">
               <form class="source-item">
                 <div data-repeater-list="group-a"

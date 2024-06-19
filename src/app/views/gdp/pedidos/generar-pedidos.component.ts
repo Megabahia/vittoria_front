@@ -52,7 +52,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   whatsapp = '';
   correo = ''
   usuarioActual;
-  selectedPrecio;
+  canalSeleccionado='megabahia.megadescuento.com';
   cedulaABuscar = ''
   clientes;
   cliente;
@@ -65,6 +65,8 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   imagenCargada = false;
   diasValidosCupon;
   verDireccion = true;
+  listaCanalesProducto;
+  tipoIdentificacion;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -141,7 +143,8 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.email]],
-        identificacion: [''],
+        identificacion: ['', []],
+        tipoIdentificacion: [this.tipoIdentificacion, [Validators.required]],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: [this.pais, [Validators.required]],
         provincia: ['', [Validators.required]],
@@ -207,6 +210,8 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       imagen: ['', [Validators.required]],
       caracteristicas: ['', []],
       precios: [[], []],
+      canal: ['megabahia.megadescuento.com'],
+      woocommerceId: ['']
     });
   }
 
@@ -237,7 +242,9 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   }
 
   crearNuevaVenta(modal): void {
+    this.canalSeleccionado = 'megabahia.megadescuento.com';
     this.iniciarNotaPedido();
+    this.obtenerListaProductos();
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
   }
 
@@ -275,10 +282,28 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     }
   }
 
+  obtenerListaProductos(): void {
+    this.productosService.obtenerListaProductos(
+      {
+        page: this.page - 1,
+        page_size: this.pageSize,
+        nombre: '',
+        codigoBarras: '',
+      }
+    ).subscribe((info) => {
+      this.listaCanalesProducto = info.canal
+    });
+  }
+
   async obtenerProducto(i): Promise<void> {
+    if (this.canalSeleccionado === '') {
+      this.toaster.open('Seleccione un canal y vuelva a buscar', {type: 'danger'});
+      return;
+    }
     return new Promise((resolve, reject) => {
-      let data = {
+      const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
+        canalProducto: this.canalSeleccionado,
         canal: this.notaPedido.value.canal,
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
@@ -298,6 +323,8 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
             Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
           ]);
           this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
+          this.detallesArray.controls[i].get('canal').setValue(info.canal)
+          this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
           this.calcular();
           resolve();
         } else {
@@ -409,7 +436,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
         this.obtenerCiudad()
         //this.notaPedido.get('facturacion').get('identificacion').disable();
       }, error => {
-        this.toaster.open(error.error, {type: 'danger'})
+        this.toaster.open(error, {type: 'danger'})
         this.notaPedido.get('facturacion').get('nombres').setValue('')
         this.notaPedido.get('facturacion').get('apellidos').setValue('')
         this.notaPedido.get('facturacion').get('correo').setValue('')
@@ -437,11 +464,12 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
         this.datosProducto.append('imagenes[' + 0 + ']id', '0');
         this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
         this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
+        this.datosProducto.append('canal', this.detallesArray.controls[i].get('canal').value);
 
         try {
           this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
             this.toaster.open('Imagen actualizada con éxito', {type: "info"});
-          }, error => this.toaster.open('Error al actualizar la imagen.', {type: "danger"}));
+          }, error => this.toaster.open('No se pudo actualizar la imagen.', {type: "danger"}));
         } catch (error) {
           this.toaster.open('Error al actualizar la imagen.', {type: "danger"});
         }
@@ -520,6 +548,33 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
   descargarImagen(): void {
     window.open(this.notaPedido.value.fotoCupon, 'Download');
+  }
+
+  onSelectChange(e: any) {
+    const value = e.target.value;
+    this.canalSeleccionado = value;
+  }
+
+  onSelectChangeIdentificacion(event: any) {
+    const selectedValue = event.target.value;
+    if (selectedValue === 'cedula') {
+      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.cedulaValido]
+      );
+      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
+    } else if (selectedValue === 'ruc') {
+      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.rucValido]
+      )
+      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
+    } else {
+      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.minLength(5)]
+      )
+      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
+    }
+    this.tipoIdentificacion=selectedValue
+
   }
 
 }

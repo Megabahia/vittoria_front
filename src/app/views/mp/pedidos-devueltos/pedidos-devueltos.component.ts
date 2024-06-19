@@ -13,6 +13,7 @@ import {ValidacionesPropias} from '../../../utils/customer.validators';
 import {Toaster} from "ngx-toast-notifications";
 import {logger} from "codelyzer/util/logger";
 import {ParamService as ParamServiceAdm} from "../../../services/admin/param.service";
+import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
 
 @Component({
   selector: 'app-pedidos-devueltos',
@@ -56,6 +57,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
     private paramService: ParamService,
     private paramServiceAdm: ParamServiceAdm,
     private productosService: ProductosService,
+    private contactosService: ContactosService,
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
@@ -94,10 +96,8 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.required, Validators.email]],
-        identificacion: ['', [
-          Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$'),
-          ValidacionesPropias.cedulaValido
-        ]],
+        identificacion: ['', []],
+        tipoIdentificacion: ['', [Validators.required]],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: ['', [Validators.required]],
         provincia: ['', [Validators.required]],
@@ -115,10 +115,8 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.required, Validators.email]],
-        identificacion: ['', [
-          Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$'),
-          ValidacionesPropias.cedulaValido
-        ]],
+        identificacion: ['', []],
+        tipoIdentificacion: ['', [Validators.required]],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: ['', [Validators.required]],
         provincia: ['', [Validators.required]],
@@ -180,7 +178,9 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       imagen: [''],
       caracteristicas: ['', []],
-      bodega: ['', []]
+      bodega: ['', []],
+      canal:[''],
+      woocommerceId:['']
     });
   }
 
@@ -428,6 +428,12 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       );
   }
 
+
+  validarDatos(): void {
+    this.contactosService.validarCamposContacto(this.notaPedido.value).subscribe((info) => {
+    }, error => this.toaster.open(error, {type: 'danger'}));
+  }
+
   cargarImagen(i, event: any): void {
     this.datosProducto = new FormData();
 
@@ -458,5 +464,45 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
   extraerHora(dateTimeString: string): string {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(' ')[0];
+  }
+
+  onSelectChangeIdentificacion(event: any) {
+    const selectedValue = event.target.value;
+    if (selectedValue === 'cedula') {
+      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.cedulaValido]
+      );
+      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
+    } else if (selectedValue === 'ruc') {
+      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.rucValido]
+      )
+      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
+    } else {
+      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.minLength(5)]
+      )
+      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
+    }
+  }
+
+  onSelectChangeIdentificacionEnvio(event: any) {
+    const selectedValue = event.target.value;
+    if (selectedValue === 'cedula') {
+      this.notaPedido.get('envio')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.cedulaValido]
+      );
+      this.notaPedido.get('envio')['controls']['identificacion'].updateValueAndValidity();
+    } else if (selectedValue === 'ruc') {
+      this.notaPedido.get('envio')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.rucValido]
+      )
+      this.notaPedido.get('envio')['controls']['identificacion'].updateValueAndValidity();
+    } else {
+      this.notaPedido.get('envio')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.minLength(5)]
+      )
+      this.notaPedido.get('envio')['controls']['identificacion'].updateValueAndValidity();
+    }
   }
 }

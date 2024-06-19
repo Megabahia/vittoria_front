@@ -11,6 +11,7 @@ import {ProductosService} from '../../../services/mdp/productos/productos.servic
 import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../constats/mp/pedidos';
 import {ValidacionesPropias} from '../../../utils/customer.validators';
 import {Toaster} from 'ngx-toast-notifications';
+import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
 
 @Component({
   selector: 'app-pedidos',
@@ -47,7 +48,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   archivo: FormData = new FormData();
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
-
+  canalPedido;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -57,6 +58,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
     private toaster: Toaster,
+    private contactosService: ContactosService,
+
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
@@ -96,10 +99,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.required, Validators.email]],
-        identificacion: ['', [
-          Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$'),
-          ValidacionesPropias.cedulaValido
-        ]],
+        identificacion: ['', []],
+        tipoIdentificacion: ['', [Validators.required]],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: ['', [Validators.required]],
         provincia: ['', [Validators.required]],
@@ -117,10 +118,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.required, Validators.email]],
-        identificacion: ['', [
-          Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$'),
-          ValidacionesPropias.cedulaValido
-        ]],
+        identificacion: ['', []],
+        tipoIdentificacion: ['', [Validators.required]],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: ['', [Validators.required]],
         provincia: ['', [Validators.required]],
@@ -182,7 +181,9 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
-      bodega: ['', []]
+      bodega: ['', []],
+      canal: [''],
+      woocommerceId: ['']
     });
   }
 
@@ -221,6 +222,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       this.validarCiudadEnProvincia(info.facturacion.provincia, info.facturacion.ciudad, info.envio.provincia, info.envio.ciudad);
 
       this.iniciarNotaPedido();
+
       info.articulos.map((item): void => {
         this.agregarItem();
       });
@@ -233,13 +235,12 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   }
 
   cortarUrlHastaCom(url: string): string {
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      const match = url.match(/https?:\/\/[^\/]+\.com/);
-      return match ? match[0] : url;  // Devuelve la URL cortada o la original si no se encuentra .com
+    const match = url.match(/https?:\/\/[^\/]+\.com/);
+    if (match) {
+      return match[0].replace(/https?:\/\//, '');
     }
-    return url;
+    return url.replace(/https?:\/\//, '');
   }
-
 
   obtenerOpciones(): void {
     this.paramService.obtenerListaPadres('PEDIDO_ESTADO').subscribe((info) => {
@@ -251,6 +252,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     return new Promise((resolve, reject) => {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
+        canalProducto: this.notaPedido.value.canal,
         canal: this.notaPedido.value.canal,
         valorUnitario: Number(this.detallesArray.controls[i].value.valorUnitario).toFixed(2)
       };
@@ -270,6 +272,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
                 this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
                 this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
                 this.detallesArray.controls[i].get('bodega').setValue(param[0].nombre);
+                this.detallesArray.controls[i].get('canal').setValue(info.canal)
+                this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
 
                 this.detallesArray.controls[i].get('cantidad').setValidators([
                   Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
@@ -289,7 +293,27 @@ export class PedidosComponent implements OnInit, AfterViewInit {
             }
           });
         } else {
-          resolve();
+
+          this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
+            console.log('INFO', info)
+            this.detallesArray.controls[i].get('id').setValue(info.id);
+            this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+            this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
+            const precioProducto = info.precio;
+            this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
+            this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
+            this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
+            this.detallesArray.controls[i].get('bodega').setValue('');
+            this.detallesArray.controls[i].get('canal').setValue(info.canal)
+            this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
+
+            this.detallesArray.controls[i].get('cantidad').setValidators([
+              Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
+            ]);
+            this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
+            this.calcular();
+            resolve();
+          });
         }
       });
     });
@@ -458,10 +482,10 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
         try {
           this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
-            this.toaster.open('Imagen actualizada con éxito',{type:"info"});
-          },error => this.toaster.open('Error al actualizar la imagen.', {type:"danger"}));
+            this.toaster.open('Imagen actualizada con éxito', {type: "info"});
+          }, error => this.toaster.open('Error al actualizar la imagen.', {type: "danger"}));
         } catch (error) {
-          this.toaster.open('Error al actualizar la imagen.', {type:"danger"});
+          this.toaster.open('Error al actualizar la imagen.', {type: "danger"});
         }
       };
       reader.readAsDataURL(archivo);
@@ -474,4 +498,48 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     return date.toTimeString().split(' ')[0];
   }
 
+  validarDatos(): void {
+    this.contactosService.validarCamposContacto(this.notaPedido.value).subscribe((info) => {
+    }, error => this.toaster.open(error, {type: 'danger'}));
+  }
+
+  onSelectChangeIdentificacion(event: any) {
+    const selectedValue = event.target.value;
+    if (selectedValue === 'cedula') {
+      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.cedulaValido]
+      );
+      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
+    } else if (selectedValue === 'ruc') {
+      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.rucValido]
+      )
+      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
+    } else {
+      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.minLength(5)]
+      )
+      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
+    }
+  }
+
+  onSelectChangeIdentificacionEnvio(event: any) {
+    const selectedValue = event.target.value;
+    if (selectedValue === 'cedula') {
+      this.notaPedido.get('envio')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.cedulaValido]
+      );
+      this.notaPedido.get('envio')['controls']['identificacion'].updateValueAndValidity();
+    } else if (selectedValue === 'ruc') {
+      this.notaPedido.get('envio')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.rucValido]
+      )
+      this.notaPedido.get('envio')['controls']['identificacion'].updateValueAndValidity();
+    } else {
+      this.notaPedido.get('envio')['controls']['identificacion'].setValidators(
+        [Validators.required, Validators.minLength(5)]
+      )
+      this.notaPedido.get('envio')['controls']['identificacion'].updateValueAndValidity();
+    }
+  }
 }

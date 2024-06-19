@@ -117,7 +117,7 @@ export class ProductosEditarComponent implements OnInit {
       estadoLanding: [true, []],
       precioLanding: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       precioLandingOferta: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      woocommerceId: ['']
+      woocommerceId: ['',[]]
     });
     this.fichaTecnicaForm = this._formBuilder.group({
       codigo: ['', [Validators.required]],

@@ -62,7 +62,9 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   cedula;
   factura;
   totalIva;
-  parametroIva
+  parametroIva;
+  canalSeleccionado = '';
+  listaCanalesProducto
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -73,6 +75,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   archivo: FormData = new FormData();
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
+  canalPrincipal = '';
 
   constructor(
     private modalService: NgbModal,
@@ -208,6 +211,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       imagen: ['', []],
       caracteristicas: ['', []],
       precios: [[], []],
+      canal: [''],
+      woocommerceId: ['']
     });
   }
 
@@ -248,6 +253,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   }
 
   obtenerContacto(modal, id): void {
+    this.obtenerListaProductos()
     this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
     this.contactosService.obtenerContacto(id).subscribe((info) => {
       if (info.tipoPago === 'rimpePopular') {
@@ -275,6 +281,9 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       this.iniciarNotaPedido();
       this.horaPedido = this.extraerHora(info.created_at);
 
+      this.canalPrincipal = info.articulos[0].canal;
+      this.canalSeleccionado = this.canalPrincipal;
+
       info.articulos.map((item): void => {
         this.agregarItem();
       });
@@ -295,27 +304,24 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async guardarPorContacto(): Promise<void> {
-    await Promise.all(this.detallesArray.controls.map((producto, index) => {
-      return this.obtenerProducto(index);
-    }));
-    if (confirm('Esta seguro de guardar los datos') === true) {
-      this.contactosService.crearNuevoContacto(this.notaPedido.value).subscribe((info) => {
-          this.modalService.dismissAll();
-          this.obtenerContactos();
-          this.mostrarInputTransaccion = false;
-          this.mostrarCargarArchivo = false;
-          this.mostrarInputCobro = false;
-          this.mostrarInputComprobante = false;
-        }, error => this.toaster.open(error, {type: 'danger'})
-      );
-    }
+  obtenerListaProductos(): void {
+    this.productosService.obtenerListaProductos(
+      {
+        page: this.page - 1,
+        page_size: this.pageSize,
+        nombre: '',
+        codigoBarras: '',
+      }
+    ).subscribe((info) => {
+      this.listaCanalesProducto = info.canal
+    });
   }
 
   async obtenerProducto(i): Promise<void> {
     return new Promise((resolve, reject) => {
-      let data = {
+      const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
+        canalProducto: this.detallesArray.controls[i].value.canal !== '' ? this.detallesArray.controls[i].value.canal : this.canalSeleccionado,
         canal: this.notaPedido.value.canal,
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
@@ -331,9 +337,12 @@ export class ContactoComponent implements OnInit, AfterViewInit {
           this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
           this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
           this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
+          this.detallesArray.controls[i].get('canal').setValue(info.canal)
+          this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
           this.detallesArray.controls[i].get('cantidad').setValidators([
             Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
           ]);
+
           this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
           this.calcular();
           resolve();
@@ -346,7 +355,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
           this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
           window.alert('Existen inconsistencias con los precios de los productos.');
         }*/
-      });
+      }, error => this.toaster.open(error, {type: 'danger'}));
     });
   }
 
@@ -374,18 +383,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 
-  /*validarComprobante(numComrpobante){
-    this.obtenerContactos();
-
-    this.listaContactos.map((num)=> {
-      console.log('1', num.numeroComprobante)
-      console.log('2', numComrpobante)
-
-      if (num.numeroComprobante === numComrpobante){
-        this.toaster.open('El número de comprobante ya existe', {type: 'danger'});
-      }
-    });
-  }*/
 
   async actualizar(): Promise<void> {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
@@ -414,7 +411,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
             this.modalService.dismissAll();
             this.obtenerContactos();
             this.verificarContacto = true;
-          }, error => this.toaster.open(error, {type: 'danger'}))
+          }, error => this.toaster.open(error, {type: 'danger'}));
         }
       } else {
         this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
@@ -515,7 +512,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
 
   onSelectChangeIdentificacion(event: any) {
     const selectedValue = event.target.value;
-    if (selectedValue === 'identificacion') {
+    if (selectedValue === 'cedula') {
       this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
         [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.cedulaValido]
       );
@@ -566,22 +563,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     }
   }
 
-  guardarArchivoTransaccion() {
-    if (this.archivo) {
-      const formData = new FormData();
-      formData.append('archivoFormaPago', 'asjfasijfnaskfjasfiasn');
-      formData.append('id', '555555');
-      //this.contactosService.actualizarVentaFormData(formData)
-      //  .subscribe(() => {
-      //    this.modalService.dismissAll();
-      //  });
-
-    } else {
-      console.error('No se ha seleccionado ningún archivo.');
-    }
-
-  }
-
   cargarImagen(i, event: any): void {
     this.datosProducto = new FormData();
 
@@ -595,7 +576,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         this.datosProducto.append('imagenes[' + 0 + ']id', '0');
         this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
         this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
-
+        this.datosProducto.append('canal', this.detallesArray.controls[i].get('canal').value);
         try {
           this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
             this.toaster.open('Imagen actualizada con éxito', {type: "info"});
@@ -623,4 +604,5 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     });
     return precios;
   }
+
 }

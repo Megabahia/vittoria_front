@@ -187,7 +187,7 @@
                           <select id="tipoIdentificacion" class="form-control" formControlName="tipoIdentificacion"
                                   (change)="onSelectChangeIdentificacion($event)">
                             <option value="" disabled>- Seleccione -</option>
-                            <option value="identificacion" selected>Cédula</option>
+                            <option value="cedula" selected>Cédula</option>
                             <option value="ruc">RUC</option>
                             <option value="pasaporte">Pasaporte</option>
                           </select>
@@ -196,7 +196,6 @@
                             <div *ngIf="facturacionForm.tipoIdentificacion.errors.required">
                               Requerido
                             </div>
-
                           </div>
                         </div>
                       </div>
@@ -341,6 +340,17 @@
                 <hr class="invoice-spacing"/>
                 <!-- Product Details starts -->
                 <div class="card-body invoice-padding bg-light-secondary">
+                  <div>
+                    <label> Canal de producto: </label>
+                    <label> {{ canalPrincipal }} </label>
+                    <!--<select class="form-control"
+                            (change)="onSelectChangeCanalProducto($event)" id="canalProducto">
+                      <option value="" selected disabled>- Seleccione -</option>
+                      <option value="{{canal}}" *ngFor="let canal of listaCanalesProducto">
+                        {{ canal }}
+                      </option>
+                    </select>-->
+                  </div>
                   <div formArrayName="articulos">
                     <form class="source-item">
                       <div data-repeater-list="group-a"
@@ -386,7 +396,7 @@
                                       <div *ngIf="detalle.controls.cantidad.errors.min">
                                         Ingrese minimo 1
                                       </div>
-                                      <div *ngIf="detalle.controls.descuento.errors.pattern">
+                                      <div *ngIf="detalle.controls.cantidad.errors.pattern">
                                         Ingrese solo números
                                       </div>
                                     </div>
