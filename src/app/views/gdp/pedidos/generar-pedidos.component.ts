@@ -26,7 +26,6 @@ import {Download} from "angular-feather/icons";
   providers: [DatePipe]
 })
 export class GenerarPedidosComponent implements OnInit, AfterViewInit {
-  @ViewChild(NgbPagination) paginator: NgbPagination;
   @Input() paises;
 
   public notaPedido: FormGroup;
@@ -130,7 +129,6 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.iniciarPaginador();
     this.obtenerContactos();
   }
 
@@ -144,7 +142,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.email]],
         identificacion: ['', []],
-        tipoIdentificacion: [this.tipoIdentificacion, [Validators.required]],
+        tipoIdentificacion: [this.tipoIdentificacion, []],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: [this.pais, [Validators.required]],
         provincia: ['', [Validators.required]],
@@ -166,12 +164,6 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       envios: ['', []],
       json: ['', []],
       fotoCupon: ['', []]
-    });
-  }
-
-  iniciarPaginador(): void {
-    this.paginator.pageChange.subscribe(() => {
-      this.obtenerContactos();
     });
   }
 
@@ -416,6 +408,13 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   }
 
   validarDatos(): void {
+    if ( this.notaPedido.value.facturacion.tipoIdentificacion === null && this.notaPedido.value.facturacion.identificacion !== '' ){
+      this.notaPedido.get('facturacion').get('tipoIdentificacion').setValidators([Validators.required]);
+      this.notaPedido.get('facturacion').get('tipoIdentificacion').updateValueAndValidity();
+    } else {
+      this.notaPedido.get('facturacion').get('tipoIdentificacion').setValidators([]);
+      this.notaPedido.get('facturacion').get('tipoIdentificacion').updateValueAndValidity();
+    }
     this.contactosService.validarCamposContacto(this.notaPedido.value).subscribe((info) => {
     }, error => this.toaster.open(error, {type: 'danger'}));
   }
