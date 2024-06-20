@@ -13,6 +13,7 @@ import {StockComponent} from './reportes/stock/stock.component';
 import {CaducidadComponent} from './reportes/caducidad/caducidad.component';
 import {RotacionComponent} from './reportes/rotacion/rotacion.component';
 import {RefilComponent} from './reportes/refil/refil.component';
+import {StockVirtualListarComponent} from "./stock-virtual/listado/stock-virtual-listar/stock-virtual-listar.component";
 
 const routes: Routes = [{
   path: '', component: MdpComponent, children: [
@@ -33,6 +34,12 @@ const routes: Routes = [{
       path: 'subcategorias', children: [
         {path: '', redirectTo: 'list', pathMatch: 'full'}, {
           path: 'list', component: SubcategoriasProductosComponent, canActivate: [AuthGuard]
+        }]
+    },
+    {
+      path: 'stock-virtual', children: [
+        {path: '', redirectTo: 'list', pathMatch: 'full'}, {
+          path: 'list', component: StockVirtualListarComponent, canActivate: [AuthGuard]
         }]
     },
     {

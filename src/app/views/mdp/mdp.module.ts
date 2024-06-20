@@ -22,6 +22,8 @@ import { BuscarProductoComponent } from './productos/buscar-producto/buscar-prod
 import { SubcategoriasProductosComponent } from './productos/subcategorias-productos/subcategorias-productos.component';
 import { CategoriasProductosComponent } from './productos/categorias-productos/categorias-productos.component';
 import { NgxDropzoneModule } from 'ngx-dropzone';
+import {StockVirtualListarComponent} from "./stock-virtual/listado/stock-virtual-listar/stock-virtual-listar.component";
+import {GdeModule} from "../gde/gde.module";
 
 
 @NgModule({
@@ -35,6 +37,8 @@ import { NgxDropzoneModule } from 'ngx-dropzone';
     CaducidadComponent,
     RotacionComponent,
     RefilComponent,
+
+    StockVirtualListarComponent,
 
     ProductosEditarComponent,
     ProductosListarComponent,
@@ -51,7 +55,8 @@ import { NgxDropzoneModule } from 'ngx-dropzone';
     ChartsModule,
     ReactiveFormsModule,
     FlatpickrModule.forRoot(),
-    NgxDropzoneModule
-    ]
+    NgxDropzoneModule,
+    GdeModule
+  ]
 })
 export class MdpModule { }
