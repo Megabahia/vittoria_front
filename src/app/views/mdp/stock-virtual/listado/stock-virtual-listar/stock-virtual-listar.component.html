@@ -158,12 +158,12 @@
                 class="text-capitalize badge {{producto.estado=='Activo' ? 'badge-light-success': 'badge-secondary' }} badge-pill">{{ producto.estado }}</span>
               </td>
               <td>
-                <a (click)="editarProducto(producto.id)">
+                <!--<a (click)="editarProducto(producto.id)">
                   <i-feather name='edit-2'></i-feather>
                 </a>
                 <a (click)="abrirModal(contenido,producto.id)" data-repeater-delete>
                   <i-feather name='trash'></i-feather>
-                </a>
+                </a>-->
                 <a (click)="abrirModalStockVirtual(stockVirtual,producto.id,producto.codigoBarras,producto.canal)"
                    data-repeater-delete>
                   <i-feather name='layers'></i-feather>
