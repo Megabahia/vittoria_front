@@ -143,11 +143,17 @@
               <td>{{ producto.subCategoria }}</td>
               <td>{{ producto.nombre | slice:0:30 }}</td>
               <td>
-                <img src="{{ producto.imagenes[0].imagen != '' ? producto.imagenes[0].imagen : './assets/images/no_existe.png'}}" alt="Imagen del producto" width="70" height="70"
-                     style="width: 100px;height: 100px;object-fit: cover;">
+                <img
+                  src="{{ producto.imagenes.length > 0 ? producto.imagenes[0].imagen : './assets/images/no_existe.png'}}"
+                  alt="Imagen del producto" width="70" height="70"
+                  style="width: 100px;height: 100px;object-fit: cover;">
               </td>
               <td>{{ producto.stock }} (Unidades)</td>
-              <td>{{ producto.stock }} (Unidades)</td>
+              <td>
+                <ul *ngFor="let stockVirtual of producto.stockVirtual">
+                  <li>{{ stockVirtual.canal }}</li>
+                </ul>
+              </td>
               <td><span
                 class="text-capitalize badge {{producto.estado=='Activo' ? 'badge-light-success': 'badge-secondary' }} badge-pill">{{ producto.estado }}</span>
               </td>
@@ -157,6 +163,10 @@
                 </a>
                 <a (click)="abrirModal(contenido,producto.id)" data-repeater-delete>
                   <i-feather name='trash'></i-feather>
+                </a>
+                <a (click)="abrirModalStockVirtual(stockVirtual,producto.id,producto.codigoBarras,producto.canal)"
+                   data-repeater-delete>
+                  <i-feather name='layers'></i-feather>
                 </a>
               </td>
             </tr>
@@ -186,6 +196,27 @@
   </div>
   <div class="modal-footer ">
     <button type="button " class="btn btn-light " (click)="cerrarModal()">SI</button>
+  </div>
+</ng-template>
+<ng-template #stockVirtual let-modal>
+  <div class="modal-header ">
+    <h4 class="modal-title ">Asignar stock virtual</h4>
+    <button type="button" class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="custom-control custom-checkbox form-check d-flex justify-content-start align-items-center"
+         *ngFor="let opcion of canalOpciones">
+      <input type="checkbox" class="custom-control-input" [id]="'canal' + opcion.id"
+             [(ngModel)]="opcion.seleccionado"
+             (change)="actualizarSeleccionados($event, opcion)"/>
+      <label class="custom-control-label" [for]="'canal' + opcion.id">{{ opcion.valor }}</label>
+    </div>
+  </div>
+  <div class="modal-footer ">
+    <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
+    <button type="button" class="btn btn-primary" (click)="actualizarProducto()">Guardar</button>
   </div>
 </ng-template>
 <app-productos-editar *ngIf="vista=='editar'" [idProducto]="idProducto"

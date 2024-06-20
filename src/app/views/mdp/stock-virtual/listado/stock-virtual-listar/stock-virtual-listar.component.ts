@@ -3,6 +3,7 @@ import {ProductosService} from '../../../../../services/mdp/productos/productos.
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {environment} from '../../../../../../environments/environment';
 import {ParamService as AdmParamService} from '../../../../../services/admin/param.service';
+import {Toaster} from "ngx-toast-notifications";
 
 @Component({
   selector: 'app-stock-virtual-listar',
@@ -18,18 +19,22 @@ export class StockVirtualListarComponent implements OnInit, AfterViewInit {
   collectionSize;
   listaProductos;
   idProducto = 0;
+  codigoBarrasProducto = '';
+  canalProducto = ''
   nombreBuscar: string;
   codigoBarras: string;
   enviando = false;
   canalOpciones;
-  canalSeleccionado='';
+  canalSeleccionado = '';
+  seleccionados = [];
+
   constructor(
     private productosService: ProductosService,
     private modalService: NgbModal,
     private paramServiceAdm: AdmParamService,
-
+    private toaster: Toaster,
   ) {
-    this.obtenerListaParametros()
+    this.obtenerListaParametros();
   }
 
   ngOnInit(): void {
@@ -81,11 +86,19 @@ export class StockVirtualListarComponent implements OnInit, AfterViewInit {
     this.modalService.open(modal);
   }
 
+  abrirModalStockVirtual(modal, id, codigoBarras, canal): void {
+    this.idProducto = id;
+    this.codigoBarrasProducto = codigoBarras;
+    this.canalProducto = canal
+    this.obtenerListaParametros();
+    this.modalService.open(modal);
+  }
+
   cerrarModal(): void {
     this.modalService.dismissAll();
     this.productosService.eliminarProducto(this.idProducto).subscribe(() => {
       this.obtenerListaProductos();
-    },error => window.alert(error));
+    }, error => window.alert(error));
   }
 
   copiarURL(inputTextValue): void {
@@ -124,8 +137,35 @@ export class StockVirtualListarComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onSelectChange(e:any){
-    const selectValue=e.target.value
-    this.canalSeleccionado=selectValue;
+  onSelectChange(e: any): void {
+    const selectValue = e.target.value;
+    this.canalSeleccionado = selectValue;
+  }
+
+  actualizarProducto() {
+    this.productosService.actualizarProducto({
+      stockVirtual: this.seleccionados,
+      codigoBarras: this.codigoBarrasProducto,
+      canal: this.canalProducto
+    }, this.idProducto).subscribe((info) => {
+        this.toaster.open('Producto actualizado', {type: 'info'});
+        this.modalService.dismissAll();
+      },
+      (error) => {
+        this.toaster.open(error, {type: 'danger'});
+      });
+  }
+
+  actualizarSeleccionados(event, opcion): void {
+    if (event.target.checked) {
+      // Añadir un objeto al arreglo
+      this.seleccionados.push({canal: opcion.valor});
+    } else {
+      // Buscar el índice del objeto por su propiedad 'canal'
+      const index = this.seleccionados.findIndex(item => item.canal === opcion.valor);
+      if (index !== -1) {
+        this.seleccionados.splice(index, 1);
+      }
+    }
   }
 }
