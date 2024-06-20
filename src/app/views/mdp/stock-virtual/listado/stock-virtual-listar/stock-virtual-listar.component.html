@@ -109,7 +109,7 @@
                   <label class="custom-control-label" for="customCheck2"></label>
                 </div>
               </th>
-              <th>Canal</th>
+              <th>Canal (Dueño de stock real)</th>
               <th>Código de barras</th>
               <th>URL</th>
               <th>Categoría</th>
@@ -117,7 +117,7 @@
               <th>Nombre</th>
               <th>Imagen</th>
               <th>Stock real</th>
-              <th>Stock virtual</th>
+              <th>Canales asignado stock</th>
               <th>Estado</th>
               <th>Acciones</th>
             </tr>
@@ -150,8 +150,8 @@
               </td>
               <td>{{ producto.stock }} (Unidades)</td>
               <td>
-                <ul *ngFor="let stockVirtual of producto.stockVirtual">
-                  <li>{{ stockVirtual.canal }}</li>
+                <ul *ngFor="let stockVirtual of producto?.stockVirtual?.canales">
+                  <li *ngIf="stockVirtual.estado==true">{{ stockVirtual.canal }}</li>
                 </ul>
               </td>
               <td><span
@@ -164,8 +164,9 @@
                 <a (click)="abrirModal(contenido,producto.id)" data-repeater-delete>
                   <i-feather name='trash'></i-feather>
                 </a>-->
-                <a (click)="abrirModalStockVirtual(stockVirtual,producto.id,producto.codigoBarras,producto.canal)"
-                   data-repeater-delete>
+                <a
+                  (click)="abrirModalStockVirtual(stockVirtual,producto.id,producto.codigoBarras,producto.canal, producto.stockVirtual)"
+                  data-repeater-delete>
                   <i-feather name='layers'></i-feather>
                 </a>
               </td>
@@ -206,13 +207,21 @@
     </button>
   </div>
   <div class="modal-body">
-    <div class="custom-control custom-checkbox form-check d-flex justify-content-start align-items-center"
-         *ngFor="let opcion of canalOpciones">
-      <input type="checkbox" class="custom-control-input" [id]="'canal' + opcion.id"
-             [(ngModel)]="opcion.seleccionado"
-             (change)="actualizarSeleccionados($event, opcion)"/>
-      <label class="custom-control-label" [for]="'canal' + opcion.id">{{ opcion.valor }}</label>
-    </div>
+    <form [formGroup]="canalStockVirtual">
+      <div formArrayName="canales">
+        <div class="custom-control custom-checkbox form-check d-flex justify-content-start align-items-center"
+             *ngFor="let opcion of canalStockVirtual.get('canales')['controls']; let i = index">
+          <ng-container [formGroup]="opcion">
+            <input type="checkbox" class="custom-control-input"
+                   id="canales-{{i}}"
+                   (change)="actualizarSeleccionados($event, opcion)"
+                   formControlName="estado"
+            />
+            <label class="custom-control-label" for="canales-{{i}}">{{ opcion.controls.canal.value }}</label>
+          </ng-container>
+        </div>
+      </div>
+    </form>
   </div>
   <div class="modal-footer ">
     <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
