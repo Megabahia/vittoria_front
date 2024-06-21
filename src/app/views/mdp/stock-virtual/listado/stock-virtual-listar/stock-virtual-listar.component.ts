@@ -117,6 +117,8 @@ export class StockVirtualListarComponent implements OnInit, AfterViewInit {
   }
 
   abrirModalStockVirtual(modal, id, codigoBarras, canal, stockVirtual): void {
+    this.obtenerListaParametrosModal();
+
     this.idProducto = id;
     this.codigoBarrasProducto = codigoBarras;
     this.canalProducto = canal;
@@ -128,15 +130,15 @@ export class StockVirtualListarComponent implements OnInit, AfterViewInit {
     }
 
     // Solo actualiza con stockVirtual si hay canales disponibles
-    if (stockVirtual && stockVirtual.canales && stockVirtual.canales.length > 0) {
-      for (const stockModal of stockVirtual.canales) {
+    if (stockVirtual && stockVirtual && stockVirtual.length > 0) {
+      for (const stockModal of stockVirtual) {
         canalUnicos.set(stockModal.canal, {...canalUnicos.get(stockModal.canal), ...stockModal});
       }
     }
     // Convertimos el mapa de vuelta a un arreglo y lo establecemos en this.canalOpcionesModal
     this.canalOpcionesModal = Array.from(canalUnicos.values());
 
-    this.getstockVirtual.clear()
+    this.getstockVirtual.clear();
     this.canalOpcionesModal.map((item): void => {
       this.agregarItem();
     });
@@ -195,16 +197,12 @@ export class StockVirtualListarComponent implements OnInit, AfterViewInit {
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar)
       .subscribe((result) => {
         this.canalOpcionesModal = result.data.map(opcion => {
-          //const isMatching = opcion.valor === this.canalProducto;
+          const isMatching = opcion.valor === this.canalProducto;
           // Seleccionado si coincide con canalProducto o está en listaStockVirtual
-          //this.seleccionadoDefault = isMatching;
-          // Deshabilitar si coincide exactamente con canalProducto
-          //this.deshabilitadoDefault = isMatching;
+          this.seleccionadoDefault = isMatching;
           // Añadir al arreglo seleccionados si está seleccionado y aún no está en el arreglo
+          console.log('seleccionado: ',this.seleccionadoDefault)
 
-          //if (this.seleccionadoDefault) {
-            this.seleccionados.push(opcion.valor);
-          //}
           return {
             //...opcion,
             canal: opcion.valor,
@@ -222,7 +220,7 @@ export class StockVirtualListarComponent implements OnInit, AfterViewInit {
 
   actualizarProducto() {
     const datos = {
-      stockVirtual: this.canalStockVirtual.value,
+      stockVirtual: this.canalStockVirtual.value.canales,
       codigoBarras: this.codigoBarrasProducto,
       canal: this.canalProducto
     }

@@ -150,7 +150,7 @@
               </td>
               <td>{{ producto.stock }} (Unidades)</td>
               <td>
-                <ul *ngFor="let stockVirtual of producto?.stockVirtual?.canales">
+                <ul *ngFor="let stockVirtual of producto?.stockVirtual">
                   <li *ngIf="stockVirtual.estado==true">{{ stockVirtual.canal }}</li>
                 </ul>
               </td>
@@ -214,6 +214,7 @@
           <ng-container [formGroup]="opcion">
             <input type="checkbox" class="custom-control-input"
                    id="canales-{{i}}"
+
                    (change)="actualizarSeleccionados($event, opcion)"
                    formControlName="estado"
             />
