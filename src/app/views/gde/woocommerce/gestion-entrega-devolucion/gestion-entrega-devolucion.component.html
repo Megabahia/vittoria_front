@@ -46,7 +46,7 @@
               <tr>
                 <th>Fecha Pedido</th>
                 <th>Fecha Autorización</th>
-                <th>Canal Venta</th>
+                <th>Canal Pedido</th>
                 <th>Canal Envio</th>
                 <th>Tipo Facturación</th>
                 <th>Numero Pedido</th>
@@ -326,8 +326,8 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-3 mt-2">
-                      <label>Canal: </label>
+                    <div class="col-4 mt-2">
+                      <label>Canal de pedido: </label>
                       <label> {{ notaPedido.value.canal }}</label>
                     </div>
                     <!-- Address and Contact ends -->
@@ -422,9 +422,9 @@
                                   </div>
                                   <div class="col-lg-1 col-12 my-lg-0 my-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
-                                      Bodega
+                                      Ubicación
                                     </p>
-                                    <label class="d-block text-wrap">{{ detalle.controls.bodega.value }}</label>
+                                    <label class="d-block text-wrap">{{ detalle.controls.canal.value }}</label>
                                   </div>
                                   <div class="col-md-2 border-left">
                                     <img class="img-detalle" alt="producto"

@@ -116,8 +116,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     };
     this.barChartData = [this.datosTransferencias];
     this.obtenerOpciones();
-    this.obtenerProvincias();
-    this.obtenerCiudad();
+    //this.obtenerProvincias();
+    //this.obtenerCiudad();
   }
 
   ngAfterViewInit(): void {
@@ -253,9 +253,14 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   }
 
   obtenerContacto(modal, id): void {
-    this.obtenerListaProductos()
+    this.obtenerProvincias();
+    this.obtenerListaProductos();
     this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
     this.contactosService.obtenerContacto(id).subscribe((info) => {
+      this.provincia = info.facturacion.provincia;
+      this.obtenerCiudad();
+
+
       if (info.tipoPago === 'rimpePopular') {
         this.mostrarInputComprobante = true;
       } else if (info.tipoPago === 'facturaElectronica') {
@@ -288,6 +293,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
+
       this.calcular()
     });
   }
@@ -491,7 +497,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   }
 
   obtenerCiudad(): void {
-    this.paramServiceAdm.obtenerListaHijos(this.notaPedido.value.facturacion.provincia, 'PROVINCIA').subscribe((info) => {
+    this.paramServiceAdm.obtenerListaHijos(this.provincia, 'PROVINCIA').subscribe((info) => {
       this.ciudadOpciones = info;
     });
   }
