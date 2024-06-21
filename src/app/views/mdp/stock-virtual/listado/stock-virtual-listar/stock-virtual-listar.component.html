@@ -151,7 +151,7 @@
               <td>{{ producto.stock }} (Unidades)</td>
               <td>
                 <ul *ngFor="let stockVirtual of producto?.stockVirtual">
-                  <li *ngIf="stockVirtual.estado==true">{{ stockVirtual.canal }}</li>
+                  <li *ngIf="stockVirtual.estado===true">{{ stockVirtual.canal }}</li>
                 </ul>
               </td>
               <td><span
