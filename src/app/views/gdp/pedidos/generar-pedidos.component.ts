@@ -433,7 +433,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
         this.notaPedido.get('facturacion').get('provincia').setValue(info.provinciaNacimiento)
         this.notaPedido.get('facturacion').get('ciudad').setValue(info.ciudadNacimiento)
 
-        this.obtenerCiudad()
+        this.obtenerCiudad();
         //this.notaPedido.get('facturacion').get('identificacion').disable();
       }, error => {
         this.toaster.open(error, {type: 'danger'})

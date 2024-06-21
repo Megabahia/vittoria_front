@@ -30,7 +30,8 @@ export class StockVirtualListarComponent implements OnInit, AfterViewInit {
   canalOpcionesModal;
   canalSeleccionado = '';
   seleccionados = [];
-  listaStockVirtual;
+  seleccionadoDefault
+  deshabilitadoDefault;
 
   constructor(
     private productosService: ProductosService,
@@ -196,19 +197,18 @@ export class StockVirtualListarComponent implements OnInit, AfterViewInit {
         this.canalOpcionesModal = result.data.map(opcion => {
           //const isMatching = opcion.valor === this.canalProducto;
           // Seleccionado si coincide con canalProducto o está en listaStockVirtual
-          //const seleccionado = isMatching;
+          //this.seleccionadoDefault = isMatching;
           // Deshabilitar si coincide exactamente con canalProducto
-          //const deshabilitado = isMatching;
+          //this.deshabilitadoDefault = isMatching;
           // Añadir al arreglo seleccionados si está seleccionado y aún no está en el arreglo
-          //if (seleccionado) {
-          this.seleccionados.push(opcion.valor);
+
+          //if (this.seleccionadoDefault) {
+            this.seleccionados.push(opcion.valor);
           //}
           return {
             //...opcion,
             canal: opcion.valor,
-            estado: false
-            //seleccionado,
-            ///deshabilitado
+            estado: false,
           };
         });
 
@@ -251,6 +251,4 @@ export class StockVirtualListarComponent implements OnInit, AfterViewInit {
       }
     }
   }
-
-  protected readonly JSON = JSON;
 }

@@ -45,7 +45,7 @@
               <thead class="thead-light">
               <tr>
                 <th>Fecha Pedido</th>
-                <th>Canal Venta</th>
+                <th>Canal Pedido</th>
                 <th>Numero Pedido</th>
                 <th>Nombres Facturación</th>
                 <th>Apellidos Facturación</th>
@@ -253,7 +253,7 @@
                         <div class="col-3">
                           <label>Pais</label>
                           <input class="form-control" type="text"
-                                 formControlName="pais">
+                                 formControlName="pais" disabled>
                           <div *ngIf="facturacionForm.pais.errors"
                                class="invalid-feedback" style="display: block;">
                             <div *ngIf="facturacionForm.pais.errors.required">
@@ -262,9 +262,15 @@
                           </div>
                         </div>
                         <div class="col-3">
-                          <label>Provincia</label>
-                          <input class="form-control" type="text"
-                                 formControlName="provincia">
+                          <label for="provinciaFact">Provincia</label>
+                          <select class="form-control" name="provinciaFact" formControlName="provincia"
+                                  (change)="obtenerCiudad()"
+                                  [(ngModel)]="provincia" id="provinciaFact">
+                            <option value="" selected>- Seleccione -</option>
+                            <option value="{{pais.nombre}}" *ngFor="let pais of provinciaOpciones">
+                              {{ pais.nombre }}
+                            </option>
+                          </select>
                           <div *ngIf="facturacionForm.provincia.errors"
                                class="invalid-feedback" style="display: block;">
                             <div *ngIf="facturacionForm.provincia.errors.required">
@@ -273,9 +279,14 @@
                           </div>
                         </div>
                         <div class="col-3">
-                          <label>Ciudad</label>
-                          <input class="form-control" type="text"
-                                 formControlName="ciudad">
+                          <label for="ciudadFact">Ciudad</label>
+                          <select class="form-control" name="ciudadFact" formControlName="ciudad"
+                                  [(ngModel)]="ciudad" id="ciudadFact">
+                            <option value="" selected>- Seleccione -</option>
+                            <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
+                              {{ ciudad.nombre }}
+                            </option>
+                          </select>
                           <div *ngIf="facturacionForm.ciudad.errors"
                                class="invalid-feedback" style="display: block;">
                             <div *ngIf="facturacionForm.ciudad.errors.required">
@@ -352,8 +363,8 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-3 mt-2">
-                    <label>Canal: </label>
+                  <div class="col-4 mt-2">
+                    <label>Canal de pedido: </label>
                     <label> {{ notaPedido.value.canal }}</label>
                   </div>
                   <!-- Address and Contact ends -->
@@ -444,9 +455,9 @@
                                 </div>
                                 <div class="col-lg-1 col-12 my-lg-0 my-2">
                                   <p class="card-text col-title mb-md-50 mb-0">
-                                    Bodega
+                                    Ubicación
                                   </p>
-                                  <label class="d-block text-wrap">{{ detalle.controls.bodega.value }}</label>
+                                  <label class="d-block text-wrap">{{ detalle.controls.canal.value | shorten}}</label>
                                 </div>
                                 <div class="col-lg-2 col-12 my-lg-0 my-2">
                                   <img
@@ -458,7 +469,6 @@
                                   </div>
 
                                 </div>
-
                                 <div
                                   class="d-flex flex-column align-items-center justify-content-between border-left border-left-black invoice-product-actions py-50">
                                   <i-feather name="x"
@@ -650,7 +660,7 @@
                         <div class="col-3">
                           <label>Pais</label>
                           <input class="form-control" type="text"
-                                 formControlName="pais">
+                                 formControlName="pais" disabled>
                           <div *ngIf="envioForm.pais.errors"
                                class="invalid-feedback" style="display: block;">
                             <div *ngIf="envioForm.pais.errors.required">
@@ -659,9 +669,15 @@
                           </div>
                         </div>
                         <div class="col-3">
-                          <label>Provincia</label>
-                          <input class="form-control" type="text"
-                                 formControlName="provincia">
+                          <label for="provinciaEnvio">Provincia</label>
+                          <select class="form-control" name="provinciaEnvio" formControlName="provincia"
+                                  (change)="obtenerCiudadEnvio()"
+                                  [(ngModel)]="provinciaEnvio" id="provinciaEnvio">
+                            <option value="" selected>- Seleccione -</option>
+                            <option value="{{provincia.nombre}}" *ngFor="let provincia of provinciaOpcionesEnvio">
+                              {{ provincia.nombre }}
+                            </option>
+                          </select>
                           <div *ngIf="envioForm.provincia.errors"
                                class="invalid-feedback" style="display: block;">
                             <div *ngIf="envioForm.provincia.errors.required">
@@ -670,9 +686,14 @@
                           </div>
                         </div>
                         <div class="col-3">
-                          <label>Ciudad</label>
-                          <input class="form-control" type="text"
-                                 formControlName="ciudad">
+                          <label for="ciudadEnvio">Ciudad</label>
+                          <select class="form-control" name="ciudadEnvio" formControlName="ciudad"
+                                  [(ngModel)]="ciudadEnvio" id="ciudadEnvio">
+                            <option value="" selected>- Seleccione -</option>
+                            <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpcionesEnvio">
+                              {{ ciudad.nombre }}
+                            </option>
+                          </select>
                           <div *ngIf="envioForm.ciudad.errors"
                                class="invalid-feedback" style="display: block;">
                             <div *ngIf="envioForm.ciudad.errors.required">

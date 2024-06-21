@@ -52,7 +52,7 @@
             <thead class="thead-light">
             <tr>
               <th>Fecha Pedido</th>
-              <th>Canal Venta</th>
+              <th>Canal Pedido</th>
               <th>Código vendedor</th>
               <th>Nombre vendedor</th>
               <th>Numero Pedido</th>
@@ -301,9 +301,15 @@
                         </div>
                       </div>
                       <div class="col-3">
-                        <label>Provincia</label>
-                        <input class="form-control" type="text"
-                               formControlName="provincia">
+                        <label for="provinciaFact">Provincia</label>
+                        <select class="form-control" name="provinciaFact" formControlName="provincia"
+                                (change)="obtenerCiudad()"
+                                [(ngModel)]="provincia" id="provinciaFact">
+                          <option value="" selected>- Seleccione -</option>
+                          <option value="{{provincia.nombre}}" *ngFor="let provincia of provinciaOpciones">
+                            {{ provincia.nombre }}
+                          </option>
+                        </select>
                         <div *ngIf="facturacionForm.provincia.errors"
                              class="invalid-feedback" style="display: block;">
                           <div *ngIf="facturacionForm.provincia.errors.required">
@@ -312,9 +318,14 @@
                         </div>
                       </div>
                       <div class="col-3">
-                        <label>Ciudad</label>
-                        <input class="form-control" type="text"
-                               formControlName="ciudad">
+                        <label for="ciudadFact">Ciudad</label>
+                        <select class="form-control" name="ciudadFact" formControlName="ciudad"
+                                [(ngModel)]="ciudad" id="ciudadFact">
+                          <option value="" selected>- Seleccione -</option>
+                          <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
+                            {{ ciudad.nombre }}
+                          </option>
+                        </select>
                         <div *ngIf="facturacionForm.ciudad.errors"
                              class="invalid-feedback" style="display: block;">
                           <div *ngIf="facturacionForm.ciudad.errors.required">

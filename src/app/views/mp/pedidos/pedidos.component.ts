@@ -12,6 +12,7 @@ import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../constats/mp/pedidos';
 import {ValidacionesPropias} from '../../../utils/customer.validators';
 import {Toaster} from 'ngx-toast-notifications';
 import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
+import {ParamService as ParamServiceAdm} from '../../../services/admin/param.service';
 
 @Component({
   selector: 'app-pedidos',
@@ -48,7 +49,16 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   archivo: FormData = new FormData();
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
-  canalPedido;
+  pais = 'Ecuador';
+  ciudad = '';
+  provincia = '';
+  ciudadEnvio = '';
+  provinciaEnvio = '';
+  ciudadOpciones;
+  provinciaOpciones;
+  ciudadOpcionesEnvio;
+  provinciaOpcionesEnvio;
+
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -59,7 +69,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     private productosService: ProductosService,
     private toaster: Toaster,
     private contactosService: ContactosService,
-
+    private paramServiceAdm: ParamServiceAdm,
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
@@ -215,12 +225,18 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
   obtenerTransaccion(modal, id): void {
     this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
+
+    this.obtenerProvincias();
+    this.obtenerProvinciasEnvio();
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
+      this.provincia = info.facturacion.provincia;
+      this.obtenerCiudad();
+      this.provinciaEnvio = info.envio.provincia;
+      this.obtenerCiudadEnvio();
 
       this.horaPedido = this.extraerHora(info.created_at);
 
       this.validarCiudadEnProvincia(info.facturacion.provincia, info.facturacion.ciudad, info.envio.provincia, info.envio.ciudad);
-
       this.iniciarNotaPedido();
 
       info.articulos.map((item): void => {
@@ -479,6 +495,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         this.datosProducto.append('imagenes[' + 0 + ']id', '0');
         this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
         this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
+        this.datosProducto.append('canal', this.detallesArray.controls[i].get('canal').value);
 
         try {
           this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
@@ -541,5 +558,27 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       )
       this.notaPedido.get('envio')['controls']['identificacion'].updateValueAndValidity();
     }
+  }
+
+  obtenerProvincias(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.pais, 'PAIS').subscribe((info) => {
+      this.provinciaOpciones = info;
+    });
+  }
+  obtenerProvinciasEnvio(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.pais, 'PAIS').subscribe((info) => {
+      this.provinciaOpcionesEnvio = info;
+    });
+  }
+
+  obtenerCiudad(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.provincia, 'PROVINCIA').subscribe((info) => {
+      this.ciudadOpciones = info;
+    });
+  }
+  obtenerCiudadEnvio(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.provinciaEnvio, 'PROVINCIA').subscribe((info) => {
+      this.ciudadOpcionesEnvio = info;
+    });
   }
 }
