@@ -46,7 +46,7 @@
               <tr>
                 <th>Fecha Pedido</th>
                 <th>Fecha Autorización</th>
-                <th>Canal Venta</th>
+                <th>Canal Pedido</th>
                 <th>Canal Envio</th>
                 <th>Tipo Facturación</th>
                 <th>Numero Pedido</th>
@@ -106,31 +106,23 @@
                     <div class="card-body invoice-padding pb-0">
                       <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
                         <div>
-                          <div class="d-flex align-items-center mb-1">
-                            <span class="title mr-1">Fecha Pedido:</span>
+                          <div class="col-12 d-block mb-2">
+                            <span class="title">Fecha Pedido:</span>
                             <input type="text"
                                    class="form-control invoice-edit-input date-picker"
                                    value="{{notaPedido.controls?.created_at.value | date: 'dd-MM-yyyy'}}"
                                    disabled/>
-                            <span class="title mr-1 ml-3 text-danger">Hora: </span>
-                            <span class="text-danger mr-3">{{horaPedido}}</span>
-
+                            <span class="title text-danger">Hora: </span>
+                            <span class="text-danger">{{ horaPedido }}</span>
                           </div>
                         </div>
-                        <div class="invoice-number-date mt-md-0 mt-2">
-                          <div class="d-flex align-items-center mb-1">
-                            <h4 class="invoice-title mr-1">Numero Pedido</h4>
-                            <div class="input-group input-group-merge invoice-edit-input-group">
-                              <div class="input-group-prepend">
-                                <div class="input-group-text">
-                                  <i-feather name="hash"
-                                             class="edit-user"></i-feather>
-                                </div>
-                              </div>
-                              <input type="text" class="form-control invoice-edit-input"
-                                     placeholder="{{notaPedido.controls?.numeroPedido.value}}"
-                                     disabled/>
-                            </div>
+                        <div>
+                          <div class="col-12 d-block align-items-center">
+                            <span class="title">Número de pedido:</span>
+                            <input type="text"
+                                   class="form-control invoice-edit-input date-picker"
+                                   value="{{notaPedido.controls?.numeroPedido.value}}"
+                                   disabled/>
                           </div>
                         </div>
                         <div class="invoice-number-date mt-md-0 mt-2">
@@ -160,7 +152,7 @@
                       <h4 class="invoice-title mb-2">Datos para la factura</h4>
                       <div formGroupName="facturacion">
                         <div class="row">
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Nombres</label>
                             <input class="form-control" type="text"
                                    formControlName="nombres" disabled>
@@ -171,7 +163,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Apellidos</label>
                             <input class="form-control" type="text"
                                    formControlName="apellidos" disabled>
@@ -182,7 +174,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Correo</label>
                             <input class="form-control" type="text"
                                    formControlName="correo" disabled>
@@ -193,7 +185,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <div class="form-group">
                               <label for="tipoIdentificacion">Tipo de Identificación</label>
                               <select id="tipoIdentificacion" class="form-control" formControlName="tipoIdentificacion"
@@ -206,14 +198,14 @@
 
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Numero Identificación</label>
                             <input class="form-control" type="text"
                                    formControlName="identificacion"
                                    disabled
                             >
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Teléfono</label>
                             <input class="form-control" type="text"
                                    formControlName="telefono" disabled>
@@ -224,7 +216,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Pais</label>
                             <input class="form-control" type="text"
                                    formControlName="pais" disabled>
@@ -235,7 +227,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Provincia</label>
                             <input class="form-control" type="text"
                                    formControlName="provincia" disabled>
@@ -246,7 +238,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Ciudad</label>
                             <input class="form-control" type="text"
                                    formControlName="ciudad" disabled>
@@ -257,7 +249,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Calle Principal</label>
                             <input class="form-control" type="text"
                                    formControlName="callePrincipal" disabled>
@@ -268,7 +260,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Número</label>
                             <input class="form-control" type="text"
                                    formControlName="numero" disabled>
@@ -279,7 +271,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Calle Secundaria</label>
                             <input class="form-control" type="text"
                                    formControlName="calleSecundaria" disabled>
@@ -290,7 +282,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Referencia</label>
                             <input class="form-control" type="text"
                                    formControlName="referencia" disabled>
@@ -301,7 +293,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>GPS</label>
                             <input class="form-control" type="text"
                                    formControlName="gps" disabled>
@@ -315,7 +307,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-md-3 col-12">
                       <label>Método Pago</label>
                       <input class="form-control" type="text"
                              formControlName="metodoPago" disabled>
@@ -326,8 +318,8 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-3 mt-2">
-                      <label>Canal: </label>
+                    <div class="col-4 mt-2">
+                      <label>Canal de pedido: </label>
                       <label> {{ notaPedido.value.canal }}</label>
                     </div>
                     <!-- Address and Contact ends -->
@@ -422,9 +414,9 @@
                                   </div>
                                   <div class="col-lg-1 col-12 my-lg-0 my-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
-                                      Bodega
+                                      Ubicación
                                     </p>
-                                    <label class="d-block text-wrap">{{ detalle.controls.bodega.value }}</label>
+                                    <label class="d-block text-wrap">{{ detalle.controls.canal.value }}</label>
                                   </div>
                                   <div class="col-md-2 border-left">
                                     <img class="img-detalle" alt="producto"
@@ -454,7 +446,7 @@
                     <div class="card-body invoice-padding">
                       <div formGroupName="facturacion">
                         <div class="row mb-1 d-flex justify-content-between">
-                          <div class="col-md-5">
+                          <div class="col-md-5 col-12">
                             <label for="codigoVendedor" class="form-label">Codigo
                               Vendedor:</label>
                             <input type="text" class="form-control" id="codigoVendedor"
@@ -466,7 +458,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-md-5">
+                          <div class="col-md-5 col-12">
                             <label for="nombreVendedor" class="form-label">Nombre
                               Vendedor:</label>
                             <input type="text" class="form-control" id="nombreVendedor"
@@ -504,7 +496,7 @@
                       <h2>Datos Entrega</h2>
                       <div formGroupName="envio">
                         <div class="row">
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Nombres</label>
                             <input class="form-control" type="text"
                                    formControlName="nombres" disabled>
@@ -515,7 +507,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Apellidos</label>
                             <input class="form-control" type="text"
                                    formControlName="apellidos" disabled>
@@ -526,7 +518,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Correo</label>
                             <input class="form-control" type="text"
                                    formControlName="correo" disabled>
@@ -537,7 +529,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <div class="form-group">
                               <label for="tipoIdentificacionEnvio">Tipo de Identificación</label>
                               <select id="tipoIdentificacionEnvio" class="form-control" formControlName="tipoIdentificacion"
@@ -550,14 +542,14 @@
 
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Numero Identificación</label>
                             <input class="form-control" type="text"
                                    formControlName="identificacion"
                                    disabled
                             >
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Teléfono</label>
                             <input class="form-control" type="text"
                                    formControlName="telefono" disabled>
@@ -568,7 +560,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Pais</label>
                             <input class="form-control" type="text"
                                    formControlName="pais" disabled>
@@ -579,7 +571,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Provincia</label>
                             <input class="form-control" type="text"
                                    formControlName="provincia" disabled>
@@ -590,7 +582,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Ciudad</label>
                             <input class="form-control" type="text"
                                    formControlName="ciudad" disabled>
@@ -601,7 +593,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Calle Principal</label>
                             <input class="form-control" type="text"
                                    formControlName="callePrincipal" disabled>
@@ -612,7 +604,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Número</label>
                             <input class="form-control" type="text"
                                    formControlName="numero" disabled>
@@ -623,7 +615,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Calle Secundaria</label>
                             <input class="form-control" type="text"
                                    formControlName="calleSecundaria" disabled>
@@ -634,7 +626,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Referencia</label>
                             <input class="form-control" type="text"
                                    formControlName="referencia" disabled>
@@ -645,7 +637,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>GPS</label>
                             <input class="form-control" type="text"
                                    formControlName="gps" disabled>
@@ -656,7 +648,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-3">
+                          <div class="col-md-3 col-12">
                             <label>Canal Envio</label>
                             <input class="form-control" type="text"
                                    formControlName="canalEnvio" disabled>

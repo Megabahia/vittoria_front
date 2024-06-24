@@ -45,7 +45,7 @@
               <thead class="thead-light">
               <tr>
                 <th>Fecha Pedido</th>
-                <th>Canal Venta</th>
+                <th>Canal Pedido</th>
                 <th>Numero Pedido</th>
                 <th>Nombres Facturación</th>
                 <th>Apellidos Facturación</th>
@@ -112,31 +112,23 @@
                   <div class="card-body invoice-padding pb-0">
                     <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
                       <div>
-                        <div class="d-flex align-items-center mb-1">
-                          <span class="title mr-1">Fecha Pedido:</span>
+                        <div class="col-12 d-block mb-2">
+                          <span class="title">Fecha Pedido:</span>
                           <input type="text"
                                  class="form-control invoice-edit-input date-picker"
-                                 value="{{notaPedido.controls?.created_at.value | date: 'dd-MM-yyyy'}}"
+                                 value="{{notaPedido.controls.created_at.value | date: 'dd-MM-yyyy'}}"
                                  disabled/>
-                          <span class="title mr-1 ml-3 text-danger">Hora: </span>
-                          <span class="text-danger">{{horaPedido}}</span>
-
+                          <span class="title text-danger">Hora: </span>
+                          <span class="text-danger">{{ horaPedido }}</span>
                         </div>
                       </div>
-                      <div class="invoice-number-date mt-md-0 mt-2">
-                        <div class="d-flex align-items-center mb-1">
-                          <h4 class="invoice-title mr-1">Numero Pedido</h4>
-                          <div class="input-group input-group-merge invoice-edit-input-group">
-                            <div class="input-group-prepend">
-                              <div class="input-group-text">
-                                <i-feather name="hash"
-                                           class="edit-user"></i-feather>
-                              </div>
-                            </div>
-                            <input type="text" class="form-control invoice-edit-input"
-                                   placeholder="{{notaPedido.controls?.numeroPedido.value}}"
-                                   disabled/>
-                          </div>
+                      <div>
+                        <div class="col-12 d-block align-items-center">
+                          <span class="title">Número de pedido:</span>
+                          <input type="text"
+                                 class="form-control invoice-edit-input date-picker"
+                                 value="{{notaPedido.controls.numeroPedido.value}}"
+                                 disabled/>
                         </div>
                       </div>
                     </div>
@@ -150,7 +142,7 @@
                     <h4 class="invoice-title mb-2">Datos para la factura</h4>
                     <div formGroupName="facturacion">
                       <div class="row">
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Nombres</label>
                           <input class="form-control" type="text"
                                  formControlName="nombres">
@@ -161,7 +153,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Apellidos</label>
                           <input class="form-control" type="text"
                                  formControlName="apellidos">
@@ -172,7 +164,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Correo</label>
                           <input class="form-control" type="text"
                                  formControlName="correo">
@@ -186,7 +178,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <div class="form-group">
                             <label for="tipoIdentificacion">Tipo de Identificación</label>
                             <select id="tipoIdentificacion" class="form-control" formControlName="tipoIdentificacion"
@@ -205,7 +197,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Numero Identificación</label>
                           <input class="form-control" type="text"
                                  formControlName="identificacion"
@@ -230,7 +222,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Teléfono</label>
                           <input class="form-control" type="text"
                                  formControlName="telefono">
@@ -250,10 +242,10 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Pais</label>
                           <input class="form-control" type="text"
-                                 formControlName="pais">
+                                 formControlName="pais" disabled>
                           <div *ngIf="facturacionForm.pais.errors"
                                class="invalid-feedback" style="display: block;">
                             <div *ngIf="facturacionForm.pais.errors.required">
@@ -261,10 +253,16 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
-                          <label>Provincia</label>
-                          <input class="form-control" type="text"
-                                 formControlName="provincia">
+                        <div class="col-md-3 col-12">
+                          <label for="provinciaFact">Provincia</label>
+                          <select class="form-control" name="provinciaFact" formControlName="provincia"
+                                  (change)="obtenerCiudad()"
+                                  [(ngModel)]="provincia" id="provinciaFact">
+                            <option value="" selected>- Seleccione -</option>
+                            <option value="{{pais.nombre}}" *ngFor="let pais of provinciaOpciones">
+                              {{ pais.nombre }}
+                            </option>
+                          </select>
                           <div *ngIf="facturacionForm.provincia.errors"
                                class="invalid-feedback" style="display: block;">
                             <div *ngIf="facturacionForm.provincia.errors.required">
@@ -272,10 +270,15 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
-                          <label>Ciudad</label>
-                          <input class="form-control" type="text"
-                                 formControlName="ciudad">
+                        <div class="col-md-3 col-12">
+                          <label for="ciudadFact">Ciudad</label>
+                          <select class="form-control" name="ciudadFact" formControlName="ciudad"
+                                  [(ngModel)]="ciudad" id="ciudadFact">
+                            <option value="" selected>- Seleccione -</option>
+                            <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
+                              {{ ciudad.nombre }}
+                            </option>
+                          </select>
                           <div *ngIf="facturacionForm.ciudad.errors"
                                class="invalid-feedback" style="display: block;">
                             <div *ngIf="facturacionForm.ciudad.errors.required">
@@ -283,7 +286,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Calle Principal</label>
                           <input class="form-control" type="text"
                                  formControlName="callePrincipal">
@@ -305,7 +308,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Calle Secundaria</label>
                           <input class="form-control" type="text"
                                  formControlName="calleSecundaria">
@@ -316,7 +319,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Referencia</label>
                           <input class="form-control" type="text"
                                  formControlName="referencia">
@@ -327,7 +330,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>GPS</label>
                           <input class="form-control" type="text"
                                  formControlName="gps">
@@ -341,7 +344,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-3">
+                  <div class="col-md-3 col-12">
                     <label>Metodo Pago</label>
                     <input class="form-control" type="text"
                            formControlName="metodoPago" disabled>
@@ -352,8 +355,8 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-3 mt-2">
-                    <label>Canal: </label>
+                  <div class="col-4 mt-2">
+                    <label>Canal de pedido: </label>
                     <label> {{ notaPedido.value.canal }}</label>
                   </div>
                   <!-- Address and Contact ends -->
@@ -444,9 +447,9 @@
                                 </div>
                                 <div class="col-lg-1 col-12 my-lg-0 my-2">
                                   <p class="card-text col-title mb-md-50 mb-0">
-                                    Bodega
+                                    Ubicación
                                   </p>
-                                  <label class="d-block text-wrap">{{ detalle.controls.bodega.value }}</label>
+                                  <label class="d-block text-wrap">{{ detalle.controls.canal.value | shorten}}</label>
                                 </div>
                                 <div class="col-lg-2 col-12 my-lg-0 my-2">
                                   <img
@@ -458,7 +461,6 @@
                                   </div>
 
                                 </div>
-
                                 <div
                                   class="d-flex flex-column align-items-center justify-content-between border-left border-left-black invoice-product-actions py-50">
                                   <i-feather name="x"
@@ -496,7 +498,7 @@
                   <div class="card-body invoice-padding">
                     <div formGroupName="facturacion">
                       <div class="row mb-1 d-flex justify-content-between">
-                        <div class="col-md-5">
+                        <div class="col-md-5 col-12">
                           <label for="codigoVendedor" class="form-label">Codigo
                             Vendedor:</label>
                           <input type="text" class="form-control" id="codigoVendedor"
@@ -508,7 +510,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-5 col-12">
                           <label for="nombreVendedor" class="form-label">Nombre
                             Vendedor:</label>
                           <input type="text" class="form-control" id="nombreVendedor"
@@ -546,7 +548,7 @@
                   <div class="card-body invoice-padding pt-0">
                     <div formGroupName="envio">
                       <div class="row">
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Nombres</label>
                           <input class="form-control" type="text"
                                  formControlName="nombres">
@@ -557,7 +559,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Apellidos</label>
                           <input class="form-control" type="text"
                                  formControlName="apellidos">
@@ -568,7 +570,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Correo</label>
                           <input class="form-control" type="text"
                                  formControlName="correo">
@@ -582,7 +584,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <div class="form-group">
                             <label for="tipoIdentificacionEnvio">Tipo de Identificación</label>
                             <select id="tipoIdentificacionEnvio" class="form-control" formControlName="tipoIdentificacion"
@@ -601,7 +603,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Numero Identificación</label>
                           <input class="form-control" type="text"
                                  formControlName="identificacion"
@@ -627,7 +629,7 @@
                           </div>
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Teléfono</label>
                           <input class="form-control" type="text"
                                  formControlName="telefono">
@@ -647,10 +649,10 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Pais</label>
                           <input class="form-control" type="text"
-                                 formControlName="pais">
+                                 formControlName="pais" disabled>
                           <div *ngIf="envioForm.pais.errors"
                                class="invalid-feedback" style="display: block;">
                             <div *ngIf="envioForm.pais.errors.required">
@@ -658,10 +660,16 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
-                          <label>Provincia</label>
-                          <input class="form-control" type="text"
-                                 formControlName="provincia">
+                        <div class="col-md-3 col-12">
+                          <label for="provinciaEnvio">Provincia</label>
+                          <select class="form-control" name="provinciaEnvio" formControlName="provincia"
+                                  (change)="obtenerCiudadEnvio()"
+                                  [(ngModel)]="provinciaEnvio" id="provinciaEnvio">
+                            <option value="" selected>- Seleccione -</option>
+                            <option value="{{provincia.nombre}}" *ngFor="let provincia of provinciaOpcionesEnvio">
+                              {{ provincia.nombre }}
+                            </option>
+                          </select>
                           <div *ngIf="envioForm.provincia.errors"
                                class="invalid-feedback" style="display: block;">
                             <div *ngIf="envioForm.provincia.errors.required">
@@ -669,10 +677,15 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
-                          <label>Ciudad</label>
-                          <input class="form-control" type="text"
-                                 formControlName="ciudad">
+                        <div class="col-md-3 col-12">
+                          <label for="ciudadEnvio">Ciudad</label>
+                          <select class="form-control" name="ciudadEnvio" formControlName="ciudad"
+                                  [(ngModel)]="ciudadEnvio" id="ciudadEnvio">
+                            <option value="" selected>- Seleccione -</option>
+                            <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpcionesEnvio">
+                              {{ ciudad.nombre }}
+                            </option>
+                          </select>
                           <div *ngIf="envioForm.ciudad.errors"
                                class="invalid-feedback" style="display: block;">
                             <div *ngIf="envioForm.ciudad.errors.required">
@@ -680,7 +693,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Calle Principal</label>
                           <input class="form-control" type="text"
                                  formControlName="callePrincipal">
@@ -691,7 +704,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Número</label>
                           <input class="form-control" type="text"
                                  formControlName="numero">
@@ -702,7 +715,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Calle Secundaria</label>
                           <input class="form-control" type="text"
                                  formControlName="calleSecundaria">
@@ -713,7 +726,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>Referencia</label>
                           <input class="form-control" type="text"
                                  formControlName="referencia">
@@ -724,7 +737,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3 col-12">
                           <label>GPS</label>
                           <input class="form-control" type="text"
                                  formControlName="gps">

@@ -249,6 +249,7 @@ export class ProductosEditarComponent implements OnInit {
     });
     this.mostrarSpinner = true;
     if (this.idProducto !== 0) {
+      this.datosProducto.delete('stockVirtual');
       this.productosService.actualizarProducto(this.datosProducto, this.idProducto).subscribe((info) => {
           this.mensaje = 'Producto actualizado';
           this.abrirModal(this.aviso);
