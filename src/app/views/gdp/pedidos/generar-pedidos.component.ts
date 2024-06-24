@@ -144,7 +144,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.email]],
         identificacion: ['', []],
-        tipoIdentificacion: [this.tipoIdentificacion, [Validators.required]],
+        tipoIdentificacion: [this.tipoIdentificacion],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: [this.pais, [Validators.required]],
         provincia: ['', [Validators.required]],
