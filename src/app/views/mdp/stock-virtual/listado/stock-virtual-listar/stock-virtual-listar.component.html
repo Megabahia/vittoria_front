@@ -212,13 +212,21 @@
         <div class="custom-control custom-checkbox form-check d-flex justify-content-start align-items-center"
              *ngFor="let opcion of canalStockVirtual.get('canales')['controls']; let i = index">
           <ng-container [formGroup]="opcion">
-            <input type="checkbox" class="custom-control-input"
-                   id="canales-{{i}}"
+            <div *ngIf="seleccionadoDefault===i; else enableCheck">
+              <i-feather id="canalesStockVirtual-{{i}}" name="check-square" class="text-success m-0 p-0"></i-feather>
+              <label class="custom-control-label"
+                     for="canalesStockVirtual-{{i}}">{{ opcion.controls.canal.value }}</label>
+            </div>
+            <ng-template #enableCheck>
+              <input type="checkbox" class="custom-control-input"
+                     id="canalesStockVirtual-{{i}}"
+                     (change)="actualizarSeleccionados($event, opcion)"
+                     formControlName="estado"
+              />
+              <label class="custom-control-label"
+                     for="canalesStockVirtual-{{i}}">{{ opcion.controls.canal.value }}</label>
+            </ng-template>
 
-                   (change)="actualizarSeleccionados($event, opcion)"
-                   formControlName="estado"
-            />
-            <label class="custom-control-label" for="canales-{{i}}">{{ opcion.controls.canal.value }}</label>
           </ng-container>
         </div>
       </div>
