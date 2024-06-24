@@ -213,7 +213,13 @@
              *ngFor="let opcion of canalStockVirtual.get('canales')['controls']; let i = index">
           <ng-container [formGroup]="opcion">
             <div *ngIf="seleccionadoDefault===i; else enableCheck">
-              <i-feather id="canalesStockVirtual-{{i}}" name="check-square" class="text-success m-0 p-0"></i-feather>
+                <input type="checkbox" class="custom-control-input"
+                       id="canalesStockVirtual-{{i}}"
+                       (change)="actualizarSeleccionados($event, opcion)"
+                       formControlName="estado"
+                       checked
+                       disabled
+                />
               <label class="custom-control-label"
                      for="canalesStockVirtual-{{i}}">{{ opcion.controls.canal.value }}</label>
             </div>
