@@ -8,7 +8,8 @@ import {Form, FormArray, FormBuilder, FormControl, FormGroup, Validators} from "
 
 @Component({
   selector: 'app-stock-virtual-listar',
-  templateUrl: './stock-virtual-listar.component.html'
+  templateUrl: './stock-virtual-listar.component.html',
+  styleUrls: ['./stock-virtual-listar.component.html']
 })
 export class StockVirtualListarComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
@@ -31,7 +32,6 @@ export class StockVirtualListarComponent implements OnInit, AfterViewInit {
   canalSeleccionado = '';
   seleccionados = [];
   seleccionadoDefault
-  deshabilitadoDefault;
 
   constructor(
     private productosService: ProductosService,
@@ -106,15 +106,6 @@ export class StockVirtualListarComponent implements OnInit, AfterViewInit {
     this.idProducto = 0;
   }
 
-  editarProducto(id): void {
-    this.idProducto = id;
-    this.vista = 'editar';
-  }
-
-  abrirModal(modal, id): void {
-    this.idProducto = id;
-    this.modalService.open(modal);
-  }
 
   abrirModalStockVirtual(modal, id, codigoBarras, canal, stockVirtual): void {
     this.obtenerListaParametrosModal();
@@ -132,6 +123,7 @@ export class StockVirtualListarComponent implements OnInit, AfterViewInit {
     // Solo actualiza con stockVirtual si hay canales disponibles
     if (stockVirtual && stockVirtual && stockVirtual.length > 0) {
       for (const stockModal of stockVirtual) {
+
         canalUnicos.set(stockModal.canal, {...canalUnicos.get(stockModal.canal), ...stockModal});
       }
     }
@@ -142,6 +134,11 @@ export class StockVirtualListarComponent implements OnInit, AfterViewInit {
     this.canalOpcionesModal.map((item): void => {
       this.agregarItem();
     });
+    this.seleccionadoDefault = this.canalOpcionesModal.findIndex(item => item.canal === this.canalProducto);
+    this.canalOpcionesModal[this.seleccionadoDefault].estado = true;
+    //const elementoId = `canalesStockVirtual-${this.seleccionadoDefault}`;
+    //console.log(document.getElementById(elementoId) as HTMLInputElement);
+    //document.getElementById(`canalesStockVirtual-${this.seleccionadoDefault}`);
 
     this.canalStockVirtual.patchValue({
       canales: this.canalOpcionesModal
@@ -196,20 +193,19 @@ export class StockVirtualListarComponent implements OnInit, AfterViewInit {
   async obtenerListaParametrosModal(): Promise<void> {
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar)
       .subscribe((result) => {
+
         this.canalOpcionesModal = result.data.map(opcion => {
           const isMatching = opcion.valor === this.canalProducto;
           // Seleccionado si coincide con canalProducto o está en listaStockVirtual
-          this.seleccionadoDefault = isMatching;
-          // Añadir al arreglo seleccionados si está seleccionado y aún no está en el arreglo
-          console.log('seleccionado: ',this.seleccionadoDefault)
-
+          //if (isMatching) {
+          //  this.seleccionadoDefault = true;
+          //}
           return {
             //...opcion,
             canal: opcion.valor,
-            estado: false,
+            estado: isMatching
           };
         });
-
       });
   }
 

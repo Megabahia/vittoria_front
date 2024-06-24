@@ -119,20 +119,20 @@
                 <div class="card-body invoice-padding pb-0">
                   <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
                     <div>
-                      <div class="d-flex align-items-center mb-1">
-                        <span class="title mr-1">Fecha Pedido:</span>
+                      <div class="col-12 d-block mb-2">
+                        <span class="title">Fecha Pedido:</span>
                         <input type="text"
                                class="form-control invoice-edit-input date-picker"
                                value="{{notaPedido.controls.created_at.value | date: 'dd-MM-yyyy'}}"
                                disabled/>
-                        <span class="title mr-1 ml-3 text-danger">Hora: </span>
-                        <span class="text-danger mr-3">{{ horaPedido }}</span>
-
+                        <span class="title text-danger">Hora: </span>
+                        <span class="text-danger">{{ horaPedido }}</span>
                       </div>
+
                     </div>
                     <div>
-                      <div class="d-flex align-items-center mb-1">
-                        <span class="title mr-1">Número de pedido:</span>
+                      <div class="col-12 d-block align-items-center">
+                        <span class="title">Número de pedido:</span>
                         <input type="text"
                                class="form-control invoice-edit-input date-picker"
                                value="{{notaPedido.controls.numeroPedido.value}}"
@@ -150,7 +150,7 @@
                   <h4 class="invoice-title mb-2">Datos para el punto de entrega</h4>
                   <div formGroupName="facturacion">
                     <div class="row">
-                      <div class="col-4">
+                      <div class="col-md-4 col-12">
                         <label>Nombres</label>
                         <input class="form-control" type="text"
                                formControlName="nombres" disabled>
@@ -161,7 +161,7 @@
                           </div>
                         </div>-->
                       </div>
-                      <div class="col-4">
+                      <div class="col-md-4 col-12">
                         <label>Apellidos</label>
                         <input class="form-control" type="text"
                                formControlName="apellidos" disabled>
@@ -172,7 +172,7 @@
                           </div>
                         </div>-->
                       </div>
-                      <div class="col-4">
+                      <div class="col-md-4 col-12">
                         <label>Correo</label>
                         <input class="form-control" type="text"
                                formControlName="correo"
@@ -188,7 +188,7 @@
                           </div>
                         </div>-->
                       </div>
-                      <div class="col-4">
+                      <div class="col-md-4 col-12">
                         <div class="form-group">
                           <label for="tipoIdentificacion">Tipo de Identificación</label>
                           <select id="tipoIdentificacion" class="form-control" formControlName="tipoIdentificacion"
@@ -201,7 +201,7 @@
 
                         </div>
                       </div>
-                      <div class="col-4">
+                      <div class="col-md-4 col-12">
                         <label>Numero Identificación</label>
                         <input class="form-control" type="text"
                                formControlName="identificacion"
@@ -209,7 +209,7 @@
                         >
                       </div>
 
-                      <div class="col-4">
+                      <div class="col-md-4 col-12">
                         <label>Teléfono</label>
                         <input class="form-control" type="text"
                                formControlName="telefono" disabled>
@@ -229,7 +229,7 @@
                           </div>
                         </div>-->
                       </div>
-                      <div class="col-4">
+                      <div class="col-md-4 col-12">
                         <label>Pais</label>
                         <input class="form-control" type="text"
                                formControlName="pais" disabled>
@@ -240,7 +240,7 @@
                           </div>
                         </div>-->
                       </div>
-                      <div class="col-4">
+                      <div class="col-md-4 col-12">
                         <label>Provincia</label>
                         <input class="form-control" type="text"
                                formControlName="provincia" disabled>
@@ -251,7 +251,7 @@
                           </div>
                         </div>-->
                       </div>
-                      <div class="col-4">
+                      <div class="col-md-4 col-12">
                         <label>Ciudad</label>
                         <input class="form-control" type="text"
                                formControlName="ciudad" disabled>
@@ -265,7 +265,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-4">
+                <div class="col-md-4 col-12">
                   <label>Metodo Pago</label>
                   <input class="form-control" type="text"
                          formControlName="metodoPago" disabled>
