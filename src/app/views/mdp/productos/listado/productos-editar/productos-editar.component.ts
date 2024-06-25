@@ -73,6 +73,7 @@ export class ProductosEditarComponent implements OnInit {
   ) {
     this.producto = this.productosService.inicializarProducto();
     this.fichaTecnica = this.productosService.inicializarFichaTecnica();
+    this.obtenerListaParametros();
   }
 
   get fp() {
@@ -92,32 +93,35 @@ export class ProductosEditarComponent implements OnInit {
       nombre: ['', [Validators.required, Validators.maxLength(150)]],
       descripcion: ['', [Validators.required]],
       codigoBarras: ['', [Validators.required, Validators.maxLength(150)]],
-      refil: ['', [Validators.required]],
+      refil: ['', []],
       stock: ['', [Validators.required, Validators.min(1), ValidacionesPropias.numeroEntero]],
-      parametrizacion: [0, [Validators.required, Validators.min(1)]],
+      //parametrizacion: [0, [Validators.required, Validators.min(1)]],
+      parametrizacion: [0, []],
       costoCompra: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       precioVentaA: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       precioVentaB: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      precioVentaC: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      precioVentaD: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      precioVentaE: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      precioVentaF: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      precioVentaBultos: ['', [Validators.required, Validators.pattern(this.numRegex)]],
+      precioVentaC: ['', []],
+      precioVentaD: ['', []],
+      precioVentaE: ['', []],
+      precioVentaF: ['', []],
+      precioVentaBultos: ['', []],
       estado: ['', [Validators.required]],
-      variableRefil: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
-      fechaCaducidad: ['', [Validators.required]],
-      fechaElaboracion: ['', [Validators.required]],
+      //variableRefil: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      variableRefil: ['', []],
+      fechaCaducidad: ['', []],
+      fechaElaboracion: ['', []],
       caracteristicas: ['', [Validators.required]],
       proveedor: ['', [Validators.required]],
-      precioOferta: ['', [Validators.required, Validators.pattern(this.numRegex)]],
+      precioOferta: ['', []],
       envioNivelNacional: [true, []],
       lugarVentaProvincia: ['', []],
       lugarVentaCiudad: ['', []],
-      courier: ['', [Validators.required]],
+      courier: ['', []],
       estadoLanding: [true, []],
-      precioLanding: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      precioLandingOferta: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      woocommerceId: ['',[]]
+      precioLanding: ['', []],
+      //precioLanding: ['', [Validators.required, Validators.pattern(this.numRegex)]],
+      precioLandingOferta: ['', []],
+      woocommerceId: ['', []]
     });
     this.fichaTecnicaForm = this._formBuilder.group({
       codigo: ['', [Validators.required]],
@@ -146,7 +150,10 @@ export class ProductosEditarComponent implements OnInit {
         this.obtenerCiudad();
         this.productoForm.get('lugarVentaCiudad').setValue(this.producto.lugarVentaCiudad);
       }
-      this.obtenerListaParametros();
+      if (info.canales == '') {
+
+        this.obtenerListaParametros();
+      }
       this.obtenerListaSubcategorias();
     });
   }
