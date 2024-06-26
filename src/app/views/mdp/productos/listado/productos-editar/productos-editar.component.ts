@@ -25,6 +25,8 @@ export class ProductosEditarComponent implements OnInit {
   @ViewChild('dismissModal') dismissModal;
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @ViewChild('eliminarImagenMdl') eliminarImagenMdl;
+  @ViewChild('fileInput') fileInput: ElementRef;
+
   idImagen = 0;
   imagenes = [];
   cantImagenes = 0;
@@ -59,6 +61,8 @@ export class ProductosEditarComponent implements OnInit {
   pageSize: any = 3;
   tiposOpciones = '';
   nombreBuscar;
+  imageUrlPrincipal: string | ArrayBuffer | null = null;
+  imagenPrinciplSeleccionada: File | null = null;
 
   constructor(
     private categoriasService: CategoriasService,
@@ -121,7 +125,8 @@ export class ProductosEditarComponent implements OnInit {
       precioLanding: ['', []],
       //precioLanding: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       precioLandingOferta: ['', []],
-      woocommerceId: ['', []]
+      woocommerceId: ['', []],
+      imagen_principal: ['', [Validators.required]]
     });
     this.fichaTecnicaForm = this._formBuilder.group({
       codigo: ['', [Validators.required]],
@@ -219,10 +224,14 @@ export class ProductosEditarComponent implements OnInit {
     let llaves = Object.keys(this.producto);
     let valores = Object.values(this.producto);
     this.datosProducto = new FormData();
-
+    this.datosProducto.delete('imagen_principal');
     valores.map((valor, pos) => {
-      this.datosProducto.append(llaves[pos], valor);
+      console.log('LLAVES POST', llaves[pos])
+      if (llaves[pos] !== 'imagen_principal') {
+        this.datosProducto.append(llaves[pos], valor);
+      }
     });
+    this.datosProducto.append('imagen_principal', this.imagenPrinciplSeleccionada);
 
     // this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
     //   console.log(info);
@@ -396,10 +405,6 @@ export class ProductosEditarComponent implements OnInit {
     });
   }
 
-  cerrarModalEliminar(): void {
-    this.modalService.dismissAll();
-  }
-
   seleccionarEnvio(event): void {
     this.habilitarEnvio = !event.currentTarget.checked;
     if (this.habilitarEnvio) {
@@ -435,6 +440,34 @@ export class ProductosEditarComponent implements OnInit {
     if (10485760 < file.size) {
       this.invalidoTamanoVideo = true;
       this.toaster.open('Archivo pesado', {type: 'warning'});
+    }
+  }
+
+
+  onFileSelect(event: any): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length) {
+      this.imagenPrinciplSeleccionada = input.files[0]; // Almacena el archivo seleccionado globalmente
+      this.cargarImagenPrincipal(this.imagenPrinciplSeleccionada); // Carga la imagen para su visualización
+    }
+  }
+
+  private cargarImagenPrincipal(file: File): void {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.imageUrlPrincipal = e.target.result; // Almacena la URL de la imagen para visualización
+    };
+    reader.readAsDataURL(file);
+  }
+
+
+  eliminarImagenPrincipal(): void {
+    this.imageUrlPrincipal = null;
+    this.imagenPrinciplSeleccionada = null;
+    // Si también necesitas limpiar el input file, aquí una manera de hacerlo usando ViewChild
+    // Debes asegurarte de tener el ViewChild para el input file
+    if (this.fileInput.nativeElement) {
+      this.fileInput.nativeElement.value = '';
     }
   }
 }
