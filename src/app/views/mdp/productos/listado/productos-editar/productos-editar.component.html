@@ -13,7 +13,7 @@
               <div class="form-group">
                 <label for="canal">Canal</label>
                 <select class="form-control select2" name="canal" formControlName="canal"
-                        [(ngModel)]="producto.canal">
+                        [(ngModel)]="producto.canal" [disabled]="disabledSelectCanal">
                   <option value="" selected>- Seleccionar -</option>
                   <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
                 </select>

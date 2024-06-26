@@ -49,6 +49,21 @@
 
                                 <form class="auth-login-form mt-2" [formGroup]="usuarioForm">
                                     <div class="row">
+                                      <div class="col-md-4">
+                                        <div class="form-group">
+                                          <label class="form-label">Canal:</label>
+                                          <select class="form-control" name="canal" formControlName="canal"
+                                                  [(ngModel)]="usuario.canal">
+                                            <option value="" selected>- Seleccione canal -</option>
+                                            <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">
+                                              {{ canalOp.valor }}
+                                            </option>
+                                          </select>
+                                          <div *ngIf="submitted && f.canal.errors" class="invalid-feedback" style="display: block;">
+                                            <div *ngIf="f.canal.errors.required">Canal requerido</div>
+                                          </div>
+                                        </div>
+                                      </div>
                                         <div class="col-md-4">
                                             <div class="form-group" *ngIf="mostrar; else MostrarUsuario">
                                                 <label for="username">Usuario</label>

@@ -194,7 +194,7 @@
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
           </li>
-          <li class="nav-item has-sub ng-star-inserted" *ngIf="usuario.usuario.idRol !== 59">
+          <li class="nav-item has-sub ng-star-inserted" *ngIf="usuario.usuario.idRol !== 59 && usuario.usuario.idRol !== 60">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Administración de proveedores">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración de proveedores</span></a>
@@ -215,7 +215,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item has-sub ng-star-inserted">
+          <li class="nav-item has-sub ng-star-inserted" *ngIf="usuario.usuario.idRol !== 60">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Administración de inventario">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración de inventario</span></a>
@@ -305,7 +305,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item has-sub ng-star-inserted">
+          <li class="nav-item has-sub ng-star-inserted" *ngIf="usuario.usuario.idRol !== 60">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Administración de stock virtual">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración de stock virtual</span></a>

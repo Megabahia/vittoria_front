@@ -5,6 +5,7 @@ import {Producto, ProductosService} from '../../../../../services/mdp/productos/
 import {SubcategoriasService} from '../../../../../services/mdp/productos/subcategorias/subcategorias.service';
 import {ParamService} from 'src/app/services/mdp/param/param.service';
 import {ParamService as AdmParamService} from '../../../../../services/admin/param.service';
+import {HttpClient} from '@angular/common/http';
 
 import {ParamService as MDMParamService} from 'src/app/services/mdm/param/param.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -54,7 +55,7 @@ export class ProductosEditarComponent implements OnInit {
   habilitarEnvio = false;
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
-
+  canalUsuario
   listaProductos;
   codigoBarras: string;
   page = 1;
@@ -63,6 +64,7 @@ export class ProductosEditarComponent implements OnInit {
   nombreBuscar;
   imageUrlPrincipal: string | ArrayBuffer | null = null;
   imagenPrinciplSeleccionada: File | null = null;
+  disabledSelectCanal = false;
 
   constructor(
     private categoriasService: CategoriasService,
@@ -74,10 +76,12 @@ export class ProductosEditarComponent implements OnInit {
     private MDMparamService: MDMParamService,
     private _formBuilder: FormBuilder,
     private toaster: Toaster,
+    private http: HttpClient
   ) {
     this.producto = this.productosService.inicializarProducto();
     this.fichaTecnica = this.productosService.inicializarFichaTecnica();
     this.obtenerListaParametros();
+    this.obtenerUsuarioActual();
   }
 
   get fp() {
@@ -138,6 +142,8 @@ export class ProductosEditarComponent implements OnInit {
     if (this.idProducto !== 0) {
       this.obtenerProducto();
       this.obtenerFichasTecnicas();
+    }else{
+      this.obtenerUsuarioActual()
     }
     this.obtenerCourierOpciones();
     this.obtenerProvinciasOpciones();
@@ -150,6 +156,11 @@ export class ProductosEditarComponent implements OnInit {
       delete producto.imagenes;
       this.producto = producto;
       this.habilitarEnvio = !producto.envioNivelNacional;
+
+      this.imageUrlPrincipal = info.imagen_principal;
+
+      this.productoForm.patchValue(info);
+
       if (!this.producto.envioNivelNacional) {
         this.productoForm.get('lugarVentaProvincia').setValue(this.producto.lugarVentaProvincia);
         this.obtenerCiudad();
@@ -226,12 +237,13 @@ export class ProductosEditarComponent implements OnInit {
     this.datosProducto = new FormData();
     this.datosProducto.delete('imagen_principal');
     valores.map((valor, pos) => {
-      console.log('LLAVES POST', llaves[pos])
       if (llaves[pos] !== 'imagen_principal') {
         this.datosProducto.append(llaves[pos], valor);
       }
     });
-    this.datosProducto.append('imagen_principal', this.imagenPrinciplSeleccionada);
+    if (typeof this.productoForm.value.imagen_principal === 'object') {
+      this.datosProducto.append('imagen_principal', this.imagenPrinciplSeleccionada);
+    }
 
     // this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
     //   console.log(info);
@@ -448,6 +460,7 @@ export class ProductosEditarComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       this.imagenPrinciplSeleccionada = input.files[0]; // Almacena el archivo seleccionado globalmente
+      console.log(this.imagenPrinciplSeleccionada)
       this.cargarImagenPrincipal(this.imagenPrinciplSeleccionada); // Carga la imagen para su visualización
     }
   }
@@ -468,6 +481,20 @@ export class ProductosEditarComponent implements OnInit {
     // Debes asegurarte de tener el ViewChild para el input file
     if (this.fileInput.nativeElement) {
       this.fileInput.nativeElement.value = '';
+    }
+  }
+
+  obtenerUsuarioActual(): void {
+    const usuarioJSON = localStorage.getItem('currentUser');
+    if (usuarioJSON) {
+      const usuarioObjeto = JSON.parse(usuarioJSON);
+      if (usuarioObjeto.usuario.idRol === 60) {
+        this.producto.canal = usuarioObjeto.usuario.canal;
+        this.disabledSelectCanal = true;
+      }
+      console.log('Usuario obtenido como objeto:', usuarioObjeto.usuario);
+    } else {
+      console.log('No hay datos de usuario en localStorage');
     }
   }
 }

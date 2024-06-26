@@ -10,6 +10,7 @@ export interface NuevoUsuario {
   nombres: string;
   apellidos: string;
   username: string;
+  canal: string;
   email: string;
   compania: string;
   pais: string;
@@ -26,6 +27,7 @@ export interface Usuario {
   nombres: string;
   apellidos: string;
   username: string;
+  canal: string;
   email: string;
   compania: string;
   pais: string;
