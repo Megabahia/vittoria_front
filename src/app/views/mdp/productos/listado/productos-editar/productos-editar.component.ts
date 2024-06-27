@@ -257,7 +257,7 @@ export class ProductosEditarComponent implements OnInit {
     const fechaElaboracion = moment(this.producto.fechaElaboracion, 'YYYY-MM-DD');
     const diferenciaDiasElabCad = fechaCaducidad.diff(fechaElaboracion, 'days');
     const diferenciaDiasHoyCad = fechaCaducidad.diff(moment(), 'days');
-    if (diferenciaDiasElabCad < 0) {
+    /*if (diferenciaDiasElabCad < 0) {
       this.mensaje = 'La fecha de caducidad debe ser mayor a la de elaboración';
       this.abrirModal(this.aviso);
       return;
@@ -266,7 +266,7 @@ export class ProductosEditarComponent implements OnInit {
       this.mensaje = 'La fecha de caducidad debe ser mayor a la fecha actual';
       this.abrirModal(this.aviso);
       return;
-    }
+    }*/
     this.datosProducto.delete('video');
     if (this.video.nativeElement.files[0]) {
       this.datosProducto.append('video', this.video.nativeElement.files[0]);
