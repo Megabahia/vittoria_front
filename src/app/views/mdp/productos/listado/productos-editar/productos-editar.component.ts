@@ -143,7 +143,7 @@ export class ProductosEditarComponent implements OnInit {
     if (this.idProducto !== 0) {
       this.obtenerProducto();
       this.obtenerFichasTecnicas();
-    }else{
+    } else {
       this.obtenerUsuarioActual()
     }
     this.obtenerCourierOpciones();
@@ -502,7 +502,7 @@ export class ProductosEditarComponent implements OnInit {
         this.producto.canal = usuarioObjeto.usuario.canal;
         this.disabledSelectCanal = true;
       }
-      console.log('Usuario obtenido como objeto:', usuarioObjeto.usuario);
+      //console.log('Usuario obtenido como objeto:', usuarioObjeto.usuario);
     } else {
       console.log('No hay datos de usuario en localStorage');
     }
