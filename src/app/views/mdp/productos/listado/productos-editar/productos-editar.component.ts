@@ -101,10 +101,10 @@ export class ProductosEditarComponent implements OnInit {
       nombre: ['', [Validators.required, Validators.maxLength(150)]],
       descripcion: ['', [Validators.required]],
       codigoBarras: ['', [Validators.required, Validators.maxLength(150)]],
-      refil: ['', []],
+      refil: [0, []],
       stock: ['', [Validators.required, Validators.min(1), ValidacionesPropias.numeroEntero]],
       //parametrizacion: [0, [Validators.required, Validators.min(1)]],
-      parametrizacion: [0, []],
+      parametrizacion: [null, []],
       costoCompra: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       precioVentaA: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       precioVentaB: ['', [Validators.required, Validators.pattern(this.numRegex)]],
@@ -112,7 +112,7 @@ export class ProductosEditarComponent implements OnInit {
       precioVentaD: ['', []],
       precioVentaE: ['', []],
       precioVentaF: ['', []],
-      precioVentaBultos: ['', []],
+      precioVentaBultos: [0, []],
       estado: ['', [Validators.required]],
       //variableRefil: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       variableRefil: ['', []],
@@ -120,15 +120,15 @@ export class ProductosEditarComponent implements OnInit {
       fechaElaboracion: ['', []],
       caracteristicas: ['', [Validators.required]],
       proveedor: ['', [Validators.required]],
-      precioOferta: ['', []],
+      precioOferta: [0, []],
       envioNivelNacional: [true, []],
       lugarVentaProvincia: ['', []],
       lugarVentaCiudad: ['', []],
       courier: ['', []],
       estadoLanding: [true, []],
-      precioLanding: ['', []],
+      precioLanding: [0, []],
       //precioLanding: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      precioLandingOferta: ['', []],
+      precioLandingOferta: [0, []],
       woocommerceId: ['', []],
       imagen_principal: ['', [Validators.required]]
     });
@@ -156,7 +156,7 @@ export class ProductosEditarComponent implements OnInit {
       delete producto.imagenes;
       this.producto = producto;
       this.habilitarEnvio = !producto.envioNivelNacional;
-
+      console.log('INFO', info)
       this.imageUrlPrincipal = info.imagen_principal;
 
       this.productoForm.patchValue(info);
@@ -235,13 +235,14 @@ export class ProductosEditarComponent implements OnInit {
     let llaves = Object.keys(this.producto);
     let valores = Object.values(this.producto);
     this.datosProducto = new FormData();
-    this.datosProducto.delete('imagen_principal');
+    //this.datosProducto.delete('imagen_principal');
     valores.map((valor, pos) => {
-      if (llaves[pos] !== 'imagen_principal') {
+      if (llaves[pos] !== 'imagen_principal' && valor !== null) {
         this.datosProducto.append(llaves[pos], valor);
       }
     });
-    if (typeof this.productoForm.value.imagen_principal === 'object') {
+    console.log(this.productoForm.value.imagen_principal)
+    if (typeof this.productoForm.value.imagen_principal === 'object' || this.productoForm.value.imagen_principal === '') {
       this.datosProducto.append('imagen_principal', this.imagenPrinciplSeleccionada);
     }
 
@@ -462,6 +463,9 @@ export class ProductosEditarComponent implements OnInit {
       this.imagenPrinciplSeleccionada = input.files[0]; // Almacena el archivo seleccionado globalmente
       console.log(this.imagenPrinciplSeleccionada)
       this.cargarImagenPrincipal(this.imagenPrinciplSeleccionada); // Carga la imagen para su visualización
+      this.datosProducto.delete('imagen_principal');
+      this.datosProducto.append('imagen_principal', this.imagenPrinciplSeleccionada);
+
     }
   }
 
