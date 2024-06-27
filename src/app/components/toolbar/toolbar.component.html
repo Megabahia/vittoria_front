@@ -188,7 +188,7 @@
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice">MDP Master Data Products</span></a>
         <ul class="menu-content ng-star-inserted">
-          <li class="nav-item {{menuToolbar['mdp']['param']}}">
+          <li class="nav-item {{menuToolbar['mdp']['param']}}" *ngIf="usuario.usuario.idRol !== 60">
             <a class="d-flex align-items-center" href="#/mdp/parametrizaciones" data-toggle="tooltip"
                data-placement="auto" title="Parametrizaciones Administracion">
               <i data-feather="circle"></i>
