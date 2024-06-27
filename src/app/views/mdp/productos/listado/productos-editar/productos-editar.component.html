@@ -11,12 +11,23 @@
           <form class="auth-login-form mt-2" [formGroup]="productoForm">
             <div class="col-md-12">
               <div class="form-group">
-                <label for="canal">Canal</label>
-                <select class="form-control select2" name="canal" formControlName="canal"
-                        [(ngModel)]="producto.canal" [disabled]="disabledSelectCanal">
-                  <option value="" selected>- Seleccionar -</option>
-                  <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
-                </select>
+                  <div *ngIf="disabledSelectCanal; else SelectEnable">
+                      <label for="canal">Canal</label>
+                      <select class="form-control select2" name="canal" id="canal" formControlName="canal"
+                              [(ngModel)]="producto.canal" disabled>
+                          <option value="" selected>- Seleccionar -</option>
+                          <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
+                      </select>
+                  </div>
+                  <ng-template #SelectEnable >
+                      <label for="canal1">Canal</label>
+                      <select class="form-control select2" name="canal" id="canal1" formControlName="canal"
+                              [(ngModel)]="producto.canal" >
+                          <option value="" selected>- Seleccionar -</option>
+                          <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
+                      </select>
+                  </ng-template>
+
               </div>
             </div>
             <div class="row" *ngIf="producto.canal != ''">
