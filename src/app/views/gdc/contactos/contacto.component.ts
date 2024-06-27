@@ -162,8 +162,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       envios: ['', []],
       json: ['', []],
       numeroComprobante: [''],
-      tipoPago: [''],
-      formaPago: [''],
+      tipoPago: ['', [Validators.required]],
+      formaPago: ['', [Validators.required]],
       numTransaccionTransferencia: [''],
       totalCobroEfectivo: ['']
     });

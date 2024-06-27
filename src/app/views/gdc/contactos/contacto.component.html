@@ -636,6 +636,12 @@
                         <option value="facturaElectronicaMegaBahia">Factura electrónica - MegaBahía</option>
                         <option value="rimpePopular">Rimpe popular</option>
                       </select>
+                      <div *ngIf="notaPedidoForm.tipoPago.errors"
+                           class="invalid-feedback" style="display: block;">
+                        <div *ngIf="notaPedidoForm.tipoPago.errors.required">
+                          Requerido
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="col-6" *ngIf="mostrarInputComprobante">
