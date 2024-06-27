@@ -41,6 +41,7 @@ export interface Producto {
   precioLandingOferta;
   idPadre;
   proveedor;
+  stockVirtual?;
 }
 
 export interface FichaTecnicaProducto {
@@ -62,7 +63,7 @@ export class ProductosService {
   inicializarProducto(): Producto {
     return {
       id: 0,
-      canal:'',
+      canal: '',
       categoria: '',
       subCategoria: '',
       nombre: '',
@@ -94,7 +95,21 @@ export class ProductosService {
       estadoLanding: true,
       precioLanding: 0,
       precioLandingOferta: 0,
-      idPadre:''
+      idPadre: '',
+      stockVirtual: [
+        {canal: 'vittoria-test.netlify.app', estado: false}, {
+        canal: 'maxidescuento.megadescuento.com',
+        estado: false
+      }, {
+        canal: 'megabahia.megadescuento.com', estado: false
+      }, {
+        canal: 'tiendamulticompras.megadescuento.com',
+        estado: false
+      }, {canal: 'contraentrega.megadescuento.com', estado: false}, {
+        canal: 'mayorista.megadescuento.com',
+        estado: false
+      }, {canal: 'megadescuento.com', estado: false}, {canal: 'todomegacentro.megadescuento.com', estado: false}
+      ],
     };
   }
 
@@ -120,7 +135,7 @@ export class ProductosService {
     return this.http.post<any>(`${apiUrl}/mdp/productos/search/producto/codigo/`, codigo);
   }
 
-  enviarGmailInconsistencias(id){
+  enviarGmailInconsistencias(id) {
     return this.http.get<any>(`${apiUrl}/api/v3/orders/notificacion/${id}`);
   }
 

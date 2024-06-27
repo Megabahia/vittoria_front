@@ -130,7 +130,8 @@ export class ProductosEditarComponent implements OnInit {
       //precioLanding: ['', [Validators.required, Validators.pattern(this.numRegex)]],
       precioLandingOferta: [0, []],
       woocommerceId: ['', []],
-      imagen_principal: ['', [Validators.required]]
+      imagen_principal: ['', [Validators.required]],
+      stockVirtual: ['', []],
     });
     this.fichaTecnicaForm = this._formBuilder.group({
       codigo: ['', [Validators.required]],
@@ -232,17 +233,23 @@ export class ProductosEditarComponent implements OnInit {
   }
 
   guardarProducto(): void {
+    this.producto.stockVirtual = JSON.stringify(this.producto.stockVirtual.map(item => {
+      if (item.canal === this.producto.canal) {
+        return {...item, estado: true};
+      } else {
+        return item;
+      }
+    }));
     let llaves = Object.keys(this.producto);
     let valores = Object.values(this.producto);
     this.datosProducto = new FormData();
-    //this.datosProducto.delete('imagen_principal');
     valores.map((valor, pos) => {
       if (llaves[pos] !== 'imagen_principal' && valor !== null) {
         this.datosProducto.append(llaves[pos], valor);
       }
     });
-    console.log(this.productoForm.value.imagen_principal)
-    if (typeof this.productoForm.value.imagen_principal === 'object' || this.productoForm.value.imagen_principal === '') {
+    if (this.imagenPrinciplSeleccionada != null) {
+      this.datosProducto.delete('imagen_principal');
       this.datosProducto.append('imagen_principal', this.imagenPrinciplSeleccionada);
     }
 
@@ -461,10 +468,8 @@ export class ProductosEditarComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       this.imagenPrinciplSeleccionada = input.files[0]; // Almacena el archivo seleccionado globalmente
-      console.log(this.imagenPrinciplSeleccionada)
+      console.log('onflieselect', input.files[0]);
       this.cargarImagenPrincipal(this.imagenPrinciplSeleccionada); // Carga la imagen para su visualización
-      this.datosProducto.delete('imagen_principal');
-      this.datosProducto.append('imagen_principal', this.imagenPrinciplSeleccionada);
 
     }
   }
@@ -481,6 +486,7 @@ export class ProductosEditarComponent implements OnInit {
   eliminarImagenPrincipal(): void {
     this.imageUrlPrincipal = null;
     this.imagenPrinciplSeleccionada = null;
+    this.datosProducto.delete('imagen_principal');
     // Si también necesitas limpiar el input file, aquí una manera de hacerlo usando ViewChild
     // Debes asegurarte de tener el ViewChild para el input file
     if (this.fileInput.nativeElement) {
