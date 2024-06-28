@@ -212,7 +212,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       caracteristicas: ['', []],
       precios: [[], []],
       canal: [''],
-      woocommerceId: ['']
+      woocommerceId: [''],
+      imagen_principal:['', [Validators.required]]
     });
   }
 
@@ -343,6 +344,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
           this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
           this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
           this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
+          this.detallesArray.controls[i].get('imagen_principal').setValue(info?.imagen_principal);
           this.detallesArray.controls[i].get('canal').setValue(info.canal)
           this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
           this.detallesArray.controls[i].get('cantidad').setValidators([
@@ -578,9 +580,10 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         const nuevaImagen = e.target.result;
-        this.detallesArray.controls[i].get('imagen').setValue(nuevaImagen);
-        this.datosProducto.append('imagenes[' + 0 + ']id', '0');
-        this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
+        this.detallesArray.controls[i].get('imagen_principal').setValue(nuevaImagen);
+        this.datosProducto.append('imagen_principal', archivo)
+        //this.datosProducto.append('imagenes[' + 0 + ']id', '0');
+        //this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
         this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
         this.datosProducto.append('canal', this.detallesArray.controls[i].get('canal').value);
         try {

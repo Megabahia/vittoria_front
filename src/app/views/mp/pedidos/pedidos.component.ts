@@ -58,7 +58,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   provinciaOpciones;
   ciudadOpcionesEnvio;
   provinciaOpcionesEnvio;
-
+  mostrarLabelProducto = false
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -193,11 +193,13 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       caracteristicas: ['', []],
       bodega: ['', []],
       canal: [''],
-      woocommerceId: ['']
+      woocommerceId: [''],
+      imagen_principal: ['', [Validators.required]]
     });
   }
 
   agregarItem(): void {
+    this.mostrarLabelProducto=false
     this.detallesArray.push(this.crearDetalleGrupo());
   }
 
@@ -263,7 +265,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       this.opciones = info;
     });
   }
-
   async obtenerProducto(i): Promise<void> {
     return new Promise((resolve, reject) => {
       const data = {
@@ -274,6 +275,11 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       };
       const codigoBodega = this.detallesArray.value[i].codigo.slice(-2);
 
+      if (codigoBodega !== '') {
+        this.mostrarLabelProducto = true;
+      } else {
+        this.mostrarLabelProducto = false;
+      }
       this.paramService.obtenerListaValor({valor: codigoBodega}).subscribe((param) => {
         if (this.detallesArray.value[i].codigo.endsWith('MD')) {
           this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
@@ -287,8 +293,13 @@ export class PedidosComponent implements OnInit, AfterViewInit {
                 this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
                 this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
                 this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
+                this.detallesArray.controls[i].get('imagen_principal').setValue(info?.imagen_principal);
                 this.detallesArray.controls[i].get('bodega').setValue(param[0].nombre);
-                this.detallesArray.controls[i].get('canal').setValue(info.canal)
+                if (info.canal !== '') {
+                  this.detallesArray.controls[i].get('canal').setValue(info.canal)
+                } else {
+                  this.detallesArray.controls[i].get('canal').setValue(this.notaPedido.value.canal)
+                }
                 this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
 
                 this.detallesArray.controls[i].get('cantidad').setValidators([
@@ -309,9 +320,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
             }
           });
         } else {
-
           this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
-            console.log('INFO', info)
             this.detallesArray.controls[i].get('id').setValue(info.id);
             this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
             this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
@@ -319,10 +328,10 @@ export class PedidosComponent implements OnInit, AfterViewInit {
             this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
             this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
             this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
+            this.detallesArray.controls[i].get('imagen_principal').setValue(info.imagen_principal);
             this.detallesArray.controls[i].get('bodega').setValue('');
             this.detallesArray.controls[i].get('canal').setValue(info.canal)
             this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
-
             this.detallesArray.controls[i].get('cantidad').setValidators([
               Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
             ]);
@@ -491,9 +500,10 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         const nuevaImagen = e.target.result;
-        this.detallesArray.controls[i].get('imagen').setValue(nuevaImagen);
-        this.datosProducto.append('imagenes[' + 0 + ']id', '0');
-        this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
+        this.detallesArray.controls[i].get('imagen_principal').setValue(nuevaImagen);
+        this.datosProducto.append('imagen_principal', archivo)
+        //this.datosProducto.append('imagenes[' + 0 + ']id', '0');
+        //this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
         this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
         this.datosProducto.append('canal', this.detallesArray.controls[i].get('canal').value);
 
@@ -565,6 +575,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       this.provinciaOpciones = info;
     });
   }
+
   obtenerProvinciasEnvio(): void {
     this.paramServiceAdm.obtenerListaHijos(this.pais, 'PAIS').subscribe((info) => {
       this.provinciaOpcionesEnvio = info;
@@ -576,6 +587,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       this.ciudadOpciones = info;
     });
   }
+
   obtenerCiudadEnvio(): void {
     this.paramServiceAdm.obtenerListaHijos(this.provinciaEnvio, 'PROVINCIA').subscribe((info) => {
       this.ciudadOpcionesEnvio = info;
