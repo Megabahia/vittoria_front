@@ -134,7 +134,6 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
   iniciarNotaPedido(): void {
     this.usuarioActual = JSON.parse(localStorage.getItem('currentUser'));
-
     this.notaPedido = this.formBuilder.group({
       id: [''],
       facturacion: this.formBuilder.group({
@@ -199,11 +198,12 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       valorUnitario: [0, [Validators.required, Validators.min(0.01)]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
-      imagen: ['', [Validators.required]],
+      imagen: [''],
       caracteristicas: ['', []],
       precios: [[], []],
       canal: ['megabahia.megadescuento.com'],
-      woocommerceId: ['']
+      woocommerceId: [''],
+      imagen_principal:['', [Validators.required]]
     });
   }
 
@@ -254,7 +254,6 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       this.toaster.open('Seleccione un precio que sea mayor a 0.', {type: 'danger'});
       return;
     }
-
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
@@ -311,6 +310,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
           this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
           this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
           this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
+          this.detallesArray.controls[i].get('imagen_principal').setValue(info?.imagen_principal);
           this.detallesArray.controls[i].get('cantidad').setValidators([
             Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
           ]);
@@ -459,9 +459,10 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         const nuevaImagen = e.target.result;
-        this.detallesArray.controls[i].get('imagen').setValue(nuevaImagen);
-        this.datosProducto.append('imagenes[' + 0 + ']id', '0');
-        this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
+        this.detallesArray.controls[i].get('imagen_principal').setValue(nuevaImagen);
+        this.datosProducto.append('imagen_principal', archivo)
+        //this.datosProducto.append('imagenes[' + 0 + ']id', '0');
+        //this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
         this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
         this.datosProducto.append('canal', this.detallesArray.controls[i].get('canal').value);
 
@@ -536,7 +537,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
   openWhatsApp(event: Event): void {
     event.preventDefault();
-    const numero = this.notaPedido.value.facturacion.telefono
+    const numero = this.notaPedido.value.facturacion.telefono;
     const modifiedNumber = (numero.startsWith('0') ? numero.substring(1) : numero);
     const internationalNumber = '593' + modifiedNumber;
     const message = encodeURIComponent(`Sr.(a)(ita). ${this.notaPedido.value.facturacion.nombres} ${this.notaPedido.value.facturacion.apellidos}\n\nMuchas gracias por confiar en nosotros, su pedido estará listo para que usted pase retirando en nuestro punto de entrega.\n\nEncuéntranos en QUITO: Av. 10 de Agosto N39-201 y José Arizaga, Sector La Y, frente al Hipermercado CORAL y junto a la Clínica AXXIS.\n\n${this.parametroDireccion}\n\n*Cuando usted retire su pedido, presentando la siguiente imagen usted  OBTIENE un 10% de ¡DESCUENTO ADICIONAL!*\n\n${this.notaPedido.value.fotoCupon}`);

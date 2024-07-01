@@ -2,7 +2,7 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {NgbPagination, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NuevoUsuario, UsersService} from 'src/app/services/admin/users.service';
 import {FormGroup, Validators, FormBuilder} from '@angular/forms';
-import {ParamService} from '../../../../services/admin/param.service';
+import {ParamService as AdmParamService, ParamService} from '../../../../services/admin/param.service';
 
 @Component({
   selector: 'app-users-list',
@@ -18,10 +18,10 @@ export class UsersListComponent implements OnInit, AfterViewInit {
   usuarioForm: FormGroup;
 
   cargando = false;
-
+  canalOpciones;
+  nombreBuscar;
   menu;
   paises;
-  paisesOpciones;
   rolesOpciones: number = 0;
   roles;
   estadosOpciones: string = '';
@@ -47,7 +47,8 @@ export class UsersListComponent implements OnInit, AfterViewInit {
     telefono: '',
     whatsapp: '',
     idRol: 0,
-    estado: 'Activo'
+    estado: 'Activo',
+    canal: ''
   };
   empresas = [];
   provinciasOpciones;
@@ -58,7 +59,10 @@ export class UsersListComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private _formBuilder: FormBuilder,
     private paramService: ParamService,
+    private paramServiceAdm: AdmParamService,
+
   ) {
+    this.obtenerListaParametros();
   }
 
   ngOnInit(): void {
@@ -66,6 +70,7 @@ export class UsersListComponent implements OnInit, AfterViewInit {
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
       username: ['', [Validators.required]],
+      canal: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       compania: ['', [Validators.required]],
       pais: ['', [Validators.required]],
@@ -123,6 +128,7 @@ export class UsersListComponent implements OnInit, AfterViewInit {
   }
 
   volver(): void {
+    this.obtenerListaUsuarios();
     this.vista = 'lista';
   }
 
@@ -156,6 +162,12 @@ export class UsersListComponent implements OnInit, AfterViewInit {
 
       });
 
+  }
+
+  async obtenerListaParametros(): Promise<void> {
+    await this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar).subscribe((result) => {
+      this.canalOpciones = result.data;
+    });
   }
 
   editarUsuario(id): void {

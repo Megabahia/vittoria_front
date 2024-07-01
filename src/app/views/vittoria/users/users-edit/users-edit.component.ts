@@ -1,6 +1,10 @@
 import {Component, Input, OnInit, ViewChild, Output, EventEmitter, AfterViewInit} from '@angular/core';
 import {Usuario, UsersService} from 'src/app/services/admin/users.service';
-import {ParamService, ParamService as ParamServiceADM} from 'src/app/services/admin/param.service';
+import {
+  ParamService as AdmParamService,
+  ParamService,
+  ParamService as ParamServiceADM
+} from 'src/app/services/admin/param.service';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
@@ -16,13 +20,16 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
   @Input() paises;
   @Input() estados;
   @ViewChild('mensajeModal') mensajeModal;
-
+  page = 1;
+  pageSize = 3;
   submitted = false;
   usuarioForm: FormGroup;
   redesForm: FormGroup;
   mensaje;
   imagen;
   imagenTemp;
+  nombreBuscar
+  canalOpciones
   usuario: Usuario = {
     id: 0,
     nombres: '',
@@ -32,6 +39,7 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
     estado: '',
     instagram: '',
     username: '',
+    canal:'',
     pais: '',
     provincia: '',
     ciudad: '',
@@ -54,8 +62,9 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private router: Router,
     private paramService: ParamService,
+    private paramServiceAdm: AdmParamService,
   ) {
-
+    this.obtenerListaParametros();
   }
 
   get f() {
@@ -71,6 +80,7 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
       username: ['', [Validators.required]],
+      canal: ['',[Validators.required]],
       email: ['', [Validators.required]],
       compania: ['', [Validators.required]],
       pais: ['', [Validators.required]],
@@ -185,6 +195,12 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
   obtenerCiudad(): void {
     this.paramService.obtenerListaHijos(this.usuarioForm.value.provincia, 'PROVINCIA').subscribe((info) => {
       this.ciudadesOpciones = info;
+    });
+  }
+
+  async obtenerListaParametros(): Promise<void> {
+    await this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar).subscribe((result) => {
+      this.canalOpciones = result.data;
     });
   }
 }

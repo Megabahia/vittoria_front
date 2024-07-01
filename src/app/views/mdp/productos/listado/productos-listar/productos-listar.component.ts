@@ -2,6 +2,7 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {ProductosService} from '../../../../../services/mdp/productos/productos.service';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {environment} from '../../../../../../environments/environment';
+import {ParamService as AdmParamService} from "../../../../../services/admin/param.service";
 
 @Component({
   selector: 'app-productos-listar',
@@ -20,11 +21,16 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   nombreBuscar: string;
   codigoBarras: string;
   enviando = false;
-
+  canalOpciones;
+  canalSeleccionado = '';
+  disabledSelectCanal=false;
   constructor(
     private productosService: ProductosService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private paramServiceAdm: AdmParamService,
   ) {
+    this.obtenerListaParametros();
+    this.obtenerUsuarioActual();
   }
 
   ngOnInit(): void {
@@ -53,6 +59,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
         page_size: this.pageSize,
         nombre: this.nombreBuscar,
         codigoBarras: this.codigoBarras,
+        canalProducto: this.canalSeleccionado
       }
     ).subscribe((info) => {
       this.listaProductos = info.info;
@@ -79,7 +86,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     this.modalService.dismissAll();
     this.productosService.eliminarProducto(this.idProducto).subscribe(() => {
       this.obtenerListaProductos();
-    },error => window.alert(error));
+    }, error => window.alert(error));
   }
 
   copiarURL(inputTextValue): void {
@@ -110,5 +117,31 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     }, (error) => {
       this.enviando = false;
     });
+  }
+
+  async obtenerListaParametros(): Promise<void> {
+    await this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar)
+      .subscribe((result) => {
+        this.canalOpciones = result.data
+      });
+  }
+
+  onSelectChange(e: any): void {
+    const selectValue = e.target.value;
+    this.canalSeleccionado = selectValue;
+  }
+
+  obtenerUsuarioActual(): void {
+    const usuarioJSON = localStorage.getItem('currentUser');
+    if (usuarioJSON) {
+      const usuarioObjeto = JSON.parse(usuarioJSON);
+      if (usuarioObjeto.usuario.idRol === 60) {
+        this.canalSeleccionado = usuarioObjeto.usuario.canal;
+        this.disabledSelectCanal = true;
+      }
+      console.log('Usuario obtenido como objeto:', usuarioObjeto.usuario);
+    } else {
+      console.log('No hay datos de usuario en localStorage');
+    }
   }
 }

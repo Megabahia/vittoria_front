@@ -1,512 +1,690 @@
 <div class="app-content content">
-    <div class="content-overlay"></div>
-    <div class="header-navbar-shadow"></div>
-    <div class="content-wrapper">
-        <div class="content-header row">
-        </div>
-        <div class="content-body">
-            <div class="card">
-                <h5 class="card-header">Crear producto</h5>
-                <div class="card-body">
-                    <form class="auth-login-form mt-2" [formGroup]="productoForm">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="categoria">Categoría</label>
-                                    <select class="form-control select2" name="categoria" formControlName="categoria" (change)="obtenerListaSubcategorias()" [(ngModel)]="producto.categoria">
-                                        <option value="" selected>- Seleccionar -</option>
-                                        <option *ngFor="let categoriasOp of categoriasOpciones" value="{{categoriasOp.id}}">{{categoriasOp.nombre}}</option>
+  <div class="content-overlay"></div>
+  <div class="header-navbar-shadow"></div>
+  <div class="content-wrapper">
+    <div class="content-header row">
+    </div>
+    <div class="content-body">
+      <div class="card">
+        <h5 class="card-header">Crear producto</h5>
+        <div class="card-body">
+          <form class="auth-login-form mt-2" [formGroup]="productoForm">
+            <div class="col-md-12">
+              <div class="form-group">
+                  <div *ngIf="disabledSelectCanal; else SelectEnable">
+                      <label for="canal">Canal</label>
+                      <select class="form-control select2" name="canal" id="canal" formControlName="canal"
+                              [(ngModel)]="producto.canal" disabled>
+                          <option value="" selected>- Seleccionar -</option>
+                          <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
+                      </select>
+                  </div>
+                  <ng-template #SelectEnable >
+                      <label for="canal1">Canal</label>
+                      <select class="form-control select2" name="canal" id="canal1" formControlName="canal"
+                              [(ngModel)]="producto.canal" >
+                          <option value="" selected>- Seleccionar -</option>
+                          <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
+                      </select>
+                  </ng-template>
 
-                                    </select>
-                                    <div *ngIf="submittedProductoForm && fp.categoria.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.categoria.errors.required">Categoría es requerida
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="subCategoria">Subcategoría</label>
-                                    <select class="form-control select2" name="subCategoria" formControlName="subCategoria" [(ngModel)]="producto.subCategoria">
-                                        <option value="" selected>- Seleccionar -</option>
-                                 <option *ngFor="let subcategoriasOp of subcategoriasOpciones" value="{{subcategoriasOp.id}}">{{subcategoriasOp.nombre}}</option>
-
-                               </select>
-                                    <div *ngIf="submittedProductoForm && fp.subCategoria.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.subCategoria.errors.required">Subcategoría es requerida
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Código de barras</label>
-                                    <input type="text" class="form-control" name="codigoBarras" formControlName="codigoBarras" [(ngModel)]="producto.codigoBarras">
-                                    <div *ngIf="submittedProductoForm && fp.codigoBarras.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.codigoBarras.errors.required">Código de barras es requeridos
-                                        </div>
-                                        <div *ngIf="fp.codigoBarras.errors.maxlength">Ingreso maximo de caracteres 150</div>
-                                    </div>
-                                </div>
-                              <div class="form-group">
-                                <label [style]="{color:'blue'}">Código de producto padre</label>
-                                <input type="text" class="form-control" name="idPadre" formControlName="idPadre" [(ngModel)]="producto.idPadre">
-
-                              </div>
-                                <div class="form-group">
-                                    <label>Fecha de Elaboración </label>
-                                    <input class="form-control invoice-edit-input date-picker" mwlFlatpickr type="text" formControlName="fechaElaboracion" [(ngModel)]="producto.fechaElaboracion">
-                                    <div *ngIf="submittedProductoForm && fp.fechaElaboracion.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.fechaElaboracion.errors.required">Fecha de Elaboración es requerido
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Stock</label>
-                                    <input type="text" class="form-control" name="stock" formControlName="stock" [(ngModel)]="producto.stock">
-                                    <div *ngIf="submittedProductoForm && fp.stock.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.stock.errors.required">Stock es requerido</div>
-                                        <div *ngIf="fp.stock.errors.min">Stock minimo 1</div>
-                                        <div *ngIf="fp.stock.errors.numeroInvalid">Ingrese solo numeros enteros</div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Costo de compra</label>
-                                    <input type="text" class="form-control" formControlName="costoCompra" [(ngModel)]="producto.costoCompra">
-                                    <div *ngIf="submittedProductoForm && fp.costoCompra.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.costoCompra.errors.required">Costo de compra es requerido</div>
-                                        <div *ngIf="fp.costoCompra.errors.pattern">Precio de venta B es requerido</div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Precio de venta A TodoMegacentro</label>
-                                    <input type="text" class="form-control" formControlName="precioVentaA" [(ngModel)]="producto.precioVentaA">
-                                    <div *ngIf="submittedProductoForm && fp.precioVentaA.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.precioVentaA.errors.required">Precio de venta A TodoMegacentro es requerido</div>
-                                        <div *ngIf="fp.precioVentaA.errors.pattern">Solo se aceptan números decimales</div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Precio de venta B TodoMegacentro</label>
-                                    <input type="text" class="form-control" formControlName="precioVentaB" [(ngModel)]="producto.precioVentaB">
-                                    <div *ngIf="submittedProductoForm && fp.precioVentaB.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.precioVentaB.errors.required">Precio de venta B TodoMegacentro es requerido</div>
-                                        <div *ngIf="fp.precioVentaB.errors.pattern">Solo se aceptan números decimales</div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Precio de venta C MD Mayorista 3 unidades</label>
-                                    <input type="text" class="form-control" formControlName="precioVentaC" [(ngModel)]="producto.precioVentaC">
-                                    <div *ngIf="submittedProductoForm && fp.precioVentaC.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.precioVentaC.errors.required">Precio de venta C MD Mayorista 3 unidades es requerido</div>
-                                        <div *ngIf="fp.precioVentaC.errors.pattern">Solo se aceptan números decimales</div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Precio de venta D MD mayorista 6 unidades</label>
-                                    <input type="text" class="form-control" formControlName="precioVentaD" [(ngModel)]="producto.precioVentaD">
-                                    <div *ngIf="submittedProductoForm && fp.precioVentaD.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.precioVentaD.errors.required">Precio de venta D MD mayorista 6 unidades es requerido</div>
-                                        <div *ngIf="fp.precioVentaD.errors.pattern">Solo se aceptan números decimales</div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Precio Portal MD</label>
-                                    <input type="text" class="form-control" formControlName="precioOferta" [(ngModel)]="producto.precioOferta">
-                                    <div *ngIf="submittedProductoForm && fp.precioOferta.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.precioOferta.errors.required">Precio Portal MD es requerido</div>
-                                        <div *ngIf="fp.precioOferta.errors.pattern">Solo se aceptan números decimales</div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Precio Landing</label>
-                                    <input type="text" class="form-control" formControlName="precioLanding" [(ngModel)]="producto.precioLanding">
-                                    <div *ngIf="submittedProductoForm && fp.precioLanding.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.precioLanding.errors.required">Precio Landing es requerido</div>
-                                        <div *ngIf="fp.precioLanding.errors.pattern">Solo se aceptan números decimales</div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Precio Landing Oferta</label>
-                                    <input type="text" class="form-control" formControlName="precioLandingOferta" [(ngModel)]="producto.precioLandingOferta">
-                                    <div *ngIf="submittedProductoForm && fp.precioLandingOferta.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.precioLandingOferta.errors.required">Precio Landing Oferta es requerido</div>
-                                        <div *ngIf="fp.precioLandingOferta.errors.pattern">Solo se aceptan números decimales</div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Envio a nivel nacional</label>
-                                    <div class="custom-control custom-switch custom-switch-success">
-                                        <input type="checkbox" class="custom-control-input" id="envioNivelNacional"
-                                               formControlName="envioNivelNacional"
-                                               [(ngModel)]="producto.envioNivelNacional"
-                                               (change)="seleccionarEnvio($event)"
-                                               />
-                                        <label class="custom-control-label" for="envioNivelNacional">
-                                            <span class="switch-icon-left"><i data-feather="check"></i></span>
-                                            <span class="switch-icon-right"><i data-feather="x"></i></span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group" *ngIf="habilitarEnvio">
-                                    <label for="lugarVentaProvincia">Lugar Venta (Provincia)</label>
-                                    <select class="form-control select2" id="lugarVentaProvincia" name="lugarVentaProvincia"
-                                            (change)="obtenerCiudad()"
-                                            formControlName="lugarVentaProvincia" [(ngModel)]="producto.lugarVentaProvincia">
-                                        <option value="" selected>- Seleccionar -</option>
-                                        <option *ngFor="let provincia of provincias" value="{{provincia.valor}}">{{provincia.nombre}}</option>
-                                    </select>
-                                    <div *ngIf="submittedProductoForm && fp.lugarVentaProvincia.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.lugarVentaProvincia.errors.required">Lugar Venta es requerido</div>
-                                    </div>
-                                </div>
-                                <div class="form-group" *ngIf="habilitarEnvio">
-                                    <label for="lugarVentaCiudad">Lugar Venta (Ciudad)</label>
-                                    <select class="form-control select2" id="lugarVentaCiudad" name="lugarVentaCiudad" formControlName="lugarVentaCiudad" [(ngModel)]="producto.lugarVentaCiudad">
-                                        <option value="" selected>- Seleccionar -</option>
-                                        <option *ngFor="let ciudad of ciudadOpciones" value="{{ciudad.valor}}">{{ciudad.nombre}}</option>
-                                    </select>
-                                    <div *ngIf="submittedProductoForm && fp.lugarVentaCiudad.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.lugarVentaCiudad.errors.required">Lugar Venta es requerido</div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="courier">Courier</label>
-                                    <select class="form-control select2" id="courier" name="courier" formControlName="courier" [(ngModel)]="producto.courier">
-                                        <option value="" selected>- Seleccionar -</option>
-                                        <option *ngFor="let courier of couriers" value="{{courier.valor}}">{{courier.nombre}}</option>
-                                    </select>
-                                    <div *ngIf="submittedProductoForm && fp.courier.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.courier.errors.required">Courier es requerido</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Nombre completo</label>
-                                    <input type="text" class="form-control" formControlName="nombre" [(ngModel)]="producto.nombre">
-                                    <div *ngIf="submittedProductoForm && fp.nombre.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.nombre.errors.required">Nombre completo es requerido
-                                        </div>
-                                        <div *ngIf="fp.nombre.errors.maxlength">Ingreso maximo de caracteres 150</div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Descripción</label>
-                                    <input type="text" class="form-control" formControlName="descripcion" [(ngModel)]="producto.descripcion">
-                                    <div *ngIf="submittedProductoForm && fp.descripcion.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.descripcion.errors.required">Descripción es requerido
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Refil</label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control" placeholder="valor numérico" formControlName="refil" [(ngModel)]="producto.refil" />
-                                        <div class="input-group-append">
-                                            <span class="input-group-text" id="basic-addon2">Días</span>
-                                        </div>
-                                    </div>
-                                    <div *ngIf="submittedProductoForm && fp.refil.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.refil.errors.required">Refil es requerido
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Fecha de Caducidad</label>
-                                    <input class="form-control invoice-edit-input date-picker" mwlFlatpickr type="text" formControlName="fechaCaducidad" [(ngModel)]="producto.fechaCaducidad">
-                                    <div *ngIf="submittedProductoForm && fp.fechaCaducidad.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.fechaCaducidad.errors.required">Fecha de Caducidad es requerido
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Precio de venta E MD mayorista 9 unidades</label>
-                                    <input type="text" class="form-control" formControlName="precioVentaE" [(ngModel)]="producto.precioVentaE">
-                                    <div *ngIf="submittedProductoForm && fp.precioVentaE.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.precioVentaE.errors.required">Precio de venta E MD mayorista 9 unidades es requerido</div>
-                                        <div *ngIf="fp.precioVentaE.errors.pattern">Solo se aceptan números decimales</div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Precio de venta MD contra entrega</label>
-                                    <input type="text" class="form-control" formControlName="precioVentaBultos" [(ngModel)]="producto.precioVentaBultos">
-                                    <div *ngIf="submittedProductoForm && fp.precioVentaBultos.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.precioVentaBultos.errors.required">Precio de venta MD contra entrega es requerido</div>
-                                        <div *ngIf="fp.precioVentaBultos.errors.pattern">Solo se aceptan números decimales</div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Precio de venta MD aliados</label>
-                                    <input type="text" class="form-control" formControlName="precioVentaF" [(ngModel)]="producto.precioVentaF">
-                                    <div *ngIf="submittedProductoForm && fp.precioVentaF.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.precioVentaF.errors.required">Precio de venta MD aliados es requerido</div>
-                                        <div *ngIf="fp.precioVentaF.errors.pattern">Solo se aceptan números decimales</div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="parametrizacion">Alerta de abastecimiento</label>
-                                    <select class="form-control select2" name="parametrizacion" formControlName="parametrizacion" [(ngModel)]="producto.parametrizacion">
-                                        <option value="0" selected>- Seleccionar -</option>
-                                        <option *ngFor="let abastecimientoOp of abastecimientoOpciones" value="{{abastecimientoOp.id}}">{{abastecimientoOp.nombre}}</option>
-                                    </select>
-                                    <div *ngIf="submittedProductoForm && fp.parametrizacion.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.parametrizacion.errors.required">Alerta de abastecimiento es requerida</div>
-                                        <div *ngIf="fp.parametrizacion.errors.min">Alerta de abastecimiento es requerida</div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Variable de Refil</label>
-                                    <input type="text" class="form-control" formControlName="variableRefil" [(ngModel)]="producto.variableRefil">
-                                    <div *ngIf="submittedProductoForm && fp.variableRefil.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.variableRefil.errors.required">Variable de Refil es requerida
-                                        </div>
-                                        <div *ngIf="fp.variableRefil.errors.pattern">Ingrese solo numero
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Estado</label>
-                                    <select class="form-control" formControlName="estado" [(ngModel)]="producto.estado">
-                                        <option value="" >- Seleccione - </option>
-                                        <option value="Activo">Activo</option>
-                                        <option value="Inactivo">Inactivo</option>
-                                    </select>
-                                    <div *ngIf="submittedProductoForm && fp.estado.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.estado.errors.required">Estado es requerido
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Caracteristicas</label>
-                                    <input type="text" class="form-control" formControlName="caracteristicas" [(ngModel)]="producto.caracteristicas">
-                                    <div *ngIf="submittedProductoForm && fp.caracteristicas.errors" class="invalid-feedback" style="display: block;">
-                                        <div *ngIf="fp.caracteristicas.errors.required">Caracteristicas es requerido
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                  <label>Proveedor</label>
-                                  <input type="text" class="form-control" formControlName="proveedor" [(ngModel)]="producto.proveedor">
-                                  <div *ngIf="submittedProductoForm && fp.proveedor.errors" class="invalid-feedback" style="display: block;">
-                                    <div *ngIf="fp.proveedor.errors.required">Proveedor es requerido
-                                    </div>
-                                  </div>
-                                </div>
-                              <div class="form-group">
-                                <label for="canal">Canal</label>
-                                <select class="form-control select2" name="canal" formControlName="canal" [(ngModel)]="producto.canal">
-                                  <option value="" selected>- Seleccionar -</option>
-                                  <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{canalOp.valor}}</option>
-
-                                </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Video</label>
-                                    <input type="file" accept="video/mp4,video/x-m4v,video/*" class="form-control"
-                                           (change)="verificarPesoArchivo($event)"
-                                           #video
-                                           >
-                                    <video [src]="producto?.video" width="300" height="300" controls>
-                                        <p>Su navegador no soporta vídeos HTML5.</p>
-                                    </video>
-                                </div>
-                                <div class="form-group">
-                                    <label>Landing</label>
-                                    <div class="custom-control custom-switch custom-switch-success">
-                                        <input type="checkbox" class="custom-control-input" id="estadoLanding"
-                                               formControlName="estadoLanding"
-                                               [(ngModel)]="producto.estadoLanding"
-                                               (change)="seleccionarEstadoLanding($event)"
-                                        />
-                                        Inactivo
-                                        <label class="custom-control-label" for="estadoLanding">
-                                            <span class="switch-icon-left"><i data-feather="check"></i></span>
-                                            <span class="switch-icon-right"><i data-feather="x"></i></span>
-                                        </label>
-                                        Activo
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <p class="card-text">
-                                    Imágenes del producto
-                                </p>
-
-                                <div class="dropzone" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
-
-                                    <ngx-dropzone-label>
-                                        <div class="dz-message">
-                                            <h2>Cargar imágenes</h2>
-                                        </div>
-                                    </ngx-dropzone-label>
-                                    <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of archivos" [file]="f" [removable]="true" (removed)="onRemove(f)">
-                                        <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
-                                    </ngx-dropzone-image-preview>
-                                </div>
-                                <button id="clear-dropzone" class="btn btn-secondary btn-sm mt-1" (click)="removeAll()">
-                                <i-feather name="trash" class="edit-user"></i-feather>
-                                <span class="align-middle">Limpiar imágenes</span>
-                            </button>
-                                <div *ngFor="let img of imagenes" class="div-imagenes-productos">
-                                    <a (click)="eliminarImagenModal(img.id)">
-                                        <img class="eliminar-imagen" width="100%" height="200px" [src]="img.imagen">
-                                        <img class="fondo-eliminar-imagen" width="100%" height="200px" src="/assets/images/borrar_imagen.png">
-                                    </a>
-                                    <hr>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </form>
-                </div>
+              </div>
             </div>
-            <div class="card">
-                <div class="row m-75">
-                    <div class="col-lg-12 col-xl-6">
-                        <h5>Ficha técnica del producto</h5>
+            <div class="row" *ngIf="producto.canal != ''">
+              <h4 class="mx-2 my-1 text-warning font-weight-bold">Información requerida</h4>
+              <div class="row mx-2">
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Nombre completo</label>
+                    <input type="text" class="form-control" formControlName="nombre" [(ngModel)]="producto.nombre">
+                    <div *ngIf="submittedProductoForm && fp.nombre.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.nombre.errors.required">Nombre completo es requerido
+                      </div>
+                      <div *ngIf="fp.nombre.errors.maxlength">Ingreso maximo de caracteres 150</div>
                     </div>
-                    <div class="col-lg-12 col-xl-6 text-right">
-                        <button class="btn btn-icon btn-primary" type="button" data-toggle="modal" data-target="#addcampo" (click)="crearFichaTecnica()">
-                        <i-feather name="plus" class="mr-25 edit-user"></i-feather>
-                        <span>Añadir</span>
-                    </button>
-
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Código de barras</label>
+                    <input type="text" class="form-control" name="codigoBarras" formControlName="codigoBarras"
+                           [(ngModel)]="producto.codigoBarras">
+                    <div *ngIf="submittedProductoForm && fp.codigoBarras.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.codigoBarras.errors.required">Código de barras es requeridos
+                      </div>
+                      <div *ngIf="fp.codigoBarras.errors.maxlength">Ingreso maximo de caracteres 150</div>
                     </div>
+                  </div>
                 </div>
-                <div class="modal modal-slide-in new-user-modal fade" id="addcampo">
-                    <div class="modal-dialog">
-                        <div class="modal-content pt-0">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
-                            <div class="modal-header mb-1">
-                                <h5 class="modal-title" id="exampleModalLabel">Nuevo campo</h5>
-                            </div>
-                            <form class="auth-login-form mt-2" [formGroup]="fichaTecnicaForm">
-                                <div class="modal-body flex-grow-1">
-                                    <div class="form-group">
-                                        <label class="form-label">Código:</label>
-                                        <input type="text" class="form-control" name="codigo" formControlName="codigo" [(ngModel)]="fichaTecnica.codigo" />
-                                        <div *ngIf="submittedFichaTecnicaForm && fft.codigo.errors" class="invalid-feedback" style="display: block;">
-                                            <div *ngIf="fft.codigo.errors.required">Código es requerido
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="form-label">Nombre del atributo:</label>
-                                        <input type="text" class="form-control" formControlName="nombreAtributo" [(ngModel)]="fichaTecnica.nombreAtributo" />
-                                        <div *ngIf="submittedFichaTecnicaForm && fft.nombreAtributo.errors" class="invalid-feedback" style="display: block;">
-                                            <div *ngIf="fft.nombreAtributo.errors.required">Nombres son requeridos
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="form-label">Valor:</label>
-                                        <input type="text" class="form-control" formControlName="valor" [(ngModel)]="fichaTecnica.valor" />
-                                        <div *ngIf="submittedFichaTecnicaForm && fft.valor.errors" class="invalid-feedback" style="display: block;">
-                                            <div *ngIf="fft.valor.errors.required">Valor es requerido
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarFichaTecnica()">Guardar</button>
-                                    <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal" style="display: none;"></button>
-                                    <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
-                                </div>
-                            </form>
-
-                        </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Stock real</label>
+                    <input type="text" class="form-control" name="stock" formControlName="stock"
+                           [(ngModel)]="producto.stock">
+                    <div *ngIf="submittedProductoForm && fp.stock.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.stock.errors.required">Stock es requerido</div>
+                      <div *ngIf="fp.stock.errors.min">Stock minimo 1</div>
+                      <div *ngIf="fp.stock.errors.numeroInvalid">Ingrese solo numeros enteros</div>
                     </div>
+                  </div>
                 </div>
-                <div class="card-datatable table-responsive pt-0">
-                    <table class="user-list-table table table-striped">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Código</th>
-                                <th>Nombre del atributo</th>
-                                <th>Valor</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Costo de compra</label>
+                    <input type="text" class="form-control" formControlName="costoCompra"
+                           [(ngModel)]="producto.costoCompra">
+                    <div *ngIf="submittedProductoForm && fp.costoCompra.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.costoCompra.errors.required">Costo de compra es requerido</div>
+                      <div *ngIf="fp.costoCompra.errors.pattern">Precio de venta B es requerido</div>
+                    </div>
+                  </div>
+                </div>
 
-                        <tbody data-repeater-list="invoice">
-                            <tr data-repeater-item *ngFor="let ficha of fichaTecnicaLista">
-                                <td>{{ficha.codigo}}</td>
-                                <td>{{ficha.nombreAtributo}}</td>
-                                <td>{{ficha.valor}}</td>
-                                <td>
-                                    <a data-toggle="modal" data-target="#addcampo" (click)="editarFichaTecnica(ficha.id)">
-                                        <i-feather name='edit-2'></i-feather>
-                                    </a>
-                                    <a data-repeater-delete (click)="abrirModal(contenido,ficha.id)">
-                                        <i-feather name='trash'></i-feather>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label for="categoria">Categoría</label>
+                    <select class="form-control select2" name="categoria" formControlName="categoria"
+                            (change)="obtenerListaSubcategorias()" [(ngModel)]="producto.categoria">
+                      <option value="" selected>- Seleccionar -</option>
+                      <option *ngFor="let categoriasOp of categoriasOpciones"
+                              value="{{categoriasOp.id}}">{{ categoriasOp.nombre }}
+                      </option>
+
+                    </select>
+                    <div *ngIf="submittedProductoForm && fp.categoria.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.categoria.errors.required">Categoría es requerida
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <hr/>
-                <div class="row p-2">
-                    <div class="col-12">
-                        <button (click)="guardarProducto()" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light"
-                           [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label for="subCategoria">Subcategoría</label>
+                    <select class="form-control select2" name="subCategoria" formControlName="subCategoria"
+                            [(ngModel)]="producto.subCategoria">
+                      <option value="" selected>- Seleccionar -</option>
+                      <option *ngFor="let subcategoriasOp of subcategoriasOpciones"
+                              value="{{subcategoriasOp.id}}">{{ subcategoriasOp.nombre }}
+                      </option>
+
+                    </select>
+                    <div *ngIf="submittedProductoForm && fp.subCategoria.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.subCategoria.errors.required">Subcategoría es requerida
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Estado</label>
+                    <select class="form-control" formControlName="estado" [(ngModel)]="producto.estado">
+                      <option value="">- Seleccione -</option>
+                      <option value="Activo">Activo</option>
+                      <option value="Inactivo">Inactivo</option>
+                    </select>
+                    <div *ngIf="submittedProductoForm && fp.estado.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.estado.errors.required">Estado es requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Proveedor</label>
+                    <input type="text" class="form-control" formControlName="proveedor"
+                           [(ngModel)]="producto.proveedor">
+                    <div *ngIf="submittedProductoForm && fp.proveedor.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.proveedor.errors.required">Proveedor es requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-5 col-12">
+                  <div class="form-group">
+                    <label for="descripcionTextArea">Descripción</label>
+                    <textarea id="descripcionTextArea" rows="3" class="form-control" formControlName="descripcion"
+                              [(ngModel)]="producto.descripcion"></textarea>
+                    <div *ngIf="submittedProductoForm && fp.descripcion.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.descripcion.errors.required">Descripción es requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-5 col-12">
+                  <div class="form-group">
+                    <label for="caracteristicasTextarea">Caracteristicas</label>
+                    <textarea id="caracteristicasTextarea" rows="3" class="form-control"
+                              formControlName="caracteristicas"
+                              [(ngModel)]="producto.caracteristicas"></textarea>
+                    <div *ngIf="submittedProductoForm && fp.caracteristicas.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.caracteristicas.errors.required">Caracteristicas es requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h4 class="mx-2 my-1 text-warning font-weight-bold">Precios</h4>
+              <div class="row mx-2">
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Precio de venta A TodoMegacentro</label>
+                    <input type="text" class="form-control" formControlName="precioVentaA"
+                           [(ngModel)]="producto.precioVentaA">
+                    <div *ngIf="submittedProductoForm && fp.precioVentaA.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.precioVentaA.errors.required">Precio de venta A TodoMegacentro es requerido
+                      </div>
+                      <div *ngIf="fp.precioVentaA.errors.pattern">Solo se aceptan números decimales</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Precio de venta B TodoMegacentro</label>
+                    <input type="text" class="form-control" formControlName="precioVentaB"
+                           [(ngModel)]="producto.precioVentaB">
+                    <div *ngIf="submittedProductoForm && fp.precioVentaB.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.precioVentaB.errors.required">Precio de venta B TodoMegacentro es requerido
+                      </div>
+                      <div *ngIf="fp.precioVentaB.errors.pattern">Solo se aceptan números decimales</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Precio de venta C MD Mayorista 3 unidades</label>
+                    <input type="text" class="form-control" formControlName="precioVentaC"
+                           [(ngModel)]="producto.precioVentaC">
+                    <!--<div *ngIf="submittedProductoForm && fp.precioVentaC.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.precioVentaC.errors.required">Precio de venta C MD Mayorista 3 unidades es
+                        requerido
+                      </div>
+                      <div *ngIf="fp.precioVentaC.errors.pattern">Solo se aceptan números decimales</div>
+                    </div>-->
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Precio de venta D MD mayorista 6 unidades</label>
+                    <input type="text" class="form-control" formControlName="precioVentaD"
+                           [(ngModel)]="producto.precioVentaD">
+                    <!--<div *ngIf="submittedProductoForm && fp.precioVentaD.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.precioVentaD.errors.required">Precio de venta D MD mayorista 6 unidades es
+                        requerido
+                      </div>
+                      <div *ngIf="fp.precioVentaD.errors.pattern">Solo se aceptan números decimales</div>
+                    </div>-->
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Precio de venta E MD mayorista 9 unidades</label>
+                    <input type="text" class="form-control" formControlName="precioVentaE"
+                           [(ngModel)]="producto.precioVentaE">
+                    <!--<div *ngIf="submittedProductoForm && fp.precioVentaE.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.precioVentaE.errors.required">Precio de venta E MD mayorista 9 unidades es
+                        requerido
+                      </div>
+                      <div *ngIf="fp.precioVentaE.errors.pattern">Solo se aceptan números decimales</div>
+                    </div>-->
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Precio de venta MD contra entrega</label>
+                    <input type="text" class="form-control" formControlName="precioVentaBultos"
+                           [(ngModel)]="producto.precioVentaBultos">
+                    <!--<div *ngIf="submittedProductoForm && fp.precioVentaBultos.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.precioVentaBultos.errors.required">Precio de venta MD contra entrega es requerido
+                      </div>
+                      <div *ngIf="fp.precioVentaBultos.errors.pattern">Solo se aceptan números decimales</div>
+                    </div>-->
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Precio Portal MD</label>
+                    <input type="text" class="form-control" formControlName="precioOferta"
+                           [(ngModel)]="producto.precioOferta">
+                    <!--<div *ngIf="submittedProductoForm && fp.precioOferta.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.precioOferta.errors.required">Precio Portal MD es requerido</div>
+                      <div *ngIf="fp.precioOferta.errors.pattern">Solo se aceptan números decimales</div>
+                    </div>-->
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Precio de venta MD aliados</label>
+                    <input type="text" class="form-control" formControlName="precioVentaF"
+                           [(ngModel)]="producto.precioVentaF">
+                    <!--<div *ngIf="submittedProductoForm && fp.precioVentaF.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.precioVentaF.errors.required">Precio de venta MD aliados es requerido</div>
+                      <div *ngIf="fp.precioVentaF.errors.pattern">Solo se aceptan números decimales</div>
+                    </div>-->
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Precio Landing</label>
+                    <input type="text" class="form-control" formControlName="precioLanding"
+                           [(ngModel)]="producto.precioLanding">
+                    <!--<div *ngIf="submittedProductoForm && fp.precioLanding.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.precioLanding.errors.required">Precio Landing es requerido</div>
+                      <div *ngIf="fp.precioLanding.errors.pattern">Solo se aceptan números decimales</div>
+                    </div>-->
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Precio Landing Oferta</label>
+                    <input type="text" class="form-control" formControlName="precioLandingOferta"
+                           [(ngModel)]="producto.precioLandingOferta">
+                    <!--<div *ngIf="submittedProductoForm && fp.precioLandingOferta.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.precioLandingOferta.errors.required">Precio Landing Oferta es requerido</div>
+                      <div *ngIf="fp.precioLandingOferta.errors.pattern">Solo se aceptan números decimales</div>
+                    </div>-->
+                  </div>
+                </div>
+              </div>
+              <h4 class="mx-2 my-1 text-warning font-weight-bold">Información adicional</h4>
+              <div class="row mx-2">
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label [style]="{color:'blue'}">Código de producto padre</label>
+                    <input type="text" class="form-control" name="idPadre" formControlName="idPadre"
+                           [(ngModel)]="producto.idPadre">
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Fecha de Elaboración </label>
+                    <input class="form-control invoice-edit-input date-picker" mwlFlatpickr type="text"
+                           formControlName="fechaElaboracion" [(ngModel)]="producto.fechaElaboracion">
+                    <!--<div *ngIf="submittedProductoForm && fp.fechaElaboracion.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.fechaElaboracion.errors.required">Fecha de Elaboración es requerido
+                      </div>
+                    </div>-->
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Fecha de Caducidad</label>
+                    <input class="form-control invoice-edit-input date-picker" mwlFlatpickr type="text"
+                           formControlName="fechaCaducidad" [(ngModel)]="producto.fechaCaducidad">
+                    <!--<div *ngIf="submittedProductoForm && fp.fechaCaducidad.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.fechaCaducidad.errors.required">Fecha de Caducidad es requerido
+                      </div>
+                    </div>-->
+                  </div>
+
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label for="courier">Courier</label>
+                    <select class="form-control select2" id="courier" name="courier" formControlName="courier"
+                            [(ngModel)]="producto.courier">
+                      <option value="" selected>- Seleccionar -</option>
+                      <option *ngFor="let courier of couriers" value="{{courier.valor}}">{{ courier.nombre }}
+                      </option>
+                    </select>
+                    <!--<div *ngIf="submittedProductoForm && fp.courier.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.courier.errors.required">Courier es requerido</div>
+                    </div>-->
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Refil</label>
+                    <div class="input-group">
+                      <input type="number" class="form-control" placeholder="valor numérico"
+                             formControlName="refil"
+                             [(ngModel)]="producto.refil"/>
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">Días</span>
+                      </div>
+                    </div>
+                    <!--<div *ngIf="submittedProductoForm && fp.refil.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.refil.errors.required">Refil es requerido
+                      </div>
+                    </div>-->
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label for="parametrizacion">Alerta de abastecimiento</label>
+                    <select class="form-control select2" name="parametrizacion"
+                            formControlName="parametrizacion"
+                            [(ngModel)]="producto.parametrizacion">
+                      <option value="0" selected>- Seleccionar -</option>
+                      <option *ngFor="let abastecimientoOp of abastecimientoOpciones"
+                              value="{{abastecimientoOp.id}}">{{ abastecimientoOp.nombre }}
+                      </option>
+                    </select>
+                    <!--<div *ngIf="submittedProductoForm && fp.parametrizacion.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.parametrizacion.errors.required">Alerta de abastecimiento es requerida</div>
+                      <div *ngIf="fp.parametrizacion.errors.min">Alerta de abastecimiento es requerida</div>
+                    </div>-->
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Variable de Refil</label>
+                    <input type="text" class="form-control" formControlName="variableRefil"
+                           [(ngModel)]="producto.variableRefil">
+                    <!--<div *ngIf="submittedProductoForm && fp.variableRefil.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.variableRefil.errors.required">Variable de Refil es requerida
+                      </div>
+                      <div *ngIf="fp.variableRefil.errors.pattern">Ingrese solo numero
+                      </div>
+                    </div>-->
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Landing</label>
+                    <div class="custom-control custom-switch custom-switch-success">
+                      <input type="checkbox" class="custom-control-input" id="estadoLanding"
+                             formControlName="estadoLanding"
+                             [(ngModel)]="producto.estadoLanding"
+                             (change)="seleccionarEstadoLanding($event)"
+                      />
+                      Inactivo
+                      <label class="custom-control-label" for="estadoLanding">
+                        <span class="switch-icon-left"><i data-feather="check"></i></span>
+                        <span class="switch-icon-right"><i data-feather="x"></i></span>
+                      </label>
+                      Activo
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Envio a nivel nacional</label>
+                    <div class="custom-control custom-switch custom-switch-success">
+                      <input type="checkbox" class="custom-control-input" id="envioNivelNacional"
+                             formControlName="envioNivelNacional"
+                             [(ngModel)]="producto.envioNivelNacional"
+                             (change)="seleccionarEnvio($event)"
+                      />
+                      <label class="custom-control-label" for="envioNivelNacional">
+                        <span class="switch-icon-left"><i data-feather="check"></i></span>
+                        <span class="switch-icon-right"><i data-feather="x"></i></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group" *ngIf="habilitarEnvio">
+                    <label for="lugarVentaProvincia">Lugar Venta (Provincia)</label>
+                    <select class="form-control select2" id="lugarVentaProvincia" name="lugarVentaProvincia"
+                            (change)="obtenerCiudad()"
+                            formControlName="lugarVentaProvincia" [(ngModel)]="producto.lugarVentaProvincia">
+                      <option value="" selected>- Seleccionar -</option>
+                      <option *ngFor="let provincia of provincias"
+                              value="{{provincia.valor}}">{{ provincia.nombre }}
+                      </option>
+                    </select>
+                    <div *ngIf="submittedProductoForm && fp.lugarVentaProvincia.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.lugarVentaProvincia.errors.required">Lugar Venta es requerido</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group" *ngIf="habilitarEnvio">
+                    <label for="lugarVentaCiudad">Lugar Venta (Ciudad)</label>
+                    <select class="form-control select2" id="lugarVentaCiudad" name="lugarVentaCiudad"
+                            formControlName="lugarVentaCiudad" [(ngModel)]="producto.lugarVentaCiudad">
+                      <option value="" selected>- Seleccionar -</option>
+                      <option *ngFor="let ciudad of ciudadOpciones" value="{{ciudad.valor}}">{{ ciudad.nombre }}
+                      </option>
+                    </select>
+                    <div *ngIf="submittedProductoForm && fp.lugarVentaCiudad.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.lugarVentaCiudad.errors.required">Lugar Venta es requerido</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mx-2 mt-2">
+                <div class="col-md-4 col-12">
+                  <p class="card-text">
+                    Imagen principal del producto
+                  </p>
+                  <input #fileInput type="file" (change)="onFileSelect($event)" accept=".jpg,.jpeg,.png" style="width: 260px" formControlName="imagen_principal">
+                  <img *ngIf="imageUrlPrincipal" [src]="imageUrlPrincipal" alt="Imagen principal" class="img-fluid mt-3"
+                       style="max-width: 250px; height: auto;">
+                  <!--<button *ngIf="imageUrlPrincipal" class="btn btn-danger mt-2" (click)="eliminarImagenPrincipal()">X</button>-->
+                  <div *ngIf="submittedProductoForm && fp.imagen_principal.errors" class="invalid-feedback"
+                       style="display: block;">
+                    <div *ngIf="fp.imagen_principal.errors.required">Imagen principal es requerido
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <p class="card-text">
+                    Imágenes alternas del producto
+                  </p>
+                  <div class="dropzone" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
+                    <ngx-dropzone-label>
+                      <div class="dz-message">
+                        <h2>Cargar imágenes</h2>
+                      </div>
+                    </ngx-dropzone-label>
+                    <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of archivos"
+                                                [file]="f"
+                                                [removable]="true" (removed)="onRemove(f)">
+                      <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+                    </ngx-dropzone-image-preview>
+                  </div>
+                  <button id="clear-dropzone" class="btn btn-secondary btn-sm mt-1" (click)="removeAll()">
+                    <i-feather name="trash" class="edit-user"></i-feather>
+                    <span class="align-middle">Limpiar imágenes</span>
+                  </button>
+                  <div *ngFor="let img of imagenes" class="div-imagenes-productos">
+                    <a (click)="eliminarImagenModal(img.id)">
+                      <img class="eliminar-imagen" width="100%" height="200px" [src]="img.imagen">
+                      <img class="fondo-eliminar-imagen" width="100%" height="200px"
+                           src="/assets/images/borrar_imagen.png">
+                    </a>
+                    <hr>
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Video</label>
+                    <input type="file" accept="video/mp4,video/x-m4v,video/*" class="form-control"
+                           (change)="verificarPesoArchivo($event)"
+                           #video
+                    >
+                    <video [src]="producto?.video" width="300" height="300" controls>
+                      <p>Su navegador no soporta vídeos HTML5.</p>
+                    </video>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row m-75">
+          <div class="col-lg-12 col-xl-6">
+            <h5>Ficha técnica del producto</h5>
+          </div>
+          <div class="col-lg-12 col-xl-6 text-right">
+            <button class="btn btn-icon btn-primary" type="button" data-toggle="modal" data-target="#addcampo"
+                    (click)="crearFichaTecnica()">
+              <i-feather name="plus" class="mr-25 edit-user"></i-feather>
+              <span>Añadir</span>
+            </button>
+
+          </div>
+        </div>
+        <div class="modal modal-slide-in new-user-modal fade" id="addcampo">
+          <div class="modal-dialog">
+            <div class="modal-content pt-0">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+              <div class="modal-header mb-1">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo campo</h5>
+              </div>
+              <form class="auth-login-form mt-2" [formGroup]="fichaTecnicaForm">
+                <div class="modal-body flex-grow-1">
+                  <div class="form-group">
+                    <label class="form-label">Código:</label>
+                    <input type="text" class="form-control" name="codigo" formControlName="codigo"
+                           [(ngModel)]="fichaTecnica.codigo"/>
+                    <div *ngIf="submittedFichaTecnicaForm && fft.codigo.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fft.codigo.errors.required">Código es requerido
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Nombre del atributo:</label>
+                    <input type="text" class="form-control" formControlName="nombreAtributo"
+                           [(ngModel)]="fichaTecnica.nombreAtributo"/>
+                    <div *ngIf="submittedFichaTecnicaForm && fft.nombreAtributo.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fft.nombreAtributo.errors.required">Nombres son requeridos
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Valor:</label>
+                    <input type="text" class="form-control" formControlName="valor" [(ngModel)]="fichaTecnica.valor"/>
+                    <div *ngIf="submittedFichaTecnicaForm && fft.valor.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fft.valor.errors.required">Valor es requerido
+                      </div>
+                    </div>
+                  </div>
+                  <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarFichaTecnica()">Guardar
+                  </button>
+                  <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal"
+                          style="display: none;"></button>
+                  <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+        <div class="card-datatable table-responsive pt-0">
+          <table class="user-list-table table table-striped">
+            <thead class="thead-light">
+            <tr>
+              <th>Código</th>
+              <th>Nombre del atributo</th>
+              <th>Valor</th>
+              <th>Acciones</th>
+            </tr>
+            </thead>
+
+            <tbody data-repeater-list="invoice">
+            <tr data-repeater-item *ngFor="let ficha of fichaTecnicaLista">
+              <td>{{ ficha.codigo }}</td>
+              <td>{{ ficha.nombreAtributo }}</td>
+              <td>{{ ficha.valor }}</td>
+              <td>
+                <a data-toggle="modal" data-target="#addcampo" (click)="editarFichaTecnica(ficha.id)">
+                  <i-feather name='edit-2'></i-feather>
+                </a>
+                <a data-repeater-delete (click)="abrirModal(contenido,ficha.id)">
+                  <i-feather name='trash'></i-feather>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr/>
+        <div class="row p-2">
+          <div class="col-12">
+            <button (click)="guardarProducto()"
+                    class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light"
+                    [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
                             <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
                                   aria-hidden="true"></span>
-                            Guardar
-                        </button>
-                        <a (click)="volver()" class="btn btn-secondary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Cancelar</a>
-                    </div>
-                </div>
-
-            </div>
-
+              Guardar
+            </button>
+            <a (click)="volver()"
+               class="btn btn-secondary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Cancelar</a>
+          </div>
         </div>
+
+      </div>
+
     </div>
+  </div>
 </div>
 <ng-template #contenido let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title">Mensaje</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-        <p>Confirma eliminar</p>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-light" (click)="cerrarModal()">SI</button>
-    </div>
+  <div class="modal-header">
+    <h4 class="modal-title">Mensaje</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Confirma eliminar</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="cerrarModal()">SI</button>
+  </div>
 </ng-template>
 <ng-template #eliminarImagenMdl let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title">Mensaje</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-        <p>Confirma eliminar</p>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-light" (click)="eliminarImagen()">SI</button>
-    </div>
+  <div class="modal-header">
+    <h4 class="modal-title">Mensaje</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Confirma eliminar</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="eliminarImagen()">SI</button>
+  </div>
 </ng-template>
 <ng-template #aviso let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title">Mensaje</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-        <div [innerHTML]="mensaje"></div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-light" (click)="cerrarModalMensaje()">Cerrar</button>
-    </div>
+  <div class="modal-header">
+    <h4 class="modal-title">Mensaje</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div [innerHTML]="mensaje"></div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="cerrarModalMensaje()">Cerrar</button>
+  </div>
 </ng-template>

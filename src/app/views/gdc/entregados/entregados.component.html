@@ -83,10 +83,12 @@
                 </a>
               </td>
               <td>
-                {{ transaccion.formaPago | uppercase }}
+                <ul *ngFor="let pago of transaccion.formaPago">
+                  <li>{{pago | uppercase}}</li>
+                </ul>
               </td>
               <td>
-                <a href="{{transaccion.archivoFormaPago}}" *ngIf="transaccion.formaPago === 'transferencia'" target="_blank">
+                <a href="{{transaccion.archivoFormaPago}}" *ngIf="transaccion.formaPago.includes('transferencia')" target="_blank">
                   <i-feather name="file-text" class="mr-25"></i-feather>
                 </a>
               </td>
@@ -383,8 +385,8 @@
                                   </div>
                                   <div class="col-md-2 border-left">
                                     <img class="img-detalle"
-                                         src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
-                                         *ngIf="detalle.controls?.imagen" width="100px" height="100px" alt="">
+                                         src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
+                                         *ngIf="detalle.controls?.imagen_principal" width="100px" height="100px" alt="">
                                     <!-- <div *ngIf="!detalle.controls?.imagen.value">
                                        <button (click)="fileInput.click()">Seleccionar imagen</button>
                                        <input #fileInput type="file" (change)="cargarImagen(i,$event)"

@@ -370,13 +370,14 @@
                           <ng-container [formGroup]="detalle">
                             <div class="repeater-wrapper" data-repeater-item>
                               <div class="row">
-                                <div class="col-lg-1 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                <div class="col-lg-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                   <p class="card-text col-title mb-md-50 mb-0">
                                     Código
                                   </p>
-                                  <input class="form-control" type="text"
+                                  <input class="form-control" type="text" formControlName="codigo"
                                          (change)="obtenerProducto(i)"
-                                         formControlName="codigo">
+                                         [ngClass]="{'disabled-input': detalle.controls.codigo.value != ''}">
+
                                   <div *ngIf="detalle.controls.codigo.errors"
                                        class="invalid-feedback"
                                        style="display: block;">
@@ -385,6 +386,7 @@
                                     </div>
                                   </div>
                                 </div>
+
                                 <div class="col-lg-1 col-12 my-lg-0 my-2">
                                   <p class="card-text col-title mb-md-50 mb-0">
                                     Cantidad
@@ -392,6 +394,7 @@
                                   <input type="text" class="form-control"
                                          formControlName="cantidad"
                                          (change)="calcular()"
+                                         [ngClass]="{'disabled-input': detalle.controls.cantidad.value != ''}"
                                   />
                                   <div *ngIf="detalle.controls.cantidad.errors"
                                        class="invalid-feedback"
@@ -420,7 +423,7 @@
                                     </div>
                                   </div>
                                 </div>
-                                <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                <div class="col-lg-1 col-12 my-lg-0 my-2">
                                   <p class="card-text col-title mb-md-50 mb-0">
                                     Características
                                   </p>
@@ -453,9 +456,9 @@
                                 </div>
                                 <div class="col-lg-2 col-12 my-lg-0 my-2">
                                   <img
-                                    src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
-                                    *ngIf="detalle.controls?.imagen" width="100px" height="100px" alt="">
-                                  <div *ngIf="!detalle.controls?.imagen.value">
+                                    src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
+                                    *ngIf="detalle.controls?.imagen_principal" width="100px" height="100px" alt="">
+                                  <div *ngIf="!detalle.controls?.imagen_principal.value">
                                     <button (click)="fileInput.click()">Seleccionar imagen</button>
                                     <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png" style="display: none;">
                                   </div>

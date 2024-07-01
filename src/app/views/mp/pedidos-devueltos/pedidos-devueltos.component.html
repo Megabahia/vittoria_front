@@ -372,7 +372,9 @@
                                         </p>
                                         <input class="form-control" type="text"
                                                (change)="obtenerProducto(i)"
-                                               formControlName="codigo">
+                                               formControlName="codigo"
+                                               [ngClass]="{'disabled-input': detalle.controls.codigo.value != ''}"
+                                        >
                                         <div *ngIf="detalle.controls.codigo.errors"
                                              class="invalid-feedback"
                                              style="display: block;">
@@ -388,6 +390,7 @@
                                         <input type="text" class="form-control"
                                                formControlName="cantidad"
                                                (change)="calcular()"
+                                               [ngClass]="{'disabled-input': detalle.controls.cantidad.value != ''}"
                                         />
                                         <div *ngIf="detalle.controls.cantidad.errors"
                                              class="invalid-feedback"
@@ -451,14 +454,14 @@
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Ubicación
                                         </p>
-                                        <label class="d-block text-wrap">{{ detalle.controls.canal.value }}</label>
+                                        <label class="d-block text-wrap">{{ detalle.controls.canal.value !== '' ? detalle.controls.canal.value : notaPedido.value.canal }}</label>
 
                                       </div>
                                       <div class="col-md-2 border-left">
                                         <img class="img-detalle"
-                                             src="{{detalle.controls?.imagen.value ? detalle.controls?.imagen.value : './assets/images/no_existe.png'}}"
-                                             *ngIf="detalle.controls?.imagen" width="100px" height="100px" alt="">
-                                        <div *ngIf="!detalle.controls?.imagen.value">
+                                             src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
+                                             *ngIf="detalle.controls?.imagen_principal" width="100px" height="100px" alt="">
+                                        <div *ngIf="!detalle.controls?.imagen_principal.value">
                                           <button (click)="fileInput.click()">Seleccionar imagen</button>
                                           <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png" style="display: none;">
                                         </div>

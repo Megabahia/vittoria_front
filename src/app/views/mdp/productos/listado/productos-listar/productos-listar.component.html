@@ -18,6 +18,16 @@
               <input class="form-control form-control-sm" type="text" placeholder="Nombre producto"
                      [(ngModel)]="nombreBuscar">
             </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-md-4">
+              <select class="form-control select2" name="canal" (change)="onSelectChange($event)"
+                      [(ngModel)]="canalSeleccionado" [disabled]="disabledSelectCanal">
+                <option value="" selected>- Seleccione canal a buscar-</option>
+                <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
+
+              </select>
+            </div>
             <div class="col-md-4">
               <button class="btn btn-primary" (click)="obtenerListaProductos()">
                 <i-feather name='search' class="edit-user"></i-feather>
@@ -97,6 +107,7 @@
               </th>
               <th>Código de barras</th>
               <th>URL</th>
+              <th>Canal</th>
               <th>Nombre</th>
               <th>Categoría</th>
               <th>Subcategoría</th>
@@ -122,6 +133,8 @@
                 >Copiar Url
                 </button>
               </td>
+              <td>{{ producto.canal }}</td>
+
               <td>{{ producto.nombre | slice:0:30 }}</td>
               <td>{{ producto.categoria }}</td>
               <td>{{ producto.subCategoria }}</td>

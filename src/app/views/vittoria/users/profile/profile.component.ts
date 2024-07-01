@@ -1,7 +1,10 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UsersService, Usuario} from '../../../../services/admin/users.service';
-import {ParamService as ParamServiceADM} from '../../../../services/admin/param.service';
+import {
+  ParamService as AdmParamService,
+  ParamService as ParamServiceADM
+} from '../../../../services/admin/param.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
 import {BehaviorSubject} from 'rxjs';
@@ -19,13 +22,16 @@ export class ProfileComponent implements OnInit {
   paises;
   estados;
   @ViewChild('mensajeModal') mensajeModal;
-
+  page = 1;
+  pageSize = 3;
   submitted = false;
   usuarioForm: FormGroup;
   redesForm: FormGroup;
   mensaje;
   imagen;
   imagenTemp;
+  nombreBuscar
+  canalOpciones
   usuario: Usuario = {
     id: 0,
     nombres: '',
@@ -43,7 +49,8 @@ export class ProfileComponent implements OnInit {
     twitter: '',
     whatsapp: '',
     facebook: '',
-    imagen: new FormData()
+    imagen: new FormData(),
+    canal: ''
   };
   mostrar = true;
 
@@ -54,6 +61,8 @@ export class ProfileComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private modalService: NgbModal,
     private router: Router,
+    private paramServiceAdm: AdmParamService,
+
   ) {
     const usuario = this.authService.currentUserValue;
     console.log(usuario);
@@ -69,6 +78,7 @@ export class ProfileComponent implements OnInit {
     this.usersService.obtenerListaEstados().subscribe((result) => {
       this.estados = result;
     });
+    this.obtenerListaParametros();
   }
 
   get f() {
@@ -90,7 +100,8 @@ export class ProfileComponent implements OnInit {
       telefono: ['', [Validators.required]],
       estado: ['', [Validators.required]],
       whatsapp: ['', [Validators.required]],
-      idRol: [0, [Validators.min(1)]]
+      idRol: [0, [Validators.min(1)]],
+      canal: ['', [Validators.required]]
     });
     this.redesForm = this._formBuilder.group({
       twitter: ['', [Validators.required]],
@@ -169,4 +180,9 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  async obtenerListaParametros(): Promise<void> {
+    await this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar).subscribe((result) => {
+      this.canalOpciones = result.data;
+    });
+  }
 }
