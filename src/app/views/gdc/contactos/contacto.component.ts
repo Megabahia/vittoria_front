@@ -337,7 +337,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     return new Promise((resolve, reject) => {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
-        canalProducto: this.detallesArray.controls[i].value.canal !== '' ? this.detallesArray.controls[i].value.canal : this.canalSeleccionado,
+        canalProducto: this.canalSeleccionado,
         canal: this.notaPedido.value.canal,
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
@@ -420,7 +420,9 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         }
       });
       this.archivo.append('estado', 'Entregado');
-      this.archivo.append('formaPago', this.formasPago.toString())
+      console.log(this.formasPago)
+      console.log(JSON.stringify(this.formasPago))
+      this.archivo.append('formaPago', JSON.stringify(this.formasPago));
       if (this.mostrarInputCobro) {
         if (Number(this.totalPagar) !== Number(this.notaPedido.value.totalCobroEfectivo)) {
           this.toaster.open('El precio total ingresado no coincide', {type: 'danger'})
@@ -451,7 +453,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       return this.obtenerProducto(index);
     }));
     if (confirm('Esta seguro de guardar los datos') === true) {
-      console.log(this.notaPedido)
       if (this.notaPedido.invalid) {
         this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
         return;
