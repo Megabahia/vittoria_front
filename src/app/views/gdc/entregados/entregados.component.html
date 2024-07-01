@@ -83,10 +83,12 @@
                 </a>
               </td>
               <td>
-                {{ transaccion.formaPago | uppercase }}
+                <ul *ngFor="let pago of transaccion.formaPago">
+                  <li>{{pago | uppercase}}</li>
+                </ul>
               </td>
               <td>
-                <a href="{{transaccion.archivoFormaPago}}" *ngIf="transaccion.formaPago === 'transferencia'" target="_blank">
+                <a href="{{transaccion.archivoFormaPago}}" *ngIf="transaccion.formaPago.includes('transferencia')" target="_blank">
                   <i-feather name="file-text" class="mr-25"></i-feather>
                 </a>
               </td>

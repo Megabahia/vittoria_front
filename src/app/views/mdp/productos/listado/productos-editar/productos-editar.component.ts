@@ -157,7 +157,6 @@ export class ProductosEditarComponent implements OnInit {
       delete producto.imagenes;
       this.producto = producto;
       this.habilitarEnvio = !producto.envioNivelNacional;
-      console.log('INFO', info)
       this.imageUrlPrincipal = info.imagen_principal;
 
       this.productoForm.patchValue(info);
@@ -168,7 +167,6 @@ export class ProductosEditarComponent implements OnInit {
         this.productoForm.get('lugarVentaCiudad').setValue(this.producto.lugarVentaCiudad);
       }
       if (info.canales == '') {
-
         this.obtenerListaParametros();
       }
       this.obtenerListaSubcategorias();

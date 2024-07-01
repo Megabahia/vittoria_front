@@ -198,7 +198,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       valorUnitario: [0, [Validators.required, Validators.min(0.01)]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
-      imagen: ['', [Validators.required]],
+      imagen: [''],
       caracteristicas: ['', []],
       precios: [[], []],
       canal: ['megabahia.megadescuento.com'],
@@ -254,7 +254,6 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       this.toaster.open('Seleccione un precio que sea mayor a 0.', {type: 'danger'});
       return;
     }
-
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
@@ -538,7 +537,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
   openWhatsApp(event: Event): void {
     event.preventDefault();
-    const numero = this.notaPedido.value.facturacion.telefono
+    const numero = this.notaPedido.value.facturacion.telefono;
     const modifiedNumber = (numero.startsWith('0') ? numero.substring(1) : numero);
     const internationalNumber = '593' + modifiedNumber;
     const message = encodeURIComponent(`Sr.(a)(ita). ${this.notaPedido.value.facturacion.nombres} ${this.notaPedido.value.facturacion.apellidos}\n\nMuchas gracias por confiar en nosotros, su pedido estará listo para que usted pase retirando en nuestro punto de entrega.\n\nEncuéntranos en QUITO: Av. 10 de Agosto N39-201 y José Arizaga, Sector La Y, frente al Hipermercado CORAL y junto a la Clínica AXXIS.\n\n${this.parametroDireccion}\n\n*Cuando usted retire su pedido, presentando la siguiente imagen usted  OBTIENE un 10% de ¡DESCUENTO ADICIONAL!*\n\n${this.notaPedido.value.fotoCupon}`);

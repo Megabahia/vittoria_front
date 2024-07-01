@@ -56,6 +56,7 @@ export class EntregadosComponent implements OnInit, AfterViewInit {
   cliente;
   cedula;
   factura;
+  listaFormasPago;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -220,6 +221,7 @@ export class EntregadosComponent implements OnInit, AfterViewInit {
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaContactos = info.info;
+      this.listaFormasPago = info.info.formaPago;
       this.toaster.open('Lista actualizada',{ type: 'success'});
     });
   }

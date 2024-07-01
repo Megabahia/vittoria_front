@@ -505,6 +505,13 @@
                                       <input #fileInput type="file" (change)="cargarImagen(i,$event)"
                                              accept=".jpg,.jpeg,.png" style="display: none;">
                                     </div>
+                                    <div *ngIf="detalle.controls.imagen_principal.errors"
+                                         class="invalid-feedback"
+                                         style="display: block;">
+                                      <div *ngIf="detalle.controls.imagen_principal.errors.required">
+                                        Requerido
+                                      </div>
+                                    </div>
                                   </div>
                                   <div
                                     class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
@@ -512,7 +519,6 @@
                                                class="cursor-pointer font-medium-3"
                                                data-repeater-delete
                                                (click)="removerItem(i)"></i-feather>
-
                                   </div>
                                 </div>
 
@@ -625,13 +631,12 @@
             <form [formGroup]="notaPedido">
               <div class="card-body invoice-padding">
                 <div class="row">
-
                   <div class="col-6">
                     <div class="form-group">
                       <label for="tipoPago">Factura</label>
                       <select id="tipoPago" class="form-control" formControlName="tipoPago"
                               (change)="onSelectChange($event)">
-                        <option value="" disabled selected>- Seleccione -</option>
+                        <option value="" selected>- Seleccione -</option>
                         <option value="facturaElectronica">Factura electrónica</option>
                         <option value="facturaElectronicaMegaBahia">Factura electrónica - MegaBahía</option>
                         <option value="rimpePopular">Rimpe popular</option>
@@ -653,51 +658,78 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-4">
-                    <label for="formaPago">Forma de pago</label>
-                    <select id="formaPago" class="form-control" formControlName="formaPago"
-                            (change)="onSelectChangeFormaPago($event)">
-                      <option value="" selected disabled>- Seleccione -</option>
-                      <option value="transferencia">Transferencia</option>
-                      <option value="efectivo">Efectivo</option>
-                    </select>
-                    <div *ngIf="notaPedidoForm.formaPago.errors"
-                         class="invalid-feedback" style="display: block;">
-                      <div *ngIf="notaPedidoForm.formaPago.errors.required">
-                        Requerido
+                  <div class="col-md-6 mb-2">
+                    <div class="row">
+                      <div class="col-md-12 col-12">
+                        <label for="formaPago">Forma de pago</label>
+                        <select id="formaPago" class="form-control" formControlName="formaPago"
+                                (change)="onSelectChangeFormaPago($event)">
+                          <option value="" selected>- Seleccione -</option>
+                          <option value="transferencia">Transferencia</option>
+                          <option value="tarjeta_credito">Tarjeta de crédito</option>
+                          <option value="efectivo">Efectivo</option>
+                        </select>
+                        <div *ngIf="notaPedidoForm.formaPago.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="notaPedidoForm.formaPago.errors.required">
+                            Requerido
+                          </div>
+                        </div>
+                        <div class="mt-1">
+                          <button type="button" class="btn btn-primary" (click)="agregarFormaPago()">Aceptar</button>
+                        </div>
                       </div>
                     </div>
                   </div>
-
-                  <div class="col-4" *ngIf="mostrarCargarArchivo">
-                    <label>Comprobante de pago</label>
-                    <input class="form-control-file" type="file" (change)="onFileSelected($event)">
-                  </div>
-
-                  <div class="col-4" *ngIf="mostrarInputTransaccion">
-                    <div class="form-group">
-                      <label for="numTransaccionTransferencia">Número de transacción</label>
-                      <input class="form-control" type="text" id="numTransaccionTransferencia"
-                             formControlName="numTransaccionTransferencia"/>
-                    </div>
-                  </div>
-
-                  <div class="col-4" *ngIf="mostrarInputCobro">
-                    <div class="form-group">
-                      <label for="totalCobroEfectivo">Total de cobro</label>
-                      <input class="form-control" type="text" id="totalCobroEfectivo"
-                             formControlName="totalCobroEfectivo"/>
+                  <div class="col-md-6 col-12">
+                    <div class="row">
+                      <div class="col-md-5 col-12" *ngIf="mostrarCargarArchivo">
+                        <label>Comprobante de pago (Transferencia)</label>
+                        <input class="form-control-file" type="file" (change)="onFileSelected($event)">
+                      </div>
+                      <div class="col-md-5 col-12" *ngIf="mostrarInputTransaccion">
+                        <div class="form-group">
+                          <label for="numTransaccionTransferencia">Número de transacción (Transferencia)</label>
+                          <input class="form-control" type="text" id="numTransaccionTransferencia"
+                                 formControlName="numTransaccionTransferencia"/>
+                        </div>
+                      </div>
+                      <div class="col-md-2 col-12" *ngIf="mostrarInputTransaccion">
+                        <button class="btn btn-light btn-sm" (click)="quitarPagoTransferencia()">X</button>
+                      </div>
+                      <div class="col-md-5 col-12 my-1" *ngIf="mostrarCargarArchivoCredito">
+                        <label>Comprobante de pago (Tarjeta de crédito)</label>
+                        <input class="form-control-file" type="file" (change)="onFileSelectedTarjeta($event)">
+                      </div>
+                      <div class="col-md-5 col-12" *ngIf="mostrarInputTransaccionCredito">
+                        <div class="form-group">
+                          <label for="numTransaccionCredito">Número de transacción (Tarjeta de crédito)</label>
+                          <input class="form-control" type="text" id="numTransaccionCredito"
+                                 formControlName="numTransaccionCredito"/>
+                        </div>
+                      </div>
+                      <div class="col-md-2 col-12" *ngIf="mostrarInputTransaccionCredito">
+                        <button class="btn btn-light btn-sm" (click)="quitarPagoCredito()">X</button>
+                      </div>
+                      <div class="col-md-6 col-12" *ngIf="mostrarInputCobro">
+                        <div class="form-group">
+                          <label for="totalCobroEfectivo">Total de cobro</label>
+                          <input class="form-control" type="text" id="totalCobroEfectivo"
+                                 formControlName="totalCobroEfectivo"/>
+                        </div>
+                      </div>
+                      <div class="col-md-2 col-12" *ngIf="mostrarInputCobro">
+                        <button class="btn btn-light btn-sm" (click)="quitarPagoEfectivo()">X</button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-
             </form>
-
           </div>
           <div class="modal-footer">
             <button type="reset" class="btn btn-secondary"
-                    (click)="modal.dismiss( 'Cross click')">Cerrar
+                    (click)="modal.dismiss('Cross click')">Cerrar
             </button>
             <button class="btn btn-primary mx-1"
                     (click)="actualizar()"

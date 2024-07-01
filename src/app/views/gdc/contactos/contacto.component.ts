@@ -53,6 +53,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   mostrarInputComprobante = false;
   mostrarCargarArchivo = false;
   mostrarInputTransaccion = false;
+  mostrarCargarArchivoCredito = false;
+  mostrarInputTransaccionCredito = false;
   mostrarInputCobro = false;
   fileToUpload: File | null = null;
   totalPagar;
@@ -64,7 +66,9 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   totalIva;
   parametroIva;
   canalSeleccionado = '';
-  listaCanalesProducto
+  listaCanalesProducto;
+  selectFormaPago;
+  formasPago = [];
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -162,9 +166,10 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       envios: ['', []],
       json: ['', []],
       numeroComprobante: [''],
-      tipoPago: ['', [Validators.required]],
-      formaPago: ['', [Validators.required]],
+      tipoPago: ['',],
+      formaPago: ['',],
       numTransaccionTransferencia: [''],
+      numTransaccionCredito: [''],
       totalCobroEfectivo: ['']
     });
   }
@@ -213,7 +218,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       precios: [[], []],
       canal: [''],
       woocommerceId: [''],
-      imagen_principal:['', [Validators.required]]
+      imagen_principal: ['', [Validators.required]]
     });
   }
 
@@ -249,19 +254,11 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  transformarFecha(fecha): string {
-    return this.datePipe.transform(fecha, 'yyyy-MM-dd');
-  }
-
   obtenerContacto(modal, id): void {
     this.obtenerProvincias();
     this.obtenerListaProductos();
     this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
     this.contactosService.obtenerContacto(id).subscribe((info) => {
-      this.provincia = info.facturacion.provincia;
-      this.obtenerCiudad();
-
-
       if (info.tipoPago === 'rimpePopular') {
         this.mostrarInputComprobante = true;
       } else if (info.tipoPago === 'facturaElectronica') {
@@ -282,7 +279,14 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         this.mostrarInputTransaccion = false;
         this.mostrarCargarArchivo = false;
         this.mostrarInputCobro = false;
+        this.mostrarCargarArchivoCredito = false;
+        this.mostrarInputTransaccionCredito = false;
+        this.formasPago = [];
       }
+
+      this.provincia = info.facturacion.provincia;
+      this.obtenerCiudad();
+
       this.totalPagar = info.total;
       this.iniciarNotaPedido();
       this.horaPedido = this.extraerHora(info.created_at);
@@ -294,7 +298,12 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
-
+      if (modal._declarationTContainer.localNames[0] === 'facturacionModal') {
+        this.notaPedido.get('formaPago').setValidators([Validators.required]);
+        this.notaPedido.get('formaPago').updateValueAndValidity();
+        this.notaPedido.get('tipoPago').setValidators([Validators.required]);
+        this.notaPedido.get('tipoPago').updateValueAndValidity();
+      }
       this.calcular()
     });
   }
@@ -396,6 +405,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
+    console.log(this.notaPedido)
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
@@ -410,7 +420,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         }
       });
       this.archivo.append('estado', 'Entregado');
-
+      this.archivo.append('formaPago', this.formasPago.toString())
       if (this.mostrarInputCobro) {
         if (Number(this.totalPagar) !== Number(this.notaPedido.value.totalCobroEfectivo)) {
           this.toaster.open('El precio total ingresado no coincide', {type: 'danger'})
@@ -431,6 +441,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
 
       this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
       });
+
     }
   }
 
@@ -440,6 +451,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       return this.obtenerProducto(index);
     }));
     if (confirm('Esta seguro de guardar los datos') === true) {
+      console.log(this.notaPedido)
       if (this.notaPedido.invalid) {
         this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
         return;
@@ -538,22 +550,35 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onSelectChangeFormaPago(event: any) {
-    const selectedValue = event.target.value;
-    if (selectedValue === 'transferencia') {
-      this.mostrarInputTransaccion = true;
-      this.mostrarCargarArchivo = true;
-      this.mostrarInputCobro = false;
+  agregarFormaPago(): void {
 
-    } else if (selectedValue === 'efectivo') {
-      this.mostrarInputTransaccion = false;
-      this.mostrarCargarArchivo = false;
-      this.mostrarInputCobro = true;
-    } else {
-      this.mostrarInputTransaccion = false;
-      this.mostrarCargarArchivo = false;
-      this.mostrarInputCobro = false;
+    if (!this.formasPago.includes(this.selectFormaPago)) {
+      this.formasPago.push(this.selectFormaPago);
     }
+
+    switch (this.selectFormaPago) {
+      case 'transferencia':
+        this.mostrarInputTransaccion = true;
+        this.mostrarCargarArchivo = true;
+        //this.mostrarInputCobro = false;
+        break;
+      case 'efectivo':
+        //this.mostrarInputTransaccion = false;
+        //this.mostrarCargarArchivo = false;
+        this.mostrarInputCobro = true;
+        break;
+      case 'tarjeta_credito':
+        this.mostrarInputTransaccionCredito = true;
+        this.mostrarCargarArchivoCredito = true;
+        //this.mostrarInputCobro = false;
+        break;
+      default:
+        console.log("Seleccione una forma de pago válida");
+    }
+  }
+
+  onSelectChangeFormaPago(event: any) {
+    this.selectFormaPago = event.target.value;
   }
 
   onFileSelected(event: any): void {
@@ -561,6 +586,14 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       this.archivo.append('archivoFormaPago', event.target.files.item(0), event.target.files.item(0).name);
     } else {
       this.archivo.delete('archivoFormaPago');
+    }
+  }
+
+  onFileSelectedTarjeta(event: any): void {
+    if (this.mostrarCargarArchivoCredito) {
+      this.archivo.append('archivoFormaPagoCredito', event.target.files.item(0), event.target.files.item(0).name);
+    } else {
+      this.archivo.delete('archivoFormaPagoCredito');
     }
   }
 
@@ -612,6 +645,34 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       }
     });
     return precios;
+  }
+
+  quitarPagoTransferencia() {
+    this.eliminarDatoArregloFormaPago('transferencia');
+    this.mostrarCargarArchivo = false;
+    this.archivo.delete('archivoFormaPago');
+    this.mostrarInputTransaccion = false;
+  }
+
+  quitarPagoCredito() {
+    this.eliminarDatoArregloFormaPago('tarjeta_credito');
+    this.mostrarCargarArchivoCredito = false;
+    this.archivo.delete('archivoFormaPagoCredito');
+    this.mostrarInputTransaccionCredito = false;
+  }
+
+  quitarPagoEfectivo() {
+    this.eliminarDatoArregloFormaPago('efectivo');
+    this.mostrarInputCobro = false;
+  }
+
+  eliminarDatoArregloFormaPago(valor) {
+    let indice = this.formasPago.indexOf(valor);
+    console.log(indice)
+    if (indice !== -1) {
+      console.log('entra if')
+      this.formasPago.splice(indice, 1);
+    }
   }
 
 }
