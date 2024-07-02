@@ -294,8 +294,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       this.canalPrincipal = info.articulos[0].canal;
       this.canalSeleccionado = this.canalPrincipal;
 
-      info.articulos.map((item, index): void => {
-        this.obtenerProducto(index);
+      info.articulos.map((item): void => {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
