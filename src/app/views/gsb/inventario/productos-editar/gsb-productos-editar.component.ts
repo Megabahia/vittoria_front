@@ -55,7 +55,6 @@ export class GsbProductosEditarComponent implements OnInit {
   habilitarEnvio = false;
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
-  canalUsuario
   listaProductos;
   codigoBarras: string;
   page = 1;
@@ -65,6 +64,7 @@ export class GsbProductosEditarComponent implements OnInit {
   imageUrlPrincipal: string | ArrayBuffer | null = null;
   imagenPrinciplSeleccionada: File | null = null;
   disabledSelectCanal = false;
+  stockInicial;
 
   constructor(
     private categoriasService: CategoriasService,
@@ -93,46 +93,50 @@ export class GsbProductosEditarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    ///if (this.idProducto !== 0) {
+    this.obtenerProducto();
+    this.obtenerFichasTecnicas();
+    //} else {
+    //  this.obtenerUsuarioActual();
+    //}
     this.productoForm = this._formBuilder.group({
-      categoria: ['', [Validators.required]],
-      subCategoria: ['', [Validators.required]],
+      categoria: [''],
+      subCategoria: [''],
       idPadre: [''],
       canal: [''],
-      nombre: ['', [Validators.required, Validators.maxLength(150)]],
-      descripcion: ['', [Validators.required]],
-      codigoBarras: ['', [Validators.required, Validators.maxLength(150)]],
-      refil: [0, []],
-      stock: ['', [Validators.required, Validators.min(1), ValidacionesPropias.numeroEntero]],
-      //parametrizacion: [0, [Validators.required, Validators.min(1)]],
+      nombre: [''],
+      descripcion: [''],
+      codigoBarras: [''],
+      refil: [0],
+      stock: ['', [Validators.required, Validators.min(this.stockInicial), ValidacionesPropias.numeroEntero]],
       parametrizacion: [null, []],
-      costoCompra: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      precioVentaA: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      precioVentaB: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      precioVentaC: ['', []],
-      precioVentaD: ['', []],
-      precioVentaE: ['', []],
-      precioVentaF: ['', []],
-      precioVentaBultos: [0, []],
-      estado: ['', [Validators.required]],
-      //variableRefil: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
-      variableRefil: ['', []],
-      fechaCaducidad: ['', []],
-      fechaElaboracion: ['', []],
-      caracteristicas: ['', [Validators.required]],
-      proveedor: ['', [Validators.required]],
-      precioOferta: [0, []],
-      envioNivelNacional: [true, []],
-      lugarVentaProvincia: ['', []],
-      lugarVentaCiudad: ['', []],
-      courier: ['', []],
-      estadoLanding: [true, []],
-      precioLanding: [0, []],
-      //precioLanding: ['', [Validators.required, Validators.pattern(this.numRegex)]],
-      precioLandingOferta: [0, []],
-      woocommerceId: ['', []],
-      imagen_principal: ['', [Validators.required]],
-      stockVirtual: ['', []],
+      costoCompra: [''],
+      precioVentaA: [''],
+      precioVentaB: [''],
+      precioVentaC: [''],
+      precioVentaD: [''],
+      precioVentaE: [''],
+      precioVentaF: [''],
+      precioVentaBultos: [0],
+      estado: [''],
+      variableRefil: [''],
+      fechaCaducidad: [''],
+      fechaElaboracion: [''],
+      caracteristicas: [''],
+      proveedor: [''],
+      precioOferta: [0],
+      envioNivelNacional: [true],
+      lugarVentaProvincia: [''],
+      lugarVentaCiudad: [''],
+      courier: [''],
+      estadoLanding: [true],
+      precioLanding: [0],
+      precioLandingOferta: [0],
+      woocommerceId: [''],
+      imagen_principal: [''],
+      stockVirtual: [''],
     });
+
     this.fichaTecnicaForm = this._formBuilder.group({
       codigo: ['', [Validators.required]],
       nombreAtributo: ['', [Validators.required]],
@@ -140,12 +144,7 @@ export class GsbProductosEditarComponent implements OnInit {
     });
     this.obtenerAbastecimientoOpciones();
     this.obtenerCategoriasOpciones();
-    if (this.idProducto !== 0) {
-      this.obtenerProducto();
-      this.obtenerFichasTecnicas();
-    } else {
-      this.obtenerUsuarioActual()
-    }
+
     this.obtenerCourierOpciones();
     this.obtenerProvinciasOpciones();
   }
@@ -155,6 +154,7 @@ export class GsbProductosEditarComponent implements OnInit {
       const producto = info;
       this.imagenes = info.imagenes;
       delete producto.imagenes;
+      this.stockInicial = info.stock;
       this.producto = producto;
       this.habilitarEnvio = !producto.envioNivelNacional;
       this.imageUrlPrincipal = info.imagen_principal;
@@ -166,7 +166,7 @@ export class GsbProductosEditarComponent implements OnInit {
         this.obtenerCiudad();
         this.productoForm.get('lugarVentaCiudad').setValue(this.producto.lugarVentaCiudad);
       }
-      if (info.canales == '') {
+      if (info.canales === '') {
         this.obtenerListaParametros();
       }
       this.obtenerListaSubcategorias();
@@ -231,38 +231,38 @@ export class GsbProductosEditarComponent implements OnInit {
   }
 
   guardarProducto(): void {
-    this.producto.stockVirtual = JSON.stringify(this.producto.stockVirtual.map(item => {
+    /*this.producto.stockVirtual = JSON.stringify(this.producto.stockVirtual.map(item => {
       if (item.canal === this.producto.canal) {
         return {...item, estado: true};
       } else {
         return item;
       }
-    }));
-    let llaves = Object.keys(this.producto);
-    let valores = Object.values(this.producto);
+    }));*/
+    const llaves = Object.keys(this.producto);
+    const valores = Object.values(this.producto);
     this.datosProducto = new FormData();
     valores.map((valor, pos) => {
       if (llaves[pos] !== 'imagen_principal' && valor !== null) {
         this.datosProducto.append(llaves[pos], valor);
       }
     });
-    if (this.imagenPrinciplSeleccionada != null) {
+    /*if (this.imagenPrinciplSeleccionada != null) {
       this.datosProducto.delete('imagen_principal');
       this.datosProducto.append('imagen_principal', this.imagenPrinciplSeleccionada);
-    }
+    }*/
 
     // this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
     //   console.log(info);
     // });
     this.submittedProductoForm = true;
-    if (this.productoForm.invalid || this.invalidoTamanoVideo) {
+    if (this.productoForm.invalid) {
       this.toaster.open('Llenar campos', {type: 'warning'});
       return;
     }
-    const fechaCaducidad = moment(this.producto.fechaCaducidad, 'YYYY-MM-DD');
+    /*const fechaCaducidad = moment(this.producto.fechaCaducidad, 'YYYY-MM-DD');
     const fechaElaboracion = moment(this.producto.fechaElaboracion, 'YYYY-MM-DD');
     const diferenciaDiasElabCad = fechaCaducidad.diff(fechaElaboracion, 'days');
-    const diferenciaDiasHoyCad = fechaCaducidad.diff(moment(), 'days');
+    const diferenciaDiasHoyCad = fechaCaducidad.diff(moment(), 'days');*/
     /*if (diferenciaDiasElabCad < 0) {
       this.mensaje = 'La fecha de caducidad debe ser mayor a la de elaboración';
       this.abrirModal(this.aviso);
@@ -273,52 +273,32 @@ export class GsbProductosEditarComponent implements OnInit {
       this.abrirModal(this.aviso);
       return;
     }*/
-    this.datosProducto.delete('video');
+    /*this.datosProducto.delete('video');
     if (this.video.nativeElement.files[0]) {
       this.datosProducto.append('video', this.video.nativeElement.files[0]);
     }
     this.archivos.map((valor, pos) => {
       this.datosProducto.append('imagenes[' + pos + ']id', pos.toString());
       this.datosProducto.append('imagenes[' + pos + ']imagen', valor);
-    });
+    });*/
     this.mostrarSpinner = true;
-    if (this.idProducto !== 0) {
-      this.datosProducto.delete('stockVirtual');
-      this.productosService.actualizarProducto(this.datosProducto, this.idProducto).subscribe((info) => {
-          this.mensaje = 'Producto actualizado';
-          this.abrirModal(this.aviso);
-          this.messageEvent.emit('lista');
-          this.mostrarSpinner = false;
-        },
-        (error) => {
-          let errores = Object.values(error);
-          let llaves = Object.keys(error);
-          this.mensaje = '';
-          errores.map((infoErrores, index) => {
-            this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
-          });
-          this.abrirModal(this.aviso);
-          this.mostrarSpinner = false;
+    this.datosProducto.delete('stockVirtual');
+    this.productosService.actualizarProducto(this.datosProducto, this.idProducto).subscribe((info) => {
+        this.mensaje = 'Producto actualizado';
+        this.abrirModal(this.aviso);
+        this.messageEvent.emit('lista');
+        this.mostrarSpinner = false;
+      },
+      (error) => {
+        let errores = Object.values(error);
+        let llaves = Object.keys(error);
+        this.mensaje = '';
+        errores.map((infoErrores, index) => {
+          this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
         });
-    } else {
-      this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
-          this.idProducto = info.id;
-          this.mensaje = 'Producto guardado';
-          this.abrirModal(this.aviso);
-          this.messageEvent.emit('lista');
-          this.mostrarSpinner = false;
-        },
-        (error) => {
-          let errores = Object.values(error);
-          let llaves = Object.keys(error);
-          this.mensaje = '';
-          errores.map((infoErrores, index) => {
-            this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
-          });
-          this.abrirModal(this.aviso);
-          this.mostrarSpinner = false;
-        });
-    }
+        this.abrirModal(this.aviso);
+        this.mostrarSpinner = false;
+      });
   }
 
   eliminarImagenModal(id): void {
@@ -371,8 +351,8 @@ export class GsbProductosEditarComponent implements OnInit {
             this.abrirModal(this.aviso);
           },
           (error) => {
-            let errores = Object.values(error);
-            let llaves = Object.keys(error);
+            const errores = Object.values(error);
+            const llaves = Object.keys(error);
             this.mensaje = '';
             errores.map((infoErrores, index) => {
               this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
@@ -392,8 +372,8 @@ export class GsbProductosEditarComponent implements OnInit {
           this.abrirModal(this.aviso);
         },
         (error) => {
-          let errores = Object.values(error);
-          let llaves = Object.keys(error);
+          const errores = Object.values(error);
+          const llaves = Object.keys(error);
           this.mensaje = '';
           errores.map((infoErrores, index) => {
             this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
@@ -452,16 +432,6 @@ export class GsbProductosEditarComponent implements OnInit {
     this.messageEvent.emit('lista');
   }
 
-  verificarPesoArchivo(event): void {
-    const file: File = event.target.files[0];
-    this.invalidoTamanoVideo = false;
-    if (10485760 < file.size) {
-      this.invalidoTamanoVideo = true;
-      this.toaster.open('Archivo pesado', {type: 'warning'});
-    }
-  }
-
-
   onFileSelect(event: any): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
@@ -480,18 +450,6 @@ export class GsbProductosEditarComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-
-  eliminarImagenPrincipal(): void {
-    this.imageUrlPrincipal = null;
-    this.imagenPrinciplSeleccionada = null;
-    this.datosProducto.delete('imagen_principal');
-    // Si también necesitas limpiar el input file, aquí una manera de hacerlo usando ViewChild
-    // Debes asegurarte de tener el ViewChild para el input file
-    if (this.fileInput.nativeElement) {
-      this.fileInput.nativeElement.value = '';
-    }
-  }
-
   obtenerUsuarioActual(): void {
     const usuarioJSON = localStorage.getItem('currentUser');
     if (usuarioJSON) {
@@ -500,7 +458,6 @@ export class GsbProductosEditarComponent implements OnInit {
         this.producto.canal = usuarioObjeto.usuario.canal;
         this.disabledSelectCanal = true;
       }
-      //console.log('Usuario obtenido como objeto:', usuarioObjeto.usuario);
     } else {
       console.log('No hay datos de usuario en localStorage');
     }

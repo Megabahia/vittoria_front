@@ -6,12 +6,12 @@
     </div>
     <div class="content-body">
       <div class="card">
-        <h5 class="card-header">Crear producto</h5>
+        <h5 class="card-header">Producto</h5>
         <div class="card-body">
           <form class="auth-login-form mt-2" [formGroup]="productoForm">
             <div class="col-md-12">
               <div class="form-group">
-                  <div *ngIf="disabledSelectCanal; else SelectEnable">
+                  <div>
                       <label for="canal">Canal</label>
                       <select class="form-control select2" name="canal" id="canal" formControlName="canal"
                               [(ngModel)]="producto.canal" disabled>
@@ -19,14 +19,6 @@
                           <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
                       </select>
                   </div>
-                  <ng-template #SelectEnable >
-                      <label for="canal1">Canal</label>
-                      <select class="form-control select2" name="canal" id="canal1" formControlName="canal"
-                              [(ngModel)]="producto.canal" >
-                          <option value="" selected>- Seleccionar -</option>
-                          <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
-                      </select>
-                  </ng-template>
 
               </div>
             </div>
@@ -36,7 +28,7 @@
                 <div class="col-md-4 col-12">
                   <div class="form-group">
                     <label>Nombre completo</label>
-                    <input type="text" class="form-control" formControlName="nombre" [(ngModel)]="producto.nombre">
+                    <input type="text" class="form-control" formControlName="nombre" disabled [(ngModel)]="producto.nombre">
                     <div *ngIf="submittedProductoForm && fp.nombre.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.nombre.errors.required">Nombre completo es requerido
@@ -49,7 +41,7 @@
                   <div class="form-group">
                     <label>Código de barras</label>
                     <input type="text" class="form-control" name="codigoBarras" formControlName="codigoBarras"
-                           [(ngModel)]="producto.codigoBarras">
+                           disabled [(ngModel)]="producto.codigoBarras">
                     <div *ngIf="submittedProductoForm && fp.codigoBarras.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.codigoBarras.errors.required">Código de barras es requeridos
@@ -66,7 +58,7 @@
                     <div *ngIf="submittedProductoForm && fp.stock.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.stock.errors.required">Stock es requerido</div>
-                      <div *ngIf="fp.stock.errors.min">Stock minimo 1</div>
+                      <div *ngIf="fp.stock.errors.min">Stock minimo {{stockInicial}} (Stock inicial)</div>
                       <div *ngIf="fp.stock.errors.numeroInvalid">Ingrese solo numeros enteros</div>
                     </div>
                   </div>
@@ -75,7 +67,7 @@
                   <div class="form-group">
                     <label>Costo de compra</label>
                     <input type="text" class="form-control" formControlName="costoCompra"
-                           [(ngModel)]="producto.costoCompra">
+                           disabled [(ngModel)]="producto.costoCompra">
                     <div *ngIf="submittedProductoForm && fp.costoCompra.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.costoCompra.errors.required">Costo de compra es requerido</div>
@@ -88,7 +80,7 @@
                   <div class="form-group">
                     <label for="categoria">Categoría</label>
                     <select class="form-control select2" name="categoria" formControlName="categoria"
-                            (change)="obtenerListaSubcategorias()" [(ngModel)]="producto.categoria">
+                            disabled (change)="obtenerListaSubcategorias()" [(ngModel)]="producto.categoria">
                       <option value="" selected>- Seleccionar -</option>
                       <option *ngFor="let categoriasOp of categoriasOpciones"
                               value="{{categoriasOp.id}}">{{ categoriasOp.nombre }}
@@ -106,7 +98,7 @@
                   <div class="form-group">
                     <label for="subCategoria">Subcategoría</label>
                     <select class="form-control select2" name="subCategoria" formControlName="subCategoria"
-                            [(ngModel)]="producto.subCategoria">
+                            disabled [(ngModel)]="producto.subCategoria">
                       <option value="" selected>- Seleccionar -</option>
                       <option *ngFor="let subcategoriasOp of subcategoriasOpciones"
                               value="{{subcategoriasOp.id}}">{{ subcategoriasOp.nombre }}
@@ -124,7 +116,7 @@
                 <div class="col-md-4 col-12">
                   <div class="form-group">
                     <label>Estado</label>
-                    <select class="form-control" formControlName="estado" [(ngModel)]="producto.estado">
+                    <select class="form-control" formControlName="estado" [(ngModel)]="producto.estado" disabled>
                       <option value="">- Seleccione -</option>
                       <option value="Activo">Activo</option>
                       <option value="Inactivo">Inactivo</option>
@@ -140,7 +132,7 @@
                   <div class="form-group">
                     <label>Proveedor</label>
                     <input type="text" class="form-control" formControlName="proveedor"
-                           [(ngModel)]="producto.proveedor">
+                           disabled [(ngModel)]="producto.proveedor">
                     <div *ngIf="submittedProductoForm && fp.proveedor.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.proveedor.errors.required">Proveedor es requerido
@@ -152,7 +144,7 @@
                   <div class="form-group">
                     <label for="descripcionTextArea">Descripción</label>
                     <textarea id="descripcionTextArea" rows="3" class="form-control" formControlName="descripcion"
-                              [(ngModel)]="producto.descripcion"></textarea>
+                              [(ngModel)]="producto.descripcion" disabled></textarea>
                     <div *ngIf="submittedProductoForm && fp.descripcion.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.descripcion.errors.required">Descripción es requerido
@@ -165,7 +157,7 @@
                     <label for="caracteristicasTextarea">Caracteristicas</label>
                     <textarea id="caracteristicasTextarea" rows="3" class="form-control"
                               formControlName="caracteristicas"
-                              [(ngModel)]="producto.caracteristicas"></textarea>
+                              [(ngModel)]="producto.caracteristicas" disabled></textarea>
                     <div *ngIf="submittedProductoForm && fp.caracteristicas.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.caracteristicas.errors.required">Caracteristicas es requerido
@@ -180,7 +172,7 @@
                   <div class="form-group">
                     <label>Precio de venta A TodoMegacentro</label>
                     <input type="text" class="form-control" formControlName="precioVentaA"
-                           [(ngModel)]="producto.precioVentaA">
+                           [(ngModel)]="producto.precioVentaA" disabled>
                     <div *ngIf="submittedProductoForm && fp.precioVentaA.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.precioVentaA.errors.required">Precio de venta A TodoMegacentro es requerido
@@ -193,7 +185,7 @@
                   <div class="form-group">
                     <label>Precio de venta B TodoMegacentro</label>
                     <input type="text" class="form-control" formControlName="precioVentaB"
-                           [(ngModel)]="producto.precioVentaB">
+                           disabled [(ngModel)]="producto.precioVentaB">
                     <div *ngIf="submittedProductoForm && fp.precioVentaB.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.precioVentaB.errors.required">Precio de venta B TodoMegacentro es requerido
@@ -206,7 +198,7 @@
                   <div class="form-group">
                     <label>Precio de venta C MD Mayorista 3 unidades</label>
                     <input type="text" class="form-control" formControlName="precioVentaC"
-                           [(ngModel)]="producto.precioVentaC">
+                           disabled [(ngModel)]="producto.precioVentaC">
                     <!--<div *ngIf="submittedProductoForm && fp.precioVentaC.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.precioVentaC.errors.required">Precio de venta C MD Mayorista 3 unidades es
@@ -220,7 +212,7 @@
                   <div class="form-group">
                     <label>Precio de venta D MD mayorista 6 unidades</label>
                     <input type="text" class="form-control" formControlName="precioVentaD"
-                           [(ngModel)]="producto.precioVentaD">
+                           disabled [(ngModel)]="producto.precioVentaD">
                     <!--<div *ngIf="submittedProductoForm && fp.precioVentaD.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.precioVentaD.errors.required">Precio de venta D MD mayorista 6 unidades es
@@ -234,7 +226,7 @@
                   <div class="form-group">
                     <label>Precio de venta E MD mayorista 9 unidades</label>
                     <input type="text" class="form-control" formControlName="precioVentaE"
-                           [(ngModel)]="producto.precioVentaE">
+                           disabled [(ngModel)]="producto.precioVentaE">
                     <!--<div *ngIf="submittedProductoForm && fp.precioVentaE.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.precioVentaE.errors.required">Precio de venta E MD mayorista 9 unidades es
@@ -248,7 +240,7 @@
                   <div class="form-group">
                     <label>Precio de venta MD contra entrega</label>
                     <input type="text" class="form-control" formControlName="precioVentaBultos"
-                           [(ngModel)]="producto.precioVentaBultos">
+                           disabled [(ngModel)]="producto.precioVentaBultos">
                     <!--<div *ngIf="submittedProductoForm && fp.precioVentaBultos.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.precioVentaBultos.errors.required">Precio de venta MD contra entrega es requerido
@@ -261,7 +253,7 @@
                   <div class="form-group">
                     <label>Precio Portal MD</label>
                     <input type="text" class="form-control" formControlName="precioOferta"
-                           [(ngModel)]="producto.precioOferta">
+                           disabled [(ngModel)]="producto.precioOferta">
                     <!--<div *ngIf="submittedProductoForm && fp.precioOferta.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.precioOferta.errors.required">Precio Portal MD es requerido</div>
@@ -273,7 +265,7 @@
                   <div class="form-group">
                     <label>Precio de venta MD aliados</label>
                     <input type="text" class="form-control" formControlName="precioVentaF"
-                           [(ngModel)]="producto.precioVentaF">
+                           disabled [(ngModel)]="producto.precioVentaF">
                     <!--<div *ngIf="submittedProductoForm && fp.precioVentaF.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.precioVentaF.errors.required">Precio de venta MD aliados es requerido</div>
@@ -285,7 +277,7 @@
                   <div class="form-group">
                     <label>Precio Landing</label>
                     <input type="text" class="form-control" formControlName="precioLanding"
-                           [(ngModel)]="producto.precioLanding">
+                           disabled [(ngModel)]="producto.precioLanding">
                     <!--<div *ngIf="submittedProductoForm && fp.precioLanding.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.precioLanding.errors.required">Precio Landing es requerido</div>
@@ -297,7 +289,7 @@
                   <div class="form-group">
                     <label>Precio Landing Oferta</label>
                     <input type="text" class="form-control" formControlName="precioLandingOferta"
-                           [(ngModel)]="producto.precioLandingOferta">
+                           disabled [(ngModel)]="producto.precioLandingOferta">
                     <!--<div *ngIf="submittedProductoForm && fp.precioLandingOferta.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.precioLandingOferta.errors.required">Precio Landing Oferta es requerido</div>
@@ -312,14 +304,14 @@
                   <div class="form-group">
                     <label [style]="{color:'blue'}">Código de producto padre</label>
                     <input type="text" class="form-control" name="idPadre" formControlName="idPadre"
-                           [(ngModel)]="producto.idPadre">
+                           disabled [(ngModel)]="producto.idPadre">
                   </div>
                 </div>
                 <div class="col-md-4 col-12">
                   <div class="form-group">
                     <label>Fecha de Elaboración </label>
                     <input class="form-control invoice-edit-input date-picker" mwlFlatpickr type="text"
-                           formControlName="fechaElaboracion" [(ngModel)]="producto.fechaElaboracion">
+                           disabled formControlName="fechaElaboracion" [(ngModel)]="producto.fechaElaboracion">
                     <!--<div *ngIf="submittedProductoForm && fp.fechaElaboracion.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.fechaElaboracion.errors.required">Fecha de Elaboración es requerido
@@ -331,7 +323,7 @@
                   <div class="form-group">
                     <label>Fecha de Caducidad</label>
                     <input class="form-control invoice-edit-input date-picker" mwlFlatpickr type="text"
-                           formControlName="fechaCaducidad" [(ngModel)]="producto.fechaCaducidad">
+                           disabled formControlName="fechaCaducidad" [(ngModel)]="producto.fechaCaducidad">
                     <!--<div *ngIf="submittedProductoForm && fp.fechaCaducidad.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.fechaCaducidad.errors.required">Fecha de Caducidad es requerido
@@ -344,7 +336,7 @@
                   <div class="form-group">
                     <label for="courier">Courier</label>
                     <select class="form-control select2" id="courier" name="courier" formControlName="courier"
-                            [(ngModel)]="producto.courier">
+                            disabled [(ngModel)]="producto.courier">
                       <option value="" selected>- Seleccionar -</option>
                       <option *ngFor="let courier of couriers" value="{{courier.valor}}">{{ courier.nombre }}
                       </option>
@@ -361,7 +353,7 @@
                     <div class="input-group">
                       <input type="number" class="form-control" placeholder="valor numérico"
                              formControlName="refil"
-                             [(ngModel)]="producto.refil"/>
+                             [(ngModel)]="producto.refil"disabled/>
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Días</span>
                       </div>
@@ -378,7 +370,7 @@
                     <label for="parametrizacion">Alerta de abastecimiento</label>
                     <select class="form-control select2" name="parametrizacion"
                             formControlName="parametrizacion"
-                            [(ngModel)]="producto.parametrizacion">
+                            [(ngModel)]="producto.parametrizacion" disabled>
                       <option value="0" selected>- Seleccionar -</option>
                       <option *ngFor="let abastecimientoOp of abastecimientoOpciones"
                               value="{{abastecimientoOp.id}}">{{ abastecimientoOp.nombre }}
@@ -395,7 +387,7 @@
                   <div class="form-group">
                     <label>Variable de Refil</label>
                     <input type="text" class="form-control" formControlName="variableRefil"
-                           [(ngModel)]="producto.variableRefil">
+                           [(ngModel)]="producto.variableRefil" disabled>
                     <!--<div *ngIf="submittedProductoForm && fp.variableRefil.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.variableRefil.errors.required">Variable de Refil es requerida
@@ -413,6 +405,7 @@
                              formControlName="estadoLanding"
                              [(ngModel)]="producto.estadoLanding"
                              (change)="seleccionarEstadoLanding($event)"
+                             disabled
                       />
                       Inactivo
                       <label class="custom-control-label" for="estadoLanding">
@@ -431,6 +424,7 @@
                              formControlName="envioNivelNacional"
                              [(ngModel)]="producto.envioNivelNacional"
                              (change)="seleccionarEnvio($event)"
+                             disabled
                       />
                       <label class="custom-control-label" for="envioNivelNacional">
                         <span class="switch-icon-left"><i data-feather="check"></i></span>
@@ -443,7 +437,7 @@
                   <div class="form-group" *ngIf="habilitarEnvio">
                     <label for="lugarVentaProvincia">Lugar Venta (Provincia)</label>
                     <select class="form-control select2" id="lugarVentaProvincia" name="lugarVentaProvincia"
-                            (change)="obtenerCiudad()"
+                            (change)="obtenerCiudad()" disabled
                             formControlName="lugarVentaProvincia" [(ngModel)]="producto.lugarVentaProvincia">
                       <option value="" selected>- Seleccionar -</option>
                       <option *ngFor="let provincia of provincias"
@@ -460,7 +454,7 @@
                   <div class="form-group" *ngIf="habilitarEnvio">
                     <label for="lugarVentaCiudad">Lugar Venta (Ciudad)</label>
                     <select class="form-control select2" id="lugarVentaCiudad" name="lugarVentaCiudad"
-                            formControlName="lugarVentaCiudad" [(ngModel)]="producto.lugarVentaCiudad">
+                            formControlName="lugarVentaCiudad" [(ngModel)]="producto.lugarVentaCiudad" disabled>
                       <option value="" selected>- Seleccionar -</option>
                       <option *ngFor="let ciudad of ciudadOpciones" value="{{ciudad.valor}}">{{ ciudad.nombre }}
                       </option>
@@ -477,7 +471,7 @@
                   <p class="card-text">
                     Imagen principal del producto
                   </p>
-                  <input #fileInput type="file" (change)="onFileSelect($event)" accept=".jpg,.jpeg,.png" style="width: 260px" formControlName="imagen_principal">
+                  <input #fileInput type="file" (change)="onFileSelect($event)" accept=".jpg,.jpeg,.png" style="width: 260px" formControlName="imagen_principal" disabled>
                   <img *ngIf="imageUrlPrincipal" [src]="imageUrlPrincipal" alt="Imagen principal" class="img-fluid mt-3"
                        style="max-width: 250px; height: auto;">
                   <!--<button *ngIf="imageUrlPrincipal" class="btn btn-danger mt-2" (click)="eliminarImagenPrincipal()">X</button>-->
@@ -487,7 +481,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-4 col-12">
+                <!--<div class="col-md-4 col-12">
                   <p class="card-text">
                     Imágenes alternas del producto
                   </p>
@@ -527,7 +521,7 @@
                       <p>Su navegador no soporta vídeos HTML5.</p>
                     </video>
                   </div>
-                </div>
+                </div>-->
               </div>
             </div>
           </form>
