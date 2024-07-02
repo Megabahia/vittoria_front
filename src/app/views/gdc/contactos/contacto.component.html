@@ -500,7 +500,7 @@
                                     <img class="img-detalle"
                                          src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
                                          *ngIf="detalle.controls?.imagen_principal" width="100px" height="100px" alt="">
-                                    <div *ngIf="!detalle.controls?.imagen_principal.value">
+                                    <div>
                                       <button (click)="fileInput.click()">Seleccionar imagen</button>
                                       <input #fileInput type="file" (change)="cargarImagen(i,$event)"
                                              accept=".jpg,.jpeg,.png" style="display: none;">
