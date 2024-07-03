@@ -64,7 +64,7 @@ export class GsbProductosEditarComponent implements OnInit {
   imageUrlPrincipal: string | ArrayBuffer | null = null;
   imagenPrinciplSeleccionada: File | null = null;
   disabledSelectCanal = false;
-  stockInicial;
+  stockInicial = 1;
 
   constructor(
     private categoriasService: CategoriasService,
@@ -93,12 +93,12 @@ export class GsbProductosEditarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    ///if (this.idProducto !== 0) {
+    // if (this.idProducto !== 0) {
     this.obtenerProducto();
     this.obtenerFichasTecnicas();
-    //} else {
+    // } else {
     //  this.obtenerUsuarioActual();
-    //}
+    // }
     this.productoForm = this._formBuilder.group({
       categoria: [''],
       subCategoria: [''],
@@ -173,25 +173,26 @@ export class GsbProductosEditarComponent implements OnInit {
     });
   }
 
-  async obtenerCourierOpciones() {
+  async obtenerCourierOpciones(): Promise<void> {
     await this.paramService.obtenerListaPadres('COURIER').subscribe((info) => {
       this.couriers = info;
     });
   }
 
   async obtenerListaParametros(): Promise<void> {
+    // tslint:disable-next-line:max-line-length
     await this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar).subscribe((result) => {
       this.canalOpciones = result.data;
     });
   }
 
-  async obtenerProvinciasOpciones() {
+  async obtenerProvinciasOpciones(): Promise<void> {
     await this.MDMparamService.obtenerListaHijos('Ecuador', 'PAIS').subscribe((info) => {
       this.provincias = info;
     });
   }
 
-  async obtenerAbastecimientoOpciones() {
+  async obtenerAbastecimientoOpciones(): Promise<void> {
     await this.paramService.obtenerListaPadres('ALERTA_ABASTECIMIENTO').subscribe((info) => {
       this.abastecimientoOpciones = info;
     });
@@ -203,13 +204,13 @@ export class GsbProductosEditarComponent implements OnInit {
     });
   }
 
-  async obtenerCategoriasOpciones() {
+  async obtenerCategoriasOpciones(): Promise<void> {
     await this.categoriasService.obtenerListaCategorias().subscribe((info) => {
       this.categoriasOpciones = info;
     });
   }
 
-  async obtenerListaSubcategorias() {
+  async obtenerListaSubcategorias(): Promise<void> {
     await this.subcategoriasService.obtenerListaSubcategoriasHijas(this.producto.categoria).subscribe((info) => {
       this.subcategoriasOpciones = info;
     });

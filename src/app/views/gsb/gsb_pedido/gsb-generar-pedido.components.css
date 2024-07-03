@@ -1,0 +1,12 @@
+.disabled-input{
+    background-color: #ced4da;
+    border: 1px solid #ced4da;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.card-img-top {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
