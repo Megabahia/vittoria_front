@@ -144,6 +144,7 @@ export class GsbGenerarPedidoComponent implements OnInit, AfterViewInit {
         comprobantePago: ['', []],
       }),
       articulos: this.formBuilder.array([], Validators.required),
+      productoExtra: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
       envioTotal: [0, [Validators.required]],
       numeroPedido: [this.generarID(), [Validators.required]],
@@ -182,6 +183,9 @@ export class GsbGenerarPedidoComponent implements OnInit, AfterViewInit {
   get detallesArray(): FormArray {
     return this.notaPedido.get('articulos') as FormArray;
   }
+  get detallesArrayProductoExtra(): FormArray {
+    return this.notaPedido.get('productoExtra') as FormArray;
+  }
 
   crearDetalleGrupo(): any {
     return this.formBuilder.group({
@@ -199,13 +203,30 @@ export class GsbGenerarPedidoComponent implements OnInit, AfterViewInit {
       imagen_principal:['', [Validators.required]]
     });
   }
+  crearDetalleGrupoProductoExtra(): any {
+    return this.formBuilder.group({
+      urlProducto: ['',[Validators.required]],
+      valorUnitario: [0],
+      cantidad: [0],
+      precio: [0],
+    });
+  }
 
   agregarItem(): void {
     this.detallesArray.push(this.crearDetalleGrupo());
   }
 
+  agregarItemExtra(): void {
+    this.detallesArrayProductoExtra.push(this.crearDetalleGrupoProductoExtra());
+  }
+
   removerItem(i): void {
     this.detallesArray.removeAt(i);
+    this.detallesArrayProductoExtra.removeAt(i);
+    this.calcular();
+  }
+  removerItemExtra(i): void {
+    this.detallesArrayProductoExtra.removeAt(i);
     this.calcular();
   }
 
@@ -337,15 +358,23 @@ export class GsbGenerarPedidoComponent implements OnInit, AfterViewInit {
 
   calcular(): void {
     const detalles = this.detallesArray.controls;
+    const detallesProductoExtra = this.detallesArrayProductoExtra.controls;
     let total = 0;
+    let totalProdExtra = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
       detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       total += parseFloat(detalles[index].get('precio').value);
     });
+    detallesProductoExtra.forEach((item, index) => {
+      const valorUnitario = parseFloat(detallesProductoExtra[index].get('valorUnitario').value || 0);
+      const cantidad = parseFloat(detallesProductoExtra[index].get('cantidad').value || 0);
+      detallesProductoExtra[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      totalProdExtra += parseFloat(detallesProductoExtra[index].get('precio').value);
+    });
     total += this.notaPedido.get('envioTotal').value;
-    this.notaPedido.get('total').setValue(total);
+    this.notaPedido.get('total').setValue((total + totalProdExtra).toFixed(2));
   }
 
   async actualizar(): Promise<void> {

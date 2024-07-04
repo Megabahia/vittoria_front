@@ -10,16 +10,16 @@ import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
-import {ValidacionesPropias} from "../../../utils/customer.validators";
 import {SuperBaratoService} from "../../../services/gsb/superbarato/super-barato.service";
+import {ValidacionesPropias} from "../../../utils/customer.validators";
 
 @Component({
-  selector: 'app-gsb-reporte',
-  templateUrl: './gsb-reporte-ventas.component.html',
-  styleUrls: ['gsb-reporte-ventas.component.css'],
+  selector: 'app-superbarato',
+  templateUrl: './superbarato.component.html',
+  styleUrls: ['superbarato.component.css'],
   providers: [DatePipe]
 })
-export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
+export class SuperbaratoComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @Input() paises;
   public notaPedido: FormGroup;
@@ -31,7 +31,7 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
   page = 1;
   pageSize = 3;
   collectionSize;
-  listaSuperBarato;
+  listaSuperBaratos;
   inicio = new Date();
   fin = new Date();
   transaccion: any;
@@ -65,7 +65,6 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
   listaCanalesProducto;
   selectFormaPago;
   formasPago = [];
-  comision;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -81,6 +80,7 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
+    private datePipe: DatePipe,
     private pedidosService: PedidosService,
     private superBaratoService: SuperBaratoService,
     private paramService: ParamService,
@@ -106,9 +106,6 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
 
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
       this.parametroIva = parseFloat(result.info[0].valor);
-    });
-    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'COMISION', 'Comision').subscribe((result) => {
-      this.comision = parseFloat(result.info[0].valor);
     });
   }
 
@@ -204,10 +201,6 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
     return this.notaPedido.get('articulos') as FormArray;
   }
 
-  get detallesArrayProductoExtra(): FormArray {
-    return this.notaPedido.get('productoExtra') as FormArray;
-  }
-
   crearDetalleGrupo(): any {
     return this.formBuilder.group({
       id: [''],
@@ -226,6 +219,13 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
     });
   }
 
+  agregarItem(): void {
+    this.detallesArray.push(this.crearDetalleGrupo());
+  }
+
+  get detallesArrayProductoExtra(): FormArray {
+    return this.notaPedido.get('productoExtra') as FormArray;
+  }
   crearDetalleGrupoProductoExtra(): any {
     return this.formBuilder.group({
       urlProducto: ['',[Validators.required]],
@@ -234,11 +234,6 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
       precio: [0],
     });
   }
-
-  agregarItem(): void {
-    this.detallesArray.push(this.crearDetalleGrupo());
-  }
-
   agregarItemExtra(): void {
     this.detallesArrayProductoExtra.push(this.crearDetalleGrupoProductoExtra());
   }
@@ -255,19 +250,19 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
 
   obtenerSuperBaratos(): void {
     this.superBaratoService.obtenerListaSuperBarato({
-      //telefono: this.whatsapp,
-      //nombre: this.nombre,
-      //apellido: this.apellido,
-      //numeroPedido: this.numPedido,
+      telefono: this.whatsapp,
+      nombre: this.nombre,
+      apellido: this.apellido,
+      numeroPedido: this.numPedido,
       page: this.page - 1,
       page_size: this.pageSize,
       //inicio: this.inicio,
       //fin: this.transformarFecha(this.fin),
-      //estado: ['Pendiente de entrega'],
-      //canal: 'SuperBarato Local'
+      estado: ['Pendiente de entrega'],
+      canal: 'Super Barato'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
-      this.listaSuperBarato = info.info;
+      this.listaSuperBaratos = info.info;
       this.whatsapp = ''
       this.nombre = ''
       this.apellido = ''
@@ -276,11 +271,35 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
     });
   }
 
-  obtenerDatosSuperBarato(modal, id): void {
+  obtenerSuperBarato(modal, id): void {
     this.obtenerProvincias();
     this.obtenerListaProductos();
     this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
     this.superBaratoService.obtenerSuperBarato(id).subscribe((info) => {
+      if (info.tipoPago === 'rimpePopular') {
+        this.mostrarInputComprobante = true;
+      } else if (info.tipoPago === 'facturaElectronica') {
+        this.mostrarInputComprobante = false;
+      } else {
+        this.mostrarInputComprobante = false;
+      }
+      if (info.formaPago === 'transferencia') {
+        this.mostrarInputTransaccion = true;
+        this.mostrarCargarArchivo = true;
+        this.mostrarInputCobro = false;
+
+      } else if (info.formaPago === 'efectivo') {
+        this.mostrarInputTransaccion = false;
+        this.mostrarCargarArchivo = false;
+        this.mostrarInputCobro = true;
+      } else {
+        this.mostrarInputTransaccion = false;
+        this.mostrarCargarArchivo = false;
+        this.mostrarInputCobro = false;
+        this.mostrarCargarArchivoCredito = false;
+        this.mostrarInputTransaccionCredito = false;
+        this.formasPago = [];
+      }
 
       this.provincia = info.facturacion.provincia;
       this.obtenerCiudad();
@@ -295,11 +314,17 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
       info.articulos.map((item): void => {
         this.agregarItem();
       });
+
       info.productoExtra.map((item): void => {
         this.agregarItemExtra();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
-
+      if (modal._declarationTContainer.localNames[0] === 'facturacionModal') {
+        this.notaPedido.get('formaPago').setValidators([Validators.required]);
+        this.notaPedido.get('formaPago').updateValueAndValidity();
+        this.notaPedido.get('tipoPago').setValidators([Validators.required]);
+        this.notaPedido.get('tipoPago').updateValueAndValidity();
+      }
       this.calcular()
     });
   }
@@ -376,6 +401,7 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
     const detalles = this.detallesArray.controls;
     const detallesProductoExtra = this.detallesArrayProductoExtra.controls;
     let totalProdExtra = 0;
+    let totalExtra = 0;
     let total = 0;
     let subtotalPedido = 0;
     detalles.forEach((item, index) => {
@@ -398,10 +424,11 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
       totalProdExtra += parseFloat(detallesProductoExtra[index].get('precio').value);
     });
     total += this.notaPedido.get('envioTotal').value;
-    subtotalPedido = total / this.parametroIva;
-    this.totalIva = (total - subtotalPedido).toFixed(2);
+    totalExtra= total + totalProdExtra;
+    subtotalPedido = totalExtra / this.parametroIva;
+    this.totalIva = (totalExtra - subtotalPedido).toFixed(2);
     this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
-    this.notaPedido.get('total').setValue((total + totalProdExtra).toFixed(2));
+    this.notaPedido.get('total').setValue(totalExtra.toFixed(2));
   }
 
 
@@ -409,7 +436,7 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
-    console.log(this.notaPedido)
+
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
@@ -418,14 +445,12 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
       const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
       facturaFisicaLlaves.map((llaves, index) => {
-        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago' && llaves !== 'facturacion' && llaves !== 'articulos') {
+        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago' && llaves !== 'facturacion' && llaves !== 'articulos' && llaves !== 'productoExtra') {
           this.archivo.delete(llaves);
           this.archivo.append(llaves, facturaFisicaValores[index]);
         }
       });
       this.archivo.append('estado', 'Entregado');
-      console.log(this.formasPago)
-      console.log(JSON.stringify(this.formasPago))
       this.archivo.append('formaPago', JSON.stringify(this.formasPago));
       if (this.mostrarInputCobro) {
         if (Number(this.totalPagar) !== Number(this.notaPedido.value.totalCobroEfectivo)) {
@@ -445,9 +470,6 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
         }, error => this.toaster.open(error, {type: 'danger'}))
       }
 
-      this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
-      });
-
     }
   }
 
@@ -464,7 +486,7 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
 
       this.superBaratoService.actualizarSuperBarato(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
-        this.obtenerListaProductos();
+        this.obtenerSuperBaratos();
         this.verificarSuperBarato = true;
       }, error => this.toaster.open(error, {type: 'danger'}))
     }
@@ -680,13 +702,4 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
     }
   }
 
-  calculoComision(estado, total) {
-    let variable2;
-    if (estado === 'Entregado') {
-      variable2 = total/this.parametroIva;
-      return (variable2 * this.comision).toFixed(2);
-    }else{
-      return '--';
-    }
-  }
 }

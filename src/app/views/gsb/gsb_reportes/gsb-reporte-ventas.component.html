@@ -294,8 +294,74 @@
 
                   </div>
                 </div>
+                <!-- Address and Contact ends -->
+                <hr class="invoice-spacing"/>
+                <!-- Product Details starts -->
                 <div class="card-body invoice-padding">
+                  <div formArrayName="productoExtra">
+                    <form class="source-item">
+                      <div data-repeater-list="group-a"
+                           *ngFor="let detalle of notaPedido.get('productoExtra')['controls']; let i = index;">
+                        <div class="row" [formGroup]="detalle">
+                          <div class="repeater-wrapper" data-repeater-item>
+                            <div class="row">
+                              <div class="col-12 d-flex product-details-border position-relative pr-0">
+                                <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                  <div class="col-lg-4 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Enlace del producto
+                                    </p>
+                                    <input class="form-control" type="text"
+                                           formControlName="urlProducto" disabled>
 
+                                  </div>
+                                  <div class="col-lg-3 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Cantidad
+                                    </p>
+                                    <input type="text" class="form-control"
+                                           formControlName="cantidad"
+                                           disabled
+                                    />
+                                    <!--<div *ngIf="detalle.controls.cantidad.errors"
+                                         class="invalid-feedback"
+                                         style="display: block;">
+                                      <div *ngIf="detalle.controls.cantidad.errors.required">
+                                        Requerido
+                                      </div>
+                                      <div *ngIf="detalle.controls.cantidad.errors.max">
+                                        Fuera de stock
+                                      </div>
+                                      <div *ngIf="detalle.controls.cantidad.errors.min">
+                                        Ingrese minimo 1
+                                      </div>
+                                    </div>-->
+                                  </div>
+
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Precio
+                                    </p>
+                                    <input type="text" class="form-control"
+                                           formControlName="valorUnitario"
+                                           disabled
+                                    />
+                                  </div>
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Total
+                                    </p>
+                                    <label>{{ detalle.controls.precio.value }}</label>
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
                 </div>
                 <!-- Product Details ends -->
                 <hr class="invoice-spacing"/>

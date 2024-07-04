@@ -14,6 +14,7 @@ import {GsbProductosEditarComponent} from "./inventario/productos-editar/gsb-pro
 import {GsbGenerarPedidoComponent} from "./gsb_pedido/gsb-generar-pedido.component";
 import {GsbReporteVentasComponent} from "./gsb_reportes/gsb-reporte-ventas.component";
 import {QRCodeModule} from "angularx-qrcode";
+import {SuperbaratoComponent} from "./gsb_superbarato/superbarato.component";
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import {QRCodeModule} from "angularx-qrcode";
     GsbProductosListarComponent,
     GsbProductosEditarComponent,
     GsbGenerarPedidoComponent,
-    GsbReporteVentasComponent
+    GsbReporteVentasComponent,
+    SuperbaratoComponent
   ],
   imports: [
     CommonModule,
