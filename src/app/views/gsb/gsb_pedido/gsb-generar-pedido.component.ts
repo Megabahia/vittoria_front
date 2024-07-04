@@ -144,7 +144,7 @@ export class GsbGenerarPedidoComponent implements OnInit, AfterViewInit {
         comprobantePago: ['', []],
       }),
       articulos: this.formBuilder.array([], Validators.required),
-      productoExtra: this.formBuilder.array([], Validators.required),
+      productoExtra: this.formBuilder.array([]),
       total: ['', [Validators.required]],
       envioTotal: [0, [Validators.required]],
       numeroPedido: [this.generarID(), [Validators.required]],
