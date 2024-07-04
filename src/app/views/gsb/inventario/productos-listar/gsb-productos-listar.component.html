@@ -97,7 +97,8 @@
               </th>-->
               <th>Código de barras</th>
               <!--<th>URL</th>-->
-              <th>Canal</th>
+              <th>Canal orgine</th>
+              <th>Canales asignados</th>
               <th>Nombre</th>
               <th>Categoría</th>
               <th>Subcategoría</th>
@@ -124,7 +125,11 @@
                 </button>
               </td>-->
               <td>{{ producto.canal }}</td>
-
+              <td>
+                <ul *ngFor="let data of producto.stockVirtual">
+                  <li *ngIf="data.estado === true">{{data.canal}}</li>
+                </ul>
+              </td>
               <td>{{ producto.nombre | slice:0:30 }}</td>
               <td>{{ producto.categoria }}</td>
               <td>{{ producto.subCategoria }}</td>
