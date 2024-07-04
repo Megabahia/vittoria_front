@@ -21,6 +21,13 @@
                   </div>
 
               </div>
+
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="text-danger">Nuevo Stock</label>
+                <input type="number" class="form-control" (change)="sumarStockProducto($event)" min="0">
+              </div>
             </div>
             <div class="row" *ngIf="producto.canal != ''">
               <h4 class="mx-2 my-1 text-warning font-weight-bold">Información requerida</h4>
@@ -54,7 +61,7 @@
                   <div class="form-group">
                     <label>Stock real</label>
                     <input type="text" class="form-control" name="stock" formControlName="stock"
-                           [(ngModel)]="producto.stock">
+                           [(ngModel)]="producto.stock" disabled>
                     <div *ngIf="submittedProductoForm && fp.stock.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.stock.errors.required">Stock es requerido</div>

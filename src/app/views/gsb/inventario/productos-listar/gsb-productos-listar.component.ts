@@ -59,7 +59,7 @@ export class GsbProductosListarComponent implements OnInit, AfterViewInit {
         page_size: this.pageSize,
         nombre: this.nombreBuscar,
         codigoBarras: this.codigoBarras,
-        canalProducto: this.canalSeleccionado
+        canalProducto: 'superbarato.megadescuento.com'
       }
     ).subscribe((info) => {
       this.listaProductos = info.info;

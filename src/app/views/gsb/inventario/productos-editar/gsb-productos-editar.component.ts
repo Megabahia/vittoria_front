@@ -64,7 +64,7 @@ export class GsbProductosEditarComponent implements OnInit {
   imageUrlPrincipal: string | ArrayBuffer | null = null;
   imagenPrinciplSeleccionada: File | null = null;
   disabledSelectCanal = false;
-  stockInicial = 1;
+  stockInicial = 0;
 
   constructor(
     private categoriasService: CategoriasService,
@@ -108,7 +108,7 @@ export class GsbProductosEditarComponent implements OnInit {
       descripcion: [''],
       codigoBarras: [''],
       refil: [0],
-      stock: ['', [Validators.required, Validators.min(this.stockInicial), ValidacionesPropias.numeroEntero]],
+      stock: [this.stockInicial],
       parametrizacion: [null, []],
       costoCompra: [''],
       precioVentaA: [''],
@@ -154,7 +154,6 @@ export class GsbProductosEditarComponent implements OnInit {
       const producto = info;
       this.imagenes = info.imagenes;
       delete producto.imagenes;
-      this.stockInicial = info.stock;
       this.producto = producto;
       this.habilitarEnvio = !producto.envioNivelNacional;
       this.imageUrlPrincipal = info.imagen_principal;
@@ -239,6 +238,13 @@ export class GsbProductosEditarComponent implements OnInit {
         return item;
       }
     }));*/
+    if (this.stockInicial < 0) {
+      this.toaster.open('Ingrese un valor válido', {type: 'danger'});
+      return;
+    }
+
+    this.producto.stock += this.stockInicial;
+
     const llaves = Object.keys(this.producto);
     const valores = Object.values(this.producto);
     this.datosProducto = new FormData();
@@ -285,6 +291,7 @@ export class GsbProductosEditarComponent implements OnInit {
     this.mostrarSpinner = true;
     this.datosProducto.delete('stockVirtual');
     this.productosService.actualizarProducto(this.datosProducto, this.idProducto).subscribe((info) => {
+
         this.mensaje = 'Producto actualizado';
         this.abrirModal(this.aviso);
         this.messageEvent.emit('lista');
@@ -462,5 +469,10 @@ export class GsbProductosEditarComponent implements OnInit {
     } else {
       console.log('No hay datos de usuario en localStorage');
     }
+
+  }
+
+  sumarStockProducto(e) {
+    this.stockInicial = Number(e.target.value);
   }
 }
