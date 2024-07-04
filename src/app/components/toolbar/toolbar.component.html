@@ -490,7 +490,6 @@
           </li>
         </ul>
       </li>
-
       <li class="nav-item" *ngIf="acciones.ADM.LEER">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
@@ -524,6 +523,41 @@
                data-placement="auto" title="Generador de pedidos">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Generador de pedidos</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item" *ngIf="acciones.ADM.LEER">
+        <a class="d-flex align-items-center">
+          <i data-feather="file-text"></i>
+          <span class="menu-title text-truncate" data-i18n="Invoice">GSB Gestión de Super Barato</span></a>
+        <ul class="menu-content ng-star-inserted">
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['gsb/inventario/list']" data-toggle="tooltip"
+               data-placement="auto" title="Super Barato">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Inventario</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['gsb/pedido']" data-toggle="tooltip"
+               data-placement="auto" title="Pedido Super Barato">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Pedido Super Barato</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['gsb/superbarato']" data-toggle="tooltip"
+               data-placement="auto" title="Super Barato">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Despachar pedido Super Barato</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['gsb/reportes']" data-toggle="tooltip"
+               data-placement="auto" title="Reportes Super Barato">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Reportes Super Barato</span>
             </a>
           </li>
         </ul>
