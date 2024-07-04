@@ -17,27 +17,30 @@ import {QRCodeModule} from "angularx-qrcode";
 import {SuperbaratoComponent} from "./gsb_superbarato/superbarato.component";
 
 @NgModule({
-  declarations: [
-    GsbComponent,
-    GsbProductosListarComponent,
-    GsbProductosEditarComponent,
-    GsbGenerarPedidoComponent,
-    GsbReporteVentasComponent,
-    SuperbaratoComponent
-  ],
-  imports: [
-    CommonModule,
-    GsbRoutingModule,
-    NgbModule,
-    SharedModule,
-    FormsModule,
-    ChartsModule,
-    ReactiveFormsModule,
-    FlatpickrModule.forRoot(),
-    NgxDropzoneModule,
-    GdeModule,
-    QRCodeModule
-  ]
+    declarations: [
+        GsbComponent,
+        GsbProductosListarComponent,
+        GsbProductosEditarComponent,
+        GsbGenerarPedidoComponent,
+        GsbReporteVentasComponent,
+        SuperbaratoComponent
+    ],
+    exports: [
+        GsbProductosListarComponent
+    ],
+    imports: [
+        CommonModule,
+        GsbRoutingModule,
+        NgbModule,
+        SharedModule,
+        FormsModule,
+        ChartsModule,
+        ReactiveFormsModule,
+        FlatpickrModule.forRoot(),
+        NgxDropzoneModule,
+        GdeModule,
+        QRCodeModule
+    ]
 })
 export class GsbModule {
 }

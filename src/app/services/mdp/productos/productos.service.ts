@@ -97,10 +97,13 @@ export class ProductosService {
       precioLandingOferta: 0,
       idPadre: '',
       stockVirtual: [
-        {canal: 'vittoria-test.netlify.app', estado: false}, {
-        canal: 'maxidescuento.megadescuento.com',
-        estado: false
-      }, {
+        {
+          canal: 'superbarato.megadescuento.com', estado: false
+        }, {
+          canal: 'vittoria-test.netlify.app', estado: false
+        }, {
+          canal: 'maxidescuento.megadescuento.com', estado: false
+        }, {
         canal: 'megabahia.megadescuento.com', estado: false
       }, {
         canal: 'tiendamulticompras.megadescuento.com',

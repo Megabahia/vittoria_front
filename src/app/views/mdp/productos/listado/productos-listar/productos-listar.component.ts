@@ -88,7 +88,6 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
       this.obtenerListaProductos();
     }, error => window.alert(error));
   }
-
   copiarURL(inputTextValue): void {
     const selectBox = document.createElement('textarea');
     selectBox.style.position = 'fixed';
