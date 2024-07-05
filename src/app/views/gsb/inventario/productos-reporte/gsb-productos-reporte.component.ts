@@ -114,6 +114,7 @@ export class GsbProductosReporteComponent implements OnInit, AfterViewInit {
       link.href = downloadURL;
       link.download = 'inventarioSuperBarato.xlsx';
       link.click();
+
     }, (error) => {
       this.enviando = false;
     });
