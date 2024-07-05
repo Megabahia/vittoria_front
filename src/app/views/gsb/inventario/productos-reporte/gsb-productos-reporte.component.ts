@@ -6,9 +6,9 @@ import {SuperBaratoService} from "../../../../services/gsb/superbarato/super-bar
 
 @Component({
   selector: 'app-gsb-productos-listar',
-  templateUrl: './gsb-productos-listar.component.html'
+  templateUrl: './gsb-productos-reporte.component.html'
 })
-export class GsbProductosListarComponent implements OnInit, AfterViewInit {
+export class GsbProductosReporteComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   menu;
   vista = 'lista';
@@ -22,11 +22,12 @@ export class GsbProductosListarComponent implements OnInit, AfterViewInit {
   codigoBarras: string;
   enviando = false;
   canalOpciones;
-  canalSeleccionado = '';
-  disabledSelectCanal= false;
+  canalSeleccionado = 'superbarato.megadescuento.com';
+  canalSeleccionadoAsignado = '';
+  disabledSelectCanal = false;
+
   constructor(
     private superBaratoService: SuperBaratoService,
-    private modalService: NgbModal,
     private paramServiceAdm: AdmParamService,
   ) {
     this.obtenerListaParametros();
@@ -59,23 +60,13 @@ export class GsbProductosListarComponent implements OnInit, AfterViewInit {
         page_size: this.pageSize,
         nombre: this.nombreBuscar,
         codigoBarras: this.codigoBarras,
-        canalProducto: 'superbarato.megadescuento.com'
+        canalProducto: 'superbarato.megadescuento.com',
+        canalStockVirtual: this.canalSeleccionadoAsignado
       }
     ).subscribe((info) => {
       this.listaProductos = info.info;
       this.collectionSize = info.cont;
     });
-  }
-
-  editarProducto(id): void {
-    this.idProducto = id;
-    this.vista = 'editar';
-  }
-
-
-  receiveMessage($event): void {
-    this.obtenerListaProductos();
-    this.vista = $event;
   }
 
   async obtenerListaParametros(): Promise<void> {
@@ -85,6 +76,15 @@ export class GsbProductosListarComponent implements OnInit, AfterViewInit {
       });
   }
 
+  onSelectChange(e: any): void {
+    const selectValue = e.target.value;
+    this.canalSeleccionado = selectValue;
+  }
+
+  onSelectChangeAsignados(e: any): void {
+    const selectValue = e.target.value;
+    this.canalSeleccionadoAsignado = selectValue;
+  }
 
   obtenerUsuarioActual(): void {
     const usuarioJSON = localStorage.getItem('currentUser');
@@ -98,5 +98,24 @@ export class GsbProductosListarComponent implements OnInit, AfterViewInit {
     } else {
       console.log('No hay datos de usuario en localStorage');
     }
+  }
+
+  reporteProductosStock(): void {
+    this.enviando = true;
+    this.superBaratoService.exportar({
+      nombre: this.nombreBuscar,
+      codigoBarras: this.codigoBarras,
+      canalProducto: 'superbarato.megadescuento.com',
+      canalStockVirtual: this.canalSeleccionadoAsignado
+    }).subscribe((data) => {
+      this.enviando = false;
+      const downloadURL = window.URL.createObjectURL(data);
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = 'inventarioSuperBarato.xlsx';
+      link.click();
+    }, (error) => {
+      this.enviando = false;
+    });
   }
 }

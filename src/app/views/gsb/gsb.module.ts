@@ -15,32 +15,34 @@ import {GsbGenerarPedidoComponent} from "./gsb_pedido/gsb-generar-pedido.compone
 import {GsbReporteVentasComponent} from "./gsb_reportes/gsb-reporte-ventas.component";
 import {QRCodeModule} from "angularx-qrcode";
 import {SuperbaratoComponent} from "./gsb_superbarato/superbarato.component";
+import {GsbProductosReporteComponent} from "./inventario/productos-reporte/gsb-productos-reporte.component";
 
 @NgModule({
-    declarations: [
-        GsbComponent,
-        GsbProductosListarComponent,
-        GsbProductosEditarComponent,
-        GsbGenerarPedidoComponent,
-        GsbReporteVentasComponent,
-        SuperbaratoComponent
-    ],
-    exports: [
-        GsbProductosListarComponent
-    ],
-    imports: [
-        CommonModule,
-        GsbRoutingModule,
-        NgbModule,
-        SharedModule,
-        FormsModule,
-        ChartsModule,
-        ReactiveFormsModule,
-        FlatpickrModule.forRoot(),
-        NgxDropzoneModule,
-        GdeModule,
-        QRCodeModule
-    ]
+  declarations: [
+    GsbComponent,
+    GsbProductosListarComponent,
+    GsbProductosEditarComponent,
+    GsbGenerarPedidoComponent,
+    GsbReporteVentasComponent,
+    SuperbaratoComponent,
+    GsbProductosReporteComponent
+  ],
+  exports: [
+    GsbProductosListarComponent
+  ],
+  imports: [
+    CommonModule,
+    GsbRoutingModule,
+    NgbModule,
+    SharedModule,
+    FormsModule,
+    ChartsModule,
+    ReactiveFormsModule,
+    FlatpickrModule.forRoot(),
+    NgxDropzoneModule,
+    GdeModule,
+    QRCodeModule
+  ]
 })
 export class GsbModule {
 }

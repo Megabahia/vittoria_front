@@ -21,12 +21,31 @@
                   </div>
 
               </div>
-
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="text-danger">Nuevo Stock</label>
-                <input type="number" class="form-control" (change)="sumarStockProducto($event)" min="0">
+            <div class="row p-2">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="text-danger">Ingreso de Stock</label>
+                  <input type="number" class="form-control" (change)="sumarStockProducto($event)" min="0">
+                </div>
+              </div>
+              <div class="col-md-4 col-12">
+                <div class="form-group">
+                  <label>Stock real</label>
+                  <input type="text" class="form-control" name="stock" formControlName="stock"
+                         [(ngModel)]="producto.stock" disabled>
+                </div>
+              </div>
+              <div class="col-12">
+                <button (click)="guardarProducto()"
+                        class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light"
+                        [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+                            <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                                  aria-hidden="true"></span>
+                  Guardar
+                </button>
+                <a (click)="volver()"
+                   class="btn btn-secondary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Cancelar</a>
               </div>
             </div>
             <div class="row" *ngIf="producto.canal != ''">
@@ -57,19 +76,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-4 col-12">
-                  <div class="form-group">
-                    <label>Stock real</label>
-                    <input type="text" class="form-control" name="stock" formControlName="stock"
-                           [(ngModel)]="producto.stock" disabled>
-                    <div *ngIf="submittedProductoForm && fp.stock.errors" class="invalid-feedback"
-                         style="display: block;">
-                      <div *ngIf="fp.stock.errors.required">Stock es requerido</div>
-                      <div *ngIf="fp.stock.errors.min">Stock minimo {{stockInicial}} (Stock inicial)</div>
-                      <div *ngIf="fp.stock.errors.numeroInvalid">Ingrese solo numeros enteros</div>
-                    </div>
-                  </div>
-                </div>
+
                 <div class="col-md-4 col-12">
                   <div class="form-group">
                     <label>Costo de compra</label>
@@ -626,20 +633,6 @@
             </tr>
             </tbody>
           </table>
-        </div>
-        <hr/>
-        <div class="row p-2">
-          <div class="col-12">
-            <button (click)="guardarProducto()"
-                    class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light"
-                    [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
-                            <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
-                                  aria-hidden="true"></span>
-              Guardar
-            </button>
-            <a (click)="volver()"
-               class="btn btn-secondary mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-float waves-light">Cancelar</a>
-          </div>
         </div>
 
       </div>

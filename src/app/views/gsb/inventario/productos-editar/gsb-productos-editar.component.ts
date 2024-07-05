@@ -288,25 +288,28 @@ export class GsbProductosEditarComponent implements OnInit {
       this.datosProducto.append('imagenes[' + pos + ']id', pos.toString());
       this.datosProducto.append('imagenes[' + pos + ']imagen', valor);
     });*/
-    this.mostrarSpinner = true;
-    this.datosProducto.delete('stockVirtual');
-    this.productosService.actualizarProducto(this.datosProducto, this.idProducto).subscribe((info) => {
 
-        this.mensaje = 'Producto actualizado';
-        this.abrirModal(this.aviso);
-        this.messageEvent.emit('lista');
-        this.mostrarSpinner = false;
-      },
-      (error) => {
-        let errores = Object.values(error);
-        let llaves = Object.keys(error);
-        this.mensaje = '';
-        errores.map((infoErrores, index) => {
-          this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
+    if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
+      this.datosProducto.delete('stockVirtual');
+      this.productosService.actualizarProducto(this.datosProducto, this.idProducto).subscribe((info) => {
+
+          this.mensaje = 'Producto actualizado';
+          this.abrirModal(this.aviso);
+          this.messageEvent.emit('lista');
+          this.mostrarSpinner = false;
+        },
+        (error) => {
+          let errores = Object.values(error);
+          let llaves = Object.keys(error);
+          this.mensaje = '';
+          errores.map((infoErrores, index) => {
+            this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
+          });
+          this.abrirModal(this.aviso);
+          this.mostrarSpinner = false;
         });
-        this.abrirModal(this.aviso);
-        this.mostrarSpinner = false;
-      });
+    }
   }
 
   eliminarImagenModal(id): void {

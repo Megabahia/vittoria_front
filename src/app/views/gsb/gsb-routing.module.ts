@@ -6,6 +6,7 @@ import {GsbProductosListarComponent} from "./inventario/productos-listar/gsb-pro
 import {GsbGenerarPedidoComponent} from "./gsb_pedido/gsb-generar-pedido.component";
 import {GsbReporteVentasComponent} from "./gsb_reportes/gsb-reporte-ventas.component";
 import {SuperbaratoComponent} from "./gsb_superbarato/superbarato.component";
+import {GsbProductosReporteComponent} from "./inventario/productos-reporte/gsb-productos-reporte.component";
 
 const routes: Routes = [{
   path: '', component: GsbComponent, children: [
@@ -14,6 +15,9 @@ const routes: Routes = [{
         {path: '', redirectTo: 'list', pathMatch: 'full'},
         {
           path: 'list', component: GsbProductosListarComponent, canActivate: [AuthGuard],
+        },
+        {
+          path: 'reporte', component: GsbProductosReporteComponent, canActivate: [AuthGuard],
         }
       ],
     },

@@ -97,8 +97,8 @@
               </th>-->
               <th>Código de barras</th>
               <!--<th>URL</th>-->
-              <th>Canal orgine</th>
-              <th>Canales asignados</th>
+              <th>Canal (Dueño de stock real)</th>
+              <th>Canales asignados stock virtual</th>
               <th>Nombre</th>
               <th>Categoría</th>
               <th>Subcategoría</th>
@@ -161,20 +161,7 @@
     </div>
   </div>
 </div>
-<ng-template #contenido let-modal>
-  <div class="modal-header ">
-    <h4 class="modal-title ">Mensaje</h4>
-    <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-      <span aria-hidden="true ">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body ">
-    <p>Confirma eliminar</p>
-  </div>
-  <div class="modal-footer ">
-    <button type="button " class="btn btn-light " (click)="cerrarModal()">SI</button>
-  </div>
-</ng-template>
+
 <app-gsp-productos-editar *ngIf="vista=='editar'" [idProducto]="idProducto"
                       (messageEvent)="receiveMessage($event)"></app-gsp-productos-editar>
 

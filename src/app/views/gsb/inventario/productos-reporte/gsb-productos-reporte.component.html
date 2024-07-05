@@ -6,7 +6,7 @@
     </div>
     <div class="content-body">
       <div class="card">
-        <h5 class="card-header">Administrar stock virtual</h5>
+        <h5 class="card-header">Reporte de inventario de Super Barato</h5>
         <div class="card-body">
           <div class="row">
             <div class="col-md-4">
@@ -17,23 +17,27 @@
               <input class="form-control form-control-sm" type="text" placeholder="Nombre producto"
                      [(ngModel)]="nombreBuscar">
             </div>
-            <!--<div class="col-md-4">
-              <button class="btn btn-primary" (click)="obtenerListaProductos()">
-                <i-feather name='search' class="edit-user"></i-feather>
-              </button>
-            </div>-->
           </div>
           <div class="row mt-2">
             <div class="col-md-4">
+              <label class="form-label">Canal de origen:</label>
+
               <select class="form-control select2" name="canal" (change)="onSelectChange($event)"
-                      [(ngModel)]="canalSeleccionado">
+                      [(ngModel)]="canalSeleccionado" disabled>
                 <option value="" selected>- Seleccione canal a buscar-</option>
                 <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
-
               </select>
             </div>
             <div class="col-md-4">
-              <button class="btn btn-primary" (click)="obtenerListaProductos()">
+              <label class="form-label">Canales que me asignaron:</label>
+              <select class="form-control select2" name="canal" (change)="onSelectChangeAsignados($event)"
+                      [(ngModel)]="canalSeleccionadoAsignado">
+                <option value="" selected>- Seleccione canal-</option>
+                <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-primary mt-2" (click)="obtenerListaProductos()">
                 <i-feather name='search' class="edit-user"></i-feather>
               </button>
             </div>
@@ -60,11 +64,6 @@
                                   aria-hidden="true"></span>
               Exportar a Excel
             </button>
-            <a (click)="crearProducto()" class="btn btn-icon btn-primary">
-              <i data-feather="plus" class="mr-25"></i>
-              <span>Añadir</span>
-            </a>
-
           </div>
         </div>
         <div class="modal modal-slide-in new-user-modal fade" id="addcampo">
@@ -103,73 +102,62 @@
           <table class="user-list-table table table-striped">
             <thead class="thead-light">
             <tr>
-              <th>
+              <!--<th>
                 <div class="custom-control custom-checkbox">
                   <input type="checkbox" class="custom-control-input" id="customCheck2"/>
                   <label class="custom-control-label" for="customCheck2"></label>
                 </div>
-              </th>
-              <th>Canal (Dueño de stock real)</th>
+              </th>-->
               <th>Código de barras</th>
-              <th>URL</th>
+              <!--<th>URL</th>-->
+              <th>Canal (Dueño de stock real)</th>
+              <th>Canales asignados stock virtual</th>
+              <th>Nombre</th>
               <th>Categoría</th>
               <th>Subcategoría</th>
-              <th>Nombre</th>
-              <th>Imagen</th>
-              <th>Stock real</th>
-              <th>Canales asignados stock virtual</th>
+              <th>Producto padre</th>
+              <th>Stock</th>
               <th>Estado</th>
-              <th>Acciones</th>
             </tr>
             </thead>
 
             <tbody data-repeater-list="invoice">
             <tr data-repeater-item *ngFor="let producto of listaProductos; let i = index">
-              <td>
+              <!--<td>
                 <div class="custom-control custom-checkbox">
                   <input type="checkbox" class="custom-control-input" id="customCheck2{{i}}"/>
                   <label class="custom-control-label" for="customCheck2{{i}}"></label>
                 </div>
-              </td>
-              <td>{{ producto.canal | shorten }}</td>
+              </td>-->
               <td>{{ producto.codigoBarras }}</td>
-              <td>
+              <!--<td>
                 <button class="btn btn-outline-primary"
                         (click)="copiarURL(producto.id)" rippleEffect
                 >Copiar Url
                 </button>
-              </td>
-              <td>{{ producto.categoria }}</td>
-              <td>{{ producto.subCategoria }}</td>
-              <td>{{ producto.nombre | slice:0:30 }}</td>
+              </td>-->
+              <td>{{ producto.canal }}</td>
               <td>
-                <img
-                  src="{{ producto.imagenes.length > 0 ? producto.imagenes[0].imagen : './assets/images/no_existe.png'}}"
-                  alt="Imagen del producto" width="70" height="70"
-                  style="width: 100px;height: 100px;object-fit: cover;">
-              </td>
-              <td>{{ producto.stock }} (Unidades)</td>
-              <td>
-                <ul *ngFor="let stockVirtual of producto?.stockVirtual">
-                  <li *ngIf="stockVirtual.estado===true">{{ stockVirtual.canal }}</li>
+                <ul *ngFor="let data of producto.stockVirtual">
+                  <li *ngIf="data.estado === true">{{ data.canal }}</li>
                 </ul>
               </td>
+              <td>{{ producto.nombre | slice:0:30 }}</td>
+              <td>{{ producto.categoria }}</td>
+              <td>{{ producto.subCategoria }}</td>
+              <td>{{ producto.idPadre }}</td>
+              <td>{{ producto.stock }} (Unidades)</td>
               <td><span
                 class="text-capitalize badge {{producto.estado=='Activo' ? 'badge-light-success': 'badge-secondary' }} badge-pill">{{ producto.estado }}</span>
               </td>
-              <td>
-                <!--<a (click)="editarProducto(producto.id)">
+              <!--<td>
+                <a (click)="editarProducto(producto.id)">
                   <i-feather name='edit-2'></i-feather>
                 </a>
                 <a (click)="abrirModal(contenido,producto.id)" data-repeater-delete>
                   <i-feather name='trash'></i-feather>
-                </a>-->
-                <a
-                  (click)="abrirModalStockVirtual(stockVirtual,producto.id,producto.codigoBarras,producto.canal, producto.stockVirtual)"
-                  data-repeater-delete>
-                  <i-feather name='layers'></i-feather>
                 </a>
-              </td>
+              </td>-->
             </tr>
             </tbody>
           </table>
@@ -178,71 +166,7 @@
                         [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
 
         <hr/>
-
-
       </div>
-
     </div>
   </div>
 </div>
-<ng-template #contenido let-modal>
-  <div class="modal-header ">
-    <h4 class="modal-title ">Mensaje</h4>
-    <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-      <span aria-hidden="true ">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body ">
-    <p>Confirma eliminar</p>
-  </div>
-  <div class="modal-footer ">
-    <button type="button " class="btn btn-light " (click)="cerrarModal()">SI</button>
-  </div>
-</ng-template>
-<ng-template #stockVirtual let-modal>
-  <div class="modal-header ">
-    <h4 class="modal-title ">Asignar stock virtual</h4>
-    <button type="button" class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <form [formGroup]="canalStockVirtual">
-      <div formArrayName="canales">
-        <div class="custom-control custom-checkbox form-check d-flex justify-content-start align-items-center"
-             *ngFor="let opcion of canalStockVirtual.get('canales')['controls']; let i = index">
-          <ng-container [formGroup]="opcion">
-            <div *ngIf="seleccionadoDefault===i; else enableCheck">
-                <input type="checkbox" class="custom-control-input"
-                       id="canalesStockVirtual-{{i}}"
-                       (change)="actualizarSeleccionados($event, opcion)"
-                       formControlName="estado"
-                       checked
-                       disabled
-                />
-              <label class="custom-control-label"
-                     for="canalesStockVirtual-{{i}}">{{ opcion.controls.canal.value }}</label>
-            </div>
-            <ng-template #enableCheck>
-              <input type="checkbox" class="custom-control-input"
-                     id="canalesStockVirtual-{{i}}"
-                     (change)="actualizarSeleccionados($event, opcion)"
-                     formControlName="estado"
-              />
-              <label class="custom-control-label"
-                     for="canalesStockVirtual-{{i}}">{{ opcion.controls.canal.value }}</label>
-            </ng-template>
-
-          </ng-container>
-        </div>
-      </div>
-    </form>
-  </div>
-  <div class="modal-footer ">
-    <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
-    <button type="button" class="btn btn-primary" (click)="actualizarProducto()">Guardar</button>
-  </div>
-</ng-template>
-<app-productos-editar *ngIf="vista=='editar'" [idProducto]="idProducto"
-                      (messageEvent)="receiveMessage($event)"></app-productos-editar>
-
