@@ -151,6 +151,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       this.obtenerContactos();
     });
   }
+
   get notaPedidoForm() {
     return this.notaPedido['controls'];
   }
@@ -247,8 +248,8 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
 
 
   obtenerDatosContacto(modal, id): void {
-    this.notaPedido.reset();
     this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
+    this.notaPedido.reset();
 
     this.contactoService.obtenerContacto(id).subscribe((info) => {
       this.horaPedido = this.extraerHora(info.created_at);
@@ -260,8 +261,8 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       });
 
       this.notaPedido.get('created_at').setValue(info.created_at);
+      this.notaPedido.get('numeroPedido').setValue(this.generarID());
       this.notaPedido.get('metodoPago').setValue(info.metodoPago);
-      this.notaPedido.get('canal').setValue(info.created_at);
       this.notaPedido.get('facturacion').get('pais').setValue(this.pais);
       this.notaPedido.get('facturacion').get('nombres').setValue(info.nombres);
       this.notaPedido.get('facturacion').get('apellidos').setValue(info.apellidos);
@@ -287,6 +288,8 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     if (confirm('Esta seguro de guardar los datos') === true) {
       this.superBaratoService.crearNuevoSuperBarato(this.notaPedido.value).subscribe((info) => {
           this.modalService.dismissAll();
+          this.notaPedido.reset();
+
           this.notaPedido.patchValue({...info, id: this.idSuperBarato});
           this.obtenerDatosSuperBarato();
 
@@ -412,7 +415,6 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
 
   generarID(): string {
     const numeroAleatorio = Math.floor(Math.random() * 1000000);
-
     return numeroAleatorio.toString().padStart(8, '0');
   }
 
