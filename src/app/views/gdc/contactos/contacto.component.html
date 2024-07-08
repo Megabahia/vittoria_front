@@ -594,7 +594,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-md-6 mb-2">
+                  <div class="col-md-4 mb-2">
                     <div class="row">
                       <div class="col-md-12 col-12">
                         <label for="formaPago">Forma de pago</label>
@@ -617,46 +617,102 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-6 col-12">
+                  <div class="col-md-8 col-12">
                     <div class="row">
-                      <div class="col-md-5 col-12" *ngIf="mostrarCargarArchivo">
+                      <div class="col-md-3 col-12" *ngIf="mostrarCargarArchivo">
                         <label>Comprobante de pago (Transferencia)</label>
                         <input class="form-control-file" type="file" (change)="onFileSelected($event)">
+
                       </div>
-                      <div class="col-md-5 col-12" *ngIf="mostrarInputTransaccion">
+
+                      <div class="col-md-3 col-12" *ngIf="mostrarInputTransaccion">
                         <div class="form-group">
                           <label for="numTransaccionTransferencia">Número de transacción (Transferencia)</label>
                           <input class="form-control" type="text" id="numTransaccionTransferencia"
                                  formControlName="numTransaccionTransferencia"/>
                         </div>
+                        <div *ngIf="notaPedidoForm.numTransaccionTransferencia.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="notaPedidoForm.numTransaccionTransferencia.errors.required">
+                            Requerido
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 col-12" *ngIf="mostrarInputTransaccion">
+                        <div class="form-group">
+                          <label for="montoTransferencia">Monto de transferencia</label>
+                          <input class="form-control" type="text" id="montoTransferencia"
+                                 formControlName="montoTransferencia" (change)="calcularTotalFormaPago()"/>
+                        </div>
+                        <div *ngIf="notaPedidoForm.montoTransferencia.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="notaPedidoForm.montoTransferencia.errors.required">
+                            Requerido
+                          </div>
+
+                        </div>
                       </div>
                       <div class="col-md-2 col-12" *ngIf="mostrarInputTransaccion">
                         <button class="btn btn-light btn-sm" (click)="quitarPagoTransferencia()">X</button>
                       </div>
-                      <div class="col-md-5 col-12 my-1" *ngIf="mostrarCargarArchivoCredito">
+                      <!--FORMA DE PAGO CREDITO-->
+                      <div class="col-md-3 col-12 my-1" *ngIf="mostrarCargarArchivoCredito">
                         <label>Comprobante de pago (Tarjeta de crédito)</label>
                         <input class="form-control-file" type="file" (change)="onFileSelectedTarjeta($event)">
+
                       </div>
-                      <div class="col-md-5 col-12" *ngIf="mostrarInputTransaccionCredito">
+                      <div class="col-md-3 col-12" *ngIf="mostrarInputTransaccionCredito">
                         <div class="form-group">
                           <label for="numTransaccionCredito">Número de transacción (Tarjeta de crédito)</label>
                           <input class="form-control" type="text" id="numTransaccionCredito"
-                                 formControlName="numTransaccionCredito"/>
+                                 formControlName="numTransaccionCredito" (change)="calcularTotalFormaPago()"/>
+                        </div>
+                        <div *ngIf="notaPedidoForm.numTransaccionCredito.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="notaPedidoForm.numTransaccionCredito.errors.required">
+                            Requerido
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 col-12" *ngIf="mostrarInputTransaccionCredito">
+                        <div class="form-group">
+                          <label for="montoCredito">Monto de crédito</label>
+                          <input class="form-control" type="text" id="montoCredito"
+                                 formControlName="montoCredito" (change)="calcularTotalFormaPago()"/>
+                        </div>
+                        <div *ngIf="notaPedidoForm.montoCredito.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="notaPedidoForm.montoCredito.errors.required">
+                            Requerido
+                          </div>
+
                         </div>
                       </div>
                       <div class="col-md-2 col-12" *ngIf="mostrarInputTransaccionCredito">
                         <button class="btn btn-light btn-sm" (click)="quitarPagoCredito()">X</button>
                       </div>
-                      <div class="col-md-6 col-12" *ngIf="mostrarInputCobro">
+                      <div class="col-md-3 col-12" *ngIf="mostrarInputCobro">
                         <div class="form-group">
-                          <label for="totalCobroEfectivo">Total de cobro</label>
+                          <label for="totalCobroEfectivo">Monto en efectivo</label>
                           <input class="form-control" type="text" id="totalCobroEfectivo"
-                                 formControlName="totalCobroEfectivo"/>
+                                 formControlName="totalCobroEfectivo" (change)="calcularTotalFormaPago()"/>
+                        </div>
+                        <div *ngIf="notaPedidoForm.totalCobroEfectivo.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="notaPedidoForm.totalCobroEfectivo.errors.required">
+                            Requerido
+                          </div>
+                          <div *ngIf="notaPedidoForm.totalCobroEfectivo.errors.pattern">
+                            Ingrese solo numeros
+                          </div>
                         </div>
                       </div>
                       <div class="col-md-2 col-12" *ngIf="mostrarInputCobro">
                         <button class="btn btn-light btn-sm" (click)="quitarPagoEfectivo()">X</button>
                       </div>
+                    </div>
+                    <div class="row">
+                      <label style="color: blue">Total: {{ totalFormaPago }}</label>
                     </div>
                   </div>
                 </div>

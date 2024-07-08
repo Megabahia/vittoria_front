@@ -206,7 +206,7 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
       fin: this.transformarFecha(this.fin),
       compania: this.centroNegocioSeleccionado,
       rol: this.usuario.usuario.idRol,
-      estado: this.estadoSeleccionado,
+      estado: this.estadoSeleccionado === '' ? '' : [this.estadoSeleccionado],
       usuarioVendedor: this.usuarioSeleccionado
     }).subscribe((info) => {
       this.collectionSize = info.cont;

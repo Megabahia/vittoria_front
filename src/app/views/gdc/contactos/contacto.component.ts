@@ -69,6 +69,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   listaCanalesProducto;
   selectFormaPago;
   formasPago = [];
+  totalFormaPago = 0;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -170,7 +171,9 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       formaPago: ['',],
       numTransaccionTransferencia: [''],
       numTransaccionCredito: [''],
-      totalCobroEfectivo: ['']
+      totalCobroEfectivo: [0],
+      montoTransferencia: [0],
+      montoCredito: [0]
     });
   }
 
@@ -255,6 +258,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   }
 
   obtenerContacto(modal, id): void {
+    this.totalFormaPago = 0;
     this.obtenerProvincias();
     this.obtenerListaProductos();
     this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
@@ -405,7 +409,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));
-    console.log(this.notaPedido)
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
@@ -420,11 +423,9 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         }
       });
       this.archivo.append('estado', 'Entregado');
-      console.log(this.formasPago)
-      console.log(JSON.stringify(this.formasPago))
       this.archivo.append('formaPago', JSON.stringify(this.formasPago));
-      if (this.mostrarInputCobro) {
-        if (Number(this.totalPagar) !== Number(this.notaPedido.value.totalCobroEfectivo)) {
+      if (this.mostrarInputCobro || this.mostrarInputTransaccion || this.mostrarInputTransaccionCredito) {
+        if (Number(this.totalPagar) !== Number(this.totalFormaPago)) {
           this.toaster.open('El precio total ingresado no coincide', {type: 'danger'})
         } else {
           this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
@@ -445,6 +446,13 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       });
 
     }
+  }
+
+  calcularTotalFormaPago() {
+    console.log('ENTRA CALCULO')
+    console.log(this.notaPedido.value.totalCobroEfectivo + this.notaPedido.value.montoCredito + this.notaPedido.value.montoTransferencia)
+    this.totalFormaPago = parseFloat(this.notaPedido.value.totalCobroEfectivo || 0) + parseFloat(this.notaPedido.value.montoCredito || 0) + parseFloat(this.notaPedido.value.montoTransferencia || 0);
+
   }
 
 
@@ -561,16 +569,31 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       case 'transferencia':
         this.mostrarInputTransaccion = true;
         this.mostrarCargarArchivo = true;
+        //this.notaPedido.get('archivoFormaPago').setValidators([Validators.required]);
+        //this.notaPedido.get('archivoFormaPago').updateValueAndValidity();
+        this.notaPedido.get('numTransaccionTransferencia').setValidators([Validators.required]);
+        this.notaPedido.get('numTransaccionTransferencia').updateValueAndValidity();
+        this.notaPedido.get('montoTransferencia').setValidators([Validators.required, Validators.pattern('^[0-9]*$')]);
+        this.notaPedido.get('montoTransferencia').updateValueAndValidity();
         //this.mostrarInputCobro = false;
         break;
       case 'efectivo':
         //this.mostrarInputTransaccion = false;
         //this.mostrarCargarArchivo = false;
         this.mostrarInputCobro = true;
+        this.notaPedido.get('totalCobroEfectivo').setValidators([Validators.required]);
+        this.notaPedido.get('totalCobroEfectivo').updateValueAndValidity();
+
         break;
       case 'tarjeta_credito':
         this.mostrarInputTransaccionCredito = true;
         this.mostrarCargarArchivoCredito = true;
+        //this.notaPedido.get('archivoFormaPagoCredito').setValidators([Validators.required]);
+        //this.notaPedido.get('archivoFormaPagoCredito').updateValueAndValidity();
+        this.notaPedido.get('numTransaccionCredito').setValidators([Validators.required]);
+        this.notaPedido.get('numTransaccionCredito').updateValueAndValidity();
+        this.notaPedido.get('montoCredito').setValidators([Validators.required]);
+        this.notaPedido.get('montoCredito').updateValueAndValidity();
         //this.mostrarInputCobro = false;
         break;
       default:
@@ -652,6 +675,12 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     this.eliminarDatoArregloFormaPago('transferencia');
     this.mostrarCargarArchivo = false;
     this.archivo.delete('archivoFormaPago');
+    this.notaPedido.value.montoTransferencia = 0;
+    this.calcularTotalFormaPago();
+    this.notaPedido.get('numTransaccionTransferencia').setValidators([]);
+    this.notaPedido.get('numTransaccionTransferencia').updateValueAndValidity();
+    this.notaPedido.get('montoTransferencia').setValidators([]);
+    this.notaPedido.get('montoTransferencia').updateValueAndValidity();
     this.mostrarInputTransaccion = false;
   }
 
@@ -659,11 +688,21 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     this.eliminarDatoArregloFormaPago('tarjeta_credito');
     this.mostrarCargarArchivoCredito = false;
     this.archivo.delete('archivoFormaPagoCredito');
+    this.notaPedido.value.montoCredito = 0;
+    this.calcularTotalFormaPago();
+    this.notaPedido.get('numTransaccionCredito').setValidators([]);
+    this.notaPedido.get('numTransaccionCredito').updateValueAndValidity();
+    this.notaPedido.get('montoCredito').setValidators([]);
+    this.notaPedido.get('montoCredito').updateValueAndValidity();
     this.mostrarInputTransaccionCredito = false;
   }
 
   quitarPagoEfectivo() {
     this.eliminarDatoArregloFormaPago('efectivo');
+    this.notaPedido.value.totalCobroEfectivo = 0;
+    this.calcularTotalFormaPago();
+    this.notaPedido.get('totalCobroEfectivo').setValidators([]);
+    this.notaPedido.get('totalCobroEfectivo').updateValueAndValidity();
     this.mostrarInputCobro = false;
   }
 
