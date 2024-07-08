@@ -32,7 +32,7 @@
               <label class="form-label">Canales que me asignaron:</label>
               <select class="form-control select2" name="canal" (change)="onSelectChangeAsignados($event)"
                       [(ngModel)]="canalSeleccionadoAsignado">
-                <option value="" selected>- Seleccione canal-</option>
+                <option value="" selected>- Todos los canales-</option>
                 <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
               </select>
             </div>
