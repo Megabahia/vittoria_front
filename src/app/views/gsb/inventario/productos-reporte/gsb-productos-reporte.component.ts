@@ -108,7 +108,6 @@ export class GsbProductosReporteComponent implements OnInit, AfterViewInit {
       canalProducto: 'superbarato.megadescuento.com',
       canalStockVirtual: this.canalSeleccionadoAsignado
     }).subscribe((data) => {
-
       this.enviando = false;
       const downloadURL = window.URL.createObjectURL(data);
       const link = document.createElement('a');
