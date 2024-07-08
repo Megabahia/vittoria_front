@@ -248,8 +248,8 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
 
 
   obtenerDatosContacto(modal, id): void {
-    this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
     this.notaPedido.reset();
+    this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
 
     this.contactoService.obtenerContacto(id).subscribe((info) => {
       this.horaPedido = this.extraerHora(info.created_at);
@@ -307,7 +307,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
         canalProducto: this.canalSeleccionado,
-        canal: this.notaPedido.value.canal,
+        canal: this.canalSeleccionado,
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {

@@ -23,6 +23,9 @@
                   <i-feather name='search' class="edit-user"></i-feather>
                 </button>
               </div>
+
+            </div>
+            <div class="row">
               <div class="col-md-4 mt-3">
                 <div class="form-group">
                   <select class="form-control"
@@ -44,6 +47,21 @@
                     </option>
                   </select>
                 </div>
+              </div>
+              <div class="col-md-4 mt-3">
+                <div class="form-group">
+                  <select class="form-control" [(ngModel)]="centroNegocioSeleccionado">
+                    <option value="" selected>- Seleccione centro de negocio-</option>
+                    <option value="{{empresa.valor}}" *ngFor="let empresa of empresas">
+                      {{ empresa.valor }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <button class="btn btn-primary" (click)="obtenerTransacciones()">
+                  <i-feather name='search' class="edit-user"></i-feather>
+                </button>
               </div>
             </div>
           </div>

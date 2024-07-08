@@ -39,6 +39,9 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
   listaUsuariosCompania = [];
   comision;
   usuarioSeleccionado='';
+  centroNegocioSeleccionado = '';
+  empresas = [];
+
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -78,6 +81,10 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'COMISION', 'Comision').subscribe((result) => {
       this.comision = parseFloat(result.info[0].valor);
     });
+    this.paramServiceAdm.obtenerListaPadres('LISTA_EMPRESAS').subscribe((info) => {
+        this.empresas = info;
+      }
+    );
   }
 
   ngOnInit(): void {
@@ -197,7 +204,7 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
       page_size: this.pageSize,
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
-      compania: this.usuario.usuario.compania,
+      compania: this.centroNegocioSeleccionado,
       rol: this.usuario.usuario.idRol,
       estado: this.estadoSeleccionado,
       usuarioVendedor: this.usuarioSeleccionado
