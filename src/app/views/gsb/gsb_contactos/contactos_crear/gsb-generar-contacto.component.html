@@ -1,0 +1,257 @@
+<div class="app-content content ">
+  <div class="content-wrapper">
+    <div class="content-body">
+      <div class="card d-inline-flex p-2">
+        <h1>Ingresar contacto</h1>
+        <button class="btn btn-primary mx-1"
+                (click)="crearNuevoContacto(notaContactoModalAdd)"
+        >Nuevo Contacto
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <ng-template #notaContactoModalAdd let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Contacto</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <hr class="invoice-spacing"/>
+
+    <div class="modal-content">
+      <form [formGroup]="notaContacto">
+        <div class="card invoice-preview-card">
+          <!-- Header starts -->
+          <div class="card-body invoice-padding pb-0">
+            <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+              <div class="d-flex align-items-center mb-1">
+                <span class="title mr-1">Fecha de venta:</span>
+                <input type="text"
+                       placeholder={{formatearFecha()}}
+                       class="form-control invoice-edit-input date-picker"
+                       disabled
+                />
+              </div>
+            </div>
+          </div>
+          <!-- Header ends -->
+
+          <hr class="invoice-spacing"/>
+
+          <!-- Address and Contact starts -->
+          <div class="card-body invoice-padding pt-0">
+            <h4 class="invoice-title mb-2">Nuevo contacto</h4>
+            <div class="row">
+              <div class="col-md-4 col-12">
+                <label>Nombres</label>
+                <input class="form-control" type="text"
+                       formControlName="nombres"
+                >
+                <div *ngIf="notaContactoForm.nombres.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="notaContactoForm.nombres.errors.required">
+                    Requerido
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 col-12">
+                <label>Apellidos</label>
+                <input class="form-control" type="text"
+                       formControlName="apellidos"
+                >
+
+              </div>
+
+              <div class="col-md-4 col-12">
+                <label>Número de WhatsApp</label>
+                <input class="form-control" type="text"
+                       formControlName="whatsapp"
+                >
+                <div *ngIf="notaContactoForm.whatsapp.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="notaContactoForm.whatsapp.errors.required">
+                    Requerido
+                  </div>
+                  <div *ngIf="notaContactoForm.whatsapp.errors.minlength">
+                    Ingrese minimo 10 digitos
+                  </div>
+                  <div *ngIf="notaContactoForm.whatsapp.errors.maxlength">
+                    Ingrese maximo 10 digitos
+                  </div>
+                  <div *ngIf="notaContactoForm.whatsapp.errors.pattern">
+                    Ingrese solo numeros
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-12">
+            <label>Metodo Pago</label>
+            <input class="form-control" type="text"
+                   formControlName="metodoPago" disabled
+            >
+            <div *ngIf="notaContactoForm.metodoPago.errors"
+                 class="invalid-feedback" style="display: block;">
+              <div *ngIf="notaContactoForm.metodoPago.errors.required">
+                Requerido
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 col-12">
+
+            <label for="canalProducto">Canal</label>
+            <select class="form-control" id="canalProducto" disabled>
+              <option value="" disabled>- Seleccione -</option>
+              <option [value]="canal" *ngFor="let canal of listaCanalesProducto"
+                      [selected]="canal === 'superbarato.megadescuento.com'">
+                {{ canal }}
+              </option>
+            </select>
+
+          </div>
+
+          <hr class="invoice-spacing"/>
+          <div class="card-body invoice-padding">
+            <div formArrayName="articulos">
+              <form class="source-item">
+                <div data-repeater-list="group-a"
+                     *ngFor="let detalle of notaContacto.get('articulos')['controls']; let i = index;">
+                  <ng-container class="row" [formGroup]="detalle">
+                    <div class="repeater-wrapper" data-repeater-item>
+                      <div class="row">
+                        <div class="col-12 d-flex product-details-border position-relative pr-0">
+                          <div class="row w-100 pr-lg-0 pr-1 py-2">
+                            <div class="col-lg-5 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                              <p class="card-text col-title mb-md-50 mb-0">
+                                Enlace del producto
+                              </p>
+                              <input class="form-control" type="text"
+                                     formControlName="urlProducto">
+                              <div *ngIf="detalle.controls.urlProducto.errors"
+                                   class="invalid-feedback"
+                                   style="display: block;">
+                                <div *ngIf="detalle.controls.urlProducto.errors.required">
+                                  Requerido
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-lg-2 col-12 my-lg-0 my-2">
+                              <p class="card-text col-title mb-md-50 mb-0 red text-danger">
+                                Cantidad
+                              </p>
+                              <input type="text" class="form-control"
+                                     formControlName="cantidad"
+                                     (change)="calcular()"
+                              />
+                            </div>
+                            <div class="col-lg-2 col-12 my-lg-0 my-2">
+                              <p class="card-text col-title mb-md-50 mb-0">
+                                Precio
+                              </p>
+                              <input type="text" class="form-control"
+                                     formControlName="valorUnitario"
+                                     (change)="calcular()"
+                              />
+                            </div>
+                            <div class="col-lg-2 col-12 my-lg-0 my-2">
+                              <p class="card-text col-title mb-md-50 mb-0">
+                                Total
+                              </p>
+                              <label>{{ detalle.controls.precio.value }}</label>
+                            </div>
+                            <div
+                              class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
+                              <i-feather name="x"
+                                         class="cursor-pointer font-medium-3"
+                                         data-repeater-delete
+                                         (click)="removerItemExtra(i)"></i-feather>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </form>
+            </div>
+            <div class="row mt-1">
+              <div class="col-12 px-0">
+                <button type="button" class="btn btn-primary btn-sm btn-add-new"
+                        data-repeater-create>
+                  <i-feather name="plus" class="mr-25 edit-user"></i-feather>
+                  <span class="align-middle" (click)="agregarItemExtra()">Añadir URL del producto</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Details ends -->
+          <!--<hr class="invoice-spacing"/>-->
+          <!-- Invoice Total starts -->
+          <!--<div class="card-body invoice-padding">
+            <div formGroupName="facturacion">
+              <div class="row mb-1">
+                <div class="col-md-6">
+                  <label for="codigoVendedor" class="form-label">Codigo
+                    Vendedor:</label>
+                  <input type="text" class="form-control" id="codigoVendedor" formControlName="codigoVendedor" disabled
+                  />
+                  <div *ngIf="facturacionForm.codigoVendedor.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="facturacionForm.codigoVendedor.errors.required">
+                      Requerido
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="nombreVendedor" class="form-label">Nombre
+                    Vendedor:</label>
+                  <input type="text" class="form-control" id="nombreVendedor" formControlName="nombreVendedor" disabled
+                  />
+                  <div *ngIf="facturacionForm.nombreVendedor.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="facturacionForm.nombreVendedor.errors.required">
+                      Requerido
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-7"></div>
+              <div class="col-md-5 text-right">
+                <div class="invoice-total-wrapper">
+                  <hr class="my-50"/>
+                  <div class="invoice-total-item">
+                    <p class="invoice-total-title text-primary font-weight-bold">
+                      Total Envio: ${{ notaContacto.controls.envioTotal.value }}</p>
+                  </div>
+                  <div class="invoice-total-item">
+                    <p class="invoice-total-title text-primary font-weight-bold">
+                      Total a pagar por el cliente: ${{ notaContacto.controls.total.value }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>-->
+          <!-- Invoice Total ends -->
+          <!--<hr class="invoice-spacing mt-0"/>-->
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="reset" class="btn btn-secondary"
+              (click)="modal.dismiss( 'Cross click')">Cerrar
+      </button>
+      <button class="btn btn-primary mx-1"
+              (click)="guardarContacto()"
+      >Guardar
+      </button>
+    </div>
+  </ng-template>
+</div>

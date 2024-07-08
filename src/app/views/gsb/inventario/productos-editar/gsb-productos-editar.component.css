@@ -1,0 +1,4 @@
+.blocked-select {
+    pointer-events: none;
+    background-color: #c21f1f; /* Cambiar el color de fondo para indicar que está bloqueado */
+}

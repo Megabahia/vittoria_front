@@ -2,36 +2,22 @@
   <div class="content-wrapper">
     <div class="content-body">
       <div class="card">
-        <h5 class="card-header">Filtros de búsqueda</h5>
-        <div class="card-body">
+        <h5 class="card-header">Lista de Contactos</h5>
+        <!--<div class="card-body">
           <div class="row">
-            <div class="col-md-3">
-              <input type="text" class="form-control form-control-sm" placeholder="Nombre"
-                     [(ngModel)]="nombre">
-              <input type="text" class="form-control form-control-sm" placeholder="Apellido"
-                     [(ngModel)]="apellido">
+            <div class="col-md-4">
+              <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="inicio">
             </div>
-            <div class="col-md-3">
-              <input type="text" class="form-control form-control-sm" placeholder="Número de WhatsApp"
-                     [(ngModel)]="whatsapp">
+            <div class="col-md-4">
+              <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="fin">
             </div>
-            <div class="col-md-3">
-              <input type="text" class="form-control form-control-sm" placeholder="Número de pedido"
-                     [(ngModel)]="numPedido">
-            </div>
-
-            <div class="col-md-1">
-              <button class="btn btn-primary" (click)="obtenerContactos()">
+            <div class="col-md-4">
+              <button class="btn btn-primary" (click)="obtenerSuperBaratos()">
                 <i-feather name='search' class="edit-user"></i-feather>
               </button>
             </div>
-            <div class="col-md-1">
-              <button class="btn btn-primary" (click)="obtenerContactos()">
-                <i-feather name='refresh-cw' class="edit-user"></i-feather>
-              </button>
-            </div>
           </div>
-        </div>
+        </div>-->
       </div>
       <div class="card">
         <div class="card-datatable table-responsive pt-0">
@@ -51,51 +37,46 @@
           <table class="user-list-table table">
             <thead class="thead-light">
             <tr>
-              <th>Fecha Pedido</th>
-              <th>Canal Pedido</th>
-              <th>Código vendedor</th>
-              <th>Nombre vendedor</th>
-              <th>Numero Pedido</th>
-              <th>Nombres Facturación</th>
-              <th>Apellidos Facturación</th>
-              <th>Metodo Pago</th>
-              <th>Telefono</th>
-              <th>Estado</th>
-              <th>Ver</th>
-              <th>Acciones</th>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Canal</th>
+              <th>Número Contacto</th>
+              <th>Nombres</th>
+              <th>Apellidos</th>
+              <th>WhatsApp</th>
+              <th>URL Productos</th>
+              <th>Accion</th>
             </tr>
             </thead>
 
             <tbody>
-            <tr *ngFor="let transaccion  of listaContactos; let i = index">
-              <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
-              <td [title]="transaccion.canal">{{ transaccion.canal | shorten }}</td>
-              <td>{{ transaccion.facturacion.codigoVendedor }}</td>
-              <td>{{ transaccion.facturacion.nombreVendedor }}</td>
-              <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido  | shorten }}</td>
-              <td [title]="transaccion.facturacion.nombres">{{ transaccion.facturacion.nombres | shorten }}</td>
-              <td [title]="transaccion.facturacion.apellidos">{{ transaccion.facturacion.apellidos | shorten }}</td>
-              <td [title]="transaccion.metodoPago">{{ transaccion.metodoPago | shorten }}</td>
-              <td>{{ transaccion.facturacion.telefono }}</td>
-              <td>{{ transaccion.estado }}</td>
-
+            <tr *ngFor="let contacto  of listaContacto; let i = index">
+              <td>{{ contacto.created_at | date: 'dd-MM-yyyy' }}</td>
+              <td>{{ contacto.created_at | date: 'HH:mm:ss' }}</td>
+              <td>{{ contacto.canal | shorten }}</td>
+              <td>{{ contacto.id }}</td>
+              <td>{{ contacto.nombres }}</td>
+              <td>{{ contacto.apellidos }}</td>
               <td>
-                <a (click)="obtenerContacto(notaPedidoModal, transaccion.id)">
-                  <i-feather name="eye" class="mr-25"></i-feather>
+                {{ contacto.whatsapp }}
+                <a (click)="openWhatsApp($event, contacto.whatsapp)">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png"
+                    alt="wsp"
+                    width="30" height="30">
                 </a>
               </td>
               <td>
-                <button *ngIf="transaccion.verificarPedido && transaccion.estado !== 'Facturado'"
-                        class="btn btn-primary"
-                        (click)="obtenerContacto(facturacionModal, transaccion.id)">
-                  Facturar
-                </button>
-                <p *ngIf="transaccion.estado === 'Facturado'">Facturado</p>
+                <ul *ngFor="let productos of contacto.articulos">
+                  <li>{{productos.urlProducto | shorten}}</li>
+                </ul>
+              </td>
+              <td>
+                <button class="btn btn-primary" (click)="obtenerDatosContacto(notaPedidoModal, contacto.id)">Generar Pedido</button>
               </td>
             </tr>
             </tbody>
           </table>
-
         </div>
         <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
                         [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
@@ -169,7 +150,7 @@
                       <div class="col-md-3 col-12">
                         <label>Correo</label>
                         <input class="form-control" type="text"
-                               formControlName="correo" (change)="validarDatos()">
+                               formControlName="correo">
                         <div *ngIf="facturacionForm.correo.errors"
                              class="invalid-feedback" style="display: block;">
                           <div *ngIf="facturacionForm.correo.errors.required">
@@ -177,6 +158,26 @@
                           </div>
                           <div *ngIf="facturacionForm.correo.errors.email">
                             Correo Invalido
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 col-12">
+                        <label>Número de WhatsApp</label>
+                        <input class="form-control" type="text"
+                               formControlName="telefono">
+                        <div *ngIf="facturacionForm.telefono.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="facturacionForm.telefono.errors.required">
+                            Requerido
+                          </div>
+                          <div *ngIf="facturacionForm.telefono.errors.minlength">
+                            Ingrese minimo 10 digitos
+                          </div>
+                          <div *ngIf="facturacionForm.telefono.errors.maxlength">
+                            Ingrese maximo 10 digitos
+                          </div>
+                          <div *ngIf="facturacionForm.telefono.errors.pattern">
+                            Ingrese solo numeros
                           </div>
                         </div>
                       </div>
@@ -202,7 +203,6 @@
                         <label>Numero Identificación</label>
                         <input class="form-control" type="text"
                                formControlName="identificacion"
-                               (change)="validarDatos()"
                         >
                         <div *ngIf="facturacionForm.identificacion.errors"
                              class="invalid-feedback" style="display: block;">
@@ -436,7 +436,7 @@
                                     <img class="img-detalle"
                                          src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
                                          *ngIf="detalle.controls?.imagen_principal" width="100px" height="100px" alt="">
-                                    <div>
+                                    <div *ngIf="!detalle.controls?.imagen_principal.value">
                                       <button (click)="fileInput.click()">Seleccionar imagen</button>
                                       <input #fileInput type="file" (change)="cargarImagen(i,$event)"
                                              accept=".jpg,.jpeg,.png" style="display: none;">
@@ -477,6 +477,97 @@
                               data-repeater-create>
                         <i-feather name="plus" class="mr-25 edit-user"></i-feather>
                         <span class="align-middle" (click)="agregarItem()">Añadir producto</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <!-- Address and Contact ends -->
+                <hr class="invoice-spacing"/>
+                <!-- Product Details starts -->
+                <div class="card-body invoice-padding">
+                  <div formArrayName="productoExtra">
+                    <form class="source-item">
+                      <div data-repeater-list="group-a"
+                           *ngFor="let detalle of notaPedido.get('productoExtra')['controls']; let i = index;">
+                        <div class="row" [formGroup]="detalle">
+                          <div class="repeater-wrapper" data-repeater-item>
+                            <div class="row">
+                              <div class="col-12 d-flex product-details-border position-relative pr-0">
+                                <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                  <div class="col-lg-4 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Enlace del producto
+                                    </p>
+                                    <input class="form-control" type="text"
+                                           formControlName="urlProducto">
+                                    <div *ngIf="detalle.controls.urlProducto.errors"
+                                         class="invalid-feedback"
+                                         style="display: block;">
+                                      <div *ngIf="detalle.controls.urlProducto.errors.required">
+                                        Requerido
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-3 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0 red text-danger">
+                                      Cantidad
+                                    </p>
+                                    <input type="text" class="form-control"
+                                           formControlName="cantidad"
+                                           (change)="calcular()"
+                                    />
+                                    <!--<div *ngIf="detalle.controls.cantidad.errors"
+                                         class="invalid-feedback"
+                                         style="display: block;">
+                                      <div *ngIf="detalle.controls.cantidad.errors.required">
+                                        Requerido
+                                      </div>
+                                      <div *ngIf="detalle.controls.cantidad.errors.max">
+                                        Fuera de stock
+                                      </div>
+                                      <div *ngIf="detalle.controls.cantidad.errors.min">
+                                        Ingrese minimo 1
+                                      </div>
+                                    </div>-->
+                                  </div>
+
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Precio
+                                    </p>
+                                    <input type="text" class="form-control"
+                                           formControlName="valorUnitario"
+                                           (change)="calcular()"
+                                    />
+                                  </div>
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Total
+                                    </p>
+                                    <label>{{ detalle.controls.precio.value }}</label>
+                                  </div>
+                                  <div
+                                    class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
+                                    <i-feather name="x"
+                                               class="cursor-pointer font-medium-3"
+                                               data-repeater-delete
+                                               (click)="removerItemExtra(i)"></i-feather>
+
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="row mt-1">
+                    <div class="col-12 px-0">
+                      <button type="button" class="btn btn-primary btn-sm btn-add-new"
+                              data-repeater-create>
+                        <i-feather name="plus" class="mr-25 edit-user"></i-feather>
+                        <span class="align-middle" (click)="agregarItemExtra()">Añadir producto extra</span>
                       </button>
                     </div>
                   </div>
@@ -546,206 +637,12 @@
                     (click)="modal.dismiss( 'Cross click')">Cerrar
             </button>
             <button class="btn btn-primary mx-1"
-                    (click)="actualizarContacto()"
-            >Actualizar
-            </button>
-          </div>
-        </ng-template>
-
-        <ng-template #facturacionModal let-modal>
-          <div class="modal-header">
-            <h4 class="modal-title">Generar Venta</h4>
-            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-content">
-
-            <div class="card-body">
-              <h5 class="text-danger">Total a pagar: ${{ notaPedido.controls.total.value }}</h5>
-            </div>
-            <form [formGroup]="notaPedido">
-              <div class="card-body invoice-padding">
-                <div class="row">
-                  <div class="col-6">
-                    <div class="form-group">
-                      <label for="tipoPago">Factura</label>
-                      <select id="tipoPago" class="form-control" formControlName="tipoPago"
-                              (change)="onSelectChange($event)">
-                        <option value="" selected>- Seleccione -</option>
-                        <option value="facturaElectronica">Factura electrónica</option>
-                        <option value="facturaElectronicaMegaBahia">Factura electrónica - MegaBahía</option>
-                        <option value="rimpePopular">Rimpe popular</option>
-                      </select>
-                      <div *ngIf="notaPedidoForm.tipoPago.errors"
-                           class="invalid-feedback" style="display: block;">
-                        <div *ngIf="notaPedidoForm.tipoPago.errors.required">
-                          Requerido
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-6" *ngIf="mostrarInputComprobante">
-                    <div class="form-group">
-                      <label for="numeroComprobante">Ingreso número de comprobante</label>
-                      <input class="form-control" type="text" id="numeroComprobante"
-                             formControlName="numeroComprobante"/>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-4 mb-2">
-                    <div class="row">
-                      <div class="col-md-12 col-12">
-                        <label for="formaPago">Forma de pago</label>
-                        <select id="formaPago" class="form-control" formControlName="formaPago"
-                                (change)="onSelectChangeFormaPago($event)">
-                          <option value="" selected>- Seleccione -</option>
-                          <option value="transferencia">Transferencia</option>
-                          <option value="tarjeta_credito">Tarjeta de crédito</option>
-                          <option value="efectivo">Efectivo</option>
-                        </select>
-                        <div *ngIf="notaPedidoForm.formaPago.errors"
-                             class="invalid-feedback" style="display: block;">
-                          <div *ngIf="notaPedidoForm.formaPago.errors.required">
-                            Requerido
-                          </div>
-                        </div>
-                        <div class="mt-1">
-                          <button type="button" class="btn btn-primary" (click)="agregarFormaPago()">Agregar forma de pago</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-8 col-12">
-                    <div class="row">
-                      <div class="col-md-3 col-12" *ngIf="mostrarCargarArchivo">
-                        <label>Comprobante de pago (Transferencia)</label>
-                        <input class="form-control-file" type="file" (change)="onFileSelected($event)">
-
-                      </div>
-
-                      <div class="col-md-3 col-12" *ngIf="mostrarInputTransaccion">
-                        <div class="form-group">
-                          <label for="numTransaccionTransferencia">Número de transacción (Transferencia)</label>
-                          <input class="form-control" type="text" id="numTransaccionTransferencia"
-                                 formControlName="numTransaccionTransferencia"/>
-                        </div>
-                        <div *ngIf="notaPedidoForm.numTransaccionTransferencia.errors"
-                             class="invalid-feedback" style="display: block;">
-                          <div *ngIf="notaPedidoForm.numTransaccionTransferencia.errors.required">
-                            Requerido
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-3 col-12" *ngIf="mostrarInputTransaccion">
-                        <div class="form-group">
-                          <label for="montoTransferencia">Monto de transferencia</label>
-                          <input class="form-control" type="text" id="montoTransferencia"
-                                 formControlName="montoTransferencia" (change)="calcularTotalFormaPago()"/>
-                        </div>
-                        <div *ngIf="notaPedidoForm.montoTransferencia.errors"
-                             class="invalid-feedback" style="display: block;">
-                          <div *ngIf="notaPedidoForm.montoTransferencia.errors.required">
-                            Requerido
-                          </div>
-
-                        </div>
-                      </div>
-                      <div class="col-md-2 col-12" *ngIf="mostrarInputTransaccion">
-                        <button class="btn btn-light btn-sm" (click)="quitarPagoTransferencia()">X</button>
-                      </div>
-                      <!--FORMA DE PAGO CREDITO-->
-                      <div class="col-md-3 col-12 my-1" *ngIf="mostrarCargarArchivoCredito">
-                        <label>Comprobante de pago (Tarjeta de crédito)</label>
-                        <input class="form-control-file" type="file" (change)="onFileSelectedTarjeta($event)">
-
-                      </div>
-                      <div class="col-md-3 col-12" *ngIf="mostrarInputTransaccionCredito">
-                        <div class="form-group">
-                          <label for="numTransaccionCredito">Número de transacción (Tarjeta de crédito)</label>
-                          <input class="form-control" type="text" id="numTransaccionCredito"
-                                 formControlName="numTransaccionCredito" (change)="calcularTotalFormaPago()"/>
-                        </div>
-                        <div *ngIf="notaPedidoForm.numTransaccionCredito.errors"
-                             class="invalid-feedback" style="display: block;">
-                          <div *ngIf="notaPedidoForm.numTransaccionCredito.errors.required">
-                            Requerido
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-3 col-12" *ngIf="mostrarInputTransaccionCredito">
-                        <div class="form-group">
-                          <label for="montoCredito">Monto de crédito</label>
-                          <input class="form-control" type="text" id="montoCredito"
-                                 formControlName="montoCredito" (change)="calcularTotalFormaPago()"/>
-                        </div>
-                        <div *ngIf="notaPedidoForm.montoCredito.errors"
-                             class="invalid-feedback" style="display: block;">
-                          <div *ngIf="notaPedidoForm.montoCredito.errors.required">
-                            Requerido
-                          </div>
-
-                        </div>
-                      </div>
-                      <div class="col-md-2 col-12" *ngIf="mostrarInputTransaccionCredito">
-                        <button class="btn btn-light btn-sm" (click)="quitarPagoCredito()">X</button>
-                      </div>
-                      <div class="col-md-3 col-12" *ngIf="mostrarInputCobro">
-                        <div class="form-group">
-                          <label for="totalCobroEfectivo">Monto en efectivo</label>
-                          <input class="form-control" type="text" id="totalCobroEfectivo"
-                                 formControlName="totalCobroEfectivo" (change)="calcularTotalFormaPago()"/>
-                        </div>
-                        <div *ngIf="notaPedidoForm.totalCobroEfectivo.errors"
-                             class="invalid-feedback" style="display: block;">
-                          <div *ngIf="notaPedidoForm.totalCobroEfectivo.errors.required">
-                            Requerido
-                          </div>
-                          <div *ngIf="notaPedidoForm.totalCobroEfectivo.errors.pattern">
-                            Ingrese solo numeros
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-2 col-12" *ngIf="mostrarInputCobro">
-                        <button class="btn btn-light btn-sm" (click)="quitarPagoEfectivo()">X</button>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <label style="color: blue">Total: {{ totalFormaPago }}</label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="reset" class="btn btn-secondary"
-                    (click)="modal.dismiss('Cross click')">Cerrar
-            </button>
-            <button class="btn btn-primary mx-1"
-                    (click)="actualizar()"
+                    (click)="generarPedidoContacto()"
             >Guardar
             </button>
           </div>
         </ng-template>
-        <hr/>
       </div>
     </div>
   </div>
-
-
-  <ng-template #aviso let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">Mensaje</h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div [innerHTML]="mensaje"></div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-light" (click)="cerrarModal()">Cerrar</button>
-    </div>
-  </ng-template>
+</div>
