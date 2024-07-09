@@ -11,19 +11,16 @@ import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
 import {v4 as uuidv4} from 'uuid';
-import {ClientesService} from "../../../services/mdm/personas/clientes/clientes.service";
-import {ProspectosService} from "../../../services/mdm/prospectosCli/prospectos.service";
+
 import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
-import {logger} from "codelyzer/util/logger";
 import {ValidacionesPropias} from "../../../utils/customer.validators";
 
 @Component({
-  selector: 'app-contacto',
-  templateUrl: './contacto.component.html',
-  styleUrls: ['contacto.component.css'],
+  selector: 'app-despachos-entregados-megabahia',
+  templateUrl: './entregados.component.html',
   providers: [DatePipe]
 })
-export class ContactoComponent implements OnInit, AfterViewInit {
+export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @Input() paises;
   public notaPedido: FormGroup;
@@ -47,14 +44,10 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   provinciaOpciones;
   verificarContacto = false;
   whatsapp = '';
-  nombre = '';
-  apellido = ''
-  numPedido = ''
+  correo = ''
   mostrarInputComprobante = false;
   mostrarCargarArchivo = false;
   mostrarInputTransaccion = false;
-  mostrarCargarArchivoCredito = false;
-  mostrarInputTransaccionCredito = false;
   mostrarInputCobro = false;
   fileToUpload: File | null = null;
   totalPagar;
@@ -63,13 +56,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   cliente;
   cedula;
   factura;
-  totalIva;
-  parametroIva;
-  canalSeleccionado = '';
-  listaCanalesProducto;
-  selectFormaPago;
-  formasPago = [];
-  totalFormaPago = 0;
+  listaFormasPago;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -80,7 +67,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   archivo: FormData = new FormData();
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
-  canalPrincipal = '';
 
   constructor(
     private modalService: NgbModal,
@@ -108,10 +94,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       estado: ['Rechazado', [Validators.required]],
       fechaPedido: ['', [Validators.required]],
     });
-
-    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
-      this.parametroIva = parseFloat(result.info[0].valor);
-    });
   }
 
   ngOnInit(): void {
@@ -121,8 +103,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     };
     this.barChartData = [this.datosTransferencias];
     this.obtenerOpciones();
-    //this.obtenerProvincias();
-    //this.obtenerCiudad();
+    this.obtenerProvincias();
+    this.obtenerCiudad();
   }
 
   ngAfterViewInit(): void {
@@ -138,8 +120,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.required, Validators.email]],
-        tipoIdentificacion: ['', [Validators.required]],
         identificacion: ['', []],
+        tipoIdentificacion: ['', []],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: [this.pais, [Validators.required]],
         provincia: ['', [Validators.required]],
@@ -155,7 +137,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
-      subtotal: [0],
       envioTotal: [0, [Validators.required]],
       numeroPedido: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
@@ -167,13 +148,10 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       envios: ['', []],
       json: ['', []],
       numeroComprobante: [''],
-      tipoPago: ['',],
-      formaPago: ['',],
+      tipoPago: [''],
+      formaPago: [''],
       numTransaccionTransferencia: [''],
-      numTransaccionCredito: [''],
-      totalCobroEfectivo: [0],
-      montoTransferencia: [0],
-      montoCredito: [0]
+      totalCobroEfectivo: ['']
     });
   }
 
@@ -212,16 +190,12 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       id: [''],
       codigo: ['', [Validators.required]],
       articulo: ['', [Validators.required]],
-      valorUnitario: [0, [Validators.required, Validators.min(0.01)]],
+      valorUnitario: [0, [Validators.required]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
-      descuento: [0, [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]*$')]],
       imagen: ['', []],
       caracteristicas: ['', []],
-      precios: [[], []],
-      canal: [''],
-      woocommerceId: [''],
-      imagen_principal: ['', [Validators.required]]
+      descuento:[0,[]]
     });
   }
 
@@ -237,33 +211,29 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   obtenerContactos(): void {
     this.contactosService.obtenerListaContactos({
       telefono: this.whatsapp,
-      nombre: this.nombre,
-      apellido: this.apellido,
-      numeroPedido: this.numPedido,
+      correo: this.correo,
       page: this.page - 1,
       page_size: this.pageSize,
       //inicio: this.inicio,
       //fin: this.transformarFecha(this.fin),
-      estado: ['Pendiente de entrega'],
+      estado: ['Entregado'],
       canal: 'Contacto Local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaContactos = info.info;
-      this.whatsapp = ''
-      this.nombre = ''
-      this.apellido = ''
-      this.numPedido = ''
-      //this.toaster.open('Lista actualizada', {type: 'success'});
+      this.listaFormasPago = info.info.formaPago;
+      this.toaster.open('Lista actualizada',{ type: 'success'});
     });
   }
 
+  transformarFecha(fecha): string {
+    return this.datePipe.transform(fecha, 'yyyy-MM-dd');
+  }
+
   obtenerContacto(modal, id): void {
-    this.totalFormaPago = 0;
-    this.obtenerProvincias();
-    this.obtenerListaProductos();
-    this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
+    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
     this.contactosService.obtenerContacto(id).subscribe((info) => {
-      /*if (info.tipoPago === 'rimpePopular') {
+      if (info.tipoPago === 'rimpePopular') {
         this.mostrarInputComprobante = true;
       } else if (info.tipoPago === 'facturaElectronica') {
         this.mostrarInputComprobante = false;
@@ -279,37 +249,20 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         this.mostrarInputTransaccion = false;
         this.mostrarCargarArchivo = false;
         this.mostrarInputCobro = true;
-      } else {*/
-      this.mostrarInputComprobante = false;
-      this.mostrarInputTransaccion = false;
-      this.mostrarCargarArchivo = false;
-      this.mostrarInputCobro = false;
-      this.mostrarCargarArchivoCredito = false;
-      this.mostrarInputTransaccionCredito = false;
-      this.formasPago = [];
-      //}
-
-      this.provincia = info.facturacion.provincia;
-      this.obtenerCiudad();
-
+      } else {
+        this.mostrarInputTransaccion = false;
+        this.mostrarCargarArchivo = false;
+        this.mostrarInputCobro = false;
+      }
       this.totalPagar = info.total;
       this.iniciarNotaPedido();
       this.horaPedido = this.extraerHora(info.created_at);
-
-      this.canalPrincipal = info.articulos[0].canal;
-      this.canalSeleccionado = this.canalPrincipal;
 
       info.articulos.map((item): void => {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
-      if (modal._declarationTContainer.localNames[0] === 'facturacionModal') {
-        this.notaPedido.get('formaPago').setValidators([Validators.required]);
-        this.notaPedido.get('formaPago').updateValueAndValidity();
-        this.notaPedido.get('tipoPago').setValidators([Validators.required]);
-        this.notaPedido.get('tipoPago').updateValueAndValidity();
-      }
-      this.calcular()
+
     });
   }
 
@@ -325,24 +278,27 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  obtenerListaProductos(): void {
-    this.productosService.obtenerListaProductos(
-      {
-        page: this.page - 1,
-        page_size: this.pageSize,
-        nombre: '',
-        codigoBarras: '',
-      }
-    ).subscribe((info) => {
-      this.listaCanalesProducto = info.canal
-    });
+  async guardarPorContacto(): Promise<void> {
+    await Promise.all(this.detallesArray.controls.map((producto, index) => {
+      return this.obtenerProducto(index);
+    }));
+    if (confirm('Esta seguro de guardar los datos') === true) {
+      this.contactosService.crearNuevoContacto(this.notaPedido.value).subscribe((info) => {
+          this.modalService.dismissAll();
+          this.obtenerContactos();
+          this.mostrarInputTransaccion = false;
+          this.mostrarCargarArchivo = false;
+          this.mostrarInputCobro = false;
+          this.mostrarInputComprobante = false;
+        }, error => this.toaster.open(error, {type: 'danger'})
+      );
+    }
   }
 
   async obtenerProducto(i): Promise<void> {
     return new Promise((resolve, reject) => {
-      const data = {
+      let data = {
         codigoBarras: this.detallesArray.value[i].codigo,
-        canalProducto: this.canalSeleccionado,
         canal: this.notaPedido.value.canal,
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
@@ -353,18 +309,13 @@ export class ContactoComponent implements OnInit, AfterViewInit {
           this.detallesArray.controls[i].get('id').setValue(info.id);
           this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-          this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
-          const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
+          const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value) || info.precioVentaA;
           this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
           this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
           this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
-          this.detallesArray.controls[i].get('imagen_principal').setValue(info?.imagen_principal);
-          this.detallesArray.controls[i].get('canal').setValue(info.canal)
-          this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
           this.detallesArray.controls[i].get('cantidad').setValidators([
             Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
           ]);
-
           this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
           this.calcular();
           resolve();
@@ -377,34 +328,22 @@ export class ContactoComponent implements OnInit, AfterViewInit {
           this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
           window.alert('Existen inconsistencias con los precios de los productos.');
         }*/
-      }, error => this.toaster.open(error, {type: 'danger'}));
+      });
     });
   }
 
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
-    let subtotalPedido = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
-      // tslint:disable-next-line:radix
-      const descuento = parseInt(detalles[index].get('descuento').value);
-      if (descuento > 0 && descuento <= 100) {
-        const totalDescuento = (valorUnitario * descuento) / 100;
-        detalles[index].get('precio').setValue((((valorUnitario - totalDescuento) * cantidad)).toFixed(2));
-      } else {
-        detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
-      }
+      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       total += parseFloat(detalles[index].get('precio').value);
     });
     total += this.notaPedido.get('envioTotal').value;
-    subtotalPedido = total / this.parametroIva;
-    this.totalIva = (total - subtotalPedido).toFixed(2);
-    this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
-    this.notaPedido.get('total').setValue(total.toFixed(2));
+    this.notaPedido.get('total').setValue(total);
   }
-
 
   async actualizar(): Promise<void> {
     await Promise.all(this.detallesArray.controls.map((producto, index) => {
@@ -424,16 +363,16 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         }
       });
       this.archivo.append('estado', 'Entregado');
-      this.archivo.append('formaPago', JSON.stringify(this.formasPago));
-      if (this.mostrarInputCobro || this.mostrarInputTransaccion || this.mostrarInputTransaccionCredito) {
-        if (Number(this.totalPagar) !== Number(this.totalFormaPago)) {
+
+      if (this.mostrarInputCobro) {
+        if (Number(this.totalPagar) !== Number(this.notaPedido.value.totalCobroEfectivo)) {
           this.toaster.open('El precio total ingresado no coincide', {type: 'danger'})
         } else {
           this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
             this.modalService.dismissAll();
             this.obtenerContactos();
             this.verificarContacto = true;
-          }, error => this.toaster.open(error, {type: 'danger'}));
+          }, error => this.toaster.open(error, {type: 'danger'}))
         }
       } else {
         this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
@@ -445,12 +384,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
 
       this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
       });
-
     }
-  }
-
-  calcularTotalFormaPago() {
-    this.totalFormaPago = parseFloat(this.notaPedido.value.totalCobroEfectivo || 0) + parseFloat(this.notaPedido.value.montoCredito || 0) + parseFloat(this.notaPedido.value.montoTransferencia || 0);
   }
 
 
@@ -518,7 +452,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   }
 
   obtenerCiudad(): void {
-    this.paramServiceAdm.obtenerListaHijos(this.provincia, 'PROVINCIA').subscribe((info) => {
+    this.paramServiceAdm.obtenerListaHijos(this.notaPedido.value.facturacion.provincia, 'PROVINCIA').subscribe((info) => {
       this.ciudadOpciones = info;
     });
   }
@@ -530,93 +464,35 @@ export class ContactoComponent implements OnInit, AfterViewInit {
 
   onSelectChange(event: any) {
     const selectedValue = event.target.value;
-    if (selectedValue === 'rimpePopular' || selectedValue === 'facturaElectronicaMegaBahia') {
+    if (selectedValue === 'rimpePopular') {
       this.mostrarInputComprobante = true;
     } else {
       this.mostrarInputComprobante = false;
     }
   }
 
-  onSelectChangeIdentificacion(event: any) {
-    const selectedValue = event.target.value;
-    if (selectedValue === 'cedula') {
-      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
-        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.cedulaValido]
-      );
-      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
-    } else if (selectedValue === 'ruc') {
-      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
-        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.rucValido]
-      )
-      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
-    } else {
-      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
-        [Validators.required, Validators.minLength(5)]
-      )
-      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
-    }
-  }
-
-  agregarFormaPago(): void {
-
-    if (!this.formasPago.includes(this.selectFormaPago)) {
-      this.formasPago.push(this.selectFormaPago);
-    }
-
-    switch (this.selectFormaPago) {
-      case 'transferencia':
-        this.mostrarInputTransaccion = true;
-        this.mostrarCargarArchivo = true;
-        //this.notaPedido.get('archivoFormaPago').setValidators([Validators.required]);
-        //this.notaPedido.get('archivoFormaPago').updateValueAndValidity();
-        this.notaPedido.get('numTransaccionTransferencia').setValidators([Validators.required]);
-        this.notaPedido.get('numTransaccionTransferencia').updateValueAndValidity();
-        this.notaPedido.get('montoTransferencia').setValidators([Validators.required, Validators.pattern('^[0-9]*$')]);
-        this.notaPedido.get('montoTransferencia').updateValueAndValidity();
-        //this.mostrarInputCobro = false;
-        break;
-      case 'efectivo':
-        //this.mostrarInputTransaccion = false;
-        //this.mostrarCargarArchivo = false;
-        this.mostrarInputCobro = true;
-        this.notaPedido.get('totalCobroEfectivo').setValidators([Validators.required]);
-        this.notaPedido.get('totalCobroEfectivo').updateValueAndValidity();
-
-        break;
-      case 'tarjeta_credito':
-        this.mostrarInputTransaccionCredito = true;
-        this.mostrarCargarArchivoCredito = true;
-        //this.notaPedido.get('archivoFormaPagoCredito').setValidators([Validators.required]);
-        //this.notaPedido.get('archivoFormaPagoCredito').updateValueAndValidity();
-        this.notaPedido.get('numTransaccionCredito').setValidators([Validators.required]);
-        this.notaPedido.get('numTransaccionCredito').updateValueAndValidity();
-        this.notaPedido.get('montoCredito').setValidators([Validators.required]);
-        this.notaPedido.get('montoCredito').updateValueAndValidity();
-        //this.mostrarInputCobro = false;
-        break;
-      default:
-        console.log("Seleccione una forma de pago válida");
-    }
-  }
-
   onSelectChangeFormaPago(event: any) {
-    this.selectFormaPago = event.target.value;
+    const selectedValue = event.target.value;
+    if (selectedValue === 'transferencia') {
+      this.mostrarInputTransaccion = true;
+      this.mostrarCargarArchivo = true;
+      this.mostrarInputCobro = false;
+
+    } else if (selectedValue === 'efectivo') {
+      this.mostrarInputTransaccion = false;
+      this.mostrarCargarArchivo = false;
+      this.mostrarInputCobro = true;
+    } else {
+      this.mostrarInputTransaccion = false;
+      this.mostrarCargarArchivo = false;
+      this.mostrarInputCobro = false;
+    }
   }
 
   onFileSelected(event: any): void {
-    if (this.mostrarCargarArchivo) {
-      this.archivo.append('archivoFormaPago', event.target.files.item(0), event.target.files.item(0).name);
-    } else {
-      this.archivo.delete('archivoFormaPago');
-    }
-  }
-
-  onFileSelectedTarjeta(event: any): void {
-    if (this.mostrarCargarArchivoCredito) {
-      this.archivo.append('archivoFormaPagoCredito', event.target.files.item(0), event.target.files.item(0).name);
-    } else {
-      this.archivo.delete('archivoFormaPagoCredito');
-    }
+    this.archivo.delete('archivoFormaPago');
+    this.archivo.append('archivoFormaPago', event.target.files.item(0), event.target.files.item(0).name);
+    // this.fileToUpload = event.target.files.item(0);
   }
 
   guardarComprobanteTransferencia(): void {
@@ -624,6 +500,22 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       const formData = new FormData();
       formData.append('archivoFormaPago', this.fileToUpload, this.fileToUpload.name);
     }
+  }
+
+  guardarArchivoTransaccion() {
+    if (this.archivo) {
+      const formData = new FormData();
+      formData.append('archivoFormaPago', 'asjfasijfnaskfjasfiasn');
+      formData.append('id', '555555');
+      //this.contactosService.actualizarVentaFormData(formData)
+      //  .subscribe(() => {
+      //    this.modalService.dismissAll();
+      //  });
+
+    } else {
+      console.error('No se ha seleccionado ningún archivo.');
+    }
+
   }
 
   cargarImagen(i, event: any): void {
@@ -635,12 +527,11 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         const nuevaImagen = e.target.result;
-        this.detallesArray.controls[i].get('imagen_principal').setValue(nuevaImagen);
-        this.datosProducto.append('imagen_principal', archivo)
-        //this.datosProducto.append('imagenes[' + 0 + ']id', '0');
-        //this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
+        this.detallesArray.controls[i].get('imagen').setValue(nuevaImagen);
+        this.datosProducto.append('imagenes[' + 0 + ']id', '0');
+        this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
         this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
-        this.datosProducto.append('canal', this.detallesArray.controls[i].get('canal').value);
+
         try {
           this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
             this.toaster.open('Imagen actualizada con éxito', {type: "info"});
@@ -657,58 +548,6 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   extraerHora(dateTimeString: string): string {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(' ')[0];
-  }
-
-  extraerPrecios(info: any) {
-    const precios = [];
-    Object.keys(info).forEach(clave => {
-      if (clave.startsWith('precioVenta')) {
-        precios.push({clave: clave, valor: info[clave]});
-      }
-    });
-    return precios;
-  }
-
-  quitarPagoTransferencia() {
-    this.eliminarDatoArregloFormaPago('transferencia');
-    this.archivo.delete('archivoFormaPago');
-    this.notaPedido.get('montoTransferencia').setValue(0);
-    this.calcularTotalFormaPago();
-    this.notaPedido.get('numTransaccionTransferencia').setValidators([]);
-    this.notaPedido.get('numTransaccionTransferencia').updateValueAndValidity();
-    this.notaPedido.get('montoTransferencia').setValidators([]);
-    this.notaPedido.get('montoTransferencia').updateValueAndValidity();
-    this.mostrarCargarArchivo = false;
-    this.mostrarInputTransaccion = false;
-  }
-
-  quitarPagoCredito() {
-    this.eliminarDatoArregloFormaPago('tarjeta_credito');
-    this.mostrarCargarArchivoCredito = false;
-    this.archivo.delete('archivoFormaPagoCredito');
-    this.notaPedido.get('montoCredito').setValue(0);
-    this.calcularTotalFormaPago();
-    this.notaPedido.get('numTransaccionCredito').setValidators([]);
-    this.notaPedido.get('numTransaccionCredito').updateValueAndValidity();
-    this.notaPedido.get('montoCredito').setValidators([]);
-    this.notaPedido.get('montoCredito').updateValueAndValidity();
-    this.mostrarInputTransaccionCredito = false;
-  }
-
-  quitarPagoEfectivo() {
-    this.eliminarDatoArregloFormaPago('efectivo');
-    this.notaPedido.get('totalCobroEfectivo').setValue(0);
-    this.calcularTotalFormaPago();
-    this.notaPedido.get('totalCobroEfectivo').setValidators([]);
-    this.notaPedido.get('totalCobroEfectivo').updateValueAndValidity();
-    this.mostrarInputCobro = false;
-  }
-
-  eliminarDatoArregloFormaPago(valor) {
-    let indice = this.formasPago.indexOf(valor);
-    if (indice !== -1) {
-      this.formasPago.splice(indice, 1);
-    }
   }
 
 }
