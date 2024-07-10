@@ -444,10 +444,6 @@ export class GsbReporteVentasComponent implements OnInit, AfterViewInit {
           this.verificarSuperBarato = true;
         }, error => this.toaster.open(error, {type: 'danger'}))
       }
-
-      this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
-      });
-
     }
   }
 

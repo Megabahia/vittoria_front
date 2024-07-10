@@ -567,7 +567,7 @@
             <form [formGroup]="notaPedido">
               <div class="card-body invoice-padding">
                 <div class="row">
-                  <div class="col-6">
+                  <div class="col-md-6 col-12">
                     <div class="form-group">
                       <label for="tipoPago">Factura</label>
                       <select id="tipoPago" class="form-control" formControlName="tipoPago"
@@ -585,7 +585,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-6" *ngIf="mostrarInputComprobante">
+                  <div class="col-md-6 col-12" *ngIf="mostrarInputComprobante">
                     <div class="form-group">
                       <label for="numeroComprobante">Ingreso número de comprobante</label>
                       <input class="form-control" type="text" id="numeroComprobante"

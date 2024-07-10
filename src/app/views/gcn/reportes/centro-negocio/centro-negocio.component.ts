@@ -41,6 +41,7 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
   usuarioSeleccionado='';
   centroNegocioSeleccionado = '';
   empresas = [];
+  enviando = false;
 
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -285,9 +286,7 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
 
       total += parseFloat(detalles[index].get('precio').value);
     });
-    console.log(total)
     subtotalPedido = total / this.parametroIva;
-    console.log(subtotalPedido)
     this.totalIva = (total - subtotalPedido).toFixed(2);
     this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
     this.notaPedido.get('total').setValue(total.toFixed(2));
@@ -315,11 +314,32 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
   calculoComision(estado, total) {
     let variable2;
     if (estado === 'Entregado') {
-      variable2 = total/this.parametroIva;
+      variable2 = total / this.parametroIva;
       return (variable2 * this.comision).toFixed(2);
     }else{
       return '--';
     }
+  }
+
+  reporteProductosStock(): void {
+    this.enviando = true;
+    this.pedidosService.exportar({
+      inicio: this.transformarFecha(this.inicio),
+      fin: this.transformarFecha(this.fin),
+      compania: this.centroNegocioSeleccionado,
+      rol: this.usuario.usuario.idRol,
+      estado: this.estadoSeleccionado === '' ? '' : [this.estadoSeleccionado],
+      usuarioVendedor: this.usuarioSeleccionado
+    }).subscribe((data) => {
+      this.enviando = false;
+      const downloadURL = window.URL.createObjectURL(data);
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = 'reporte_centro_negocio.xlsx';
+      link.click();
+    }, (error) => {
+      this.enviando = false;
+    });
   }
 
 }
