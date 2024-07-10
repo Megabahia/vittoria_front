@@ -151,10 +151,10 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       }),
       vendedor: ['', [Validators.required]],
       articulos: this.formBuilder.array([], Validators.required),
-      total: ['', [Validators.required]],
+      total: [0, [Validators.required]],
       subtotal: [0],
       envioTotal: [0, [Validators.required]],
-      numeroPedido: [this.generarID(), [Validators.required]],
+      numeroDespacho: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['', [Validators.required]],
       archivoMetodoPago: ['', [Validators.required]],
@@ -165,8 +165,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       envio: ['', []],
       envios: ['', []],
       json: ['', []],
-      numeroComprobante: [''],
-      tipoPago: ['',],
+      tipoPago: [''],
     });
   }
 
@@ -243,10 +242,18 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
       facturaFisicaLlaves.map((llaves, index) => {
-        this.archivo.delete(llaves);
-        this.archivo.append(llaves, facturaFisicaValores[index]);
+        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago' && llaves !== 'archivoComprobanteVenta') {
+          if (llaves === 'articulos' || llaves === 'facturacion') {
+            this.archivo.delete(llaves);
+            this.archivo.append(llaves, JSON.stringify(facturaFisicaValores[index]));
+          } else {
+            this.archivo.delete(llaves);
+            this.archivo.append(llaves, facturaFisicaValores[index]);
+          }
 
+        }
       });
+
       this.megabahiaService.crearNuevoMegabahiaDespacho(this.archivo).subscribe((info) => {
           this.modalService.dismissAll();
           this.notaPedido.patchValue({...info});
@@ -452,9 +459,10 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       this.notaPedido.get('archivoMetodoPago').setValidators([Validators.required]);
       this.notaPedido.get('archivoMetodoPago').updateValueAndValidity();
     } else {
-      this.mostrarInputArchivoComprobante = false;
       this.notaPedido.get('archivoMetodoPago').setValidators([]);
       this.notaPedido.get('archivoMetodoPago').updateValueAndValidity();
+      this.archivo.delete('archivoMetodoPago');
+      this.mostrarInputArchivoComprobante = false;
     }
   }
 
@@ -465,6 +473,8 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
 
   onFileSelectedComprobantePago(event: any): void {
     this.archivo.append('archivoMetodoPago', event.target.files.item(0), event.target.files.item(0).name);
+    this.notaPedido.get('archivoMetodoPago').setValue(event.target.files.item(0));
+
   }
 
 }
