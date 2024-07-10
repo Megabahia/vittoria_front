@@ -263,7 +263,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     this.obtenerListaProductos();
     this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
     this.contactosService.obtenerContacto(id).subscribe((info) => {
-      if (info.tipoPago === 'rimpePopular') {
+      /*if (info.tipoPago === 'rimpePopular') {
         this.mostrarInputComprobante = true;
       } else if (info.tipoPago === 'facturaElectronica') {
         this.mostrarInputComprobante = false;
@@ -279,14 +279,15 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         this.mostrarInputTransaccion = false;
         this.mostrarCargarArchivo = false;
         this.mostrarInputCobro = true;
-      } else {
-        this.mostrarInputTransaccion = false;
-        this.mostrarCargarArchivo = false;
-        this.mostrarInputCobro = false;
-        this.mostrarCargarArchivoCredito = false;
-        this.mostrarInputTransaccionCredito = false;
-        this.formasPago = [];
-      }
+      } else {*/
+      this.mostrarInputComprobante = false;
+      this.mostrarInputTransaccion = false;
+      this.mostrarCargarArchivo = false;
+      this.mostrarInputCobro = false;
+      this.mostrarCargarArchivoCredito = false;
+      this.mostrarInputTransaccionCredito = false;
+      this.formasPago = [];
+      //}
 
       this.provincia = info.facturacion.provincia;
       this.obtenerCiudad();
@@ -449,10 +450,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   }
 
   calcularTotalFormaPago() {
-    console.log('ENTRA CALCULO')
-    console.log(this.notaPedido.value.totalCobroEfectivo + this.notaPedido.value.montoCredito + this.notaPedido.value.montoTransferencia)
     this.totalFormaPago = parseFloat(this.notaPedido.value.totalCobroEfectivo || 0) + parseFloat(this.notaPedido.value.montoCredito || 0) + parseFloat(this.notaPedido.value.montoTransferencia || 0);
-
   }
 
 
@@ -673,14 +671,14 @@ export class ContactoComponent implements OnInit, AfterViewInit {
 
   quitarPagoTransferencia() {
     this.eliminarDatoArregloFormaPago('transferencia');
-    this.mostrarCargarArchivo = false;
     this.archivo.delete('archivoFormaPago');
-    this.notaPedido.value.montoTransferencia = 0;
+    this.notaPedido.get('montoTransferencia').setValue(0);
     this.calcularTotalFormaPago();
     this.notaPedido.get('numTransaccionTransferencia').setValidators([]);
     this.notaPedido.get('numTransaccionTransferencia').updateValueAndValidity();
     this.notaPedido.get('montoTransferencia').setValidators([]);
     this.notaPedido.get('montoTransferencia').updateValueAndValidity();
+    this.mostrarCargarArchivo = false;
     this.mostrarInputTransaccion = false;
   }
 
@@ -688,7 +686,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     this.eliminarDatoArregloFormaPago('tarjeta_credito');
     this.mostrarCargarArchivoCredito = false;
     this.archivo.delete('archivoFormaPagoCredito');
-    this.notaPedido.value.montoCredito = 0;
+    this.notaPedido.get('montoCredito').setValue(0);
     this.calcularTotalFormaPago();
     this.notaPedido.get('numTransaccionCredito').setValidators([]);
     this.notaPedido.get('numTransaccionCredito').updateValueAndValidity();
@@ -699,7 +697,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
 
   quitarPagoEfectivo() {
     this.eliminarDatoArregloFormaPago('efectivo');
-    this.notaPedido.value.totalCobroEfectivo = 0;
+    this.notaPedido.get('totalCobroEfectivo').setValue(0);
     this.calcularTotalFormaPago();
     this.notaPedido.get('totalCobroEfectivo').setValidators([]);
     this.notaPedido.get('totalCobroEfectivo').updateValueAndValidity();
@@ -708,9 +706,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
 
   eliminarDatoArregloFormaPago(valor) {
     let indice = this.formasPago.indexOf(valor);
-    console.log(indice)
     if (indice !== -1) {
-      console.log('entra if')
       this.formasPago.splice(indice, 1);
     }
   }

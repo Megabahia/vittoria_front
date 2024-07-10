@@ -15,6 +15,9 @@ const routes: Routes = [
     path: 'gdc', loadChildren: () => import('./views/gdc/gdc.module').then(m => m.GdcModule)
   },
   {
+    path: 'gmb', loadChildren: () => import('./views/gmb/gmb.module').then(m => m.GmbModule)
+  },
+  {
     path: 'gdb', loadChildren: () => import('./views/gdb/gdb.module').then(m => m.GdbModule)
   },
   {

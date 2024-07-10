@@ -1,0 +1,497 @@
+<div class="app-content content ">
+  <div class="content-wrapper">
+    <div class="content-body">
+      <div class="card">
+        <h5 class="card-header">Filtros de búsqueda</h5>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              <input type="text" class="form-control form-control-sm" placeholder="Correo"
+                     [(ngModel)]="correo">
+
+            </div>
+            <div class="col-md-3">
+              <input type="text" class="form-control form-control-sm" placeholder="Número de WhatsApp"
+                     [(ngModel)]="whatsapp">
+            </div>
+
+            <div class="col-md-2">
+              <button class="btn btn-primary" (click)="obtenerMegabahiaDespacho()">
+                <i-feather name='search' class="edit-user"></i-feather>
+              </button>
+            </div>
+            <div class="col-md-1">
+              <button class="btn btn-primary" (click)="obtenerMegabahiaDespacho()">
+                <i-feather name='refresh-cw' class="edit-user"></i-feather>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-datatable table-responsive pt-0">
+          <div class="row m-75">
+            <div class="col-lg-12 col-xl-6">
+              <label>Mostrar</label>
+              <select class="form-control-sm" [(ngModel)]="pageSize"
+                      (change)="obtenerMegabahiaDespacho()">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+
+            </div>
+          </div>
+          <table class="user-list-table table">
+            <thead class="thead-light">
+            <tr>
+              <th>Fecha despacho</th>
+              <th>Canal despacho</th>
+              <th>Código usuario</th>
+              <th>Nombre usuario</th>
+              <th>Vendedor</th>
+              <th>Numero Despacho</th>
+              <th>Nombres Facturación</th>
+              <th>Apellidos Facturación</th>
+              <th>Metodo Pago</th>
+              <th>WhatspApp</th>
+              <th>Estado</th>
+              <th>Ver</th>
+              <th>Comprobante pago</th>
+              <th>Comprobante venta</th>
+              <!--<th>Acciones</th>-->
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let transaccion  of listaMegabahias; let i = index">
+              <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
+              <td [title]="transaccion.canal">{{ transaccion.canal | shorten }}</td>
+              <td>{{ transaccion.facturacion.codigoUsuario }}</td>
+              <td>{{ transaccion.facturacion.nombreUsuario }}</td>
+              <td>{{ transaccion.vendedor }}</td>
+              <td [title]="transaccion.numeroPedido">{{ transaccion.numeroDespacho  | shorten }}</td>
+              <td [title]="transaccion.facturacion.nombres">{{ transaccion.facturacion.nombres | shorten }}</td>
+              <td [title]="transaccion.facturacion.apellidos">{{ transaccion.facturacion.apellidos | shorten }}</td>
+              <td [title]="transaccion.metodoPago">{{ transaccion.metodoPago | shorten }}</td>
+              <td>{{ transaccion.facturacion.telefono }}</td>
+              <td>{{ transaccion.estado }}</td>
+
+              <td>
+                <a (click)="obtenerMegabahia(notaPedidoModal, transaccion.id)">
+                  <i-feather name="eye" class="mr-25"></i-feather>
+                </a>
+              </td>
+              <td>
+                <a href="{{transaccion.archivoMetodoPago}}" *ngIf="transaccion.archivoMetodoPago" target="_blank">
+                  <i-feather name="file-text" class="mr-25"></i-feather>
+                </a>
+              </td>
+              <td>
+                <a href="{{transaccion.archivoComprobanteVenta}}" *ngIf="transaccion.archivoComprobanteVenta" target="_blank">
+                  <i-feather name="file-text" class="mr-25"></i-feather>
+                </a>
+              </td>
+
+            </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
+                        [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+
+        <ng-template #notaPedidoModal let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title">Nota de Despacho MEGABAHIA</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <hr class="invoice-spacing"/>
+
+          <div class="modal-content">
+            <form [formGroup]="notaPedido">
+              <div class="card invoice-preview-card">
+                <!-- Header starts -->
+                <div class="card-body invoice-padding pb-0">
+                  <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+                    <div>
+                      <div class="col-12 d-block mb-2">
+                        <span class="title">Fecha para despacho:</span>
+                        <input type="text"
+                               placeholder={{formatearFecha()}}
+                               class="form-control invoice-edit-input date-picker"
+                               disabled
+                        />
+                        <span class="title text-danger">Hora: </span>
+                        <span class="text-danger">{{ horaPedido }}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="col-12 d-block align-items-center">
+                        <span class="title">Número para Despacho:</span>
+                        <input type="text"
+                               class="form-control invoice-edit-input date-picker"
+                               formControlName="numeroDespacho"
+                               disabled/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Header ends -->
+
+                <hr class="invoice-spacing"/>
+
+                <!-- Address and Contact starts -->
+                <div class="card-body invoice-padding pt-0">
+                  <h4 class="invoice-title mb-2">Datos para el Despacho</h4>
+                  <div formGroupName="facturacion">
+                    <div class="row">
+                      <div class="col-md-4 col-12">
+                        <label>Nombres</label>
+                        <input class="form-control" type="text"
+                               formControlName="nombres" disabled
+                        >
+
+                      </div>
+                      <div class="col-md-4 col-12">
+                        <label>Apellidos</label>
+                        <input class="form-control" type="text"
+                               formControlName="apellidos" disabled
+                        >
+
+                      </div>
+                      <div class="col-md-4 col-12">
+                        <label>Correo electrónico</label>
+                        <input class="form-control" type="text"
+                               formControlName="correo" disabled
+                        >
+                      </div>
+                      <div class="col-md-4 col-12">
+                        <div class="form-group">
+                          <label for="tipoIdentificacion">Tipo de Identificación</label>
+                          <select id="tipoIdentificacion" class="form-control" formControlName="tipoIdentificacion"
+                                  disabled>
+                            <option value="" disabled>- Seleccione -</option>
+                            <option value="cedula" selected>Cédula</option>
+                            <option value="ruc">RUC</option>
+                            <option value="pasaporte">Pasaporte</option>
+                          </select>
+
+                        </div>
+                      </div>
+                      <div class="col-md-4 col-12">
+                        <label>Numero Identificación</label>
+                        <input class="form-control" type="text"
+                               formControlName="identificacion" disabled
+                        >
+
+                      </div>
+                      <div class="col-md-4 col-12">
+                        <label>Número de WhatsApp</label>
+                        <input class="form-control" type="text"
+                               formControlName="telefono" disabled
+                        >
+
+                      </div>
+                      <div class="col-md-4 col-12">
+                        <label>País</label>
+                        <input class="form-control" type="text"
+                               formControlName="pais" disabled
+                        >
+
+                      </div>
+                      <div class="col-md-4 col-12">
+                        <label for="provinciaMegabahia">Provincia</label>
+                        <select class="form-control" name="provinciaMegabahia" formControlName="provincia"
+                                (change)="obtenerCiudad()" id="provinciaMegabahia" disabled>
+                          <option value="" selected>- Seleccione -</option>
+                          <option value="{{pais.nombre}}" *ngFor="let pais of provinciaOpciones">
+                            {{ pais.nombre }}
+                          </option>
+                        </select>
+
+                      </div>
+                      <div class="col-md-4 col-12">
+                        <label for="ciudadContacto">Ciudad</label>
+                        <select class="form-control" name="ciudadContacto" formControlName="ciudad"
+                                id="ciudadContacto" disabled>
+                          <option value="" selected>- Seleccione -</option>
+                          <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
+                            {{ ciudad.nombre }}
+                          </option>
+                        </select>
+
+                      </div>
+                      <div class="col-md-4 col-12">
+                        <label>Calle principal</label>
+                        <input class="form-control" type="text"
+                               formControlName="callePrincipal" disabled
+                        >
+
+                      </div>
+                      <div class="col-md-4 col-12">
+                        <label>Número de casa</label>
+                        <input class="form-control" type="text"
+                               formControlName="numero" disabled
+                        >
+                      </div>
+                      <div class="col-md-4 col-12">
+                        <label>Calle secundaria</label>
+                        <input class="form-control" type="text"
+                               formControlName="calleSecundaria" disabled
+                        >
+                      </div>
+                      <div class="col-md-4 col-12">
+                        <label>Referencia</label>
+                        <input class="form-control" type="text"
+                               formControlName="referencia" disabled
+                        >
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 col-12">
+                  <label>Metodo Pago</label>
+                  <label>{{notaPedido.value.metodoPago | uppercase}}</label>
+                </div>
+                <div class="col-md-4 mt-1">
+                  <label>Vendedor: </label>
+                  <label>{{notaPedido.value.vendedor}}</label>
+                </div>
+                <!-- Address and Contact ends -->
+                <hr class="invoice-spacing"/>
+                <!-- Product Details starts -->
+                <div class="card-body invoice-padding">
+                  <div>
+                    <label>Canal de producto: </label><br/>
+                    <label>{{notaPedido.value.canal}}</label>
+                  </div>
+                  <div formArrayName="articulos">
+                    <form class="source-item">
+                      <div data-repeater-list="group-a"
+                           *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
+                        <ng-container class="row" [formGroup]="detalle">
+                          <div class="repeater-wrapper" data-repeater-item>
+                            <div class="row">
+                              <div class="col-12 d-flex product-details-border position-relative pr-0">
+                                <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                  <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Código Producto
+                                    </p>
+                                    <input class="form-control" type="text"
+                                           (change)="obtenerProducto(i)"
+                                           formControlName="codigo" disabled>
+
+                                  </div>
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Nombre
+                                    </p>
+                                    <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
+                                  </div>
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0 red text-danger">
+                                      Cantidad
+                                    </p>
+                                    <label>{{ detalle.controls.cantidad.value }}</label>
+
+                                  </div>
+
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Valor Unitario
+                                    </p>
+                                    <label>{{ detalle.controls.valorUnitario.value }}</label>
+                                  </div>
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Total
+                                    </p>
+                                    <label>{{ detalle.controls.precio.value }}</label>
+
+                                  </div>
+                                  <div class="col-md-2 border-left">
+                                    <img class="img-detalle"
+                                         src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
+                                         *ngIf="detalle.controls?.imagen_principal" width="100px" height="100px" alt="">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <div class="card-body invoice-padding">
+
+                </div>
+                <!-- Product Details ends -->
+                <hr class="invoice-spacing"/>
+                <!-- Invoice Total starts -->
+                <div class="card-body invoice-padding">
+                  <div formGroupName="facturacion">
+                    <div class="row mb-1">
+                      <div class="col-md-6">
+                        <label for="codigoUsuario" class="form-label">Codigo
+                          Usuario:</label>
+                        <input type="text" class="form-control" id="codigoUsuario" formControlName="codigoUsuario" disabled
+                        />
+                      </div>
+                      <div class="col-md-6">
+                        <label for="nombreUsuario" class="form-label">Nombre
+                          Usuario:</label>
+                        <input type="text" class="form-control" id="nombreUsuario" formControlName="nombreUsuario" disabled/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row d-flex justify-content-end">
+                    <div class="col-md-5 text-right">
+                      <div class="invoice-total-wrapper">
+                        <hr class="my-20"/>
+                        <div class="invoice-total-item">
+                          <p class="invoice-total-title text-primary font-weight-bold">
+                            Costo envio: ${{ notaPedido.controls.envioTotal.value }}</p>
+                        </div>
+                        <div class="invoice-total-item">
+                          <p class="invoice-total-title text-primary font-weight-bold">
+                            Subtotal: ${{ notaPedido.controls.subtotal.value }}</p>
+                        </div>
+                        <div class="invoice-total-item">
+                          <p class="invoice-total-title text-primary font-weight-bold">
+                            IVA (15%): ${{ totalIva }}</p>
+                        </div>
+                        <div class="invoice-total-item">
+                          <p class="invoice-total-title text-primary font-weight-bold">
+                            Total a pagar por el cliente: ${{ notaPedido.controls.total.value }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="reset" class="btn btn-secondary"
+                    (click)="modal.dismiss( 'Cross click')">Cerrar
+            </button>
+
+          </div>
+        </ng-template>
+
+        <ng-template #facturacionModal let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title">Generar Venta</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-content">
+
+            <div class="card-body">
+              <h5 class="text-danger">Total a pagar: ${{ notaPedido.controls.total.value }}</h5>
+            </div>
+            <form [formGroup]="notaPedido">
+              <div class="card-body invoice-padding">
+                <div class="row">
+
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="tipoPago">Factura</label>
+                      <select id="tipoPago" class="form-control" formControlName="tipoPago"
+                              (change)="onSelectChange($event)">
+                        <option value="" disabled selected>- Seleccione -</option>
+                        <option value="facturaElectronica">Factura electrónica</option>
+                        <option value="rimpePopular">Rimpe popular</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-6" *ngIf="mostrarInputComprobante">
+                    <div class="form-group">
+                      <label for="numeroComprobante">Ingreso número de comprobante</label>
+                      <input class="form-control" type="text" id="numeroComprobante"
+                             formControlName="numeroComprobante"/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-4">
+                    <label for="formaPago">Forma de pago</label>
+                    <select id="formaPago" class="form-control" formControlName="formaPago"
+                            (change)="onSelectChangeFormaPago($event)">
+                      <option value="" selected disabled>- Seleccione -</option>
+                      <option value="transferencia">Transferencia</option>
+                      <option value="efectivo">Efectivo</option>
+                    </select>
+                    <div *ngIf="notaPedidoForm.formaPago.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="notaPedidoForm.formaPago.errors.required">
+                        Requerido
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-4" *ngIf="mostrarCargarArchivo">
+                    <label>Comprobante de pago</label>
+                    <input class="form-control-file" type="file" (change)="onFileSelected($event)">
+                  </div>
+
+                  <div class="col-4" *ngIf="mostrarInputTransaccion">
+                    <div class="form-group">
+                      <label for="numTransaccionTransferencia">Número de transacción</label>
+                      <input class="form-control" type="text" id="numTransaccionTransferencia"
+                             formControlName="numTransaccionTransferencia"/>
+                    </div>
+                  </div>
+
+                  <div class="col-4" *ngIf="mostrarInputCobro">
+                    <div class="form-group">
+                      <label for="totalCobroEfectivo">Total de cobro</label>
+                      <input class="form-control" type="text" id="totalCobroEfectivo"
+                             formControlName="totalCobroEfectivo"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <button type="reset" class="btn btn-secondary"
+                    (click)="modal.dismiss( 'Cross click')">Cerrar
+            </button>
+            <button class="btn btn-primary mx-1"
+                    (click)="actualizar()"
+            >Guardar
+            </button>
+          </div>
+        </ng-template>
+        <hr/>
+      </div>
+    </div>
+  </div>
+
+
+  <ng-template #aviso let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Mensaje</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div [innerHTML]="mensaje"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-light" (click)="cerrarModal()">Cerrar</button>
+    </div>
+  </ng-template>
