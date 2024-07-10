@@ -16,8 +16,8 @@ import {UsersService} from '../../../services/admin/users.service';
 
 @Component({
   selector: 'app-megabahia',
-  templateUrl: './Megabahia.component.html',
-  styleUrls: ['Megabahia.component.css'],
+  templateUrl: './megabahia.component.html',
+  styleUrls: ['megabahia.component.css'],
   providers: [DatePipe]
 })
 export class MegabahiaComponent implements OnInit, AfterViewInit {
