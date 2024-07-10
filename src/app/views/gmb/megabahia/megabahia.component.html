@@ -275,7 +275,7 @@
             <select class="form-control"
                     formControlName="vendedor">
               <option value="" selected>- Seleccione vendedor-</option>
-              <option value="{{usuario.username}}" *ngFor="let usuario of listaUsuarios">
+              <option value="{{ usuario.username }}" *ngFor="let usuario of listaUsuarios">
                 {{ usuario.username }} - {{ usuario.nombres }} {{ usuario.apellidos }}
               </option>
             </select>

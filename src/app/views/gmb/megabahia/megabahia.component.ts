@@ -153,7 +153,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       articulos: this.formBuilder.array([], Validators.required),
       total: [0, [Validators.required]],
       subtotal: [0],
-      envioTotal: [0, [Validators.required]],
+      envioTotal: [0, []],
       numeroDespacho: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['', [Validators.required]],
@@ -242,7 +242,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
       facturaFisicaLlaves.map((llaves, index) => {
-        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago' && llaves !== 'archivoComprobanteVenta') {
+        if (llaves !== 'archivoMetodoPago' && llaves !== 'archivoComprobanteVenta') {
           if (llaves === 'articulos' || llaves === 'facturacion') {
             this.archivo.delete(llaves);
             this.archivo.append(llaves, JSON.stringify(facturaFisicaValores[index]));
@@ -250,9 +250,12 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
             this.archivo.delete(llaves);
             this.archivo.append(llaves, facturaFisicaValores[index]);
           }
-
         }
       });
+      this.archivo.delete('envio')
+      this.archivo.delete('envios')
+      this.archivo.delete('json')
+      this.archivo.delete('tipoPago')
 
       this.megabahiaService.crearNuevoMegabahiaDespacho(this.archivo).subscribe((info) => {
           this.modalService.dismissAll();
