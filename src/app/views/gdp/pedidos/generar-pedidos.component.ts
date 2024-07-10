@@ -51,7 +51,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   whatsapp = '';
   correo = ''
   usuarioActual;
-  canalSeleccionado='megabahia.megadescuento.com';
+  canalSeleccionado = 'megabahia.megadescuento.com';
   cedulaABuscar = ''
   clientes;
   cliente;
@@ -66,6 +66,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   verDireccion = true;
   listaCanalesProducto;
   tipoIdentificacion;
+  hablilitarBotonGuardar = true;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -203,7 +204,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       precios: [[], []],
       canal: ['megabahia.megadescuento.com'],
       woocommerceId: [''],
-      imagen_principal:['', [Validators.required]]
+      imagen_principal: ['', [Validators.required]]
     });
   }
 
@@ -234,6 +235,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   }
 
   crearNuevaVenta(modal): void {
+    this.hablilitarBotonGuardar = true;
     this.canalSeleccionado = 'megabahia.megadescuento.com';
     this.iniciarNotaPedido();
     this.obtenerListaProductos();
@@ -258,7 +260,9 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
     }
+
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.hablilitarBotonGuardar = false;
       this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
           this.modalService.dismissAll();
           this.notaPedido.patchValue({...info, id: this.idContacto});
@@ -270,6 +274,8 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
         }, error => this.toaster.open(error, {type: 'danger'})
       );
+    } else {
+      this.hablilitarBotonGuardar = true;
     }
   }
 
@@ -408,7 +414,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   }
 
   validarDatos(): void {
-    if ( this.notaPedido.value.facturacion.tipoIdentificacion === null && this.notaPedido.value.facturacion.identificacion !== '' ){
+    if (this.notaPedido.value.facturacion.tipoIdentificacion === null && this.notaPedido.value.facturacion.identificacion !== '') {
       this.notaPedido.get('facturacion').get('tipoIdentificacion').setValidators([Validators.required]);
       this.notaPedido.get('facturacion').get('tipoIdentificacion').updateValueAndValidity();
     } else {
@@ -573,7 +579,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       )
       this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
     }
-    this.tipoIdentificacion=selectedValue
+    this.tipoIdentificacion = selectedValue
 
   }
 

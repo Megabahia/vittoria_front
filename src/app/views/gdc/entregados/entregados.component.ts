@@ -382,8 +382,6 @@ export class EntregadosComponent implements OnInit, AfterViewInit {
         }, error => this.toaster.open(error, {type: 'danger'}))
       }
 
-      this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
-      });
     }
   }
 
