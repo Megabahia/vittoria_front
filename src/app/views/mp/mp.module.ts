@@ -12,6 +12,7 @@ import { PedidosComponent } from './pedidos/pedidos.component';
 import { PedidosDevueltosComponent } from './pedidos-devueltos/pedidos-devueltos.component';
 import { PedidosRechazadosComponent } from './pedidos-rechazados/pedidos-rechazados.component';
 import {GdeModule} from '../gde/gde.module';
+import {PedidoMegabahiaComponent} from "./pedidos-canal/pedido-megabahia/pedido-megabahia.component";
 
 
 
@@ -21,6 +22,7 @@ import {GdeModule} from '../gde/gde.module';
     PedidosComponent,
     PedidosDevueltosComponent,
     PedidosRechazadosComponent,
+    PedidoMegabahiaComponent
   ],
   imports: [
     CommonModule,

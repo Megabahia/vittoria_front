@@ -1,166 +1,297 @@
 <div class="app-content content">
-    <div class="content-overlay"></div>
-    <div class="header-navbar-shadow"></div>
-    <div class="content-wrapper">
-        <div class="content-header row">
-        </div>
-        <div class="content-body">
-            <!-- users list start -->
-            <section class="app-user-list">
-                <!-- list section start -->
-                <div class="card">
-                    <div class="card-datatable table-responsive pt-0">
-                        <div class="row m-75">
-                            <div class="col-lg-12 col-xl-6">
-                                <label>Mostrar</label>
-                                <select class="form-control-sm" [(ngModel)]="pageSize"
-                                        (change)="obtenerListaParametros()">
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-
-                            </div>
-                            <div class="col-lg-12 col-xl-6 text-right">
-                                <button class="btn btn-primary" tabindex="0" aria-controls="DataTables_Table_0"
-                                        type="button" data-toggle="modal" data-target="#modals-slide-in"
-                                        (click)="insertarParametro()">
-                                    Añadir Integracion
-                                </button>
-                            </div>
-                        </div>
-                        <table class="user-list-table table">
-                            <thead class="thead-light">
-                            <tr>
-                                <th>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck2"/>
-                                        <label class="custom-control-label" for="customCheck2"></label>
-                                    </div>
-                                </th>
-                                <th>Valor</th>
-                                <th>Acciones</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr *ngFor="let parametro of parametros; let i = index">
-                                <td>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck2{{i}}"/>
-                                        <label class="custom-control-label" for="customCheck2{{i}}"></label>
-                                    </div>
-                                </td>
-                                <td> {{parametro.valor}}</td>
-                                <td>
-                                    <a data-toggle="modal" data-target="#modals-slide-in"
-                                       (click)="editarParametro(parametro.id)">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                             stroke-linecap="round" stroke-linejoin="round" class="mr-50">
-                                            <polyline points="21 8 21 21 3 21 3 8"></polyline>
-                                            <rect x="1" y="3" width="22" height="5"></rect>
-                                            <line x1="10" y1="12" x2="14" y2="12"></line>
-                                        </svg>
-                                    </a>
-                                    <a (click)="abrirModal(contenido,parametro.id)">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                             stroke-linecap="round" stroke-linejoin="round" class="mr-50">
-                                            <polyline points="3 6 5 6 21 6"></polyline>
-                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                            <line x1="10" y1="11" x2="10" y2="17"></line>
-                                            <line x1="14" y1="11" x2="14" y2="17"></line>
-                                        </svg>
-                                    </a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page"
-                                        [pageSize]="pageSize" [maxSize]="5" [ellipses]="false"
-                                        [boundaryLinks]="true"></ngb-pagination>
-
-                    </div>
-                </div>
-                <!-- list section end -->
-                <ng-template #contenido let-modal>
-                    <div class="modal-header">
-                        <h4 class="modal-title">Mensaje</h4>
-                        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Confirma eliminar</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" (click)="cerrarModal()">SI</button>
-                    </div>
-                </ng-template>
-                <!-- Modal to add new user starts-->
-                <div class="modal modal-slide-in new-user-modal fade" id="modals-slide-in">
-                    <div class="modal-dialog">
-                        <div class="modal-content pt-0">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
-                            <div class="modal-header mb-1">
-                                <h5 class="modal-title" id="exampleModalLabel">Nuevo</h5>
-                            </div>
-                            <div class="modal-body flex-grow-1">
-                                <form class="auth-login-form mt-2" [formGroup]="paramForm">
-                                    <div class="form-group">
-                                        <label class="form-label" for="basic-icon-default-fullname">Nombre
-                                            Pagina:</label>
-                                        <input type="text" class="form-control dt-full-name"
-                                               id="basic-icon-default-fullname" name="nombre" formControlName="nombre"
-                                               [(ngModel)]="nombre"/>
-                                        <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback"
-                                             style="display: block;">
-                                            <div *ngIf="f.nombre.errors.required">Nombre pagina es requerido
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="basic-icon-default-email">Url:</label>
-                                        <input type="text" id="basic-icon-default-email" class="form-control dt-email"
-                                               name="valor" formControlName="valor" [(ngModel)]="valor"/>
-                                        <div *ngIf="submitted && f.valor.errors" class="invalid-feedback"
-                                             style="display: block;">
-                                            <div *ngIf="f.valor.errors.required">Url es requerido</div>
-                                        </div>
-                                    </div>
-                                </form>
-                                <button class="btn btn-primary mr-1" aria-label="Close" (click)="gestionarParametro()">
-                                    <span *ngIf="cargando" class="spinner-border spinner-border-sm"></span>Guardar
-                                </button>
-                                <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal"
-                                        style="display: none;"></button>
-                                <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Modal to add new user Ends-->
-            </section>
-            <!-- users list ends -->
-        </div>
+  <div class="content-overlay"></div>
+  <div class="header-navbar-shadow"></div>
+  <div class="content-wrapper">
+    <div class="content-header row">
     </div>
+    <div class="content-body">
+      <!-- users list start -->
+      <section class="app-user-list">
+        <!-- list section start -->
+        <div class="card">
+          <div class="card-datatable table-responsive pt-0">
+            <div class="row m-75">
+              <div class="col-lg-12 col-xl-6">
+                <label>Mostrar</label>
+                <select class="form-control-sm" [(ngModel)]="page_size"
+                        (change)="obtenerListaParametros()">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+
+              </div>
+              <div class="col-lg-12 col-xl-6 text-right">
+                <button class="btn btn-primary" tabindex="0" aria-controls="DataTables_Table_0"
+                        type="button" data-toggle="modal" data-target="#modals-slide-in"
+                        (click)="insertarParametro()">
+                  Añadir Integracion
+                </button>
+              </div>
+            </div>
+            <table class="user-list-table table">
+              <thead class="thead-light">
+              <tr>
+                <th>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck2"/>
+                    <label class="custom-control-label" for="customCheck2"></label>
+                  </div>
+                </th>
+                <th>Valor</th>
+                <th>Acciones</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let parametro of parametros; let i = index">
+                <td>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck2{{i}}"/>
+                    <label class="custom-control-label" for="customCheck2{{i}}"></label>
+                  </div>
+                </td>
+                <td> {{ parametro.valor }}</td>
+                <td>
+                  <a data-toggle="modal" data-target="#modals-slide-in"
+                     (click)="editarParametro(parametro.id)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" class="mr-50">
+                      <polyline points="21 8 21 21 3 21 3 8"></polyline>
+                      <rect x="1" y="3" width="22" height="5"></rect>
+                      <line x1="10" y1="12" x2="14" y2="12"></line>
+                    </svg>
+                  </a>
+                  <a (click)="abrirModal(contenido,parametro.id)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" class="mr-50">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      <line x1="10" y1="11" x2="10" y2="17"></line>
+                      <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                  </a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page"
+                            [pageSize]="page_size" [maxSize]="5" [ellipses]="false"
+                            [boundaryLinks]="true"></ngb-pagination>
+
+          </div>
+        </div>
+        <!-- list section end -->
+        <ng-template #contenido let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title">Mensaje</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Confirma eliminar</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" (click)="cerrarModal()">SI</button>
+          </div>
+        </ng-template>
+        <!-- Modal to add new user starts-->
+        <div class="modal modal-slide-in new-user-modal fade" id="modals-slide-in">
+          <div class="modal-dialog">
+            <div class="modal-content pt-0">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+              <div class="modal-header mb-1">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo</h5>
+              </div>
+              <div class="modal-body flex-grow-1">
+                <form class="auth-login-form mt-2" [formGroup]="paramForm">
+                  <div class="form-group">
+                    <label class="form-label" for="basic-icon-default-fullname">Nombre Comercial del Canal:</label>
+                    <input type="text" class="form-control dt-full-name"
+                           id="basic-icon-default-fullname" name="nombre" formControlName="nombre"/>
+                    <div *ngIf="f.nombre.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.nombre.errors.required">Nombre pagina es requerido
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="basic-icon-default-email">Url:</label>
+                    <input type="text" id="basic-icon-default-email" class="form-control dt-email"
+                           name="valor" formControlName="valor"/>
+                    <div *ngIf="f.valor.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.valor.errors.required">Url es requerido</div>
+                    </div>
+                  </div>
+                  <label class="form-label font-weight-bold mb-2" for="basic-icon-default-email">Pedidos gestionados por:</label>
+                  <div>
+                    <div class="form-group">
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="customCheckPedido"
+                               (change)="onSelectCheckPedido($event)"/>
+                        <label class="custom-control-label" for="customCheckPedido">El propio canal: </label>
+                      </div>
+                    </div>
+                    <div formGroupName="pedidos_local" *ngIf="habilitarDatosPedido === 1">
+                      <div class="form-group ml-3">
+                        <label class="form-label">Nombre de contacto para pedido de
+                          canal:</label>
+                        <input type="text" class="form-control" formControlName="nombre"/>
+                        <div *ngIf="pedidosLocalForm.nombre.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="pedidosLocalForm.nombre.errors.required">
+                            Requerido
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group ml-3">
+                        <label class="form-label">Correo electrónico para notificación de
+                          pedido:</label>
+                        <input type="text" class="form-control" formControlName="correo"/>
+                        <div *ngIf="pedidosLocalForm.correo.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="pedidosLocalForm.correo.errors.required">
+                            Requerido
+                          </div>
+                          <div *ngIf="pedidosLocalForm.correo.errors.email">
+                            Correo Invalido
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group ml-3">
+                        <label class="form-label">Número de WhatsApp para notificación de
+                          pedido:</label>
+                        <input type="text" class="form-control" formControlName="telefono"/>
+                        <div *ngIf="pedidosLocalForm.telefono.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="pedidosLocalForm.telefono.errors.required">
+                            Requerido
+                          </div>
+                          <div *ngIf="pedidosLocalForm.telefono.errors.minlength">
+                            Ingrese minimo 10 digitos
+                          </div>
+                          <div *ngIf="pedidosLocalForm.telefono.errors.maxlength">
+                            Ingrese maximo 10 digitos
+                          </div>
+                          <div *ngIf="pedidosLocalForm.telefono.errors.pattern">
+                            Ingrese solo numeros
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="customCheckPedidoOnmiglobal"
+                               formControlName="pedidos_omniglobal" (change)="onSelectCheckPedidoOmniglobal($event)"/>
+                        <label class="custom-control-label" for="customCheckPedidoOnmiglobal">Por Corporación
+                          Omniglobal </label>
+                      </div>
+                    </div>
+                  </div>
+                  <label class="form-label font-weight-bold mb-2" for="basic-icon-default-email">Despachos gestionados por:</label>
+                  <div>
+                    <div class="form-group">
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="customCheckDespacho"
+                               (change)="onSelectCheckDespacho($event)"/>
+                        <label class="custom-control-label" for="customCheckDespacho">El propio canal: </label>
+                      </div>
+                    </div>
+                    <div formGroupName="despachos_local" *ngIf="habilitarDatosDespacho === 1">
+                      <div class="form-group ml-3">
+                        <label class="form-label" for="basic-icon-default-email">Nombre de contacto para despacho de
+                          canal:</label>
+                        <input type="text" class="form-control dt-email"
+                               name="valor" formControlName="nombre"/>
+                        <div *ngIf="despachosLocalForm.nombre.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="despachosLocalForm.nombre.errors.required">
+                            Requerido
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group ml-3">
+                        <label class="form-label" for="basic-icon-default-email">Correo electrónico para notificación de
+                          despacho:</label>
+                        <input type="text" class="form-control dt-email"
+                               name="valor" formControlName="correo"/>
+                        <div *ngIf="despachosLocalForm.correo.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="despachosLocalForm.correo.errors.required">
+                            Requerido
+                          </div>
+                          <div *ngIf="despachosLocalForm.correo.errors.email">
+                            Correo Invalido
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group ml-3">
+                        <label class="form-label" for="basic-icon-default-email">Número de WhatsApp para notificación de
+                          despacho:</label>
+                        <input type="text" class="form-control dt-email"
+                               name="valor" formControlName="telefono"/>
+                        <div *ngIf="despachosLocalForm.telefono.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="despachosLocalForm.telefono.errors.required">
+                            Requerido
+                          </div>
+                          <div *ngIf="despachosLocalForm.telefono.errors.minlength">
+                            Ingrese minimo 10 digitos
+                          </div>
+                          <div *ngIf="despachosLocalForm.telefono.errors.maxlength">
+                            Ingrese maximo 10 digitos
+                          </div>
+                          <div *ngIf="despachosLocalForm.telefono.errors.pattern">
+                            Ingrese solo numeros
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="customCheckDespachoOnmiglobal"
+                               formControlName="despachos_omniglobal" (change)="onSelectCheckDespachoOmniglobal($event)"/>
+                        <label class="custom-control-label" for="customCheckDespachoOnmiglobal">Por Corporación
+                          Omniglobal </label>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+                <button class="btn btn-primary mr-1" aria-label="Close" (click)="gestionarParametro()">
+                  <span *ngIf="cargando" class="spinner-border spinner-border-sm"></span>Guardar
+                </button>
+                <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal"
+                        style="display: none;"></button>
+                <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal to add new user Ends-->
+      </section>
+      <!-- users list ends -->
+    </div>
+  </div>
 </div>
 
 
 <ng-template #mensajeModal let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title">Mensaje</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <div [innerHTML]="mensaje"></div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-light" (click)="cerrarModal()">Cerrar</button>
-    </div>
+  <div class="modal-header">
+    <h4 class="modal-title">Mensaje</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div [innerHTML]="mensaje"></div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="cerrarModal()">Cerrar</button>
+  </div>
 </ng-template>

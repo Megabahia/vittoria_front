@@ -6,6 +6,7 @@ import {ParamsComponent} from './params/params.component';
 import {PedidosComponent} from './pedidos/pedidos.component';
 import {PedidosDevueltosComponent} from './pedidos-devueltos/pedidos-devueltos.component';
 import {PedidosRechazadosComponent} from './pedidos-rechazados/pedidos-rechazados.component';
+import {PedidoMegabahiaComponent} from './pedidos-canal/pedido-megabahia/pedido-megabahia.component';
 
 const routes: Routes = [{
   path: '', component: MdpComponent, children: [
@@ -25,6 +26,13 @@ const routes: Routes = [{
     },
     {
       path: 'pedidos-rechazados', component: PedidosRechazadosComponent, canActivate: [AuthGuard]
+    },
+    {
+      path: 'pedido-canal', children: [
+        {
+          path: 'megabahia', component: PedidoMegabahiaComponent, canActivate: [AuthGuard]
+        },
+      ]
     },
   ]
 }];
