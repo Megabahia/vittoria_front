@@ -649,7 +649,9 @@
                           <div *ngIf="notaPedidoForm.montoTransferencia.errors.required">
                             Requerido
                           </div>
-
+                            <div *ngIf="notaPedidoForm.montoTransferencia.errors.pattern">
+                                Ingreso solo numeros
+                            </div>
                         </div>
                       </div>
                       <div class="col-md-2 col-12" *ngIf="mostrarInputTransaccion">
@@ -685,7 +687,9 @@
                           <div *ngIf="notaPedidoForm.montoCredito.errors.required">
                             Requerido
                           </div>
-
+                            <div *ngIf="notaPedidoForm.montoCredito.errors.pattern">
+                                Ingreso solo numeros
+                            </div>
                         </div>
                       </div>
                       <div class="col-md-2 col-12" *ngIf="mostrarInputTransaccionCredito">
