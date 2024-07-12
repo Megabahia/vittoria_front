@@ -25,6 +25,12 @@ export class PedidoWoocomerceComponent implements OnInit {
     private paramServiceAdm: ParamServiceAdm,
   ) {
     this.iniciarNotaPedido();
+    const navbar = document.getElementById('navbar');
+    const toolbar = document.getElementById('toolbar');
+    if (navbar && toolbar) {
+      navbar.style.display = 'none';
+      toolbar.style.display = 'none';
+    }
   }
 
   ngOnInit(): void {
