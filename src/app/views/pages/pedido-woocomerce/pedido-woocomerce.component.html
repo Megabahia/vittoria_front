@@ -1,3 +1,237 @@
-<h1>
-    {{datos}}
-</h1>
+<div class="card">
+  <h2 class="card-header">Administrar Pedido SuperBarato</h2>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="card-datatable table-responsive pt-0">
+      <h4 class="pt-1 px-2">Productos</h4>
+      <table class="user-list-table table table-striped">
+        <thead class="thead-light">
+        <tr>
+          <th>Id</th>
+          <th>Key</th>
+          <th>Subtotal</th>
+          <th>Total</th>
+          <th>Cantidad</th>
+          <th>Variacion id</th>
+        </tr>
+        </thead>
+        <tbody data-repeater-list="invoice">
+        <tr data-repeater-item *ngFor="let producto of datos; let i = index">
+          <td>{{ producto.product_id }}</td>
+          <td>{{ producto.key }}</td>
+          <td>{{ producto.line_subtotal }}</td>
+          <td>{{ producto.line_total }}</td>
+          <td>{{ producto.quantity }}</td>
+          <td>{{ producto.variatino_id }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <hr/>
+  </div>
+  <div class="card">
+    <h4 class="p-2">Datos de facturación</h4>
+    <div class="card-body invoice-padding pt-0">
+      <form [formGroup]="notaPedido">
+
+        <div formGroupName="facturacion">
+          <div class="row">
+            <div class="col-md-4 col-12">
+              <label>Nombres</label>
+              <input class="form-control" type="text"
+                     formControlName="nombres"
+              >
+              <div *ngIf="facturacionForm.nombres.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.nombres.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label>Apellidos</label>
+              <input class="form-control" type="text"
+                     formControlName="apellidos"
+              >
+              <div *ngIf="facturacionForm.apellidos.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.apellidos.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label>Correo electrónico</label>
+              <input class="form-control" type="text"
+                     formControlName="correo"
+              >
+              <div *ngIf="facturacionForm.correo.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.correo.errors.required">
+                  Requerido
+                </div>
+                <div *ngIf="facturacionForm.correo.errors.email">
+                  Correo Invalido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <div class="form-group">
+                <label for="tipoIdentificacion">Tipo de Identificación</label>
+                <select id="tipoIdentificacion" class="form-control" formControlName="tipoIdentificacion"
+                        (change)="onSelectChangeIdentificacion($event)">
+                  <option value="" disabled>- Seleccione -</option>
+                  <option value="cedula" selected>Cédula</option>
+                  <option value="ruc">RUC</option>
+                  <option value="pasaporte">Pasaporte</option>
+                </select>
+                <div *ngIf="facturacionForm.tipoIdentificacion.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="facturacionForm.tipoIdentificacion.errors.required">
+                    Requerido
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label>Numero Identificación</label>
+              <input class="form-control" type="text"
+                     formControlName="identificacion"
+              >
+              <div *ngIf="facturacionForm.identificacion.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.identificacion.errors.required">
+                  Requerido
+                </div>
+                <div *ngIf="facturacionForm.identificacion.errors.pattern">
+                  Ingrese solo numeros
+                </div>
+                <div *ngIf="facturacionForm.identificacion.errors.identificacionInvalid">
+                  Identificacion no valida
+                </div>
+                <div *ngIf="facturacionForm.identificacion.errors.rucInvalid">
+                  RUC no valido
+                </div>
+                <div *ngIf="facturacionForm.identificacion.errors.minlength">
+                  Mínimo 5 caracteres
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label>Número de WhatsApp</label>
+              <input class="form-control" type="text"
+                     formControlName="telefono"
+              >
+              <div *ngIf="facturacionForm.telefono.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.telefono.errors.required">
+                  Requerido
+                </div>
+                <div *ngIf="facturacionForm.telefono.errors.minlength">
+                  Ingrese minimo 10 digitos
+                </div>
+                <div *ngIf="facturacionForm.telefono.errors.maxlength">
+                  Ingrese maximo 10 digitos
+                </div>
+                <div *ngIf="facturacionForm.telefono.errors.pattern">
+                  Ingrese solo numeros
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label>País</label>
+              <input class="form-control" type="text"
+                     formControlName="pais" disabled
+              >
+
+            </div>
+            <div class="col-md-4 col-12">
+              <label for="provinciaContacto">Provincia</label>
+              <select class="form-control" name="provinciaContacto" formControlName="provincia"
+                      (change)="obtenerCiudad()" id="provinciaContacto">
+                <option value="" selected>- Seleccione -</option>
+                <option value="{{pais.nombre}}" *ngFor="let pais of provinciaOpciones">
+                  {{ pais.nombre }}
+                </option>
+              </select>
+              <div *ngIf="facturacionForm.provincia.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.provincia.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label for="ciudadContacto">Ciudad</label>
+              <select class="form-control" name="ciudadContacto" formControlName="ciudad"
+                      id="ciudadContacto">
+                <option value="" selected>- Seleccione -</option>
+                <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
+                  {{ ciudad.nombre }}
+                </option>
+              </select>
+              <div *ngIf="facturacionForm.ciudad.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.ciudad.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label>Calle principal</label>
+              <input class="form-control" type="text"
+                     formControlName="callePrincipal"
+              >
+              <div *ngIf="facturacionForm.callePrincipal.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.callePrincipal.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label>Número de casa</label>
+              <input class="form-control" type="text"
+                     formControlName="numero"
+              >
+              <div *ngIf="facturacionForm.numero.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.numero.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label>Calle secundaria</label>
+              <input class="form-control" type="text"
+                     formControlName="calleSecundaria"
+              >
+              <div *ngIf="facturacionForm.calleSecundaria.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.calleSecundaria.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label>Referencia</label>
+              <input class="form-control" type="text"
+                     formControlName="referencia"
+              >
+              <div *ngIf="facturacionForm.referencia.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.referencia.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <button class="btn btn-primary my-2">Guardar
+      </button>
+    </div>
+  </div>
+</div>
+

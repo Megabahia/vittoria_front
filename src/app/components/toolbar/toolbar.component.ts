@@ -34,7 +34,7 @@ export class ToolbarComponent implements OnInit, OnChanges {
       caduRep: '',
       rotaRep: '',
       refilRep: '',
-      prodStockVirtualList:''
+      prodStockVirtualList: ''
     },
     mdo: {
       param: '',

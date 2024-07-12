@@ -1,13 +1,15 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ParamService} from '../../../services/admin/param.service';
+import {IntegracionesService} from '../../../services/admin/integraciones.service';
+import {Toaster} from 'ngx-toast-notifications';
 
 @Component({
   selector: 'app-integracion-woocommerce',
   templateUrl: './integracion-woocommerce.component.html',
   styleUrls: ['./integracion-woocommerce.component.css']
 })
+
 export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @ViewChild('dismissModal') dismissModal;
@@ -16,11 +18,10 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   cargando = false;
   mensaje = '';
   paramForm: FormGroup;
-  submitted;
   menu;
   vista;
   page = 1;
-  pageSize: any = 3;
+  page_size: any = 3;
   maxSize;
   collectionSize;
   parametros;
@@ -38,11 +39,20 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   valor;
   padres;
 
+  habilitarDatosPedido;
+  habilitarDatosDespacho;
+  pedidoOmniglobal;
+  despachoOmniglobal;
+
+  disabledPedidoLocal = false;
+  disabledPedidoOmniglobal = false;
+
   // @ViewChild('padres') padres;
   constructor(
-    private paramService: ParamService,
+    private integracionesService: IntegracionesService,
     private modalService: NgbModal,
     private _formBuilder: FormBuilder,
+    private toaster: Toaster,
   ) {
   }
 
@@ -50,12 +60,29 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
     return this.paramForm.controls;
   }
 
+  insertarParametro(): void{
+    this.funcion = 'insertar';
+    this.paramForm.reset();
+  }
+
   ngOnInit(): void {
     this.paramForm = this._formBuilder.group({
-      nombre: ['', []],
-      nombreTipo: ['', []],
-      descripcion: ['', []],
-      tipoVariable: ['', []],
+      id: [''],
+      nombre: ['', [Validators.required]],
+      pedidos_local: this._formBuilder.group({
+        estado: [0, []],
+        nombre: [''],
+        correo: [''],
+        telefono: [''],
+      }),
+      pedidos_omniglobal: [0, []],
+      despachos_local: this._formBuilder.group({
+        estado: [0, []],
+        nombre: [''],
+        correo: [''],
+        telefono: [''],
+      }),
+      despachos_omniglobal: [0, []],
       valor: ['', [Validators.required]]
     });
     this.menu = {
@@ -64,15 +91,19 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
     };
   }
 
+  get pedidosLocalForm() {
+    return this.paramForm.get('pedidos_local')['controls'];
+  }
+  get despachosLocalForm() {
+    return this.paramForm.get('despachos_local')['controls'];
+  }
+
   ngAfterViewInit(): void {
     this.iniciarPaginador();
     this.obtenerListaParametros();
   }
 
   async iniciarPaginador(): Promise<void> {
-    await this.paramService.obtenerListaTipos().subscribe((result) => {
-      this.tipos = result;
-    });
     this.paginator.pageChange.subscribe(() => {
       this.obtenerListaParametros();
     });
@@ -80,79 +111,42 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   }
 
   async obtenerListaParametros(): Promise<void> {
-    await this.paramService.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar).subscribe((result) => {
+    await this.integracionesService.obtenerListaIntegraciones(this.page - 1, this.page_size).subscribe((result) => {
       this.parametros = result.info;
       this.collectionSize = result.cont;
     });
   }
 
   async editarParametro(id): Promise<void> {
-
     this.idParametro = id;
     this.funcion = 'editar';
 
-    await this.paramService.obtenerParametro(id).subscribe(async (result) => {
-      if (result.idPadre) {
-        await this.paramService.obtenerParametro(result.idPadre).subscribe(async (data) => {
-          this.tipoPadre = data.tipo;
-          await this.paramService.obtenerListaPadres(data.tipo).subscribe((result2) => {
-            this.padres = result2;
-          });
-        });
-        this.idPadre = result.idPadre;
-      } else {
-        this.tipoPadre = '';
-        this.idPadre = 0;
+    await this.integracionesService.obtenerIntegracion(id).subscribe(async (result) => {
+      this.paramForm.patchValue({...result});
 
-      }
-      this.nombre = result.nombre;
-      this.nombreTipo = result.tipo;
-      this.descripcion = result.descripcion;
-      this.tipoVariable = result.tipoVariable;
-      this.valor = result.valor;
     });
-  }
-
-  insertarParametro(): void {
-    this.nombre = '';
-    this.nombreTipo = 'INTEGRACION_WOOCOMMERCE';
-    this.descripcion = 'Paginas de integracion de woocommerce';
-    this.tipoPadre = '';
-    this.tipoVariable = 'texto';
-    this.valor = '';
-    this.idPadre = 0;
-    this.submitted = false;
-
-    this.funcion = 'insertar';
   }
 
   async gestionarParametro(): Promise<void> {
 
-    this.submitted = true;
     if (this.paramForm.invalid) {
+      this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
     }
     this.cargando = true;
     if (this.funcion === 'insertar') {
-      await this.paramService.insertarParametro(
-        this.nombre,
-        this.nombreTipo,
-        this.descripcion,
-        this.tipoVariable,
-        this.valor,
-        this.idPadre
-      ).subscribe((result) => {
+
+      await this.integracionesService.insertarIntegracion(this.paramForm.value).subscribe((result) => {
           this.obtenerListaParametros();
           this.dismissModal.nativeElement.click();
-          this.submitted = false;
           this.cargando = false;
           this.mensaje = 'Parámetro guardado';
           this.abrirModalMensaje(this.mensajeModal);
-
+          this.paramForm.reset();
         },
         (error) => {
-          let errores = Object.values(error);
-          let llaves = Object.keys(error);
+          const errores = Object.values(error);
+          const llaves = Object.keys(error);
           this.mensaje = '';
           errores.map((infoErrores, index) => {
             this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
@@ -160,24 +154,16 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
           this.abrirModalMensaje(this.mensajeModal);
         });
     } else if (this.funcion === 'editar') {
-      await this.paramService.editarParametro(
-        this.idParametro,
-        this.nombre,
-        this.nombreTipo,
-        this.descripcion,
-        this.tipoVariable,
-        this.valor,
-        this.idPadre).subscribe((result) => {
+      await this.integracionesService.editarIntegracion(this.paramForm.value).subscribe((result) => {
           this.obtenerListaParametros();
           this.dismissModal.nativeElement.click();
-          this.submitted = false;
           this.cargando = false;
           this.mensaje = 'Parámetro guardado';
           this.abrirModalMensaje(this.mensajeModal);
         },
         (error) => {
-          let errores = Object.values(error);
-          let llaves = Object.keys(error);
+          const errores = Object.values(error);
+          const llaves = Object.keys(error);
           this.mensaje = '';
           errores.map((infoErrores, index) => {
             this.mensaje += llaves[index] + ': ' + infoErrores + '<br>';
@@ -195,25 +181,67 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   async cerrarModal(): Promise<void> {
     this.modalService.dismissAll();
     if (this.funcion !== 'editar' && this.funcion !== 'insertar') {
-      await this.paramService.eliminarParametro(this.idParametro).subscribe((result) => {
+      await this.integracionesService.eliminarIntegracion(this.idParametro).subscribe((result) => {
         this.obtenerListaParametros();
       });
     }
     this.funcion = '';
   }
 
-  async buscarPadre(): Promise<void> {
-    await this.paramService.obtenerListaPadres(this.tipoPadre).subscribe((result) => {
-      this.padres = result;
-    });
-  }
-
   abrirModalMensaje(modal): void {
     this.modalService.open(modal);
   }
 
-  cerrarModalMensaje(): void {
-    this.modalService.dismissAll();
+  onSelectCheckPedido(event: any): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.habilitarDatosPedido = inputElement.checked ? 1 : 0;
+    if (this.habilitarDatosPedido === 1) {
+      this.paramForm.get('pedidos_local').get('estado').setValue(1);
+      this.paramForm.get('pedidos_local').get('nombre').setValidators([Validators.required]);
+      this.paramForm.get('pedidos_local').get('correo').setValidators([Validators.required, Validators.email]);
+      this.paramForm.get('pedidos_local').get('telefono').setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]);
+    } else {
+      this.paramForm.get('pedidos_local').get('estado').setValue(0);
+      this.paramForm.get('pedidos_local').get('nombre').setValidators([]);
+      this.paramForm.get('pedidos_local').get('correo').setValidators([]);
+      this.paramForm.get('pedidos_local').get('telefono').setValidators([]);
+    }
+    this.paramForm.get('pedidos_local').get('nombre').updateValueAndValidity();
+    this.paramForm.get('pedidos_local').get('correo').updateValueAndValidity();
+    this.paramForm.get('pedidos_local').get('telefono').updateValueAndValidity();
+
   }
 
+  onSelectCheckPedidoOmniglobal(event: any): void{
+    const inputElement = event.target as HTMLInputElement;
+    this.pedidoOmniglobal = inputElement.checked ? 1 : 0;
+    this.paramForm.get('pedidos_omniglobal').setValue(this.pedidoOmniglobal);
+
+  }
+
+  onSelectCheckDespacho(event: any): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.habilitarDatosDespacho = inputElement.checked ? 1 : 0;
+    if (this.habilitarDatosDespacho === 1) {
+      this.paramForm.get('despachos_local').get('estado').setValue(1);
+      this.paramForm.get('despachos_local').get('nombre').setValidators([Validators.required]);
+      this.paramForm.get('despachos_local').get('correo').setValidators([Validators.required, Validators.email]);
+      this.paramForm.get('despachos_local').get('telefono').setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]);
+    } else {
+      this.paramForm.get('despachos_local').get('estado').setValue(0);
+      this.paramForm.get('despachos_local').get('nombre').setValidators([]);
+      this.paramForm.get('despachos_local').get('correo').setValidators([]);
+      this.paramForm.get('despachos_local').get('telefono').setValidators([]);
+    }
+    this.paramForm.get('despachos_local').get('nombre').updateValueAndValidity();
+    this.paramForm.get('despachos_local').get('correo').updateValueAndValidity();
+    this.paramForm.get('despachos_local').get('telefono').updateValueAndValidity();
+  }
+
+  onSelectCheckDespachoOmniglobal(event: any): void{
+    const inputElement = event.target as HTMLInputElement;
+    this.despachoOmniglobal = inputElement.checked ? 1 : 0;
+    this.paramForm.get('despachos_omniglobal').setValue(this.despachoOmniglobal);
+
+  }
 }

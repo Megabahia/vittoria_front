@@ -381,6 +381,77 @@
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Pedidos Rechazados</span></a>
           </li>
+          <li class="nav-item has-sub ng-star-inserted">
+            <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
+               title="Pedidos por Canal">
+              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Pedidos Canal</span></a>
+            <ul class="menu-content">
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/megabahia']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal Mega Bahia">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido MegaBahia</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/mayorista']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal Mayorista">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido Mayorista</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/megadescuento']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal Megadescuento">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido Megadescuento</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/todomegacentro']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal TodoMegacentro">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido TodoMegacentro</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/tiendamulticompras']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal TiendaMulticompras">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido TiendaMulticompras</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/contraentrega']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal Contraentrega">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido Contraentrega</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/maxidescuento']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal Maxidescuento">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido Maxidescuento</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/vittoria']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal Vittoria">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido Vittoria</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/superbarato']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal Superbarato">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido Superbarato</span>
+                </a>
+              </li>
+
+            </ul>
+          </li>
         </ul>
       </li>
       <li class="nav-item" *ngIf="acciones.GDO.LEER">

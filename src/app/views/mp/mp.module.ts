@@ -12,6 +12,17 @@ import { PedidosComponent } from './pedidos/pedidos.component';
 import { PedidosDevueltosComponent } from './pedidos-devueltos/pedidos-devueltos.component';
 import { PedidosRechazadosComponent } from './pedidos-rechazados/pedidos-rechazados.component';
 import {GdeModule} from '../gde/gde.module';
+import {PedidoMegabahiaComponent} from "./pedidos-canal/pedido-megabahia/pedido-megabahia.component";
+import {PedidoMayoristaComponent} from "./pedidos-canal/pedido-mayorista/pedido-mayorista.component";
+import {PedidoContraentregaComponent} from "./pedidos-canal/pedido-contraentrega/pedido-contraentrega.component";
+import {PedidoMaxidescuentoComponent} from "./pedidos-canal/pedido-maxidescuento/pedido-maxidescuento.component";
+import {PedidoMegadescuentoComponent} from "./pedidos-canal/pedido-megadescuento/pedido-megadescuento.component";
+import {PedidoSuperbaratoComponent} from "./pedidos-canal/pedido-superbarato/pedido-superbarato.component";
+import {
+  PedidoTiendamulticomprasComponent
+} from "./pedidos-canal/pedido-tiendamulticompras/pedido-tiendamulticompras.component";
+import {PedidoTodomegacentroComponent} from "./pedidos-canal/pedido-todomegacentro/pedido-todomegacentro.component";
+import {PedidoVittoriaComponent} from "./pedidos-canal/pedido-vittoria/pedido-vittoria.component";
 
 
 
@@ -21,6 +32,15 @@ import {GdeModule} from '../gde/gde.module';
     PedidosComponent,
     PedidosDevueltosComponent,
     PedidosRechazadosComponent,
+    PedidoMegabahiaComponent,
+    PedidoMayoristaComponent,
+    PedidoContraentregaComponent,
+    PedidoMaxidescuentoComponent,
+    PedidoMegadescuentoComponent,
+    PedidoSuperbaratoComponent,
+    PedidoTiendamulticomprasComponent,
+    PedidoTodomegacentroComponent,
+    PedidoVittoriaComponent
   ],
   imports: [
     CommonModule,

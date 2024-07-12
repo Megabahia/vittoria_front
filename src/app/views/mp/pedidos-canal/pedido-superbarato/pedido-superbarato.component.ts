@@ -2,25 +2,24 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {Color, Label} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
-import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
-import {ParamService} from '../../../services/mp/param/param.service';
-import {ParamService as ParamServiceMDP} from '../../../services/admin/param.service';
+import {PedidosService} from '../../../../services/mp/pedidos/pedidos.service';
+import {ParamService} from '../../../../services/mp/param/param.service';
+import {ParamService as ParamServiceMDP} from '../../../../services/admin/param.service';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
-import {ProductosService} from '../../../services/mdp/productos/productos.service';
-import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../constats/mp/pedidos';
-import {ValidacionesPropias} from '../../../utils/customer.validators';
+import {ProductosService} from '../../../../services/mdp/productos/productos.service';
+import {CONTRA_ENTREGA, PREVIO_PAGO} from '../../../../constats/mp/pedidos';
+import {ValidacionesPropias} from '../../../../utils/customer.validators';
 import {Toaster} from 'ngx-toast-notifications';
-import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
-import {ParamService as ParamServiceAdm} from '../../../services/admin/param.service';
+import {ContactosService} from "../../../../services/gdc/contactos/contactos.service";
+import {ParamService as ParamServiceAdm} from '../../../../services/admin/param.service';
 
 @Component({
-  selector: 'app-pedidos',
-  templateUrl: './pedidos.component.html',
-  styleUrls: ['./pedidos.component.css'],
+  selector: 'app-pedido-superbarato',
+  templateUrl: './pedido-superbarato.component.html',
   providers: [DatePipe]
 })
-export class PedidosComponent implements OnInit, AfterViewInit {
+export class PedidoSuperbaratoComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
@@ -215,7 +214,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
       estado: ['Pendiente'],
-      gestion_pedido: 'omniglobal'
+      canal: 'superbarato.megadescuento.com',
+      gestion_pedido: 'local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;
