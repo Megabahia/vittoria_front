@@ -9,13 +9,15 @@ import {PagesRoutingModule} from './pages-routing.module';
 import { ProductosComponent } from './productos/productos.component';
 import {NgxCaptchaModule} from 'ngx-captcha';
 import { CalculadoraComponent } from './calculadora/calculadora.component';
+import { PedidoWoocomerceComponent } from './pedido-woocomerce/pedido-woocomerce.component';
 
 
 
 @NgModule({
   declarations: [
     ProductosComponent,
-    CalculadoraComponent
+    CalculadoraComponent,
+    PedidoWoocomerceComponent
   ],
   imports: [
     CommonModule,

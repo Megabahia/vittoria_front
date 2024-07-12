@@ -568,7 +568,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         //this.notaPedido.get('archivoFormaPago').updateValueAndValidity();
         this.notaPedido.get('numTransaccionTransferencia').setValidators([Validators.required]);
         this.notaPedido.get('numTransaccionTransferencia').updateValueAndValidity();
-        this.notaPedido.get('montoTransferencia').setValidators([Validators.required, Validators.pattern('^[0-9]*$')]);
+        this.notaPedido.get('montoTransferencia').setValidators([Validators.required, Validators.pattern('^\\d+(\\.\\d+)?$')]);
         this.notaPedido.get('montoTransferencia').updateValueAndValidity();
         //this.mostrarInputCobro = false;
         break;
@@ -576,7 +576,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         //this.mostrarInputTransaccion = false;
         //this.mostrarCargarArchivo = false;
         this.mostrarInputCobro = true;
-        this.notaPedido.get('totalCobroEfectivo').setValidators([Validators.required]);
+        this.notaPedido.get('totalCobroEfectivo').setValidators([Validators.required, Validators.pattern('^\\d+(\\.\\d+)?$')]);
         this.notaPedido.get('totalCobroEfectivo').updateValueAndValidity();
 
         break;
@@ -587,7 +587,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         //this.notaPedido.get('archivoFormaPagoCredito').updateValueAndValidity();
         this.notaPedido.get('numTransaccionCredito').setValidators([Validators.required]);
         this.notaPedido.get('numTransaccionCredito').updateValueAndValidity();
-        this.notaPedido.get('montoCredito').setValidators([Validators.required]);
+        this.notaPedido.get('montoCredito').setValidators([Validators.required, Validators.pattern('^\\d+(\\.\\d+)?$')]);
         this.notaPedido.get('montoCredito').updateValueAndValidity();
         //this.mostrarInputCobro = false;
         break;
