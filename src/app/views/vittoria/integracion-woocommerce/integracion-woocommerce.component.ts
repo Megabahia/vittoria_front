@@ -44,6 +44,8 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   pedidoOmniglobal;
   despachoOmniglobal;
 
+  disabledPedidoLocal = false;
+  disabledPedidoOmniglobal = false;
 
   // @ViewChild('padres') padres;
   constructor(
@@ -60,6 +62,7 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
 
   insertarParametro(): void{
     this.funcion = 'insertar';
+    this.paramForm.reset();
   }
 
   ngOnInit(): void {
@@ -120,6 +123,7 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
 
     await this.integracionesService.obtenerIntegracion(id).subscribe(async (result) => {
       this.paramForm.patchValue({...result});
+
     });
   }
 
@@ -205,6 +209,7 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
     this.paramForm.get('pedidos_local').get('nombre').updateValueAndValidity();
     this.paramForm.get('pedidos_local').get('correo').updateValueAndValidity();
     this.paramForm.get('pedidos_local').get('telefono').updateValueAndValidity();
+
   }
 
   onSelectCheckPedidoOmniglobal(event: any): void{

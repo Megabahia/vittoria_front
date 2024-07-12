@@ -214,7 +214,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       page_size: this.pageSize,
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
-      estado: ['Pendiente']
+      estado: ['Pendiente'],
+      gestion_pedido: 'omniglobal'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info;

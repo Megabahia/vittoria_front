@@ -15,11 +15,11 @@ import {ContactosService} from "../../../../services/gdc/contactos/contactos.ser
 import {ParamService as ParamServiceAdm} from '../../../../services/admin/param.service';
 
 @Component({
-  selector: 'app-pedido-megabahia',
-  templateUrl: './pedido-megabahia.component.html',
+  selector: 'app-pedido-tiendamulticompras',
+  templateUrl: './pedido-tiendamulticompras.component.html',
   providers: [DatePipe]
 })
-export class PedidoMegabahiaComponent implements OnInit, AfterViewInit {
+export class PedidoTiendamulticomprasComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
@@ -214,7 +214,7 @@ export class PedidoMegabahiaComponent implements OnInit, AfterViewInit {
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
       estado: ['Pendiente'],
-      canal: 'megabahia.megadescuento.com',
+      canal: 'tiendamulticompras.megadescuento.com',
       gestion_pedido: 'local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
