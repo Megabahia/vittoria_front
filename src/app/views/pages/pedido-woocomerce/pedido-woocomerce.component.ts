@@ -10,6 +10,19 @@ import {ParamService as ParamServiceAdm} from "../../../services/admin/param.ser
   styleUrls: ['./pedido-woocomerce.component.css']
 })
 export class PedidoWoocomerceComponent implements OnInit {
+
+  opcionesPrimerCombo = [
+    { id: 1, valor: 'Opción 1' },
+    { id: 2, valor: 'Opción 2' },
+    { id: 3, valor: 'Opción 3' }
+  ];
+
+  opcionesSegundoCombo = [
+    { id: 1, valor: 'A' },
+    { id: 2, valor: 'B' },
+    { id: 3, valor: 'C' }
+  ];
+
   @Input() paises;
   public notaPedido: FormGroup;
 
@@ -18,6 +31,9 @@ export class PedidoWoocomerceComponent implements OnInit {
   pais = 'Ecuador';
   ciudadOpciones;
   provinciaOpciones;
+
+  seleccionPrimerCombo: any;
+  seleccionSegundoCombo: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,6 +51,7 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
+
       const datosReorganizados = [];
 
       // Usar un mapa temporal para organizar los datos por ID
@@ -60,12 +77,14 @@ export class PedidoWoocomerceComponent implements OnInit {
       // Convertir el objeto de datos temporales en un arreglo
       for (const key in tempData) {
         datosReorganizados.push(tempData[key]);
+        this.agregarItem(tempData[key]);
       }
       this.datos = datosReorganizados;
     });
 
     this.obtenerProvincias();
     this.obtenerCiudad();
+    console.log('NOTA PEDIDO INICIAL', this.notaPedido);
   }
 
   iniciarNotaPedido(): void {
@@ -113,25 +132,26 @@ export class PedidoWoocomerceComponent implements OnInit {
     return this.notaPedido.get('articulos') as FormArray;
   }
 
-  crearDetalleGrupo(): any {
+  crearDetalleGrupo(datos: any): any {
     return this.formBuilder.group({
       id: [''],
-      codigo: ['', []],
-      articulo: ['', []],
-      valorUnitario: [0, []],
-      cantidad: [0, []],
-      precio: [0, []],
+      codigo: [''],
+      articulo: [''],
+      valorUnitario: [datos.line_total || 0],
+      cantidad: [datos.quantity || 0],
+      precio: [datos.line_subtotal || 0],
       imagen: [''],
-      caracteristicas: ['', []],
-      precios: [[], []],
+      caracteristicas: [''],
+      precios: [[]],
       canal: ['superbarato.megadescuento.com'],
       woocommerceId: [''],
-      imagen_principal: ['', []]
+      imagen_principal: ['']
     });
   }
 
-  agregarItem(): void {
-    this.detallesArray.push(this.crearDetalleGrupo());
+  agregarItem(datos: any): void {
+    const detalle = this.crearDetalleGrupo(datos)
+    this.detallesArray.push(detalle);
   }
 
   removerItem(i): void {
@@ -194,8 +214,26 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   obtenerFechaActual(): Date {
     const fechaActual = new Date();
-
     return fechaActual;
+  }
 
+  guardarVenta(): void{
+    console.log(this.notaPedido.value);
+  }
+
+  onChangeCombo(event: any): void {
+    const newValue = event.target.value;
+    // Actualizar el ngModel del primer combo
+    this.seleccionPrimerCombo = newValue;
+    console.log("Seleccionado en Primer Combo:", this.seleccionPrimerCombo);
+
+    // Encontrar el objeto correspondiente en el segundo combo
+    const seleccionEnSegundo = this.opcionesSegundoCombo.find(x => x.id === Number(newValue));
+
+    // Asegurarse de que el segundo combo use solo el ID o el valor necesario para el ngModel
+    if (seleccionEnSegundo) {
+      this.seleccionSegundoCombo = seleccionEnSegundo.id;  // Asumiendo que quieres asignar el ID
+      console.log("Valor automático para Segundo Combo:", seleccionEnSegundo.valor);
+    }
   }
 }
