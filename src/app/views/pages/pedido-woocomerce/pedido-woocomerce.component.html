@@ -10,48 +10,30 @@
           <table class="user-list-table table table-striped">
             <thead class="thead-light">
             <tr>
-              <th>Id</th>
               <th>Canal</th>
               <th>Imagen</th>
               <th>Codigo de barras</th>
               <th>Nombre</th>
               <th>Cantidad</th>
-              <th>Precio</th>
-              <th>Subtotal</th>
+              <th>Valor unitario</th>
               <th>Total</th>
               <th>Acciones</th>
             </tr>
             </thead>
-            <!--<tbody data-repeater-list="invoice">
+            <tbody data-repeater-list="invoice">
             <tr data-repeater-item *ngFor="let producto of notaPedido.get('articulos')['controls']; let i = index;"
                 [formGroup]="producto">
-              <td>{{ producto.controls.id?.value }}</td>
-              <td>{{ producto.controls.codigoBarras?.value }}</td>
-              <td>{{ producto.controls.valorUnitario?.value }}</td>
-              <td>{{ producto.controls.precio?.value }}</td>
-              <td>
-                <input type="number" min="0" formControlName="cantidad"/>
-              </td>
               <td>{{ producto.controls.canal?.value }}</td>
               <td>
-                <a type="button" (click)="removerItem(i)">
-                  <i-feather name="trash" class="text-danger"></i-feather>
-                </a>
+                <img src="{{ producto.controls.imagen_principal?.value }}" alt="imagen" width="100" height="100">
               </td>
-            </tr>
-            </tbody>-->
-            <tbody data-repeater-list="invoice">
-            <tr data-repeater-item *ngFor="let producto of datos; let i = index;"
-                [formGroup]="producto">
-              <td>{{ producto.ID_del_producto }}</td>
-              <td>CANAL</td>
-              <td [innerHTML]="producto.Imagen_del_producto"></td>
-              <td>{{ producto.SKU_del_producto }}</td>
-              <td>{{ producto.Nombre_del_producto }}</td>
-              <td>{{ producto.Cantidad_en_el_carrito }}</td>
-              <td>{{ producto.Precio_del_producto }}</td>
-              <td [innerHTML]="producto['Subtotal_del_artículo']"></td>
-              <td [innerHTML]="producto['Total_del_artículo']"></td>
+              <td>{{ producto.controls.codigo?.value }}</td>
+              <td>{{ producto.controls.articulo?.value }}</td>
+              <td>
+                <input type="number" min="0" formControlName="cantidad" (change)="calcular()"/>
+              </td>
+              <td>{{ producto.controls.valorUnitario?.value }}</td>
+              <td>{{ producto.controls.precio?.value }}</td>
               <td>
                 <a type="button" (click)="removerItem(i)">
                   <i-feather name="trash" class="text-danger"></i-feather>
@@ -59,7 +41,11 @@
               </td>
             </tr>
             </tbody>
+
           </table>
+          <div class="text-right mr-3">
+            <label style="color: blue; font-weight: bold; font-size: large">Total: {{this.notaPedido.controls.total.value.toFixed(2)}}</label>
+          </div>
         </div>
       </div>
       <hr/>
@@ -289,7 +275,7 @@
       </div>
     </form>
 
-    <button class="btn btn-primary my-2 mx-2 col-md-3" (click)="guardarVenta()">Guardar
+    <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="guardarVenta()">Guardar
     </button>
   </div>
 

@@ -3,12 +3,23 @@ import {ActivatedRoute} from '@angular/router';
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ValidacionesPropias} from "../../../utils/customer.validators";
 import {ParamService as ParamServiceAdm} from "../../../services/admin/param.service";
+import {PedidosService} from "../../../services/mp/pedidos/pedidos.service";
+import {logger} from "codelyzer/util/logger";
+import {Toaster} from "ngx-toast-notifications";
+
+interface ProductoProcesado {
+  canal?: string;
+
+  [key: string]: any; // Esto permite cualquier nombre de clave adicional
+}
 
 @Component({
   selector: 'app-pedido-woocomerce',
   templateUrl: './pedido-woocomerce.component.html',
   styleUrls: ['./pedido-woocomerce.component.css']
 })
+
+
 export class PedidoWoocomerceComponent implements OnInit {
 
   opcionesPrimerCombo = [
@@ -38,6 +49,8 @@ export class PedidoWoocomerceComponent implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private paramServiceAdm: ParamServiceAdm,
+    private pedidosService: PedidosService,
+    private toaster: Toaster,
   ) {
     this.iniciarNotaPedido();
     const navbar = document.getElementById('navbar');
@@ -50,40 +63,42 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      const decodedString = decodeURIComponent(params.cadena);
-      const lines = decodedString.split('\n');
+      // Decodificamos y parseamos el JSON de la cadena que recibimos
+      const productos = JSON.parse(decodeURIComponent(params.cadena));
 
-      const product = {};
+      // Procesar cada producto para normalizar claves y valores
+      const productosProcesados: ProductoProcesado[] = productos.map(producto => {
+        const productoProcesado: ProductoProcesado = {};
 
-      lines.forEach(line => {
-        const [key, value] = line.split(': ');
-        if (value) {
-          let cleanValue = value.trim();
+        Object.entries(producto).forEach(([clave, valor]) => {
+          // Normalizar la clave a minúsculas sin tildes ni caracteres especiales
+          const claveNormalizada = this.normalizarClave(clave);
 
-          // Extraer la URL de la imagen del producto
-          if (key.includes('Imagen_del_producto')) {
-            const urlMatch = /src="(.*?)"/.exec(cleanValue);
-            cleanValue = urlMatch ? urlMatch[1] : '';
-          }
+          // Asignar el valor a la nueva clave en el objeto procesado
+          productoProcesado[claveNormalizada] = valor;
+        });
 
-          // Limpiar y convertir los valores de los campos de precio
-          if (key.includes('Total_del_artículo') || key.includes('Subtotal_del_artículo')) {
-            cleanValue = cleanValue.replace(/<[^>]*>?/gm, ''); // Elimina etiquetas HTML
-            cleanValue = cleanValue.replace(/&#36;/g, ''); // Elimina referencias codificadas a símbolos monetarios
-            const matches = cleanValue.match(/[0-9]+,[0-9]{2}/); // Encuentra números con formato `9,00`
-            cleanValue = matches ? matches[0] : '0.00'; // Usa el número encontrado o '0.00' si no se encuentra nada
-          }
+        // Agregar el canal al producto procesado
+        productoProcesado.canal = params.canal;
 
-          product[key.trim().replace('á', 'a').replace('é', 'e')] = cleanValue; // Ajustar claves para remover tildes
-        }
+        return productoProcesado;
       });
 
-      this.datos.push(product);
+      // Si quieres agregar todos los productos al arreglo `this.datos`
+      this.datos.push(...productosProcesados);
     });
 
     this.obtenerProvincias();
     this.obtenerCiudad();
+    this.datos.map(data => this.agregarItem(data));
+    this.calcular();
     console.log('NOTA PEDIDO INICIAL', this.notaPedido);
+  }
+
+  normalizarClave(clave: string): string {
+    return clave.toLowerCase() // Convertir a minúsculas
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Eliminar tildes
+      .replace(/[^a-z0-9_]/gi, '_'); // Reemplazar espacios y caracteres no alfanuméricos con guión bajo
   }
 
   iniciarNotaPedido(): void {
@@ -137,28 +152,28 @@ export class PedidoWoocomerceComponent implements OnInit {
   crearDetalleGrupo(datos: any): any {
     return this.formBuilder.group({
       id: [''],
-      codigo: [''],
-      articulo: [''],
-      valorUnitario: [datos.line_total || 0],
-      cantidad: [datos.quantity || 0],
-      precio: [datos.line_subtotal || 0],
+      codigo: [datos.sku_del_producto],
+      articulo: [datos.nombre_del_producto],
+      valorUnitario: [datos.precio_del_producto || 0],
+      cantidad: [datos.cantidad_en_el_carrito || 0],
+      precio: [datos.total_del_articulo || 0],
       imagen: [''],
       caracteristicas: [''],
       precios: [[]],
-      canal: ['superbarato.megadescuento.com'],
-      woocommerceId: [''],
-      imagen_principal: ['']
+      canal: [datos.canal],
+      imagen_principal: [datos.imagen_del_producto]
     });
   }
 
   agregarItem(datos: any): void {
-    const detalle = this.crearDetalleGrupo(datos)
+    const detalle = this.crearDetalleGrupo(datos);
     this.detallesArray.push(detalle);
   }
 
   removerItem(i): void {
     this.detallesArray.removeAt(i);
     this.calcular();
+    console.log(this.notaPedido);
   }
 
   onSelectChangeIdentificacion(event: any) {
@@ -221,6 +236,16 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   guardarVenta(): void {
     console.log(this.notaPedido.value);
+
+    if (this.notaPedido.invalid){
+      this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
+      return;
+    }
+
+    this.pedidosService.crearPedido(this.notaPedido.value).subscribe(result => {
+      console.log('PEDIDO GUARDADO', result);
+      this.toaster.open('Pedido guardado', {type: 'success'});
+    }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
   }
 
   onChangeCombo(event: any): void {

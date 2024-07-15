@@ -35,10 +35,10 @@
               <tr>
                 <th>Cidudad origen</th>
                 <th>Ciudad destino</th>
-                <th>Distancia</th>
-                <th>Tamaño de paquete</th>
-                <th>Peso de paquete</th>
-                <th>Costo estimado</th>
+                <th>Distancia (km)</th>
+                <th>Tamaño de paquete(m)</th>
+                <th>Peso de paquete (g)</th>
+                <th>Costo</th>
                 <th>Acciones</th>
               </tr>
               </thead>
@@ -126,27 +126,27 @@
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="basic-icon-default-distancia">Distancia:</label>
+                    <label class="form-label" for="basic-icon-default-distancia">Distancia en Kilómetros:</label>
                     <input type="text" id="basic-icon-default-distancia" class="form-control dt-email"
-                           name="valor" formControlName="distancia"/>
+                           name="valor" formControlName="distancia" (change)="calcularEnvio()"/>
                     <div *ngIf="f.distancia.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="f.distancia.errors.required">Distancia es requerido</div>
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="basic-icon-default-tamanio">Tamaño paquete:</label>
+                    <label class="form-label" for="basic-icon-default-tamanio">Tamaño paquete en centímetros:</label>
                     <input type="text" id="basic-icon-default-tamanio" class="form-control dt-email"
-                           name="valor" formControlName="tamanio"/>
+                           name="valor" formControlName="tamanio" (change)="calcularEnvio()"/>
                     <div *ngIf="f.tamanio.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="f.tamanio.errors.required">Tamaño es requerido</div>
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="basic-icon-default-peso">Peso paquete:</label>
+                    <label class="form-label" for="basic-icon-default-peso">Peso paquete en gramos:</label>
                     <input type="text" id="basic-icon-default-peso" class="form-control dt-email"
-                           name="valor" formControlName="peso"/>
+                           name="valor" formControlName="peso" (change)="calcularEnvio()"/>
                     <div *ngIf="f.peso.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="f.peso.errors.required">Peso es requerido</div>

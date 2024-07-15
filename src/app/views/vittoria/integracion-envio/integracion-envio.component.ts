@@ -1,11 +1,11 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {IntegracionesService} from '../../../services/admin/integraciones.service';
 import {Toaster} from 'ngx-toast-notifications';
+import {IntegracionesEnviosService} from "../../../services/admin/integraciones_envios.service";
 
 @Component({
-  selector: 'app-integracion-woocommerce',
+  selector: 'app-integracion-envio-woocommerce',
   templateUrl: './integracion-envio.component.html',
   styleUrls: ['./integracion-envio.component.css']
 })
@@ -39,17 +39,9 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
   valor;
   padres;
 
-  habilitarDatosPedido;
-  habilitarDatosDespacho;
-  pedidoOmniglobal;
-  despachoOmniglobal;
-
-  disabledPedidoLocal = false;
-  disabledPedidoOmniglobal = false;
-
   // @ViewChild('padres') padres;
   constructor(
-    private integracionesService: IntegracionesService,
+    private integracionesEnviosService: IntegracionesEnviosService,
     private modalService: NgbModal,
     private _formBuilder: FormBuilder,
     private toaster: Toaster,
@@ -101,7 +93,7 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
   }
 
   async obtenerListaParametros(): Promise<void> {
-    await this.integracionesService.obtenerListaIntegraciones(this.page - 1, this.page_size).subscribe((result) => {
+    await this.integracionesEnviosService.obtenerListaIntegracionesEnvios(this.page - 1, this.page_size).subscribe((result) => {
       this.parametros = result.info;
       this.collectionSize = result.cont;
     });
@@ -111,7 +103,7 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
     this.idParametro = id;
     this.funcion = 'editar';
 
-    await this.integracionesService.obtenerIntegracion(id).subscribe(async (result) => {
+    await this.integracionesEnviosService.obtenerIntegracionEnvio(id).subscribe(async (result) => {
       this.paramForm.patchValue({...result});
 
     });
@@ -126,7 +118,7 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
     this.cargando = true;
     if (this.funcion === 'insertar') {
 
-      await this.integracionesService.insertarIntegracion(this.paramForm.value).subscribe((result) => {
+      await this.integracionesEnviosService.insertarIntegracionEnvio(this.paramForm.value).subscribe((result) => {
           this.obtenerListaParametros();
           this.dismissModal.nativeElement.click();
           this.cargando = false;
@@ -144,7 +136,7 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
           this.abrirModalMensaje(this.mensajeModal);
         });
     } else if (this.funcion === 'editar') {
-      await this.integracionesService.editarIntegracion(this.paramForm.value).subscribe((result) => {
+      await this.integracionesEnviosService.editarIntegracionEnvio(this.paramForm.value).subscribe((result) => {
           this.obtenerListaParametros();
           this.dismissModal.nativeElement.click();
           this.cargando = false;
@@ -171,7 +163,7 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
   async cerrarModal(): Promise<void> {
     this.modalService.dismissAll();
     if (this.funcion !== 'editar' && this.funcion !== 'insertar') {
-      await this.integracionesService.eliminarIntegracion(this.idParametro).subscribe((result) => {
+      await this.integracionesEnviosService.eliminarIntegracionEnvio(this.idParametro).subscribe((result) => {
         this.obtenerListaParametros();
       });
     }
@@ -182,56 +174,10 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
     this.modalService.open(modal);
   }
 
-  onSelectCheckPedido(event: any): void {
-    const inputElement = event.target as HTMLInputElement;
-    this.habilitarDatosPedido = inputElement.checked ? 1 : 0;
-    if (this.habilitarDatosPedido === 1) {
-      this.paramForm.get('pedidos_local').get('estado').setValue(1);
-      this.paramForm.get('pedidos_local').get('nombre').setValidators([Validators.required]);
-      this.paramForm.get('pedidos_local').get('correo').setValidators([Validators.required, Validators.email]);
-      this.paramForm.get('pedidos_local').get('telefono').setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]);
-    } else {
-      this.paramForm.get('pedidos_local').get('estado').setValue(0);
-      this.paramForm.get('pedidos_local').get('nombre').setValidators([]);
-      this.paramForm.get('pedidos_local').get('correo').setValidators([]);
-      this.paramForm.get('pedidos_local').get('telefono').setValidators([]);
-    }
-    this.paramForm.get('pedidos_local').get('nombre').updateValueAndValidity();
-    this.paramForm.get('pedidos_local').get('correo').updateValueAndValidity();
-    this.paramForm.get('pedidos_local').get('telefono').updateValueAndValidity();
-
-  }
-
-  onSelectCheckPedidoOmniglobal(event: any): void{
-    const inputElement = event.target as HTMLInputElement;
-    this.pedidoOmniglobal = inputElement.checked ? 1 : 0;
-    this.paramForm.get('pedidos_omniglobal').setValue(this.pedidoOmniglobal);
-
-  }
-
-  onSelectCheckDespacho(event: any): void {
-    const inputElement = event.target as HTMLInputElement;
-    this.habilitarDatosDespacho = inputElement.checked ? 1 : 0;
-    if (this.habilitarDatosDespacho === 1) {
-      this.paramForm.get('despachos_local').get('estado').setValue(1);
-      this.paramForm.get('despachos_local').get('nombre').setValidators([Validators.required]);
-      this.paramForm.get('despachos_local').get('correo').setValidators([Validators.required, Validators.email]);
-      this.paramForm.get('despachos_local').get('telefono').setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]);
-    } else {
-      this.paramForm.get('despachos_local').get('estado').setValue(0);
-      this.paramForm.get('despachos_local').get('nombre').setValidators([]);
-      this.paramForm.get('despachos_local').get('correo').setValidators([]);
-      this.paramForm.get('despachos_local').get('telefono').setValidators([]);
-    }
-    this.paramForm.get('despachos_local').get('nombre').updateValueAndValidity();
-    this.paramForm.get('despachos_local').get('correo').updateValueAndValidity();
-    this.paramForm.get('despachos_local').get('telefono').updateValueAndValidity();
-  }
-
-  onSelectCheckDespachoOmniglobal(event: any): void{
-    const inputElement = event.target as HTMLInputElement;
-    this.despachoOmniglobal = inputElement.checked ? 1 : 0;
-    this.paramForm.get('despachos_omniglobal').setValue(this.despachoOmniglobal);
-
+  calcularEnvio(){
+    const costoEnvio = parseFloat(this.paramForm.get('distancia').value)
+      * parseFloat(this.paramForm.get('tamanio').value)
+      * parseFloat(this.paramForm.get('peso').value);
+    this.paramForm.get('costo').setValue(costoEnvio.toFixed(2));
   }
 }
