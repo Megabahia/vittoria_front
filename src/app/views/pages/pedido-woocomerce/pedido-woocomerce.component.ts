@@ -54,7 +54,7 @@ export class PedidoWoocomerceComponent implements OnInit {
     private pedidosService: PedidosService,
     private toaster: Toaster,
   ) {
-    /*const ref = document.referrer;
+    const ref = document.referrer;
     const host = document.location.host;
     if (ref !== 'https://superbarato.megadescuento.com/') {
       if (host !== '209.145.61.41:4201') {
@@ -64,7 +64,7 @@ export class PedidoWoocomerceComponent implements OnInit {
         localStorage.clear();
         return;
       }
-    }*/
+    }
     this.iniciarNotaPedido();
     const navbar = document.getElementById('navbar');
     const toolbar = document.getElementById('toolbar');
