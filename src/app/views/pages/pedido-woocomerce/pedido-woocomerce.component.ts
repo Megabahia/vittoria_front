@@ -50,23 +50,35 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      // Decodificar la cadena
       const decodedString = decodeURIComponent(params.cadena);
-
-      // Dividir la cadena en líneas
       const lines = decodedString.split('\n');
 
-      // Crear un objeto a partir de las líneas
       const product = {};
 
       lines.forEach(line => {
         const [key, value] = line.split(': ');
-        product[key.trim()] = value ? value.trim() : '';
+        if (value) {
+          let cleanValue = value.trim();
+
+          // Extraer la URL de la imagen del producto
+          if (key.includes('Imagen_del_producto')) {
+            const urlMatch = /src="(.*?)"/.exec(cleanValue);
+            cleanValue = urlMatch ? urlMatch[1] : '';
+          }
+
+          // Limpiar y convertir los valores de los campos de precio
+          if (key.includes('Total_del_artículo') || key.includes('Subtotal_del_artículo')) {
+            cleanValue = cleanValue.replace(/<[^>]*>?/gm, ''); // Elimina etiquetas HTML
+            cleanValue = cleanValue.replace(/&#36;/g, ''); // Elimina referencias codificadas a símbolos monetarios
+            const matches = cleanValue.match(/[0-9]+,[0-9]{2}/); // Encuentra números con formato `9,00`
+            cleanValue = matches ? matches[0] : '0.00'; // Usa el número encontrado o '0.00' si no se encuentra nada
+          }
+
+          product[key.trim().replace('á', 'a').replace('é', 'e')] = cleanValue; // Ajustar claves para remover tildes
+        }
       });
 
       this.datos.push(product);
-
-      console.log(this.datos);
     });
 
     this.obtenerProvincias();
