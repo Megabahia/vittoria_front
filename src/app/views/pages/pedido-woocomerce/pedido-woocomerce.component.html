@@ -4,51 +4,6 @@
 <div class="container">
   <div class="card">
     <form [formGroup]="notaPedido">
-      <div class="card-datatable table-responsive pt-0">
-        <h4 class="pt-1 px-2">Productos</h4>
-        <div formArrayName="articulos">
-          <table class="user-list-table table table-striped">
-            <thead class="thead-light">
-            <tr>
-              <th>Canal</th>
-              <th>Imagen</th>
-              <th>Codigo de barras</th>
-              <th>Nombre</th>
-              <th>Cantidad</th>
-              <th>Valor unitario</th>
-              <th>Total</th>
-              <th>Acciones</th>
-            </tr>
-            </thead>
-            <tbody data-repeater-list="invoice">
-            <tr data-repeater-item *ngFor="let producto of notaPedido.get('articulos')['controls']; let i = index;"
-                [formGroup]="producto">
-              <td>{{ producto.controls.canal?.value }}</td>
-              <td>
-                <img src="{{ producto.controls.imagen_principal?.value }}" alt="imagen" width="100" height="100">
-              </td>
-              <td>{{ producto.controls.codigo?.value }}</td>
-              <td>{{ producto.controls.articulo?.value }}</td>
-              <td>
-                <input type="number" min="0" formControlName="cantidad" (change)="calcular()"/>
-              </td>
-              <td>{{ producto.controls.valorUnitario?.value }}</td>
-              <td>{{ producto.controls.precio?.value }}</td>
-              <td>
-                <a type="button" (click)="removerItem(i)">
-                  <i-feather name="trash" class="text-danger"></i-feather>
-                </a>
-              </td>
-            </tr>
-            </tbody>
-
-          </table>
-          <div class="text-right mr-3">
-            <label style="color: blue; font-weight: bold; font-size: large">Total: {{this.notaPedido.controls.total.value.toFixed(2)}}</label>
-          </div>
-        </div>
-      </div>
-      <hr/>
       <h4 class="pt-1 px-2">Datos de facturación y entrega</h4>
       <div formGroupName="facturacion">
         <div class="row px-2">
@@ -241,6 +196,19 @@
               </div>
             </div>
           </div>
+          <div class="col-md-4 col-12">
+            <label>Código Vendedor</label>
+            <input class="form-control" type="text"
+                   formControlName="codigoVendedor"
+            >
+
+          </div>
+          <div class="col-md-4 col-12">
+            <label>Nombre Vendedor</label>
+            <input class="form-control" type="text"
+                   formControlName="nombreVendedor"
+            >
+          </div>
         </div>
       </div>
       <div class="row my-1 mx-1">
@@ -267,6 +235,95 @@
           </select>
         </div>
       </div>
+      <hr/>
+
+      <h4 class="pt-1 px-2 py-2">Productos</h4>
+      <div formArrayName="articulos">
+        <form class="source-item">
+          <div data-repeater-list="group-a"
+               *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
+            <ng-container [formGroup]="detalle">
+              <div class="repeater-wrapper" data-repeater-item>
+                <div class="row px-2 mt-1">
+                  <div class="col-md-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                    <p class="card-text col-title mb-md-50 mb-0">
+                      Código
+                    </p>
+                    <label>{{ detalle.controls.codigo.value }}</label>
+                  </div>
+                  <div class="col-md-2 col-12 my-lg-0 my-2">
+                    <p class="card-text col-title mb-md-50 mb-0">
+                      Nombre
+                    </p>
+                    <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
+
+                  </div>
+                  <div class="col-md-1 col-12 my-lg-0 my-2">
+                    <p class="card-text col-title mb-md-50 mb-0">
+                      Cantidad
+                    </p>
+                    <input type="text" class="form-control"
+                           formControlName="cantidad"
+                           (change)="calcular()"
+                    />
+                    <div *ngIf="detalle.controls.cantidad.errors"
+                         class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="detalle.controls.cantidad.errors.required">
+                        Requerido
+                      </div>
+                      <div *ngIf="detalle.controls.cantidad.errors.max">
+                        Fuera de stock
+                      </div>
+                      <div *ngIf="detalle.controls.cantidad.errors.min">
+                        Ingrese minimo 1
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-1 col-12 my-lg-0 my-2">
+                    <p class="card-text col-title mb-md-50 mb-0">
+                      Precio
+                    </p>
+                    <label>{{ detalle.controls.valorUnitario.value }}</label>
+                  </div>
+                  <div class="col-md-1 col-12 my-lg-0 my-2">
+                    <p class="card-text col-title mb-md-50 mb-0">
+                      Total
+                    </p>
+                    <label>{{ detalle.controls.precio.value }}</label>
+
+                  </div>
+                  <div class="col-md-2 col-12 my-lg-0 my-2">
+                    <p class="card-text col-title mb-md-50 mb-0">
+                      Ubicación
+                    </p>
+                    <label class="d-block text-wrap">{{ detalle.controls.canal.value | shorten }}</label>
+                  </div>
+                  <div class="col-md-2 col-12 my-lg-0 my-2">
+                    <img
+                      src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
+                      *ngIf="detalle.controls?.imagen_principal" width="100px" height="100px" alt="">
+                    <!--<div *ngIf="!detalle.controls?.imagen_principal.value">
+                      <button (click)="fileInput.click()">Seleccionar imagen</button>
+                      <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png"
+                             style="display: none;">
+                    </div>-->
+                  </div>
+                  <div
+                    class="d-flex flex-column align-items-center justify-content-between border-left border-left-black invoice-product-actions py-50 px-2">
+                    <i-feather name="trash"
+                               class="cursor-pointer text-danger"
+                               data-repeater-delete
+                               (click)="removerItem(i)"></i-feather>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </form>
+
+      </div>
+
       <div class="row mx-2">
         <div *ngIf="seleccionPrimerCombo === 'envioServiEntrega'" class="col-md-5">
           <h6 class="text-uppercase">Datos de cuenta: <br>BANCO PICHINCHA<br>CUENTA: XXXX<br>Nombre: XXXX<br></h6>
@@ -274,9 +331,10 @@
         </div>
       </div>
     </form>
-
-    <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="guardarVenta()">Guardar
-    </button>
+    <div class="row">
+      <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="guardarVenta()">Guardar
+      </button>
+    </div>
   </div>
 
 </div>

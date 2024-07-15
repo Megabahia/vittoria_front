@@ -54,7 +54,7 @@ export class PedidoWoocomerceComponent implements OnInit {
     private pedidosService: PedidosService,
     private toaster: Toaster,
   ) {
-    const ref = document.referrer;
+    /*const ref = document.referrer;
     const host = document.location.host;
     if (ref !== 'https://superbarato.megadescuento.com/') {
       if (host !== '209.145.61.41:4201') {
@@ -64,7 +64,7 @@ export class PedidoWoocomerceComponent implements OnInit {
         localStorage.clear();
         return;
       }
-    }
+    }*/
     this.iniciarNotaPedido();
     const navbar = document.getElementById('navbar');
     const toolbar = document.getElementById('toolbar');
@@ -131,6 +131,8 @@ export class PedidoWoocomerceComponent implements OnInit {
         numero: ['', [Validators.required]],
         calleSecundaria: ['', [Validators.required]],
         referencia: ['', [Validators.required]],
+        codigoVendedor: [''],
+        nombreVendedor: ['']
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
@@ -168,7 +170,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       codigo: [datos.sku_del_producto],
       articulo: [datos.nombre_del_producto],
       valorUnitario: [datos.precio_del_producto || 0],
-      cantidad: [datos.cantidad_en_el_carrito || 0],
+      cantidad: [datos.cantidad_en_el_carrito || 0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [datos.total_del_articulo || 0],
       imagen: [''],
       caracteristicas: [''],
@@ -249,6 +251,10 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   guardarVenta(): void {
     console.log(this.notaPedido.value);
+
+    this.notaPedido.get('articulos').value.map((producto) => {
+      delete producto.imagen_principal;
+    });
 
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});

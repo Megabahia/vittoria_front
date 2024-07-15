@@ -10,6 +10,7 @@ import { ProductosComponent } from './productos/productos.component';
 import {NgxCaptchaModule} from 'ngx-captcha';
 import { CalculadoraComponent } from './calculadora/calculadora.component';
 import { PedidoWoocomerceComponent } from './pedido-woocomerce/pedido-woocomerce.component';
+import {GdeModule} from "../gde/gde.module";
 
 
 
@@ -19,16 +20,17 @@ import { PedidoWoocomerceComponent } from './pedido-woocomerce/pedido-woocomerce
     CalculadoraComponent,
     PedidoWoocomerceComponent
   ],
-  imports: [
-    CommonModule,
-    NgbModule,
-    SharedModule,
-    FormsModule,
-    ChartsModule,
-    ReactiveFormsModule,
-    FlatpickrModule.forRoot(),
-    PagesRoutingModule,
-    NgxCaptchaModule,
-  ]
+    imports: [
+        CommonModule,
+        NgbModule,
+        SharedModule,
+        FormsModule,
+        ChartsModule,
+        ReactiveFormsModule,
+        FlatpickrModule.forRoot(),
+        PagesRoutingModule,
+        NgxCaptchaModule,
+        GdeModule,
+    ]
 })
 export class PagesModule { }
