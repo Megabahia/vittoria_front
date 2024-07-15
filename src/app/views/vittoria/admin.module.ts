@@ -15,6 +15,7 @@ import { ParamsListComponent } from './params/params-list/params-list.component'
 import { NgxCaptchaModule } from 'ngx-captcha';
 import { ProfileComponent } from './users/profile/profile.component';
 import { IntegracionWoocommerceComponent } from './integracion-woocommerce/integracion-woocommerce.component';
+import {IntegracionEnvioComponent} from "./integracion-envio/integracion-envio.component";
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { IntegracionWoocommerceComponent } from './integracion-woocommerce/integ
     ParamsListComponent,
     ProfileComponent,
     IntegracionWoocommerceComponent,
+    IntegracionEnvioComponent
   ],
   imports: [
     CommonModule,

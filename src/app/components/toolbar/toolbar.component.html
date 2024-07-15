@@ -44,6 +44,12 @@
           <i data-feather="circle"></i>
           <span class="menu-item text-truncate" data-i18n="List">Integraciones Woocommerce</span></a>
       </li>
+      <li class="nav-item {{menuToolbar['adm']['integracionesEnvio']}}" *ngIf="acciones.ADM.LEER">
+        <a class="d-flex align-items-center" [routerLink]="['/admin/integraciones-envio']" data-toggle="tooltip"
+           data-placement="auto" title="Integraciones Envio">
+          <i data-feather="circle"></i>
+          <span class="menu-item text-truncate" data-i18n="List">Integraciones Envio</span></a>
+      </li>
 
       <li class="navigation-header">Módulos de sistema</li>
       <!--<li class="nav-item" *ngIf="acciones.ADM.LEER">
