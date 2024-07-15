@@ -11,15 +11,17 @@
             <thead class="thead-light">
             <tr>
               <th>Id</th>
-              <th>Key</th>
+              <th>Canal</th>
+              <th>Codigo de barras</th>
+              <th>Nombre</th>
+              <th>Cantidad</th>
+              <th>Precio</th>
               <th>Subtotal</th>
               <th>Total</th>
-              <th>Cantidad</th>
-              <th>Canal</th>
               <th>Acciones</th>
             </tr>
             </thead>
-            <tbody data-repeater-list="invoice">
+            <!--<tbody data-repeater-list="invoice">
             <tr data-repeater-item *ngFor="let producto of notaPedido.get('articulos')['controls']; let i = index;"
                 [formGroup]="producto">
               <td>{{ producto.controls.id?.value }}</td>
@@ -36,12 +38,30 @@
                 </a>
               </td>
             </tr>
+            </tbody>-->
+            <tbody data-repeater-list="invoice">
+            <tr data-repeater-item *ngFor="let producto of datos; let i = index;"
+                [formGroup]="producto">
+              <td>{{ producto.ID_del_producto }}</td>
+              <td>CANAL</td>
+              <td>{{ producto.SKU_del_producto }}</td>
+              <td>{{ producto.Nombre_del_producto }}</td>
+              <td>{{ producto.Cantidad_en_el_carrito }}</td>
+              <td>{{ producto.Precio_del_producto }}</td>
+              <td>Subtotal</td>
+              <td>Total</td>
+              <td>
+                <a type="button" (click)="removerItem(i)">
+                  <i-feather name="trash" class="text-danger"></i-feather>
+                </a>
+              </td>
+            </tr>
             </tbody>
           </table>
         </div>
       </div>
       <hr/>
-      <h4 class="pt-1 px-2">Datos de facturación</h4>
+      <h4 class="pt-1 px-2">Datos de facturación y entrega</h4>
       <div formGroupName="facturacion">
         <div class="row px-2">
           <div class="col-md-4 col-12">
@@ -235,21 +255,38 @@
           </div>
         </div>
       </div>
+      <div class="row my-1 mx-1">
+        <div class="col-md-3">
+          <label for="primero">Formas de entrega de pedido:</label>
+          <select id="primero" class="form-control" [(ngModel)]="seleccionPrimerCombo" (change)="onChangeCombo($event)"
+                  formControlName="tipoEnvio">
+            <option value="" selected disabled>- Seleccion forma de envio -</option>
+            <option *ngFor="let op of opcionesPrimerCombo" [value]="op.id">{{ op.valor }}</option>
+          </select>
+          <div *ngIf="notaPedidoForm.tipoEnvio.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaPedidoForm.tipoEnvio.errors.required">
+              Requerido
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label for="segundo">Forma de pago:</label>
+          <select id="segundo" class="form-control" [(ngModel)]="seleccionSegundoCombo" disabled
+                  formControlName="tipoPago">
+            <option selected disabled>- Seleccion forma de pago -</option>
+            <option *ngFor="let op of opcionesSegundoCombo" [value]="op.id">{{ op.valor }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row mx-2">
+        <div *ngIf="seleccionPrimerCombo === 'envioServiEntrega'" class="col-md-5">
+          <h6 class="text-uppercase">Datos de cuenta: <br>BANCO PICHINCHA<br>CUENTA: XXXX<br>Nombre: XXXX<br></h6>
+          <input class="form-control-file" type="file" (change)="onFileSelected($event)">
+        </div>
+      </div>
     </form>
-    <div class="row my-1 mx-1">
-      <div class="col-md-3">
-        <label for="primero">Primero:</label>
-        <select id="primero" [(ngModel)]="seleccionPrimerCombo" (change)="onChangeCombo($event)">
-          <option *ngFor="let op of opcionesPrimerCombo" [value]="op.id">{{ op.valor }}</option>
-        </select>
-      </div>
-      <div class="col-md-3">
-        <label for="segundo">Segundo:</label>
-        <select id="segundo" [(ngModel)]="seleccionSegundoCombo" disabled style="width: 120px;">
-          <option *ngFor="let op of opcionesSegundoCombo" [value]="op.id">{{ op.valor }}</option>
-        </select>
-      </div>
-    </div>
+
     <button class="btn btn-primary my-2 mx-2 col-md-3" (click)="guardarVenta()">Guardar
     </button>
   </div>

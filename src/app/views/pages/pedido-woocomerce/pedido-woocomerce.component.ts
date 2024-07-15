@@ -12,26 +12,25 @@ import {ParamService as ParamServiceAdm} from "../../../services/admin/param.ser
 export class PedidoWoocomerceComponent implements OnInit {
 
   opcionesPrimerCombo = [
-    { id: 1, valor: 'Opción 1' },
-    { id: 2, valor: 'Opción 2' },
-    { id: 3, valor: 'Opción 3' }
+    {id: 'envioServiEntrega', valor: 'Envío por Servientrega'},
+    {id: 'envioMotorizadoContraEntrega', valor: 'Envío motorizado de Contraentrega'},
+    {id: 'envioPuntoEntrega', valor: 'Envío a punto de entrega'}
   ];
 
   opcionesSegundoCombo = [
-    { id: 1, valor: 'A' },
-    { id: 2, valor: 'B' },
-    { id: 3, valor: 'C' }
+    {id: 'tranferenciaDeposito', valor: 'Tranferencia/Depósito'},
+    {id: 'eleccionCliente', valor: 'Cliente elegirá al momento de entrega'},
   ];
 
   @Input() paises;
   public notaPedido: FormGroup;
+  archivo: FormData = new FormData();
 
   tipoIdentificacion;
-  datos;
+  datos: any[] = [];
   pais = 'Ecuador';
   ciudadOpciones;
   provinciaOpciones;
-
   seleccionPrimerCombo: any;
   seleccionSegundoCombo: any;
 
@@ -51,35 +50,23 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
+      // Decodificar la cadena
+      const decodedString = decodeURIComponent(params.cadena);
 
-      const datosReorganizados = [];
+      // Dividir la cadena en líneas
+      const lines = decodedString.split('\n');
 
-      // Usar un mapa temporal para organizar los datos por ID
-      const tempData = {};
+      // Crear un objeto a partir de las líneas
+      const product = {};
 
-      // Iterar sobre todas las claves del objeto 'params'
-      Object.keys(params).forEach(key => {
-        // Extraer el identificador del ítem
-        const match = key.match(/^([a-f0-9]+)\[/);
-        if (match) {
-          const id = match[1];
-          // Asegurarse de que hay un objeto inicializado para este ID
-          if (!tempData[id]) {
-            tempData[id] = {id: id}; // Almacena también el ID si es necesario
-          }
-          // Extraer el nombre de la propiedad (todo lo que está después del [ y antes del ])
-          const propName = key.match(/\[([^)]+)\]/)[1];
-          // Asignar el valor a la propiedad adecuada del objeto correspondiente al ID
-          tempData[id][propName] = params[key];
-        }
+      lines.forEach(line => {
+        const [key, value] = line.split(': ');
+        product[key.trim()] = value ? value.trim() : '';
       });
 
-      // Convertir el objeto de datos temporales en un arreglo
-      for (const key in tempData) {
-        datosReorganizados.push(tempData[key]);
-        this.agregarItem(tempData[key]);
-      }
-      this.datos = datosReorganizados;
+      this.datos.push(product);
+
+      console.log(this.datos);
     });
 
     this.obtenerProvincias();
@@ -114,6 +101,9 @@ export class PedidoWoocomerceComponent implements OnInit {
       verificarPedido: [true, [Validators.required]],
       canal: ['superbarato.megadescuento.com', []],
       estado: ['Pendiente', []],
+      tipoEnvio: [this.seleccionPrimerCombo, [Validators.required]],
+      tipoPago: [this.seleccionSegundoCombo],
+      archivoMetodoPago: [''],
       envio: ['', []],
       envios: ['', []],
       json: ['', []],
@@ -217,23 +207,25 @@ export class PedidoWoocomerceComponent implements OnInit {
     return fechaActual;
   }
 
-  guardarVenta(): void{
+  guardarVenta(): void {
     console.log(this.notaPedido.value);
   }
 
   onChangeCombo(event: any): void {
     const newValue = event.target.value;
-    // Actualizar el ngModel del primer combo
     this.seleccionPrimerCombo = newValue;
-    console.log("Seleccionado en Primer Combo:", this.seleccionPrimerCombo);
+    if (newValue === 'envioServiEntrega' && newValue !== '') {
+      this.seleccionSegundoCombo = 'tranferenciaDeposito'; // Asumiendo que deseas seleccionar esta opción si se elige 'envioServiEntrega'
+    } else {
+      this.seleccionSegundoCombo = 'eleccionCliente'; // Opción predeterminada para los otros casos
+    }
+  }
 
-    // Encontrar el objeto correspondiente en el segundo combo
-    const seleccionEnSegundo = this.opcionesSegundoCombo.find(x => x.id === Number(newValue));
-
-    // Asegurarse de que el segundo combo use solo el ID o el valor necesario para el ngModel
-    if (seleccionEnSegundo) {
-      this.seleccionSegundoCombo = seleccionEnSegundo.id;  // Asumiendo que quieres asignar el ID
-      console.log("Valor automático para Segundo Combo:", seleccionEnSegundo.valor);
+  onFileSelected(event: any): void {
+    if (this.seleccionPrimerCombo !== '') {
+      this.archivo.append('archivoMetodoPago', event.target.files.item(0), event.target.files.item(0).name);
+    } else {
+      this.archivo.delete('archivoMetodoPago');
     }
   }
 }
