@@ -291,7 +291,6 @@
                       Total
                     </p>
                     <label>{{ detalle.controls.precio.value }}</label>
-
                   </div>
                   <div class="col-md-2 col-12 my-lg-0 my-2">
                     <p class="card-text col-title mb-md-50 mb-0">
@@ -323,7 +322,18 @@
         </form>
 
       </div>
-
+      <div class="row">
+        <div class="col-md-7"></div>
+        <div class="col-md-5 text-right">
+          <div class="invoice-total-wrapper">
+            <hr class="my-50"/>
+            <div class="invoice-total-item">
+              <p class="invoice-total-title text-primary font-weight-bold">
+                Total a pagar: ${{ notaPedido.controls.total.value }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="row mx-2">
         <div *ngIf="seleccionPrimerCombo === 'envioServiEntrega'" class="col-md-5">
           <h6 class="text-uppercase">Datos de cuenta: <br>BANCO PICHINCHA<br>CUENTA: XXXX<br>Nombre: XXXX<br></h6>
