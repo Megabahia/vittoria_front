@@ -12,6 +12,7 @@
             <tr>
               <th>Id</th>
               <th>Canal</th>
+              <th>Imagen</th>
               <th>Codigo de barras</th>
               <th>Nombre</th>
               <th>Cantidad</th>
@@ -44,12 +45,13 @@
                 [formGroup]="producto">
               <td>{{ producto.ID_del_producto }}</td>
               <td>CANAL</td>
+              <td [innerHTML]="producto.Imagen_del_producto"></td>
               <td>{{ producto.SKU_del_producto }}</td>
               <td>{{ producto.Nombre_del_producto }}</td>
               <td>{{ producto.Cantidad_en_el_carrito }}</td>
               <td>{{ producto.Precio_del_producto }}</td>
-              <td>Subtotal</td>
-              <td>Total</td>
+              <td [innerHTML]="producto['Subtotal_del_artículo']"></td>
+              <td [innerHTML]="producto['Total_del_artículo']"></td>
               <td>
                 <a type="button" (click)="removerItem(i)">
                   <i-feather name="trash" class="text-danger"></i-feather>
