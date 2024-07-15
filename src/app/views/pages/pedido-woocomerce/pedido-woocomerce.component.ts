@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ValidacionesPropias} from "../../../utils/customer.validators";
 import {ParamService as ParamServiceAdm} from "../../../services/admin/param.service";
@@ -45,13 +45,26 @@ export class PedidoWoocomerceComponent implements OnInit {
   seleccionPrimerCombo: any;
   seleccionSegundoCombo: any;
 
+
   constructor(
     private route: ActivatedRoute,
+    private _router: Router,
     private formBuilder: FormBuilder,
     private paramServiceAdm: ParamServiceAdm,
     private pedidosService: PedidosService,
     private toaster: Toaster,
   ) {
+    const ref = document.referrer;
+    const host = document.location.host;
+    if (ref !== 'https://superbarato.megadescuento.com/') {
+      if (host !== '209.145.61.41:4201') {
+        this._router.navigate([
+          '/auth/signin'
+        ]);
+        localStorage.clear();
+        return;
+      }
+    }
     this.iniciarNotaPedido();
     const navbar = document.getElementById('navbar');
     const toolbar = document.getElementById('toolbar');
@@ -237,7 +250,7 @@ export class PedidoWoocomerceComponent implements OnInit {
   guardarVenta(): void {
     console.log(this.notaPedido.value);
 
-    if (this.notaPedido.invalid){
+    if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
     }
