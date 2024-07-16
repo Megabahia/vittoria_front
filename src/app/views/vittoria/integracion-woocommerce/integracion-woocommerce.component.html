@@ -110,12 +110,15 @@
                 <form class="auth-login-form mt-2" [formGroup]="paramForm">
                   <div class="form-group">
                     <label class="form-label" for="tipoCanal">Tipo de Canal:</label>
-                    <select id="tipoCanal" class="form-control">
+                    <select id="tipoCanal" class="form-control" formControlName="tipoCanal">
                       <option value="" selected>- Seleccione -</option>
                       <option value="proveedor">Proveedor</option>
                       <option value="ventas">Ventas</option>
                     </select>
-
+                    <div *ngIf="f.tipoCanal.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.tipoCanal.errors.required">El tipo de canal es requerido</div>
+                    </div>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="basic-icon-default-fullname">Nombre Comercial del Canal:</label>
@@ -136,8 +139,12 @@
                       <div *ngIf="f.valor.errors.required">Url es requerido</div>
                     </div>
                   </div>
-                  <div class="col-md-3 col-12">
-                    <label for="provinciaOrigen">Provincia Origen</label>
+                  <div class="form-group">
+                    <label class="form-label">País:</label>
+                    <input type="text" class="form-control" formControlName="pais" disabled/>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="provinciaOrigen">Provincia</label>
                     <select class="form-control"
                             (change)="obtenerCiudad()"
                             [(ngModel)]="provincia" id="provinciaOrigen" formControlName="provincia">
@@ -146,26 +153,40 @@
                         {{ provincia.nombre }}
                       </option>
                     </select>
-                    <div *ngIf="f.provincia_origen.errors" class="invalid-feedback"
+                    <div *ngIf="f.provincia.errors" class="invalid-feedback"
                          style="display: block;">
-                      <div *ngIf="f.provincia_origen.errors.required">Provincia es requerida
+                      <div *ngIf="f.provincia.errors.required">Provincia es requerida
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-3 col-12">
-                    <label for="ciudadOrigen">Ciudad Origen:</label>
-                    <select class="form-control" formControlName="ciudad_origen" id="ciudadOrigen">
+                  <div class="form-group">
+                    <label class="form-label" for="ciudadOrigen">Ciudad:</label>
+                    <select class="form-control" formControlName="ciudad" id="ciudadOrigen">
                       <option value="" selected>- Seleccione -</option>
                       <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
                         {{ ciudad.nombre }}
                       </option>
                     </select>
-                    <div *ngIf="f.ciudad_origen.errors" class="invalid-feedback"
+                    <div *ngIf="f.ciudad.errors" class="invalid-feedback"
                          style="display: block;">
-                      <div *ngIf="f.ciudad_origen.errors.required">Ciudad es requerida
+                      <div *ngIf="f.ciudad.errors.required">Ciudad es requerida
                       </div>
                     </div>
                   </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="sector">Sector:</label>
+                    <input type="text" id="sector" class="form-control" formControlName="sector"/>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="lat">Latitud:</label>
+                    <input type="text" id="lat" class="form-control" formControlName="latitud"/>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="lng">Longitud:</label>
+                    <input type="text" id="lng" class="form-control" formControlName="longitud"/>
+                  </div>
+
                   <label class="form-label font-weight-bold mb-2" for="basic-icon-default-email">Pedidos gestionados
                     por:</label>
                   <div formGroupName="pedidos_local">

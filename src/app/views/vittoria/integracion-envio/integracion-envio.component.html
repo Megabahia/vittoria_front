@@ -21,9 +21,7 @@
                   <option value="100">100</option>
                 </select>
 
-              </div>
-              <div class="col-lg-12 col-xl-6 text-right">
-                <button class="btn btn-primary" tabindex="0" aria-controls="DataTables_Table_0"
+                <button class="btn btn-primary ml-2" tabindex="0" aria-controls="DataTables_Table_0"
                         type="button" data-toggle="modal" data-target="#modals-slide-in"
                         (click)="insertarParametro()">
                   Añadir Integracion
@@ -33,23 +31,43 @@
             <table class="user-list-table table">
               <thead class="thead-light">
               <tr>
-                <th>Cidudad origen</th>
-                <th>Ciudad destino</th>
+                <th>País</th>
+                <th>Provincia</th>
+                <th>Ciudad</th>
+                <th>Tamaño inicial (cm)</th>
+                <th>Tamaño fin (cm)</th>
+                <th>Peso inicial (kg)</th>
+                <th>Peso fin (kg)</th>
                 <th>Distancia (km)</th>
-                <th>Tamaño de paquete(m)</th>
-                <th>Peso de paquete (g)</th>
                 <th>Costo</th>
+                <th>Forma de pago</th>
                 <th>Acciones</th>
               </tr>
               </thead>
               <tbody>
               <tr *ngFor="let parametro of parametros; let i = index">
-                <td> Quito</td>
-                <td> Ibarra</td>
-                <td> 10 km</td>
-                <td> 1 m</td>
-                <td> 2 kg</td>
-                <td> 8.00</td>
+                <td> {{ parametro.pais }}</td>
+                <td> {{ parametro.provincia }}</td>
+                <td> {{ parametro.ciudad }}</td>
+                <td>
+                  {{ parametro.tamanio_inicial }}
+                </td>
+                <td>
+                  {{ parametro.tamanio_fin }}
+                </td>
+                <td>
+                  {{ parametro.peso_inicial }}
+                </td>
+                <td>
+                  {{ parametro.peso_fin }}
+                </td>
+                <td> {{ parametro.distancia }}</td>
+                <td> {{ parametro.costo | currency }}</td>
+                <td>
+                  <ul *ngFor="let pago of parametro.formaPago">
+                    <li *ngIf="pago.estado">{{ pago.nombre }}</li>
+                  </ul>
+                </td>
                 <td>
                   <a data-toggle="modal" data-target="#modals-slide-in"
                      (click)="editarParametro(parametro.id)">
@@ -106,52 +124,123 @@
               </div>
               <div class="modal-body flex-grow-1">
                 <form class="auth-login-form mt-2" [formGroup]="paramForm">
+                  <!--PAIS, PROVINCIA, CIUDAD-->
                   <div class="form-group">
-                    <label class="form-label" for="basic-icon-default-origen">Ciudad de origen:</label>
-                    <input type="text" class="form-control dt-full-name"
-                           id="basic-icon-default-origen" name="nombre" formControlName="ciudad_origen"/>
-                    <div *ngIf="f.ciudad_origen.errors" class="invalid-feedback"
+                    <label class="form-label">País:</label>
+                    <input type="text" class="form-control" formControlName="pais" disabled/>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="provinciaOrigen">Provincia</label>
+                    <select class="form-control"
+                            (change)="obtenerCiudad()"
+                            [(ngModel)]="provincia" id="provinciaOrigen" formControlName="provincia">
+                      <option value="" selected>- Seleccione -</option>
+                      <option value="{{provincia.nombre}}" *ngFor="let provincia of provinciaOpciones">
+                        {{ provincia.nombre }}
+                      </option>
+                    </select>
+                    <div *ngIf="f.provincia.errors" class="invalid-feedback"
                          style="display: block;">
-                      <div *ngIf="f.ciudad_origen.errors.required">Ciudad origen es requerido
+                      <div *ngIf="f.provincia.errors.required">Provincia es requerida
                       </div>
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="basic-icon-default-destino">Ciudad destino:</label>
-                    <input type="text" id="basic-icon-default-destino" class="form-control dt-email"
-                           name="valor" formControlName="ciudad_destino"/>
-                    <div *ngIf="f.ciudad_destino.errors" class="invalid-feedback"
+                    <label class="form-label" for="ciudadOrigen">Ciudad:</label>
+                    <select class="form-control" formControlName="ciudad" id="ciudadOrigen">
+                      <option value="" selected>- Seleccione -</option>
+                      <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
+                        {{ ciudad.nombre }}
+                      </option>
+                    </select>
+                    <div *ngIf="f.ciudad.errors" class="invalid-feedback"
                          style="display: block;">
-                      <div *ngIf="f.ciudad_destino.errors.required">Ciudad destino es requerido</div>
+                      <div *ngIf="f.ciudad.errors.required">Ciudad es requerida
+                      </div>
                     </div>
                   </div>
+                  <!--DISTANCIA-->
                   <div class="form-group">
                     <label class="form-label" for="basic-icon-default-distancia">Distancia en Kilómetros:</label>
-                    <input type="text" id="basic-icon-default-distancia" class="form-control dt-email"
-                           name="valor" formControlName="distancia" (change)="calcularEnvio()"/>
+                    <input type="text" id="basic-icon-default-distancia" class="form-control"
+                           name="valor" formControlName="distancia"/>
                     <div *ngIf="f.distancia.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="f.distancia.errors.required">Distancia es requerido</div>
+                      <div *ngIf="f.distancia.errors.pattern">
+                        Ingrese solo numeros
+                      </div>
+                    </div>
+                  </div>
+                  <!--TAMAÑOS-->
+                  <div class="form-group">
+                    <label class="form-label" for="basic-icon-default-tamanio-inicial">Tamaño paquete inicial en
+                      centímetros:</label>
+                    <input type="text" id="basic-icon-default-tamanio-inicial" class="form-control dt-email"
+                           name="valor" formControlName="tamanio_inicial"/>
+                    <div *ngIf="f.tamanio_inicial.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.tamanio_inicial.errors.required">Tamaño inicial es requerido</div>
+                      <div *ngIf="f.tamanio_inicial.errors.pattern">
+                        Ingrese solo numeros
+                      </div>
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="basic-icon-default-tamanio">Tamaño paquete en centímetros:</label>
-                    <input type="text" id="basic-icon-default-tamanio" class="form-control dt-email"
-                           name="valor" formControlName="tamanio" (change)="calcularEnvio()"/>
-                    <div *ngIf="f.tamanio.errors" class="invalid-feedback"
+                    <label class="form-label" for="basic-icon-default-tamanio-final">Tamaño paquete final en
+                      centímetros:</label>
+                    <input type="text" id="basic-icon-default-tamanio-final" class="form-control dt-email"
+                           name="valor" formControlName="tamanio_fin"/>
+                    <div *ngIf="f.tamanio_fin.errors" class="invalid-feedback"
                          style="display: block;">
-                      <div *ngIf="f.tamanio.errors.required">Tamaño es requerido</div>
+                      <div *ngIf="f.tamanio_fin.errors.required">Tamaño es requerido</div>
+                      <div *ngIf="f.tamanio_fin.errors.pattern">
+                        Ingrese solo numeros
+                      </div>
+                    </div>
+                  </div>
+                  <!--PESOS-->
+                  <div class="form-group">
+                    <label class="form-label" for="basic-icon-default-peso-inicio">Peso paquete inicial en
+                      Kilogramos:</label>
+                    <input type="text" id="basic-icon-default-peso-inicio" class="form-control dt-email"
+                           formControlName="peso_inicial"/>
+                    <div *ngIf="f.peso_inicial.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.peso_inicial.errors.required">Peso inicial es requerido</div>
+                      <div *ngIf="f.peso_inicial.errors.pattern">
+                        Ingrese solo numeros
+                      </div>
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="basic-icon-default-peso">Peso paquete en gramos:</label>
-                    <input type="text" id="basic-icon-default-peso" class="form-control dt-email"
-                           name="valor" formControlName="peso" (change)="calcularEnvio()"/>
-                    <div *ngIf="f.peso.errors" class="invalid-feedback"
+                    <label class="form-label" for="basic-icon-default-peso-fin">Peso paquete fin en gramos:</label>
+                    <input type="text" id="basic-icon-default-peso-fin" class="form-control dt-email"
+                           formControlName="peso_fin"/>
+                    <div *ngIf="f.peso_fin.errors" class="invalid-feedback"
                          style="display: block;">
-                      <div *ngIf="f.peso.errors.required">Peso es requerido</div>
+                      <div *ngIf="f.peso_fin.errors.required">Peso final es requerido</div>
+                      <div *ngIf="f.peso_fin.errors.pattern">
+                        Ingrese solo numeros
+                      </div>
                     </div>
                   </div>
+                  <!--COURIER-->
+                  <div class="form-group">
+                    <label for="basicSelect">Courier</label>
+                    <select id="basicSelect" class="form-control" formControlName="courier">
+                      <option value="">- Seleccione -</option>
+                      <option value="{{item.username}}"
+                              *ngFor="let item of couriers"
+                      >{{ item.username }}
+                      </option>
+                    </select>
+                    <div *ngIf="f.courier.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.courier.errors.required">Courier es requerido</div>
+                    </div>
+                  </div>
+                  <!--COSTO-->
                   <div class="form-group">
                     <label class="form-label" for="basic-icon-default-costo">Costo:</label>
                     <input type="text" id="basic-icon-default-costo" class="form-control dt-email"
@@ -159,8 +248,63 @@
                     <div *ngIf="f.costo.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="f.costo.errors.required">Costo es requerido</div>
+                      <div *ngIf="f.costo.errors.pattern">
+                        Ingrese solo numeros
+                      </div>
                     </div>
                   </div>
+                  <!--TIEMPO ENTREGA-->
+                  <div class="form-group">
+                    <label class="form-label" for="tiempo">Tiempo de entrega</label>
+                    <select class="form-control" id="tiempo" formControlName="tiempo_entrega">
+                      <option value="" selected>- Seleccione -</option>
+                      <option value="{{tiempo.value}}" *ngFor="let tiempo of horas">
+                        {{ tiempo.label }}h
+                      </option>
+                    </select>
+                    <div *ngIf="f.tiempo_entrega.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.tiempo_entrega.errors.required">El tiempo de entrega es requerido
+                      </div>
+                    </div>
+                  </div>
+                  <!--LATITUD-->
+                  <div class="form-group">
+                    <label class="form-label" for="lat">Latitud:</label>
+                    <input type="text" id="lat" class="form-control" formControlName="distancia"/>
+                  </div>
+                  <!--LONGITUD-->
+                  <div class="form-group">
+                    <label class="form-label" for="lng">Longitud:</label>
+                    <input type="text" id="lng" class="form-control" formControlName="longitud"/>
+                  </div>
+                  <!--FORMAS DE PAGO-->
+                  <div class="form-group">
+                    <label class="form-label">Formas de pago:</label>
+                    <div formArrayName="formaPago">
+                      <div *ngFor="let pago of paramForm.get('formaPago')['controls']; let i = index">
+                        <div [formGroup]="pago">
+
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="pago{{i}}"
+                                   formControlName="estado" (change)="onChangeCheckPago(pago.controls.nombre.value)">
+                            <label class="custom-control-label" for="pago{{i}}">{{ pago.controls.nombre.value }}</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!--<div formArrayName="formaPago">
+                    <div *ngFor="let pagoControl of paramForm.get('formaPago')['controls']; let i = index; let i = index;">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" formControlName="nombre" id="formaPago-{{i}}">
+                        <label class="form-check-label" for="formaPago-{{i}}">
+                          {{ pagoControl.get('nombre').value }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>-->
                 </form>
                 <button class="btn btn-primary mr-1" aria-label="Close" (click)="gestionarParametro()">
                   <span *ngIf="cargando" class="spinner-border spinner-border-sm"></span>Guardar

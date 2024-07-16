@@ -42,6 +42,8 @@ export interface Producto {
   idPadre;
   proveedor;
   stockVirtual?;
+  peso;
+  tamanio
 }
 
 export interface FichaTecnicaProducto {
@@ -113,6 +115,8 @@ export class ProductosService {
         estado: false
       }, {canal: 'megadescuento.com', estado: false}, {canal: 'todomegacentro.megadescuento.com', estado: false}
       ],
+      peso: 0,
+      tamanio: 0
     };
   }
 

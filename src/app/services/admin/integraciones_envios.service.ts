@@ -32,6 +32,6 @@ export class IntegracionesEnviosService {
   }
 
   obtenerIntegracionEnvio(id): Observable<any> {
-    return this.http.get<any>(`${apiUrl}/adm/integraciones/listOne/${id}`);
+    return this.http.get<any>(`${apiUrl}/adm/integraciones/envios/listOne/${id}`);
   }
 }

@@ -50,7 +50,6 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   provinciaOpciones;
   provincia = '';
 
-
   // @ViewChild('padres') padres;
   constructor(
     private integracionesService: IntegracionesService,
@@ -59,8 +58,7 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
     private toaster: Toaster,
     private paramServiceAdm: ParamServiceAdm,
   ) {
-    this.obtenerProvincias();
-    this.obtenerCiudad();
+
   }
 
   get f() {
@@ -70,7 +68,9 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   insertarParametro(): void {
     this.funcion = 'insertar';
     this.paramForm.reset();
+    this.paramForm.get('pais').setValue(this.pais);
   }
+
 
   ngOnInit(): void {
     this.paramForm = this._formBuilder.group({
@@ -93,13 +93,19 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
       valor: ['', [Validators.required]],
       //MIGRACION
       tipoCanal: ['', [Validators.required]],
-      provincia_origen: ['', [Validators.required]],
-      ciudad_origen: ['', [Validators.required]]
+      pais: [this.pais, [Validators.required]],
+      provincia: ['', [Validators.required]],
+      ciudad: ['', [Validators.required]],
+      sector: [''],
+      latitud: [''],
+      longitud: ['']
     });
     this.menu = {
       modulo: 'adm',
       seccion: 'param'
     };
+
+    this.obtenerProvincias();
   }
 
   get pedidosLocalForm() {
@@ -132,10 +138,9 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   async editarParametro(id): Promise<void> {
     this.idParametro = id;
     this.funcion = 'editar';
-
     await this.integracionesService.obtenerIntegracion(id).subscribe(async (result) => {
       this.paramForm.patchValue({...result});
-
+      this.obtenerCiudad();
     });
   }
 
@@ -268,4 +273,5 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
       this.ciudadOpciones = info;
     });
   }
+
 }

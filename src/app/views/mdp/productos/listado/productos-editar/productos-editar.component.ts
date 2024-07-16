@@ -132,6 +132,8 @@ export class ProductosEditarComponent implements OnInit {
       woocommerceId: ['', []],
       imagen_principal: ['', [Validators.required]],
       stockVirtual: ['', []],
+      peso: [0, []],
+      tamanio: [0, []]
     });
     this.fichaTecnicaForm = this._formBuilder.group({
       codigo: ['', [Validators.required]],
