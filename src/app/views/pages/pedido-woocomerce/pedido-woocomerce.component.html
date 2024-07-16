@@ -1,7 +1,33 @@
 <div class="card">
-  <h2 class="card-header">Administrar Pedido SuperBarato</h2>
+  <h2 class="card-header">PEDIDO SUPERBARATO</h2>
 </div>
 <div class="container">
+  <div class="card">
+    <div class="row p-2">
+      <div class="col-md-3 col-12">
+        <label for="cliente">Es nuestro cliente?</label>
+        <select id="cliente" class="form-control" (change)="onSelectChangeCliente($event)">
+          <option value="" disabled selected>- Seleccione -</option>
+          <option value="esCliente">SI</option>
+          <option value="noEsCliente">NO</option>
+        </select>
+      </div>
+      <div class="col-md-4 col-12" *ngIf="esCliente">
+        <label>Ingrese su correo electrónico:</label>
+        <div class="d-flex justify-content-between align-items-center">
+          <input type="text" class="form-control" [(ngModel)]="correoCliente"/>
+          <button class="btn btn-primary ml-2" style="width: 300px" (click)="enviarCorreoCliente()">Enviar correo</button>
+        </div>
+      </div>
+      <div class="col-md-4 col-12" *ngIf="enviarCorreo">
+        <label>Ingrese el código:</label>
+        <div class="d-flex justify-content-between align-items-center">
+          <input type="text" class="form-control" [(ngModel)]="codigoCorreo"/>
+          <button class="btn btn-primary ml-2" style="width: 300px" (click)="validarCodigoCorreo()">Validar codigo</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="card">
     <form [formGroup]="notaPedido">
       <h4 class="pt-1 px-2">Datos de facturación y entrega</h4>
@@ -329,7 +355,7 @@
             <hr class="my-50"/>
             <div class="invoice-total-item">
               <p class="invoice-total-title text-primary font-weight-bold">
-                Total a pagar: ${{ notaPedido.controls.total.value }}</p>
+                Total a pagar: ${{ notaPedido.controls.total.value.toFixed(2) }}</p>
             </div>
           </div>
         </div>

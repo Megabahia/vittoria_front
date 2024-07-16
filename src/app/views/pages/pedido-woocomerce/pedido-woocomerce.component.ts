@@ -44,8 +44,10 @@ export class PedidoWoocomerceComponent implements OnInit {
   provinciaOpciones;
   seleccionPrimerCombo: any;
   seleccionSegundoCombo: any;
-
-
+  esCliente;
+  enviarCorreo = false;
+  correoCliente;
+  codigoCorreo;
   constructor(
     private route: ActivatedRoute,
     private _router: Router,
@@ -54,7 +56,7 @@ export class PedidoWoocomerceComponent implements OnInit {
     private pedidosService: PedidosService,
     private toaster: Toaster,
   ) {
-    const ref = document.referrer;
+    /*const ref = document.referrer;
     const host = document.location.host;
     if (ref !== 'https://superbarato.megadescuento.com/') {
       if (host !== '209.145.61.41:4201') {
@@ -64,7 +66,7 @@ export class PedidoWoocomerceComponent implements OnInit {
         localStorage.clear();
         return;
       }
-    }
+    }*/
     this.iniciarNotaPedido();
     const navbar = document.getElementById('navbar');
     const toolbar = document.getElementById('toolbar');
@@ -283,5 +285,31 @@ export class PedidoWoocomerceComponent implements OnInit {
     } else {
       this.archivo.delete('archivoMetodoPago');
     }
+  }
+
+  onSelectChangeCliente(event: any): void {
+    const selectValue = event.target.value;
+    if (selectValue === 'esCliente') {
+      this.esCliente = true;
+    } else {
+      this.esCliente = false;
+    }
+  }
+
+  enviarCorreoCliente(): void {
+    if (this.validarCorreo(this.correoCliente)) {
+      this.enviarCorreo = true;
+      console.log(this.correoCliente);
+    } else {
+      this.toaster.open('Ingrese un correo válido', {type: 'danger'});
+    }
+  }
+
+  validarCodigoCorreo(): void{
+    console.log(this.codigoCorreo);
+  }
+
+  validarCorreo(correo: string): boolean {
+    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(correo);
   }
 }

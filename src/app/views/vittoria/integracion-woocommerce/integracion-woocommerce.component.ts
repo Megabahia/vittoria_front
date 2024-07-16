@@ -3,6 +3,7 @@ import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {IntegracionesService} from '../../../services/admin/integraciones.service';
 import {Toaster} from 'ngx-toast-notifications';
+import {ParamService as ParamServiceAdm} from '../../../services/admin/param.service';
 
 @Component({
   selector: 'app-integracion-woocommerce',
@@ -44,8 +45,11 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   pedidoOmniglobal;
   despachoOmniglobal;
 
-  disabledPedidoLocal = false;
-  disabledPedidoOmniglobal = false;
+  pais = 'Ecuador';
+  ciudadOpciones;
+  provinciaOpciones;
+  provincia = '';
+
 
   // @ViewChild('padres') padres;
   constructor(
@@ -53,14 +57,17 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private _formBuilder: FormBuilder,
     private toaster: Toaster,
+    private paramServiceAdm: ParamServiceAdm,
   ) {
+    this.obtenerProvincias();
+    this.obtenerCiudad();
   }
 
   get f() {
     return this.paramForm.controls;
   }
 
-  insertarParametro(): void{
+  insertarParametro(): void {
     this.funcion = 'insertar';
     this.paramForm.reset();
   }
@@ -83,7 +90,11 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
         telefono: [''],
       }),
       despachos_omniglobal: [0, []],
-      valor: ['', [Validators.required]]
+      valor: ['', [Validators.required]],
+      //MIGRACION
+      tipoCanal: ['', [Validators.required]],
+      provincia_origen: ['', [Validators.required]],
+      ciudad_origen: ['', [Validators.required]]
     });
     this.menu = {
       modulo: 'adm',
@@ -94,6 +105,7 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   get pedidosLocalForm() {
     return this.paramForm.get('pedidos_local')['controls'];
   }
+
   get despachosLocalForm() {
     return this.paramForm.get('despachos_local')['controls'];
   }
@@ -212,7 +224,7 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
 
   }
 
-  onSelectCheckPedidoOmniglobal(event: any): void{
+  onSelectCheckPedidoOmniglobal(event: any): void {
     const inputElement = event.target as HTMLInputElement;
     this.pedidoOmniglobal = inputElement.checked ? 1 : 0;
     this.paramForm.get('pedidos_omniglobal').setValue(this.pedidoOmniglobal);
@@ -238,10 +250,22 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
     this.paramForm.get('despachos_local').get('telefono').updateValueAndValidity();
   }
 
-  onSelectCheckDespachoOmniglobal(event: any): void{
+  onSelectCheckDespachoOmniglobal(event: any): void {
     const inputElement = event.target as HTMLInputElement;
     this.despachoOmniglobal = inputElement.checked ? 1 : 0;
     this.paramForm.get('despachos_omniglobal').setValue(this.despachoOmniglobal);
 
+  }
+
+  obtenerProvincias(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.pais, 'PAIS').subscribe((info) => {
+      this.provinciaOpciones = info;
+    });
+  }
+
+  obtenerCiudad(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.provincia, 'PROVINCIA').subscribe((info) => {
+      this.ciudadOpciones = info;
+    });
   }
 }
