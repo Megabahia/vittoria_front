@@ -2,10 +2,9 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Toaster} from 'ngx-toast-notifications';
-import {IntegracionesEnviosService} from "../../../services/admin/integraciones_envios.service";
+import {IntegracionesEnviosService} from '../../../services/admin/integraciones_envios.service';
 import {ParamService as ParamServiceAdm} from '../../../services/admin/param.service';
-import {UsersService} from "../../../services/admin/users.service";
-import {DatePipe} from "@angular/common";
+import {UsersService} from '../../../services/admin/users.service';
 
 @Component({
   selector: 'app-integracion-envio-woocommerce',
@@ -51,7 +50,9 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
 
   pais = 'Ecuador';
   ciudadOpciones;
+  ciudadDestinoOpciones;
   provinciaOpciones;
+  provinciaDestinoOpciones;
   provincia = '';
 
   horas: any[] = [];
@@ -80,9 +81,6 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
   insertarParametro(): void {
     this.funcion = 'insertar';
     this.paramForm.reset();
-    /*this.formasDePago.map(item => {
-      this.agregarItemFormaPago(item);
-    });*/
     this.iniciarParamForm();
     this.paramForm.get('pais').setValue(this.pais);
   }
@@ -92,10 +90,12 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
       id: [''],
       costo: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d+)?$')]],
       distancia: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d+)?$')]],
-      //MIGRACION
+      // MIGRACION
       pais: [this.pais, [Validators.required]],
       provincia: ['', [Validators.required]],
       ciudad: ['', [Validators.required]],
+      provinciaDestino: ['', [Validators.required]],
+      ciudadDestino: ['', [Validators.required]],
       courier: ['', [Validators.required]],
       formaPago: this.formBuilder.array([
         this.formBuilder.group({
@@ -152,16 +152,12 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
     return this.paramForm.get('formaPago') as FormArray;
   }
 
-  crearDetalleGrupoFormaPago(datos: any): any {
+  crearDetalleGrupoFormaPago(): any {
     return this.formBuilder.group({
       nombre: [''],
       estad: [''],
       valor: [0]
     });
-  }
-
-  agregarItemFormaPago(datos: any): void {
-    this.detallesArrayFormaPago.push(this.crearDetalleGrupoFormaPago(datos));
   }
 
   async iniciarPaginador(): Promise<void> {
@@ -183,9 +179,11 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
     this.funcion = 'editar';
 
     await this.integracionesEnviosService.obtenerIntegracionEnvio(id).subscribe(async (result) => {
-      this.paramForm.patchValue({...result});
+      console.log('resutl', result);
+      await this.paramForm.patchValue({...result});
       this.paramForm.get('pais').setValue(this.pais);
       this.obtenerCiudad();
+      this.obtenerCiudadDestino();
     });
   }
 
@@ -264,12 +262,19 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
   obtenerProvincias(): void {
     this.paramServiceAdm.obtenerListaHijos(this.pais, 'PAIS').subscribe((info) => {
       this.provinciaOpciones = info;
+      this.provinciaDestinoOpciones = info;
     });
   }
 
   obtenerCiudad(): void {
     this.paramServiceAdm.obtenerListaHijos(this.provincia, 'PROVINCIA').subscribe((info) => {
       this.ciudadOpciones = info;
+    });
+  }
+
+  obtenerCiudadDestino(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.paramForm.value.provinciaDestino, 'PROVINCIA').subscribe((info) => {
+      this.ciudadDestinoOpciones = info;
     });
   }
 
