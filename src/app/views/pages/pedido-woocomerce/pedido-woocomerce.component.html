@@ -1,41 +1,44 @@
 <div class="card">
-  <h2 class="card-header">PEDIDO SUPERBARATO</h2>
+  <h2 class="card-header font-weight-bold">PEDIDO SUPERBARATO</h2>
 </div>
 <div class="container">
   <div class="card">
     <div class="row p-2">
       <div class="col-md-3 col-12">
-        <h5 for="cliente">Es nuestro cliente?</h5>
-        <select id="cliente" class="form-control" (change)="onSelectChangeCliente($event)">
+        <h5>¿Usted es nuestro cliente?</h5>
+        <select id="cliente" class="form-control" (change)="onSelectChangeCliente($event)" [disabled]="disabledCombo">
           <option value="" disabled selected>- Seleccione -</option>
           <option value="esCliente">SI</option>
           <option value="noEsCliente">NO</option>
         </select>
       </div>
       <div class="col-md-4 col-12" *ngIf="esCliente">
-        <label>Por favor ingrese su correo electrónico registrado:</label>
+        <label style="color: blue">Por favor ingrese su correo electrónico registrado:</label>
         <div class="d-flex justify-content-between align-items-center">
           <input type="text" class="form-control" [(ngModel)]="correoCliente"/>
-          <button class="btn btn-primary ml-2" style="width: 300px" (click)="enviarCorreoCliente()">Generar código</button>
+          <button class="btn btn-primary ml-2" style="width: 300px" (click)="enviarCorreoCliente()">Generar código
+          </button>
         </div>
-        <label>Al correo electrónico se va a enviar un código para cargar su información
+        <label class="mt-1 text-warning">Al correo electrónico se va a enviar un código para cargar su información
         </label>
       </div>
       <div class="col-md-4 col-12" *ngIf="enviarCorreo">
-        <label>Ingrese el código enviado a su correo electrónico:</label>
+        <label style="color: blue">Ingrese el código enviado a su correo electrónico:</label>
         <div class="d-flex justify-content-between align-items-center">
           <input type="text" class="form-control" [(ngModel)]="codigoCorreo"/>
-          <button class="btn btn-primary ml-2" style="width: 300px" (click)="validarCodigoCorreo()">Enviar codigo</button>
+          <button class="btn btn-primary ml-2" (click)="validarCodigoCorreo()">Enviar codigo</button>
         </div>
       </div>
     </div>
   </div>
-  <div class="card">
-    <form [formGroup]="notaPedido">
-      <h4 class="pt-1 px-2">Datos de facturación y entrega</h4>
+  <form [formGroup]="notaPedido">
+    <div class="card" *ngIf="mostrarContenido">
       <div formGroupName="facturacion">
-        <div class="row px-2">
-          <div class="col-md-4 col-12">
+        <h3 class="py-1 px-2 font-weight-bold">Datos de facturación y entrega </h3>
+        <h5 class="pl-3">DATO PERSONALES <label class="text-muted">(Datos
+          obligatorios)</label></h5>
+        <div class="row px-4">
+          <div class="col-md-3 col-12">
             <label>Nombres</label>
             <input class="form-control" type="text"
                    formControlName="nombres"
@@ -47,7 +50,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4 col-12">
+          <div class="col-md-3 col-12">
             <label>Apellidos</label>
             <input class="form-control" type="text"
                    formControlName="apellidos"
@@ -59,7 +62,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4 col-12">
+          <div class="col-md-3 col-12">
             <label>Correo electrónico</label>
             <input class="form-control" type="text"
                    formControlName="correo"
@@ -74,7 +77,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4 col-12">
+          <div class="col-md-3 col-12">
             <div class="form-group">
               <label for="tipoIdentificacion">Tipo de Identificación</label>
               <select id="tipoIdentificacion" class="form-control" formControlName="tipoIdentificacion"
@@ -92,7 +95,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4 col-12">
+          <div class="col-md-3 col-12">
             <label>Numero Identificación</label>
             <input class="form-control" type="text"
                    formControlName="identificacion"
@@ -116,7 +119,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4 col-12">
+          <div class="col-md-3 col-12">
             <label>Número de WhatsApp</label>
             <input class="form-control" type="text"
                    formControlName="telefono"
@@ -137,14 +140,19 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4 col-12">
+        </div>
+        <hr/>
+        <h5 class="pl-3">DATOS DE DIRECCIÓN <label class="text-muted">(Datos
+          obligatorios)</label></h5>
+        <div class="row px-4">
+          <div class="col-md-3 col-12">
             <label>País</label>
             <input class="form-control" type="text"
                    formControlName="pais" disabled
             >
 
           </div>
-          <div class="col-md-4 col-12">
+          <div class="col-md-3 col-12">
             <label for="provinciaContacto">Provincia</label>
             <select class="form-control" name="provinciaContacto" formControlName="provincia"
                     (change)="obtenerCiudad()" id="provinciaContacto">
@@ -160,7 +168,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4 col-12">
+          <div class="col-md-3 col-12">
             <label for="ciudadContacto">Ciudad</label>
             <select class="form-control" name="ciudadContacto" formControlName="ciudad"
                     id="ciudadContacto">
@@ -176,7 +184,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4 col-12">
+          <div class="col-md-3 col-12">
             <label>Calle principal</label>
             <input class="form-control" type="text"
                    formControlName="callePrincipal"
@@ -188,7 +196,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4 col-12">
+          <div class="col-md-3 col-12">
             <label>Número de casa</label>
             <input class="form-control" type="text"
                    formControlName="numero"
@@ -200,7 +208,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4 col-12">
+          <div class="col-md-3 col-12">
             <label>Calle secundaria</label>
             <input class="form-control" type="text"
                    formControlName="calleSecundaria"
@@ -212,7 +220,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4 col-12">
+          <div class="col-md-3 col-12">
             <label>Referencia</label>
             <input class="form-control" type="text"
                    formControlName="referencia"
@@ -224,6 +232,11 @@
               </div>
             </div>
           </div>
+        </div>
+        <hr/>
+        <h5 class="pl-3">DATOS VENDEDOR <label class="text-muted">(Datos
+          opcionales)</label></h5>
+        <div class="row px-4 pb-2">
           <div class="col-md-4 col-12">
             <label>Código Vendedor</label>
             <input class="form-control" type="text"
@@ -239,17 +252,29 @@
           </div>
         </div>
       </div>
-      <div class="row my-1 mx-1">
+    </div>
+    <div class="card" *ngIf="mostrarContenido">
+      <h5 class="pl-3 pt-2">Datos de facturación <label class="text-muted">(Datos
+        obligatorios)</label></h5>
+      <div class="row px-4 pb-2">
         <div class="col-md-3">
           <label for="envio">Costo de envio:</label>
           <select id="envio" class="form-control"
                   formControlName="envioTotal" (change)="calcular()">
-            <option value="0" selected>- Seleccion costo de envío -</option>
-            <option *ngFor="let op of parametros" [value]="Number(op.costo)">Ciudad: {{ op.ciudad }} - Costo: {{op.costo}}</option>
+            <option value="" selected disabled>- Seleccion costo de envío -</option>
+            <option *ngFor="let op of parametros" [value]="Number(op.costo)">Ciudad: {{ op.ciudad }} -
+              Costo: {{ op.costo }}
+            </option>
           </select>
+          <div *ngIf="notaPedidoForm.envioTotal.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaPedidoForm.envioTotal.errors.required">
+              Requerido
+            </div>
+          </div>
         </div>
       </div>
-      <div class="row my-1 mx-1">
+      <div class="row px-4 pb-2">
         <div class="col-md-3">
           <label for="primero">Formas de entrega de pedido:</label>
           <select id="primero" class="form-control" [(ngModel)]="seleccionPrimerCombo" (change)="onChangeCombo($event)"
@@ -265,6 +290,7 @@
           </div>
         </div>
         <div class="col-md-3">
+
           <label for="segundo">Forma de pago:</label>
           <select id="segundo" class="form-control" [(ngModel)]="seleccionSegundoCombo" disabled
                   formControlName="tipoPago">
@@ -272,33 +298,38 @@
             <option *ngFor="let op of opcionesSegundoCombo" [value]="op.id">{{ op.valor }}</option>
           </select>
         </div>
-
+        <div class="col-md-6">
+          <div *ngIf="seleccionPrimerCombo === 'envioServiEntrega'" class="col-md-5">
+            <h6 class="text-uppercase">Datos de cuenta: <br>BANCO PICHINCHA<br>CUENTA: XXXX<br>Nombre: XXXX<br></h6>
+            <input class="form-control-file" type="file" (change)="onFileSelected($event)">
+          </div>
+        </div>
       </div>
-      <hr/>
-
-      <h4 class="pt-1 px-2 py-2">Productos</h4>
-      <div formArrayName="articulos">
-        <form class="source-item">
+    </div>
+    <hr/>
+    <div formArrayName="articulos">
+      <div class="card">
+        <h3 class="py-1 px-2">Datos de productos </h3>
+        <form class="source-item p-2">
           <div data-repeater-list="group-a"
                *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
             <ng-container [formGroup]="detalle">
               <div class="repeater-wrapper" data-repeater-item>
                 <div class="row px-2 mt-1">
                   <div class="col-md-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
-                    <p class="card-text col-title mb-md-50 mb-0">
+                    <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
                       Código
                     </p>
-                    <label>{{ detalle.controls.codigo.value }}</label>
+                    <label style="font-size: small">{{ detalle.controls.codigo.value }}</label>
                   </div>
-                  <div class="col-md-2 col-12 my-lg-0 my-2">
-                    <p class="card-text col-title mb-md-50 mb-0">
+                  <div class="col-md-3 col-12 my-lg-0 my-2">
+                    <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
                       Nombre
                     </p>
-                    <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
-
+                    <label class="d-block text-wrap" style="font-size: small">{{ detalle.controls.articulo.value }}</label>
                   </div>
-                  <div class="col-md-1 col-12 my-lg-0 my-2">
-                    <p class="card-text col-title mb-md-50 mb-0">
+                  <div class="col-md-2 col-12 my-lg-0 my-2">
+                    <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
                       Cantidad
                     </p>
                     <input type="text" class="form-control"
@@ -320,27 +351,21 @@
                     </div>
                   </div>
                   <div class="col-md-1 col-12 my-lg-0 my-2">
-                    <p class="card-text col-title mb-md-50 mb-0">
+                    <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
                       Precio
                     </p>
-                    <label>{{ detalle.controls.valorUnitario.value }}</label>
+                    <label style="font-size: small">{{ detalle.controls.valorUnitario.value }}</label>
                   </div>
                   <div class="col-md-1 col-12 my-lg-0 my-2">
-                    <p class="card-text col-title mb-md-50 mb-0">
+                    <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
                       Total
                     </p>
-                    <label>{{ detalle.controls.precio.value }}</label>
-                  </div>
-                  <div class="col-md-2 col-12 my-lg-0 my-2">
-                    <p class="card-text col-title mb-md-50 mb-0">
-                      Ubicación
-                    </p>
-                    <label class="d-block text-wrap">{{ detalle.controls.canal.value | shorten }}</label>
+                    <label style="font-size: small">{{ detalle.controls.precio.value }}</label>
                   </div>
                   <div class="col-md-2 col-12 my-lg-0 my-2">
                     <img
                       src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
-                      *ngIf="detalle.controls?.imagen_principal" width="100px" height="100px" alt="">
+                      *ngIf="detalle.controls?.imagen_principal" width="150px" height="150px" alt="">
                     <!--<div *ngIf="!detalle.controls?.imagen_principal.value">
                       <button (click)="fileInput.click()">Seleccionar imagen</button>
                       <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png"
@@ -359,32 +384,24 @@
             </ng-container>
           </div>
         </form>
-
       </div>
-      <div class="row">
-        <div class="col-md-7"></div>
-        <div class="col-md-5 text-right">
-          <div class="invoice-total-wrapper">
-            <hr class="my-50"/>
-            <div class="invoice-total-item">
-              <p class="invoice-total-title text-primary font-weight-bold mr-3">
-                Total a pagar: ${{ notaPedido.controls.total.value.toFixed(2) }}</p>
-            </div>
+    </div>
+    <div class="row">
+      <div class="col-md-7"></div>
+      <div class="col-md-5 text-right mt-2">
+        <div class="invoice-total-wrapper">
+          <div class="invoice-total-item">
+            <p class="invoice-total-title text-primary mr-3 font-weight-bold">
+              Total a pagar: ${{ notaPedido.controls.total.value.toFixed(2) }}</p>
           </div>
         </div>
       </div>
-      <div class="row mx-2">
-        <div *ngIf="seleccionPrimerCombo === 'envioServiEntrega'" class="col-md-5">
-          <h6 class="text-uppercase">Datos de cuenta: <br>BANCO PICHINCHA<br>CUENTA: XXXX<br>Nombre: XXXX<br></h6>
-          <input class="form-control-file" type="file" (change)="onFileSelected($event)">
-        </div>
-      </div>
-    </form>
+    </div>
     <div class="row">
-      <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="guardarVenta()">Guardar
+      <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="guardarVenta()">Enviar Pedido
       </button>
     </div>
-  </div>
+  </form>
 
 </div>
 

@@ -43,6 +43,9 @@ export class ConsultaProductosComponent implements OnInit {
   producto;
   integracionProducto;
 
+  mostrarDatosProducto = false;
+
+
   constructor(
     private paramServiceAdm: ParamServiceAdm,
     private toaster: Toaster,
@@ -75,13 +78,20 @@ export class ConsultaProductosComponent implements OnInit {
   }
 
   async obtenerProducto(): Promise<void> {
+    if (!this.codigoBarras) {
+      this.toaster.open('Ingrese un código de producto', {type: 'danger'});
+      return;
+    }
+
     return new Promise((resolve, reject) => {
       const data = {
         codigoBarras: this.codigoBarras,
       };
+
       this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
         this.producto = info.producto;
-        //this.integracionProducto = info.integraciones_canal;
+        this.integracionProducto = info.integraciones_canal;
+        this.mostrarDatosProducto = true;
       }, error => this.toaster.open(error, {type: 'danger'}));
     });
   }

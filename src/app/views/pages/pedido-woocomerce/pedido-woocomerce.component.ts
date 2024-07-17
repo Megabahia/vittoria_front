@@ -49,7 +49,11 @@ export class PedidoWoocomerceComponent implements OnInit {
   correoCliente;
   codigoCorreo;
 
+  mostrarContenido = false;
+
   datosCliente;
+  disabledCombo = false;
+  selectClient;
 
   page = 1;
   page_size: any = 3;
@@ -149,7 +153,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
-      envioTotal: [0, [Validators.required]],
+      envioTotal: ['', [Validators.required]],
       numeroPedido: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['Contra-Entrega', [Validators.required]],
@@ -235,7 +239,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       total += parseFloat(detalles[index].get('precio').value);
     });
-    total += parseFloat(this.notaPedido.get('envioTotal').value);
+    total += this.notaPedido.get('envioTotal').value ? parseFloat(this.notaPedido.get('envioTotal').value) : 0;
     this.notaPedido.get('total').setValue(total);
   }
 
@@ -267,6 +271,11 @@ export class PedidoWoocomerceComponent implements OnInit {
     this.notaPedido.get('articulos').value.map((producto) => {
       delete producto.imagen_principal;
     });
+
+    if (!this.selectClient) {
+      this.toaster.open('Seleccione si es cliente o no', {type: 'danger'});
+      return;
+    }
 
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
@@ -319,7 +328,14 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   onSelectChangeCliente(event: any): void {
     const selectValue = event.target.value;
-    this.esCliente = selectValue === 'esCliente';
+    this.selectClient = selectValue;
+    if (selectValue === 'esCliente') {
+      this.mostrarContenido = false;
+      this.esCliente = true;
+    } else {
+      this.esCliente = false;
+      this.mostrarContenido = true;
+    }
   }
 
   enviarCorreoCliente(): void {
@@ -338,7 +354,6 @@ export class PedidoWoocomerceComponent implements OnInit {
   }
 
   validarCodigoCorreo(): void {
-    console.log(this.codigoCorreo);
     const datos = {
       correo: this.correoCliente,
       codigo: this.codigoCorreo
@@ -346,6 +361,8 @@ export class PedidoWoocomerceComponent implements OnInit {
     this.pedidosService.verificarCodigoCorreo(datos).subscribe(data => {
       this.datosCliente = data;
       this.completarCamposCliente();
+      this.mostrarContenido = true;
+      this.disabledCombo = true;
     }, error => this.toaster.open(error, {type: 'danger'}));
   }
 
@@ -378,7 +395,6 @@ export class PedidoWoocomerceComponent implements OnInit {
   validarCorreo(correo: string): boolean {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(correo);
   }
-
 
   protected readonly Number = Number;
 }
