@@ -11,6 +11,7 @@ import {NgxCaptchaModule} from 'ngx-captcha';
 import { CalculadoraComponent } from './calculadora/calculadora.component';
 import { PedidoWoocomerceComponent } from './pedido-woocomerce/pedido-woocomerce.component';
 import {GdeModule} from "../gde/gde.module";
+import {ConsultaProductosComponent} from "./consulta-productos/consulta-productos.component";
 
 
 
@@ -18,7 +19,8 @@ import {GdeModule} from "../gde/gde.module";
   declarations: [
     ProductosComponent,
     CalculadoraComponent,
-    PedidoWoocomerceComponent
+    PedidoWoocomerceComponent,
+    ConsultaProductosComponent
   ],
     imports: [
         CommonModule,

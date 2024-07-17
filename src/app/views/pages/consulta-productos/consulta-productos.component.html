@@ -1,16 +1,12 @@
 <div class="card">
-  <h2 class="card-header">PEDIDO SUPERBARATO</h2>
+  <h2 class="card-header">CONSULTA DE PRODUCTOS</h2>
 </div>
 <div class="container">
   <div class="card">
     <div class="row p-2">
       <div class="col-md-3 col-12">
-        <h5 for="cliente">Es nuestro cliente?</h5>
-        <select id="cliente" class="form-control" (change)="onSelectChangeCliente($event)">
-          <option value="" disabled selected>- Seleccione -</option>
-          <option value="esCliente">SI</option>
-          <option value="noEsCliente">NO</option>
-        </select>
+        <h5 for="cliente">Ingrese el código del producto</h5>
+        <input class="form-control" type="text">
       </div>
       <div class="col-md-4 col-12" *ngIf="esCliente">
         <label>Por favor ingrese su correo electrónico registrado:</label>
@@ -241,16 +237,6 @@
       </div>
       <div class="row my-1 mx-1">
         <div class="col-md-3">
-          <label for="envio">Costo de envio:</label>
-          <select id="envio" class="form-control"
-                  formControlName="envioTotal" (change)="calcular()">
-            <option value="0" selected>- Seleccion costo de envío -</option>
-            <option *ngFor="let op of parametros" [value]="Number(op.costo)">Ciudad: {{ op.ciudad }} - Costo: {{op.costo}}</option>
-          </select>
-        </div>
-      </div>
-      <div class="row my-1 mx-1">
-        <div class="col-md-3">
           <label for="primero">Formas de entrega de pedido:</label>
           <select id="primero" class="form-control" [(ngModel)]="seleccionPrimerCombo" (change)="onChangeCombo($event)"
                   formControlName="tipoEnvio">
@@ -272,7 +258,14 @@
             <option *ngFor="let op of opcionesSegundoCombo" [value]="op.id">{{ op.valor }}</option>
           </select>
         </div>
-
+        <div class="col-md-3">
+          <label for="envio">Costo de envio:</label>
+          <select id="envio" class="form-control" disabled
+                  formControlName="envioTotal">
+            <option selected disabled>- Seleccion costo de envío -</option>
+            <option *ngFor="let op of parametros" [value]="op.costo">{{ op.ciudad }} - {{op.costo}}</option>
+          </select>
+        </div>
       </div>
       <hr/>
 
@@ -367,7 +360,7 @@
           <div class="invoice-total-wrapper">
             <hr class="my-50"/>
             <div class="invoice-total-item">
-              <p class="invoice-total-title text-primary font-weight-bold mr-3">
+              <p class="invoice-total-title text-primary font-weight-bold">
                 Total a pagar: ${{ notaPedido.controls.total.value.toFixed(2) }}</p>
             </div>
           </div>

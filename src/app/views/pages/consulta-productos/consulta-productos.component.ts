@@ -15,13 +15,13 @@ interface ProductoProcesado {
 }
 
 @Component({
-  selector: 'app-pedido-woocomerce',
-  templateUrl: './pedido-woocomerce.component.html',
-  styleUrls: ['./pedido-woocomerce.component.css']
+  selector: 'app-consulta-productos',
+  templateUrl: './consulta-productos.component.html',
+  styleUrls: ['./consulta-productos.component.css']
 })
 
 
-export class PedidoWoocomerceComponent implements OnInit {
+export class ConsultaProductosComponent implements OnInit {
 
   opcionesPrimerCombo = [
     {id: 'envioServiEntrega', valor: 'Envío por Servientrega'},
@@ -84,9 +84,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       toolbar.style.display = 'none';
     }
 
-    this.integracionesEnviosService.obtenerListaIntegracionesEnviosSinAuth().subscribe((result) => {
-      this.parametros = result.info;
-    });
+    this.obtenerListaParametros();
   }
 
   ngOnInit(): void {
@@ -131,6 +129,7 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   iniciarNotaPedido(): void {
     this.notaPedido = this.formBuilder.group({
+      id: [''],
       facturacion: this.formBuilder.group({
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
@@ -236,7 +235,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       total += parseFloat(detalles[index].get('precio').value);
     });
-    total += parseFloat(this.notaPedido.get('envioTotal').value);
+    total += this.notaPedido.get('envioTotal').value;
     this.notaPedido.get('total').setValue(total);
   }
 
@@ -275,30 +274,10 @@ export class PedidoWoocomerceComponent implements OnInit {
       return;
     }
 
-    if (confirm('Esta seguro de guardar los datos') === true) {
-      const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
-      const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
-      facturaFisicaLlaves.map((llaves, index) => {
-        if (llaves !== 'archivoComprobanteVenta') {
-          if (llaves === 'articulos' || llaves === 'facturacion') {
-            this.archivo.delete(llaves);
-            this.archivo.append(llaves, JSON.stringify(facturaFisicaValores[index]));
-          } else {
-            this.archivo.delete(llaves);
-            this.archivo.append(llaves, facturaFisicaValores[index]);
-          }
-        }
-      });
-      this.archivo.delete('envio');
-      this.archivo.delete('envios');
-      this.archivo.delete('json');
-      this.archivo.delete('tipoPago');
-
-      this.pedidosService.crearPedidoSuperBarato(this.archivo).subscribe(result => {
-        console.log('PEDIDO GUARDADO', result);
-        this.toaster.open('Pedido guardado', {type: 'success'});
-      }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
-    }
+    this.pedidosService.crearPedido(this.notaPedido.value).subscribe(result => {
+      console.log('PEDIDO GUARDADO', result);
+      this.toaster.open('Pedido guardado', {type: 'success'});
+    }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
   }
 
   onChangeCombo(event: any): void {
@@ -385,8 +364,11 @@ export class PedidoWoocomerceComponent implements OnInit {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(correo);
   }
 
-
-  protected readonly Number = Number;
+  async obtenerListaParametros(): Promise<void> {
+    await this.integracionesEnviosService.obtenerListaIntegracionesEnvios(this.page - 1, this.page_size).subscribe((result) => {
+      this.parametros = result.data;
+    });
+  }
 }
 
 

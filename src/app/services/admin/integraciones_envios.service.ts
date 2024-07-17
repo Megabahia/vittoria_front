@@ -18,6 +18,9 @@ export class IntegracionesEnviosService {
       page, page_size
     });
   }
+  obtenerListaIntegracionesEnviosSinAuth() {
+    return this.http.post<any>(`${apiUrl}/adm/integraciones/envios/list/noAuth`, {state: 1});
+  }
 
   insertarIntegracionEnvio(datos): Observable<any> {
     return this.http.post<any>(`${apiUrl}/adm/integraciones/envios/create/`, datos);
