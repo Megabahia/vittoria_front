@@ -159,6 +159,36 @@
                       </div>
                     </div>
                   </div>
+                    <div class="form-group">
+                        <label class="form-label" for="provinciaDestino">Provincia destino:</label>
+                        <select class="form-control"
+                                (change)="obtenerCiudadDestino()"
+                                id="provinciaDestino" formControlName="provinciaDestino">
+                            <option value="" selected>- Seleccione -</option>
+                            <option value="{{provincia.nombre}}" *ngFor="let provincia of provinciaDestinoOpciones">
+                                {{ provincia.nombre }}
+                            </option>
+                        </select>
+                        <div *ngIf="f.provinciaDestino.errors" class="invalid-feedback"
+                             style="display: block;">
+                            <div *ngIf="f.provinciaDestino.errors.required">Provincia es requerida
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="ciudadDestino">Ciudad destino:</label>
+                        <select class="form-control" formControlName="ciudadDestino" id="ciudadDestino">
+                            <option value="" selected>- Seleccione -</option>
+                            <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadDestinoOpciones">
+                                {{ ciudad.nombre }}
+                            </option>
+                        </select>
+                        <div *ngIf="f.ciudadDestino.errors" class="invalid-feedback"
+                             style="display: block;">
+                            <div *ngIf="f.ciudadDestino.errors.required">Ciudad es requerida
+                            </div>
+                        </div>
+                    </div>
                   <!--DISTANCIA-->
                   <div class="form-group">
                     <label class="form-label" for="basic-icon-default-distancia">Distancia en Kilómetros:</label>
