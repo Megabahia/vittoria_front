@@ -141,6 +141,9 @@ export class ProductosService {
   obtenerProductoPorCodigo(codigo) {
     return this.http.post<any>(`${apiUrl}/mdp/productos/search/producto/codigo/`, codigo);
   }
+  obtenerProductoPorCodigoCanal(codigo) {
+    return this.http.post<any>(`${apiUrl}/mdp/productos/search/producto/codigo/canal/`, codigo);
+  }
 
   enviarGmailInconsistencias(id) {
     return this.http.get<any>(`${apiUrl}/api/v3/orders/notificacion/${id}`);
