@@ -1,12 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ValidacionesPropias} from "../../../utils/customer.validators";
-import {ParamService as ParamServiceAdm} from "../../../services/admin/param.service";
-import {PedidosService} from "../../../services/mp/pedidos/pedidos.service";
-import {logger} from "codelyzer/util/logger";
-import {Toaster} from "ngx-toast-notifications";
-import {IntegracionesEnviosService} from "../../../services/admin/integraciones_envios.service";
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ValidacionesPropias} from '../../../utils/customer.validators';
+import {ParamService as ParamServiceAdm} from '../../../services/admin/param.service';
+import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
+import {Toaster} from 'ngx-toast-notifications';
+import {IntegracionesEnviosService} from '../../../services/admin/integraciones_envios.service';
 
 interface ProductoProcesado {
   canal?: string;
@@ -125,7 +124,7 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   normalizarClave(clave: string): string {
     return clave.toLowerCase() // Convertir a minúsculas
-      .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Eliminar tildes
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Eliminar tildes
       .replace(/[^a-z0-9_]/gi, '_'); // Reemplazar espacios y caracteres no alfanuméricos con guión bajo
   }
 
@@ -215,15 +214,15 @@ export class PedidoWoocomerceComponent implements OnInit {
     } else if (selectedValue === 'ruc') {
       this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
         [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.rucValido]
-      )
+      );
       this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
     } else {
       this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
         [Validators.required, Validators.minLength(5)]
-      )
+      );
       this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
     }
-    this.tipoIdentificacion = selectedValue
+    this.tipoIdentificacion = selectedValue;
 
   }
 
@@ -259,8 +258,7 @@ export class PedidoWoocomerceComponent implements OnInit {
   }
 
   obtenerFechaActual(): Date {
-    const fechaActual = new Date();
-    return fechaActual;
+    return new Date();
   }
 
   guardarVenta(): void {
@@ -279,7 +277,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
       facturaFisicaLlaves.map((llaves, index) => {
-        if (llaves !== 'archivoComprobanteVenta') {
+        if (llaves !== 'archivoMetodoPago') {
           if (llaves === 'articulos' || llaves === 'facturacion') {
             this.archivo.delete(llaves);
             this.archivo.append(llaves, JSON.stringify(facturaFisicaValores[index]));
@@ -321,11 +319,7 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   onSelectChangeCliente(event: any): void {
     const selectValue = event.target.value;
-    if (selectValue === 'esCliente') {
-      this.esCliente = true;
-    } else {
-      this.esCliente = false;
-    }
+    this.esCliente = selectValue === 'esCliente';
   }
 
   enviarCorreoCliente(): void {
