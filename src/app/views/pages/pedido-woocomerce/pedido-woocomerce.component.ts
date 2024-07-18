@@ -6,6 +6,7 @@ import {ParamService as ParamServiceAdm} from '../../../services/admin/param.ser
 import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
 import {Toaster} from 'ngx-toast-notifications';
 import {IntegracionesEnviosService} from '../../../services/admin/integraciones_envios.service';
+import {ProductosService} from "../../../services/mdp/productos/productos.service";
 
 interface ProductoProcesado {
   canal?: string;
@@ -58,6 +59,7 @@ export class PedidoWoocomerceComponent implements OnInit {
   page = 1;
   page_size: any = 3;
   parametros;
+  integracionProducto
 
   constructor(
     private route: ActivatedRoute,
@@ -67,6 +69,7 @@ export class PedidoWoocomerceComponent implements OnInit {
     private pedidosService: PedidosService,
     private toaster: Toaster,
     private integracionesEnviosService: IntegracionesEnviosService,
+    private productosService: ProductosService
   ) {
     /*const ref = document.referrer;
     const host = document.location.host;
@@ -87,9 +90,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       toolbar.style.display = 'none';
     }
 
-    this.integracionesEnviosService.obtenerListaIntegracionesEnviosSinAuth().subscribe((result) => {
-      this.parametros = result.info;
-    });
+
   }
 
   ngOnInit(): void {
@@ -123,7 +124,7 @@ export class PedidoWoocomerceComponent implements OnInit {
     this.obtenerCiudad();
     this.datos.map(data => this.agregarItem(data));
     this.calcular();
-    console.log('NOTA PEDIDO INICIAL', this.notaPedido);
+    this.obtenerDatosProducto();
   }
 
   normalizarClave(clave: string): string {
@@ -153,7 +154,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
-      envioTotal: ['', [Validators.required]],
+      envioTotal: ['', [  ]],
       numeroPedido: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['Contra-Entrega', [Validators.required]],
@@ -205,7 +206,6 @@ export class PedidoWoocomerceComponent implements OnInit {
   removerItem(i): void {
     this.detallesArray.removeAt(i);
     this.calcular();
-    console.log(this.notaPedido);
   }
 
   onSelectChangeIdentificacion(event: any) {
@@ -394,6 +394,35 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   validarCorreo(correo: string): boolean {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(correo);
+  }
+
+  async obtenerDatosProducto(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const data = {
+        canal: this.detallesArray.value[0].canal
+      };
+
+      this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
+        this.integracionProducto = info.integraciones_canal;
+      }, error => this.toaster.open(error, {type: 'danger'}));
+    });
+  }
+
+  obtenerCostosEnvio(): void{
+    if(this.notaPedido.get('facturacion').get('ciudad').value){
+      this.integracionesEnviosService.obtenerListaIntegracionesEnviosSinAuth({
+        ciudad: this.integracionProducto.ciudad,
+        ciudadDestino: this.notaPedido.get('facturacion').get('ciudad').value
+      }).subscribe((result) => {
+        this.parametros = result.info;
+        if (result.cont === 0){
+          this.toaster.open(`No existe precio de envio desde ${this.integracionProducto.ciudad} hasta
+          ${this.notaPedido.get('facturacion').get('ciudad').value}`, {type: 'info'});
+        }else{
+          this.toaster.open('Costos de envío cargados', {type: 'info'});
+        }
+      });
+    }
   }
 
   protected readonly Number = Number;

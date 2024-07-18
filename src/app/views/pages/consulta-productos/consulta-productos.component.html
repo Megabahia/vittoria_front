@@ -5,88 +5,110 @@
   <div class="card">
     <div class="row p-2 d-flex align-items-center">
       <div class="col-md-3 col-12 mt-2">
-        <h5>Ingrese el código del producto:</h5>
+        <h5>Ingrese el código del producto: <span class="text-danger">*</span></h5>
       </div>
       <div class="col-md-3 col-12 mt-2">
         <input class="form-control" type="text" [(ngModel)]="codigoBarras" placeholder="Código de producto">
       </div>
-      <div class="col-md-3 col-12 mt-2">
-        <button class="btn btn-primary ml-2" (click)="obtenerProducto()">Consultar</button>
+      <div class="col-md-3 col-12 mt-2 ml-2">
+        <button class="btn btn-primary" (click)="obtenerProducto()">Consultar</button>
       </div>
     </div>
   </div>
   <div class="card" *ngIf="mostrarDatosProducto">
-    <div class="container mt-4">
-      <!-- Título general con un color de fondo suave -->
-      <h4 class="mb-1 p-3 bg-light text-dark">Detalle del Producto</h4>
+    <div class="container mt-1">
+      <h4 class="mb-1 p-1 bg-light text-dark">Detalle del Producto</h4>
       <div class="card border-primary">
         <div class="card-header bg-primary text-white">
-          <h5 class="card-title">{{ producto.nombre }}</h5>
+          <h5 class="card-title">{{ producto?.nombre }}</h5>
         </div>
         <div class="card-body bg-light">
-          <!-- Fotos del producto, si están disponibles -->
-          <div *ngIf="producto.fotos && producto.fotos.length > 0" class="mb-3">
-            <img [src]="producto.fotos[0]" class="img-fluid" alt="Foto principal del producto">
-          </div>
-          <ul class="list-unstyled">
-            <li><strong>Descripción:</strong> {{ producto.descripcion }}</li>
-            <li><strong>Precio Normal:</strong> <span class="text-success">{{ producto.precioVentaA | currency }}</span></li>
-            <li><strong>Precio Oferta:</strong> <span class="text-danger">{{ producto.precioOferta | currency }}</span></li>
-            <li><strong>Cantidad en Stock:</strong> {{ producto.stock }}</li>
-            <li><strong>Origen:</strong> {{ producto.canal }}</li>
-            <li><strong>Tienda:</strong> {{ integracionProducto.nombre }}</li>
+          <ul class="list-unstyled mt-1">
+            <li><strong>Descripción:</strong> {{ producto?.descripcion }}</li>
+            <li><strong>Precio Normal:</strong> <span
+              class="text-success"> {{ producto?.precioVentaA | currency }}</span></li>
+            <li><strong>Precio Oferta:</strong> <span class="text-danger"> {{ producto?.precioOferta | currency }}</span>
+            </li>
+            <li><strong>Cantidad en Stock real:</strong> {{ producto?.stock }}</li>
+            <li><strong>Ubicación del producto (Origen):</strong> {{ producto?.canal }}</li>
+            <li><strong>Tienda:</strong> {{ integracionProducto?.nombre }}</li>
           </ul>
+          <!-- Fotos del producto, si están disponibles -->
+          <div *ngIf="producto?.imagenes && producto?.imagenes.length > 0" class="row mx-0">
+            <div *ngFor="let imagen of producto?.imagenes; let i = index" class="col-md-3 col-sm-3 p-2">
+              <div class="image-container">
+                <img [src]="imagen.imagen" class="img-fluid" alt="Imagen {{ i }}" style="height: 200px; width: 100%; object-fit: cover;">
+              </div>
+            </div>
+          </div>
         </div>
         <div class="card-footer text-muted">
-          <small>Gracias por elegirnos!</small>
+          <small>Vittoria!</small>
         </div>
       </div>
     </div>
     <hr/>
-    <div class="row m-2">
-      <div class="col-md-3 col-12">
-        <h5>Ingrese la ciudad del Cliente (Destino del producto):</h5>
+    <div class="container mt-1">
+      <div class="row">
+        <div class="col-12">
+          <h4 class="mb-1">Detalles de Envío</h4>
+        </div>
       </div>
-      <div class="col-md-3 col-12">
-        <label>País</label>
-        <input class="form-control" type="text" [(ngModel)]="pais" disabled
-        >
+      <div class="row">
+        <div class="col-md-3 col-12">
+          <label>País</label>
+          <input class="form-control" type="text" [(ngModel)]="pais" disabled>
+        </div>
+        <div class="col-md-3 col-12">
+          <label for="provinciaContacto">Provincia <span class="text-danger">*</span></label>
+          <select class="form-control" (change)="obtenerCiudad()" id="provinciaContacto" [(ngModel)]="provincia">
+            <option value="" selected>- Seleccione -</option>
+            <option *ngFor="let opcion of provinciaOpciones" [value]="opcion.id">
+              {{ opcion.nombre }}
+            </option>
+          </select>
+        </div>
+        <div class="col-md-3 col-12">
+          <label for="ciudadContacto">Ciudad <span class="text-danger">*</span></label>
+          <select class="form-control" id="ciudadContacto" [(ngModel)]="ciudad">
+            <option value="" selected>- Seleccione -</option>
+            <option *ngFor="let opcion of ciudadOpciones" [value]="opcion.id">
+              {{ opcion.nombre }}
+            </option>
+          </select>
+        </div>
+        <div class="col-md-3 col-12">
+          <label for="sectorContacto">Sector <span class="text-danger">*</span></label>
+          <input class="form-control" id="sectorContacto" [(ngModel)]="sector">
+        </div>
+        <div class="col-md-3 col-12 mt-1">
+          <label for="callePrincipalContacto">Calle principal</label>
+          <input class="form-control" id="callePrincipalContacto" [(ngModel)]="callePrincipal">
+        </div>
+        <div class="col-md-3 col-12 mt-1">
+          <label for="calleSecundariContacto">Calle secundaria</label>
+          <input class="form-control" id="calleSecundariContacto" [(ngModel)]="calleSecundaria">
+        </div>
+        <div class="col-md-3 col-12 mt-3">
+          <button class="btn btn-primary" (click)="consultarDatosEnvio()">Consultar</button>
+        </div>
       </div>
-      <div class="col-md-3 col-12">
-        <label for="provinciaContacto">Provincia</label>
-        <select class="form-control" (change)="obtenerCiudad()" id="provinciaContacto" [(ngModel)]="provincia">
-          <option value="" selected>- Seleccione -</option>
-          <option value="{{pais.nombre}}" *ngFor="let pais of provinciaOpciones">
-            {{ pais.nombre }}
-          </option>
-        </select>
+      <div class="row mt-4">
+        <div class="col-12 mb-2">
+          <h5>Las formas de entrega y costo de envío se calcularán en base a la ubicación del cliente y la tienda.</h5>
+        </div>
       </div>
-      <div class="col-md-3 col-12">
-        <label for="ciudadContacto">Ciudad</label>
-        <select class="form-control" id="ciudadContacto" [(ngModel)]="ciudad">
-          <option value="" selected>- Seleccione -</option>
-          <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
-            {{ ciudad.nombre }}
-          </option>
-        </select>
+      <div class="row">
+        <div class="container">
+          <ul class="list-unstyled">
+            <li><strong>Forma de entrega: </strong></li>
+            <li class="mt-1"><strong>Forma de pago: </strong></li>
+            <li class="mt-1 mb-3"><strong>Tiempo de entrega: </strong></li>
+          </ul>
+        </div>
       </div>
-      <button class="btn btn-primary mt-2">Consultar</button>
     </div>
-    <div class="row m-2">
-      <h4>Las formas de entrega y costo de envío de acuerdo a la ubicación
-        física de los productos/tienda y la ubicación del cliente</h4>
-      <ul>
-        <li>
-          <h5>Forma de entrega:</h5>
-        </li>
-        <li>
-          <h5>Forma de pago:</h5>
-        </li>
-        <li>
-          <h5>Tiempo de entrega:</h5>
-        </li>
-      </ul>
-    </div>
+
   </div>
 </div>
 

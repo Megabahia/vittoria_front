@@ -33,9 +33,15 @@ export class ConsultaProductosComponent implements OnInit {
   pais = 'Ecuador';
   provincia = '';
   ciudad = '';
+  sector = '';
+
+  callePrincipal = '';
+  calleSecundaria = '';
+
   ciudadOpciones;
   provinciaOpciones;
   page = 1;
+  // tslint:disable-next-line:variable-name
   page_size: any = 3;
   parametros;
 
@@ -86,6 +92,8 @@ export class ConsultaProductosComponent implements OnInit {
     return new Promise((resolve, reject) => {
       const data = {
         codigoBarras: this.codigoBarras,
+        state: 1,
+        estado: 'Activo',
       };
 
       this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
@@ -94,6 +102,13 @@ export class ConsultaProductosComponent implements OnInit {
         this.mostrarDatosProducto = true;
       }, error => this.toaster.open(error, {type: 'danger'}));
     });
+  }
+
+  consultarDatosEnvio(): void{
+    if (this.provincia === '' || this.ciudad === '' || this.sector === ''){
+      this.toaster.open('Complete los campos requeridos', {type: 'danger'});
+      return;
+    }
   }
 
   obtenerProvincias(): void {
@@ -108,6 +123,7 @@ export class ConsultaProductosComponent implements OnInit {
       this.ciudadOpciones = info;
     });
   }
+
 }
 
 
