@@ -54,6 +54,8 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
   provinciaOpciones;
   provinciaDestinoOpciones;
   provincia = '';
+  sectorOpciones;
+  sectorDestinoOpciones;
 
   horas: any[] = [];
 
@@ -94,8 +96,10 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
       pais: [this.pais, [Validators.required]],
       provincia: ['', [Validators.required]],
       ciudad: ['', [Validators.required]],
+      sector: ['', [Validators.required]],
       provinciaDestino: ['', [Validators.required]],
       ciudadDestino: ['', [Validators.required]],
+      sectorDestino: ['', [Validators.required]],
       courier: ['', [Validators.required]],
       formaPago: this.formBuilder.array([
         this.formBuilder.group({
@@ -182,8 +186,10 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
       console.log('resutl', result);
       await this.paramForm.patchValue({...result});
       this.paramForm.get('pais').setValue(this.pais);
-      this.obtenerCiudad();
-      this.obtenerCiudadDestino();
+      await this.obtenerCiudad();
+      await this.obtenerCiudadDestino();
+      await this.obtenerSector();
+      await this.obtenerSectorDestino();
     });
   }
 
@@ -275,6 +281,18 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
   obtenerCiudadDestino(): void {
     this.paramServiceAdm.obtenerListaHijos(this.paramForm.value.provinciaDestino, 'PROVINCIA').subscribe((info) => {
       this.ciudadDestinoOpciones = info;
+    });
+  }
+
+  obtenerSector(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.paramForm.value.ciudad, 'CIUDAD').subscribe((info) => {
+      this.sectorOpciones = info;
+    });
+  }
+
+  obtenerSectorDestino(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.paramForm.value.ciudadDestino, 'CIUDAD').subscribe((info) => {
+      this.sectorDestinoOpciones = info;
     });
   }
 
