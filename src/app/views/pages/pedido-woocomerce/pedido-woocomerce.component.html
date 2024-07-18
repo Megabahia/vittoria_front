@@ -233,24 +233,6 @@
             </div>
           </div>
         </div>
-        <hr/>
-        <h5 class="pl-3">DATOS VENDEDOR <label class="text-muted">(Datos
-          opcionales)</label></h5>
-        <div class="row px-4 pb-2">
-          <div class="col-md-4 col-12">
-            <label>Código Vendedor</label>
-            <input class="form-control" type="text"
-                   formControlName="codigoVendedor"
-            >
-
-          </div>
-          <div class="col-md-4 col-12">
-            <label>Nombre Vendedor</label>
-            <input class="form-control" type="text"
-                   formControlName="nombreVendedor"
-            >
-          </div>
-        </div>
       </div>
     </div>
     <div class="card" *ngIf="mostrarContenido">
@@ -393,6 +375,26 @@
             <p class="invoice-total-title text-primary mr-3 font-weight-bold">
               Total a pagar: ${{ notaPedido.controls.total.value.toFixed(2) }}</p>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h5 class="pl-3">DATOS VENDEDOR <label class="text-muted">(Datos
+        opcionales)</label></h5>
+      <div class="row px-4 pb-2">
+        <div class="col-md-4 col-12">
+          <label>Código Vendedor</label>
+          <input class="form-control" type="text"
+                 formControlName="codigoVendedor"
+          >
+
+        </div>
+        <div class="col-md-4 col-12">
+          <label>Nombre Vendedor</label>
+          <input class="form-control" type="text"
+                 formControlName="nombreVendedor"
+          >
         </div>
       </div>
     </div>
