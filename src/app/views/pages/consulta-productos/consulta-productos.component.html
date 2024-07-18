@@ -37,6 +37,14 @@
             <li><strong>Ubicación del producto (Origen):</strong> {{ producto?.canal }}</li>
             <li><strong>Tienda:</strong> {{ integracionProducto?.nombre }}</li>
           </ul>
+          <!-- Fotos principal -->
+          <div class="row mx-0">
+            <label style="font-size: small"><strong>Imagen principal: </strong></label>
+            <div class="image-container">
+              <img [src]="producto?.imagen_principal" class="img-fluid" alt="Imagen principal"
+                   style="height: 200px; width: 100%; object-fit: cover;">
+            </div>
+          </div>
           <!-- Fotos del producto, si están disponibles -->
           <div *ngIf="producto?.imagenes && producto?.imagenes.length > 0" class="row mx-0">
             <div *ngFor="let imagen of producto?.imagenes; let i = index" class="col-md-3 col-sm-3 p-2">

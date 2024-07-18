@@ -32,6 +32,97 @@
     </div>
   </div>
   <form [formGroup]="notaPedido">
+    <div formArrayName="articulos">
+      <div class="card">
+        <h3 class="py-1 px-2 bg-primary">Datos de productos </h3>
+        <form class="source-item p-2">
+          <div data-repeater-list="group-a"
+               *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
+            <ng-container [formGroup]="detalle">
+              <div class="repeater-wrapper" data-repeater-item>
+                <div class="row px-2 mt-1">
+                  <div class="col-md-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                    <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
+                      Código
+                    </p>
+                    <label style="font-size: small">{{ detalle.controls.codigo.value }}</label>
+                  </div>
+                  <div class="col-md-3 col-12 my-lg-0 my-2">
+                    <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
+                      Nombre
+                    </p>
+                    <label class="d-block text-wrap"
+                           style="font-size: small">{{ detalle.controls.articulo.value }}</label>
+                  </div>
+                  <div class="col-md-2 col-12 my-lg-0 my-2">
+                    <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
+                      Cantidad
+                    </p>
+                    <input type="text" class="form-control"
+                           formControlName="cantidad"
+                           (change)="calcular()"
+                    />
+                    <div *ngIf="detalle.controls.cantidad.errors"
+                         class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="detalle.controls.cantidad.errors.required">
+                        Requerido
+                      </div>
+                      <div *ngIf="detalle.controls.cantidad.errors.max">
+                        Fuera de stock
+                      </div>
+                      <div *ngIf="detalle.controls.cantidad.errors.min">
+                        Ingrese minimo 1
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-1 col-12 my-lg-0 my-2">
+                    <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
+                      Precio
+                    </p>
+                    <label style="font-size: small">{{ detalle.controls.valorUnitario.value }}</label>
+                  </div>
+                  <div class="col-md-1 col-12 my-lg-0 my-2">
+                    <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
+                      Total
+                    </p>
+                    <label style="font-size: small">{{ detalle.controls.precio.value }}</label>
+                  </div>
+                  <div class="col-md-2 col-12 my-lg-0 my-2">
+                    <img
+                      src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
+                      *ngIf="detalle.controls?.imagen_principal" width="150px" height="150px" alt="">
+                    <!--<div *ngIf="!detalle.controls?.imagen_principal.value">
+                      <button (click)="fileInput.click()">Seleccionar imagen</button>
+                      <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png"
+                             style="display: none;">
+                    </div>-->
+                  </div>
+                  <div
+                    class="d-flex flex-column align-items-center justify-content-between border-left border-left-black invoice-product-actions py-50 px-2">
+                    <i-feather name="trash"
+                               class="cursor-pointer text-danger"
+                               data-repeater-delete
+                               (click)="removerItem(i)"></i-feather>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-7"></div>
+      <div class="col-md-5 text-right mt-2">
+        <div class="invoice-total-wrapper">
+          <div class="invoice-total-item">
+            <p class="invoice-total-title text-primary mr-3 font-weight-bold">
+              Total a pagar: ${{ notaPedido.controls.total.value.toFixed(2) }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="card" *ngIf="mostrarContenido">
       <div formGroupName="facturacion">
         <h3 class="py-1 px-2 font-weight-bold bg-primary">Datos de facturación y entrega </h3>
@@ -236,38 +327,21 @@
       </div>
     </div>
     <div class="card" *ngIf="mostrarContenido">
-      <h5 class="pl-3 pt-2">DATOS DE FACTURACION <label class="text-muted">(Datos
+      <h5 class="pl-3 pt-2">DATOS DE ENVIO<label class="text-muted">(Datos
         obligatorios) <strong class="text-info">(Primero seleccione ciudad de destino)</strong></label></h5>
       <div class="row px-4 pb-2">
         <div class="col-md-3">
           <label for="envio">Costo de envio:</label>
           <select id="envio" class="form-control"
-                  formControlName="envioTotal" (change)="calcular()">
-            <option value="" selected disabled>- Seleccion costo de envío -</option>
-            <option *ngFor="let op of parametros" [value]="Number(op.costo)">({{ op.courier }}) - Desde {{ op.ciudad }}
-              hasta {{ op.ciudadDestino }} - Tiene un costo de ${{ op.costo }}
+                  formControlName="formasEnvio" (change)="onChangeCombo($event)">
+            <option value="" disabled>- Selecciona un costo de envío -</option>
+            <option *ngFor="let op of parametros" [value]="op.nombre">
+              {{ op.nombre }}
             </option>
           </select>
           <div *ngIf="notaPedidoForm.envioTotal.errors"
                class="invalid-feedback" style="display: block;">
             <div *ngIf="notaPedidoForm.envioTotal.errors.required">
-              Requerido
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row px-4 pb-2">
-        <div class="col-md-3">
-          <label for="primero">Formas de entrega de pedido:</label>
-          <select id="primero" class="form-control"
-                  formControlName="tipoEnvio" (change)="onChangeCombo($event)">
-            <option value="" selected>- Seleccion costo de envío -</option>
-            <option *ngFor="let op of parametros" [value]="op.courier">{{ op.courier }}
-            </option>
-          </select>
-          <div *ngIf="notaPedidoForm.tipoEnvio.errors"
-               class="invalid-feedback" style="display: block;">
-            <div *ngIf="notaPedidoForm.tipoEnvio.errors.required">
               Requerido
             </div>
           </div>
@@ -288,102 +362,29 @@
         </div>
         <div class="col-md-6">
           <div *ngIf="mostrarCargaComprobante" class="col-md-5">
-            <h6 class="text-uppercase">Datos de cuenta: <br>BANCO PICHINCHA<br>CUENTA: XXXX<br>Nombre: XXXX<br></h6>
+            <h6 class="text-uppercase">Datos de cuenta: <br>BANCO PICHINCHA<br>CUENTA: {{ numeroCuenta }}<br>Nombre: {{nombreCuenta}}<br></h6>
             <input class="form-control-file" type="file" (change)="onFileSelected($event)">
           </div>
         </div>
       </div>
-    </div>
-    <div formArrayName="articulos">
-      <div class="card">
-        <h3 class="py-1 px-2 bg-primary">Datos de productos </h3>
-        <form class="source-item p-2">
-          <div data-repeater-list="group-a"
-               *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
-            <ng-container [formGroup]="detalle">
-              <div class="repeater-wrapper" data-repeater-item>
-                <div class="row px-2 mt-1">
-                  <div class="col-md-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
-                    <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
-                      Código
-                    </p>
-                    <label style="font-size: small">{{ detalle.controls.codigo.value }}</label>
-                  </div>
-                  <div class="col-md-3 col-12 my-lg-0 my-2">
-                    <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
-                      Nombre
-                    </p>
-                    <label class="d-block text-wrap"
-                           style="font-size: small">{{ detalle.controls.articulo.value }}</label>
-                  </div>
-                  <div class="col-md-2 col-12 my-lg-0 my-2">
-                    <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
-                      Cantidad
-                    </p>
-                    <input type="text" class="form-control"
-                           formControlName="cantidad"
-                           (change)="calcular()"
-                    />
-                    <div *ngIf="detalle.controls.cantidad.errors"
-                         class="invalid-feedback"
-                         style="display: block;">
-                      <div *ngIf="detalle.controls.cantidad.errors.required">
-                        Requerido
-                      </div>
-                      <div *ngIf="detalle.controls.cantidad.errors.max">
-                        Fuera de stock
-                      </div>
-                      <div *ngIf="detalle.controls.cantidad.errors.min">
-                        Ingrese minimo 1
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-1 col-12 my-lg-0 my-2">
-                    <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
-                      Precio
-                    </p>
-                    <label style="font-size: small">{{ detalle.controls.valorUnitario.value }}</label>
-                  </div>
-                  <div class="col-md-1 col-12 my-lg-0 my-2">
-                    <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
-                      Total
-                    </p>
-                    <label style="font-size: small">{{ detalle.controls.precio.value }}</label>
-                  </div>
-                  <div class="col-md-2 col-12 my-lg-0 my-2">
-                    <img
-                      src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
-                      *ngIf="detalle.controls?.imagen_principal" width="150px" height="150px" alt="">
-                    <!--<div *ngIf="!detalle.controls?.imagen_principal.value">
-                      <button (click)="fileInput.click()">Seleccionar imagen</button>
-                      <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png"
-                             style="display: none;">
-                    </div>-->
-                  </div>
-                  <div
-                    class="d-flex flex-column align-items-center justify-content-between border-left border-left-black invoice-product-actions py-50 px-2">
-                    <i-feather name="trash"
-                               class="cursor-pointer text-danger"
-                               data-repeater-delete
-                               (click)="removerItem(i)"></i-feather>
-                  </div>
-                </div>
-              </div>
-            </ng-container>
-          </div>
-        </form>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-7"></div>
-      <div class="col-md-5 text-right mt-2">
-        <div class="invoice-total-wrapper">
-          <div class="invoice-total-item">
-            <p class="invoice-total-title text-primary mr-3 font-weight-bold">
-              Total a pagar: ${{ notaPedido.controls.total.value.toFixed(2) }}</p>
+      <!--<div class="row px-4 pb-2">
+        <div class="col-md-3">
+          <label for="primero">Formas de entrega de pedido:</label>
+          <select id="primero" class="form-control"
+                  formControlName="tipoEnvio" (change)="onChangeCombo($event)">
+            <option value="" selected>- Seleccion costo de envío -</option>
+            <option *ngFor="let op of parametros" [value]="op.courier">{{ op.courier }}
+            </option>
+          </select>
+          <div *ngIf="notaPedidoForm.tipoEnvio.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaPedidoForm.tipoEnvio.errors.required">
+              Requerido
+            </div>
           </div>
         </div>
-      </div>
+
+      </div>-->
     </div>
     <div class="card p-2" *ngIf="mostrarContenido">
       <div formArrayName="facturacion">
@@ -395,6 +396,12 @@
             <input class="form-control" type="text"
                    formControlName="codigoVendedor"
             >
+            <div *ngIf="facturacionForm.codigoVendedor.errors"
+                 class="invalid-feedback" style="display: block;">
+              <div *ngIf="facturacionForm.codigoVendedor.errors.required">
+                Requerido
+              </div>
+            </div>
 
           </div>
           <div class="col-md-4 col-12">
@@ -402,6 +409,12 @@
             <input class="form-control" type="text"
                    formControlName="nombreVendedor"
             >
+            <div *ngIf="facturacionForm.nombreVendedor.errors"
+                 class="invalid-feedback" style="display: block;">
+              <div *ngIf="facturacionForm.nombreVendedor.errors.required">
+                Requerido
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -422,7 +435,7 @@
          style="width: 100px;">
   </div>
   <p>Valoramos mucho tu preferencia y trabajamos continuamente para ofrecerte lo mejor.</p>
-  <p>Su número de pedido es: {{numeroPedido}}.</p>
+  <p>Su número de pedido es: {{ numeroPedido }}.</p>
   <div class="mt-4">
     <a href="https://superbarato.megadescuento.com" class="btn btn-primary">Volver a la tienda</a>
   </div>

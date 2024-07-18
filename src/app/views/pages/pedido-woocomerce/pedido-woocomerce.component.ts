@@ -59,6 +59,9 @@ export class PedidoWoocomerceComponent implements OnInit {
   datosCliente;
   disabledCombo = false;
   selectClient;
+  costoEnvio;
+  numeroCuenta;
+  nombreCuenta;
 
   page = 1;
   page_size: any = 3;
@@ -154,8 +157,8 @@ export class PedidoWoocomerceComponent implements OnInit {
         numero: ['', [Validators.required]],
         calleSecundaria: ['', [Validators.required]],
         referencia: ['', [Validators.required]],
-        codigoVendedor: [''],
-        nombreVendedor: ['']
+        codigoVendedor: ['', [Validators.required]],
+        nombreVendedor: ['', [Validators.required]]
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
@@ -166,12 +169,29 @@ export class PedidoWoocomerceComponent implements OnInit {
       verificarPedido: [true, [Validators.required]],
       canal: ['superbarato.megadescuento.com', []],
       estado: ['Pendiente', []],
-      tipoEnvio: ['', [Validators.required]],
+      tipoEnvio: [''],
       tipoPago: ['', [Validators.required]],
       archivoMetodoPago: [''],
-      envio: ['', []],
+      envio: this.formBuilder.group({
+        nombres: [''],
+        apellidos: [''],
+        correo: [''],
+        identificacion: [''],
+        tipoIdentificacion: [''],
+        telefono: [''],
+        pais: [''],
+        provincia: [''],
+        ciudad: [''],
+        callePrincipal: [''],
+        numero: [''],
+        calleSecundaria: [''],
+        referencia: [''],
+        codigoVendedor: [''],
+        nombreVendedor: ['']
+      }),
       envios: ['', []],
       json: ['', []],
+      formasEnvio: ['', []],
     });
   }
 
@@ -286,11 +306,12 @@ export class PedidoWoocomerceComponent implements OnInit {
     }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.notaPedido.patchValue({...this.notaPedido.value, envio: {...this.notaPedido.value.facturacion}});
       const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
       facturaFisicaLlaves.map((llaves, index) => {
         if (llaves !== 'archivoMetodoPago') {
-          if (llaves === 'articulos' || llaves === 'facturacion') {
+          if (llaves === 'articulos' || llaves === 'facturacion' || llaves === 'envio') {
             this.archivo.delete(llaves);
             this.archivo.append(llaves, JSON.stringify(facturaFisicaValores[index]));
           } else {
@@ -299,7 +320,6 @@ export class PedidoWoocomerceComponent implements OnInit {
           }
         }
       });
-      this.archivo.delete('envio');
       this.archivo.delete('envios');
       this.archivo.delete('json');
       this.archivo.delete('tipoPago');
@@ -314,14 +334,21 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   onChangeCombo(event: any): void {
 
-    const newValue = event.target.value;
-    const seleccionado = this.parametros.find(p => p.courier === newValue);
-    if (seleccionado && seleccionado.formaPago) {
-      this.formasPagoCourier = seleccionado.formaPago.filter(fp => fp.estado === true);
-      this.mostrarCargaComprobante = false;
+    const formasPago = this.parametros.find((item) => item.nombre === event.target.value);
+    this.formasPagoCourier = formasPago.formaPago.filter((item) => item.estado);
+    this.notaPedido.get('envioTotal').setValue(formasPago.costo);
+    /*if (seleccionado && seleccionado.formaPago) {
+      this.nombreCuenta = seleccionado.nombreCuenta;
+      this.numeroCuenta = seleccionado.numeroCuenta;
+      this.costoEnvio = seleccionado.costo;
     } else {
       this.formasPagoCourier = [];
-    }
+    }*/
+    this.calcular();
+  }
+
+  compararEnvios(o1: any, o2: any): boolean {
+    return o1 && o2 ? o1.id === o2.id : o1 === o2;
   }
 
   onFileSelected(event: any): void {
@@ -421,7 +448,13 @@ export class PedidoWoocomerceComponent implements OnInit {
         ciudad: this.integracionProducto.ciudad,
         ciudadDestino: this.notaPedido.get('facturacion').get('ciudad').value
       }).subscribe((result) => {
-        this.parametros = result.info;
+        this.parametros = result.info.map(item => {
+          return {
+            nombre: `${item.courier} - Desde ${item.ciudad} hasta ${item.ciudadDestino} - Costo ${item.costo}`,
+            costo: item.costo,
+            formaPago: item.formaPago,
+          };
+        });
         if (result.cont === 0) {
           this.toaster.open(`No existe precio de envio desde ${this.integracionProducto.ciudad} hasta
           ${this.notaPedido.get('facturacion').get('ciudad').value}`, {type: 'info'});
@@ -434,7 +467,7 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   onSelectFormaPago(e: any) {
     const selectValue = e.target.value;
-    if (selectValue === 'Transferencia') {
+    if (selectValue !== '' && selectValue === 'Transferencia') {
       this.mostrarCargaComprobante = true;
     } else {
       this.mostrarCargaComprobante = false;
