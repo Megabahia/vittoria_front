@@ -44,6 +44,7 @@ export class ConsultaProductosComponent implements OnInit {
   // tslint:disable-next-line:variable-name
   page_size: any = 3;
   parametros;
+  integracionEnvio;
 
   codigoBarras;
   producto;
@@ -109,20 +110,38 @@ export class ConsultaProductosComponent implements OnInit {
       this.toaster.open('Complete los campos requeridos', {type: 'danger'});
       return;
     }
+
+    this.obtenerFacturasEnvio();
   }
 
   obtenerProvincias(): void {
     this.paramServiceAdm.obtenerListaHijos(this.pais, 'PAIS').subscribe((info) => {
       this.provinciaOpciones = info;
     });
-    console.log(this.provincia);
   }
 
   obtenerCiudad(): void {
-    console.log(this.provincia)
     this.paramServiceAdm.obtenerListaHijos(this.provincia, 'PROVINCIA').subscribe((info) => {
       this.ciudadOpciones = info;
     });
+  }
+
+  obtenerFacturasEnvio(): void{
+    console.log(this.integracionProducto);
+    console.log(this.ciudad);
+    if(this.ciudad){
+      this.integracionesEnviosService.obtenerListaIntegracionesEnviosSinAuth({
+        ciudad: this.integracionProducto.ciudad,
+        ciudadDestino: this.ciudad,
+        sector: this.integracionProducto.sector,
+        sectorDestino: this.sector
+      }).subscribe((result) => {
+        this.integracionEnvio = result.info;
+        if (result.cont === 0){
+          this.toaster.open(`No existe datos de envío`);
+        }
+      });
+    }
   }
 
 }

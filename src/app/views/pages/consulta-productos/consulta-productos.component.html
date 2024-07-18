@@ -72,7 +72,7 @@
           <label for="ciudadContacto">Ciudad <span class="text-danger">*</span></label>
           <select class="form-control" id="ciudadContacto" [(ngModel)]="ciudad">
             <option value="" selected>- Seleccione -</option>
-            <option *ngFor="let opcion of ciudadOpciones" [value]="opcion.id">
+            <option *ngFor="let opcion of ciudadOpciones" [value]="opcion.nombre">
               {{ opcion.nombre }}
             </option>
           </select>
@@ -99,11 +99,16 @@
         </div>
       </div>
       <div class="row">
-        <div class="container">
+        <div class="container" *ngFor="let envio of integracionEnvio; let i = index">
           <ul class="list-unstyled">
-            <li><strong>Forma de entrega: </strong></li>
-            <li class="mt-1"><strong>Forma de pago: </strong></li>
-            <li class="mt-1 mb-3"><strong>Tiempo de entrega: </strong></li>
+            <li><strong>Forma de entrega: </strong> {{envio.courier}}</li>
+            <li class="mt-1">
+              <strong>Forma de pago: </strong>
+              <ng-container *ngFor="let nombre of envio.formaPago; let last = last" >
+                <label *ngIf="nombre.estado" style="font-size: medium">{{ nombre.nombre }}<span *ngIf="!last">, </span></label>
+              </ng-container>
+            </li>
+            <li class="mt-1 mb-3"><strong>Tiempo de entrega: </strong>{{envio.tiempo_entrega}} Horas</li>
           </ul>
         </div>
       </div>
