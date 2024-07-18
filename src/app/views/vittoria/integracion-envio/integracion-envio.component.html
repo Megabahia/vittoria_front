@@ -31,9 +31,14 @@
             <table class="user-list-table table">
               <thead class="thead-light">
               <tr>
-                <th>País</th>
-                <th>Provincia</th>
-                <th>Ciudad</th>
+                <th>Paíso</th>
+                <th>Provincia origen de producto</th>
+                <th>Ciudad origen de producto</th>
+                <th>Sector origen de producto</th>
+                <th>Provincia destino de producto</th>
+                <th>Ciudad destino de producto</th>
+                <th>Sector destino de producto</th>
+                <th>Courier</th>
                 <th>Tamaño inicial (cm)</th>
                 <th>Tamaño fin (cm)</th>
                 <th>Peso inicial (kg)</th>
@@ -49,6 +54,11 @@
                 <td> {{ parametro.pais }}</td>
                 <td> {{ parametro.provincia }}</td>
                 <td> {{ parametro.ciudad }}</td>
+                <td> {{ parametro.sector }}</td>
+                <td> {{ parametro.provinciaDestino }}</td>
+                <td> {{ parametro.ciudadDestino }}</td>
+                <td> {{ parametro.sectorDestino }}</td>
+                <td> {{ parametro.courier }}</td>
                 <td>
                   {{ parametro.tamanio_inicial }}
                 </td>
@@ -130,7 +140,7 @@
                     <input type="text" class="form-control" formControlName="pais" disabled/>
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="provinciaOrigen">Provincia</label>
+                    <label class="form-label" for="provinciaOrigen">Provincia origen del producto</label>
                     <select class="form-control"
                             (change)="obtenerCiudad()"
                             [(ngModel)]="provincia" id="provinciaOrigen" formControlName="provincia">
@@ -146,7 +156,7 @@
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="ciudadOrigen">Ciudad:</label>
+                    <label class="form-label" for="ciudadOrigen">Ciudad origen del producto:</label>
                     <select class="form-control"
                             (change)="obtenerSector()"
                             formControlName="ciudad" id="ciudadOrigen">
@@ -162,7 +172,7 @@
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="ciudadOrigen">Sector:</label>
+                    <label class="form-label" for="ciudadOrigen">Sector origen del producto:</label>
                     <select class="form-control" formControlName="sector" id="sectorOrigen">
                       <option value="" selected>- Seleccione -</option>
                       <option value="{{sector.nombre}}" *ngFor="let sector of sectorOpciones">
@@ -175,50 +185,65 @@
                       </div>
                     </div>
                   </div>
-                    <div class="form-group">
-                        <label class="form-label" for="provinciaDestino">Provincia destino:</label>
-                        <select class="form-control"
-                                (change)="obtenerCiudadDestino()"
-                                id="provinciaDestino" formControlName="provinciaDestino">
-                            <option value="" selected>- Seleccione -</option>
-                            <option value="{{provincia.nombre}}" *ngFor="let provincia of provinciaDestinoOpciones">
-                                {{ provincia.nombre }}
-                            </option>
-                        </select>
-                        <div *ngIf="f.provinciaDestino.errors" class="invalid-feedback"
-                             style="display: block;">
-                            <div *ngIf="f.provinciaDestino.errors.required">Provincia es requerida
-                            </div>
-                        </div>
+                  <div class="form-group">
+                    <label class="form-label" for="provinciaDestino">Provincia destino del producto:</label>
+                    <select class="form-control"
+                            (change)="obtenerCiudadDestino()"
+                            id="provinciaDestino" formControlName="provinciaDestino">
+                      <option value="" selected>- Seleccione -</option>
+                      <option value="{{provincia.nombre}}" *ngFor="let provincia of provinciaDestinoOpciones">
+                        {{ provincia.nombre }}
+                      </option>
+                    </select>
+                    <div *ngIf="f.provinciaDestino.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.provinciaDestino.errors.required">Provincia es requerida
+                      </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" for="ciudadDestino">Ciudad destino:</label>
-                        <select class="form-control" formControlName="ciudadDestino" id="ciudadDestino">
-                            <option value="" selected>- Seleccione -</option>
-                            <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadDestinoOpciones">
-                                {{ ciudad.nombre }}
-                            </option>
-                        </select>
-                        <div *ngIf="f.ciudadDestino.errors" class="invalid-feedback"
-                             style="display: block;">
-                            <div *ngIf="f.ciudadDestino.errors.required">Ciudad es requerida
-                            </div>
-                        </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="ciudadDestino">Ciudad destino del producto:</label>
+                    <select class="form-control" formControlName="ciudadDestino" id="ciudadDestino">
+                      <option value="" selected>- Seleccione -</option>
+                      <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadDestinoOpciones">
+                        {{ ciudad.nombre }}
+                      </option>
+                    </select>
+                    <div *ngIf="f.ciudadDestino.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.ciudadDestino.errors.required">Ciudad es requerida
+                      </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" for="sectorDestino">Sector destino:</label>
-                        <select class="form-control" formControlName="sectorDestino" id="sectorDestino">
-                            <option value="" selected>- Seleccione -</option>
-                            <option value="{{sector.nombre}}" *ngFor="let sector of sectorDestinoOpciones">
-                                {{ sector.nombre }}
-                            </option>
-                        </select>
-                        <div *ngIf="f.sectorDestino.errors" class="invalid-feedback"
-                             style="display: block;">
-                            <div *ngIf="f.sectorDestino.errors.required">Sector es requerida
-                            </div>
-                        </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="sectorDestino">Sector destino del producto:</label>
+                    <select class="form-control" formControlName="sectorDestino" id="sectorDestino">
+                      <option value="" selected>- Seleccione -</option>
+                      <option value="{{sector.nombre}}" *ngFor="let sector of sectorDestinoOpciones">
+                        {{ sector.nombre }}
+                      </option>
+                    </select>
+                    <div *ngIf="f.sectorDestino.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.sectorDestino.errors.required">Sector es requerida
+                      </div>
                     </div>
+                  </div>
+                  <!--COURIER-->
+                  <div class="form-group">
+                    <label for="basicSelect">Courier</label>
+                    <select id="basicSelect" class="form-control" formControlName="courier">
+                      <option value="">- Seleccione -</option>
+                      <option value="{{item.username}}"
+                              *ngFor="let item of couriers"
+                      >{{ item.username }}
+                      </option>
+                    </select>
+                    <div *ngIf="f.courier.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.courier.errors.required">Courier es requerido</div>
+                    </div>
+                  </div>
                   <!--DISTANCIA-->
                   <div class="form-group">
                     <label class="form-label" for="basic-icon-default-distancia">Distancia en Kilómetros:</label>
@@ -285,24 +310,9 @@
                       </div>
                     </div>
                   </div>
-                  <!--COURIER-->
-                  <div class="form-group">
-                    <label for="basicSelect">Courier</label>
-                    <select id="basicSelect" class="form-control" formControlName="courier">
-                      <option value="">- Seleccione -</option>
-                      <option value="{{item.username}}"
-                              *ngFor="let item of couriers"
-                      >{{ item.username }}
-                      </option>
-                    </select>
-                    <div *ngIf="f.courier.errors" class="invalid-feedback"
-                         style="display: block;">
-                      <div *ngIf="f.courier.errors.required">Courier es requerido</div>
-                    </div>
-                  </div>
                   <!--COSTO-->
                   <div class="form-group">
-                    <label class="form-label" for="basic-icon-default-costo">Costo:</label>
+                    <label class="form-label" for="basic-icon-default-costo">Costo de envío:</label>
                     <input type="text" id="basic-icon-default-costo" class="form-control dt-email"
                            name="valor" formControlName="costo"/>
                     <div *ngIf="f.costo.errors" class="invalid-feedback"
@@ -330,13 +340,23 @@
                   </div>
                   <!--LATITUD-->
                   <div class="form-group">
-                    <label class="form-label" for="lat">Latitud:</label>
-                    <input type="text" id="lat" class="form-control" formControlName="distancia"/>
+                    <label class="form-label" for="lat">Latitud origen del producto:</label>
+                    <input type="text" id="lat" class="form-control" formControlName="latitud"/>
                   </div>
                   <!--LONGITUD-->
                   <div class="form-group">
-                    <label class="form-label" for="lng">Longitud:</label>
+                    <label class="form-label" for="lng">Longitud origen del producto:</label>
                     <input type="text" id="lng" class="form-control" formControlName="longitud"/>
+                  </div>
+                  <!--LATITUD DESTINO-->
+                  <div class="form-group">
+                    <label class="form-label" for="latDestino">Latitud destino del producto:</label>
+                    <input type="text" id="latDestino" class="form-control" formControlName="latitudDestino"/>
+                  </div>
+                  <!--LONGITUD DESTINO-->
+                  <div class="form-group">
+                    <label class="form-label" for="lngDestino">Longitud destino del producto:</label>
+                    <input type="text" id="lngDestino" class="form-control" formControlName="longitudDestino"/>
                   </div>
                   <!--FORMAS DE PAGO-->
                   <div class="form-group">
@@ -344,17 +364,25 @@
                     <div formArrayName="formaPago">
                       <div *ngFor="let pago of paramForm.get('formaPago')['controls']; let i = index">
                         <div [formGroup]="pago">
-
                           <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="pago{{i}}"
                                    formControlName="estado" (change)="onChangeCheckPago(pago.controls.nombre.value)">
                             <label class="custom-control-label" for="pago{{i}}">{{ pago.controls.nombre.value }}</label>
                           </div>
                         </div>
+
                       </div>
                     </div>
                   </div>
-
+                  <!--CUENTA BANCARIA-->
+                  <div class="form-group">
+                    <label class="form-label" for="nombreCuenta">Nombre de la cuenta bancaria de COURIER:</label>
+                    <input type="text" id="nombreCuenta" class="form-control" formControlName="nombreCuenta"/>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="numeroCuenta">Número de la cuenta bancaria de COURIER:</label>
+                    <input type="text" id="numeroCuenta" class="form-control" formControlName="numeroCuenta"/>
+                  </div>
                   <!--<div formArrayName="formaPago">
                     <div *ngFor="let pagoControl of paramForm.get('formaPago')['controls']; let i = index; let i = index;">
                       <div class="form-check">

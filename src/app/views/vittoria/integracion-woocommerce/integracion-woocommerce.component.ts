@@ -44,6 +44,7 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   habilitarDatosDespacho;
   pedidoOmniglobal;
   despachoOmniglobal;
+  sectorOpciones;
 
   pais = 'Ecuador';
   ciudadOpciones;
@@ -271,6 +272,12 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   obtenerCiudad(): void {
     this.paramServiceAdm.obtenerListaHijos(this.provincia, 'PROVINCIA').subscribe((info) => {
       this.ciudadOpciones = info;
+    });
+  }
+
+  obtenerSector(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.paramForm.value.ciudad, 'CIUDAD').subscribe((info) => {
+      this.sectorOpciones = info;
     });
   }
 

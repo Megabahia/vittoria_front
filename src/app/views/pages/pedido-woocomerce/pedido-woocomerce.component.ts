@@ -50,7 +50,11 @@ export class PedidoWoocomerceComponent implements OnInit {
   correoCliente;
   codigoCorreo;
 
+  numeroPedido;
+
   mostrarContenido = false;
+  mostrarCargaComprobante = false;
+  mostrarContenidoPantalla = true;
 
   datosCliente;
   disabledCombo = false;
@@ -59,7 +63,8 @@ export class PedidoWoocomerceComponent implements OnInit {
   page = 1;
   page_size: any = 3;
   parametros;
-  integracionProducto
+  integracionProducto;
+  formasPagoCourier: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -154,15 +159,15 @@ export class PedidoWoocomerceComponent implements OnInit {
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
-      envioTotal: ['', [  ]],
+      envioTotal: ['', [Validators.required]],
       numeroPedido: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['Contra-Entrega', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
       canal: ['superbarato.megadescuento.com', []],
       estado: ['Pendiente', []],
-      tipoEnvio: [this.seleccionPrimerCombo, [Validators.required]],
-      tipoPago: [this.seleccionSegundoCombo],
+      tipoEnvio: ['', [Validators.required]],
+      tipoPago: ['', [Validators.required]],
       archivoMetodoPago: [''],
       envio: ['', []],
       envios: ['', []],
@@ -266,8 +271,6 @@ export class PedidoWoocomerceComponent implements OnInit {
   }
 
   guardarVenta(): void {
-    console.log(this.notaPedido.value);
-
     this.notaPedido.get('articulos').value.map((producto) => {
       delete producto.imagen_principal;
     });
@@ -302,19 +305,22 @@ export class PedidoWoocomerceComponent implements OnInit {
       this.archivo.delete('tipoPago');
 
       this.pedidosService.crearPedidoSuperBarato(this.archivo).subscribe(result => {
-        console.log('PEDIDO GUARDADO', result);
         this.toaster.open('Pedido guardado', {type: 'success'});
+        this.numeroPedido = result.numeroPedido;
+        this.mostrarContenidoPantalla = false;
       }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
     }
   }
 
   onChangeCombo(event: any): void {
+
     const newValue = event.target.value;
-    this.seleccionPrimerCombo = newValue;
-    if (newValue === 'envioServiEntrega' && newValue !== '') {
-      this.seleccionSegundoCombo = 'tranferenciaDeposito'; // Asumiendo que deseas seleccionar esta opción si se elige 'envioServiEntrega'
+    const seleccionado = this.parametros.find(p => p.courier === newValue);
+    if (seleccionado && seleccionado.formaPago) {
+      this.formasPagoCourier = seleccionado.formaPago.filter(fp => fp.estado === true);
+      this.mostrarCargaComprobante = false;
     } else {
-      this.seleccionSegundoCombo = 'eleccionCliente'; // Opción predeterminada para los otros casos
+      this.formasPagoCourier = [];
     }
   }
 
@@ -409,20 +415,29 @@ export class PedidoWoocomerceComponent implements OnInit {
     });
   }
 
-  obtenerCostosEnvio(): void{
-    if(this.notaPedido.get('facturacion').get('ciudad').value){
+  obtenerCostosEnvio(): void {
+    if (this.notaPedido.get('facturacion').get('ciudad').value) {
       this.integracionesEnviosService.obtenerListaIntegracionesEnviosSinAuth({
         ciudad: this.integracionProducto.ciudad,
         ciudadDestino: this.notaPedido.get('facturacion').get('ciudad').value
       }).subscribe((result) => {
         this.parametros = result.info;
-        if (result.cont === 0){
+        if (result.cont === 0) {
           this.toaster.open(`No existe precio de envio desde ${this.integracionProducto.ciudad} hasta
           ${this.notaPedido.get('facturacion').get('ciudad').value}`, {type: 'info'});
-        }else{
+        } else {
           this.toaster.open('Costos de envío cargados', {type: 'info'});
         }
       });
+    }
+  }
+
+  onSelectFormaPago(e: any) {
+    const selectValue = e.target.value;
+    if (selectValue === 'Transferencia') {
+      this.mostrarCargaComprobante = true;
+    } else {
+      this.mostrarCargaComprobante = false;
     }
   }
 

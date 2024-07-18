@@ -8,6 +8,7 @@ import {logger} from "codelyzer/util/logger";
 import {Toaster} from "ngx-toast-notifications";
 import {IntegracionesEnviosService} from "../../../services/admin/integraciones_envios.service";
 import {ProductosService} from "../../../services/mdp/productos/productos.service";
+import {AuthService} from "../../../services/admin/auth.service";
 
 interface ProductoProcesado {
   canal?: string;
@@ -52,6 +53,7 @@ export class ConsultaProductosComponent implements OnInit {
 
   mostrarDatosProducto = false;
 
+  sectorOpciones;
 
   constructor(
     private paramServiceAdm: ParamServiceAdm,
@@ -59,6 +61,7 @@ export class ConsultaProductosComponent implements OnInit {
     private _router: Router,
     private integracionesEnviosService: IntegracionesEnviosService,
     private productosService: ProductosService,
+    private authService: AuthService
   ) {
     /*const ref = document.referrer;
     const host = document.location.host;
@@ -125,10 +128,13 @@ export class ConsultaProductosComponent implements OnInit {
       this.ciudadOpciones = info;
     });
   }
+  obtenerSector(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.ciudad, 'CIUDAD').subscribe((info) => {
+      this.sectorOpciones = info;
+    });
+  }
 
   obtenerFacturasEnvio(): void{
-    console.log(this.integracionProducto);
-    console.log(this.ciudad);
     if(this.ciudad){
       this.integracionesEnviosService.obtenerListaIntegracionesEnviosSinAuth({
         ciudad: this.integracionProducto.ciudad,
@@ -137,11 +143,16 @@ export class ConsultaProductosComponent implements OnInit {
         sectorDestino: this.sector
       }).subscribe((result) => {
         this.integracionEnvio = result.info;
+        console.log(this.integracionEnvio);
         if (result.cont === 0){
           this.toaster.open(`No existe datos de envío`);
         }
       });
     }
+  }
+
+  cerrarSesion() {
+    this.authService.signOut();
   }
 
 }

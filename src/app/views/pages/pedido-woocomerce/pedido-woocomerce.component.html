@@ -1,7 +1,7 @@
-<div class="card">
+<div class="card" *ngIf="mostrarContenidoPantalla">
   <h2 class="card-header font-weight-bold">PEDIDO SUPERBARATO</h2>
 </div>
-<div class="container">
+<div *ngIf="mostrarContenidoPantalla">
   <div class="card">
     <div class="row p-2">
       <div class="col-md-3 col-12">
@@ -237,32 +237,33 @@
     </div>
     <div class="card" *ngIf="mostrarContenido">
       <h5 class="pl-3 pt-2">DATOS DE FACTURACION <label class="text-muted">(Datos
-        obligatorios)</label></h5>
+        obligatorios) <strong class="text-info">(Primero seleccione ciudad de destino)</strong></label></h5>
       <div class="row px-4 pb-2">
         <div class="col-md-3">
           <label for="envio">Costo de envio:</label>
           <select id="envio" class="form-control"
                   formControlName="envioTotal" (change)="calcular()">
             <option value="" selected disabled>- Seleccion costo de envío -</option>
-            <option *ngFor="let op of parametros" [value]="Number(op.costo)">Desde {{ op.ciudad }} hasta {{op.ciudadDestino}} el
-              costo es ${{ op.costo }}
+            <option *ngFor="let op of parametros" [value]="Number(op.costo)">({{ op.courier }}) - Desde {{ op.ciudad }}
+              hasta {{ op.ciudadDestino }} - Tiene un costo de ${{ op.costo }}
             </option>
           </select>
-          <!--<div *ngIf="notaPedidoForm.envioTotal.errors"
+          <div *ngIf="notaPedidoForm.envioTotal.errors"
                class="invalid-feedback" style="display: block;">
             <div *ngIf="notaPedidoForm.envioTotal.errors.required">
               Requerido
             </div>
-          </div>-->
+          </div>
         </div>
       </div>
       <div class="row px-4 pb-2">
         <div class="col-md-3">
           <label for="primero">Formas de entrega de pedido:</label>
-          <select id="primero" class="form-control" [(ngModel)]="seleccionPrimerCombo" (change)="onChangeCombo($event)"
-                  formControlName="tipoEnvio">
-            <option value="" selected disabled>- Seleccion forma de envio -</option>
-            <option *ngFor="let op of opcionesPrimerCombo" [value]="op.id">{{ op.valor }}</option>
+          <select id="primero" class="form-control"
+                  formControlName="tipoEnvio" (change)="onChangeCombo($event)">
+            <option value="" selected>- Seleccion costo de envío -</option>
+            <option *ngFor="let op of parametros" [value]="op.courier">{{ op.courier }}
+            </option>
           </select>
           <div *ngIf="notaPedidoForm.tipoEnvio.errors"
                class="invalid-feedback" style="display: block;">
@@ -272,16 +273,21 @@
           </div>
         </div>
         <div class="col-md-3">
-
           <label for="segundo">Forma de pago:</label>
-          <select id="segundo" class="form-control" [(ngModel)]="seleccionSegundoCombo" disabled
-                  formControlName="tipoPago">
-            <option selected disabled>- Seleccion forma de pago -</option>
-            <option *ngFor="let op of opcionesSegundoCombo" [value]="op.id">{{ op.valor }}</option>
+          <select id="segundo" class="form-control"
+                  formControlName="tipoPago" (change)="onSelectFormaPago($event)">
+            <option value="" selected>- Seleccion forma de pago -</option>
+            <option *ngFor="let op of formasPagoCourier" [value]="op.nombre">{{ op.nombre }}</option>
           </select>
+          <div *ngIf="notaPedidoForm.tipoPago.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaPedidoForm.tipoPago.errors.required">
+              Requerido
+            </div>
+          </div>
         </div>
         <div class="col-md-6">
-          <div *ngIf="seleccionPrimerCombo === 'envioServiEntrega'" class="col-md-5">
+          <div *ngIf="mostrarCargaComprobante" class="col-md-5">
             <h6 class="text-uppercase">Datos de cuenta: <br>BANCO PICHINCHA<br>CUENTA: XXXX<br>Nombre: XXXX<br></h6>
             <input class="form-control-file" type="file" (change)="onFileSelected($event)">
           </div>
@@ -307,7 +313,8 @@
                     <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
                       Nombre
                     </p>
-                    <label class="d-block text-wrap" style="font-size: small">{{ detalle.controls.articulo.value }}</label>
+                    <label class="d-block text-wrap"
+                           style="font-size: small">{{ detalle.controls.articulo.value }}</label>
                   </div>
                   <div class="col-md-2 col-12 my-lg-0 my-2">
                     <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
@@ -379,21 +386,23 @@
       </div>
     </div>
     <div class="card p-2" *ngIf="mostrarContenido">
-      <h5 class="pl-3">DATOS VENDEDOR <label class="text-muted">(Datos
-        opcionales)</label></h5>
-      <div class="row px-4 pb-2 d-flex justify-content-between">
-        <div class="col-md-4 col-12">
-          <label>Código Vendedor</label>
-          <input class="form-control" type="text"
-                 formControlName="codigoVendedor"
-          >
+      <div formArrayName="facturacion">
+        <h5 class="pl-3">DATOS VENDEDOR <label class="text-muted">(Datos
+          opcionales)</label></h5>
+        <div class="row px-4 pb-2 d-flex justify-content-between">
+          <div class="col-md-4 col-12">
+            <label>Código Vendedor</label>
+            <input class="form-control" type="text"
+                   formControlName="codigoVendedor"
+            >
 
-        </div>
-        <div class="col-md-4 col-12">
-          <label>Nombre Vendedor</label>
-          <input class="form-control" type="text"
-                 formControlName="nombreVendedor"
-          >
+          </div>
+          <div class="col-md-4 col-12">
+            <label>Nombre Vendedor</label>
+            <input class="form-control" type="text"
+                   formControlName="nombreVendedor"
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -403,5 +412,19 @@
     </div>
   </form>
 
+</div>
+
+<div class="container text-center p-5 mt-5 border shadow rounded" *ngIf="!mostrarContenidoPantalla">
+  <h2 class="mb-3">¡Gracias por tu compra!</h2>
+  <p class="lead">Tu pedido ha sido procesado con éxito.</p>
+  <div class="my-4">
+    <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Order Success" class="img-fluid"
+         style="width: 100px;">
+  </div>
+  <p>Valoramos mucho tu preferencia y trabajamos continuamente para ofrecerte lo mejor.</p>
+  <p>Su número de pedido es: {{numeroPedido}}.</p>
+  <div class="mt-4">
+    <a href="https://superbarato.megadescuento.com" class="btn btn-primary">Volver a la tienda</a>
+  </div>
 </div>
 

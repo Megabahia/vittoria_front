@@ -124,7 +124,11 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
       peso_fin: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d+)?$')]],
       tiempo_entrega: ['', [Validators.required]],
       latitud: [''],
-      longitud: ['']
+      longitud: [''],
+      latitudDestino: [''],
+      longitudDestino: [''],
+      nombreCuenta: [''],
+      numeroCuenta: ['']
     });
   }
 

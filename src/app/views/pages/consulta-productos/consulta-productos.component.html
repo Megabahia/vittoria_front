@@ -20,14 +20,18 @@
       <h4 class="mb-1 p-1 bg-light text-dark">Detalle del Producto</h4>
       <div class="card border-primary">
         <div class="card-header bg-primary text-white">
-          <h5 class="card-title">{{ producto?.nombre }}</h5>
+          <h5 class="card-title">
+            {{ producto?.nombre }}
+            <h6>({{ producto?.codigoBarras }})</h6>
+          </h5>
         </div>
         <div class="card-body bg-light">
           <ul class="list-unstyled mt-1">
             <li><strong>Descripción:</strong> {{ producto?.descripcion }}</li>
             <li><strong>Precio Normal:</strong> <span
               class="text-success"> {{ producto?.precioVentaA | currency }}</span></li>
-            <li><strong>Precio Oferta:</strong> <span class="text-danger"> {{ producto?.precioOferta | currency }}</span>
+            <li><strong>Precio Oferta:</strong> <span
+              class="text-danger"> {{ producto?.precioOferta | currency }}</span>
             </li>
             <li><strong>Cantidad en Stock real:</strong> {{ producto?.stock }}</li>
             <li><strong>Ubicación del producto (Origen):</strong> {{ producto?.canal }}</li>
@@ -37,7 +41,8 @@
           <div *ngIf="producto?.imagenes && producto?.imagenes.length > 0" class="row mx-0">
             <div *ngFor="let imagen of producto?.imagenes; let i = index" class="col-md-3 col-sm-3 p-2">
               <div class="image-container">
-                <img [src]="imagen.imagen" class="img-fluid" alt="Imagen {{ i }}" style="height: 200px; width: 100%; object-fit: cover;">
+                <img [src]="imagen.imagen" class="img-fluid" alt="Imagen {{ i }}"
+                     style="height: 200px; width: 100%; object-fit: cover;">
               </div>
             </div>
           </div>
@@ -47,11 +52,10 @@
         </div>
       </div>
     </div>
-    <hr/>
     <div class="container mt-1">
-      <div class="row">
+      <div class="row bg-primary pt-1 mb-1">
         <div class="col-12">
-          <h4 class="mb-1">Detalles de Envío</h4>
+          <h4 class="mb-1">Consulta de costos de envío</h4>
         </div>
       </div>
       <div class="row">
@@ -60,7 +64,7 @@
           <input class="form-control" type="text" [(ngModel)]="pais" disabled>
         </div>
         <div class="col-md-3 col-12">
-          <label for="provinciaContacto">Provincia <span class="text-danger">*</span></label>
+          <label for="provinciaContacto">Provincia destino <span class="text-danger">*</span></label>
           <select class="form-control" (change)="obtenerCiudad()" id="provinciaContacto" [(ngModel)]="provincia">
             <option value="" selected>- Seleccione -</option>
             <option *ngFor="let opcion of provinciaOpciones" [value]="opcion.nombre">
@@ -69,8 +73,8 @@
           </select>
         </div>
         <div class="col-md-3 col-12">
-          <label for="ciudadContacto">Ciudad <span class="text-danger">*</span></label>
-          <select class="form-control" id="ciudadContacto" [(ngModel)]="ciudad">
+          <label for="ciudadContacto">Ciudad destino <span class="text-danger">*</span></label>
+          <select class="form-control" id="ciudadContacto" [(ngModel)]="ciudad" (change)="obtenerSector()">
             <option value="" selected>- Seleccione -</option>
             <option *ngFor="let opcion of ciudadOpciones" [value]="opcion.nombre">
               {{ opcion.nombre }}
@@ -78,17 +82,22 @@
           </select>
         </div>
         <div class="col-md-3 col-12">
-          <label for="sectorContacto">Sector <span class="text-danger">*</span></label>
-          <input class="form-control" id="sectorContacto" [(ngModel)]="sector">
+          <label class="form-label" for="sectorOrigen">Sector destino <span class="text-danger">*</span></label>
+          <select class="form-control" [(ngModel)]="sector" id="sectorOrigen">
+            <option value="" selected>- Seleccione -</option>
+            <option value="{{sector.nombre}}" *ngFor="let sector of sectorOpciones">
+              {{ sector.nombre }}
+            </option>
+          </select>
         </div>
-        <div class="col-md-3 col-12 mt-1">
+        <!--<div class="col-md-3 col-12 mt-1">
           <label for="callePrincipalContacto">Calle principal</label>
           <input class="form-control" id="callePrincipalContacto" [(ngModel)]="callePrincipal">
         </div>
         <div class="col-md-3 col-12 mt-1">
           <label for="calleSecundariContacto">Calle secundaria</label>
           <input class="form-control" id="calleSecundariContacto" [(ngModel)]="calleSecundaria">
-        </div>
+        </div>-->
         <div class="col-md-3 col-12 mt-3">
           <button class="btn btn-primary" (click)="consultarDatosEnvio()">Consultar</button>
         </div>
@@ -99,21 +108,43 @@
         </div>
       </div>
       <div class="row">
-        <div class="container" *ngFor="let envio of integracionEnvio; let i = index">
-          <ul class="list-unstyled">
-            <li><strong>Forma de entrega: </strong> {{envio.courier}}</li>
-            <li class="mt-1">
-              <strong>Forma de pago: </strong>
-              <ng-container *ngFor="let nombre of envio.formaPago; let last = last" >
-                <label *ngIf="nombre.estado" style="font-size: medium">{{ nombre.nombre }}<span *ngIf="!last">, </span></label>
-              </ng-container>
-            </li>
-            <li class="mt-1 mb-3"><strong>Tiempo de entrega: </strong>{{envio.tiempo_entrega}} Horas</li>
-          </ul>
+        <div class="container mt-1">
+          <h3 class="text-center mb-1">Detalles de envío</h3>
+          <div class="row">
+            <!-- Cada iteración del bucle ngFor se mostrará en una columna de dos disponibles -->
+            <div *ngFor="let envio of integracionEnvio; let i = index" class="col-md-6 mb-4">
+              <div class="card bg-light shadow-lg">
+                <div class="card-header">
+                  <h5 class="card-title text-primary">{{ envio.courier }}</h5>
+                </div>
+                <div class="card-body">
+
+                  <p><strong>País:</strong> {{ envio.pais }}</p>
+                  <p><strong>Dirección de origen:</strong> {{ envio.provincia }}, {{ envio.ciudad }}, {{ envio.sector }}
+                  </p>
+                  <p><strong>Dirección de destino:</strong> {{ envio.provinciaDestino }}, {{ envio.ciudadDestino }}
+                    , {{ envio.sectorDestino }}</p>
+                  <p><strong>Distancia:</strong> {{ envio.distancia }} km</p>
+                  <p><strong>Costo:</strong> ${{ envio.costo }}</p>
+                  <p>
+                    <strong>Formas de pago:</strong>
+                    <ng-container *ngFor="let nombre of envio.formaPago; let last = last">
+                      <span *ngIf="nombre.estado"> {{ nombre.nombre }}<span *ngIf="!last">, </span></span>
+                    </ng-container>
+                  </p>
+                  <p><strong>Tiempo de entrega:</strong> {{ envio.tiempo_entrega }} Horas</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <button class="btn btn-secondary" (click)="cerrarSesion()">Cerrar</button>
+    </div>
   </div>
 </div>
 
