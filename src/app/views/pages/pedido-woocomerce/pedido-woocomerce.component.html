@@ -378,11 +378,10 @@
         </div>
       </div>
     </div>
-
-    <div class="card">
+    <div class="card p-2" *ngIf="mostrarContenido">
       <h5 class="pl-3">DATOS VENDEDOR <label class="text-muted">(Datos
         opcionales)</label></h5>
-      <div class="row px-4 pb-2">
+      <div class="row px-4 pb-2 d-flex justify-content-between">
         <div class="col-md-4 col-12">
           <label>Código Vendedor</label>
           <input class="form-control" type="text"
