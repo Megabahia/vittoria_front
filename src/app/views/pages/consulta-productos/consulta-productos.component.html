@@ -15,7 +15,7 @@
       </div>
     </div>
   </div>
-  <div class="card" *ngIf="mostrarDatosProducto">
+  <div class="card">
     <div class="container mt-1">
       <h4 class="mb-1 p-1 bg-light text-dark">Detalle del Producto</h4>
       <div class="card border-primary">
@@ -63,7 +63,7 @@
           <label for="provinciaContacto">Provincia <span class="text-danger">*</span></label>
           <select class="form-control" (change)="obtenerCiudad()" id="provinciaContacto" [(ngModel)]="provincia">
             <option value="" selected>- Seleccione -</option>
-            <option *ngFor="let opcion of provinciaOpciones" [value]="opcion.id">
+            <option *ngFor="let opcion of provinciaOpciones" [value]="opcion.nombre">
               {{ opcion.nombre }}
             </option>
           </select>

@@ -34,7 +34,7 @@
   <form [formGroup]="notaPedido">
     <div class="card" *ngIf="mostrarContenido">
       <div formGroupName="facturacion">
-        <h3 class="py-1 px-2 font-weight-bold">Datos de facturación y entrega </h3>
+        <h3 class="py-1 px-2 font-weight-bold bg-primary">Datos de facturación y entrega </h3>
         <h5 class="pl-3">DATO PERSONALES <label class="text-muted">(Datos
           obligatorios)</label></h5>
         <div class="row px-4">
@@ -254,7 +254,7 @@
       </div>
     </div>
     <div class="card" *ngIf="mostrarContenido">
-      <h5 class="pl-3 pt-2">Datos de facturación <label class="text-muted">(Datos
+      <h5 class="pl-3 pt-2">DATOS DE FACTURACION <label class="text-muted">(Datos
         obligatorios)</label></h5>
       <div class="row px-4 pb-2">
         <div class="col-md-3">
@@ -306,10 +306,9 @@
         </div>
       </div>
     </div>
-    <hr/>
     <div formArrayName="articulos">
       <div class="card">
-        <h3 class="py-1 px-2">Datos de productos </h3>
+        <h3 class="py-1 px-2 bg-primary">Datos de productos </h3>
         <form class="source-item p-2">
           <div data-repeater-list="group-a"
                *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">

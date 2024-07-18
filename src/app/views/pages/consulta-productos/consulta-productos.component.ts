@@ -119,6 +119,7 @@ export class ConsultaProductosComponent implements OnInit {
   }
 
   obtenerCiudad(): void {
+    console.log(this.provincia)
     this.paramServiceAdm.obtenerListaHijos(this.provincia, 'PROVINCIA').subscribe((info) => {
       this.ciudadOpciones = info;
     });

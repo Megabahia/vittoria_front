@@ -334,6 +334,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       this.esCliente = true;
     } else {
       this.esCliente = false;
+      this.enviarCorreo = false;
       this.mostrarContenido = true;
     }
   }
