@@ -138,7 +138,6 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
         this.canalSeleccionado = usuarioObjeto.usuario.canal;
         this.disabledSelectCanal = true;
       }
-      console.log('Usuario obtenido como objeto:', usuarioObjeto.usuario);
     } else {
       console.log('No hay datos de usuario en localStorage');
     }

@@ -7,6 +7,8 @@ import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
 import {Toaster} from 'ngx-toast-notifications';
 import {IntegracionesEnviosService} from '../../../services/admin/integraciones_envios.service';
 import {ProductosService} from "../../../services/mdp/productos/productos.service";
+import {IntegracionesService} from "../../../services/admin/integraciones.service";
+import Decimal from "decimal.js";
 
 interface ProductoProcesado {
   canal?: string;
@@ -51,6 +53,8 @@ export class PedidoWoocomerceComponent implements OnInit {
   codigoCorreo;
 
   numeroPedido;
+  productoBuscar: any [] = [];
+  numeroPedidos: any = {};
 
   mostrarContenido = false;
   mostrarCargaComprobante = false;
@@ -66,6 +70,7 @@ export class PedidoWoocomerceComponent implements OnInit {
   page = 1;
   page_size: any = 3;
   parametros;
+  parametrosIntegracionesCanal;
   integracionProducto;
   formasPagoCourier: any[] = [];
 
@@ -77,7 +82,8 @@ export class PedidoWoocomerceComponent implements OnInit {
     private pedidosService: PedidosService,
     private toaster: Toaster,
     private integracionesEnviosService: IntegracionesEnviosService,
-    private productosService: ProductosService
+    private productosService: ProductosService,
+    private integracionesService: IntegracionesService
   ) {
     /*const ref = document.referrer;
     const host = document.location.host;
@@ -97,6 +103,8 @@ export class PedidoWoocomerceComponent implements OnInit {
       navbar.style.display = 'none';
       toolbar.style.display = 'none';
     }
+
+    this.obtenerListaParametrosCanal();
 
 
   }
@@ -130,7 +138,11 @@ export class PedidoWoocomerceComponent implements OnInit {
 
     this.obtenerProvincias();
     this.obtenerCiudad();
-    this.datos.map(data => this.agregarItem(data));
+    this.datos.map((data, index) => {
+      this.agregarItem(data);
+      this.obtenerProducto(index);
+    });
+
     this.calcular();
     this.obtenerDatosProducto();
   }
@@ -374,14 +386,15 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   enviarCorreoCliente(): void {
     if (this.validarCorreo(this.correoCliente)) {
-      this.enviarCorreo = true;
       const datos = {
         email: this.correoCliente
       };
 
       this.pedidosService.enviarCodioCorreo(datos).subscribe((item) => {
+        this.enviarCorreo = true;
+
         this.toaster.open(item.message, {type: 'info'});
-      });
+      }, error => this.toaster.open(error.error, {type: 'danger'}));
     } else {
       this.toaster.open('Ingrese un correo válido', {type: 'danger'});
     }
@@ -450,7 +463,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       }).subscribe((result) => {
         this.parametros = result.info.map(item => {
           return {
-            nombre: `${item.courier} - Desde ${item.ciudad} hasta ${item.ciudadDestino} - Costo ${item.costo}`,
+            nombre: `${item.courier} - Desde ${item.ciudad} hasta ${item.ciudadDestino} - Costo $${item.costo}`,
             costo: item.costo,
             formaPago: item.formaPago,
           };
@@ -473,6 +486,54 @@ export class PedidoWoocomerceComponent implements OnInit {
       this.mostrarCargaComprobante = false;
     }
   }
+
+  async obtenerListaParametrosCanal(): Promise<void> {
+    const datos = {
+      page: this.page,
+      page_size: this.page_size,
+      valor: 'superbarato.megadescuento.com'
+    };
+    await this.integracionesService.obtenerListaIntegraciones(datos).subscribe((result) => {
+      this.parametrosIntegracionesCanal = result.data[0];
+    });
+  }
+
+  escogerCantidad(operacion, i): void {
+    const cantidadControl = this.detallesArray.controls;
+    let cantidad = +cantidadControl[i].get('cantidad').value;
+    cantidad = operacion === 'sumar' ? Math.min(cantidad + 1) : Math.max(cantidad - 1, 0);
+    cantidadControl[i].get('cantidad').setValue(cantidad);
+    console.log('CANTIDAD', cantidad)
+    //this.fDetalles.controls[0].get('cantidad').setValue(cantidad);
+    //this.fDetalles.controls[0].get('precio').setValue(this.producto.precioLandingOferta);
+    const total = +new Decimal(cantidadControl[i].get('valorUnitario').value).mul(cantidad).toFixed(2).toString();
+    cantidadControl[i].get('precio').setValue(total);
+    //this.pospectoForm.get('precio').setValue(this.producto.precioLandingOferta * cantidad);
+    this.notaPedido.get('total').setValue(total);
+    this.notaPedido.updateValueAndValidity();
+  }
+
+  //OBTENER PRODUCTO
+  async obtenerProducto(i): Promise<void> {
+
+    return new Promise((resolve, reject) => {
+      const data = {
+        codigoBarras: this.detallesArray.value[i].codigo,
+      };
+      this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
+        this.productoBuscar.push({...info.producto});
+        const prefijo = info.producto.prefijo; // Asumiendo que cada producto tiene un atributo 'prefijo'
+        if (!this.numeroPedidos[prefijo]) {
+          this.numeroPedidos[prefijo] = []; // Inicializa el arreglo si el prefijo es nuevo
+        }
+        this.numeroPedidos[prefijo].push({...info.producto}); // Agrega el producto al arreglo correspondiente
+
+        resolve(); // Resolver la promesa
+      }, error => this.toaster.open(error, {type: 'danger'}));
+      console.log('NUMERO DE PEDIDOS', this.numeroPedidos); // Para verificación
+    });
+  }
+
 
   protected readonly Number = Number;
 }

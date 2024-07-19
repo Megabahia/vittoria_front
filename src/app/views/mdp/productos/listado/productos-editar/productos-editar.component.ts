@@ -12,10 +12,11 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import * as moment from 'moment';
 import {ValidacionesPropias} from '../../../../../utils/customer.validators';
 import {Toaster} from 'ngx-toast-notifications';
+import {IntegracionesService} from "../../../../../services/admin/integraciones.service";
 
 @Component({
   selector: 'app-productos-editar',
-  templateUrl: './productos-editar.component.html'
+  templateUrl: './productos-editar.component.html',
 })
 export class ProductosEditarComponent implements OnInit {
   @Output() messageEvent = new EventEmitter<string>();
@@ -66,6 +67,9 @@ export class ProductosEditarComponent implements OnInit {
   imagenPrinciplSeleccionada: File | null = null;
   disabledSelectCanal = false;
 
+  parametros;
+  page_size = 3;
+
   constructor(
     private categoriasService: CategoriasService,
     private subcategoriasService: SubcategoriasService,
@@ -76,7 +80,8 @@ export class ProductosEditarComponent implements OnInit {
     private MDMparamService: MDMParamService,
     private _formBuilder: FormBuilder,
     private toaster: Toaster,
-    private http: HttpClient
+    private http: HttpClient,
+    private integracionesService: IntegracionesService,
   ) {
     this.producto = this.productosService.inicializarProducto();
     this.fichaTecnica = this.productosService.inicializarFichaTecnica();
@@ -133,7 +138,8 @@ export class ProductosEditarComponent implements OnInit {
       imagen_principal: ['', [Validators.required]],
       stockVirtual: ['', []],
       peso: [0, []],
-      tamanio: [0, []]
+      tamanio: [0, []],
+      prefijo: ['', []]
     });
     this.fichaTecnicaForm = this._formBuilder.group({
       codigo: ['', [Validators.required]],
@@ -162,13 +168,13 @@ export class ProductosEditarComponent implements OnInit {
       this.imageUrlPrincipal = info.imagen_principal;
 
       this.productoForm.patchValue(info);
-
+      this.obtenerListaParametrosCanal(info.canal);
       if (!this.producto.envioNivelNacional) {
         this.productoForm.get('lugarVentaProvincia').setValue(this.producto.lugarVentaProvincia);
         this.obtenerCiudad();
         this.productoForm.get('lugarVentaCiudad').setValue(this.producto.lugarVentaCiudad);
       }
-      if (info.canales == '') {
+      if (info.canales === '') {
         this.obtenerListaParametros();
       }
       this.obtenerListaSubcategorias();
@@ -252,6 +258,8 @@ export class ProductosEditarComponent implements OnInit {
       this.datosProducto.delete('imagen_principal');
       this.datosProducto.append('imagen_principal', this.imagenPrinciplSeleccionada);
     }
+
+    this.datosProducto.append('prefijo', this.parametros.prefijo);
 
     // this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
     //   console.log(info);
@@ -468,7 +476,6 @@ export class ProductosEditarComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       this.imagenPrinciplSeleccionada = input.files[0]; // Almacena el archivo seleccionado globalmente
-      console.log('onflieselect', input.files[0]);
       this.cargarImagenPrincipal(this.imagenPrinciplSeleccionada); // Carga la imagen para su visualización
 
     }
@@ -507,4 +514,17 @@ export class ProductosEditarComponent implements OnInit {
       console.log('No hay datos de usuario en localStorage');
     }
   }
+
+
+  async obtenerListaParametrosCanal(canal): Promise<void> {
+    const datos = {
+      page: this.page,
+      page_size: this.page_size,
+      valor: canal
+    };
+    await this.integracionesService.obtenerListaIntegraciones(datos).subscribe((result) => {
+      this.parametros = result.data[0];
+    });
+  }
+
 }

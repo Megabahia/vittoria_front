@@ -40,6 +40,7 @@
                   </div>
                 </th>
                 <th>Valor</th>
+                <th>Prefijo</th>
                 <th>Acciones</th>
               </tr>
               </thead>
@@ -52,6 +53,7 @@
                   </div>
                 </td>
                 <td> {{ parametro.valor }}</td>
+                <td> {{ parametro.prefijo }}</td>
                 <td>
                   <a data-toggle="modal" data-target="#modals-slide-in"
                      (click)="editarParametro(parametro.id)">
@@ -132,11 +134,20 @@
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="basic-icon-default-email">Url:</label>
-                    <input type="text" id="basic-icon-default-email" class="form-control dt-email"
+                    <input type="text" id="basic-icon-defauf.valor.errors.maxlengthlt-email" class="form-control dt-email"
                            name="valor" formControlName="valor"/>
                     <div *ngIf="f.valor.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="f.valor.errors.required">Url es requerido</div>
+                      <div *ngIf="f.valor.errors.maxlength">Máximo 4 caracteres</div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="basic-icon-default-prefijo">Prefijo del canal:</label>
+                    <input type="text" id="basic-icon-default-prefijo" class="form-control" formControlName="prefijo"/>
+                    <div *ngIf="f.prefijo.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.prefijo.errors.required">Prefijo es requerido</div>
                     </div>
                   </div>
                   <div class="form-group">

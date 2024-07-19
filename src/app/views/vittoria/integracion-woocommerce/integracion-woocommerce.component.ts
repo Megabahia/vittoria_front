@@ -99,7 +99,8 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
       ciudad: ['', [Validators.required]],
       sector: [''],
       latitud: [''],
-      longitud: ['']
+      longitud: [''],
+      prefijo: ['', [Validators.required, Validators.maxLength(4)]]
     });
     this.menu = {
       modulo: 'adm',
@@ -130,7 +131,11 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   }
 
   async obtenerListaParametros(): Promise<void> {
-    await this.integracionesService.obtenerListaIntegraciones(this.page - 1, this.page_size).subscribe((result) => {
+    const datos = {
+      page: this.page,
+      page_size: this.page_size
+    };
+    await this.integracionesService.obtenerListaIntegraciones(datos).subscribe((result) => {
       this.parametros = result.info;
       this.collectionSize = result.cont;
     });
