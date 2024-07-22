@@ -22,7 +22,7 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   menu;
   vista;
   page = 1;
-  page_size: any = 3;
+  pageSize = 3;
   maxSize;
   collectionSize;
   parametros;
@@ -133,11 +133,11 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   async obtenerListaParametros(): Promise<void> {
     const datos = {
       page: this.page,
-      page_size: this.page_size
+      page_size: this.pageSize
     };
     await this.integracionesService.obtenerListaIntegraciones(datos).subscribe((result) => {
-      this.parametros = result.info;
       this.collectionSize = result.cont;
+      this.parametros = result.info;
     });
   }
 
