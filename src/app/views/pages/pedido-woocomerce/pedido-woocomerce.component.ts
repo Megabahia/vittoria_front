@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ValidacionesPropias} from '../../../utils/customer.validators';
@@ -6,9 +6,9 @@ import {ParamService as ParamServiceAdm} from '../../../services/admin/param.ser
 import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
 import {Toaster} from 'ngx-toast-notifications';
 import {IntegracionesEnviosService} from '../../../services/admin/integraciones_envios.service';
-import {ProductosService} from "../../../services/mdp/productos/productos.service";
-import {IntegracionesService} from "../../../services/admin/integraciones.service";
-import Decimal from "decimal.js";
+import {ProductosService} from '../../../services/mdp/productos/productos.service';
+import {IntegracionesService} from '../../../services/admin/integraciones.service';
+import Decimal from 'decimal.js';
 
 interface ProductoProcesado {
   canal?: string;
@@ -73,6 +73,7 @@ export class PedidoWoocomerceComponent implements OnInit {
   parametrosIntegracionesCanal;
   integracionProducto;
   formasPagoCourier: any[] = [];
+  creacionPedidos;
 
   constructor(
     private route: ActivatedRoute,
@@ -139,12 +140,17 @@ export class PedidoWoocomerceComponent implements OnInit {
     this.obtenerProvincias();
     this.obtenerCiudad();
     this.datos.map((data, index) => {
-      this.agregarItem(data);
-      this.obtenerProducto(index);
+      this.obtenerProducto(this.datos[index]);
     });
 
-    this.calcular();
-    this.obtenerDatosProducto();
+    this.notaPedido.updateValueAndValidity();
+  }
+
+  tiendaArray(posicion: number): FormArray | null {
+    if (this.detallesPedidos && this.detallesPedidos.controls[posicion]) {
+      return this.detallesPedidos.controls[posicion].get('articulos') as FormArray;
+    }
+    return null;
   }
 
   normalizarClave(clave: string): string {
@@ -173,6 +179,7 @@ export class PedidoWoocomerceComponent implements OnInit {
         nombreVendedor: ['', [Validators.required]]
       }),
       articulos: this.formBuilder.array([], Validators.required),
+      pedidos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
       envioTotal: ['', [Validators.required]],
       numeroPedido: [this.generarID(), [Validators.required]],
@@ -219,7 +226,11 @@ export class PedidoWoocomerceComponent implements OnInit {
     return this.notaPedido.get('articulos') as FormArray;
   }
 
-  crearDetalleGrupo(datos: any): any {
+  get detallesPedidos(): FormArray {
+    return this.notaPedido.get('pedidos') as FormArray;
+  }
+
+  crearDetalleGrupo(datos: any, datosBaseDatos): any {
     return this.formBuilder.group({
       id: [''],
       codigo: [datos.sku_del_producto],
@@ -231,13 +242,29 @@ export class PedidoWoocomerceComponent implements OnInit {
       caracteristicas: [''],
       precios: [[]],
       canal: [datos.canal],
-      imagen_principal: [datos.imagen_del_producto]
+      imagen_principal: [datos.imagen_del_producto],
+      prefijo: [datosBaseDatos.prefijo, []]
     });
   }
 
-  agregarItem(datos: any): void {
-    const detalle = this.crearDetalleGrupo(datos);
+  crearDetalleGrupoPedidos(datos: any, ciudad): any {
+    return this.formBuilder.group({
+      prefijo: [datos.prefijo, []],
+      ciudad: [ciudad, []],
+      formasPagos: ['', []],
+      precioEnvio: [0, [Validators.required, Validators.min(1)]],
+      articulos: this.formBuilder.array([]),
+    });
+  }
+
+  agregarItem(datos: any, datosBaseDatos): void {
+    const detalle = this.crearDetalleGrupo(datos, datosBaseDatos);
     this.detallesArray.push(detalle);
+  }
+
+  agregarItemPedidos(datos, ciudad): void {
+    const detalle = this.crearDetalleGrupoPedidos(datos, ciudad);
+    this.detallesPedidos.push(detalle);
   }
 
   removerItem(i): void {
@@ -268,15 +295,17 @@ export class PedidoWoocomerceComponent implements OnInit {
   }
 
   calcular(): void {
-    const detalles = this.detallesArray.controls;
+    const pedidos = this.notaPedido.get('pedidos')['controls'];
     let total = 0;
-    detalles.forEach((item, index) => {
-      const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
-      const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
-      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
-      total += parseFloat(detalles[index].get('precio').value);
+    pedidos.map((pedido) => {
+      console.log('pedido del map', pedido.value);
+      total += parseFloat(pedido.value.precioEnvio ?? 0);
+      pedido.value.articulos.forEach((item, index) => {
+        const valorUnitario = parseFloat(item.valorUnitario);
+        const cantidad = parseFloat(item.cantidad || 0);
+        total += cantidad * valorUnitario;
+      });
     });
-    total += this.notaPedido.get('envioTotal').value ? parseFloat(this.notaPedido.get('envioTotal').value) : 0;
     this.notaPedido.get('total').setValue(total);
   }
 
@@ -344,11 +373,9 @@ export class PedidoWoocomerceComponent implements OnInit {
     }
   }
 
-  onChangeCombo(event: any): void {
-
-    const formasPago = this.parametros.find((item) => item.nombre === event.target.value);
-    this.formasPagoCourier = formasPago.formaPago.filter((item) => item.estado);
-    this.notaPedido.get('envioTotal').setValue(formasPago.costo);
+  onChangeCombo(event: any, numeroPedido): void {
+    const formasPago = this.notaPedido.get('pedidos')['controls'][numeroPedido]['controls'].formasPagos.value.find((item) => item.nombre === event.target.value);
+    this.notaPedido.get('pedidos')['controls'][numeroPedido].get('precioEnvio').setValue(formasPago.costo);
     /*if (seleccionado && seleccionado.formaPago) {
       this.nombreCuenta = seleccionado.nombreCuenta;
       this.numeroCuenta = seleccionado.numeroCuenta;
@@ -457,23 +484,30 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   obtenerCostosEnvio(): void {
     if (this.notaPedido.get('facturacion').get('ciudad').value) {
-      this.integracionesEnviosService.obtenerListaIntegracionesEnviosSinAuth({
-        ciudad: this.integracionProducto.ciudad,
-        ciudadDestino: this.notaPedido.get('facturacion').get('ciudad').value
-      }).subscribe((result) => {
-        this.parametros = result.info.map(item => {
-          return {
-            nombre: `${item.courier} - Desde ${item.ciudad} hasta ${item.ciudadDestino} - Costo $${item.costo}`,
-            costo: item.costo,
-            formaPago: item.formaPago,
-          };
-        });
-        if (result.cont === 0) {
-          this.toaster.open(`No existe precio de envio desde ${this.integracionProducto.ciudad} hasta
+      console.log('this.notaPedido.get(\'pedidos\').value', this.notaPedido.get('pedidos')['controls'][0]);
+      this.notaPedido.get('pedidos').value.map((tienda, index) => {
+        this.integracionesEnviosService.obtenerListaIntegracionesEnviosSinAuth({
+          ciudad: tienda.ciudad,
+          ciudadDestino: this.notaPedido.get('facturacion').get('ciudad').value
+        }).subscribe((result) => {
+          console.log('forma', result);
+          const formasPagos = result.info.map(item => {
+            return {
+              nombre: `${item.courier} - Desde ${item.ciudad} hasta ${item.ciudadDestino} - Costo $${item.costo}`,
+              costo: item.costo,
+              formaPago: item.formaPago,
+            };
+          });
+          this.notaPedido.get('pedidos')['controls'][index].get('formasPagos').setValue(formasPagos);
+          this.notaPedido.updateValueAndValidity();
+          console.log('this.notaPedido', this.notaPedido);
+          if (result.cont === 0) {
+            this.toaster.open(`No existe precio de envio desde ${tienda.ciudad} hasta
           ${this.notaPedido.get('facturacion').get('ciudad').value}`, {type: 'info'});
-        } else {
-          this.toaster.open('Costos de envío cargados', {type: 'info'});
-        }
+          } else {
+            this.toaster.open('Costos de envío cargados', {type: 'info'});
+          }
+        });
       });
     }
   }
@@ -498,44 +532,54 @@ export class PedidoWoocomerceComponent implements OnInit {
     });
   }
 
-  escogerCantidad(operacion, i): void {
-    const cantidadControl = this.detallesArray.controls;
-    let cantidad = +cantidadControl[i].get('cantidad').value;
+  escogerCantidad(operacion, i, articulo): void {
+    const cantidadControl = articulo;
+    let cantidad = +articulo.get('cantidad').value;
     cantidad = operacion === 'sumar' ? Math.min(cantidad + 1) : Math.max(cantidad - 1, 0);
-    cantidadControl[i].get('cantidad').setValue(cantidad);
-    console.log('CANTIDAD', cantidad)
-    //this.fDetalles.controls[0].get('cantidad').setValue(cantidad);
-    //this.fDetalles.controls[0].get('precio').setValue(this.producto.precioLandingOferta);
-    const total = +new Decimal(cantidadControl[i].get('valorUnitario').value).mul(cantidad).toFixed(2).toString();
-    cantidadControl[i].get('precio').setValue(total);
-    //this.pospectoForm.get('precio').setValue(this.producto.precioLandingOferta * cantidad);
-    this.notaPedido.get('total').setValue(total);
+    cantidadControl.get('cantidad').setValue(cantidad);
+    const total = +new Decimal(cantidadControl.get('valorUnitario').value).mul(cantidad).toFixed(2).toString();
+    cantidadControl.get('precio').setValue(total);
     this.notaPedido.updateValueAndValidity();
+    this.calcular();
   }
 
   //OBTENER PRODUCTO
-  async obtenerProducto(i): Promise<void> {
+  async obtenerProducto(productoWoocomerce): Promise<void> {
 
     return new Promise((resolve, reject) => {
       const data = {
-        codigoBarras: this.detallesArray.value[i].codigo,
+        codigoBarras: productoWoocomerce.sku_del_producto,
       };
       this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
         this.productoBuscar.push({...info.producto});
         const prefijo = info.producto.prefijo; // Asumiendo que cada producto tiene un atributo 'prefijo'
         if (!this.numeroPedidos[prefijo]) {
           this.numeroPedidos[prefijo] = []; // Inicializa el arreglo si el prefijo es nuevo
+          this.agregarItemPedidos(info.producto, info.integraciones_canal.ciudad);
         }
         this.numeroPedidos[prefijo].push({...info.producto}); // Agrega el producto al arreglo correspondiente
 
+        // Encuentra la posición del artículo con el prefijo 'MAXI'
+        const posicion = this.notaPedido.get('pedidos').value.findIndex(articulo => articulo.prefijo === prefijo);
+
+        // Usa el método tiendaArray para obtener el FormArray y agregar el valor
+        this.tiendaArray(posicion).push(
+          this.crearDetalleGrupo(productoWoocomerce, info.producto)
+        );
         resolve(); // Resolver la promesa
+        this.calcular();
       }, error => this.toaster.open(error, {type: 'danger'}));
-      console.log('NUMERO DE PEDIDOS', this.numeroPedidos); // Para verificación
     });
   }
 
 
   protected readonly Number = Number;
+  protected readonly JSON = JSON;
+
+  getTotalFormatted(): string {
+    const totalValue = this.notaPedido.controls.total.value;
+    return !isNaN(totalValue) && totalValue !== null ? (+totalValue).toFixed(2) : '0.00';
+  }
 }
 
 
