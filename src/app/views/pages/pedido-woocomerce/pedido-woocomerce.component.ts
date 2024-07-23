@@ -267,8 +267,8 @@ export class PedidoWoocomerceComponent implements OnInit {
     this.detallesPedidos.push(detalle);
   }
 
-  removerItem(i): void {
-    this.detallesArray.removeAt(i);
+  removerItem(tienda, i): void {
+    tienda.controls.articulos.removeAt(i);
     this.calcular();
   }
 
