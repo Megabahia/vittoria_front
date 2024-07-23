@@ -62,7 +62,7 @@
                           <div class="col-md-3">
                               <label for="segundo">Forma de pago:</label>
                               <select id="segundo" class="form-control"
-                                      (change)="onSelectFormaPago($event)">
+                                     formControlName="formasPagos" (change)="onSelectFormaPago($event)">
                                   <option value="" selected>- Seleccion forma de pago -</option>
                                   <option *ngFor="let op of this.notaPedido.get('pedidos')['controls'][j]['controls'].listaFormasPagos.value" [value]="op.nombre">{{ op.nombre }}</option>
                               </select>
@@ -73,13 +73,15 @@
                                   </div>
                               </div>
                           </div>
-<!--                          <div class="col-md-6">-->
-<!--                              <div *ngIf="mostrarCargaComprobante" class="col-md-5">-->
-<!--                                  <h6 class="text-uppercase">Datos de cuenta: <br>BANCO PICHINCHA<br>CUENTA: {{ numeroCuenta }}-->
-<!--                                      <br>Nombre: {{ nombreCuenta }}<br></h6>-->
+                          <div class="col-md-6">
+                              <div *ngIf="this.notaPedido.get('pedidos')['controls'][j]['controls'].formasPagos.value == 'Transferencia'" class="col-md-5">
+                                  <h6 class="text-uppercase">Datos de cuenta: <br>BANCO PICHINCHA<br>CUENTA:
+                                      {{ this.notaPedido.get('pedidos')['controls'][j]['controls'].numeroCuenta.value }}
+                                      <br>Nombre: {{ this.notaPedido.get('pedidos')['controls'][j]['controls'].nombreCuenta.value }}<br>
+                                  </h6>
 <!--                                  <input class="form-control-file" type="file" (change)="onFileSelected($event)">-->
-<!--                              </div>-->
-<!--                          </div>-->
+                              </div>
+                          </div>
                       </div>
                   </div>
                   <div formArrayName="articulos">
