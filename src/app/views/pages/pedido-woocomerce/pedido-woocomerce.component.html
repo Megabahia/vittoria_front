@@ -35,7 +35,7 @@
       <div formArrayName="pedidos">
           <div *ngFor="let tienda of notaPedido.get('pedidos')['controls']; let j = index;">
               <ng-container [formGroup]="tienda">
-                  <h1>{{tienda.controls.prefijo.value}}</h1>
+                  <h2 class="m-2">Tienda: {{tienda.controls.prefijo.value}}</h2>
                   <div class="card" *ngIf="mostrarContenido">
                       <h5 class="pl-3 pt-2">DATOS DE ENVIO<label class="text-muted">(Datos
                           obligatorios) <strong class="text-info">(Primero seleccione ciudad de destino)</strong></label></h5>

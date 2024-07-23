@@ -349,10 +349,10 @@ export class PedidoWoocomerceComponent implements OnInit {
       return;
     }
 
-    /*if (this.notaPedido.invalid) {
+    if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
-    }*/
+    }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
 
