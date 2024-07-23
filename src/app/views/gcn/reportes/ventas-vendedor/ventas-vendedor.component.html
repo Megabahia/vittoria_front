@@ -321,15 +321,20 @@
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Código
                                         </p>
-                                        <input class="form-control" type="text"
-                                               (change)="obtenerProducto(i)"
-                                               formControlName="codigo"
-                                               disabled>
-                                        <div *ngIf="detalle.controls.codigo.errors"
-                                             class="invalid-feedback"
-                                             style="display: block;">
-                                          <div *ngIf="detalle.controls.codigo.errors.required">
-                                            Requerido
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">{{ detalle.controls.prefijo?.value }}</span>
+                                          </div>
+                                          <input class="form-control" type="text"
+                                                 (change)="obtenerProducto(i)"
+                                                 formControlName="codigo"
+                                                 disabled>
+                                          <div *ngIf="detalle.controls.codigo.errors"
+                                               class="invalid-feedback"
+                                               style="display: block;">
+                                            <div *ngIf="detalle.controls.codigo.errors.required">
+                                              Requerido
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
@@ -374,7 +379,7 @@
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Precio
                                         </p>
-                                        <label>{{ detalle.controls.valorUnitario.value }}</label>
+                                        <label>${{ detalle.controls.valorUnitario.value }}</label>
                                         <div *ngIf="detalle.controls.valorUnitario.errors"
                                              class="invalid-feedback"
                                              style="display: block;">
@@ -395,7 +400,7 @@
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Total
                                         </p>
-                                        <label class="text-danger"> {{ detalle.controls.precio.value }}</label>
+                                        <label class="text-danger"> ${{ detalle.controls.precio.value }}</label>
                                         <div *ngIf="detalle.controls.precio.errors"
                                              class="invalid-feedback"
                                              style="display: block;">

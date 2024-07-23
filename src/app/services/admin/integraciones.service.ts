@@ -13,10 +13,8 @@ export class IntegracionesService {
   constructor(private http: HttpClient) {
   }
 
-  obtenerListaIntegraciones(page, page_size) {
-    return this.http.post<any>(`${apiUrl}/adm/integraciones/list/`, {
-      page, page_size
-    });
+  obtenerListaIntegraciones(datos): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/adm/integraciones/list/`, datos);
   }
 
   insertarIntegracion(datos): Observable<any> {

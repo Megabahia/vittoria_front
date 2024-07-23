@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ValidacionesPropias} from '../../../utils/customer.validators';
@@ -6,7 +6,9 @@ import {ParamService as ParamServiceAdm} from '../../../services/admin/param.ser
 import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
 import {Toaster} from 'ngx-toast-notifications';
 import {IntegracionesEnviosService} from '../../../services/admin/integraciones_envios.service';
-import {ProductosService} from "../../../services/mdp/productos/productos.service";
+import {ProductosService} from '../../../services/mdp/productos/productos.service';
+import {IntegracionesService} from '../../../services/admin/integraciones.service';
+import Decimal from 'decimal.js';
 
 interface ProductoProcesado {
   canal?: string;
@@ -22,17 +24,6 @@ interface ProductoProcesado {
 
 
 export class PedidoWoocomerceComponent implements OnInit {
-
-  opcionesPrimerCombo = [
-    {id: 'envioServiEntrega', valor: 'Envío por Servientrega'},
-    {id: 'envioMotorizadoContraEntrega', valor: 'Envío motorizado de Contraentrega'},
-    {id: 'envioPuntoEntrega', valor: 'Envío a punto de entrega'}
-  ];
-
-  opcionesSegundoCombo = [
-    {id: 'tranferenciaDeposito', valor: 'Tranferencia/Depósito'},
-    {id: 'eleccionCliente', valor: 'Cliente elegirá al momento de entrega'},
-  ];
 
   @Input() paises;
   public notaPedido: FormGroup;
@@ -50,9 +41,12 @@ export class PedidoWoocomerceComponent implements OnInit {
   correoCliente;
   codigoCorreo;
 
-  numeroPedido;
+  numeroPedido: any [] = [];
+  productoBuscar: any [] = [];
+  numeroPedidos: any = {};
 
   mostrarContenido = false;
+  mostrarContenidoFacturacion = false;
   mostrarCargaComprobante = false;
   mostrarContenidoPantalla = true;
 
@@ -66,8 +60,10 @@ export class PedidoWoocomerceComponent implements OnInit {
   page = 1;
   page_size: any = 3;
   parametros;
+  parametrosIntegracionesCanal;
   integracionProducto;
   formasPagoCourier: any[] = [];
+  creacionPedidos;
 
   constructor(
     private route: ActivatedRoute,
@@ -77,7 +73,8 @@ export class PedidoWoocomerceComponent implements OnInit {
     private pedidosService: PedidosService,
     private toaster: Toaster,
     private integracionesEnviosService: IntegracionesEnviosService,
-    private productosService: ProductosService
+    private productosService: ProductosService,
+    private integracionesService: IntegracionesService
   ) {
     /*const ref = document.referrer;
     const host = document.location.host;
@@ -97,6 +94,8 @@ export class PedidoWoocomerceComponent implements OnInit {
       navbar.style.display = 'none';
       toolbar.style.display = 'none';
     }
+
+    this.obtenerListaParametrosCanal();
 
 
   }
@@ -130,9 +129,18 @@ export class PedidoWoocomerceComponent implements OnInit {
 
     this.obtenerProvincias();
     this.obtenerCiudad();
-    this.datos.map(data => this.agregarItem(data));
-    this.calcular();
-    this.obtenerDatosProducto();
+    this.datos.map((data, index) => {
+      this.obtenerProducto(this.datos[index]);
+    });
+
+    this.notaPedido.updateValueAndValidity();
+  }
+
+  tiendaArray(posicion: number): FormArray | null {
+    if (this.detallesPedidos && this.detallesPedidos.controls[posicion]) {
+      return this.detallesPedidos.controls[posicion].get('articulos') as FormArray;
+    }
+    return null;
   }
 
   normalizarClave(clave: string): string {
@@ -161,9 +169,10 @@ export class PedidoWoocomerceComponent implements OnInit {
         nombreVendedor: ['', [Validators.required]]
       }),
       articulos: this.formBuilder.array([], Validators.required),
+      pedidos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
       envioTotal: ['', [Validators.required]],
-      numeroPedido: [this.generarID(), [Validators.required]],
+      numeroPedido: ['', [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['Contra-Entrega', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
@@ -207,7 +216,11 @@ export class PedidoWoocomerceComponent implements OnInit {
     return this.notaPedido.get('articulos') as FormArray;
   }
 
-  crearDetalleGrupo(datos: any): any {
+  get detallesPedidos(): FormArray {
+    return this.notaPedido.get('pedidos') as FormArray;
+  }
+
+  crearDetalleGrupo(datos: any, datosBaseDatos): any {
     return this.formBuilder.group({
       id: [''],
       codigo: [datos.sku_del_producto],
@@ -219,19 +232,73 @@ export class PedidoWoocomerceComponent implements OnInit {
       caracteristicas: [''],
       precios: [[]],
       canal: [datos.canal],
-      imagen_principal: [datos.imagen_del_producto]
+      imagen_principal: [datos.imagen_del_producto],
+      prefijo: [datosBaseDatos.prefijo, []]
     });
   }
 
-  agregarItem(datos: any): void {
-    const detalle = this.crearDetalleGrupo(datos);
+  crearDetalleGrupoGardar(data): any {
+    return this.formBuilder.group({
+      id: [data.id],
+      codigo: [data.codigo],
+      articulo: [data.articulo],
+      valorUnitario: [data.valorUnitario],
+      cantidad: [data.cantidad],
+      precio: [data.precio],
+      imagen: [data.imagen],
+      caracteristicas: [data.caracteristicas],
+      precios: [data.precios],
+      canal: [data.canal],
+      imagen_principal: [data.imagen_principal],
+      prefijo: [data.prefijo]
+    });
+  }
+
+  crearDetalleGrupoPedidos(datos: any, ciudad): any {
+    return this.formBuilder.group({
+      prefijo: [datos.prefijo, []],
+      ciudad: [ciudad, []],
+      couries: ['', []],
+      formasPagos: ['', [Validators.required]],
+      listaFormasPagos: ['', []],
+      numeroCuenta: ['', []],
+      nombreCuenta: ['', []],
+      precioEnvio: [0, [Validators.required, Validators.min(1)]],
+      articulos: this.formBuilder.array([]),
+    });
+  }
+
+  agregarItem(data): void {
+    const detalle = this.crearDetalleGrupoGardar(data);
     this.detallesArray.push(detalle);
   }
 
-  removerItem(i): void {
-    this.detallesArray.removeAt(i);
+  agregarItemPedidos(datos, ciudad): void {
+    const detalle = this.crearDetalleGrupoPedidos(datos, ciudad);
+    this.detallesPedidos.push(detalle);
+  }
+
+  /*removerItem(tienda, i): void {
+    tienda.controls.articulos.removeAt(i);
+    if (tienda.controls.articulos.value.length < 1 || !tienda.controls.articulos.value) {
+      this.mostrarContenidoFacturacion = false;
+    }
+    this.calcular();
+  }*/
+
+  removerItem(tienda, articuloIndex): void {
+    // Remueve el artículo en el índice especificado.
+    const articulosFormArray = tienda.get('articulos') as FormArray;
+    articulosFormArray.removeAt(articuloIndex);
+
+    if (articulosFormArray.length === 0) {
+      this.mostrarContenidoFacturacion = false; // Asumiendo que es un array que controla la visualización por tienda.
+    }
+
+    // Llama a cualquier otra lógica necesaria, como recalcular totales.
     this.calcular();
   }
+
 
   onSelectChangeIdentificacion(event: any) {
     const selectedValue = event.target.value;
@@ -256,15 +323,16 @@ export class PedidoWoocomerceComponent implements OnInit {
   }
 
   calcular(): void {
-    const detalles = this.detallesArray.controls;
+    const pedidos = this.notaPedido.get('pedidos')['controls'];
     let total = 0;
-    detalles.forEach((item, index) => {
-      const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
-      const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
-      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
-      total += parseFloat(detalles[index].get('precio').value);
+    pedidos.map((pedido) => {
+      total += parseFloat(pedido.value.precioEnvio ?? 0);
+      pedido.value.articulos.forEach((item, index) => {
+        const valorUnitario = parseFloat(item.valorUnitario);
+        const cantidad = parseFloat(item.cantidad || 0);
+        total += cantidad * valorUnitario;
+      });
     });
-    total += this.notaPedido.get('envioTotal').value ? parseFloat(this.notaPedido.get('envioTotal').value) : 0;
     this.notaPedido.get('total').setValue(total);
   }
 
@@ -300,43 +368,61 @@ export class PedidoWoocomerceComponent implements OnInit {
       return;
     }
 
-    if (this.notaPedido.invalid) {
+    /*if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
-    }
+    }*/
 
     if (confirm('Esta seguro de guardar los datos') === true) {
-      this.notaPedido.patchValue({...this.notaPedido.value, envio: {...this.notaPedido.value.facturacion}});
-      const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
-      const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
-      facturaFisicaLlaves.map((llaves, index) => {
-        if (llaves !== 'archivoMetodoPago') {
-          if (llaves === 'articulos' || llaves === 'facturacion' || llaves === 'envio') {
-            this.archivo.delete(llaves);
-            this.archivo.append(llaves, JSON.stringify(facturaFisicaValores[index]));
-          } else {
-            this.archivo.delete(llaves);
-            this.archivo.append(llaves, facturaFisicaValores[index]);
-          }
-        }
-      });
-      this.archivo.delete('envios');
-      this.archivo.delete('json');
-      this.archivo.delete('tipoPago');
 
-      this.pedidosService.crearPedidoSuperBarato(this.archivo).subscribe(result => {
-        this.toaster.open('Pedido guardado', {type: 'success'});
-        this.numeroPedido = result.numeroPedido;
-        this.mostrarContenidoPantalla = false;
-      }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
+      this.notaPedido.value.pedidos.map((data) => {
+        this.notaPedido.patchValue({
+          ...this.notaPedido.value,
+          envio: {...this.notaPedido.value.facturacion},
+        });
+        data.articulos.forEach((articulo, i) => {
+          this.detallesArray.removeAt(i);
+          this.agregarItem(articulo);
+        });
+
+
+        const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
+        const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
+
+
+        facturaFisicaLlaves.map((llaves, index) => {
+          if (llaves !== 'archivoMetodoPago') {
+            if (llaves === 'articulos' || llaves === 'facturacion' || llaves === 'envio') {
+              this.archivo.delete(llaves);
+              this.archivo.append(llaves, JSON.stringify(facturaFisicaValores[index]));
+            } else {
+              this.archivo.delete(llaves);
+              this.archivo.append(llaves, facturaFisicaValores[index]);
+            }
+          }
+        });
+
+        this.archivo.append('numeroPedido', this.generarID());
+
+        this.archivo.delete('envios');
+        this.archivo.delete('pedidos');
+        this.archivo.delete('json');
+        this.archivo.delete('tipoPago');
+
+        this.pedidosService.crearPedidoSuperBarato(this.archivo).subscribe(result => {
+          this.numeroPedido.push(result.numeroPedido);
+          this.toaster.open('Pedido guardado', {type: 'success'});
+          this.mostrarContenidoPantalla = false;
+        }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
+      });
     }
   }
 
-  onChangeCombo(event: any): void {
-
-    const formasPago = this.parametros.find((item) => item.nombre === event.target.value);
-    this.formasPagoCourier = formasPago.formaPago.filter((item) => item.estado);
-    this.notaPedido.get('envioTotal').setValue(formasPago.costo);
+  onChangeCombo(event: any, numeroPedido): void {
+    const formasPago = this.notaPedido.get('pedidos')['controls'][numeroPedido]['controls'].couries.value.find((item) => item.nombre === event.target.value);
+    this.notaPedido.get('pedidos')['controls'][numeroPedido].get('precioEnvio').setValue(formasPago.costo);
+    const metodosPagos = this.notaPedido.get('pedidos')['controls'][numeroPedido]['controls']?.formasPagos.value[event.target.selectedIndex - 1];
+    this.notaPedido.get('pedidos')['controls'][numeroPedido].get('listaFormasPagos').setValue([...metodosPagos]);
     /*if (seleccionado && seleccionado.formaPago) {
       this.nombreCuenta = seleccionado.nombreCuenta;
       this.numeroCuenta = seleccionado.numeroCuenta;
@@ -364,24 +450,27 @@ export class PedidoWoocomerceComponent implements OnInit {
     this.selectClient = selectValue;
     if (selectValue === 'esCliente') {
       this.mostrarContenido = false;
+      this.mostrarContenidoFacturacion = false;
       this.esCliente = true;
     } else {
       this.esCliente = false;
       this.enviarCorreo = false;
       this.mostrarContenido = true;
+      this.mostrarContenidoFacturacion = true;
     }
   }
 
   enviarCorreoCliente(): void {
     if (this.validarCorreo(this.correoCliente)) {
-      this.enviarCorreo = true;
       const datos = {
         email: this.correoCliente
       };
 
       this.pedidosService.enviarCodioCorreo(datos).subscribe((item) => {
+        this.enviarCorreo = true;
+
         this.toaster.open(item.message, {type: 'info'});
-      });
+      }, error => this.toaster.open(error.error, {type: 'danger'}));
     } else {
       this.toaster.open('Ingrese un correo válido', {type: 'danger'});
     }
@@ -396,6 +485,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       this.datosCliente = data;
       this.completarCamposCliente();
       this.mostrarContenido = true;
+      this.mostrarContenidoFacturacion = true;
       this.disabledCombo = true;
     }, error => this.toaster.open(error, {type: 'danger'}));
   }
@@ -444,23 +534,35 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   obtenerCostosEnvio(): void {
     if (this.notaPedido.get('facturacion').get('ciudad').value) {
-      this.integracionesEnviosService.obtenerListaIntegracionesEnviosSinAuth({
-        ciudad: this.integracionProducto.ciudad,
-        ciudadDestino: this.notaPedido.get('facturacion').get('ciudad').value
-      }).subscribe((result) => {
-        this.parametros = result.info.map(item => {
-          return {
-            nombre: `${item.courier} - Desde ${item.ciudad} hasta ${item.ciudadDestino} - Costo ${item.costo}`,
-            costo: item.costo,
-            formaPago: item.formaPago,
-          };
-        });
-        if (result.cont === 0) {
-          this.toaster.open(`No existe precio de envio desde ${this.integracionProducto.ciudad} hasta
+      this.notaPedido.get('pedidos').value.map((tienda, index) => {
+        this.integracionesEnviosService.obtenerListaIntegracionesEnviosSinAuth({
+          ciudad: tienda.ciudad,
+          ciudadDestino: this.notaPedido.get('facturacion').get('ciudad').value
+        }).subscribe((result) => {
+          const couries = result.info.map(item => {
+            return {
+              nombre: `${item.courier} - Desde ${item.ciudad} hasta ${item.ciudadDestino} - Costo $${item.costo}`,
+              costo: item.costo,
+              formaPago: item.formaPago,
+            };
+          });
+          this.notaPedido.get('pedidos')['controls'][index].get('couries').setValue(couries);
+          const formasPagos = result.info.map(item => item.formaPago.filter(item2 => item2.estado === true));
+          const numeroCuenta = result.info.find(item => item.numeroCuenta !== undefined)?.numeroCuenta;
+          const nombreCuenta = result.info.find(item => item.nombreCuenta !== undefined)?.nombreCuenta;
+          this.notaPedido.get('pedidos')['controls'][index].get('formasPagos').setValue(formasPagos);
+          if (numeroCuenta != null && nombreCuenta != null) {
+            this.notaPedido.get('pedidos')['controls'][index].get('numeroCuenta').setValue(numeroCuenta);
+            this.notaPedido.get('pedidos')['controls'][index].get('nombreCuenta').setValue(nombreCuenta);
+          }
+          this.notaPedido.updateValueAndValidity();
+          if (result.cont === 0) {
+            this.toaster.open(`No existe precio de envio desde ${tienda.ciudad} hasta
           ${this.notaPedido.get('facturacion').get('ciudad').value}`, {type: 'info'});
-        } else {
-          this.toaster.open('Costos de envío cargados', {type: 'info'});
-        }
+          } else {
+            this.toaster.open('Costos de envío cargados', {type: 'info'});
+          }
+        });
       });
     }
   }
@@ -474,7 +576,65 @@ export class PedidoWoocomerceComponent implements OnInit {
     }
   }
 
+  async obtenerListaParametrosCanal(): Promise<void> {
+    const datos = {
+      page: this.page,
+      page_size: this.page_size,
+      valor: 'superbarato.megadescuento.com'
+    };
+    await this.integracionesService.obtenerListaIntegraciones(datos).subscribe((result) => {
+      this.parametrosIntegracionesCanal = result.data[0];
+    });
+  }
+
+  escogerCantidad(operacion, i, articulo): void {
+    const cantidadControl = articulo;
+    let cantidad = +articulo.get('cantidad').value;
+    cantidad = operacion === 'sumar' ? Math.min(cantidad + 1) : Math.max(cantidad - 1, 0);
+    cantidadControl.get('cantidad').setValue(cantidad);
+    const total = +new Decimal(cantidadControl.get('valorUnitario').value).mul(cantidad).toFixed(2).toString();
+    cantidadControl.get('precio').setValue(total);
+    this.notaPedido.updateValueAndValidity();
+    this.calcular();
+  }
+
+  //OBTENER PRODUCTO
+  async obtenerProducto(productoWoocomerce): Promise<void> {
+
+    return new Promise((resolve, reject) => {
+      const data = {
+        codigoBarras: productoWoocomerce.sku_del_producto,
+      };
+      this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
+        this.productoBuscar.push({...info.producto});
+        const prefijo = info.producto.prefijo; // Asumiendo que cada producto tiene un atributo 'prefijo'
+        if (!this.numeroPedidos[prefijo]) {
+          this.numeroPedidos[prefijo] = []; // Inicializa el arreglo si el prefijo es nuevo
+          this.agregarItemPedidos(info.producto, info.integraciones_canal.ciudad);
+        }
+        this.numeroPedidos[prefijo].push({...info.producto}); // Agrega el producto al arreglo correspondiente
+
+        // Encuentra la posición del artículo con el prefijo 'MAXI'
+        const posicion = this.notaPedido.get('pedidos').value.findIndex(articulo => articulo.prefijo === prefijo);
+
+        // Usa el método tiendaArray para obtener el FormArray y agregar el valor
+        this.tiendaArray(posicion).push(
+          this.crearDetalleGrupo(productoWoocomerce, info.producto)
+        );
+        resolve(); // Resolver la promesa
+        this.calcular();
+      }, error => this.toaster.open(error, {type: 'danger'}));
+    });
+  }
+
+
   protected readonly Number = Number;
+  protected readonly JSON = JSON;
+
+  getTotalFormatted(): string {
+    const totalValue = this.notaPedido.controls.total.value;
+    return !isNaN(totalValue) && totalValue !== null ? (+totalValue).toFixed(2) : '0.00';
+  }
 }
 
 

@@ -13,7 +13,7 @@
             <div class="row m-75">
               <div class="col-lg-12 col-xl-6">
                 <label>Mostrar</label>
-                <select class="form-control-sm" [(ngModel)]="page_size"
+                <select class="form-control-sm" [(ngModel)]="pageSize"
                         (change)="obtenerListaParametros()">
                   <option value="10">10</option>
                   <option value="25">25</option>
@@ -40,6 +40,7 @@
                   </div>
                 </th>
                 <th>Valor</th>
+                <th>Prefijo</th>
                 <th>Acciones</th>
               </tr>
               </thead>
@@ -52,6 +53,7 @@
                   </div>
                 </td>
                 <td> {{ parametro.valor }}</td>
+                <td> {{ parametro.prefijo }}</td>
                 <td>
                   <a data-toggle="modal" data-target="#modals-slide-in"
                      (click)="editarParametro(parametro.id)">
@@ -78,7 +80,7 @@
               </tbody>
             </table>
             <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page"
-                            [pageSize]="page_size" [maxSize]="5" [ellipses]="false"
+                            [pageSize]="pageSize" [maxSize]="5" [ellipses]="false"
                             [boundaryLinks]="true"></ngb-pagination>
 
           </div>
@@ -137,6 +139,15 @@
                     <div *ngIf="f.valor.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="f.valor.errors.required">Url es requerido</div>
+                      <div *ngIf="f.valor.errors.maxlength">Máximo 4 caracteres</div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="basic-icon-default-prefijo">Prefijo del canal:</label>
+                    <input type="text" id="basic-icon-default-prefijo" class="form-control" formControlName="prefijo"/>
+                    <div *ngIf="f.prefijo.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.prefijo.errors.required">Prefijo es requerido</div>
                     </div>
                   </div>
                   <div class="form-group">

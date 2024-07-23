@@ -22,7 +22,7 @@
                 <ng-template #SelectEnable>
                   <label for="canal1">Canal</label>
                   <select class="form-control select2" name="canal" id="canal1" formControlName="canal"
-                          [(ngModel)]="producto.canal">
+                          [(ngModel)]="producto.canal" (change)="obtenerListaParametrosCanal(producto.canal)">
                     <option value="" selected>- Seleccionar -</option>
                     <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
                   </select>
@@ -48,13 +48,18 @@
                 <div class="col-md-4 col-12">
                   <div class="form-group">
                     <label>Código de barras</label>
-                    <input type="text" class="form-control" name="codigoBarras" formControlName="codigoBarras"
-                           [(ngModel)]="producto.codigoBarras">
-                    <div *ngIf="submittedProductoForm && fp.codigoBarras.errors" class="invalid-feedback"
-                         style="display: block;">
-                      <div *ngIf="fp.codigoBarras.errors.required">Código de barras es requeridos
+                    <div class="input-group mb-1">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">{{this.parametros?.prefijo}}</span>
                       </div>
-                      <div *ngIf="fp.codigoBarras.errors.maxlength">Ingreso maximo de caracteres 150</div>
+                      <input type="text" class="form-control" name="codigoBarras" formControlName="codigoBarras"
+                             [(ngModel)]="producto.codigoBarras">
+                      <div *ngIf="submittedProductoForm && fp.codigoBarras.errors" class="invalid-feedback"
+                           style="display: block;">
+                        <div *ngIf="fp.codigoBarras.errors.required">Código de barras es requeridos
+                        </div>
+                        <div *ngIf="fp.codigoBarras.errors.maxlength">Ingreso maximo de caracteres 150</div>
+                      </div>
                     </div>
                   </div>
                 </div>
