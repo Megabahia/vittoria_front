@@ -278,24 +278,15 @@ export class PedidoWoocomerceComponent implements OnInit {
     this.detallesPedidos.push(detalle);
   }
 
-  /*removerItem(tienda, i): void {
-    tienda.controls.articulos.removeAt(i);
-    if (tienda.controls.articulos.value.length < 1 || !tienda.controls.articulos.value) {
-      this.mostrarContenidoFacturacion = false;
-    }
-    this.calcular();
-  }*/
-
-  removerItem(tienda, articuloIndex): void {
+  removerItem(tienda, articuloIndex, tiendaIndex): void {
     // Remueve el artículo en el índice especificado.
-    const articulosFormArray = tienda.get('articulos') as FormArray;
-    articulosFormArray.removeAt(articuloIndex);
+    const tiendaFormArray = tienda.get('articulos') as FormArray;
+    tiendaFormArray.removeAt(articuloIndex);
 
-    if (articulosFormArray.length === 0) {
-      this.mostrarContenidoFacturacion = false; // Asumiendo que es un array que controla la visualización por tienda.
+    if (tienda.value.articulos.length === 0) {
+      this.detallesPedidos.removeAt(tiendaIndex);
     }
 
-    // Llama a cualquier otra lógica necesaria, como recalcular totales.
     this.calcular();
   }
 
@@ -368,10 +359,15 @@ export class PedidoWoocomerceComponent implements OnInit {
       return;
     }
 
-    /*if (this.notaPedido.invalid) {
+    if (this.notaPedido.get('pedidos').value.length === 0) {
+      this.toaster.open('Debe haber al menos 1 artículo', {type: 'danger'});
+      return;
+    }
+
+    if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
-    }*/
+    }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
 

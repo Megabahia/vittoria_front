@@ -31,14 +31,14 @@
       </div>
     </div>
   </div>
-  <form [formGroup]="notaPedido">
+  <form [formGroup]="notaPedido" *ngIf="mostrarContenidoFacturacion">
     <div formArrayName="pedidos">
       <div *ngFor="let tienda of notaPedido.get('pedidos')['controls']; let j = index;">
         <ng-container [formGroup]="tienda">
           <h2 class="m-2">Tienda: {{ tienda.controls.prefijo.value }}</h2>
-          <div class="card" *ngIf="mostrarContenidoFacturacion">
+          <div class="card" *ngIf="tienda.controls.articulos.value.length !== 0">
             <h5 class="pl-3 pt-2">DATOS DE ENVIO<label class="text-muted">(Datos
-              obligatorios) <strong class="text-info">(Primero seleccione ciudad de destino)</strong></label></h5>
+              obligatorios) <strong class="text-info">(Primero seleccione ciudad de destino en datos de facturación)</strong></label></h5>
             <div class="row px-4 pb-2">
               <div class="col-md-3">
                 <label for="envio">Costo de envio:</label>
@@ -189,7 +189,7 @@
                       <i-feather name="trash"
                                  class="cursor-pointer text-danger"
                                  data-repeater-delete
-                                 (click)="removerItem(tienda, i)"></i-feather>
+                                 (click)="removerItem(tienda, i, j)"></i-feather>
                     </div>
                   </div>
                 </div>
