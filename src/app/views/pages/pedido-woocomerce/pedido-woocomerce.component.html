@@ -32,175 +32,181 @@
     </div>
   </div>
   <form [formGroup]="notaPedido">
-      <div formArrayName="pedidos">
-          <div *ngFor="let tienda of notaPedido.get('pedidos')['controls']; let j = index;">
-              <ng-container [formGroup]="tienda">
-                  <h2 class="m-2">Tienda: {{tienda.controls.prefijo.value}}</h2>
-                  <div class="card" *ngIf="mostrarContenido">
-                      <h5 class="pl-3 pt-2">DATOS DE ENVIO<label class="text-muted">(Datos
-                          obligatorios) <strong class="text-info">(Primero seleccione ciudad de destino)</strong></label></h5>
-                      <div class="row px-4 pb-2">
-                          <div class="col-md-3">
-                              <label for="envio">Costo de envio:</label>
-                              <select id="envio" class="form-control"
-                                      (change)="onChangeCombo($event, j)">
-                                  <option value="">- Selecciona un costo de envío -</option>
-                                  <option *ngFor="let op of this.notaPedido.get('pedidos')['controls'][j]['controls'].couries.value" [value]="op.nombre">
-                                      {{ op.nombre }}
-                                  </option>
-                              </select>
-                              <div *ngIf="tienda.controls.precioEnvio.errors"
-                                   class="invalid-feedback" style="display: block;">
-                                  <div *ngIf="tienda.controls.precioEnvio.errors.required">
-                                      Requerido
-                                  </div>
-                                  <div *ngIf="tienda.controls.precioEnvio.errors.min">
-                                      Minimo 1
-                                  </div>
-                              </div>
-                          </div>
-                          <div class="col-md-3">
-                              <label for="segundo">Forma de pago:</label>
-                              <select id="segundo" class="form-control"
-                                     formControlName="formasPagos" (change)="onSelectFormaPago($event)">
-                                  <option value="" selected>- Seleccion forma de pago -</option>
-                                  <option *ngFor="let op of this.notaPedido.get('pedidos')['controls'][j]['controls'].listaFormasPagos.value" [value]="op.nombre">{{ op.nombre }}</option>
-                              </select>
-                              <div *ngIf="this.notaPedido.get('pedidos')['controls'][j]['controls'].formasPagos.errors"
-                                   class="invalid-feedback" style="display: block;">
-                                  <div *ngIf="this.notaPedido.get('pedidos')['controls'][j]['controls'].formasPagos.errors.required">
-                                      Requerido
-                                  </div>
-                              </div>
-                          </div>
-                          <div class="col-md-6">
-                              <div *ngIf="this.notaPedido.get('pedidos')['controls'][j]['controls'].formasPagos.value == 'Transferencia'" class="col-md-5">
-                                  <h6 class="text-uppercase">Datos de cuenta: <br>BANCO PICHINCHA<br>CUENTA:
-                                      {{ this.notaPedido.get('pedidos')['controls'][j]['controls'].numeroCuenta.value }}
-                                      <br>Nombre: {{ this.notaPedido.get('pedidos')['controls'][j]['controls'].nombreCuenta.value }}<br>
-                                  </h6>
-<!--                                  <input class="form-control-file" type="file" (change)="onFileSelected($event)">-->
-                              </div>
-                          </div>
-                      </div>
+    <div formArrayName="pedidos">
+      <div *ngFor="let tienda of notaPedido.get('pedidos')['controls']; let j = index;">
+        <ng-container [formGroup]="tienda">
+          <h2 class="m-2">Tienda: {{ tienda.controls.prefijo.value }}</h2>
+          <div class="card" *ngIf="mostrarContenidoFacturacion">
+            <h5 class="pl-3 pt-2">DATOS DE ENVIO<label class="text-muted">(Datos
+              obligatorios) <strong class="text-info">(Primero seleccione ciudad de destino)</strong></label></h5>
+            <div class="row px-4 pb-2">
+              <div class="col-md-3">
+                <label for="envio">Costo de envio:</label>
+                <select id="envio" class="form-control"
+                        (change)="onChangeCombo($event, j)">
+                  <option value="">- Selecciona un costo de envío -</option>
+                  <option *ngFor="let op of this.notaPedido.get('pedidos')['controls'][j]['controls'].couries.value"
+                          [value]="op.nombre">
+                    {{ op.nombre }}
+                  </option>
+                </select>
+                <div *ngIf="tienda.controls.precioEnvio.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="tienda.controls.precioEnvio.errors.required">
+                    Requerido
                   </div>
-                  <div formArrayName="articulos">
-                      <div *ngFor="let articulo of tienda.get('articulos').controls; let i = index">
-                          <ng-container [formGroup]="articulo">
-                              <div class="repeater-wrapper" data-repeater-item>
-                                  <div class="row px-2 mt-1">
-                                      <div class="col-md-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
-                                          <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
-                                              Código producto
-                                          </p>
-                                          <label style="font-size: small">{{ articulo.controls.articulo.value }}</label>
-                                      </div>
-                                      <div class="col-md-3 col-12 my-lg-0 my-2">
-                                          <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
-                                              Nombre producto
-                                          </p>
-                                          <label class="d-block text-wrap"
-                                                 style="font-size: small">{{ articulo.controls.articulo.value }}</label>
-                                      </div>
-
-                                      <!--CANTIDAD-->
-                                      <div class="item-quantity">
-                                          <p class="quantity-title col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
-                                              Cantidad del producto
-                                          </p>
-                                          <div class="quantity-counter-wrapper">
-                                              <core-touchspin>
-                                                  <div class="btn-group touchspin-wrapper">
-                                                      <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-down"
-                                                              (click)="escogerCantidad('restar', i, articulo)"
-                                                      >
-                                                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                               viewBox="0 0 24 24"
-                                                               fill="none" stroke="currentColor" stroke-width="2"
-                                                               stroke-linecap="round"
-                                                               stroke-linejoin="round" class="feather feather-minus">
-                                                              <line x1="5" y1="12" x2="19" y2="12"></line>
-                                                          </svg><!----><!----></button>
-                                                      <input type="number" pattern="\d*" maxlength="4"
-                                                             class="form-control ng-untouched ng-pristine ng-valid"
-                                                             step="1" min="1"
-                                                             max="10"
-                                                             disabled
-                                                             formControlName="cantidad"
-                                                      >
-
-                                                      <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-up"
-                                                              (click)="escogerCantidad('sumar', i, articulo)"
-                                                      >
-                                                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                               viewBox="0 0 24 24"
-                                                               fill="none" stroke="currentColor" stroke-width="2"
-                                                               stroke-linecap="round"
-                                                               stroke-linejoin="round" class="feather feather-plus">
-                                                              <line x1="12" y1="5" x2="12" y2="19"></line>
-                                                              <line x1="5" y1="12" x2="19" y2="12"></line>
-                                                          </svg><!----><!----></button>
-                                                  </div>
-                                              </core-touchspin>
-                                              <div *ngIf="articulo.controls.cantidad.errors"
-                                                   class="invalid-feedback"
-                                                   style="display: block;">
-                                                  <div *ngIf="articulo.controls.cantidad.errors.required">
-                                                      Requerido
-                                                  </div>
-                                                  <div *ngIf="articulo.controls.cantidad.errors.min">
-                                                      Ingrese minimo 1
-                                                  </div>
-                                              </div>
-                                          </div>
-
-                                      </div>
-                                      <!--PRECIO-->
-                                      <div class="col-md-1 col-12 my-lg-0 my-2">
-                                          <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
-                                              Precio
-                                          </p>
-                                          <label style="font-size: small">{{ articulo.controls.valorUnitario.value }}</label>
-                                      </div>
-                                      <div class="col-md-1 col-12 my-lg-0 my-2">
-                                          <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
-                                              Total
-                                          </p>
-                                          <label style="font-size: small">{{ articulo.controls.precio.value }}</label>
-                                      </div>
-                                      <div class="col-md-2 col-12 my-lg-0 my-2">
-                                          <img
-                                                  src="{{articulo.controls?.imagen_principal.value ? articulo.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
-                                                  *ngIf="articulo.controls?.imagen_principal" width="150px" height="150px" alt="">
-                                          <!--<div *ngIf="!detalle.controls?.imagen_principal.value">
-                                            <button (click)="fileInput.click()">Seleccionar imagen</button>
-                                            <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png"
-                                                   style="display: none;">
-                                          </div>-->
-                                      </div>
-                                      <div
-                                              class="d-flex flex-column align-items-center justify-content-between border-left border-left-black invoice-product-actions py-50 px-2">
-                                          <i-feather name="trash"
-                                                     class="cursor-pointer text-danger"
-                                                     data-repeater-delete
-                                                     (click)="removerItem(tienda, i)"></i-feather>
-                                      </div>
-                                  </div>
-                              </div>
-                          </ng-container>
-                      </div>
+                  <div *ngIf="tienda.controls.precioEnvio.errors.min">
+                    Minimo 1
                   </div>
-              </ng-container>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="segundo">Forma de pago:</label>
+                <select id="segundo" class="form-control"
+                        formControlName="formasPagos" (change)="onSelectFormaPago($event)">
+                  <option value="" selected>- Seleccion forma de pago -</option>
+                  <option
+                    *ngFor="let op of this.notaPedido.get('pedidos')['controls'][j]['controls'].listaFormasPagos.value"
+                    [value]="op.nombre">{{ op.nombre }}
+                  </option>
+                </select>
+                <div *ngIf="this.notaPedido.get('pedidos')['controls'][j]['controls'].formasPagos.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="this.notaPedido.get('pedidos')['controls'][j]['controls'].formasPagos.errors.required">
+                    Requerido
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div
+                  *ngIf="this.notaPedido.get('pedidos')['controls'][j]['controls'].formasPagos.value == 'Transferencia'"
+                  class="col-md-5">
+                  <h6 class="text-uppercase">Datos de cuenta: <br>BANCO PICHINCHA<br>CUENTA:
+                    {{ this.notaPedido.get('pedidos')['controls'][j]['controls'].numeroCuenta.value }}
+                    <br>Nombre: {{ this.notaPedido.get('pedidos')['controls'][j]['controls'].nombreCuenta.value }}<br>
+                  </h6>
+                  <!--                                  <input class="form-control-file" type="file" (change)="onFileSelected($event)">-->
+                </div>
+              </div>
+            </div>
           </div>
+          <div formArrayName="articulos">
+            <div *ngFor="let articulo of tienda.get('articulos').controls; let i = index">
+              <ng-container [formGroup]="articulo">
+                <div class="repeater-wrapper" data-repeater-item>
+                  <div class="row px-2 mt-1">
+                    <div class="col-md-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                      <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
+                        Código producto
+                      </p>
+                      <label style="font-size: small">{{ articulo.controls.articulo.value }}</label>
+                    </div>
+                    <div class="col-md-3 col-12 my-lg-0 my-2">
+                      <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
+                        Nombre producto
+                      </p>
+                      <label class="d-block text-wrap"
+                             style="font-size: small">{{ articulo.controls.articulo.value }}</label>
+                    </div>
+
+                    <!--CANTIDAD-->
+                    <div class="item-quantity">
+                      <p class="quantity-title col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
+                        Cantidad del producto
+                      </p>
+                      <div class="quantity-counter-wrapper">
+                        <core-touchspin>
+                          <div class="btn-group touchspin-wrapper">
+                            <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-down"
+                                    (click)="escogerCantidad('restar', i, articulo)"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                   viewBox="0 0 24 24"
+                                   fill="none" stroke="currentColor" stroke-width="2"
+                                   stroke-linecap="round"
+                                   stroke-linejoin="round" class="feather feather-minus">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                              </svg><!----><!----></button>
+                            <input type="number" pattern="\d*" maxlength="4"
+                                   class="form-control ng-untouched ng-pristine ng-valid"
+                                   step="1" min="1"
+                                   max="10"
+                                   disabled
+                                   formControlName="cantidad"
+                            >
+
+                            <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-up"
+                                    (click)="escogerCantidad('sumar', i, articulo)"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                   viewBox="0 0 24 24"
+                                   fill="none" stroke="currentColor" stroke-width="2"
+                                   stroke-linecap="round"
+                                   stroke-linejoin="round" class="feather feather-plus">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                              </svg><!----><!----></button>
+                          </div>
+                        </core-touchspin>
+                        <div *ngIf="articulo.controls.cantidad.errors"
+                             class="invalid-feedback"
+                             style="display: block;">
+                          <div *ngIf="articulo.controls.cantidad.errors.required">
+                            Requerido
+                          </div>
+                          <div *ngIf="articulo.controls.cantidad.errors.min">
+                            Ingrese minimo 1
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                    <!--PRECIO-->
+                    <div class="col-md-1 col-12 my-lg-0 my-2">
+                      <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
+                        Precio
+                      </p>
+                      <label style="font-size: small">{{ articulo.controls.valorUnitario.value }}</label>
+                    </div>
+                    <div class="col-md-1 col-12 my-lg-0 my-2">
+                      <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
+                        Total
+                      </p>
+                      <label style="font-size: small">{{ articulo.controls.precio.value }}</label>
+                    </div>
+                    <div class="col-md-2 col-12 my-lg-0 my-2">
+                      <img
+                        src="{{articulo.controls?.imagen_principal.value ? articulo.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
+                        *ngIf="articulo.controls?.imagen_principal" width="150px" height="150px" alt="">
+                      <!--<div *ngIf="!detalle.controls?.imagen_principal.value">
+                        <button (click)="fileInput.click()">Seleccionar imagen</button>
+                        <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png"
+                               style="display: none;">
+                      </div>-->
+                    </div>
+                    <div
+                      class="d-flex flex-column align-items-center justify-content-between border-left border-left-black invoice-product-actions py-50 px-2">
+                      <i-feather name="trash"
+                                 class="cursor-pointer text-danger"
+                                 data-repeater-delete
+                                 (click)="removerItem(tienda, i)"></i-feather>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </ng-container>
       </div>
+    </div>
     <div class="row">
       <div class="col-md-7"></div>
       <div class="col-md-5 text-right mt-2">
         <div class="invoice-total-wrapper">
           <div class="invoice-total-item">
-              <p class="invoice-total-title text-primary mr-3 font-weight-bold">
-                  Total a pagar: ${{ getTotalFormatted() }}
-              </p>
+            <p class="invoice-total-title text-primary mr-3 font-weight-bold">
+              Total a pagar: ${{ getTotalFormatted() }}
+            </p>
           </div>
         </div>
       </div>
@@ -457,7 +463,9 @@
          style="width: 100px;">
   </div>
   <p>Valoramos mucho tu preferencia y trabajamos continuamente para ofrecerte lo mejor.</p>
-  <p>Su número de pedido es: {{ numeroPedido }}.</p>
+  <div *ngFor="let numero of numeroPedido; let i=index">
+    <p>Su número de pedido {{i+1}} es: <strong>{{ numero }}</strong>.</p>
+  </div>
   <div class="mt-4">
     <a href="https://superbarato.megadescuento.com" class="btn btn-primary">Volver a la tienda</a>
   </div>

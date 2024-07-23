@@ -172,7 +172,8 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
       caracteristicas:['',[]],
       descuento: [0,[]],
       imagen: ['', []],
-      imagen_principal: ['']
+      imagen_principal: [''],
+      prefijo: ['']
     });
   }
 

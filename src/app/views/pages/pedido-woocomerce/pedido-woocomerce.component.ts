@@ -41,11 +41,12 @@ export class PedidoWoocomerceComponent implements OnInit {
   correoCliente;
   codigoCorreo;
 
-  numeroPedido;
+  numeroPedido: any [] = [];
   productoBuscar: any [] = [];
   numeroPedidos: any = {};
 
   mostrarContenido = false;
+  mostrarContenidoFacturacion = false;
   mostrarCargaComprobante = false;
   mostrarContenidoPantalla = true;
 
@@ -171,7 +172,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       pedidos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
       envioTotal: ['', [Validators.required]],
-      numeroPedido: [this.generarID(), [Validators.required]],
+      numeroPedido: ['', [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['Contra-Entrega', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
@@ -277,10 +278,27 @@ export class PedidoWoocomerceComponent implements OnInit {
     this.detallesPedidos.push(detalle);
   }
 
-  removerItem(tienda, i): void {
+  /*removerItem(tienda, i): void {
     tienda.controls.articulos.removeAt(i);
+    if (tienda.controls.articulos.value.length < 1 || !tienda.controls.articulos.value) {
+      this.mostrarContenidoFacturacion = false;
+    }
+    this.calcular();
+  }*/
+
+  removerItem(tienda, articuloIndex): void {
+    // Remueve el artículo en el índice especificado.
+    const articulosFormArray = tienda.get('articulos') as FormArray;
+    articulosFormArray.removeAt(articuloIndex);
+
+    if (articulosFormArray.length === 0) {
+      this.mostrarContenidoFacturacion = false; // Asumiendo que es un array que controla la visualización por tienda.
+    }
+
+    // Llama a cualquier otra lógica necesaria, como recalcular totales.
     this.calcular();
   }
+
 
   onSelectChangeIdentificacion(event: any) {
     const selectedValue = event.target.value;
@@ -308,7 +326,6 @@ export class PedidoWoocomerceComponent implements OnInit {
     const pedidos = this.notaPedido.get('pedidos')['controls'];
     let total = 0;
     pedidos.map((pedido) => {
-      console.log('pedido del map', pedido.value);
       total += parseFloat(pedido.value.precioEnvio ?? 0);
       pedido.value.articulos.forEach((item, index) => {
         const valorUnitario = parseFloat(item.valorUnitario);
@@ -351,13 +368,12 @@ export class PedidoWoocomerceComponent implements OnInit {
       return;
     }
 
-    if (this.notaPedido.invalid) {
+    /*if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
-    }
+    }*/
 
     if (confirm('Esta seguro de guardar los datos') === true) {
-
 
       this.notaPedido.value.pedidos.map((data) => {
         this.notaPedido.patchValue({
@@ -385,27 +401,27 @@ export class PedidoWoocomerceComponent implements OnInit {
             }
           }
         });
+
+        this.archivo.append('numeroPedido', this.generarID());
+
         this.archivo.delete('envios');
         this.archivo.delete('pedidos');
         this.archivo.delete('json');
         this.archivo.delete('tipoPago');
 
         this.pedidosService.crearPedidoSuperBarato(this.archivo).subscribe(result => {
+          this.numeroPedido.push(result.numeroPedido);
           this.toaster.open('Pedido guardado', {type: 'success'});
-          this.numeroPedido = result.numeroPedido;
           this.mostrarContenidoPantalla = false;
         }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
       });
-
     }
   }
 
   onChangeCombo(event: any, numeroPedido): void {
     const formasPago = this.notaPedido.get('pedidos')['controls'][numeroPedido]['controls'].couries.value.find((item) => item.nombre === event.target.value);
     this.notaPedido.get('pedidos')['controls'][numeroPedido].get('precioEnvio').setValue(formasPago.costo);
-    console.log('event', this.notaPedido.get('pedidos')['controls']);
     const metodosPagos = this.notaPedido.get('pedidos')['controls'][numeroPedido]['controls']?.formasPagos.value[event.target.selectedIndex - 1];
-    console.log('metodosPagos', metodosPagos);
     this.notaPedido.get('pedidos')['controls'][numeroPedido].get('listaFormasPagos').setValue([...metodosPagos]);
     /*if (seleccionado && seleccionado.formaPago) {
       this.nombreCuenta = seleccionado.nombreCuenta;
@@ -434,11 +450,13 @@ export class PedidoWoocomerceComponent implements OnInit {
     this.selectClient = selectValue;
     if (selectValue === 'esCliente') {
       this.mostrarContenido = false;
+      this.mostrarContenidoFacturacion = false;
       this.esCliente = true;
     } else {
       this.esCliente = false;
       this.enviarCorreo = false;
       this.mostrarContenido = true;
+      this.mostrarContenidoFacturacion = true;
     }
   }
 
@@ -467,6 +485,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       this.datosCliente = data;
       this.completarCamposCliente();
       this.mostrarContenido = true;
+      this.mostrarContenidoFacturacion = true;
       this.disabledCombo = true;
     }, error => this.toaster.open(error, {type: 'danger'}));
   }
@@ -515,13 +534,11 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   obtenerCostosEnvio(): void {
     if (this.notaPedido.get('facturacion').get('ciudad').value) {
-      console.log('this.notaPedido.get(\'pedidos\').value', this.notaPedido.get('pedidos')['controls'][0]);
       this.notaPedido.get('pedidos').value.map((tienda, index) => {
         this.integracionesEnviosService.obtenerListaIntegracionesEnviosSinAuth({
           ciudad: tienda.ciudad,
           ciudadDestino: this.notaPedido.get('facturacion').get('ciudad').value
         }).subscribe((result) => {
-          console.log('forma', result);
           const couries = result.info.map(item => {
             return {
               nombre: `${item.courier} - Desde ${item.ciudad} hasta ${item.ciudadDestino} - Costo $${item.costo}`,
@@ -539,7 +556,6 @@ export class PedidoWoocomerceComponent implements OnInit {
             this.notaPedido.get('pedidos')['controls'][index].get('nombreCuenta').setValue(nombreCuenta);
           }
           this.notaPedido.updateValueAndValidity();
-          console.log('this.notaPedido', this.notaPedido);
           if (result.cont === 0) {
             this.toaster.open(`No existe precio de envio desde ${tienda.ciudad} hasta
           ${this.notaPedido.get('facturacion').get('ciudad').value}`, {type: 'info'});

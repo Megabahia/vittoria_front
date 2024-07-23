@@ -141,7 +141,7 @@
 
           <div class="modal fade" id="verfactura" tabindex="-1" role="dialog"
                aria-labelledby="myLargeModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-xl">
               <div class="modal-content">
                 <form [formGroup]="notaPedido">
                   <div class="card invoice-preview-card">
@@ -358,19 +358,24 @@
                                 <div class="row">
                                   <div class="col-12 d-flex product-details-border position-relative pr-0">
                                     <div class="row w-100 pr-lg-0 pr-1 py-2">
-                                      <div class="col-lg-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Código
                                         </p>
-                                        <input class="form-control" type="text"
-                                               (change)="obtenerProducto(i)"
-                                               formControlName="codigo"
-                                               disabled>
-                                        <div *ngIf="detalle.controls.codigo.errors"
-                                             class="invalid-feedback"
-                                             style="display: block;">
-                                          <div *ngIf="detalle.controls.codigo.errors.required">
-                                            Requerido
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">{{ detalle.controls.prefijo?.value }}</span>
+                                          </div>
+                                          <input class="form-control" type="text"
+                                                 (change)="obtenerProducto(i)"
+                                                 formControlName="codigo"
+                                                 disabled>
+                                          <div *ngIf="detalle.controls.codigo.errors"
+                                               class="invalid-feedback"
+                                               style="display: block;">
+                                            <div *ngIf="detalle.controls.codigo.errors.required">
+                                              Requerido
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
@@ -409,11 +414,11 @@
                                           </div>
                                         </div>
                                       </div>
-                                      <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                      <div class="col-lg-1 col-12 my-lg-0 my-2">
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Precio
                                         </p>
-                                        <label>{{ detalle.controls.valorUnitario.value }}</label>
+                                        <label>${{ detalle.controls.valorUnitario.value }}</label>
                                         <div *ngIf="detalle.controls.valorUnitario.errors"
                                              class="invalid-feedback"
                                              style="display: block;">
@@ -434,7 +439,7 @@
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Total
                                         </p>
-                                        <label>{{ detalle.controls.precio.value }}</label>
+                                        <label>${{ detalle.controls.precio.value }}</label>
                                         <div *ngIf="detalle.controls.precio.errors"
                                              class="invalid-feedback"
                                              style="display: block;">

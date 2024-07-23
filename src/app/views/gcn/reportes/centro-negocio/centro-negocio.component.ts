@@ -186,7 +186,8 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       descuento: [0,[]],
       imagen: ['', []],
-      imagen_principal: ['']
+      imagen_principal: [''],
+      prefijo: ['']
     });
   }
 
