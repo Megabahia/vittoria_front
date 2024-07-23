@@ -254,6 +254,8 @@ export class PedidoWoocomerceComponent implements OnInit {
       couries: ['', []],
       formasPagos: ['', [Validators.required]],
       listaFormasPagos: ['', []],
+      numeroCuenta: ['', []],
+      nombreCuenta: ['', []],
       precioEnvio: [0, [Validators.required, Validators.min(1)]],
       articulos: this.formBuilder.array([]),
     });
@@ -506,7 +508,13 @@ export class PedidoWoocomerceComponent implements OnInit {
           });
           this.notaPedido.get('pedidos')['controls'][index].get('couries').setValue(couries);
           const formasPagos = result.info.map(item => item.formaPago.filter(item2 => item2.estado === true));
+          const numeroCuenta = result.info.find(item => item.numeroCuenta !== undefined)?.numeroCuenta;
+          const nombreCuenta = result.info.find(item => item.nombreCuenta !== undefined)?.nombreCuenta;
           this.notaPedido.get('pedidos')['controls'][index].get('formasPagos').setValue(formasPagos);
+          if (numeroCuenta != null && nombreCuenta != null) {
+            this.notaPedido.get('pedidos')['controls'][index].get('numeroCuenta').setValue(numeroCuenta);
+            this.notaPedido.get('pedidos')['controls'][index].get('nombreCuenta').setValue(nombreCuenta);
+          }
           this.notaPedido.updateValueAndValidity();
           console.log('this.notaPedido', this.notaPedido);
           if (result.cont === 0) {
