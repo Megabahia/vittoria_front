@@ -44,8 +44,8 @@
                               <label for="envio">Costo de envio:</label>
                               <select id="envio" class="form-control"
                                       (change)="onChangeCombo($event, j)">
-                                  <option value="" disabled>- Selecciona un costo de envío -</option>
-                                  <option *ngFor="let op of this.notaPedido.get('pedidos')['controls'][j]['controls'].formasPagos.value" [value]="op.nombre">
+                                  <option value="">- Selecciona un costo de envío -</option>
+                                  <option *ngFor="let op of this.notaPedido.get('pedidos')['controls'][j]['controls'].couries.value" [value]="op.nombre">
                                       {{ op.nombre }}
                                   </option>
                               </select>
@@ -59,20 +59,20 @@
                                   </div>
                               </div>
                           </div>
-<!--                          <div class="col-md-3">-->
-<!--                              <label for="segundo">Forma de pago:</label>-->
-<!--                              <select id="segundo" class="form-control"-->
-<!--                                      formControlName="tipoPago" (change)="onSelectFormaPago($event)">-->
-<!--                                  <option value="" selected>- Seleccion forma de pago -</option>-->
-<!--                                  <option *ngFor="let op of formasPagoCourier" [value]="op.nombre">{{ op.nombre }}</option>-->
-<!--                              </select>-->
-<!--                              <div *ngIf="notaPedidoForm.tipoPago.errors"-->
-<!--                                   class="invalid-feedback" style="display: block;">-->
-<!--                                  <div *ngIf="notaPedidoForm.tipoPago.errors.required">-->
-<!--                                      Requerido-->
-<!--                                  </div>-->
-<!--                              </div>-->
-<!--                          </div>-->
+                          <div class="col-md-3">
+                              <label for="segundo">Forma de pago:</label>
+                              <select id="segundo" class="form-control"
+                                      (change)="onSelectFormaPago($event)">
+                                  <option value="" selected>- Seleccion forma de pago -</option>
+                                  <option *ngFor="let op of this.notaPedido.get('pedidos')['controls'][j]['controls'].listaFormasPagos.value" [value]="op.nombre">{{ op.nombre }}</option>
+                              </select>
+                              <div *ngIf="this.notaPedido.get('pedidos')['controls'][j]['controls'].formasPagos.errors"
+                                   class="invalid-feedback" style="display: block;">
+                                  <div *ngIf="this.notaPedido.get('pedidos')['controls'][j]['controls'].formasPagos.errors.required">
+                                      Requerido
+                                  </div>
+                              </div>
+                          </div>
 <!--                          <div class="col-md-6">-->
 <!--                              <div *ngIf="mostrarCargaComprobante" class="col-md-5">-->
 <!--                                  <h6 class="text-uppercase">Datos de cuenta: <br>BANCO PICHINCHA<br>CUENTA: {{ numeroCuenta }}-->
@@ -181,7 +181,7 @@
                                           <i-feather name="trash"
                                                      class="cursor-pointer text-danger"
                                                      data-repeater-delete
-                                                     (click)="removerItem(i)"></i-feather>
+                                                     (click)="removerItem(tienda, i)"></i-feather>
                                       </div>
                                   </div>
                               </div>
