@@ -168,18 +168,18 @@ export class PedidoWoocomerceComponent implements OnInit {
         codigoVendedor: ['', [Validators.required]],
         nombreVendedor: ['', [Validators.required]]
       }),
-      articulos: this.formBuilder.array([], Validators.required),
+      articulos: this.formBuilder.array([]),
       pedidos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
-      envioTotal: ['', [Validators.required]],
-      numeroPedido: ['', [Validators.required]],
+      envioTotal: [''],
+      numeroPedido: [''],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['Contra-Entrega', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
       canal: ['superbarato.megadescuento.com', []],
       estado: ['Pendiente', []],
       tipoEnvio: [''],
-      tipoPago: ['', [Validators.required]],
+      tipoPago: [''],
       archivoMetodoPago: [''],
       envio: this.formBuilder.group({
         nombres: [''],
@@ -372,6 +372,7 @@ export class PedidoWoocomerceComponent implements OnInit {
     if (confirm('Esta seguro de guardar los datos') === true) {
 
       this.notaPedido.value.pedidos.map((data) => {
+        console.log('DATA', data)
         this.notaPedido.patchValue({
           ...this.notaPedido.value,
           envio: {...this.notaPedido.value.facturacion},
@@ -399,11 +400,12 @@ export class PedidoWoocomerceComponent implements OnInit {
         });
 
         this.archivo.append('numeroPedido', this.generarID());
+        this.archivo.append('envioTotal', data.precioEnvio.toString());
+        this.archivo.append('tipoPago', data.formasPagos);
 
         this.archivo.delete('envios');
         this.archivo.delete('pedidos');
         this.archivo.delete('json');
-        this.archivo.delete('tipoPago');
 
         this.pedidosService.crearPedidoSuperBarato(this.archivo).subscribe(result => {
           this.numeroPedido.push(result.numeroPedido);
