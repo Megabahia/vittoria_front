@@ -25,17 +25,6 @@ interface ProductoProcesado {
 
 export class PedidoWoocomerceComponent implements OnInit {
 
-  opcionesPrimerCombo = [
-    {id: 'envioServiEntrega', valor: 'Envío por Servientrega'},
-    {id: 'envioMotorizadoContraEntrega', valor: 'Envío motorizado de Contraentrega'},
-    {id: 'envioPuntoEntrega', valor: 'Envío a punto de entrega'}
-  ];
-
-  opcionesSegundoCombo = [
-    {id: 'tranferenciaDeposito', valor: 'Tranferencia/Depósito'},
-    {id: 'eleccionCliente', valor: 'Cliente elegirá al momento de entrega'},
-  ];
-
   @Input() paises;
   public notaPedido: FormGroup;
   archivo: FormData = new FormData();
@@ -247,6 +236,23 @@ export class PedidoWoocomerceComponent implements OnInit {
     });
   }
 
+  crearDetalleGrupoGardar(data): any {
+    return this.formBuilder.group({
+      id: [data.id],
+      codigo: [data.codigo],
+      articulo: [data.articulo],
+      valorUnitario: [data.valorUnitario],
+      cantidad: [data.cantidad],
+      precio: [data.precio],
+      imagen: [data.imagen],
+      caracteristicas: [data.caracteristicas],
+      precios: [data.precios],
+      canal: [data.canal],
+      imagen_principal: [data.imagen_principal],
+      prefijo: [data.prefijo]
+    });
+  }
+
   crearDetalleGrupoPedidos(datos: any, ciudad): any {
     return this.formBuilder.group({
       prefijo: [datos.prefijo, []],
@@ -257,8 +263,8 @@ export class PedidoWoocomerceComponent implements OnInit {
     });
   }
 
-  agregarItem(datos: any, datosBaseDatos): void {
-    const detalle = this.crearDetalleGrupo(datos, datosBaseDatos);
+  agregarItem(data): void {
+    const detalle = this.crearDetalleGrupoGardar(data);
     this.detallesArray.push(detalle);
   }
 
@@ -341,35 +347,52 @@ export class PedidoWoocomerceComponent implements OnInit {
       return;
     }
 
-    if (this.notaPedido.invalid) {
+    /*if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
-    }
+    }*/
 
     if (confirm('Esta seguro de guardar los datos') === true) {
-      this.notaPedido.patchValue({...this.notaPedido.value, envio: {...this.notaPedido.value.facturacion}});
-      const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
-      const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
-      facturaFisicaLlaves.map((llaves, index) => {
-        if (llaves !== 'archivoMetodoPago') {
-          if (llaves === 'articulos' || llaves === 'facturacion' || llaves === 'envio') {
-            this.archivo.delete(llaves);
-            this.archivo.append(llaves, JSON.stringify(facturaFisicaValores[index]));
-          } else {
-            this.archivo.delete(llaves);
-            this.archivo.append(llaves, facturaFisicaValores[index]);
-          }
-        }
-      });
-      this.archivo.delete('envios');
-      this.archivo.delete('json');
-      this.archivo.delete('tipoPago');
 
-      this.pedidosService.crearPedidoSuperBarato(this.archivo).subscribe(result => {
-        this.toaster.open('Pedido guardado', {type: 'success'});
-        this.numeroPedido = result.numeroPedido;
-        this.mostrarContenidoPantalla = false;
-      }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
+
+      this.notaPedido.value.pedidos.map((data) => {
+        this.notaPedido.patchValue({
+          ...this.notaPedido.value,
+          envio: {...this.notaPedido.value.facturacion},
+        });
+        data.articulos.forEach((articulo, i) => {
+          this.detallesArray.removeAt(i);
+          this.agregarItem(articulo);
+        });
+
+
+        const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
+        const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
+
+
+        facturaFisicaLlaves.map((llaves, index) => {
+          if (llaves !== 'archivoMetodoPago') {
+            if (llaves === 'articulos' || llaves === 'facturacion' || llaves === 'envio') {
+              this.archivo.delete(llaves);
+              this.archivo.append(llaves, JSON.stringify(facturaFisicaValores[index]));
+            } else {
+              this.archivo.delete(llaves);
+              this.archivo.append(llaves, facturaFisicaValores[index]);
+            }
+          }
+        });
+        this.archivo.delete('envios');
+        this.archivo.delete('pedidos');
+        this.archivo.delete('json');
+        this.archivo.delete('tipoPago');
+
+        this.pedidosService.crearPedidoSuperBarato(this.archivo).subscribe(result => {
+          this.toaster.open('Pedido guardado', {type: 'success'});
+          this.numeroPedido = result.numeroPedido;
+          this.mostrarContenidoPantalla = false;
+        }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
+      });
+
     }
   }
 
