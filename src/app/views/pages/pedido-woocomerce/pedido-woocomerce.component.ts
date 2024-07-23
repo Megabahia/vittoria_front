@@ -251,7 +251,9 @@ export class PedidoWoocomerceComponent implements OnInit {
     return this.formBuilder.group({
       prefijo: [datos.prefijo, []],
       ciudad: [ciudad, []],
-      formasPagos: ['', []],
+      couries: ['', []],
+      formasPagos: ['', [Validators.required]],
+      listaFormasPagos: ['', []],
       precioEnvio: [0, [Validators.required, Validators.min(1)]],
       articulos: this.formBuilder.array([]),
     });
@@ -374,8 +376,12 @@ export class PedidoWoocomerceComponent implements OnInit {
   }
 
   onChangeCombo(event: any, numeroPedido): void {
-    const formasPago = this.notaPedido.get('pedidos')['controls'][numeroPedido]['controls'].formasPagos.value.find((item) => item.nombre === event.target.value);
+    const formasPago = this.notaPedido.get('pedidos')['controls'][numeroPedido]['controls'].couries.value.find((item) => item.nombre === event.target.value);
     this.notaPedido.get('pedidos')['controls'][numeroPedido].get('precioEnvio').setValue(formasPago.costo);
+    console.log('event', this.notaPedido.get('pedidos')['controls']);
+    const metodosPagos = this.notaPedido.get('pedidos')['controls'][numeroPedido]['controls']?.formasPagos.value[event.target.selectedIndex - 1];
+    console.log('metodosPagos', metodosPagos);
+    this.notaPedido.get('pedidos')['controls'][numeroPedido].get('listaFormasPagos').setValue([...metodosPagos]);
     /*if (seleccionado && seleccionado.formaPago) {
       this.nombreCuenta = seleccionado.nombreCuenta;
       this.numeroCuenta = seleccionado.numeroCuenta;
@@ -491,13 +497,15 @@ export class PedidoWoocomerceComponent implements OnInit {
           ciudadDestino: this.notaPedido.get('facturacion').get('ciudad').value
         }).subscribe((result) => {
           console.log('forma', result);
-          const formasPagos = result.info.map(item => {
+          const couries = result.info.map(item => {
             return {
               nombre: `${item.courier} - Desde ${item.ciudad} hasta ${item.ciudadDestino} - Costo $${item.costo}`,
               costo: item.costo,
               formaPago: item.formaPago,
             };
           });
+          this.notaPedido.get('pedidos')['controls'][index].get('couries').setValue(couries);
+          const formasPagos = result.info.map(item => item.formaPago.filter(item2 => item2.estado === true));
           this.notaPedido.get('pedidos')['controls'][index].get('formasPagos').setValue(formasPagos);
           this.notaPedido.updateValueAndValidity();
           console.log('this.notaPedido', this.notaPedido);
