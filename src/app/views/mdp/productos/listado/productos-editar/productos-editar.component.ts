@@ -239,15 +239,8 @@ export class ProductosEditarComponent implements OnInit {
   }
 
   guardarProducto(): void {
-    this.producto.stockVirtual = JSON.stringify(this.producto.stockVirtual.map(item => {
-      if (item.canal === this.producto.canal) {
-        return {...item, estado: true};
-      } else {
-        return item;
-      }
-    }));
-    let llaves = Object.keys(this.producto);
-    let valores = Object.values(this.producto);
+    const llaves = Object.keys(this.producto);
+    const valores = Object.values(this.producto);
     this.datosProducto = new FormData();
     valores.map((valor, pos) => {
       if (llaves[pos] !== 'imagen_principal' && valor !== null) {
@@ -259,7 +252,6 @@ export class ProductosEditarComponent implements OnInit {
       this.datosProducto.append('imagen_principal', this.imagenPrinciplSeleccionada);
     }
 
-    this.datosProducto.append('prefijo', this.parametros.prefijo);
 
     // this.productosService.crearProducto(this.datosProducto).subscribe((info) => {
     //   console.log(info);
@@ -269,6 +261,18 @@ export class ProductosEditarComponent implements OnInit {
       this.toaster.open('Llenar campos', {type: 'warning'});
       return;
     }
+
+    this.producto.stockVirtual = JSON.stringify(this.producto.stockVirtual.map(item => {
+      if (item.canal === this.producto.canal) {
+        return {...item, estado: true};
+      } else {
+        return item;
+      }
+    }));
+
+    this.datosProducto.append('prefijo', this.parametros.prefijo);
+    this.datosProducto.append('stockVirtual', this.producto.stockVirtual);
+
     const fechaCaducidad = moment(this.producto.fechaCaducidad, 'YYYY-MM-DD');
     const fechaElaboracion = moment(this.producto.fechaElaboracion, 'YYYY-MM-DD');
     const diferenciaDiasElabCad = fechaCaducidad.diff(fechaElaboracion, 'days');

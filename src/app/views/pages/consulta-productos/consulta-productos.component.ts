@@ -45,12 +45,18 @@ export class ConsultaProductosComponent implements OnInit {
   // tslint:disable-next-line:variable-name
   page_size: any = 3;
   parametros;
-  integracionEnvio;
+  integracionEnvio: any[] = [];
 
   codigoBarras;
   producto;
   integracionProducto;
+  totalProductosEnOrigen;
 
+  mostrarSelectCourier = false;
+
+  couriers: any[] = [];
+  courierSeleccionado;
+  dataOrigenProductoEnvio;
   mostrarDatosProducto = false;
 
   sectorOpciones;
@@ -103,18 +109,23 @@ export class ConsultaProductosComponent implements OnInit {
       this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
         this.producto = info.producto;
         this.integracionProducto = info.integraciones_canal;
+        this.totalProductosEnOrigen = info.productos;
+        //this.totalProductosEnOrigen.map((courier) => this.couriers.push(courier.courier));
+        //console.log('COURIERS', this.couriers);
+        //this.obtenerDatosOrigenProducto();
         this.mostrarDatosProducto = true;
       }, error => this.toaster.open(error, {type: 'danger'}));
     });
   }
 
-  consultarDatosEnvio(): void{
-    if (this.provincia === '' || this.ciudad === '' || this.sector === ''){
+  consultarDatosEnvio(): void {
+    if (this.provincia === '' || this.ciudad === '' || this.sector === '') {
       this.toaster.open('Complete los campos requeridos', {type: 'danger'});
       return;
     }
 
     this.obtenerFacturasEnvio();
+    //this.mostrarSelectCourier = true;
   }
 
   obtenerProvincias(): void {
@@ -128,26 +139,50 @@ export class ConsultaProductosComponent implements OnInit {
       this.ciudadOpciones = info;
     });
   }
+
   obtenerSector(): void {
     this.paramServiceAdm.obtenerListaHijos(this.ciudad, 'CIUDAD').subscribe((info) => {
       this.sectorOpciones = info;
     });
   }
 
-  obtenerFacturasEnvio(): void{
-    if(this.ciudad){
+  /*obtenerDatosOrigenProducto(): void {
+    const todosProductos: any[] = [];
+    this.totalProductosEnOrigen.map(item => {
       this.integracionesEnviosService.obtenerListaIntegracionesEnviosSinAuth({
-        ciudad: this.integracionProducto.ciudad,
-        ciudadDestino: this.ciudad,
-        sector: this.integracionProducto.sector,
-        sectorDestino: this.sector
+        ciudad: item.ciudad,
+        sector: item.sector
       }).subscribe((result) => {
-        this.integracionEnvio = result.info;
-        console.log(this.integracionEnvio);
-        if (result.cont === 0){
+        todosProductos.push(result.info);
+        if (result.cont === 0) {
           this.toaster.open(`No existe datos de envío`);
         }
       });
+    })
+    this.dataOrigenProductoEnvio = todosProductos;
+    console.log('DATOS DESTINO PROD', this.dataOrigenProductoEnvio);
+  }*/
+
+  obtenerFacturasEnvio(): void {
+    if (this.ciudad && this.sector) {
+
+      this.totalProductosEnOrigen.map(producto => {
+        this.integracionesEnviosService.obtenerListaIntegracionesEnviosSinAuth({
+          ciudad: producto.ciudad,
+          ciudadDestino: this.ciudad,
+          sector: producto.sector,
+          sectorDestino: this.sector
+        }).subscribe((result) => {
+          if (result.cont === 0) {
+            this.toaster.open(`No existe datos de envío`);
+          }
+          this.integracionEnvio.push({envio: {...result.info}, datos_producto: producto});
+          this.integracionEnvio.sort((a, b) => {
+            return a.envio['0'].distancia - b.envio['0'].distancia; // De menor a mayor
+          });
+          console.log(this.integracionEnvio);
+        });
+      })
     }
   }
 
