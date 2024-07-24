@@ -63,7 +63,7 @@
               <div class="col-md-3">
                 <label for="segundo">Forma de pago:</label>
                 <select id="segundo" class="form-control"
-                        formControlName="formasPagos" (change)="onSelectFormaPago($event)">
+                        formControlName="formaPago" (change)="onSelectFormaPago($event)">
                   <option value="" selected>- Seleccion forma de pago -</option>
                   <option
                     *ngFor="let op of this.notaPedido.get('pedidos')['controls'][j]['controls'].listaFormasPagos.value"
