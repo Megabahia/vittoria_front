@@ -260,6 +260,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       ciudad: [ciudad, []],
       couries: ['', []],
       formasPagos: ['', [Validators.required]],
+      formaPago: ['', [Validators.required]],
       listaFormasPagos: ['', []],
       numeroCuenta: ['', []],
       nombreCuenta: ['', []],
@@ -421,6 +422,7 @@ export class PedidoWoocomerceComponent implements OnInit {
     this.notaPedido.get('pedidos')['controls'][numeroPedido].get('precioEnvio').setValue(formasPago.costo);
     const metodosPagos = this.notaPedido.get('pedidos')['controls'][numeroPedido]['controls']?.formasPagos.value[event.target.selectedIndex - 1];
     this.notaPedido.get('pedidos')['controls'][numeroPedido].get('listaFormasPagos').setValue([...metodosPagos]);
+    this.notaPedido.updateValueAndValidity();
     /*if (seleccionado && seleccionado.formaPago) {
       this.nombreCuenta = seleccionado.nombreCuenta;
       this.numeroCuenta = seleccionado.numeroCuenta;
@@ -567,11 +569,12 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   onSelectFormaPago(e: any) {
     const selectValue = e.target.value;
-    if (selectValue !== '' && selectValue === 'Transferencia') {
-      this.mostrarCargaComprobante = true;
-    } else {
-      this.mostrarCargaComprobante = false;
-    }
+    console.log('notepedido', this.notaPedido.value);
+    // if (selectValue !== '' && selectValue === 'Transferencia') {
+    //   this.mostrarCargaComprobante = true;
+    // } else {
+    //   this.mostrarCargaComprobante = false;
+    // }
   }
 
   async obtenerListaParametrosCanal(): Promise<void> {
