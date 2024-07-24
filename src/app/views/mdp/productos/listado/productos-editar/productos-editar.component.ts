@@ -262,16 +262,16 @@ export class ProductosEditarComponent implements OnInit {
       return;
     }
 
-    this.producto.stockVirtual = JSON.stringify(this.producto.stockVirtual.map(item => {
-      if (item.canal === this.producto.canal) {
-        return {...item, estado: true};
-      } else {
-        return item;
-      }
-    }));
+    if (typeof this.producto.stockVirtual === 'object'){
+      this.producto.stockVirtual = JSON.stringify(this.producto.stockVirtual.map(item => {
+        if (item.canal === this.producto.canal) {
+          return {...item, estado: true};
+        } else {
+          return item;
+        }
+      }));
+    }
 
-    this.datosProducto.append('prefijo', this.parametros.prefijo);
-    this.datosProducto.append('stockVirtual', this.producto.stockVirtual);
 
     const fechaCaducidad = moment(this.producto.fechaCaducidad, 'YYYY-MM-DD');
     const fechaElaboracion = moment(this.producto.fechaElaboracion, 'YYYY-MM-DD');
@@ -295,7 +295,10 @@ export class ProductosEditarComponent implements OnInit {
       this.datosProducto.append('imagenes[' + pos + ']id', pos.toString());
       this.datosProducto.append('imagenes[' + pos + ']imagen', valor);
     });
+    this.datosProducto.append('prefijo', this.parametros.prefijo);
+    this.datosProducto.append('stockVirtual', this.producto.stockVirtual);
     this.mostrarSpinner = true;
+
     if (this.idProducto !== 0) {
       this.datosProducto.delete('stockVirtual');
       this.productosService.actualizarProducto(this.datosProducto, this.idProducto).subscribe((info) => {
