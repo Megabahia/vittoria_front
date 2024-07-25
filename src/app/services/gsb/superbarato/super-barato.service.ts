@@ -54,4 +54,8 @@ export class SuperBaratoService {
     }
     return this.http.get<any>(`${apiUrl}/gsb/superbarato/exportar`, {params, ...httpOptions});
   }
+
+  validarContacto(datos): Observable<any>{
+    return this.http.post<any>(`${apiUrl}/gsb/superbarato/validate/contact/available`, datos);
+  }
 }

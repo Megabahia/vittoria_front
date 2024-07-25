@@ -600,7 +600,7 @@
       <li class="nav-item" *ngIf="acciones.ADM.LEER">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
-          <span class="menu-title text-truncate" data-i18n="Invoice">GSB Gestión de Super Barato</span></a>
+          <span class="menu-title text-truncate" data-i18n="Invoice" title="GD Gestión de Drop Shipping">GD Gestión de Drop Shipping</span></a>
         <ul class="menu-content ng-star-inserted">
           <li class="nav-item">
             <a class="d-flex align-items-center" [routerLink]="['gsb/inventario/list']" data-toggle="tooltip"
@@ -616,18 +616,32 @@
               <span class="menu-item text-truncate" data-i18n="List">Reporte de Inventario</span>
             </a>
           </li>
-          <li class="nav-item">
-            <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/create']" data-toggle="tooltip"
-               data-placement="auto" title="Ingreso de contactos">
-              <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Ingresar Contactos</span>
-            </a>
+          <li class="nav-item has-sub ng-star-inserted">
+            <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
+               title="Pedidos por Canal">
+              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Registro de contactos</span></a>
+            <ul class="menu-content">
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/create']" data-toggle="tooltip"
+                   data-placement="auto" title="Ingreso de contactos">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Ingresar Contactos</span>
+                </a>
+              </li>
+            </ul>
           </li>
           <li class="nav-item">
             <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/list']" data-toggle="tooltip"
                data-placement="auto" title="Listar Contactos">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Listar Contactos</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/list/reporte']" data-toggle="tooltip"
+               data-placement="auto" title="Reporte de lista de contactos">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Reporte de lista de contactos</span>
             </a>
           </li>
           <li class="nav-item">

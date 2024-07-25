@@ -15,7 +15,7 @@
       </div>
     </div>
   </div>
-  <div class="card" *ngIf="mostrarDatosProducto">
+  <div class="card">
     <div class="container mt-1">
       <h4 class="mb-1 p-1 bg-light text-dark">Detalle del Producto</h4>
       <div class="card border-primary">
@@ -61,16 +61,16 @@
           <small>Vittoria!</small>
         </div>
       </div>
-      <div class="container mt-2">
+      <!--<div class="container mt-2">
         <h2 class="mb-1">Origen de los productos por tienda</h2>
         <div class="card">
-          <!-- La fila debería estar fuera del bucle ngFor -->
+           La fila debería estar fuera del bucle ngFor
           <div class="row">
-            <!-- ngFor aplicado a las columnas -->
+             ngFor aplicado a las columnas
             <div class="col-md-6 col-12 mb-2" *ngFor="let p of totalProductosEnOrigen; let i = index">
               <div class="card-body">
                 <h5 class="card-title text-primary font-weight-bold">{{ p.tienda }}</h5>
-                <!--<p class="card-text">{{ p.descripcion }}</p>-->
+                <p class="card-text">{{ p.descripcion }}</p>
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item"><strong>Producto:</strong> {{ p.nombre }} <span
                     class="text-muted">({{ p.codigoBarras }})</span></li>
@@ -82,18 +82,18 @@
                   <li class="list-group-item"><strong>Precio oferta:</strong> <span
                     class="text-danger"> {{ p.precioOferta | currency }}</span></li>
                   <li class="list-group-item"><strong>Stock real:</strong> {{ p.stock }}</li>
-                  <!--<li class="list-group-item"><strong>Courier:</strong> {{ p.courier }} (Costo envío: ${{ p.costo }})</li>-->
+                  <li class="list-group-item"><strong>Courier:</strong> {{ p.courier }} (Costo envío: ${{ p.costo }})</li>
                 </ul>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </div>-->
     </div>
     <div class="container mt-1">
       <div class="row bg-primary pt-1 mb-1">
         <div class="col-12">
-          <h4 class="mb-1">Datos de destino</h4>
+          <h4 class="mb-1">Ingrese los datos del destino del producto</h4>
         </div>
       </div>
       <div class="row">
@@ -168,13 +168,14 @@
                   <!-- Información de Envío -->
                   <div class="col-md-6">
                     <p><strong>País:</strong> {{ item.envio['0'].pais }}</p>
+                    <p><strong>Tienda de origen:</strong> <span class="text-primary"> {{ item.datos_producto.tienda }}</span></p>
                     <p><strong>Dirección de origen:</strong> {{ item.envio['0'].provincia }}, {{ item.envio['0'].ciudad }}, {{ item.envio['0'].sector }}</p>
                     <p><strong>Dirección de destino:</strong> {{ item.envio['0'].provinciaDestino }}, {{ item.envio['0'].ciudadDestino }}, {{ item.envio['0'].sectorDestino }}</p>
-                    <p><strong>Distancia entre origen y destino:</strong> <span class="text-danger">{{ item.envio['0'].distancia }} km</span></p>
-                    <p><strong>Costo de envío:</strong> ${{ item.envio['0'].costo }}</p>
+                    <p><strong>Distancia entre origen y destino:</strong> <span class="text-danger"> {{ item.envio['0'].distancia }} km</span></p>
+                    <p><strong>Costo de envío:</strong> {{ item.envio['0'].costo | currency}}</p>
                     <p><strong>Formas de pago:</strong>
                       <ng-container *ngFor="let forma of item.envio['0'].formaPago; let last = last">
-                        <span *ngIf="forma.estado">{{ forma.nombre }}<span *ngIf="!last">, </span></span>
+                        <span *ngIf="forma.estado"> {{ forma.nombre }}<span *ngIf="!last">, </span></span>
                       </ng-container>
                     </p>
                     <p><strong>Tiempo de entrega estimado:</strong> {{ item.envio['0'].tiempo_entrega }} horas</p>
@@ -182,8 +183,9 @@
                   <!-- Información del Producto -->
                   <div class="col-md-6">
                     <p class="font-weight-bold">{{ item.datos_producto.nombre }} - {{item.datos_producto.codigoBarras}}</p>
-                    <p><strong>Desripción:</strong>{{ item.datos_producto.descripcion }}</p>
-                    <p><strong>Precio Venta:</strong> ${{ item.datos_producto.precioVentaA }}</p>
+                    <p><strong>Desripción:</strong> {{ item.datos_producto.descripcion }}</p>
+                    <p><strong>Precio Venta:</strong> <span class="text-success"> {{ item.datos_producto.precioVentaA | currency}}</span> </p>
+                    <p><strong>Precio Oferta:</strong> <span class="text-danger"> {{ item.datos_producto.precioOferta | currency}}</span> </p>
                     <p><strong>Stock real:</strong> {{ item.datos_producto.stock }}</p>
                   </div>
                 </div>

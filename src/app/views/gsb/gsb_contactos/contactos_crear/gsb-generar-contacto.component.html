@@ -2,7 +2,7 @@
   <div class="content-wrapper">
     <div class="content-body">
       <div class="card d-inline-flex p-2">
-        <h1>Ingresar contacto</h1>
+        <h1>Ingresar contacto para venta</h1>
         <button class="btn btn-primary mx-1"
                 (click)="crearNuevoContacto(notaContactoModalAdd)"
         >Nuevo Contacto
@@ -34,6 +34,8 @@
                        class="form-control invoice-edit-input date-picker"
                        disabled
                 />
+                <span class="title text-danger p-1">Hora: </span>
+                <span class="text-danger">{{ horaPedido }}</span>
               </div>
             </div>
           </div>
@@ -69,6 +71,7 @@
                 <label>Número de WhatsApp</label>
                 <input class="form-control" type="text"
                        formControlName="whatsapp"
+                       (change)="validarDatos()"
                 >
                 <div *ngIf="notaContactoForm.whatsapp.errors"
                      class="invalid-feedback" style="display: block;">
@@ -89,7 +92,7 @@
             </div>
           </div>
 
-          <div class="col-md-4 col-12">
+          <!--<div class="col-md-4 col-12">
             <label>Metodo Pago</label>
             <input class="form-control" type="text"
                    formControlName="metodoPago" disabled
@@ -100,20 +103,23 @@
                 Requerido
               </div>
             </div>
+          </div>-->
+          <div class="row d-flex justify-content-between m-2">
+            <div class="col-md-5 col-12">
+              <label>Usuario:</label><br />
+              <label >{{currentUser.usuario.nombres}} {{currentUser.usuario.apellidos}}</label>
+            </div>
+            <div class="col-md-5 col-12">
+              <label for="canalProducto">Canal</label>
+              <select class="form-control" id="canalProducto" disabled>
+                <option value="" disabled>- Seleccione -</option>
+                <option [value]="canal" *ngFor="let canal of listaCanalesProducto"
+                        [selected]="canal === 'superbarato.megadescuento.com'">
+                  {{ canal }}
+                </option>
+              </select>
+            </div>
           </div>
-          <div class="col-md-4 col-12">
-
-            <label for="canalProducto">Canal</label>
-            <select class="form-control" id="canalProducto" disabled>
-              <option value="" disabled>- Seleccione -</option>
-              <option [value]="canal" *ngFor="let canal of listaCanalesProducto"
-                      [selected]="canal === 'superbarato.megadescuento.com'">
-                {{ canal }}
-              </option>
-            </select>
-
-          </div>
-
           <hr class="invoice-spacing"/>
           <div class="card-body invoice-padding">
             <div formArrayName="articulos">
@@ -125,7 +131,7 @@
                       <div class="row">
                         <div class="col-12 d-flex product-details-border position-relative pr-0">
                           <div class="row w-100 pr-lg-0 pr-1 py-2">
-                            <div class="col-lg-5 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                            <div class="col-lg-4 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
                               <p class="card-text col-title mb-md-50 mb-0">
                                 Enlace del producto
                               </p>
@@ -139,21 +145,67 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="col-lg-2 col-12 my-lg-0 my-2">
-                              <p class="card-text col-title mb-md-50 mb-0 red text-danger">
-                                Cantidad
+                            <div class="col-lg-3 col-12 my-lg-0 my-2">
+                              <p class="quantity-title col-title mb-md-50 mb-0">
+                                Cantidad del producto
                               </p>
-                              <input type="text" class="form-control"
+                              <div class="quantity-counter-wrapper">
+                                <core-touchspin>
+                                  <div class="btn-group touchspin-wrapper">
+                                    <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-down"
+                                            (click)="escogerCantidad('restar', i, detalle)"
+                                    >
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                           viewBox="0 0 24 24"
+                                           fill="none" stroke="currentColor" stroke-width="2"
+                                           stroke-linecap="round"
+                                           stroke-linejoin="round" class="feather feather-minus">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                      </svg><!----><!----></button>
+                                    <input type="number" pattern="\d*" maxlength="4"
+                                           class="form-control ng-untouched ng-pristine ng-valid"
+                                           step="1" min="1"
+                                           max="10"
+                                           disabled
+                                           formControlName="cantidad"
+                                    >
+
+                                    <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-up"
+                                            (click)="escogerCantidad('sumar', i, detalle)"
+                                    >
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                           viewBox="0 0 24 24"
+                                           fill="none" stroke="currentColor" stroke-width="2"
+                                           stroke-linecap="round"
+                                           stroke-linejoin="round" class="feather feather-plus">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                      </svg><!----><!----></button>
+                                  </div>
+                                </core-touchspin>
+                                <div *ngIf="detalle.controls.cantidad.errors"
+                                     class="invalid-feedback"
+                                     style="display: block;">
+                                  <div *ngIf="detalle.controls.cantidad.errors.required">
+                                    Requerido
+                                  </div>
+                                  <div *ngIf="detalle.controls.cantidad.errors.min">
+                                    Ingrese minimo 1
+                                  </div>
+                                </div>
+                              </div>
+                              <!--<input type="text" class="form-control"
                                      formControlName="cantidad"
                                      (change)="calcular()"
-                              />
+                              />-->
                             </div>
                             <div class="col-lg-2 col-12 my-lg-0 my-2">
                               <p class="card-text col-title mb-md-50 mb-0">
-                                Precio
+                                Precio publicado
                               </p>
                               <input type="text" class="form-control"
                                      formControlName="valorUnitario"
+                                     placeholder="00.00"
                                      (change)="calcular()"
                               />
                             </div>

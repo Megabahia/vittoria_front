@@ -9,6 +9,9 @@ import {SuperbaratoComponent} from "./gsb_superbarato/superbarato.component";
 import {GsbProductosReporteComponent} from "./inventario/productos-reporte/gsb-productos-reporte.component";
 import {GsbGenerarContactoComponent} from "./gsb_contactos/contactos_crear/gsb-generar-contacto.component";
 import {ContactosListarComponent} from "./gsb_contactos/contactos_listar/contactos-listar.component";
+import {
+  ReporteContactosListarComponent
+} from "./gsb_contactos/reporte_contactos_listar/reporte_contactos-listar.component";
 
 const routes: Routes = [{
   path: '', component: GsbComponent, children: [
@@ -31,6 +34,9 @@ const routes: Routes = [{
         {path: '', redirectTo: 'list', pathMatch: 'full'},
         {
           path: 'list', component: ContactosListarComponent, canActivate: [AuthGuard],
+        },
+        {
+          path: 'list/reporte', component: ReporteContactosListarComponent, canActivate: [AuthGuard],
         },
         {
           path: 'create', component: GsbGenerarContactoComponent, canActivate: [AuthGuard],

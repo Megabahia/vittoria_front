@@ -10,9 +10,10 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
 import {ClientesService} from '../../../../services/mdm/personas/clientes/clientes.service';
-import {ValidacionesPropias} from '../../../../utils/customer.validators';
-import html2canvas from 'html2canvas';
-import {ContactosService} from "../../../../services/mdm/personas/contactos/contactos.service";
+import {ContactosService} from '../../../../services/mdm/personas/contactos/contactos.service';
+import {SuperBaratoService} from '../../../../services/gsb/superbarato/super-barato.service';
+import {AuthService} from '../../../../services/admin/auth.service';
+import Decimal from "decimal.js";
 
 @Component({
   selector: 'app-gsb-generar-contacto',
@@ -49,15 +50,11 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
   cedulaABuscar = '';
   clientes;
   cliente;
-  cedula
+  cedula;
   parametroDireccion;
   descuentoCupon;
-  myAngularxCode;
   fotoCupon;
-  idContacto;
-  imagenCargada = false;
   diasValidosCupon;
-  verDireccion = true;
   listaCanalesProducto;
   tipoIdentificacion;
   public barChartData: ChartDataSets[] = [];
@@ -70,31 +67,26 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
   archivo: FormData = new FormData();
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
+  horaPedido;
+  currentUser;
 
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
-    private clientesService: ClientesService,
     private contactoService: ContactosService,
     private paramService: ParamService,
     private paramServiceAdm: ParamServiceAdm,
     private productosService: ProductosService,
+    private superBaratoService: SuperBaratoService,
+    private authService: AuthService,
     private toaster: Toaster,
   ) {
+    this.currentUser = this.authService.currentUserValue;
+    const fecha = new Date();
+    this.horaPedido = this.extraerHora(fecha.toString());
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaContacto();
-    /*this.autorizarForm = this.formBuilder.group({
-      metodoConfirmacion: ['', [Validators.required]],
-      codigoConfirmacion: ['', [Validators.required]],
-      fechaHoraConfirmacion: ['', [Validators.required]],
-      tipoFacturacion: ['', [Validators.required]],
-    });
-    this.rechazoForm = this.formBuilder.group({
-      id: ['', [Validators.required]],
-      motivo: ['', [Validators.required]],
-      estado: ['Rechazado', [Validators.required]],
-      fechaContacto: ['', [Validators.required]],
-    });*/
+
 
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'DIRECCIÓN', 'Dirección').subscribe((result) => {
       this.parametroDireccion = result.info[0].valor;
@@ -103,6 +95,7 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
       this.descuentoCupon = result.info[0].valor;
     });
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'CUPON VALIDO', 'Cupón válido').subscribe((result) => {
+      // tslint:disable-next-line:radix
       this.diasValidosCupon = parseInt(result.info[0].valor);
     });
 
@@ -115,12 +108,9 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
     };
     this.barChartData = [this.datosTransferencias];
     this.obtenerOpciones();
-    //this.obtenerProvincias();
-    //this.obtenerCiudad();
   }
 
   ngAfterViewInit(): void {
-    //this.obtenerDatosContacto();
   }
 
   iniciarNotaContacto(): void {
@@ -134,20 +124,14 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['Contra-Entrega', [Validators.required]],
       canal: [this.canalSeleccionado, []],
+      estado: ['Ingresado'],
+      usuario: [`${this.currentUser.usuario.nombres} ${this.currentUser.usuario.apellidos}`]
     });
   }
 
 
   get notaContactoForm() {
     return this.notaContacto['controls'];
-  }
-
-  get facturacionForm() {
-    return this.notaContacto.get('facturacion')['controls'];
-  }
-
-  get envioForm() {
-    return this.notaContacto.get('envio')['controls'];
   }
 
   get detallesArray(): FormArray {
@@ -158,7 +142,7 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
     return this.formBuilder.group({
       urlProducto: ['', [Validators.required]],
       valorUnitario: [0],
-      cantidad: [0],
+      cantidad: [1],
       precio: [0],
     });
   }
@@ -172,20 +156,6 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
     this.calcular();
   }
 
-  obtenerDatosContacto(): void {
-    this.contactoService.obtenerLista({
-      page: this.page - 1,
-      page_size: this.pageSize,
-      //inicio: this.inicio,
-      //fin: this.transformarFecha(this.fin),
-      //estado: ['Pendiente'],
-      canal: 'Super Barato'
-    }).subscribe((info) => {
-      this.collectionSize = info.cont;
-      this.listaContacto = info.info;
-      this.idContacto = info.info[0].id;
-    });
-  }
 
   crearNuevoContacto(modal): void {
     this.canalSeleccionado = 'superbarato.megadescuento.com';
@@ -212,15 +182,12 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
     }
+
+
     if (confirm('Esta seguro de guardar los datos') === true) {
       this.contactoService.crearContactos(this.notaContacto.value).subscribe((info) => {
           this.modalService.dismissAll();
           this.notaContacto.patchValue({...info});
-          //this.obtenerDatosContacto();
-          //this.abrirModalCupon(notaContactoModal);
-          //this.myAngularxCode = `Numero de Contacto: ${info.numeroContacto}`;
-
-          //this.captureScreen();
         }, error => this.toaster.open(error, {type: 'danger'})
       );
     }
@@ -252,9 +219,7 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
-        //if(info.mensaje==''){
         if (info.codigoBarras) {
-          //this.productosService.enviarGmailInconsistencias(this.notaContacto.value.id).subscribe();
           this.detallesArray.controls[i].get('id').setValue(info.id);
           this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
@@ -268,24 +233,20 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
             Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
           ]);
           this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
-          this.detallesArray.controls[i].get('canal').setValue(info.canal)
-          this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
+          this.detallesArray.controls[i].get('canal').setValue(info.canal);
+          this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId);
           this.calcular();
           resolve();
         } else {
           this.detallesArray.controls[i].get('articulo').setValue('');
           this.toaster.open('Producto no existente, agregue un producto que se encuentre en la lista de productos.', {type: 'danger'});
           reject(new Error('No existe el producto a buscar')); // Rechaza la promesa si no se encuentra el producto
-        }// Resuelve la promesa una vez completadas todas las asignaciones
-        /*}else{
-          this.productosService.enviarGmailInconsistencias(this.notaContacto.value.id).subscribe();
-          window.alert('Existen inconsistencias con los precios de los productos.');
-        }*/
+        }
       });
     });
   }
 
-  extraerPrecios(info: any) {
+  extraerPrecios(info: any): any[] {
     const precios = [];
     Object.keys(info).forEach(clave => {
       if (clave.startsWith('precioVenta')) {
@@ -295,47 +256,24 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
     return precios;
   }
 
+  extraerHora(dateTimeString: string): string {
+    const date = new Date(dateTimeString);
+    return date.toTimeString().split(' ')[0];
+  }
+
   calcular(): void {
-    //const detalles = this.detallesArray.controls;
     const detallesProductoExtra = this.detallesArray.controls;
-    //let total = 0;
     let totalProdExtra = 0;
-    /*detalles.forEach((item, index) => {
-      const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
-      const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
-      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
-      total += parseFloat(detalles[index].get('precio').value);
-    });*/
     detallesProductoExtra.forEach((item, index) => {
       const valorUnitario = parseFloat(detallesProductoExtra[index].get('valorUnitario').value || 0);
       const cantidad = parseFloat(detallesProductoExtra[index].get('cantidad').value || 0);
       detallesProductoExtra[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       totalProdExtra += parseFloat(detallesProductoExtra[index].get('precio').value);
     });
-    //total += this.notaContacto.get('envioTotal').value;
-    //this.notaContacto.get('total').setValue((totalProdExtra).toFixed(2));
   }
 
-  /*async actualizar(): Promise<void> {
-    this.archivo.delete('id');
-    this.archivo.delete('fotoCupon');
-    this.archivo.append('id', this.idContacto)
-    this.archivo.append('fotoCupon', this.fotoCupon);
-
-    this.contactoService.actualizarContacto(this.archivo).subscribe((info) => {
-      delete info.articulos;
-      this.notaContacto.patchValue({...info});
-      this.toaster.open('Captura realizada correctamente', {type: 'info'})
-      this.imagenCargada = true;
-    }, error => this.toaster.open(error, {type: 'danger'}))
-
-  }*/
 
   obtenerFechaActual(): Date {
-    //const fecha= new Date();
-    //const dia= fecha.getDate().toString().padStart(2, '0');
-    //const mes= (fecha.getMonth() + 1).toString().padStart(2, '0');
-    //const anio= fecha.getFullYear().toString();
     const fechaActual = new Date();
 
     return fechaActual;
@@ -350,181 +288,26 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
     return `${dia}-${mes}-${anio}`;
   }
 
-  generarID(): string {
-    const numeroAleatorio = Math.floor(Math.random() * 1000000);
-
-    return numeroAleatorio.toString().padStart(8, '0');
-  }
-
-  obtenerProvincias(): void {
-    this.paramServiceAdm.obtenerListaHijos(this.pais, 'PAIS').subscribe((info) => {
-      this.provinciaOpciones = info;
+  validarDatos(): void {
+    const filters = {
+      whatsapp: this.notaContacto.value.whatsapp
+    };
+    this.superBaratoService.validarContacto(filters).subscribe((info) => {
+    }, error => {
+      this.notaContacto.get('whatsapp').setValue('');
+      this.toaster.open(error, {type: 'danger'});
     });
   }
 
-  obtenerCiudad(): void {
-    this.paramServiceAdm.obtenerListaHijos(this.notaContacto.value.facturacion.provincia, 'PROVINCIA').subscribe((info) => {
-      this.ciudadOpciones = info;
-    });
+
+  escogerCantidad(operacion, i, articulo): void {
+    const cantidadControl = articulo;
+    let cantidad = +articulo.get('cantidad').value;
+    cantidad = operacion === 'sumar' ? Math.min(cantidad + 1) : Math.max(cantidad - 1, 1);
+    cantidadControl.get('cantidad').setValue(cantidad);
+    const total = +new Decimal(cantidadControl.get('valorUnitario').value).mul(cantidad).toFixed(2).toString();
+    cantidadControl.get('precio').setValue(total);
+    this.notaContacto.updateValueAndValidity();
+    this.calcular();
   }
-
-  obtenerClienteCedula(): void {
-
-    if (this.cedulaABuscar !== '') {
-
-      this.clientesService.obtenerClientePorCedula({cedula: this.cedulaABuscar}).subscribe((info) => {
-        this.notaContacto.get('facturacion').get('nombres').setValue(info.nombres)
-        this.notaContacto.get('facturacion').get('apellidos').setValue(info.apellidos)
-        this.notaContacto.get('facturacion').get('correo').setValue(info.correo)
-        this.notaContacto.get('facturacion').get('identificacion').setValue(info.cedula)
-        this.notaContacto.get('facturacion').get('telefono').setValue(info.telefono)
-        this.notaContacto.get('facturacion').get('provincia').setValue(info.provinciaNacimiento)
-        this.notaContacto.get('facturacion').get('ciudad').setValue(info.ciudadNacimiento)
-
-        this.obtenerCiudad();
-        //this.notaContacto.get('facturacion').get('identificacion').disable();
-      }, error => {
-        this.toaster.open(error, {type: 'danger'})
-        this.notaContacto.get('facturacion').get('nombres').setValue('')
-        this.notaContacto.get('facturacion').get('apellidos').setValue('')
-        this.notaContacto.get('facturacion').get('correo').setValue('')
-        this.notaContacto.get('facturacion').get('identificacion').setValue('')
-        this.notaContacto.get('facturacion').get('telefono').setValue('')
-        this.notaContacto.get('facturacion').get('provincia').setValue('')
-        this.notaContacto.get('facturacion').get('ciudad').setValue('')
-        this.obtenerCiudad()
-
-        //this.notaContacto.get('facturacion').get('identificacion').enable();
-      })
-    }
-  }
-
-  cargarImagen(i, event: any): void {
-    this.datosProducto = new FormData();
-
-    const id = this.detallesArray.controls[i].get('id').value;
-    const archivo = event.target.files[0];
-    if (archivo) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const nuevaImagen = e.target.result;
-        this.detallesArray.controls[i].get('imagen_principal').setValue(nuevaImagen);
-        this.datosProducto.append('imagen_principal', archivo)
-        //this.datosProducto.append('imagenes[' + 0 + ']id', '0');
-        //this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
-        this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
-        this.datosProducto.append('canal', this.detallesArray.controls[i].get('canal').value);
-
-        try {
-          this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
-            this.toaster.open('Imagen actualizada con éxito', {type: "info"});
-          }, error => this.toaster.open('No se pudo actualizar la imagen.', {type: "danger"}));
-        } catch (error) {
-          this.toaster.open('Error al actualizar la imagen.', {type: "danger"});
-        }
-      };
-      reader.readAsDataURL(archivo);
-
-    }
-  }
-
-  validarCedulaInicial(e) {
-    if (e.target.value === '') {
-      this.notaContacto.get('facturacion').get('identificacion').setValidators([]);
-    } else {
-      this.notaContacto.get('facturacion').get('identificacion').setValidators([Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$'),
-        ValidacionesPropias.cedulaValido
-      ]);
-    }
-    this.notaContacto.get('facturacion').get('identificacion').updateValueAndValidity();
-  }
-
-  fechaValidez(): string {
-    const fecha = new Date(this.notaContacto.value.created_at);
-    const dia = fecha.getDate() + this.diasValidosCupon;
-    const mes = fecha.getMonth() + 1;
-    const anio = fecha.getFullYear();
-
-    return dia.toString().padStart(2, '0') + '-' + mes.toString().padStart(2, '0') + '-' + anio;
-  }
-
-
-  abrirModalCupon(modal): void {
-    this.imagenCargada = false
-
-    this.modalService.open(modal, {size: 'lg', backdrop: 'static'})
-  }
-
-  captureScreen() {
-    const data = document.getElementById('notaContactoContent');
-    if (data) {
-      setTimeout(() => {
-        html2canvas(data, {
-          scale: 2,
-          backgroundColor: null,
-        }).then(canvas => {
-          canvas.style.filter = 'brightness(150%)';
-          const imgData = canvas.toDataURL('image/png');
-          this.fotoCupon = this.base64ToFile(imgData, `Contacto_${this.notaContacto.value.numeroContacto}.png`, 'image/png');
-          this.notaContacto.value.fotoCupon = imgData;
-          //this.actualizar();
-        });
-      }, 3000);
-    }
-  }
-
-  base64ToFile(base64, filename, contentType) {
-    const arr = base64.split(',');
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, {type: contentType});
-  }
-
-  openWhatsApp(event: Event): void {
-    event.preventDefault();
-    const numero = this.notaContacto.value.facturacion.telefono;
-    const modifiedNumber = (numero.startsWith('0') ? numero.substring(1) : numero);
-    const internationalNumber = '593' + modifiedNumber;
-    const message = encodeURIComponent(`Sr.(a)(ita). ${this.notaContacto.value.facturacion.nombres} ${this.notaContacto.value.facturacion.apellidos}\n\nMuchas gracias por confiar en nosotros, su Contacto estará listo para que usted pase retirando en nuestro punto de entrega.\n\nEncuéntranos en QUITO: Av. 10 de Agosto N39-201 y José Arizaga, Sector La Y, frente al Hipermercado CORAL y junto a la Clínica AXXIS.\n\n${this.parametroDireccion}\n\n*Cuando usted retire su Contacto, presentando la siguiente imagen usted  OBTIENE un 10% de ¡DESCUENTO ADICIONAL!*\n\n${this.notaContacto.value.fotoCupon}`);
-    //const imageUrl = encodeURIComponent(imagen);  // URL de la imagen que deseas enviar
-    const whatsappUrl = `https://web.whatsapp.com/send/?phone=${internationalNumber}&text=${message}`;
-    window.open(whatsappUrl, '_blank');  // Abrir WhatsApp en una nueva pestaña
-  }
-
-  descargarImagen(): void {
-    window.open(this.notaContacto.value.fotoCupon, 'Download');
-  }
-
-  onSelectChange(e: any) {
-    const value = e.target.value;
-    this.canalSeleccionado = value;
-  }
-
-  onSelectChangeIdentificacion(event: any) {
-    const selectedValue = event.target.value;
-    if (selectedValue === 'cedula') {
-      this.notaContacto.get('facturacion')['controls']['identificacion'].setValidators(
-        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.cedulaValido]
-      );
-      this.notaContacto.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
-    } else if (selectedValue === 'ruc') {
-      this.notaContacto.get('facturacion')['controls']['identificacion'].setValidators(
-        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.rucValido]
-      )
-      this.notaContacto.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
-    } else {
-      this.notaContacto.get('facturacion')['controls']['identificacion'].setValidators(
-        [Validators.required, Validators.minLength(5)]
-      )
-      this.notaContacto.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
-    }
-    this.tipoIdentificacion = selectedValue;
-
-  }
-
 }
-
