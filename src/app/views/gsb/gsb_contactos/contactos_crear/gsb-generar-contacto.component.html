@@ -114,7 +114,7 @@
               <select class="form-control" id="canalProducto" disabled>
                 <option value="" disabled>- Seleccione -</option>
                 <option [value]="canal" *ngFor="let canal of listaCanalesProducto"
-                        [selected]="canal === 'superbarato.megadescuento.com'">
+                        [selected]="canal === this.canalSeleccionado">
                   {{ canal }}
                 </option>
               </select>
@@ -208,6 +208,16 @@
                                      placeholder="00.00"
                                      (change)="calcular()"
                               />
+                              <div *ngIf="detalle.controls.valorUnitario.errors"
+                                   class="invalid-feedback"
+                                   style="display: block;">
+                                <div *ngIf="detalle.controls.valorUnitario.errors.required">
+                                  Requerido
+                                </div>
+                                <div *ngIf="detalle.controls.valorUnitario.errors.pattern">
+                                  Ingrese valores válidos
+                                </div>
+                              </div>
                             </div>
                             <div class="col-lg-2 col-12 my-lg-0 my-2">
                               <p class="card-text col-title mb-md-50 mb-0">

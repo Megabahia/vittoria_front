@@ -46,7 +46,7 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
   whatsapp = '';
   correo = '';
   usuarioActual;
-  canalSeleccionado = 'Contacto.megadescuento.com';
+  canalSeleccionado = '';
   cedulaABuscar = '';
   clientes;
   cliente;
@@ -82,6 +82,7 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
     private toaster: Toaster,
   ) {
     this.currentUser = this.authService.currentUserValue;
+    console.log(this.currentUser);
     const fecha = new Date();
     this.horaPedido = this.extraerHora(fecha.toString());
     this.inicio.setMonth(this.inicio.getMonth() - 3);
@@ -141,7 +142,7 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
   crearDetalleGrupoProductoExtra(): any {
     return this.formBuilder.group({
       urlProducto: ['', [Validators.required]],
-      valorUnitario: [0],
+      valorUnitario: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d+)?$')]],
       cantidad: [1],
       precio: [0],
     });
@@ -158,7 +159,7 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
 
 
   crearNuevoContacto(modal): void {
-    this.canalSeleccionado = 'superbarato.megadescuento.com';
+    this.canalSeleccionado = this.currentUser.usuario.canal;
     this.iniciarNotaContacto();
     this.obtenerListaProductos();
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});

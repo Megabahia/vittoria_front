@@ -59,12 +59,7 @@
               <td>{{ contacto.apellidos }}</td>
               <td>
                 {{ enmarcarNumeroTelefono(contacto.whatsapp) }}
-                <a (click)="openWhatsApp($event, contacto.whatsapp)">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png"
-                    alt="wsp"
-                    width="30" height="30">
-                </a>
+
               </td>
               <td>
                 <ul *ngFor="let productos of contacto.articulos">

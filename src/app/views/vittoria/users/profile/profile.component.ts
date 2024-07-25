@@ -31,7 +31,8 @@ export class ProfileComponent implements OnInit {
   imagen;
   imagenTemp;
   nombreBuscar
-  canalOpciones
+  canalOpciones;
+  usuarioLocalStorage;
   usuario: Usuario = {
     id: 0,
     nombres: '',
@@ -65,9 +66,7 @@ export class ProfileComponent implements OnInit {
 
   ) {
     const usuario = this.authService.currentUserValue;
-    console.log(usuario);
     this.mostrar = !!usuario.acciones.ADM.CREAR;
-    console.log('this.mostrAR', this.mostrar);
     this.idUsuario = usuario.id;
     this.usersService.obtenerListaPaises().subscribe((result) => {
       this.paises = result;
@@ -80,6 +79,7 @@ export class ProfileComponent implements OnInit {
     });
     this.obtenerListaParametros();
   }
+
 
   get f() {
     return this.usuarioForm.controls;
@@ -110,6 +110,13 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  cargarDatosUsuarioLocalStorage() {
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    if (userData.usuario) {
+      console.log(userData.usuario);
+    }
+  }
+
   async ngAfterViewInit() {
     await this.usersService.obtenerUsuario(this.idUsuario).subscribe((result) => {
       this.usuario = result;
@@ -117,6 +124,14 @@ export class ProfileComponent implements OnInit {
       this.redesForm.patchValue(result);
       this.imagen = this.usuario.imagen;
     });
+  }
+
+  loadUserDataLocalStorage() {
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      this.usuario = JSON.parse(userData).usuario;
+    }
+    console.log(userData)
   }
 
   async actualizarUsuario() {
@@ -132,7 +147,13 @@ export class ProfileComponent implements OnInit {
       return;
     }
     delete this.usuario.imagen;
-    await this.usersService.actualizarUsuario(this.usuario).subscribe(() => {
+    await this.usersService.actualizarUsuario(this.usuario).subscribe((usuario) => {
+
+        //ACTUALIZAR LOCALSTORAGE
+        const userData = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+        localStorage.setItem('currentUser', JSON.stringify({...userData, usuario: this.usuarioForm.value }));
+
         this.mensaje = 'Se actualizo correctamente';
         this.abrirModal(this.mensajeModal);
         this.router.navigate(['/admin/management']);
