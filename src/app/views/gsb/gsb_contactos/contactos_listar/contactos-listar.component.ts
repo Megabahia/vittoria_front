@@ -223,7 +223,6 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       page_size: this.pageSize,
       //inicio: this.inicio,
       //fin: this.transformarFecha(this.fin),
-      canal: 'superbarato.megadescuento.com'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaContacto = info.info;
