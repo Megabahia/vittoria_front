@@ -4,11 +4,14 @@
 <div class="container">
   <div class="card">
     <div class="row p-2 d-flex align-items-center">
-      <div class="col-md-3 col-12 mt-2">
-        <h5>Ingrese el código del producto: <span class="text-danger">*</span></h5>
+      <div class="col-md-2 col-12 mt-2 ">
+        <h5>Filtros de búsqueda: <span class="text-danger">*</span></h5>
       </div>
       <div class="col-md-3 col-12 mt-2">
         <input class="form-control" type="text" [(ngModel)]="codigoBarras" placeholder="Código de producto">
+      </div>
+      <div class="col-md-3 col-12 mt-2">
+        <input class="form-control" type="text" [(ngModel)]="nombreProducto" placeholder="Nombre de producto">
       </div>
       <div class="col-md-3 col-12 mt-2 ml-2">
         <button class="btn btn-primary" (click)="obtenerProducto()">Consultar</button>
@@ -168,7 +171,8 @@
                   <!-- Información de Envío -->
                   <div class="col-md-6">
                     <p><strong>País:</strong> {{ item.envio['0'].pais }}</p>
-                    <p><strong>Tienda de origen:</strong> <span class="text-primary"> {{ item.datos_producto.tienda }}</span></p>
+                    <p><strong>Tienda de origen:</strong> <span> {{ item.datos_producto.tienda }}</span></p>
+                    <p><strong>Link de la tienda origen:</strong> <a href="https://{{item.datos_producto.canal}}" target="_blank"> {{ item.datos_producto.canal }}</a></p>
                     <p><strong>Dirección de origen:</strong> {{ item.envio['0'].provincia }}, {{ item.envio['0'].ciudad }}, {{ item.envio['0'].sector }}</p>
                     <p><strong>Dirección de destino:</strong> {{ item.envio['0'].provinciaDestino }}, {{ item.envio['0'].ciudadDestino }}, {{ item.envio['0'].sectorDestino }}</p>
                     <p><strong>Distancia entre origen y destino:</strong> <span class="text-danger"> {{ item.envio['0'].distancia }} km</span></p>
@@ -183,6 +187,7 @@
                   <!-- Información del Producto -->
                   <div class="col-md-6">
                     <p class="font-weight-bold">{{ item.datos_producto.nombre }} - {{item.datos_producto.codigoBarras}}</p>
+                    <p><strong>Link del catálogo de categoría:</strong> <a  href="{{ item.datos_producto.link_catalogo }}"target="_blank"> {{ item.datos_producto.link_catalogo }}</a></p>
                     <p><strong>Desripción:</strong> {{ item.datos_producto.descripcion }}</p>
                     <p><strong>Precio Venta:</strong> <span class="text-success"> {{ item.datos_producto.precioVentaA | currency}}</span> </p>
                     <p><strong>Precio Oferta:</strong> <span class="text-danger"> {{ item.datos_producto.precioOferta | currency}}</span> </p>

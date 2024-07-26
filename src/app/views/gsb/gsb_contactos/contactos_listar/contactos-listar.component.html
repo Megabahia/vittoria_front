@@ -37,14 +37,13 @@
           <table class="user-list-table table">
             <thead class="thead-light">
             <tr>
-              <th>Fecha</th>
-              <th>Hora</th>
-              <th>Canal</th>
-              <th>Número Contacto</th>
+              <th>Fecha de contacto</th>
+              <th style="color: blue">Hora de Contacto</th>
               <th>Nombres</th>
               <th>Apellidos</th>
               <th>WhatsApp</th>
               <th>URL Productos</th>
+              <th>Estado del contacto</th>
               <th>Accion</th>
             </tr>
             </thead>
@@ -52,14 +51,12 @@
             <tbody>
             <tr *ngFor="let contacto  of listaContacto; let i = index">
               <td>{{ contacto.created_at | date: 'dd-MM-yyyy' }}</td>
-              <td>{{ contacto.created_at | date: 'HH:mm:ss' }}</td>
-              <td>{{ contacto.canal | shorten }}</td>
-              <td>{{ contacto.id }}</td>
+              <td style="color: blue">{{ contacto.created_at | date: 'HH:mm:ss' }}</td>
               <td>{{ contacto.nombres }}</td>
               <td>{{ contacto.apellidos }}</td>
               <td>
-                {{ contacto.whatsapp }}
-                <a (click)="openWhatsApp($event, contacto.whatsapp)">
+                {{ enmarcarNumeroTelefono(contacto.whatsapp) }}
+                <a (click)="openWhatsApp($event, contacto.whatsapp, contacto.nombres, contacto.apellidos)">
                   <img
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png"
                     alt="wsp"
@@ -68,8 +65,14 @@
               </td>
               <td>
                 <ul *ngFor="let productos of contacto.articulos">
-                  <li>{{productos.urlProducto | shorten}}</li>
+                  <li style="color: black">
+                    <a href="{{productos.urlProducto}}" target="_blank">{{productos.urlProducto | shorten}}</a>
+                  </li>
                 </ul>
+              </td>
+              <td
+                [ngStyle]="{'color': contacto.estado === 'NUEVO' ? 'black' : contacto.estado === 'CONTACTO FALSO' ? 'red' : contacto.estado === 'EN PROCESO DE VENTA' ? 'blue' : 'green'}">
+                {{contacto.estado}}
               </td>
               <td>
                 <button class="btn btn-primary" (click)="obtenerDatosContacto(notaPedidoModal, contacto.id)">Generar Pedido</button>

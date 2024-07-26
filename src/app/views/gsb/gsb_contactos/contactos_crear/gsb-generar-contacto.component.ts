@@ -125,7 +125,7 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['Contra-Entrega', [Validators.required]],
       canal: [this.canalSeleccionado, []],
-      estado: ['Ingresado'],
+      estado: ['NUEVO'],
       usuario: [`${this.currentUser.usuario.nombres} ${this.currentUser.usuario.apellidos}`]
     });
   }

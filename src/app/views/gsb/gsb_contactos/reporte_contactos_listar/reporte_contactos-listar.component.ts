@@ -471,7 +471,6 @@ export class ReporteContactosListarComponent implements OnInit, AfterViewInit {
     if (numero.length <= 4){
       return numero;
     }
-
     const ultimosDigitos = numero.slice(-4);
     const numerosEnmascarados = numero.slice(0, -4).replace(/./g, '*');
 

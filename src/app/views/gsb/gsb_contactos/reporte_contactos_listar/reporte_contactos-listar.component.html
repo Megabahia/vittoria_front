@@ -59,7 +59,6 @@
               <td>{{ contacto.apellidos }}</td>
               <td>
                 {{ enmarcarNumeroTelefono(contacto.whatsapp) }}
-
               </td>
               <td>
                 <ul *ngFor="let productos of contacto.articulos">
@@ -67,7 +66,7 @@
                 </ul>
               </td>
               <td
-                [ngStyle]="{'color': contacto.estado === 'Falso' ? 'red' : contacto.estado === 'Ingresado' ? 'black' : 'green'}">
+                [ngStyle]="{'color': contacto.estado === 'NUEVO' ? 'black' : contacto.estado === 'CONTACTO FALSO' ? 'red' : contacto.estado === 'EN PROCESO DE VENTA' ? 'blue' : 'green'}">
                 {{contacto.estado}}
               </td>
             </tr>

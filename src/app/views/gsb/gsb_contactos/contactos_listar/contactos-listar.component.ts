@@ -423,12 +423,12 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     return date.toTimeString().split(' ')[0];
   }
 
-  openWhatsApp(event: Event, numero): void {
+  openWhatsApp(event: Event, numero, nombre, apellido): void {
     event.preventDefault();
     const modifiedNumber = (numero.startsWith('0') ? numero.substring(1) : numero);
     const internationalNumber = '593' + modifiedNumber;
-    //const imageUrl = encodeURIComponent(imagen);  // URL de la imagen que deseas enviar
-    const whatsappUrl = `https://web.whatsapp.com/send/?phone=${internationalNumber}`;
+    const message = encodeURIComponent(`Hola Sr.(a)(ita). ${nombre} ${apellido}\n\nLe saludamos desde nuestra organización Vittoria.\n\nMuchas gracias por confiar en nosotros.\n\n¡Bievenido!`);
+    const whatsappUrl = `https://web.whatsapp.com/send/?phone=${internationalNumber}&text=${message}`;
     window.open(whatsappUrl, '_blank');  // Abrir WhatsApp en una nueva pestaña
   }
 
@@ -464,6 +464,15 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     }
     this.tipoIdentificacion = selectedValue;
 
+  }
+
+  enmarcarNumeroTelefono(numero: any): string{
+    if (numero.length <= 4){
+      return numero;
+    }
+    const ultimosDigitos = numero.slice(-4);
+    const numerosEnmascarados = numero.slice(0, -4).replace(/./g, '*');
+    return numerosEnmascarados + ultimosDigitos;
   }
 
 }
