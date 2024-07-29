@@ -64,6 +64,10 @@ export class ContactosService {
     // const data = {confirmacionContacto, comentariosVendedor};
     return this.http.post<any>(`${apiUrl}/mdm/contactos/update/${data.id}`, data);
   }
+  actualizarEstadoContacto(id, nuevoEstado) {
+    const payload = { estado: nuevoEstado };
+    return this.http.post<any>(`${apiUrl}/mdm/contactos/update/${id}`, payload);
+  }
 
   eliminarContacto(id) {
     return this.http.delete<any>(`${apiUrl}/mdm/contactos/delete/${id}`);

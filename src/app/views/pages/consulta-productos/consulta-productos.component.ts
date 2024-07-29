@@ -46,7 +46,7 @@ export class ConsultaProductosComponent implements OnInit {
   page_size: any = 3;
   parametros;
   integracionEnvio: any[] = [];
-
+  nombreProducto;
   codigoBarras;
   producto;
   integracionProducto;
@@ -94,14 +94,15 @@ export class ConsultaProductosComponent implements OnInit {
   }
 
   async obtenerProducto(): Promise<void> {
-    if (!this.codigoBarras) {
-      this.toaster.open('Ingrese un código de producto', {type: 'danger'});
+    if (!this.codigoBarras && !this.nombreProducto) {
+      this.toaster.open('Ingrese un dato para buscar producto', {type: 'danger'});
       return;
     }
 
     return new Promise((resolve, reject) => {
       const data = {
         codigoBarras: this.codigoBarras,
+        nombre: this.nombreProducto,
         state: 1,
         estado: 'Activo',
       };
@@ -119,11 +120,11 @@ export class ConsultaProductosComponent implements OnInit {
   }
 
   consultarDatosEnvio(): void {
+    this.integracionEnvio = [];
     if (this.provincia === '' || this.ciudad === '' || this.sector === '') {
       this.toaster.open('Complete los campos requeridos', {type: 'danger'});
       return;
     }
-
     this.obtenerFacturasEnvio();
     //this.mostrarSelectCourier = true;
   }
@@ -180,7 +181,6 @@ export class ConsultaProductosComponent implements OnInit {
           this.integracionEnvio.sort((a, b) => {
             return a.envio['0'].distancia - b.envio['0'].distancia; // De menor a mayor
           });
-          console.log(this.integracionEnvio);
         });
       })
     }

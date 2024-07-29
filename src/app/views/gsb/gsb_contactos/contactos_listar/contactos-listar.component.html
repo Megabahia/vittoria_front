@@ -37,14 +37,16 @@
           <table class="user-list-table table">
             <thead class="thead-light">
             <tr>
-              <th>Fecha</th>
-              <th>Hora</th>
-              <th>Canal</th>
-              <th>Número Contacto</th>
+              <th>Fecha de contacto</th>
+              <th style="color: blue">Hora de Contacto</th>
               <th>Nombres</th>
               <th>Apellidos</th>
               <th>WhatsApp</th>
               <th>URL Productos</th>
+              <th>Estado del contacto</th>
+              <th>Tiempo para concretar la venta</th>
+              <th>Concretar la venta</th>
+              <th>Consultar productos</th>
               <th>Accion</th>
             </tr>
             </thead>
@@ -52,14 +54,12 @@
             <tbody>
             <tr *ngFor="let contacto  of listaContacto; let i = index">
               <td>{{ contacto.created_at | date: 'dd-MM-yyyy' }}</td>
-              <td>{{ contacto.created_at | date: 'HH:mm:ss' }}</td>
-              <td>{{ contacto.canal | shorten }}</td>
-              <td>{{ contacto.id }}</td>
+              <td style="color: blue">{{ contacto.created_at | date: 'HH:mm:ss' }}</td>
               <td>{{ contacto.nombres }}</td>
               <td>{{ contacto.apellidos }}</td>
               <td>
-                {{ contacto.whatsapp }}
-                <a (click)="openWhatsApp($event, contacto.whatsapp)">
+                {{ enmarcarNumeroTelefono(contacto.whatsapp) }}
+                <a (click)="openWhatsApp($event, contacto.whatsapp, contacto.nombres, contacto.apellidos)">
                   <img
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png"
                     alt="wsp"
@@ -68,11 +68,42 @@
               </td>
               <td>
                 <ul *ngFor="let productos of contacto.articulos">
-                  <li>{{productos.urlProducto | shorten}}</li>
+                  <li style="color: black">
+                    <a href="{{productos.urlProducto}}" target="_blank">{{ productos.urlProducto | shorten }}</a>
+                  </li>
                 </ul>
               </td>
+              <td
+                [ngStyle]="{'color': contacto.estado === 'NUEVO' ? 'black' : contacto.estado === 'CONTACTO FALSO' ? 'red' : contacto.estado === 'EN PROCESO DE VENTA' ? 'blue' : 'green'}">
+                {{ contacto.estado }}
+              </td>
               <td>
-                <button class="btn btn-primary" (click)="obtenerDatosContacto(notaPedidoModal, contacto.id)">Generar Pedido</button>
+                <ng-container *ngIf="esTiempoSobrepasado(contacto); else tiempoNormal">
+                  <span style="color: red;">
+                    Alerta Tiempo concretado ({{ calcularTiempoConcretar(contacto) }})
+                  </span>
+                </ng-container>
+                <ng-template #tiempoNormal>
+                  <span>
+                    {{ parametroTiempo }} min - Hasta: {{ calcularTiempoConcretar(contacto) }}
+                  </span>
+                </ng-template>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-secondary" (click)="actualizarEstadoContacto(contacto, 'EN PROCESO DE VENTA')">
+                  Tomar contacto para venta
+                </button>
+              </td>
+              <td>
+                <a *ngIf="contacto.estado === 'EN PROCESO DE VENTA'"  class="btn btn-sm border-primary"
+                   [routerLink]="['/pages/consulta/producto']" target="_blank">
+                  Consultar productos
+                </a>
+              </td>
+              <td>
+                <button *ngIf="contacto.estado === 'EN PROCESO DE VENTA'" class="btn btn-primary" (click)="obtenerDatosContacto(notaPedidoModal, contacto.id)">Generar
+                  Pedido
+                </button>
               </td>
             </tr>
             </tbody>
@@ -489,12 +520,12 @@
                     <form class="source-item">
                       <div data-repeater-list="group-a"
                            *ngFor="let detalle of notaPedido.get('productoExtra')['controls']; let i = index;">
-                        <div class="row" [formGroup]="detalle">
+                        <ng-container class="row" [formGroup]="detalle">
                           <div class="repeater-wrapper" data-repeater-item>
                             <div class="row">
                               <div class="col-12 d-flex product-details-border position-relative pr-0">
                                 <div class="row w-100 pr-lg-0 pr-1 py-2">
-                                  <div class="col-lg-4 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                  <div class="col-lg-5 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
                                       Enlace del producto
                                     </p>
@@ -508,7 +539,7 @@
                                       </div>
                                     </div>
                                   </div>
-                                  <div class="col-lg-3 col-12 my-lg-0 my-2">
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
                                     <p class="card-text col-title mb-md-50 mb-0 red text-danger">
                                       Cantidad
                                     </p>
@@ -516,19 +547,20 @@
                                            formControlName="cantidad"
                                            (change)="calcular()"
                                     />
-                                    <!--<div *ngIf="detalle.controls.cantidad.errors"
+                                    <div *ngIf="detalle.controls.cantidad.errors"
                                          class="invalid-feedback"
                                          style="display: block;">
                                       <div *ngIf="detalle.controls.cantidad.errors.required">
                                         Requerido
                                       </div>
-                                      <div *ngIf="detalle.controls.cantidad.errors.max">
-                                        Fuera de stock
-                                      </div>
                                       <div *ngIf="detalle.controls.cantidad.errors.min">
                                         Ingrese minimo 1
                                       </div>
-                                    </div>-->
+                                      <div *ngIf="detalle.controls.cantidad.errors.pattern">
+                                        Ingrese número enteros
+                                      </div>
+                                    </div>
+
                                   </div>
 
                                   <div class="col-lg-2 col-12 my-lg-0 my-2">
@@ -538,7 +570,18 @@
                                     <input type="text" class="form-control"
                                            formControlName="valorUnitario"
                                            (change)="calcular()"
+                                           placeholder="00.00"
                                     />
+                                    <div *ngIf="detalle.controls.valorUnitario.errors"
+                                         class="invalid-feedback"
+                                         style="display: block;">
+                                      <div *ngIf="detalle.controls.valorUnitario.errors.required">
+                                        Requerido
+                                      </div>
+                                      <div *ngIf="detalle.controls.valorUnitario.errors.pattern">
+                                        Ingrese número válidos
+                                      </div>
+                                    </div>
                                   </div>
                                   <div class="col-lg-2 col-12 my-lg-0 my-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
@@ -548,8 +591,8 @@
                                   </div>
                                   <div
                                     class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
-                                    <i-feather name="x"
-                                               class="cursor-pointer font-medium-3"
+                                    <i-feather name="trash"
+                                               class="cursor-pointer font-medium-3 text-danger"
                                                data-repeater-delete
                                                (click)="removerItemExtra(i)"></i-feather>
 
@@ -558,7 +601,7 @@
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </ng-container>
                       </div>
                     </form>
                   </div>

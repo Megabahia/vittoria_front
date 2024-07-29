@@ -139,7 +139,8 @@ export class ProductosEditarComponent implements OnInit {
       stockVirtual: ['', []],
       peso: [0, []],
       tamanio: [0, []],
-      prefijo: ['', []]
+      prefijo: ['', []],
+      link_catalogo: ['']
     });
     this.fichaTecnicaForm = this._formBuilder.group({
       codigo: ['', [Validators.required]],

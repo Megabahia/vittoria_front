@@ -49,6 +49,7 @@ export class PedidoWoocomerceComponent implements OnInit {
   mostrarContenidoFacturacion = false;
   mostrarCargaComprobante = false;
   mostrarContenidoPantalla = true;
+  mostrarDatosEnvio = false;
 
   datosCliente;
   disabledCombo = false;
@@ -451,6 +452,7 @@ export class PedidoWoocomerceComponent implements OnInit {
     if (selectValue === 'esCliente') {
       this.mostrarContenido = false;
       this.mostrarContenidoFacturacion = false;
+      this.mostrarDatosEnvio = false;
       this.esCliente = true;
     } else {
       this.esCliente = false;
@@ -628,6 +630,32 @@ export class PedidoWoocomerceComponent implements OnInit {
     });
   }
 
+  mostrarDatosEnvioConScroll() {
+    this.mostrarDatosEnvio = true;
+    this.smoothScrollToTop(1500);
+  }
+
+  smoothScrollToTop(duration: number) {
+    const start = window.pageYOffset;
+    const startTime = performance.now();
+
+    const animateScroll = (currentTime: number) => {
+      const elapsedTime = currentTime - startTime;
+      const fraction = elapsedTime / duration;
+
+      const easeOutQuad = (t: number) => t * (2 - t);
+      const scrollFraction = easeOutQuad(fraction);
+
+      const newScrollPosition = start * (1 - scrollFraction);
+      window.scrollTo(0, newScrollPosition);
+
+      if (fraction < 1) {
+        requestAnimationFrame(animateScroll);
+      }
+    };
+
+    requestAnimationFrame(animateScroll);
+  }
 
   protected readonly Number = Number;
   protected readonly JSON = JSON;

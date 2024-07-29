@@ -21,6 +21,7 @@ import {ContactosListarComponent} from "./gsb_contactos/contactos_listar/contact
 import {
   ReporteContactosListarComponent
 } from "./gsb_contactos/reporte_contactos_listar/reporte_contactos-listar.component";
+import {GdParamsComponent} from "./gd_params/gd_params.component";
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {
     GsbProductosReporteComponent,
     GsbGenerarContactoComponent,
     ContactosListarComponent,
-    ReporteContactosListarComponent
+    ReporteContactosListarComponent,
+    GdParamsComponent
   ],
   exports: [
     GsbProductosListarComponent

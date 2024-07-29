@@ -43,7 +43,8 @@ export interface Producto {
   proveedor;
   stockVirtual?;
   peso;
-  tamanio
+  tamanio;
+  link_catalogo;
 }
 
 export interface FichaTecnicaProducto {
@@ -116,7 +117,8 @@ export class ProductosService {
       }, {canal: 'megadescuento.com', estado: false}, {canal: 'todomegacentro.megadescuento.com', estado: false}
       ],
       peso: 0,
-      tamanio: 0
+      tamanio: 0,
+      link_catalogo: ''
     };
   }
 

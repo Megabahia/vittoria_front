@@ -12,7 +12,7 @@
             <div class="col-md-12">
               <div class="form-group">
                 <div *ngIf="disabledSelectCanal; else SelectEnable">
-                  <label for="canal">Canal</label>
+                  <label for="canal">Link del catálogo de la tienda: </label>
                   <select class="form-control select2" name="canal" id="canal" formControlName="canal"
                           [(ngModel)]="producto.canal" disabled>
                     <option value="" selected>- Seleccionar -</option>
@@ -20,7 +20,7 @@
                   </select>
                 </div>
                 <ng-template #SelectEnable>
-                  <label for="canal1">Canal</label>
+                  <label for="canal1">Link del catálogo de la tienda: </label>
                   <select class="form-control select2" name="canal" id="canal1" formControlName="canal"
                           [(ngModel)]="producto.canal" (change)="obtenerListaParametrosCanal(producto.canal)">
                     <option value="" selected>- Seleccionar -</option>
@@ -33,6 +33,18 @@
             <div class="row" *ngIf="producto.canal != ''">
               <h4 class="mx-2 my-1 text-warning font-weight-bold">Información requerida</h4>
               <div class="row mx-2">
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label style="color: blue">Link del catálogo de la categoría</label>
+                    <input type="text" class="form-control" formControlName="link_catalogo"
+                           [(ngModel)]="producto.link_catalogo">
+                    <!--<div *ngIf="submittedProductoForm && fp.link_catalogo.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.link_catalogo.errors.required">Link del catálogo de la categoría requerido
+                      </div>
+                    </div>-->
+                  </div>
+                </div>
                 <div class="col-md-4 col-12">
                   <div class="form-group">
                     <label>Nombre completo</label>
@@ -50,7 +62,7 @@
                     <label>Código de barras</label>
                     <div class="input-group mb-1">
                       <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">{{this.parametros?.prefijo}}</span>
+                        <span class="input-group-text" id="basic-addon1">{{ this.parametros?.prefijo }}</span>
                       </div>
                       <input type="text" class="form-control" name="codigoBarras" formControlName="codigoBarras"
                              [(ngModel)]="producto.codigoBarras">
