@@ -36,6 +36,8 @@ export class GdParamsComponent implements OnInit, AfterViewInit {
   archivo: FormData = new FormData();
   tipo;
 
+  parametroTiempo;
+
   // @ViewChild('padres') padres;
   constructor(
     private paramService: GdParamService,
@@ -44,6 +46,7 @@ export class GdParamsComponent implements OnInit, AfterViewInit {
     private authService: AuthService,
   ) {
     this.currentUserValue = this.authService.currentUserValue;
+
   }
 
   get f() {
