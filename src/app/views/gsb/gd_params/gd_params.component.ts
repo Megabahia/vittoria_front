@@ -145,10 +145,10 @@ export class GdParamsComponent implements OnInit, AfterViewInit {
         {
           id: this.idParametro,
           nombre: this.nombre,
-          tipo: this.nombreTipo,
-          tipoVariable: this.descripcion,
-          valor: this.tipoVariable,
-          descripcion: this.valor,
+          tipo: this.tipo,
+          tipoVariable: this.tipoVariable,
+          valor: this.valor,
+          descripcion: this.descripcion
         }).subscribe((result) => {
         this.obtenerListaParametros();
         this.dismissModal.nativeElement.click();
