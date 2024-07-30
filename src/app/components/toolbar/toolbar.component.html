@@ -558,6 +558,13 @@
               <span class="menu-item text-truncate" data-i18n="List">Despachos entregados</span>
             </a>
           </li>
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['gdc/facturas/cargadas']" data-toggle="tooltip"
+               data-placement="auto" title="Confirmación de facturas cargadas">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Confirmación de facturas</span>
+            </a>
+          </li>
         </ul>
       </li>
       <li class="nav-item" *ngIf="acciones.ADM.LEER">

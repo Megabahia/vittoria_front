@@ -60,7 +60,7 @@
               <th>Forma de pago</th>
               <th>Comprobante Transferencia</th>
               <th>Comprobante Tarjeta de Crédito</th>
-              <!--<th>Acciones</th>-->
+              <th>Acciones</th>
             </tr>
             </thead>
 
@@ -98,13 +98,14 @@
                   <i-feather name="file-text" class="mr-25"></i-feather>
                 </a>
               </td>
-              <!--<td>
-                <button *ngIf="transaccion.verificarPedido && transaccion.estado !== 'Facturado'" class="btn btn-primary"
-                        (click)="obtenerContacto(facturacionModal, transaccion.id)">
-                  Facturar
+              <td class="text-center">
+                <button (click)="aprobarContacto(transaccion.id)" class="btn btn-primary">
+                  Aprobar
                 </button>
-                <p *ngIf="transaccion.estado === 'Facturado'">Facturado</p>
-              </td>-->
+                <button (click)="negarContacto(transaccion.id)" class="btn btn-secondary">
+                  Negar
+                </button>
+              </td>
             </tr>
             </tbody>
           </table>
