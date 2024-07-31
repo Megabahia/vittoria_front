@@ -59,8 +59,9 @@
                 <th>Ver</th>
                 <th>Cupón</th>
                 <th>Monto subtotal a pagar del pedido</th>
-                <th>Monto subtotal ingresado en evidencia </th>
-                <th>Evidencia de venta</th>
+                <th>Monto subtotal ingresado en evidencia</th>
+                <th>Evidenciade factura</th>
+                <th>Cargar evidencia de venta</th>
               </tr>
               </thead>
 
@@ -93,8 +94,13 @@
                   </a>
                   <span *ngIf="transaccion.fotoCupon===null">No existe cupón.</span>
                 </td>
-                <td>{{transaccion.subtotal | currency}}</td>
-                <td class="text-info">{{transaccion.montoSubtotalCliente | currency}}</td>
+                <td>{{ transaccion.subtotal | currency }}</td>
+                <td class="text-info">{{ transaccion.montoSubtotalCliente | currency }}</td>
+                <td>
+                  <a href="{{transaccion.archivoFactura}}" *ngIf="transaccion.archivoFactura" target="_blank">
+                    <i-feather name="file-text" class="mr-25"></i-feather>
+                  </a>
+                </td>
                 <td>
                   <button
                     *ngIf="transaccion.estado === 'Pendiente de entrega' || transaccion.estado === 'Por confirmar'"
@@ -705,11 +711,18 @@
         <div class="modal-content">
           <div class="card-body invoice-padding">
             <div class="col-12">
-              <p class="bg-primary text-center">Por favor, carga el archivo de la factura y el monto del subtotal de la factura para reflejar la evidencia de la venta.</p>
+              <p class="bg-primary text-center">Por favor, carga el archivo de la factura y el monto del subtotal de la
+                factura para reflejar la evidencia de la venta.</p>
             </div>
           </div>
           <form [formGroup]="formaPagoForm">
             <div class="card-body invoice-padding">
+              <div class="row">
+                <div class="col-md-6 col-12 mb-1">
+                  <label>Fecha de la carga de evidencia:</label>
+                  <input class="form-control mb-2" type="text" disabled formControlName="fechaCargaFormaPago"/>
+                </div>
+              </div>
               <div class="row">
                 <div class="col-md-6 col-12 mb-1">
                   <div class="form-group">
@@ -745,7 +758,13 @@
               <div class="row">
                 <div class="col-md-6 col-12 mb-1">
                   <label>Fecha en la que se emitió la factura:</label>
-                  <input class="form-control mb-2" type="text" disabled formControlName="fechaCargaFormaPago"/>
+                  <input class="form-control mb-2" type="date" formControlName="fechaEmisionFactura"/>
+                  <div *ngIf="formasPagoForm.fechaEmisionFactura.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="formasPagoForm.fechaEmisionFactura.errors.required">
+                      Requerido
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="row">
@@ -771,7 +790,7 @@
                       Requerido
                     </div>
                     <div *ngIf="formasPagoForm.montoSubtotalCliente.errors.pattern">
-                      Ingrese valores válidos
+                      Ingrese valores válidos y unicamente dos decimales
                     </div>
                   </div>
                 </div>

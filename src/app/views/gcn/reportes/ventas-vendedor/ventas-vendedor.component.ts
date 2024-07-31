@@ -170,7 +170,8 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
       montoCredito: [''],
       numeroComprobante: [''],
       archivoFactura: ['', [Validators.required]],
-      montoSubtotalCliente: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d+)?$')]],
+      montoSubtotalCliente: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
+      fechaEmisionFactura: ['', [Validators.required]],
     });
   }
 
@@ -385,6 +386,8 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
         this.toaster.open('El monto ingresado no debe ser mayor al monto a pagar del pedido.', {type: 'danger'})
         return;
       } else {
+        const fechaTransformada = new Date(this.formaPagoForm.get('fechaEmisionFactura').value).toISOString();
+
         const facturaFisicaValores: string[] = Object.values(this.formaPagoForm.value);
         const facturaFisicaLlaves: string[] = Object.keys(this.formaPagoForm.value);
         facturaFisicaLlaves.map((llaves, index) => {
@@ -396,6 +399,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
         this.archivo.append('id', this.idPedido);
         this.archivo.append('formaPago', JSON.stringify(this.formasPago));
         this.archivo.append('fechaCargaFormaPago', this.fechaFactura);
+        this.archivo.append('fechaEmisionFactura', fechaTransformada);
 
         this.pedidosService.actualizarPedidoFormaPagoFormData(this.archivo).subscribe((info) => {
           this.modalService.dismissAll();
@@ -408,7 +412,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
 
   onSelectChange(event: any) {
     const selectedValue = event.target.value;
-    if (selectedValue === 'rimpePopular' || selectedValue === 'facturaElectronicaMegaBahia') {
+    if (selectedValue === 'rimpePopular' || selectedValue === 'facturaElectronica') {
       this.mostrarInputComprobante = true;
       this.formaPagoForm.get('numeroComprobante').setValidators([Validators.required]);
       this.formaPagoForm.get('numeroComprobante').updateValueAndValidity();
