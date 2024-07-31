@@ -57,9 +57,8 @@
               <th>Telefono</th>
               <th>Estado</th>
               <th>Ver</th>
-              <th>Forma de pago</th>
-              <th>Comprobante Transferencia</th>
-              <th>Comprobante Tarjeta de Crédito</th>
+              <th>Evidencia de factura</th>
+              <th>Monto subtotal</th>
               <th>Acciones</th>
             </tr>
             </thead>
@@ -84,19 +83,12 @@
                 </a>
               </td>
               <td>
-                <ul *ngFor="let pago of transaccion.formaPago">
-                  <li>{{pago | uppercase}}</li>
-                </ul>
-              </td>
-              <td>
-                <a href="{{transaccion.archivoFormaPago}}" *ngIf="transaccion.formaPago.includes('transferencia')" target="_blank">
+                <a href="{{transaccion.archivoFactura}}" *ngIf="transaccion.archivoFactura" target="_blank">
                   <i-feather name="file-text" class="mr-25"></i-feather>
                 </a>
               </td>
               <td>
-                <a href="{{transaccion.archivoFormaPagoCredito}}" *ngIf="transaccion.formaPago.includes('tarjeta_credito')" target="_blank">
-                  <i-feather name="file-text" class="mr-25"></i-feather>
-                </a>
+                {{transaccion.montoSubtotalCliente | currency}}
               </td>
               <td class="text-center">
                 <button (click)="aprobarContacto(transaccion.id)" class="btn btn-primary">

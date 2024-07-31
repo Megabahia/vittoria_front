@@ -159,8 +159,8 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
     this.formaPagoForm = this.formBuilder.group({
       id: ['', []],
       tipoPago: ['', [Validators.required]],
-      fechaCargaFormaPago: [''],
-      formaPago: ['', [Validators.required]],
+      fechaCargaFormaPago: [this.fechaFactura],
+      formaPago: [''],
       archivoFormaPago: [''],
       archivoFormaPagoCredito: [''],
       numTransaccionTransferencia: [''],
@@ -168,7 +168,9 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
       totalCobroEfectivo: [''],
       montoTransferencia: [''],
       montoCredito: [''],
-      numeroComprobante: ['']
+      numeroComprobante: [''],
+      archivoFactura: ['', [Validators.required]],
+      montoSubtotalCliente: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d+)?$')]],
     });
   }
 
@@ -209,8 +211,8 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
       valorUnitario: [0, [Validators.required]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
-      caracteristicas:['',[]],
-      descuento: [0,[]],
+      caracteristicas: ['', []],
+      descuento: [0, []],
       imagen: ['', []],
       imagen_principal: [''],
       prefijo: ['']
@@ -231,7 +233,10 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
       rol: this.usuario.usuario.idRol
     }).subscribe((info) => {
       this.collectionSize = info.cont;
-      this.listaTransacciones = info.info;
+      this.listaTransacciones = info.info.map((item) => {
+        const resultado = this.calculoComision(item.estado, item.montoSubtotalCliente, item.total);
+        return {...item, comision: resultado};
+      });
     });
   }
 
@@ -239,7 +244,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
     return this.datePipe.transform(fecha, 'yyyy-MM-dd');
   }
 
-  obtenerFechaActual(){
+  obtenerFechaActual() {
     const hoy = new Date();
     return this.datePipe.transform(hoy, 'dd-MM-yyyy') || '';
   }
@@ -252,7 +257,6 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
       info.articulos.map((item): void => {
         this.agregarItem();
       });
-      //const iva = +(info.total * this.iva.valor).toFixed(2);
       const total = info.total;
       this.notaPedido.patchValue({...info, subtotal: info.subtotal, total});
       this.calcular();
@@ -328,68 +332,34 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
     return date.toTimeString().split(' ')[0];
   }
 
-  calculoComision(estado, total) {
-    let variable2;
-    if (estado === 'Entregado') {
-      variable2 = total/this.parametroIva;
-      return (variable2 * this.comision).toFixed(2);
-    }else{
+  calculoComision(estado, montoSubtotal, total): string {
+    let resultado;
+    if (estado !== 'Entregado') {
       return '--';
     }
+
+    if (montoSubtotal != null) {
+      resultado = montoSubtotal * this.comision;
+    } else if (total != null) {
+      resultado = (total / this.parametroIva) * this.comision;
+    }
+
+    return resultado.toFixed(2);
   }
 
   cargarFactura(modal, id): void {
     this.totalFormaPago = 0;
-    //this.obtenerProvincias();
-    //this.obtenerListaProductos();
-    this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
+    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
     this.idPedido = id;
     this.iniciarFormaPagoForm();
+    this.formaPagoForm.get('archivoFactura').setValue('');
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
-      console.log('DATOS', info)
-      /*if (info.tipoPago === 'rimpePopular') {
-        this.mostrarInputComprobante = true;
-      } else if (info.tipoPago === 'facturaElectronica') {
-        this.mostrarInputComprobante = false;
-      } else {
-        this.mostrarInputComprobante = false;
-      }
-      if (info.formaPago === 'transferencia') {
-        this.mostrarInputTransaccion = true;
-        this.mostrarCargarArchivo = true;
-        this.mostrarInputCobro = false;
-
-      } else if (info.formaPago === 'efectivo') {
-        this.mostrarInputTransaccion = false;
-        this.mostrarCargarArchivo = false;
-        this.mostrarInputCobro = true;
-      } else {*/
-      this.mostrarInputComprobante = false;
-      this.mostrarInputTransaccion = false;
-      this.mostrarCargarArchivo = false;
-      this.mostrarInputCobro = false;
-      this.mostrarCargarArchivoCredito = false;
-      this.mostrarInputTransaccionCredito = false;
       this.formasPago = [];
-      //}
-
-      //this.provincia = info.facturacion.provincia;
-      //this.obtenerCiudad();
-
-      this.totalPagar = info.total;
-      /*this.iniciarNotaPedido();
-      this.horaPedido = this.extraerHora(info.created_at);*/
-
-      //this.canalPrincipal = info.articulos[0].canal;
-      //this.canalSeleccionado = this.canalPrincipal;
-
-      /*info.articulos.map((item): void => {
-        this.agregarItem();
-      });*/
+      this.totalPagar = info.subtotal;
       //this.formaPagoForm.patchValue({...info, verificarPedido: true});
       if (modal._declarationTContainer.localNames[0] === 'facturacionModal') {
-        this.formaPagoForm.get('formaPago').setValidators([Validators.required]);
-        this.formaPagoForm.get('formaPago').updateValueAndValidity();
+        //this.formaPagoForm.get('formaPago').setValidators([Validators.required]);
+        //this.formaPagoForm.get('formaPago').updateValueAndValidity();
         this.formaPagoForm.get('tipoPago').setValidators([Validators.required]);
         this.formaPagoForm.get('tipoPago').updateValueAndValidity();
       }
@@ -398,35 +368,41 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
   }
 
   async actualizar(): Promise<void> {
-    await Promise.all(this.detallesArray.controls.map((producto, index) => {
+    /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
-    }));
+    }));*/
+    this.formaPagoForm.get('archivoFactura').setValue('');
+    this.formaPagoForm.get('archivoFactura').setValidators([]);
+    this.formaPagoForm.get('archivoFactura').updateValueAndValidity();
+
     if (this.formaPagoForm.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
     }
+
     if (confirm('Esta seguro de guardar los datos') === true) {
-      const facturaFisicaValores: string[] = Object.values(this.formaPagoForm.value);
-      const facturaFisicaLlaves: string[] = Object.keys(this.formaPagoForm.value);
-      facturaFisicaLlaves.map((llaves, index) => {
-        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago' && llaves !== 'facturacion' && llaves !== 'articulos') {
-          this.archivo.delete(llaves);
-          this.archivo.append(llaves, facturaFisicaValores[index]);
-        }
-      });
-      this.archivo.append('id', this.idPedido);
-      this.archivo.append('formaPago', JSON.stringify(this.formasPago));
-      this.archivo.append('fechaCargaFormaPago', this.fechaFactura);
-      if (this.mostrarInputCobro || this.mostrarInputTransaccion || this.mostrarInputTransaccionCredito) {
-        if (Number(this.totalPagar) !== Number(this.totalFormaPago)) {
-          this.toaster.open('El precio total ingresado no coincide', {type: 'danger'})
-        } else {
-          this.pedidosService.actualizarPedidoFormaPagoFormData(this.archivo).subscribe((info) => {
-            this.modalService.dismissAll();
-            this.obtenerTransacciones();
-          }, error => this.toaster.open(error, {type: 'danger'}));
-        }
+      if (Number(this.totalPagar) < Number(this.formaPagoForm.value.montoSubtotalCliente)) {
+        this.toaster.open('El monto ingresado no debe ser mayor al monto a pagar del pedido.', {type: 'danger'})
+        return;
+      } else {
+        const facturaFisicaValores: string[] = Object.values(this.formaPagoForm.value);
+        const facturaFisicaLlaves: string[] = Object.keys(this.formaPagoForm.value);
+        facturaFisicaLlaves.map((llaves, index) => {
+          if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago' && llaves !== 'facturacion' && llaves !== 'articulos') {
+            this.archivo.delete(llaves);
+            this.archivo.append(llaves, facturaFisicaValores[index]);
+          }
+        });
+        this.archivo.append('id', this.idPedido);
+        this.archivo.append('formaPago', JSON.stringify(this.formasPago));
+        this.archivo.append('fechaCargaFormaPago', this.fechaFactura);
+
+        this.pedidosService.actualizarPedidoFormaPagoFormData(this.archivo).subscribe((info) => {
+          this.modalService.dismissAll();
+          this.obtenerTransacciones();
+        }, error => this.toaster.open(error, {type: 'danger'}));
       }
+
     }
   }
 
@@ -536,11 +512,8 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
   }
 
   onFileSelected(event: any): void {
-    if (this.mostrarCargarArchivo) {
-      this.archivo.append('archivoFormaPago', event.target.files.item(0), event.target.files.item(0).name);
-    } else {
-      this.archivo.delete('archivoFormaPago');
-    }
+    this.archivo.append('archivoFactura', event.target.files.item(0), event.target.files.item(0).name);
+    this.formaPagoForm.get('archivoFactura').setValue(event.target.files.item(0).name);
   }
 
   onFileSelectedTarjeta(event: any): void {
