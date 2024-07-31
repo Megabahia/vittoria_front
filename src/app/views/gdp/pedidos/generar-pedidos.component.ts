@@ -66,6 +66,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   verDireccion = true;
   listaCanalesProducto;
   tipoIdentificacion;
+  totalIva;
   hablilitarBotonGuardar = true;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -77,7 +78,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   archivo: FormData = new FormData();
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
-
+  parametroIva;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -114,6 +115,10 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     });
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'CUPON VALIDO', 'Cupón válido').subscribe((result) => {
       this.diasValidosCupon = parseInt(result.info[0].valor);
+    });
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
+      this.parametroIva = parseFloat(result.info[0].valor);
     });
 
   }
@@ -153,6 +158,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
+      subtotal: [0],
       envioTotal: [0, [Validators.required]],
       numeroPedido: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
@@ -351,6 +357,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
+    let subtotalPedido = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
@@ -358,7 +365,10 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       total += parseFloat(detalles[index].get('precio').value);
     });
     total += this.notaPedido.get('envioTotal').value;
-    this.notaPedido.get('total').setValue(total);
+    subtotalPedido = total / this.parametroIva;
+    this.totalIva = (total - subtotalPedido).toFixed(2);
+    this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
+    this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 
   async actualizar(): Promise<void> {
