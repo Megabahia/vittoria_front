@@ -52,6 +52,7 @@
                 <th>Metodo Pago</th>
                 <th>Telefono</th>
                 <th>Estado</th>
+                <th>Motivo de pedido negado</th>
                 <th>Comisión</th>
                 <th>Código vendedor</th>
                 <th>Nombre vendedor</th>
@@ -60,6 +61,7 @@
                 <th>Cupón</th>
                 <th>Monto subtotal a pagar del pedido</th>
                 <th>Monto subtotal ingresado en evidencia</th>
+                <th>Monto subtotal aprobado</th>
                 <th>Evidenciade factura</th>
                 <th>Cargar evidencia de venta</th>
               </tr>
@@ -74,9 +76,10 @@
                 <td>{{ transaccion.facturacion.apellidos }}</td>
                 <td>{{ transaccion.metodoPago }}</td>
                 <td>{{ transaccion.facturacion.telefono }}</td>
-                <td [ngStyle]="{'color': transaccion.estado === 'Devolucion' || transaccion.estado === 'Rechazado' || transaccion.estado === 'Pendiente de entrega' ? 'red' :
+                <td [ngStyle]="{'color': transaccion.estado === 'Devolucion' || transaccion.estado === 'Rechazado' || transaccion.estado === 'Pendiente de entrega' || transaccion.estado === 'Pedido Negado' ? 'red' :
                                 transaccion.estado === 'Despachado' || transaccion.estado === 'Empacado'|| transaccion.estado === 'Pendiente' ? 'yellow' : transaccion.estado === 'Por confirmar' ? 'black' : 'green'}">{{ transaccion.estado }}
                 </td>
+                <td class="text-warning">{{transaccion.motivoNegacionPedido}}</td>
                 <td [ngStyle]="{'color':'blue'}">${{ transaccion.comision }}</td>
                 <td>{{ transaccion.facturacion.codigoVendedor }}</td>
                 <td>{{ transaccion.facturacion.nombreVendedor }}</td>
@@ -96,6 +99,7 @@
                 </td>
                 <td>{{ transaccion.subtotal | currency }}</td>
                 <td class="text-info">{{ transaccion.montoSubtotalCliente | currency }}</td>
+                <td class="text-success">{{ transaccion.montoSubtotalAprobado | currency }}</td>
                 <td>
                   <a href="{{transaccion.archivoFactura}}" *ngIf="transaccion.archivoFactura" target="_blank">
                     <i-feather name="file-text" class="mr-25"></i-feather>

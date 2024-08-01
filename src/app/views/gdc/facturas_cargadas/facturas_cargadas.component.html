@@ -57,8 +57,11 @@
               <th>Telefono</th>
               <th>Estado</th>
               <th>Ver</th>
+              <th>Fecha de carga de factura</th>
+              <th>Fecha de emisión de factura</th>
+              <th>Monto subtotal del pedido</th>
+              <th>Monto subtotal ingresado por el vendedor</th>
               <th>Evidencia de factura</th>
-              <th>Monto subtotal</th>
               <th>Acciones</th>
             </tr>
             </thead>
@@ -76,25 +79,34 @@
               <td>{{ transaccion.facturacion.telefono }}</td>
               <td>{{ transaccion.estado }}</td>
 
-
               <td>
                 <a (click)="obtenerContacto(notaPedidoModal, transaccion.id)">
                   <i-feather name="eye" class="mr-25"></i-feather>
                 </a>
+              </td>
+
+              <td>
+                {{transaccion.fechaCargaFormaPago}}
+              </td>
+              <td>
+                {{transaccion.fechaEmisionFactura | date: 'dd-MM-yyyy'}}
+              </td>
+              <td>
+                {{ transaccion.subtotal | currency }}
+              </td>
+              <td>
+                {{ transaccion.montoSubtotalCliente | currency }}
               </td>
               <td>
                 <a href="{{transaccion.archivoFactura}}" *ngIf="transaccion.archivoFactura" target="_blank">
                   <i-feather name="file-text" class="mr-25"></i-feather>
                 </a>
               </td>
-              <td>
-                {{transaccion.montoSubtotalCliente | currency}}
-              </td>
               <td class="text-center">
-                <button (click)="aprobarContacto(transaccion.id)" class="btn btn-primary">
+                <button (click)="aprobarContacto(facturacionAprobarModal, transaccion.id)" class="btn btn-primary">
                   Aprobar
                 </button>
-                <button (click)="negarContacto(transaccion.id)" class="btn btn-secondary">
+                <button (click)="negarContacto(facturacionNegarModal, transaccion.id)" class="btn btn-secondary">
                   Negar
                 </button>
               </td>
@@ -471,6 +483,14 @@
                         </div>
                         <div class="invoice-total-item">
                           <p class="invoice-total-title text-primary font-weight-bold">
+                            Subtotal: ${{ notaPedido.controls.subtotal.value }}</p>
+                        </div>
+                        <div class="invoice-total-item">
+                          <p class="invoice-total-title text-primary font-weight-bold">
+                            IVA (15%): ${{ totalIva }}</p>
+                        </div>
+                        <div class="invoice-total-item">
+                          <p class="invoice-total-title text-danger font-weight-bold">
                             Total a pagar por el cliente: ${{ notaPedido.controls.total.value }}</p>
                         </div>
                       </div>
@@ -496,87 +516,120 @@
           </div>
         </ng-template>
 
-        <ng-template #facturacionModal let-modal>
+        <ng-template #facturacionAprobarModal let-modal>
           <div class="modal-header">
-            <h4 class="modal-title">Generar Venta</h4>
+            <h4 class="modal-title">Evidencias de venta</h4>
             <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-content">
-
-            <div class="card-body">
-              <h5 class="text-danger">Total a pagar: ${{ notaPedido.controls.total.value }}</h5>
+            <div class="card-body invoice-padding">
+              <div class="col-12">
+                <p class="bg-success text-center">Por favor, ingrese el monto subtotal correcto en caso de que el valor ingresado por el vendedor sea incorrecto.</p>
+              </div>
             </div>
-            <form [formGroup]="notaPedido">
+            <form [formGroup]="formaPagoForm">
               <div class="card-body invoice-padding">
+                <h5 class="text-warning">Información de la evidencia de venta</h5>
                 <div class="row">
-
-                  <div class="col-6">
-                    <div class="form-group">
-                      <label for="tipoPago">Factura</label>
-                      <select id="tipoPago" class="form-control" formControlName="tipoPago"
-                              (change)="onSelectChange($event)">
-                        <option value="" disabled selected>- Seleccione -</option>
-                        <option value="facturaElectronica">Factura electrónica</option>
-                        <option value="rimpePopular">Rimpe popular</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-6" *ngIf="mostrarInputComprobante">
-                    <div class="form-group">
-                      <label for="numeroComprobante">Ingreso número de comprobante</label>
-                      <input class="form-control" type="text" id="numeroComprobante"
-                             formControlName="numeroComprobante"/>
-                    </div>
+                  <div class="col-12">
+                    <label><strong>Fecha de la carga de evidencia:</strong> {{ listaPedido?.fechaCargaFormaPago }}</label>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-4">
-                    <label for="formaPago">Forma de pago</label>
-                    <select id="formaPago" class="form-control" formControlName="formaPago"
-                            (change)="onSelectChangeFormaPago($event)">
-                      <option value="" selected disabled>- Seleccione -</option>
-                      <option value="transferencia">Transferencia</option>
-                      <option value="efectivo">Efectivo</option>
-                    </select>
-                    <div *ngIf="notaPedidoForm.formaPago.errors"
+                  <div class="col-12">
+                    <label><strong>Tipo de Factura:</strong> {{ infoTipoPago }}</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <label><strong>Número de comprobante:</strong> {{ listaPedido?.numeroComprobante }}</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <label><strong>Fecha en la que se emitió la factura:</strong> {{ listaPedido?.fechaEmisionFactura | date: 'dd-MM-yyyy' }}</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <label class="font-weight-bold">Evidencia de venta (Factura o comprobante)</label>
+                    <label>Ver el comprobante cargado. <a href="{{ listaPedido?.archivoFactura }}" target="_blank" *ngIf="listaPedido?.archivoFactura">Aquí</a></label>
+                  </div>
+                </div>
+                <hr />
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group">
+                      <label class="font-weight-bold">Ingrese el monto del subtotal de la factura
+                        aprobada</label>
+                      <input class="form-control" type="text"
+                             formControlName="montoSubtotalAprobado"/>
+                    </div>
+                    <div *ngIf="formasPagoForm.montoSubtotalAprobado.errors"
                          class="invalid-feedback" style="display: block;">
-                      <div *ngIf="notaPedidoForm.formaPago.errors.required">
+                      <div *ngIf="formasPagoForm.montoSubtotalAprobado.errors.required">
                         Requerido
                       </div>
-                    </div>
-                  </div>
-
-                  <div class="col-4" *ngIf="mostrarCargarArchivo">
-                    <label>Comprobante de pago</label>
-                    <input class="form-control-file" type="file" (change)="onFileSelected($event)">
-                  </div>
-
-                  <div class="col-4" *ngIf="mostrarInputTransaccion">
-                    <div class="form-group">
-                      <label for="numTransaccionTransferencia">Número de transacción</label>
-                      <input class="form-control" type="text" id="numTransaccionTransferencia"
-                             formControlName="numTransaccionTransferencia"/>
-                    </div>
-                  </div>
-
-                  <div class="col-4" *ngIf="mostrarInputCobro">
-                    <div class="form-group">
-                      <label for="totalCobroEfectivo">Total de cobro</label>
-                      <input class="form-control" type="text" id="totalCobroEfectivo"
-                             formControlName="totalCobroEfectivo"/>
+                      <div *ngIf="formasPagoForm.montoSubtotalAprobado.errors.pattern">
+                        Ingrese valores válidos y unicamente dos decimales
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-
             </form>
-
           </div>
           <div class="modal-footer">
             <button type="reset" class="btn btn-secondary"
-                    (click)="modal.dismiss( 'Cross click')">Cerrar
+                    (click)="modal.dismiss('Cross click')">Cerrar
+            </button>
+            <button class="btn btn-primary mx-1"
+                    (click)="actualizarContactoAprobado()"
+            >Confirmar el subtotal de venta de la factura
+            </button>
+          </div>
+        </ng-template>
+
+        <ng-template #facturacionNegarModal let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title">Motivo de negación el pedido</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-content">
+            <div class="card-body invoice-padding">
+              <div class="col-12">
+                <p class="bg-danger text-center">Por favor, ingrese el motivo por el cual usted esta negando o
+                  rechazando el pedido.</p>
+              </div>
+            </div>
+            <form [formGroup]="negarPedidoForm">
+              <div class="card-body invoice-padding">
+                <div class="row">
+                  <div class="col-12">
+                    <label>Ingrese la el motivo</label>
+                    <textarea class="form-control" formControlName="motivoNegacionPedido" rows="3"></textarea>
+                    <div *ngIf="negarForm.motivoNegacionPedido.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="negarForm.motivoNegacionPedido.errors.required">
+                        Requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="reset" class="btn btn-secondary"
+                    (click)="modal.dismiss('Cross click')">Cerrar
+            </button>
+            <button class="btn btn-primary mx-1"
+                    (click)="actualizarNegarContacto()"
+            >Negar Pedido
             </button>
           </div>
         </ng-template>
@@ -584,19 +637,4 @@
       </div>
     </div>
   </div>
-
-
-  <ng-template #aviso let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">Mensaje</h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div [innerHTML]="mensaje"></div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-light" (click)="cerrarModal()">Cerrar</button>
-    </div>
-  </ng-template>
+</div>
