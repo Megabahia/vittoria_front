@@ -99,11 +99,18 @@
                 <th>Metodo Pago</th>
                 <th>Telefono</th>
                 <th>Estado</th>
+                <th>Motivo de pedido negado</th>
                 <th>Comisión</th>
                 <th>Código vendedor</th>
                 <th>Nombre vendedor</th>
                 <th>Centro de negocio</th>
                 <th>Ver</th>
+                <th>Cupón</th>
+                <th>Monto subtotal a pagar del pedido</th>
+                <th>Monto subtotal ingresado en evidencia</th>
+                <th>Monto subtotal aprobado</th>
+                <th>Evidenciade factura</th>
+                <th>Cargar evidencia de venta</th>
               </tr>
               </thead>
 
@@ -117,11 +124,10 @@
                 <td>{{ transaccion.metodoPago }}</td>
                 <td>{{ transaccion.facturacion.telefono }}</td>
                 <td [ngStyle]="{'color': transaccion.estado === 'Devolucion' || transaccion.estado === 'Rechazado' || transaccion.estado === 'Pendiente de entrega' ? 'red' :
-                                transaccion.estado === 'Despachado' || transaccion.estado === 'Empacado'|| transaccion.estado === 'Pendiente' ? 'yellow' : 'green'}">
-                  {{ transaccion.estado }}
+                                transaccion.estado === 'Despachado' || transaccion.estado === 'Empacado'|| transaccion.estado === 'Pendiente' ? 'yellow' : transaccion.estado === 'Por confirmar' ? 'black' : 'green'}">{{ transaccion.estado }}
                 </td>
-                <td [ngStyle]="{'color':'blue'}">${{ calculoComision(transaccion.estado, transaccion.total) }}</td>
-
+                <td>{{transaccion.motivoNegacionPedido}}</td>
+                <td [ngStyle]="{'color':'blue'}">${{ transaccion.comision }}</td>
                 <td>{{ transaccion.facturacion.codigoVendedor }}</td>
                 <td>{{ transaccion.facturacion.nombreVendedor }}</td>
                 <td>{{ transaccion.companiaVendedor }}</td>
@@ -130,6 +136,28 @@
                      data-target="#verfactura">
                     <i-feather name="eye" class="mr-25"></i-feather>
                   </a>
+                </td>
+                <td>
+                  <a *ngIf="transaccion.fotoCupon!=null" href="{{transaccion.fotoCupon}}" target="_blank">
+                    <i-feather name="image" class="mr-25"></i-feather>
+                  </a>
+                  <span *ngIf="transaccion.fotoCupon===null">No existe cupón.</span>
+                </td>
+                <td>{{ transaccion.subtotal | currency }}</td>
+                <td class="text-info">{{ transaccion.montoSubtotalCliente | currency }}</td>
+                <td class="text-success">{{ transaccion.montoSubtotalAprobado | currency }}</td>
+                <td>
+                  <a href="{{transaccion.archivoFactura}}" *ngIf="transaccion.archivoFactura" target="_blank">
+                    <i-feather name="file-text" class="mr-25"></i-feather>
+                  </a>
+                </td>
+                <td>
+                  <button
+                    *ngIf="transaccion.estado === 'Pendiente de entrega' || transaccion.estado === 'Por confirmar'"
+                    class="btn btn-primary"
+                    (click)="cargarFactura(facturacionModal, transaccion.id)">
+                    Cargar evidencia de venta
+                  </button>
                 </td>
               </tr>
               </tbody>
@@ -141,7 +169,7 @@
 
           <div class="modal fade" id="verfactura" tabindex="-1" role="dialog"
                aria-labelledby="myLargeModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-xl">
               <div class="modal-content">
                 <form [formGroup]="notaPedido">
                   <div class="card invoice-preview-card">
@@ -358,19 +386,24 @@
                                 <div class="row">
                                   <div class="col-12 d-flex product-details-border position-relative pr-0">
                                     <div class="row w-100 pr-lg-0 pr-1 py-2">
-                                      <div class="col-lg-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Código
                                         </p>
-                                        <input class="form-control" type="text"
-                                               (change)="obtenerProducto(i)"
-                                               formControlName="codigo"
-                                               disabled>
-                                        <div *ngIf="detalle.controls.codigo.errors"
-                                             class="invalid-feedback"
-                                             style="display: block;">
-                                          <div *ngIf="detalle.controls.codigo.errors.required">
-                                            Requerido
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">{{ detalle.controls.prefijo?.value }}</span>
+                                          </div>
+                                          <input class="form-control" type="text"
+                                                 (change)="obtenerProducto(i)"
+                                                 formControlName="codigo"
+                                                 disabled>
+                                          <div *ngIf="detalle.controls.codigo.errors"
+                                               class="invalid-feedback"
+                                               style="display: block;">
+                                            <div *ngIf="detalle.controls.codigo.errors.required">
+                                              Requerido
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
@@ -409,11 +442,11 @@
                                           </div>
                                         </div>
                                       </div>
-                                      <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                      <div class="col-lg-1 col-12 my-lg-0 my-2">
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Precio
                                         </p>
-                                        <label>{{ detalle.controls.valorUnitario.value }}</label>
+                                        <label>${{ detalle.controls.valorUnitario.value }}</label>
                                         <div *ngIf="detalle.controls.valorUnitario.errors"
                                              class="invalid-feedback"
                                              style="display: block;">
@@ -434,7 +467,7 @@
                                         <p class="card-text col-title mb-md-50 mb-0">
                                           Total
                                         </p>
-                                        <label>{{ detalle.controls.precio.value }}</label>
+                                        <label>${{ detalle.controls.precio.value }}</label>
                                         <div *ngIf="detalle.controls.precio.errors"
                                              class="invalid-feedback"
                                              style="display: block;">
@@ -721,6 +754,113 @@
           <hr/>
         </div>
       </section>
+      <ng-template #facturacionModal let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title">Carga de las evidencias de venta</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-content">
+          <div class="card-body invoice-padding">
+            <div class="col-12">
+              <p class="bg-primary text-center">Por favor, carga el archivo de la factura y el monto del subtotal de la
+                factura para reflejar la evidencia de la venta.</p>
+            </div>
+          </div>
+          <form [formGroup]="formaPagoForm">
+            <div class="card-body invoice-padding">
+              <div class="row">
+                <div class="col-md-6 col-12 mb-1">
+                  <label>Fecha de la carga de evidencia:</label>
+                  <input class="form-control mb-2" type="text" disabled formControlName="fechaCargaFormaPago"/>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 col-12 mb-1">
+                  <div class="form-group">
+                    <label for="tipoPago">Tipo de Factura</label>
+                    <select id="tipoPago" class="form-control" formControlName="tipoPago"
+                            (change)="onSelectChange($event)">
+                      <option value="" selected>- Seleccione el tipo de factura-</option>
+                      <option value="facturaElectronica">Factura electrónica</option>
+                      <option value="rimpePopular">Rimpe popular</option>
+                    </select>
+                    <div *ngIf="formasPagoForm.tipoPago.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="formasPagoForm.tipoPago.errors.required">
+                        Requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-12" *ngIf="mostrarInputComprobante">
+                  <div class="form-group">
+                    <label for="numeroComprobante">Ingreso número de comprobante</label>
+                    <input class="form-control" type="text" id="numeroComprobante"
+                           formControlName="numeroComprobante"/>
+                  </div>
+                  <div *ngIf="formasPagoForm.numeroComprobante.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="formasPagoForm.numeroComprobante.errors.required">
+                      Requerido
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 col-12 mb-1">
+                  <label>Fecha en la que se emitió la factura:</label>
+                  <input class="form-control mb-2" type="date" formControlName="fechaEmisionFactura"/>
+                  <div *ngIf="formasPagoForm.fechaEmisionFactura.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="formasPagoForm.fechaEmisionFactura.errors.required">
+                      Requerido
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 col-12 my-1">
+                  <label>Evidencia de venta (Factura o comprobante)</label>
+                  <input class="form-control-file" type="file" (change)="onFileSelected($event)">
+                  <div *ngIf="formasPagoForm.archivoFactura.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="formasPagoForm.archivoFactura.errors.required">
+                      Requerido
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-12">
+                  <div class="form-group">
+                    <label for="totalCobroSubtotal">Ingrese el monto del subtotal de la factura</label>
+                    <input class="form-control" type="text" id="totalCobroSubtotal"
+                           formControlName="montoSubtotalCliente"/>
+                  </div>
+                  <div *ngIf="formasPagoForm.montoSubtotalCliente.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="formasPagoForm.montoSubtotalCliente.errors.required">
+                      Requerido
+                    </div>
+                    <div *ngIf="formasPagoForm.montoSubtotalCliente.errors.pattern">
+                      Ingrese valores válidos y unicamente dos decimales
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="reset" class="btn btn-secondary"
+                  (click)="modal.dismiss('Cross click')">Cerrar
+          </button>
+          <button class="btn btn-primary mx-1"
+                  (click)="actualizar()"
+          >Cargar evidencias
+          </button>
+        </div>
+      </ng-template>
       <!-- users list ends -->
     </div>
   </div>

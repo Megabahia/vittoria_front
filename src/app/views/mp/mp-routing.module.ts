@@ -6,6 +6,17 @@ import {ParamsComponent} from './params/params.component';
 import {PedidosComponent} from './pedidos/pedidos.component';
 import {PedidosDevueltosComponent} from './pedidos-devueltos/pedidos-devueltos.component';
 import {PedidosRechazadosComponent} from './pedidos-rechazados/pedidos-rechazados.component';
+import {PedidoMegabahiaComponent} from './pedidos-canal/pedido-megabahia/pedido-megabahia.component';
+import {PedidoMayoristaComponent} from "./pedidos-canal/pedido-mayorista/pedido-mayorista.component";
+import {PedidoMegadescuentoComponent} from "./pedidos-canal/pedido-megadescuento/pedido-megadescuento.component";
+import {PedidoTodomegacentroComponent} from "./pedidos-canal/pedido-todomegacentro/pedido-todomegacentro.component";
+import {
+  PedidoTiendamulticomprasComponent
+} from "./pedidos-canal/pedido-tiendamulticompras/pedido-tiendamulticompras.component";
+import {PedidoContraentregaComponent} from "./pedidos-canal/pedido-contraentrega/pedido-contraentrega.component";
+import {PedidoMaxidescuentoComponent} from "./pedidos-canal/pedido-maxidescuento/pedido-maxidescuento.component";
+import {PedidoVittoriaComponent} from "./pedidos-canal/pedido-vittoria/pedido-vittoria.component";
+import {PedidoSuperbaratoComponent} from "./pedidos-canal/pedido-superbarato/pedido-superbarato.component";
 
 const routes: Routes = [{
   path: '', component: MdpComponent, children: [
@@ -25,6 +36,37 @@ const routes: Routes = [{
     },
     {
       path: 'pedidos-rechazados', component: PedidosRechazadosComponent, canActivate: [AuthGuard]
+    },
+    {
+      path: 'pedido-canal', children: [
+        {
+          path: 'megabahia', component: PedidoMegabahiaComponent, canActivate: [AuthGuard]
+        },
+        {
+          path: 'mayorista', component: PedidoMayoristaComponent, canActivate: [AuthGuard]
+        },
+        {
+          path: 'megadescuento', component: PedidoMegadescuentoComponent, canActivate: [AuthGuard]
+        },
+        {
+          path: 'todomegacentro', component: PedidoTodomegacentroComponent, canActivate: [AuthGuard]
+        },
+        {
+          path: 'tiendamulticompras', component: PedidoTiendamulticomprasComponent, canActivate: [AuthGuard]
+        },
+        {
+          path: 'contraentrega', component: PedidoContraentregaComponent, canActivate: [AuthGuard]
+        },
+        {
+          path: 'maxidescuento', component: PedidoMaxidescuentoComponent, canActivate: [AuthGuard]
+        },
+        {
+          path: 'vittoria', component: PedidoVittoriaComponent, canActivate: [AuthGuard]
+        },
+        {
+          path: 'superbarato', component: PedidoSuperbaratoComponent, canActivate: [AuthGuard]
+        },
+      ]
     },
   ]
 }];

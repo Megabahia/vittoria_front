@@ -1,0 +1,430 @@
+<div class="app-content content">
+  <div class="content-overlay"></div>
+  <div class="header-navbar-shadow"></div>
+  <div class="content-wrapper">
+    <div class="content-header row">
+    </div>
+    <div class="content-body">
+      <!-- users list start -->
+      <section class="app-user-list">
+        <!-- list section start -->
+        <div class="card">
+          <div class="card-datatable table-responsive pt-0">
+            <div class="row m-75">
+              <div class="col-lg-12 col-xl-6">
+                <label>Mostrar</label>
+                <select class="form-control-sm" [(ngModel)]="page_size"
+                        (change)="obtenerListaParametros()">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+
+                <button class="btn btn-primary ml-2" tabindex="0" aria-controls="DataTables_Table_0"
+                        type="button" data-toggle="modal" data-target="#modals-slide-in"
+                        (click)="insertarParametro()">
+                  Añadir Integracion
+                </button>
+              </div>
+            </div>
+            <table class="user-list-table table">
+              <thead class="thead-light">
+              <tr>
+                <th>País</th>
+                <th>Provincia origen de producto</th>
+                <th>Ciudad origen de producto</th>
+                <th>Sector origen de producto</th>
+                <th>Provincia destino de producto</th>
+                <th>Ciudad destino de producto</th>
+                <th>Sector destino de producto</th>
+                <th>Courier</th>
+                <th>Tamaño inicial (cm)</th>
+                <th>Tamaño fin (cm)</th>
+                <th>Peso inicial (kg)</th>
+                <th>Peso fin (kg)</th>
+                <th>Distancia (km)</th>
+                <th>Costo</th>
+                <th>Forma de pago</th>
+                <th>Acciones</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let parametro of parametros; let i = index">
+                <td> {{ parametro.pais }}</td>
+                <td> {{ parametro.provincia }}</td>
+                <td> {{ parametro.ciudad }}</td>
+                <td> {{ parametro.sector }}</td>
+                <td> {{ parametro.provinciaDestino }}</td>
+                <td> {{ parametro.ciudadDestino }}</td>
+                <td> {{ parametro.sectorDestino }}</td>
+                <td> {{ parametro.courier }}</td>
+                <td>
+                  {{ parametro.tamanio_inicial }}
+                </td>
+                <td>
+                  {{ parametro.tamanio_fin }}
+                </td>
+                <td>
+                  {{ parametro.peso_inicial }}
+                </td>
+                <td>
+                  {{ parametro.peso_fin }}
+                </td>
+                <td> {{ parametro.distancia }}</td>
+                <td> {{ parametro.costo | currency }}</td>
+                <td>
+                  <ul *ngFor="let pago of parametro.formaPago">
+                    <li *ngIf="pago.estado">{{ pago.nombre }}</li>
+                  </ul>
+                </td>
+                <td>
+                  <a data-toggle="modal" data-target="#modals-slide-in"
+                     (click)="editarParametro(parametro.id)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" class="mr-50">
+                      <polyline points="21 8 21 21 3 21 3 8"></polyline>
+                      <rect x="1" y="3" width="22" height="5"></rect>
+                      <line x1="10" y1="12" x2="14" y2="12"></line>
+                    </svg>
+                  </a>
+                  <a (click)="abrirModal(contenido,parametro.id)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" class="mr-50">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      <line x1="10" y1="11" x2="10" y2="17"></line>
+                      <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                  </a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page"
+                            [pageSize]="page_size" [maxSize]="5" [ellipses]="false"
+                            [boundaryLinks]="true"></ngb-pagination>
+
+          </div>
+        </div>
+        <!-- list section end -->
+        <ng-template #contenido let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title">Mensaje</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Confirma eliminar</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" (click)="cerrarModal()">SI</button>
+          </div>
+        </ng-template>
+        <!-- Modal to add new user starts-->
+        <div class="modal modal-slide-in new-user-modal fade" id="modals-slide-in">
+          <div class="modal-dialog">
+            <div class="modal-content pt-0">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+              <div class="modal-header mb-1">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo</h5>
+              </div>
+              <div class="modal-body flex-grow-1">
+                <form class="auth-login-form mt-2" [formGroup]="paramForm">
+                  <!--PAIS, PROVINCIA, CIUDAD-->
+                  <div class="form-group">
+                    <label class="form-label">País:</label>
+                    <input type="text" class="form-control" formControlName="pais" disabled/>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="provinciaOrigen">Provincia origen del producto</label>
+                    <select class="form-control"
+                            (change)="obtenerCiudad()"
+                            [(ngModel)]="provincia" id="provinciaOrigen" formControlName="provincia">
+                      <option value="" selected>- Seleccione -</option>
+                      <option value="{{provincia.nombre}}" *ngFor="let provincia of provinciaOpciones">
+                        {{ provincia.nombre }}
+                      </option>
+                    </select>
+                    <div *ngIf="f.provincia.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.provincia.errors.required">Provincia es requerida
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="ciudadOrigen">Ciudad origen del producto:</label>
+                    <select class="form-control"
+                            (change)="obtenerSector()"
+                            formControlName="ciudad" id="ciudadOrigen">
+                      <option value="" selected>- Seleccione -</option>
+                      <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
+                        {{ ciudad.nombre }}
+                      </option>
+                    </select>
+                    <div *ngIf="f.ciudad.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.ciudad.errors.required">Ciudad es requerida
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="ciudadOrigen">Sector origen del producto:</label>
+                    <select class="form-control" formControlName="sector" id="sectorOrigen">
+                      <option value="" selected>- Seleccione -</option>
+                      <option value="{{sector.nombre}}" *ngFor="let sector of sectorOpciones">
+                        {{ sector.nombre }}
+                      </option>
+                    </select>
+                    <div *ngIf="f.sector.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.sector.errors.required">Sector es requerida
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="provinciaDestino">Provincia destino del producto:</label>
+                    <select class="form-control"
+                            (change)="obtenerCiudadDestino()"
+                            id="provinciaDestino" formControlName="provinciaDestino">
+                      <option value="" selected>- Seleccione -</option>
+                      <option value="{{provincia.nombre}}" *ngFor="let provincia of provinciaDestinoOpciones">
+                        {{ provincia.nombre }}
+                      </option>
+                    </select>
+                    <div *ngIf="f.provinciaDestino.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.provinciaDestino.errors.required">Provincia es requerida
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="ciudadDestino">Ciudad destino del producto:</label>
+                    <select class="form-control" formControlName="ciudadDestino" id="ciudadDestino">
+                      <option value="" selected>- Seleccione -</option>
+                      <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadDestinoOpciones">
+                        {{ ciudad.nombre }}
+                      </option>
+                    </select>
+                    <div *ngIf="f.ciudadDestino.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.ciudadDestino.errors.required">Ciudad es requerida
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="sectorDestino">Sector destino del producto:</label>
+                    <select class="form-control" formControlName="sectorDestino" id="sectorDestino">
+                      <option value="" selected>- Seleccione -</option>
+                      <option value="{{sector.nombre}}" *ngFor="let sector of sectorDestinoOpciones">
+                        {{ sector.nombre }}
+                      </option>
+                    </select>
+                    <div *ngIf="f.sectorDestino.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.sectorDestino.errors.required">Sector es requerida
+                      </div>
+                    </div>
+                  </div>
+                  <!--COURIER-->
+                  <div class="form-group">
+                    <label for="basicSelect">Courier</label>
+                    <select id="basicSelect" class="form-control" formControlName="courier">
+                      <option value="">- Seleccione -</option>
+                      <option value="{{item.username}}"
+                              *ngFor="let item of couriers"
+                      >{{ item.username }}
+                      </option>
+                    </select>
+                    <div *ngIf="f.courier.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.courier.errors.required">Courier es requerido</div>
+                    </div>
+                  </div>
+                  <!--DISTANCIA-->
+                  <div class="form-group">
+                    <label class="form-label" for="basic-icon-default-distancia">Distancia en Kilómetros:</label>
+                    <input type="text" id="basic-icon-default-distancia" class="form-control"
+                           name="valor" formControlName="distancia"/>
+                    <div *ngIf="f.distancia.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.distancia.errors.required">Distancia es requerido</div>
+                      <div *ngIf="f.distancia.errors.pattern">
+                        Ingrese solo numeros
+                      </div>
+                    </div>
+                  </div>
+                  <!--TAMAÑOS-->
+                  <div class="form-group">
+                    <label class="form-label" for="basic-icon-default-tamanio-inicial">Tamaño paquete inicial en
+                      centímetros:</label>
+                    <input type="text" id="basic-icon-default-tamanio-inicial" class="form-control dt-email"
+                           name="valor" formControlName="tamanio_inicial"/>
+                    <div *ngIf="f.tamanio_inicial.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.tamanio_inicial.errors.required">Tamaño inicial es requerido</div>
+                      <div *ngIf="f.tamanio_inicial.errors.pattern">
+                        Ingrese solo numeros
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="basic-icon-default-tamanio-final">Tamaño paquete final en
+                      centímetros:</label>
+                    <input type="text" id="basic-icon-default-tamanio-final" class="form-control dt-email"
+                           name="valor" formControlName="tamanio_fin"/>
+                    <div *ngIf="f.tamanio_fin.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.tamanio_fin.errors.required">Tamaño es requerido</div>
+                      <div *ngIf="f.tamanio_fin.errors.pattern">
+                        Ingrese solo numeros
+                      </div>
+                    </div>
+                  </div>
+                  <!--PESOS-->
+                  <div class="form-group">
+                    <label class="form-label" for="basic-icon-default-peso-inicio">Peso paquete inicial en
+                      Kilogramos:</label>
+                    <input type="text" id="basic-icon-default-peso-inicio" class="form-control dt-email"
+                           formControlName="peso_inicial"/>
+                    <div *ngIf="f.peso_inicial.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.peso_inicial.errors.required">Peso inicial es requerido</div>
+                      <div *ngIf="f.peso_inicial.errors.pattern">
+                        Ingrese solo numeros
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="basic-icon-default-peso-fin">Peso paquete fin en gramos:</label>
+                    <input type="text" id="basic-icon-default-peso-fin" class="form-control dt-email"
+                           formControlName="peso_fin"/>
+                    <div *ngIf="f.peso_fin.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.peso_fin.errors.required">Peso final es requerido</div>
+                      <div *ngIf="f.peso_fin.errors.pattern">
+                        Ingrese solo numeros
+                      </div>
+                    </div>
+                  </div>
+                  <!--COSTO-->
+                  <div class="form-group">
+                    <label class="form-label" for="basic-icon-default-costo">Costo de envío:</label>
+                    <input type="text" id="basic-icon-default-costo" class="form-control dt-email"
+                           name="valor" formControlName="costo"/>
+                    <div *ngIf="f.costo.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.costo.errors.required">Costo es requerido</div>
+                      <div *ngIf="f.costo.errors.pattern">
+                        Ingrese solo numeros
+                      </div>
+                    </div>
+                  </div>
+                  <!--TIEMPO ENTREGA-->
+                  <div class="form-group">
+                    <label class="form-label" for="tiempo">Tiempo de entrega</label>
+                    <select class="form-control" id="tiempo" formControlName="tiempo_entrega">
+                      <option value="" selected>- Seleccione -</option>
+                      <option value="{{tiempo.value}}" *ngFor="let tiempo of horas">
+                        {{ tiempo.label }}h
+                      </option>
+                    </select>
+                    <div *ngIf="f.tiempo_entrega.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.tiempo_entrega.errors.required">El tiempo de entrega es requerido
+                      </div>
+                    </div>
+                  </div>
+                  <!--LATITUD-->
+                  <div class="form-group">
+                    <label class="form-label" for="lat">Latitud origen del producto:</label>
+                    <input type="text" id="lat" class="form-control" formControlName="latitud"/>
+                  </div>
+                  <!--LONGITUD-->
+                  <div class="form-group">
+                    <label class="form-label" for="lng">Longitud origen del producto:</label>
+                    <input type="text" id="lng" class="form-control" formControlName="longitud"/>
+                  </div>
+                  <!--LATITUD DESTINO-->
+                  <div class="form-group">
+                    <label class="form-label" for="latDestino">Latitud destino del producto:</label>
+                    <input type="text" id="latDestino" class="form-control" formControlName="latitudDestino"/>
+                  </div>
+                  <!--LONGITUD DESTINO-->
+                  <div class="form-group">
+                    <label class="form-label" for="lngDestino">Longitud destino del producto:</label>
+                    <input type="text" id="lngDestino" class="form-control" formControlName="longitudDestino"/>
+                  </div>
+                  <!--FORMAS DE PAGO-->
+                  <div class="form-group">
+                    <label class="form-label">Formas de pago:</label>
+                    <div formArrayName="formaPago">
+                      <div *ngFor="let pago of paramForm.get('formaPago')['controls']; let i = index">
+                        <div [formGroup]="pago">
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="pago{{i}}"
+                                   formControlName="estado" (change)="onChangeCheckPago(pago.controls.nombre.value)">
+                            <label class="custom-control-label" for="pago{{i}}">{{ pago.controls.nombre.value }}</label>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                  <!--CUENTA BANCARIA-->
+                  <div class="form-group">
+                    <label class="form-label" for="nombreCuenta">Nombre de la cuenta bancaria de COURIER:</label>
+                    <input type="text" id="nombreCuenta" class="form-control" formControlName="nombreCuenta"/>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="numeroCuenta">Número de la cuenta bancaria de COURIER:</label>
+                    <input type="text" id="numeroCuenta" class="form-control" formControlName="numeroCuenta"/>
+                  </div>
+                  <!--<div formArrayName="formaPago">
+                    <div *ngFor="let pagoControl of paramForm.get('formaPago')['controls']; let i = index; let i = index;">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" formControlName="nombre" id="formaPago-{{i}}">
+                        <label class="form-check-label" for="formaPago-{{i}}">
+                          {{ pagoControl.get('nombre').value }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>-->
+                </form>
+                <button class="btn btn-primary mr-1" aria-label="Close" (click)="gestionarParametro()">
+                  <span *ngIf="cargando" class="spinner-border spinner-border-sm"></span>Guardar
+                </button>
+                <button #dismissModal data-toggle="modal" data-target="#exito" data-dismiss="modal"
+                        style="display: none;"></button>
+                <button type="reset" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal to add new user Ends-->
+      </section>
+      <!-- users list ends -->
+    </div>
+  </div>
+</div>
+
+
+<ng-template #mensajeModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Mensaje</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div [innerHTML]="mensaje"></div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="cerrarModal()">Cerrar</button>
+  </div>
+</ng-template>

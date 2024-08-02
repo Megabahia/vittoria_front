@@ -18,6 +18,10 @@ import {SuperbaratoComponent} from "./gsb_superbarato/superbarato.component";
 import {GsbProductosReporteComponent} from "./inventario/productos-reporte/gsb-productos-reporte.component";
 import {GsbGenerarContactoComponent} from "./gsb_contactos/contactos_crear/gsb-generar-contacto.component";
 import {ContactosListarComponent} from "./gsb_contactos/contactos_listar/contactos-listar.component";
+import {
+  ReporteContactosListarComponent
+} from "./gsb_contactos/reporte_contactos_listar/reporte_contactos-listar.component";
+import {GdParamsComponent} from "./gd_params/gd_params.component";
 
 @NgModule({
   declarations: [
@@ -29,7 +33,9 @@ import {ContactosListarComponent} from "./gsb_contactos/contactos_listar/contact
     SuperbaratoComponent,
     GsbProductosReporteComponent,
     GsbGenerarContactoComponent,
-    ContactosListarComponent
+    ContactosListarComponent,
+    ReporteContactosListarComponent,
+    GdParamsComponent
   ],
   exports: [
     GsbProductosListarComponent

@@ -42,6 +42,9 @@ export interface Producto {
   idPadre;
   proveedor;
   stockVirtual?;
+  peso;
+  tamanio;
+  link_catalogo;
 }
 
 export interface FichaTecnicaProducto {
@@ -113,6 +116,9 @@ export class ProductosService {
         estado: false
       }, {canal: 'megadescuento.com', estado: false}, {canal: 'todomegacentro.megadescuento.com', estado: false}
       ],
+      peso: 0,
+      tamanio: 0,
+      link_catalogo: ''
     };
   }
 
@@ -136,6 +142,9 @@ export class ProductosService {
 
   obtenerProductoPorCodigo(codigo) {
     return this.http.post<any>(`${apiUrl}/mdp/productos/search/producto/codigo/`, codigo);
+  }
+  obtenerProductoPorCodigoCanal(codigo) {
+    return this.http.post<any>(`${apiUrl}/mdp/productos/search/producto/codigo/canal/`, codigo);
   }
 
   enviarGmailInconsistencias(id) {

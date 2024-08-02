@@ -58,7 +58,9 @@
               <th>Estado</th>
               <th>Ver</th>
               <th>Forma de pago</th>
-              <th>Comprobante</th>
+              <th>Comprobante Transferencia</th>
+              <th>Comprobante Tarjeta de Crédito</th>
+              <th>Comprobante de Fatura</th>
               <!--<th>Acciones</th>-->
             </tr>
             </thead>
@@ -89,6 +91,16 @@
               </td>
               <td>
                 <a href="{{transaccion.archivoFormaPago}}" *ngIf="transaccion.formaPago.includes('transferencia')" target="_blank">
+                  <i-feather name="file-text" class="mr-25"></i-feather>
+                </a>
+              </td>
+              <td>
+                <a href="{{transaccion.archivoFormaPagoCredito}}" *ngIf="transaccion.formaPago.includes('tarjeta_credito')" target="_blank">
+                  <i-feather name="file-text" class="mr-25"></i-feather>
+                </a>
+              </td>
+              <td>
+                <a href="{{transaccion.archivoFactura}}" *ngIf="transaccion.archivoFactura" target="_blank">
                   <i-feather name="file-text" class="mr-25"></i-feather>
                 </a>
               </td>

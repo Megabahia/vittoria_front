@@ -11,28 +11,40 @@
           <form class="auth-login-form mt-2" [formGroup]="productoForm">
             <div class="col-md-12">
               <div class="form-group">
-                  <div *ngIf="disabledSelectCanal; else SelectEnable">
-                      <label for="canal">Canal</label>
-                      <select class="form-control select2" name="canal" id="canal" formControlName="canal"
-                              [(ngModel)]="producto.canal" disabled>
-                          <option value="" selected>- Seleccionar -</option>
-                          <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
-                      </select>
-                  </div>
-                  <ng-template #SelectEnable >
-                      <label for="canal1">Canal</label>
-                      <select class="form-control select2" name="canal" id="canal1" formControlName="canal"
-                              [(ngModel)]="producto.canal" >
-                          <option value="" selected>- Seleccionar -</option>
-                          <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
-                      </select>
-                  </ng-template>
+                <div *ngIf="disabledSelectCanal; else SelectEnable">
+                  <label for="canal">Link del catálogo de la tienda: </label>
+                  <select class="form-control select2" name="canal" id="canal" formControlName="canal"
+                          [(ngModel)]="producto.canal" disabled>
+                    <option value="" selected>- Seleccionar -</option>
+                    <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
+                  </select>
+                </div>
+                <ng-template #SelectEnable>
+                  <label for="canal1">Link del catálogo de la tienda: </label>
+                  <select class="form-control select2" name="canal" id="canal1" formControlName="canal"
+                          [(ngModel)]="producto.canal" (change)="obtenerListaParametrosCanal(producto.canal)">
+                    <option value="" selected>- Seleccionar -</option>
+                    <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
+                  </select>
+                </ng-template>
 
               </div>
             </div>
             <div class="row" *ngIf="producto.canal != ''">
               <h4 class="mx-2 my-1 text-warning font-weight-bold">Información requerida</h4>
               <div class="row mx-2">
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label style="color: blue">Link del catálogo de la categoría</label>
+                    <input type="text" class="form-control" formControlName="link_catalogo"
+                           [(ngModel)]="producto.link_catalogo">
+                    <!--<div *ngIf="submittedProductoForm && fp.link_catalogo.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.link_catalogo.errors.required">Link del catálogo de la categoría requerido
+                      </div>
+                    </div>-->
+                  </div>
+                </div>
                 <div class="col-md-4 col-12">
                   <div class="form-group">
                     <label>Nombre completo</label>
@@ -48,13 +60,18 @@
                 <div class="col-md-4 col-12">
                   <div class="form-group">
                     <label>Código de barras</label>
-                    <input type="text" class="form-control" name="codigoBarras" formControlName="codigoBarras"
-                           [(ngModel)]="producto.codigoBarras">
-                    <div *ngIf="submittedProductoForm && fp.codigoBarras.errors" class="invalid-feedback"
-                         style="display: block;">
-                      <div *ngIf="fp.codigoBarras.errors.required">Código de barras es requeridos
+                    <div class="input-group mb-1">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">{{ this.parametros?.prefijo }}</span>
                       </div>
-                      <div *ngIf="fp.codigoBarras.errors.maxlength">Ingreso maximo de caracteres 150</div>
+                      <input type="text" class="form-control" name="codigoBarras" formControlName="codigoBarras"
+                             [(ngModel)]="producto.codigoBarras">
+                      <div *ngIf="submittedProductoForm && fp.codigoBarras.errors" class="invalid-feedback"
+                           style="display: block;">
+                        <div *ngIf="fp.codigoBarras.errors.required">Código de barras es requeridos
+                        </div>
+                        <div *ngIf="fp.codigoBarras.errors.maxlength">Ingreso maximo de caracteres 150</div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -310,6 +327,26 @@
               <div class="row mx-2">
                 <div class="col-md-4 col-12">
                   <div class="form-group">
+                    <label>Peso del producto</label>
+                    <input type="text" class="form-control" formControlName="peso" [(ngModel)]="producto.peso">
+                    <!--<div *ngIf="submittedProductoForm && fp.peso.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.peso.errors.pattern">Ingreso valores válidos</div>
+                    </div>-->
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Tamaño del producto</label>
+                    <input type="text" class="form-control" formControlName="tamanio" [(ngModel)]="producto.tamanio">
+                    <!--<div *ngIf="submittedProductoForm && fp.tamanio.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.tamanio.errors.pattern">Ingrese un valor válidos</div>
+                    </div>-->
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
                     <label [style]="{color:'blue'}">Código de producto padre</label>
                     <input type="text" class="form-control" name="idPadre" formControlName="idPadre"
                            [(ngModel)]="producto.idPadre">
@@ -477,7 +514,8 @@
                   <p class="card-text">
                     Imagen principal del producto
                   </p>
-                  <input #fileInput type="file" (change)="onFileSelect($event)" accept=".jpg,.jpeg,.png" style="width: 260px" formControlName="imagen_principal">
+                  <input #fileInput type="file" (change)="onFileSelect($event)" accept=".jpg,.jpeg,.png"
+                         style="width: 260px" formControlName="imagen_principal">
                   <img *ngIf="imageUrlPrincipal" [src]="imageUrlPrincipal" alt="Imagen principal" class="img-fluid mt-3"
                        style="max-width: 250px; height: auto;">
                   <!--<button *ngIf="imageUrlPrincipal" class="btn btn-danger mt-2" (click)="eliminarImagenPrincipal()">X</button>-->

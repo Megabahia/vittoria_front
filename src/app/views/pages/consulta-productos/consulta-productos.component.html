@@ -1,0 +1,212 @@
+<div class="card">
+  <h2 class="card-header">CONSULTA DE PRODUCTOS</h2>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="row p-2 d-flex align-items-center">
+      <div class="col-md-2 col-12 mt-2 ">
+        <h5>Filtros de búsqueda: <span class="text-danger">*</span></h5>
+      </div>
+      <div class="col-md-3 col-12 mt-2">
+        <input class="form-control" type="text" [(ngModel)]="codigoBarras" placeholder="Código de producto">
+      </div>
+      <div class="col-md-3 col-12 mt-2">
+        <input class="form-control" type="text" [(ngModel)]="nombreProducto" placeholder="Nombre de producto">
+      </div>
+      <div class="col-md-3 col-12 mt-2 ml-2">
+        <button class="btn btn-primary" (click)="obtenerProducto()">Consultar</button>
+      </div>
+    </div>
+  </div>
+  <div class="card" *ngIf="mostrarDatosProducto">
+    <div class="container mt-1">
+      <h4 class="mb-1 p-1 bg-light text-dark">Detalle del Producto</h4>
+      <div class="card border-primary">
+        <div class="card-header bg-primary text-white">
+          <h5 class="card-title">
+            {{ producto?.nombre }}
+            <h6>SKU: {{ producto?.codigoBarras }}</h6>
+          </h5>
+        </div>
+        <div class="card-body bg-light">
+          <ul class="list-unstyled mt-1">
+            <li><strong>Descripción:</strong> {{ producto?.descripcion }}</li>
+            <!--<li><strong>Precio Normal:</strong> <span
+              class="text-success"> {{ producto?.precioVentaA | currency }}</span></li>
+            <li><strong>Precio Oferta:</strong> <span
+              class="text-danger"> {{ producto?.precioOferta | currency }}</span>
+            </li>
+            <li><strong>Cantidad en Stock real:</strong> {{ producto?.stock }}</li>
+            <li><strong>Ubicación del producto (Origen):</strong> {{ producto?.canal }}</li>
+            <li><strong>Tienda:</strong> {{ integracionProducto?.nombre }}</li>-->
+          </ul>
+          <!-- Fotos principal -->
+          <div class="row mx-0">
+            <label style="font-size: small"><strong>Imagen principal: </strong></label>
+            <div class="image-container">
+              <img
+                [src]="producto?.imagen_principal ? producto?.imagen_principal : 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019'"
+                class="img-fluid" alt="Imagen principal"
+                style="height: 200px; width: 100%; object-fit: cover;">
+            </div>
+          </div>
+          <!-- Fotos del producto, si están disponibles -->
+          <div *ngIf="producto?.imagenes && producto?.imagenes.length > 0" class="row mx-0">
+            <div *ngFor="let imagen of producto?.imagenes; let i = index" class="col-md-3 col-sm-3 p-2">
+              <div class="image-container">
+                <img [src]="imagen.imagen" class="img-fluid" alt="Imagen {{ i }}"
+                     style="height: 200px; width: 100%; object-fit: cover;">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer text-muted">
+          <small>Vittoria!</small>
+        </div>
+      </div>
+      <!--<div class="container mt-2">
+        <h2 class="mb-1">Origen de los productos por tienda</h2>
+        <div class="card">
+           La fila debería estar fuera del bucle ngFor
+          <div class="row">
+             ngFor aplicado a las columnas
+            <div class="col-md-6 col-12 mb-2" *ngFor="let p of totalProductosEnOrigen; let i = index">
+              <div class="card-body">
+                <h5 class="card-title text-primary font-weight-bold">{{ p.tienda }}</h5>
+                <p class="card-text">{{ p.descripcion }}</p>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item"><strong>Producto:</strong> {{ p.nombre }} <span
+                    class="text-muted">({{ p.codigoBarras }})</span></li>
+                  <li class="list-group-item"><strong>Origen del producto:</strong> Ecuador, {{ p.ciudad }}
+                    , {{ p.sector }}
+                  </li>
+                  <li class="list-group-item"><strong>Precio normal:</strong> <span
+                    class="text-success"> {{ p.precioVentaA | currency }}</span></li>
+                  <li class="list-group-item"><strong>Precio oferta:</strong> <span
+                    class="text-danger"> {{ p.precioOferta | currency }}</span></li>
+                  <li class="list-group-item"><strong>Stock real:</strong> {{ p.stock }}</li>
+                  <li class="list-group-item"><strong>Courier:</strong> {{ p.courier }} (Costo envío: ${{ p.costo }})</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>-->
+    </div>
+    <div class="container mt-1">
+      <div class="row bg-primary pt-1 mb-1">
+        <div class="col-12">
+          <h4 class="mb-1">Ingrese los datos del destino del producto</h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3 col-12">
+          <label>País</label>
+          <input class="form-control" type="text" [(ngModel)]="pais" disabled>
+        </div>
+        <div class="col-md-3 col-12">
+          <label for="provinciaContacto">Provincia destino <span class="text-danger">*</span></label>
+          <select class="form-control" (change)="obtenerCiudad()" id="provinciaContacto" [(ngModel)]="provincia">
+            <option value="" selected>- Seleccione -</option>
+            <option *ngFor="let opcion of provinciaOpciones" [value]="opcion.nombre">
+              {{ opcion.nombre }}
+            </option>
+          </select>
+        </div>
+        <div class="col-md-3 col-12">
+          <label for="ciudadContacto">Ciudad destino <span class="text-danger">*</span></label>
+          <select class="form-control" id="ciudadContacto" [(ngModel)]="ciudad" (change)="obtenerSector()">
+            <option value="" selected>- Seleccione -</option>
+            <option *ngFor="let opcion of ciudadOpciones" [value]="opcion.nombre">
+              {{ opcion.nombre }}
+            </option>
+          </select>
+        </div>
+        <div class="col-md-3 col-12">
+          <label class="form-label" for="sectorOrigen">Sector destino <span class="text-danger">*</span></label>
+          <select class="form-control" [(ngModel)]="sector" id="sectorOrigen">
+            <option value="" selected>- Seleccione -</option>
+            <option value="{{sector.nombre}}" *ngFor="let sector of sectorOpciones">
+              {{ sector.nombre }}
+            </option>
+          </select>
+        </div>
+        <!--<div class="col-md-3 col-12 mt-1">
+          <label for="callePrincipalContacto">Calle principal</label>
+          <input class="form-control" id="callePrincipalContacto" [(ngModel)]="callePrincipal">
+        </div>
+        <div class="col-md-3 col-12 mt-1">
+          <label for="calleSecundariContacto">Calle secundaria</label>
+          <input class="form-control" id="calleSecundariContacto" [(ngModel)]="calleSecundaria">
+        </div>-->
+        <div class="col-md-3 col-12 mt-2">
+          <button class="btn btn-primary" (click)="consultarDatosEnvio()">Consultar</button>
+        </div>
+      </div>
+      <!--<div class="row my-1" *ngIf="mostrarSelectCourier">
+        <div class="col-md-3 col-12">
+          <label class="form-label" for="courier">Couriers</label>
+          <select class="form-control" [(ngModel)]="dataOrigenProductoEnvio" id="courier">
+            <option value="" selected>- Seleccione courier-</option>
+            <option value="{{c}}" *ngFor="let c of couriers">
+              {{ c }}
+            </option>
+          </select>
+        </div>
+      </div>-->
+      <div class="row mt-4">
+        <div class="col-12 mb-2 text-center">
+          <h5>Las formas de entrega y costo de envío se calcularán en base a la ubicación del cliente y la tienda.</h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="container mt-1">
+          <div class="row" *ngFor="let item of integracionEnvio; let i = index">
+            <div class="col-md-12">
+              <div class="card bg-light mb-4 shadow-lg">
+                <div class="card-header">
+                  <h6 class="card-title text-warning">Envío: {{ item.envio['0'].courier }}</h6>
+                </div>
+                <div class="row card-body">
+                  <!-- Información de Envío -->
+                  <div class="col-md-6">
+                    <p><strong>País:</strong> {{ item.envio['0'].pais }}</p>
+                    <p><strong>Tienda de origen:</strong> <span> {{ item.datos_producto.tienda }}</span></p>
+                    <p><strong>Link de la tienda origen:</strong> <a href="https://{{item.datos_producto.canal}}" target="_blank"> {{ item.datos_producto.canal }}</a></p>
+                    <p><strong>Dirección de origen:</strong> {{ item.envio['0'].provincia }}, {{ item.envio['0'].ciudad }}, {{ item.envio['0'].sector }}</p>
+                    <p><strong>Dirección de destino:</strong> {{ item.envio['0'].provinciaDestino }}, {{ item.envio['0'].ciudadDestino }}, {{ item.envio['0'].sectorDestino }}</p>
+                    <p><strong>Distancia entre origen y destino:</strong> <span class="text-danger"> {{ item.envio['0'].distancia }} km</span></p>
+                    <p><strong>Costo de envío:</strong> {{ item.envio['0'].costo | currency}}</p>
+                    <p><strong>Formas de pago:</strong>
+                      <ng-container *ngFor="let forma of item.envio['0'].formaPago; let last = last">
+                        <span *ngIf="forma.estado"> {{ forma.nombre }}<span *ngIf="!last">, </span></span>
+                      </ng-container>
+                    </p>
+                    <p><strong>Tiempo de entrega estimado:</strong> {{ item.envio['0'].tiempo_entrega }} horas</p>
+                  </div>
+                  <!-- Información del Producto -->
+                  <div class="col-md-6">
+                    <p class="font-weight-bold">{{ item.datos_producto.nombre }} - {{item.datos_producto.codigoBarras}}</p>
+                    <p><strong>Link del catálogo de categoría:</strong> <a  href="{{ item.datos_producto.link_catalogo }}"target="_blank"> {{ item.datos_producto.link_catalogo }}</a></p>
+                    <p><strong>Desripción:</strong> {{ item.datos_producto.descripcion }}</p>
+                    <p><strong>Precio Venta:</strong> <span class="text-success"> {{ item.datos_producto.precioVentaA | currency}}</span> </p>
+                    <p><strong>Precio Oferta:</strong> <span class="text-danger"> {{ item.datos_producto.precioOferta | currency}}</span> </p>
+                    <p><strong>Stock real:</strong> {{ item.datos_producto.stock }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <button class="btn btn-secondary" (click)="cerrarSesion()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+
+

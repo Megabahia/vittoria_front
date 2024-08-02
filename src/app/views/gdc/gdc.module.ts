@@ -12,6 +12,7 @@ import {GdcComponent} from "./gdc.component";
 import {ContactoComponent} from "./contactos/contacto.component";
 import {VentasComponent} from "./ventas/ventas.component";
 import {EntregadosComponent} from "./entregados/entregados.component";
+import {FacturasCargadasComponent} from "./facturas_cargadas/facturas_cargadas.component";
 
 
 
@@ -20,7 +21,8 @@ import {EntregadosComponent} from "./entregados/entregados.component";
     GdcComponent,
     ContactoComponent,
     VentasComponent,
-    EntregadosComponent
+    EntregadosComponent,
+    FacturasCargadasComponent
   ],
   imports: [
     CommonModule,

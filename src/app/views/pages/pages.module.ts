@@ -9,24 +9,30 @@ import {PagesRoutingModule} from './pages-routing.module';
 import { ProductosComponent } from './productos/productos.component';
 import {NgxCaptchaModule} from 'ngx-captcha';
 import { CalculadoraComponent } from './calculadora/calculadora.component';
+import { PedidoWoocomerceComponent } from './pedido-woocomerce/pedido-woocomerce.component';
+import {GdeModule} from "../gde/gde.module";
+import {ConsultaProductosComponent} from "./consulta-productos/consulta-productos.component";
 
 
 
 @NgModule({
   declarations: [
     ProductosComponent,
-    CalculadoraComponent
+    CalculadoraComponent,
+    PedidoWoocomerceComponent,
+    ConsultaProductosComponent
   ],
-  imports: [
-    CommonModule,
-    NgbModule,
-    SharedModule,
-    FormsModule,
-    ChartsModule,
-    ReactiveFormsModule,
-    FlatpickrModule.forRoot(),
-    PagesRoutingModule,
-    NgxCaptchaModule,
-  ]
+    imports: [
+        CommonModule,
+        NgbModule,
+        SharedModule,
+        FormsModule,
+        ChartsModule,
+        ReactiveFormsModule,
+        FlatpickrModule.forRoot(),
+        PagesRoutingModule,
+        NgxCaptchaModule,
+        GdeModule,
+    ]
 })
 export class PagesModule { }

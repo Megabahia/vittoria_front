@@ -27,6 +27,13 @@ export class PedidosService {
     return this.http.post<any>(`${apiUrl}/api/v3/orders/list`, datos);
   }
 
+  crearPedido(datos): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/api/v3/orders`, datos);
+  }
+  crearPedidoSuperBarato(datos): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/api/v3/orders/super/barato`, datos);
+  }
+
   obtenerListaPedidosBodega(datos): Observable<any> {
     return this.http.post<any>(`${apiUrl}/api/v3/orders/list/bodega`, datos);
   }
@@ -50,9 +57,20 @@ export class PedidosService {
   actualizarPedidoFormData(datos: FormData): Observable<any> {
     return this.http.post<any>(`${apiUrl}/api/v3/orders/update/${datos.get('id')}`, datos);
   }
+  actualizarPedidoFormaPagoFormData(datos: FormData): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/api/v3/orders/update/formaPago/${datos.get('id')}`, datos);
+  }
 
   obtenerPedido(id): Observable<any> {
     return this.http.get<any>(`${apiUrl}/api/v3/orders/listOne/${id}`);
+  }
+
+  enviarCodioCorreo(datos): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/api/v3/orders/codigo/email`, datos);
+  }
+
+  verificarCodigoCorreo(datos): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/api/v3/orders/codigo/email/verify`, datos);
   }
 
   exportar(filtros): Observable<any> {

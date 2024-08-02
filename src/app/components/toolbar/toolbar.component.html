@@ -3,7 +3,7 @@
     <ul class="nav navbar-nav flex-row">
       <li class="nav-item mr-auto">
         <a class="navbar-brand" [routerLink]="['/']">
-          <img src="assets/images/logo.svg" width="160">
+          <img src="assets/images/logo.svg" width="160" alt="vittoria">
         </a>
       </li>
     </ul>
@@ -42,31 +42,16 @@
         <a class="d-flex align-items-center" [routerLink]="['/admin/integraciones-woocommerce']" data-toggle="tooltip"
            data-placement="auto" title="Integraciones Woocommerce">
           <i data-feather="circle"></i>
-          <span class="menu-item text-truncate" data-i18n="List">Integraciones Woocommerce</span></a>
+          <span class="menu-item text-truncate" data-i18n="List">Integraciones Canales</span></a>
+      </li>
+      <li class="nav-item {{menuToolbar['adm']['integracionesEnvio']}}" *ngIf="acciones.ADM.LEER">
+        <a class="d-flex align-items-center" [routerLink]="['/admin/integraciones-envio']" data-toggle="tooltip"
+           data-placement="auto" title="Integraciones Envio">
+          <i data-feather="circle"></i>
+          <span class="menu-item text-truncate" data-i18n="List">Integraciones Envio</span></a>
       </li>
 
       <li class="navigation-header">Módulos de sistema</li>
-      <!--<li class="nav-item" *ngIf="acciones.ADM.LEER">
-        <a class="d-flex align-items-center" title="Contactos para local">
-          <i data-feather="file-text"></i>
-          <span class="menu-title text-truncate" data-i18n="User">MC Contactos de local</span></a>
-        <ul class="menu-content">
-          <li class="nav-item">
-            <a class="d-flex align-items-center" [routerLink]="['/contacto/generarContacto']" data-toggle="tooltip"
-               data-placement="auto" title="Generador de contacto">
-              <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Generador de contacto</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="d-flex align-items-center" [routerLink]="['/contacto/generarVenta']" data-toggle="tooltip"
-               data-placement="right" title="Generador de pedidos">
-              <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Generador de pedidos</span>
-            </a>
-          </li>
-        </ul>
-      </li>-->
       <li class="nav-item" *ngIf="acciones.MDM.LEER">
         <a class="d-flex align-items-center collapsed_menu_item">
           <i data-feather="file-text"></i>
@@ -322,35 +307,88 @@
 
         </ul>
       </li>
-      <li class="nav-item" *ngIf="acciones.MDO.LEER">
+      <li class="ml-2">-------------------------------------</li>
+      <li class="nav-item" *ngIf="acciones.ADM.LEER">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
-          <span class="menu-title text-truncate" data-i18n="Invoice">MDO Motor de ofertas</span></a>
-        <ul class="menu-content">
-          <li class="nav-item {{menuToolbar['mdo']['param']}}">
-            <a class="d-flex align-items-center" href="#/mdo/parametrizaciones/list" data-toggle="tooltip"
-               data-placement="auto" title="Parametrizaciones MDO">
-              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
+          <span class="menu-title text-truncate" data-i18n="Invoice" title="GD Gestión de Drop Shipping">GD Gestión de Drop Shipping</span></a>
+        <ul class="menu-content ng-star-inserted">
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['gsb/gd_params']" data-toggle="tooltip"
+               data-placement="auto" title="Parametrizaciones">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Parametrizaciones</span>
+            </a>
           </li>
-          <li class="nav-item {{menuToolbar['mdo']['predCross']}}">
-            <a class="d-flex align-items-center" href="#/mdo/predicciones/cross" data-toggle="tooltip"
-               data-placement="auto" title="Predicciones para crosseling">
-              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Predicciones para crosseling</span></a>
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['gsb/inventario/list']" data-toggle="tooltip"
+               data-placement="auto" title="Super Barato">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Inventario</span>
+            </a>
           </li>
-          <li class="nav-item {{menuToolbar['mdo']['predRefil']}}">
-            <a class="d-flex align-items-center" href="#/mdo/predicciones/refil" data-toggle="tooltip"
-               data-placement="auto" title="Predicciones para refil">
-              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Predicciones para refil</span></a>
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['gsb/inventario/reporte']" data-toggle="tooltip"
+               data-placement="auto" title="Reporte de Inventario Super Barato">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Reporte de Inventario</span>
+            </a>
           </li>
-          <li class="nav-item {{menuToolbar['mdo']['predNueProd']}}">
-            <a class="d-flex align-items-center" href="#/mdo/predicciones/nuevos" data-toggle="tooltip"
-               data-placement="auto" title="Predicciones para nuevos productos">
-              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Predicciones para nuevos productos</span></a>
+          <li class="nav-item has-sub ng-star-inserted">
+            <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
+               title="Pedidos por Canal">
+              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Registro de contactos</span></a>
+            <ul class="menu-content">
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/create']" data-toggle="tooltip"
+                   data-placement="auto" title="Ingreso de contactos">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Ingresar Contactos</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/list/reporte']" data-toggle="tooltip"
+                   data-placement="auto" title="Reporte de lista de contactos">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Reporte de lista de contactos</span>
+                </a>
+              </li>
+            </ul>
           </li>
-          <li class="nav-item {{menuToolbar['mdo']['genOferta']}}">
-            <a class="d-flex align-items-center" href="#/mdo/oferta/generar" data-toggle="tooltip"
-               data-placement="auto" title="Generar oferta para cliente">
-              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Generar oferta para cliente</span></a>
+          <li class="nav-item has-sub ng-star-inserted">
+            <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
+               title="Concretar ventas">
+              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Concretar ventas</span></a>
+            <ul class="menu-content">
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/list']" data-toggle="tooltip"
+                   data-placement="auto" title="Listar Contactos">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Listar Contactos</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['gsb/pedido']" data-toggle="tooltip"
+               data-placement="auto" title="Pedido Super Barato">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Pedido Super Barato</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['gsb/superbarato']" data-toggle="tooltip"
+               data-placement="auto" title="Super Barato">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Despachar pedido Super Barato</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['gsb/reportes']" data-toggle="tooltip"
+               data-placement="auto" title="Reportes Super Barato">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Reportes Super Barato</span>
+            </a>
           </li>
         </ul>
       </li>
@@ -381,24 +419,76 @@
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Pedidos Rechazados</span></a>
           </li>
-        </ul>
-      </li>
-      <li class="nav-item" *ngIf="acciones.GDO.LEER">
-        <a class="d-flex align-items-center">
-          <i data-feather="file-text"></i>
-          <span class="menu-title text-truncate" data-i18n="Invoice">GDO Gestión de ofertas</span></a>
-        <ul class="menu-content">
-          <li class="nav-item {{menuToolbar['gdo']['param']}}">
-            <a class="d-flex align-items-center" href="#/gdo/parametrizaciones/list"
-               title="Parametrizaciones de GDO"
-            >
-              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
-          </li>
-          <li class="nav-item {{menuToolbar['gdo']['gestOferta']}}">
-            <a class="d-flex align-items-center" href="#/gdo/gestionOferta/list" data-toggle="tooltip"
-               data-placement="auto" title="Gestión de la oferta">
-              <i data-feather="circle"></i><span class="menu-item text-truncate"
-                                                 data-i18n="List">Gestión de la oferta</span></a>
+          <li class="nav-item has-sub ng-star-inserted">
+            <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
+               title="Pedidos por Canal">
+              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Pedidos Canal</span></a>
+            <ul class="menu-content">
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/megabahia']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal Mega Bahia">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido MegaBahia</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/mayorista']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal Mayorista">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido Mayorista</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/megadescuento']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal Megadescuento">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido Megadescuento</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/todomegacentro']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal TodoMegacentro">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido TodoMegacentro</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/tiendamulticompras']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal TiendaMulticompras">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido TiendaMulticompras</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/contraentrega']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal Contraentrega">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido Contraentrega</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/maxidescuento']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal Maxidescuento">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido Maxidescuento</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/vittoria']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal Vittoria">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido Vittoria</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/superbarato']" data-toggle="tooltip"
+                   data-placement="auto" title="Pedido Canal Superbarato">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Pedido Superbarato</span>
+                </a>
+              </li>
+
+            </ul>
           </li>
         </ul>
       </li>
@@ -441,23 +531,40 @@
           </li>
         </ul>
       </li>
-      <li class="nav-item" *ngIf="acciones.GCN.LEER">
-        <a class="d-flex align-items-center" title="GCN Gestión de centro de negocios">
+      <li class="nav-item" *ngIf="acciones.ADM.LEER">
+        <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
-          <span class="menu-title text-truncate" data-i18n="Invoice">GCN Gestión de centro de negocios</span></a>
+          <span class="menu-title text-truncate" data-i18n="Invoice">GDB Gestión de bodega</span></a>
         <ul class="menu-content">
-          <li class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}">
-            <a class="d-flex align-items-center" href="#/gcn/reporte-ventas-vendedor/list" data-toggle="tooltip"
-               data-placement="auto" title="Reporte de ventas por vendedor">
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['gdb/bodega']" data-toggle="tooltip"
+               data-placement="auto" title="Bodega">
               <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas por vendedor</span>
+              <span class="menu-item text-truncate" data-i18n="List">Bodega</span>
             </a>
           </li>
-          <li *ngIf="usuario.usuario.idRol !== 58 && usuario.usuario.idRol !== 52 || usuario.usuario.idRol === 54" class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}">
-            <a class="d-flex align-items-center" href="#/gcn/reporte-ventas-centro-negocio/list" data-toggle="tooltip"
-               data-placement="auto" title="Reporte de ventas del centro de negocio">
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['gdb/pedidos']" data-toggle="tooltip"
+               data-placement="auto" title="Vittoria">
               <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas del centro de negocio</span>
+              <span class="menu-item text-truncate" data-i18n="List">Pedidos a bodega</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="ml-2">-------------------------------------</li>
+      <li class="nav-item"
+          *ngIf="usuario.usuario.idRol === 58 || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 54">
+        <a class="d-flex align-items-center">
+          <i data-feather="file-text"></i>
+          <span class="menu-title text-truncate" data-i18n="Invoice">GDP Gestión de pedidos</span></a>
+        <ul class="menu-content">
+
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['/gdp/pedidos']" data-toggle="tooltip"
+               data-placement="auto" title="Generador de pedidos">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Generador de pedidos</span>
             </a>
           </li>
         </ul>
@@ -481,97 +588,32 @@
               <span class="menu-item text-truncate" data-i18n="List">Despachos entregados</span>
             </a>
           </li>
+          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
+            <a class="d-flex align-items-center" [routerLink]="['gdc/facturas/cargadas']" data-toggle="tooltip"
+               data-placement="auto" title="Confirmación de facturas cargadas">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Confirmación de facturas</span>
+            </a>
+          </li>
         </ul>
       </li>
-      <li class="nav-item" *ngIf="acciones.ADM.LEER">
-        <a class="d-flex align-items-center">
+      <li class="nav-item" *ngIf="acciones.GCN.LEER">
+        <a class="d-flex align-items-center" title="GCN Gestión de centro de negocios">
           <i data-feather="file-text"></i>
-          <span class="menu-title text-truncate" data-i18n="Invoice">GDB Gestión de bodega</span></a>
+          <span class="menu-title text-truncate" data-i18n="Invoice">GCN Gestión de centro de negocios</span></a>
         <ul class="menu-content">
-          <li class="nav-item">
-            <a class="d-flex align-items-center" [routerLink]="['gdb/bodega']" data-toggle="tooltip"
-               data-placement="auto" title="Bodega">
+          <li class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}">
+            <a class="d-flex align-items-center" href="#/gcn/reporte-ventas-vendedor/list" data-toggle="tooltip"
+               data-placement="auto" title="Reporte de ventas por vendedor">
               <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Bodega</span>
+              <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas por vendedor</span>
             </a>
           </li>
-          <li class="nav-item">
-            <a class="d-flex align-items-center" [routerLink]="['gdb/pedidos']" data-toggle="tooltip"
-               data-placement="auto" title="Vittoria">
+          <li *ngIf="usuario.usuario.idRol !== 58 && usuario.usuario.idRol !== 52 || usuario.usuario.idRol === 54" class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}">
+            <a class="d-flex align-items-center" href="#/gcn/reporte-ventas-centro-negocio/list" data-toggle="tooltip"
+               data-placement="auto" title="Reporte de ventas del centro de negocio">
               <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Pedidos a bodega</span>
-            </a>
-          </li>
-        </ul>
-      </li>
-      <li class="nav-item"
-          *ngIf="usuario.usuario.idRol === 58 || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 54">
-        <a class="d-flex align-items-center">
-          <i data-feather="file-text"></i>
-          <span class="menu-title text-truncate" data-i18n="Invoice">GDP Gestión de pedidos</span></a>
-        <ul class="menu-content">
-
-          <li class="nav-item">
-            <a class="d-flex align-items-center" [routerLink]="['/gdp/pedidos']" data-toggle="tooltip"
-               data-placement="auto" title="Generador de pedidos">
-              <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Generador de pedidos</span>
-            </a>
-          </li>
-        </ul>
-      </li>
-      <li class="nav-item" *ngIf="acciones.ADM.LEER">
-        <a class="d-flex align-items-center">
-          <i data-feather="file-text"></i>
-          <span class="menu-title text-truncate" data-i18n="Invoice">GSB Gestión de Super Barato</span></a>
-        <ul class="menu-content ng-star-inserted">
-          <li class="nav-item">
-            <a class="d-flex align-items-center" [routerLink]="['gsb/inventario/list']" data-toggle="tooltip"
-               data-placement="auto" title="Super Barato">
-              <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Inventario</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="d-flex align-items-center" [routerLink]="['gsb/inventario/reporte']" data-toggle="tooltip"
-               data-placement="auto" title="Reporte de Inventario Super Barato">
-              <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Reporte de Inventario</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/create']" data-toggle="tooltip"
-               data-placement="auto" title="Ingreso de contactos">
-              <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Ingresar Contactos</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/list']" data-toggle="tooltip"
-               data-placement="auto" title="Listar Contactos">
-              <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Listar Contactos</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="d-flex align-items-center" [routerLink]="['gsb/pedido']" data-toggle="tooltip"
-               data-placement="auto" title="Pedido Super Barato">
-              <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Pedido Super Barato</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="d-flex align-items-center" [routerLink]="['gsb/superbarato']" data-toggle="tooltip"
-               data-placement="auto" title="Super Barato">
-              <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Despachar pedido Super Barato</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="d-flex align-items-center" [routerLink]="['gsb/reportes']" data-toggle="tooltip"
-               data-placement="auto" title="Reportes Super Barato">
-              <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Reportes Super Barato</span>
+              <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas del centro de negocio</span>
             </a>
           </li>
         </ul>
@@ -594,6 +636,59 @@
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Despachos realizados</span>
             </a>
+          </li>
+        </ul>
+      </li>
+      <li class="ml-2">-------------------------------------</li>
+      <li class="navigation-header">Módulos por afinar</li>
+      <li class="nav-item" *ngIf="acciones.MDO.LEER">
+        <a class="d-flex align-items-center">
+          <i data-feather="file-text"></i>
+          <span class="menu-title text-truncate" data-i18n="Invoice">MDO Motor de ofertas</span></a>
+        <ul class="menu-content">
+          <li class="nav-item {{menuToolbar['mdo']['param']}}">
+            <a class="d-flex align-items-center" href="#/mdo/parametrizaciones/list" data-toggle="tooltip"
+               data-placement="auto" title="Parametrizaciones MDO">
+              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
+          </li>
+          <li class="nav-item {{menuToolbar['mdo']['predCross']}}">
+            <a class="d-flex align-items-center" href="#/mdo/predicciones/cross" data-toggle="tooltip"
+               data-placement="auto" title="Predicciones para crosseling">
+              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Predicciones para crosseling</span></a>
+          </li>
+          <li class="nav-item {{menuToolbar['mdo']['predRefil']}}">
+            <a class="d-flex align-items-center" href="#/mdo/predicciones/refil" data-toggle="tooltip"
+               data-placement="auto" title="Predicciones para refil">
+              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Predicciones para refil</span></a>
+          </li>
+          <li class="nav-item {{menuToolbar['mdo']['predNueProd']}}">
+            <a class="d-flex align-items-center" href="#/mdo/predicciones/nuevos" data-toggle="tooltip"
+               data-placement="auto" title="Predicciones para nuevos productos">
+              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Predicciones para nuevos productos</span></a>
+          </li>
+          <li class="nav-item {{menuToolbar['mdo']['genOferta']}}">
+            <a class="d-flex align-items-center" href="#/mdo/oferta/generar" data-toggle="tooltip"
+               data-placement="auto" title="Generar oferta para cliente">
+              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Generar oferta para cliente</span></a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item" *ngIf="acciones.GDO.LEER">
+        <a class="d-flex align-items-center">
+          <i data-feather="file-text"></i>
+          <span class="menu-title text-truncate" data-i18n="Invoice">GDO Gestión de ofertas</span></a>
+        <ul class="menu-content">
+          <li class="nav-item {{menuToolbar['gdo']['param']}}">
+            <a class="d-flex align-items-center" href="#/gdo/parametrizaciones/list"
+               title="Parametrizaciones de GDO"
+            >
+              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
+          </li>
+          <li class="nav-item {{menuToolbar['gdo']['gestOferta']}}">
+            <a class="d-flex align-items-center" href="#/gdo/gestionOferta/list" data-toggle="tooltip"
+               data-placement="auto" title="Gestión de la oferta">
+              <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                                 data-i18n="List">Gestión de la oferta</span></a>
           </li>
         </ul>
       </li>
@@ -744,7 +839,7 @@
           </li>
         </ul>
       </li>
-      <li class="navigation-header">Todomegacentro</li>
+      <!--<li class="navigation-header">Todomegacentro</li>
       <li class="nav-item" *ngIf="acciones.TODOMEGA.LEER">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
@@ -757,7 +852,7 @@
                                                  data-i18n="List">Inicio</span></a>
           </li>
         </ul>
-      </li>
+      </li>-->
     </ul>
   </div>
 </div>

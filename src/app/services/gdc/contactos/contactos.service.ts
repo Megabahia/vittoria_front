@@ -33,6 +33,15 @@ export class ContactosService {
     return this.http.post<any>(`${apiUrl}/gdc/contact/update/${datos.id}`, datos);
   }
 
+  actualizarAprobarcionContacto(id, nuevoEstado, montoSubtotal) {
+    const payload = { estado: nuevoEstado, montoSubtotalAprobado: montoSubtotal };
+    return this.http.post<any>(`${apiUrl}/gdc/contact/update/${id}`, payload);
+  }
+  actualizarNegacionContacto(id, nuevoEstado, motivo) {
+    const payload = { estado: nuevoEstado, motivoNegacionPedido: motivo };
+    return this.http.post<any>(`${apiUrl}/gdc/contact/update/${id}`, payload);
+  }
+
   actualizarVentaFormData(datos: FormData): Observable<any> {
     return this.http.post<any>(`${apiUrl}/gdc/contact/update/${datos.get('id')}`, datos);
   }

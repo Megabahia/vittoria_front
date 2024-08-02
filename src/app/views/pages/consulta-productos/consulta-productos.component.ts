@@ -1,0 +1,196 @@
+import {Component, Input, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {ValidacionesPropias} from "../../../utils/customer.validators";
+import {ParamService as ParamServiceAdm} from "../../../services/admin/param.service";
+import {PedidosService} from "../../../services/mp/pedidos/pedidos.service";
+import {logger} from "codelyzer/util/logger";
+import {Toaster} from "ngx-toast-notifications";
+import {IntegracionesEnviosService} from "../../../services/admin/integraciones_envios.service";
+import {ProductosService} from "../../../services/mdp/productos/productos.service";
+import {AuthService} from "../../../services/admin/auth.service";
+
+interface ProductoProcesado {
+  canal?: string;
+
+  [key: string]: any; // Esto permite cualquier nombre de clave adicional
+}
+
+@Component({
+  selector: 'app-consulta-productos',
+  templateUrl: './consulta-productos.component.html',
+  styleUrls: ['./consulta-productos.component.css']
+})
+
+
+export class ConsultaProductosComponent implements OnInit {
+
+  @Input() paises;
+  public notaPedido: FormGroup;
+  archivo: FormData = new FormData();
+
+  tipoIdentificacion;
+  datos: any[] = [];
+  pais = 'Ecuador';
+  provincia = '';
+  ciudad = '';
+  sector = '';
+
+  callePrincipal = '';
+  calleSecundaria = '';
+
+  ciudadOpciones;
+  provinciaOpciones;
+  page = 1;
+  // tslint:disable-next-line:variable-name
+  page_size: any = 3;
+  parametros;
+  integracionEnvio: any[] = [];
+  nombreProducto;
+  codigoBarras;
+  producto;
+  integracionProducto;
+  totalProductosEnOrigen;
+
+  mostrarSelectCourier = false;
+
+  couriers: any[] = [];
+  courierSeleccionado;
+  dataOrigenProductoEnvio;
+  mostrarDatosProducto = false;
+
+  sectorOpciones;
+
+  constructor(
+    private paramServiceAdm: ParamServiceAdm,
+    private toaster: Toaster,
+    private _router: Router,
+    private integracionesEnviosService: IntegracionesEnviosService,
+    private productosService: ProductosService,
+    private authService: AuthService
+  ) {
+    /*const ref = document.referrer;
+    const host = document.location.host;
+    if (ref !== 'https://superbarato.megadescuento.com/') {
+      if (host !== '209.145.61.41:4201') {
+        this._router.navigate([
+          '/auth/signin'
+        ]);
+        localStorage.clear();
+        return;
+      }
+    }*/
+    const navbar = document.getElementById('navbar');
+    const toolbar = document.getElementById('toolbar');
+    if (navbar && toolbar) {
+      navbar.style.display = 'none';
+      toolbar.style.display = 'none';
+    }
+
+  }
+
+  ngOnInit(): void {
+    this.obtenerProvincias();
+  }
+
+  async obtenerProducto(): Promise<void> {
+    if (!this.codigoBarras && !this.nombreProducto) {
+      this.toaster.open('Ingrese un dato para buscar producto', {type: 'danger'});
+      return;
+    }
+
+    return new Promise((resolve, reject) => {
+      const data = {
+        codigoBarras: this.codigoBarras,
+        nombre: this.nombreProducto,
+        state: 1,
+        estado: 'Activo',
+      };
+
+      this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
+        this.producto = info.producto;
+        this.integracionProducto = info.integraciones_canal;
+        this.totalProductosEnOrigen = info.productos;
+        //this.totalProductosEnOrigen.map((courier) => this.couriers.push(courier.courier));
+        //console.log('COURIERS', this.couriers);
+        //this.obtenerDatosOrigenProducto();
+        this.mostrarDatosProducto = true;
+      }, error => this.toaster.open(error, {type: 'danger'}));
+    });
+  }
+
+  consultarDatosEnvio(): void {
+    this.integracionEnvio = [];
+    if (this.provincia === '' || this.ciudad === '' || this.sector === '') {
+      this.toaster.open('Complete los campos requeridos', {type: 'danger'});
+      return;
+    }
+    this.obtenerFacturasEnvio();
+    //this.mostrarSelectCourier = true;
+  }
+
+  obtenerProvincias(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.pais, 'PAIS').subscribe((info) => {
+      this.provinciaOpciones = info;
+    });
+  }
+
+  obtenerCiudad(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.provincia, 'PROVINCIA').subscribe((info) => {
+      this.ciudadOpciones = info;
+    });
+  }
+
+  obtenerSector(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.ciudad, 'CIUDAD').subscribe((info) => {
+      this.sectorOpciones = info;
+    });
+  }
+
+  /*obtenerDatosOrigenProducto(): void {
+    const todosProductos: any[] = [];
+    this.totalProductosEnOrigen.map(item => {
+      this.integracionesEnviosService.obtenerListaIntegracionesEnviosSinAuth({
+        ciudad: item.ciudad,
+        sector: item.sector
+      }).subscribe((result) => {
+        todosProductos.push(result.info);
+        if (result.cont === 0) {
+          this.toaster.open(`No existe datos de envío`);
+        }
+      });
+    })
+    this.dataOrigenProductoEnvio = todosProductos;
+    console.log('DATOS DESTINO PROD', this.dataOrigenProductoEnvio);
+  }*/
+
+  obtenerFacturasEnvio(): void {
+    if (this.ciudad && this.sector) {
+
+      this.totalProductosEnOrigen.map(producto => {
+        this.integracionesEnviosService.obtenerListaIntegracionesEnviosSinAuth({
+          ciudad: producto.ciudad,
+          ciudadDestino: this.ciudad,
+          sector: producto.sector,
+          sectorDestino: this.sector
+        }).subscribe((result) => {
+          if (result.cont === 0) {
+            this.toaster.open(`No existe datos de envío`);
+          }
+          this.integracionEnvio.push({envio: {...result.info}, datos_producto: producto});
+          this.integracionEnvio.sort((a, b) => {
+            return a.envio['0'].distancia - b.envio['0'].distancia; // De menor a mayor
+          });
+        });
+      })
+    }
+  }
+
+  cerrarSesion() {
+    this.authService.signOut();
+  }
+
+}
+
+
+
