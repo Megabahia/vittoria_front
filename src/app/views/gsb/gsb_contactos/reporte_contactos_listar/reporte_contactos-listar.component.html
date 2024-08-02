@@ -37,13 +37,14 @@
           <table class="user-list-table table">
             <thead class="thead-light">
             <tr>
-              <th>Fecha</th>
-              <th>Hora</th>
+              <th>Fecha de ingreso de contacto</th>
+              <th style="color: red">Hora de ingreso de contacto</th>
               <th>Canal que ingreso contacto</th>
               <th>Usuario que ingreso contacto</th>
               <th>Nombres</th>
               <th>Apellidos</th>
               <th>WhatsApp</th>
+              <th>Tipo de contacto</th>
               <th>URL Productos</th>
               <th>Estado de contacto</th>
             </tr>
@@ -52,13 +53,16 @@
             <tbody>
             <tr *ngFor="let contacto  of listaContacto; let i = index">
               <td>{{ contacto.created_at | date: 'dd-MM-yyyy' }}</td>
-              <td>{{ contacto.created_at | date: 'HH:mm:ss' }}</td>
+              <td style="color: red">{{ contacto.created_at | date: 'HH:mm:ss' }}</td>
               <td>{{ contacto.canal | shorten }}</td>
               <td>{{ contacto.usuario }}</td>
               <td>{{ contacto.nombres }}</td>
               <td>{{ contacto.apellidos }}</td>
               <td>
                 {{ enmarcarNumeroTelefono(contacto.whatsapp) }}
+              </td>
+              <td [style]="{'color': contacto.tipoContacto === 'original' ? 'green' : 'red' }">
+                {{ contacto.tipoContacto === 'original' ? 'Original' : 'Duplicado'}}
               </td>
               <td>
                 <ul *ngFor="let productos of contacto.articulos">

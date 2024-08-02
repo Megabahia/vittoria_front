@@ -12,7 +12,7 @@
             <div class="col-md-12">
               <div class="form-group">
                 <div *ngIf="disabledSelectCanal; else SelectEnable">
-                  <label for="canal">Link del catálogo de la tienda: </label>
+                  <label for="canal">Canal: </label>
                   <select class="form-control select2" name="canal" id="canal" formControlName="canal"
                           [(ngModel)]="producto.canal" disabled>
                     <option value="" selected>- Seleccionar -</option>
@@ -31,11 +31,23 @@
               </div>
             </div>
             <div class="row" *ngIf="producto.canal != ''">
-              <h4 class="mx-2 my-1 text-warning font-weight-bold">Información requerida</h4>
               <div class="row mx-2">
-                <div class="col-md-4 col-12">
+                <h4 class="col-md-12 my-1 text-warning font-weight-bold">Enlaces de detalle del producto</h4>
+                <div class="col-md-6 col-12">
                   <div class="form-group">
-                    <label style="color: blue">Link del catálogo de la categoría</label>
+                    <label style="color: blue">Enlace de la tienda del producto</label>
+                    <input type="text" class="form-control" formControlName="link_tienda"
+                           [(ngModel)]="producto.link_tienda">
+                    <!--<div *ngIf="submittedProductoForm && fp.link_catalogo.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.link_catalogo.errors.required">Link del catálogo de la categoría requerido
+                      </div>
+                    </div>-->
+                  </div>
+                </div>
+                <div class="col-md-6 col-12">
+                  <div class="form-group">
+                    <label style="color: blue">Enlace del catálogo de la categoría</label>
                     <input type="text" class="form-control" formControlName="link_catalogo"
                            [(ngModel)]="producto.link_catalogo">
                     <!--<div *ngIf="submittedProductoForm && fp.link_catalogo.errors" class="invalid-feedback"
@@ -45,9 +57,12 @@
                     </div>-->
                   </div>
                 </div>
+              </div>
+              <div class="row mx-2">
+                <h4 class="col-md-12 my-1 text-warning font-weight-bold">Información requerida</h4>
                 <div class="col-md-4 col-12">
                   <div class="form-group">
-                    <label>Nombre completo</label>
+                    <label>Nombre completo <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" formControlName="nombre" [(ngModel)]="producto.nombre">
                     <div *ngIf="submittedProductoForm && fp.nombre.errors" class="invalid-feedback"
                          style="display: block;">
@@ -59,7 +74,7 @@
                 </div>
                 <div class="col-md-4 col-12">
                   <div class="form-group">
-                    <label>Código de barras</label>
+                    <label>Código de barras <span class="text-danger">*</span></label>
                     <div class="input-group mb-1">
                       <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">{{ this.parametros?.prefijo }}</span>
@@ -77,7 +92,7 @@
                 </div>
                 <div class="col-md-4 col-12">
                   <div class="form-group">
-                    <label>Stock real</label>
+                    <label>Stock real <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" name="stock" formControlName="stock"
                            [(ngModel)]="producto.stock">
                     <div *ngIf="submittedProductoForm && fp.stock.errors" class="invalid-feedback"
@@ -90,7 +105,7 @@
                 </div>
                 <div class="col-md-4 col-12">
                   <div class="form-group">
-                    <label>Costo de compra</label>
+                    <label>Costo de compra <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" formControlName="costoCompra"
                            [(ngModel)]="producto.costoCompra">
                     <div *ngIf="submittedProductoForm && fp.costoCompra.errors" class="invalid-feedback"
@@ -103,8 +118,8 @@
 
                 <div class="col-md-4 col-12">
                   <div class="form-group">
-                    <label for="categoria">Categoría</label>
-                    <select class="form-control select2" name="categoria" formControlName="categoria"
+                    <label for="categoria">Categoría <span class="text-danger">*</span></label>
+                    <select class="form-control select2" id="categoria" name="categoria" formControlName="categoria"
                             (change)="obtenerListaSubcategorias()" [(ngModel)]="producto.categoria">
                       <option value="" selected>- Seleccionar -</option>
                       <option *ngFor="let categoriasOp of categoriasOpciones"
@@ -121,8 +136,8 @@
                 </div>
                 <div class="col-md-4 col-12">
                   <div class="form-group">
-                    <label for="subCategoria">Subcategoría</label>
-                    <select class="form-control select2" name="subCategoria" formControlName="subCategoria"
+                    <label for="subCategoriaP">Subcategoría <span class="text-danger">*</span></label>
+                    <select class="form-control select2" id="subCategoriaP" name="subCategoria" formControlName="subCategoria"
                             [(ngModel)]="producto.subCategoria">
                       <option value="" selected>- Seleccionar -</option>
                       <option *ngFor="let subcategoriasOp of subcategoriasOpciones"
@@ -140,7 +155,7 @@
 
                 <div class="col-md-4 col-12">
                   <div class="form-group">
-                    <label>Estado</label>
+                    <label>Estado <span class="text-danger">*</span></label>
                     <select class="form-control" formControlName="estado" [(ngModel)]="producto.estado">
                       <option value="">- Seleccione -</option>
                       <option value="Activo">Activo</option>
@@ -155,7 +170,7 @@
                 </div>
                 <div class="col-md-4 col-12">
                   <div class="form-group">
-                    <label>Proveedor</label>
+                    <label>Proveedor <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" formControlName="proveedor"
                            [(ngModel)]="producto.proveedor">
                     <div *ngIf="submittedProductoForm && fp.proveedor.errors" class="invalid-feedback"
@@ -167,7 +182,7 @@
                 </div>
                 <div class="col-md-5 col-12">
                   <div class="form-group">
-                    <label for="descripcionTextArea">Descripción</label>
+                    <label for="descripcionTextArea">Descripción <span class="text-danger">*</span></label>
                     <textarea id="descripcionTextArea" rows="3" class="form-control" formControlName="descripcion"
                               [(ngModel)]="producto.descripcion"></textarea>
                     <div *ngIf="submittedProductoForm && fp.descripcion.errors" class="invalid-feedback"
@@ -179,7 +194,7 @@
                 </div>
                 <div class="col-md-5 col-12">
                   <div class="form-group">
-                    <label for="caracteristicasTextarea">Caracteristicas</label>
+                    <label for="caracteristicasTextarea">Caracteristicas <span class="text-danger">*</span></label>
                     <textarea id="caracteristicasTextarea" rows="3" class="form-control"
                               formControlName="caracteristicas"
                               [(ngModel)]="producto.caracteristicas"></textarea>
@@ -191,8 +206,8 @@
                   </div>
                 </div>
               </div>
-              <h4 class="mx-2 my-1 text-warning font-weight-bold">Precios</h4>
               <div class="row mx-2">
+              <h4 class="col-md-12 my-1 text-warning font-weight-bold">Precios</h4>
                 <div class="col-md-4 col-12">
                   <div class="form-group">
                     <label>Precio de venta A TodoMegacentro</label>
@@ -323,8 +338,8 @@
                   </div>
                 </div>
               </div>
-              <h4 class="mx-2 my-1 text-warning font-weight-bold">Información adicional</h4>
               <div class="row mx-2">
+                <h4 class="col-md-12 my-1 text-warning font-weight-bold">Información adicional</h4>
                 <div class="col-md-4 col-12">
                   <div class="form-group">
                     <label>Peso del producto</label>
@@ -510,9 +525,11 @@
                 </div>
               </div>
               <div class="row mx-2 mt-2">
+                <h4 class="col-md-12 my-1 text-warning font-weight-bold">Multimedia</h4>
+
                 <div class="col-md-4 col-12">
                   <p class="card-text">
-                    Imagen principal del producto
+                    Imagen principal del producto <span class="text-danger">*</span>
                   </p>
                   <input #fileInput type="file" (change)="onFileSelect($event)" accept=".jpg,.jpeg,.png"
                          style="width: 260px" formControlName="imagen_principal">

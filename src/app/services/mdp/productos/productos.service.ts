@@ -45,6 +45,7 @@ export interface Producto {
   peso;
   tamanio;
   link_catalogo;
+  link_tienda;
 }
 
 export interface FichaTecnicaProducto {
@@ -118,7 +119,8 @@ export class ProductosService {
       ],
       peso: 0,
       tamanio: 0,
-      link_catalogo: ''
+      link_catalogo: '',
+      link_tienda: ''
     };
   }
 

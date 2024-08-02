@@ -142,8 +142,7 @@
                   <div class="form-group">
                     <label class="form-label" for="provinciaOrigen">Provincia origen del producto</label>
                     <select class="form-control"
-                            (change)="obtenerCiudad()"
-                            [(ngModel)]="provincia" id="provinciaOrigen" formControlName="provincia">
+                            (change)="obtenerCiudad()" id="provinciaOrigen" formControlName="provincia">
                       <option value="" selected>- Seleccione -</option>
                       <option value="{{provincia.nombre}}" *ngFor="let provincia of provinciaOpciones">
                         {{ provincia.nombre }}

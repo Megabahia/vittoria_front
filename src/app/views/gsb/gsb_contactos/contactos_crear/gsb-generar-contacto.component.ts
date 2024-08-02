@@ -57,6 +57,10 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
   diasValidosCupon;
   listaCanalesProducto;
   tipoIdentificacion;
+  titulo = 'Nuevo contacto';
+  tituloBoton = 'Guardar contacto';
+  mostrarInformacionRepetida = false;
+
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -82,14 +86,14 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
     private toaster: Toaster,
   ) {
     this.currentUser = this.authService.currentUserValue;
-    console.log(this.currentUser);
+    this.obtenerListaProductos();
+
     const fecha = new Date();
     this.horaPedido = this.extraerHora(fecha.toString());
-    this.inicio.setMonth(this.inicio.getMonth() - 3);
+    //this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaContacto();
 
-
-    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'DIRECCIÓN', 'Dirección').subscribe((result) => {
+    /*this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'DIRECCIÓN', 'Dirección').subscribe((result) => {
       this.parametroDireccion = result.info[0].valor;
     });
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'CUPON', 'Descuento cupón').subscribe((result) => {
@@ -98,7 +102,7 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'CUPON VALIDO', 'Cupón válido').subscribe((result) => {
       // tslint:disable-next-line:radix
       this.diasValidosCupon = parseInt(result.info[0].valor);
-    });
+    });*/
 
   }
 
@@ -124,9 +128,10 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
       whatsapp: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['Contra-Entrega', [Validators.required]],
-      canal: [this.canalSeleccionado, []],
+      canal: [this.currentUser.usuario.canal, []],
       estado: ['NUEVO'],
-      usuario: [`${this.currentUser.usuario.nombres} ${this.currentUser.usuario.apellidos}`]
+      usuario: [`${this.currentUser.usuario.nombres} ${this.currentUser.usuario.apellidos}`],
+      tipoContacto: ['']
     });
   }
 
@@ -161,7 +166,6 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
   crearNuevoContacto(modal): void {
     this.canalSeleccionado = this.currentUser.usuario.canal;
     this.iniciarNotaContacto();
-    this.obtenerListaProductos();
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
   }
 
@@ -172,23 +176,19 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
   }
 
   async guardarContacto(): Promise<void> {
-    /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
-      return this.obtenerProducto(index);
-    }));
-    if (this.notaContacto.value.valorUnitario === 0) {
-      this.toaster.open('Seleccione un precio que sea mayor a 0.', {type: 'danger'});
-      return;
-    }*/
     if (this.notaContacto.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
     }
 
-
     if (confirm('Esta seguro de guardar los datos') === true) {
       this.contactoService.crearContactos(this.notaContacto.value).subscribe((info) => {
           this.modalService.dismissAll();
-          this.notaContacto.patchValue({...info});
+          this.titulo = 'Nuevo contacto';
+          this.tituloBoton = 'Guardar contacto';
+          this.mostrarInformacionRepetida = false;
+          this.toaster.open('Contacto registrado', {type: 'warning'});
+          this.iniciarNotaContacto();
         }, error => this.toaster.open(error, {type: 'danger'})
       );
     }
@@ -294,8 +294,17 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
       whatsapp: this.notaContacto.value.whatsapp
     };
     this.superBaratoService.validarContacto(filters).subscribe((info) => {
+      this.titulo = 'Nuevo contacto';
+      this.tituloBoton = 'Guardar contacto';
+      this.mostrarInformacionRepetida = false;
+      this.notaContacto.get('tipoContacto').setValue('original');
     }, error => {
-      this.notaContacto.get('whatsapp').setValue('');
+      this.canalSeleccionado = this.currentUser.usuario.canal;
+      //this.iniciarNotaContacto();
+      this.notaContacto.get('tipoContacto').setValue('duplicado');
+      this.titulo = 'Contacto existente';
+      this.tituloBoton = 'Guardar contacto existente';
+      this.mostrarInformacionRepetida = true;
       this.toaster.open(error, {type: 'danger'});
     });
   }
@@ -311,4 +320,5 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
     this.notaContacto.updateValueAndValidity();
     this.calcular();
   }
+
 }
