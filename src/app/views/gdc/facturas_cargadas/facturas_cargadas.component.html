@@ -557,6 +557,11 @@
                     <label>Ver el comprobante cargado. <a href="{{ listaPedido?.archivoFactura }}" target="_blank" *ngIf="listaPedido?.archivoFactura">Aquí</a></label>
                   </div>
                 </div>
+                  <div class="row">
+                      <div class="col-12">
+                          <label class="font-weight-bold text-danger mb-2">Monto ingresado por el vendedor: ${{listaPedido?.montoSubtotalCliente}}</label>
+                      </div>
+                  </div>
                 <hr />
                 <div class="row">
                   <div class="col-12">
