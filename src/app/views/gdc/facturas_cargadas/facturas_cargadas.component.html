@@ -46,7 +46,6 @@
           <table class="user-list-table table">
             <thead class="thead-light">
             <tr>
-              <th>Fecha Pedido</th>
               <th>Canal Pedido</th>
               <th>Código vendedor</th>
               <th>Nombre vendedor</th>
@@ -57,6 +56,7 @@
               <th>Telefono</th>
               <th>Estado</th>
               <th>Ver</th>
+              <th>Fecha Pedido</th>
               <th>Fecha de carga de factura</th>
               <th>Fecha de emisión de factura</th>
               <th>Monto subtotal del pedido</th>
@@ -68,7 +68,6 @@
 
             <tbody>
             <tr *ngFor="let transaccion  of listaContactos; let i = index">
-              <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
               <td [title]="transaccion.canal">{{ transaccion.canal | shorten }}</td>
               <td>{{ transaccion.facturacion.codigoVendedor }}</td>
               <td>{{ transaccion.facturacion.nombreVendedor }}</td>
@@ -84,7 +83,7 @@
                   <i-feather name="eye" class="mr-25"></i-feather>
                 </a>
               </td>
-
+              <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
               <td>
                 {{transaccion.fechaCargaFormaPago}}
               </td>
