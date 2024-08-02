@@ -12,8 +12,7 @@ import {ProductosService} from '../../../services/mdp/productos/productos.servic
 import {Toaster} from 'ngx-toast-notifications';
 import {v4 as uuidv4} from 'uuid';
 
-import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
-import {ValidacionesPropias} from "../../../utils/customer.validators";
+import {ContactosService} from '../../../services/gdc/contactos/contactos.service';
 
 @Component({
   selector: 'app-facturas-cargadas-gdc',
@@ -25,6 +24,8 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
   @Input() paises;
   public notaPedido: FormGroup;
   public facturarForm: FormGroup;
+  public formaPagoForm: FormGroup;
+  public negarPedidoForm: FormGroup;
   public rechazoForm: FormGroup;
   datosProducto: FormData = new FormData();
 
@@ -42,9 +43,9 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
   provincia = '';
   ciudadOpciones;
   provinciaOpciones;
-  verificarContacto = false;
+  parametroIva;
   whatsapp = '';
-  correo = ''
+  correo = '';
   mostrarInputComprobante = false;
   mostrarCargarArchivo = false;
   mostrarInputTransaccion = false;
@@ -57,6 +58,9 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
   cedula;
   factura;
   listaFormasPago;
+  listaPedido;
+  totalIva;
+  infoTipoPago = '';
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -94,6 +98,10 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
       estado: ['Rechazado', [Validators.required]],
       fechaPedido: ['', [Validators.required]],
     });
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
+      this.parametroIva = parseFloat(result.info[0].valor);
+    });
   }
 
   ngOnInit(): void {
@@ -126,17 +134,13 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
         pais: [this.pais, [Validators.required]],
         provincia: ['', [Validators.required]],
         ciudad: ['', [Validators.required]],
-        //callePrincipal: ['', [Validators.required]],
-        //numero: ['', [Validators.required]],
-        //calleSecundaria: ['', [Validators.required]],
-        //referencia: ['', [Validators.required]],
-        //gps: ['', []],
         codigoVendedor: ['', []],
         nombreVendedor: ['', []],
         comprobantePago: ['', []],
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
+      subtotal: ['', []],
       envioTotal: [0, [Validators.required]],
       numeroPedido: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
@@ -161,16 +165,26 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
     });
   }
 
-  get autorizarFForm() {
-    return this.facturarForm['controls'];
+  iniciarFormaPagoForm(): void {
+    this.formaPagoForm = this.formBuilder.group({
+      id: [''],
+      montoSubtotalAprobado: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
+    });
   }
 
-  get rechazarFForm() {
-    return this.rechazoForm['controls'];
+  iniciarpedidoNegadooForm(): void {
+    this.negarPedidoForm = this.formBuilder.group({
+      id: ['', []],
+      motivoNegacionPedido: ['', [Validators.required]],
+    });
   }
 
-  get notaPedidoForm() {
-    return this.notaPedido['controls'];
+  get formasPagoForm() {
+    return this.formaPagoForm['controls'];
+  }
+
+  get negarForm() {
+    return this.negarPedidoForm['controls'];
   }
 
   get facturacionForm() {
@@ -195,7 +209,7 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
-      descuento:[0,[]]
+      descuento: [0, []]
     });
   }
 
@@ -214,20 +228,13 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
       correo: this.correo,
       page: this.page - 1,
       page_size: this.pageSize,
-      //inicio: this.inicio,
-      //fin: this.transformarFecha(this.fin),
       estado: ['Por confirmar'],
       canal: 'Contacto Local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaContactos = info.info;
       this.listaFormasPago = info.info.formaPago;
-      //this.toaster.open('Lista actualizada',{ type: 'success'});
     });
-  }
-
-  transformarFecha(fecha): string {
-    return this.datePipe.transform(fecha, 'yyyy-MM-dd');
   }
 
   obtenerContacto(modal, id): void {
@@ -262,15 +269,9 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
-
+      this.calcular();
     });
   }
-
-  crearNuevoContacto(modal): void {
-    this.iniciarNotaPedido();
-    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
-  }
-
 
   obtenerOpciones(): void {
     this.paramService.obtenerListaPadres('PEDIDO_ESTADO').subscribe((info) => {
@@ -280,7 +281,7 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
 
   async obtenerProducto(i): Promise<void> {
     return new Promise((resolve, reject) => {
-      let data = {
+      const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
         canal: this.notaPedido.value.canal,
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario
@@ -318,40 +319,83 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
+    let subtotalPedido = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
       detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       total += parseFloat(detalles[index].get('precio').value);
     });
-    total += this.notaPedido.get('envioTotal').value;
-    this.notaPedido.get('total').setValue(total);
+    subtotalPedido = total / this.parametroIva;
+    this.totalIva = (total - subtotalPedido).toFixed(2);
+    this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
+    this.notaPedido.get('total').setValue(total.toFixed(2));
+  }
+
+  obtenerPedido(id): void {
+    this.contactosService.obtenerContacto(id).subscribe((info) => {
+      if (info.tipoPago === 'rimpePopular'){
+        this.infoTipoPago = 'Rimpe popular';
+      } else {
+        this.infoTipoPago = 'Factura electrónica';
+      }
+      this.listaPedido = info;
+      this.formaPagoForm.get('id').setValue(info.id);
+      this.formaPagoForm.get('montoSubtotalAprobado').setValue(info.montoSubtotalCliente);
+    });
   }
 
 
-  async aprobarContacto(id): Promise<void> {
+  async actualizarContactoAprobado(): Promise<void> {
+    if (this.formaPagoForm.invalid) {
+      this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
+      return;
+    }
+
     if (confirm('Esta seguro de guardar los datos') === true) {
-      this.contactosService.actualizarEstadoContacto(id, 'Entregado').subscribe((info) => {
-        this.toaster.open('Despacho aprobado', {type: 'success'});
-        this.obtenerContactos();
-      }, error => this.toaster.open(error, {type: 'danger'}));
+      if (Number(this.formaPagoForm.value.montoSubtotalAprobado) > Number(this.listaPedido.subtotal)){
+        this.toaster.open('El valor no debe exceder el monto subtotal del pedido', {type: 'danger'});
+        return;
+      }else{
+        this.contactosService.actualizarAprobarcionContacto(this.formaPagoForm.value.id, 'Entregado', Number(this.formaPagoForm.value.montoSubtotalAprobado)).subscribe((info) => {
+          this.toaster.open('Despacho aprobado', {type: 'success'});
+          this.obtenerContactos();
+          this.modalService.dismissAll();
+        }, error => this.toaster.open(error, {type: 'danger'}));
+      }
     }
   }
 
-  async negarContacto(id): Promise<void> {
+  async aprobarContacto(modal, id): Promise<void> {
+    this.iniciarFormaPagoForm();
+    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+    this.obtenerPedido(id);
+  }
+
+  async actualizarNegarContacto(): Promise<void> {
+    if (this.negarPedidoForm.invalid) {
+      this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
+      return;
+    }
+
     if (confirm('Esta seguro de guardar los datos') === true) {
-      this.contactosService.actualizarEstadoContacto(id, 'Pendiente de entrega').subscribe((info) => {
+      this.contactosService.actualizarNegacionContacto(this.negarPedidoForm.value.id, 'Pedido Negado', this.negarPedidoForm.value.motivoNegacionPedido).subscribe((info) => {
         this.toaster.open('Despacho negado', {type: 'info'});
         this.obtenerContactos();
+        this.modalService.dismissAll();
+
       }, error => this.toaster.open(error, {type: 'info'}));
     }
   }
 
+  async negarContacto(modal, id): Promise<void> {
+    this.iniciarpedidoNegadooForm();
+    this.negarPedidoForm.get('id').setValue(id);
+    this.modalService.open(modal, {size: 'sm', backdrop: 'static'});
+
+  }
+
   obtenerFechaActual(): Date {
-    //const fecha= new Date();
-    //const dia= fecha.getDate().toString().padStart(2, '0');
-    //const mes= (fecha.getMonth() + 1).toString().padStart(2, '0');
-    //const anio= fecha.getFullYear().toString();
     const fechaActual = new Date();
 
     return fechaActual;
@@ -384,11 +428,6 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
     });
   }
 
-  validarDatos(): void {
-    this.contactosService.validarCamposContacto(this.notaPedido.value).subscribe((info) => {
-    }, error => this.toaster.open(error, {type: 'danger'}));
-  }
-
   onSelectChange(event: any) {
     const selectedValue = event.target.value;
     if (selectedValue === 'rimpePopular') {
@@ -398,79 +437,12 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onSelectChangeFormaPago(event: any) {
-    const selectedValue = event.target.value;
-    if (selectedValue === 'transferencia') {
-      this.mostrarInputTransaccion = true;
-      this.mostrarCargarArchivo = true;
-      this.mostrarInputCobro = false;
-
-    } else if (selectedValue === 'efectivo') {
-      this.mostrarInputTransaccion = false;
-      this.mostrarCargarArchivo = false;
-      this.mostrarInputCobro = true;
-    } else {
-      this.mostrarInputTransaccion = false;
-      this.mostrarCargarArchivo = false;
-      this.mostrarInputCobro = false;
-    }
-  }
-
   onFileSelected(event: any): void {
     this.archivo.delete('archivoFormaPago');
     this.archivo.append('archivoFormaPago', event.target.files.item(0), event.target.files.item(0).name);
     // this.fileToUpload = event.target.files.item(0);
   }
 
-  guardarComprobanteTransferencia(): void {
-    if (this.archivo) {
-      const formData = new FormData();
-      formData.append('archivoFormaPago', this.fileToUpload, this.fileToUpload.name);
-    }
-  }
-
-  guardarArchivoTransaccion() {
-    if (this.archivo) {
-      const formData = new FormData();
-      formData.append('archivoFormaPago', 'asjfasijfnaskfjasfiasn');
-      formData.append('id', '555555');
-      //this.contactosService.actualizarVentaFormData(formData)
-      //  .subscribe(() => {
-      //    this.modalService.dismissAll();
-      //  });
-
-    } else {
-      console.error('No se ha seleccionado ningún archivo.');
-    }
-
-  }
-
-  cargarImagen(i, event: any): void {
-    this.datosProducto = new FormData();
-
-    const id = this.detallesArray.controls[i].get('id').value;
-    const archivo = event.target.files[0];
-    if (archivo) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const nuevaImagen = e.target.result;
-        this.detallesArray.controls[i].get('imagen').setValue(nuevaImagen);
-        this.datosProducto.append('imagenes[' + 0 + ']id', '0');
-        this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
-        this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
-
-        try {
-          this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
-            this.toaster.open('Imagen actualizada con éxito', {type: "info"});
-          }, error => this.toaster.open('Error al actualizar la imagen.', {type: "danger"}));
-        } catch (error) {
-          this.toaster.open('Error al actualizar la imagen.', {type: "danger"});
-        }
-      };
-      reader.readAsDataURL(archivo);
-
-    }
-  }
 
   extraerHora(dateTimeString: string): string {
     const date = new Date(dateTimeString);

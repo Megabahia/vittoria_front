@@ -10,8 +10,7 @@ import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/pa
 import {ParamService as ParamServiceAdm} from '../../../../services/admin/param.service';
 
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
-import {ContactosService} from "../../../../services/gdc/contactos/contactos.service";
-import {Toaster} from "ngx-toast-notifications";
+import {Toaster} from 'ngx-toast-notifications';
 
 @Component({
   selector: 'app-ventas-vendedor',
@@ -40,18 +39,16 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
   totalIva;
   totalFormaPago;
 
-  //FACTURACION
+  // FACTURACION
   mostrarInputComprobante;
   mostrarInputTransaccion;
   mostrarCargarArchivo;
   mostrarInputCobro;
-  mostrarCargarArchivoCredito;
-  mostrarInputTransaccionCredito;
   formasPago = [];
-  selectFormaPago;
   totalPagar;
   idPedido;
   fechaFactura;
+
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -235,7 +232,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info.map((item) => {
-        const resultado = this.calculoComision(item.estado, item.montoSubtotalCliente, item.total);
+        const resultado = this.calculoComision(item.estado, item.montoSubtotalCliente, item.total, item.montoSubtotalAprobado);
         return {...item, comision: resultado};
       });
     });
@@ -245,7 +242,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
     return this.datePipe.transform(fecha, 'yyyy-MM-dd');
   }
 
-  obtenerFechaActual() {
+  obtenerFechaActual(): string {
     const hoy = new Date();
     return this.datePipe.transform(hoy, 'dd-MM-yyyy') || '';
   }
@@ -333,13 +330,15 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
     return date.toTimeString().split(' ')[0];
   }
 
-  calculoComision(estado, montoSubtotal, total): string {
+  calculoComision(estado, montoSubtotal, total, montoAprobado): string {
     let resultado;
     if (estado !== 'Entregado') {
       return '--';
     }
 
-    if (montoSubtotal != null) {
+    if (montoAprobado != null) {
+      resultado = montoAprobado * this.comision;
+    } else if (montoSubtotal != null){
       resultado = montoSubtotal * this.comision;
     } else if (total != null) {
       resultado = (total / this.parametroIva) * this.comision;
@@ -357,10 +356,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
       this.formasPago = [];
       this.totalPagar = info.subtotal;
-      //this.formaPagoForm.patchValue({...info, verificarPedido: true});
       if (modal._declarationTContainer.localNames[0] === 'facturacionModal') {
-        //this.formaPagoForm.get('formaPago').setValidators([Validators.required]);
-        //this.formaPagoForm.get('formaPago').updateValueAndValidity();
         this.formaPagoForm.get('tipoPago').setValidators([Validators.required]);
         this.formaPagoForm.get('tipoPago').updateValueAndValidity();
       }
@@ -383,7 +379,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
 
     if (confirm('Esta seguro de guardar los datos') === true) {
       if (Number(this.totalPagar) < Number(this.formaPagoForm.value.montoSubtotalCliente)) {
-        this.toaster.open('El monto ingresado no debe ser mayor al monto a pagar del pedido.', {type: 'danger'})
+        this.toaster.open('El monto ingresado no debe ser mayor al monto a pagar del pedido.', {type: 'danger'});
         return;
       } else {
         const fechaTransformada = new Date(this.formaPagoForm.get('fechaEmisionFactura').value).toISOString();
@@ -410,7 +406,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onSelectChange(event: any) {
+  onSelectChange(event: any): void {
     const selectedValue = event.target.value;
     if (selectedValue === 'rimpePopular' || selectedValue === 'facturaElectronica') {
       this.mostrarInputComprobante = true;
@@ -423,108 +419,10 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onSelectChangeFormaPago(event: any) {
-    this.selectFormaPago = event.target.value;
-  }
-
-  agregarFormaPago(): void {
-
-    if (!this.formasPago.includes(this.selectFormaPago)) {
-      this.formasPago.push(this.selectFormaPago);
-    }
-
-    switch (this.selectFormaPago) {
-      case 'transferencia':
-        this.mostrarInputTransaccion = true;
-        this.mostrarCargarArchivo = true;
-        //this.notaPedido.get('archivoFormaPago').setValidators([Validators.required]);
-        //this.notaPedido.get('archivoFormaPago').updateValueAndValidity();
-        this.formaPagoForm.get('numTransaccionTransferencia').setValidators([Validators.required]);
-        this.formaPagoForm.get('numTransaccionTransferencia').updateValueAndValidity();
-        this.formaPagoForm.get('montoTransferencia').setValidators([Validators.required, Validators.pattern('^\\d+(\\.\\d+)?$')]);
-        this.formaPagoForm.get('montoTransferencia').updateValueAndValidity();
-        //this.mostrarInputCobro = false;
-        break;
-      case 'efectivo':
-        //this.mostrarInputTransaccion = false;
-        //this.mostrarCargarArchivo = false;
-        this.mostrarInputCobro = true;
-        this.formaPagoForm.get('totalCobroEfectivo').setValidators([Validators.required, Validators.pattern('^\\d+(\\.\\d+)?$')]);
-        this.formaPagoForm.get('totalCobroEfectivo').updateValueAndValidity();
-
-        break;
-      case 'tarjeta_credito':
-        this.mostrarInputTransaccionCredito = true;
-        this.mostrarCargarArchivoCredito = true;
-        //this.notaPedido.get('archivoFormaPagoCredito').setValidators([Validators.required]);
-        //this.notaPedido.get('archivoFormaPagoCredito').updateValueAndValidity();
-        this.formaPagoForm.get('numTransaccionCredito').setValidators([Validators.required]);
-        this.formaPagoForm.get('numTransaccionCredito').updateValueAndValidity();
-        this.formaPagoForm.get('montoCredito').setValidators([Validators.required, Validators.pattern('^\\d+(\\.\\d+)?$')]);
-        this.formaPagoForm.get('montoCredito').updateValueAndValidity();
-        //this.mostrarInputCobro = false;
-        break;
-      default:
-        console.log("Seleccione una forma de pago válida");
-    }
-  }
-
-  quitarPagoTransferencia() {
-    this.eliminarDatoArregloFormaPago('transferencia');
-    this.archivo.delete('archivoFormaPago');
-    this.formaPagoForm.get('montoTransferencia').setValue(0);
-    this.calcularTotalFormaPago();
-    this.formaPagoForm.get('numTransaccionTransferencia').setValidators([]);
-    this.formaPagoForm.get('numTransaccionTransferencia').updateValueAndValidity();
-    this.formaPagoForm.get('montoTransferencia').setValidators([]);
-    this.formaPagoForm.get('montoTransferencia').updateValueAndValidity();
-    this.mostrarCargarArchivo = false;
-    this.mostrarInputTransaccion = false;
-  }
-
-  quitarPagoCredito() {
-    this.eliminarDatoArregloFormaPago('tarjeta_credito');
-    this.mostrarCargarArchivoCredito = false;
-    this.archivo.delete('archivoFormaPagoCredito');
-    this.formaPagoForm.get('montoCredito').setValue(0);
-    this.calcularTotalFormaPago();
-    this.formaPagoForm.get('numTransaccionCredito').setValidators([]);
-    this.formaPagoForm.get('numTransaccionCredito').updateValueAndValidity();
-    this.formaPagoForm.get('montoCredito').setValidators([]);
-    this.formaPagoForm.get('montoCredito').updateValueAndValidity();
-    this.mostrarInputTransaccionCredito = false;
-  }
-
-  quitarPagoEfectivo() {
-    this.eliminarDatoArregloFormaPago('efectivo');
-    this.formaPagoForm.get('totalCobroEfectivo').setValue(0);
-    this.calcularTotalFormaPago();
-    this.formaPagoForm.get('totalCobroEfectivo').setValidators([]);
-    this.formaPagoForm.get('totalCobroEfectivo').updateValueAndValidity();
-    this.mostrarInputCobro = false;
-  }
-
-  calcularTotalFormaPago() {
-    this.totalFormaPago = (parseFloat(this.formaPagoForm.value.totalCobroEfectivo || 0) + parseFloat(this.formaPagoForm.value.montoCredito || 0) + parseFloat(this.formaPagoForm.value.montoTransferencia || 0)).toFixed(2);
-  }
-
-  eliminarDatoArregloFormaPago(valor) {
-    let indice = this.formasPago.indexOf(valor);
-    if (indice !== -1) {
-      this.formasPago.splice(indice, 1);
-    }
-  }
-
   onFileSelected(event: any): void {
     this.archivo.append('archivoFactura', event.target.files.item(0), event.target.files.item(0).name);
     this.formaPagoForm.get('archivoFactura').setValue(event.target.files.item(0).name);
   }
 
-  onFileSelectedTarjeta(event: any): void {
-    if (this.mostrarCargarArchivoCredito) {
-      this.archivo.append('archivoFormaPagoCredito', event.target.files.item(0), event.target.files.item(0).name);
-    } else {
-      this.archivo.delete('archivoFormaPagoCredito');
-    }
-  }
+
 }

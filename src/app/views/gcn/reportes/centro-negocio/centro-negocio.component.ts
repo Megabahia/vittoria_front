@@ -9,6 +9,7 @@ import {ParamService} from '../../../../services/mp/param/param.service';
 import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {ParamService as ParamServiceAdm} from '../../../../services/admin/param.service';
+import {Toaster} from 'ngx-toast-notifications';
 
 @Component({
   selector: 'app-centro-negocio',
@@ -20,6 +21,8 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
+  public formaPagoForm: FormGroup;
+
   menu;
   page = 1;
   pageSize = 3;
@@ -43,6 +46,14 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
   empresas = [];
   enviando = false;
 
+  mostrarInputComprobante;
+  mostrarInputTransaccion;
+  mostrarCargarArchivo;
+  mostrarInputCobro;
+  formasPago = [];
+  totalPagar;
+  idPedido;
+  fechaFactura;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -63,7 +74,9 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
     private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
     private paramServiceAdm: ParamServiceAdm,
+    private toaster: Toaster,
   ) {
+    this.fechaFactura = this.obtenerFechaActual();
     this.usuario = JSON.parse(localStorage.getItem('currentUser'));
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
@@ -157,6 +170,26 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
     });
   }
 
+  iniciarFormaPagoForm(): void {
+    this.formaPagoForm = this.formBuilder.group({
+      id: ['', []],
+      tipoPago: ['', [Validators.required]],
+      fechaCargaFormaPago: [this.fechaFactura],
+      formaPago: [''],
+      archivoFormaPago: [''],
+      archivoFormaPagoCredito: [''],
+      numTransaccionTransferencia: [''],
+      numTransaccionCredito: [''],
+      totalCobroEfectivo: [''],
+      montoTransferencia: [''],
+      montoCredito: [''],
+      numeroComprobante: [''],
+      archivoFactura: ['', [Validators.required]],
+      montoSubtotalCliente: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
+      fechaEmisionFactura: ['', [Validators.required]],
+    });
+  }
+
   get autorizarFForm() {
     return this.autorizarForm['controls'];
   }
@@ -190,6 +223,9 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
       prefijo: ['']
     });
   }
+  get formasPagoForm() {
+    return this.formaPagoForm['controls'];
+  }
 
   agregarItem(): void {
     this.detallesArray.push(this.crearDetalleGrupo());
@@ -198,6 +234,11 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
   removerItem(i): void {
     this.detallesArray.removeAt(i);
     this.calcular();
+  }
+
+  obtenerFechaActual(): string {
+    const hoy = new Date();
+    return this.datePipe.transform(hoy, 'dd-MM-yyyy') || '';
   }
 
   obtenerTransacciones(): void {
@@ -212,7 +253,10 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
       usuarioVendedor: this.usuarioSeleccionado
     }).subscribe((info) => {
       this.collectionSize = info.cont;
-      this.listaTransacciones = info.info;
+      this.listaTransacciones = info.info.map((item) => {
+        const resultado = this.calculoComision(item.estado, item.montoSubtotalCliente, item.total, item.montoSubtotalAprobado);
+        return {...item, comision: resultado};
+      });
       this.listaEstados = info.estados;
       this.listaUsuariosCompania = this.listaUsuariosCompania.length === 0 ? info.usuarios : this.listaUsuariosCompania;
       this.suma_total = info.suma_total.subtotal__sum.toFixed(2);
@@ -293,33 +337,27 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
     this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 
-  cargarArchivo(event, nombreCampo): void {
-    this.archivo.append(nombreCampo, event.target.files[0]);
-  }
 
   extraerHora(dateTimeString: string): string {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(' ')[0];
   }
 
-  onSelectChange(event: any) {
-    this.estadoSeleccionado = event.target.value;
-    this.obtenerTransacciones()
-  }
-
-  onSelectChangeUsers(event: any) {
-    this.usuarioSeleccionado = event.target.value;
-    this.obtenerTransacciones();
-  }
-
-  calculoComision(estado, total) {
-    let variable2;
-    if (estado === 'Entregado') {
-      variable2 = total / this.parametroIva;
-      return (variable2 * this.comision).toFixed(2);
-    }else{
+  calculoComision(estado, montoSubtotal, total, montoAprobado): string {
+    let resultado;
+    if (estado !== 'Entregado') {
       return '--';
     }
+
+    if (montoAprobado != null) {
+      resultado = montoAprobado * this.comision;
+    } else if (montoSubtotal != null){
+      resultado = montoSubtotal * this.comision;
+    } else if (total != null) {
+      resultado = (total / this.parametroIva) * this.comision;
+    }
+
+    return resultado.toFixed(2);
   }
 
   reporteProductosStock(): void {
@@ -343,4 +381,82 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
     });
   }
 
+  cargarFactura(modal, id): void {
+    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+    this.idPedido = id;
+    this.iniciarFormaPagoForm();
+    this.formaPagoForm.get('archivoFactura').setValue('');
+    this.pedidosService.obtenerPedido(id).subscribe((info) => {
+      this.formasPago = [];
+      this.totalPagar = info.subtotal;
+      //this.formaPagoForm.patchValue({...info, verificarPedido: true});
+      if (modal._declarationTContainer.localNames[0] === 'facturacionModal') {
+        //this.formaPagoForm.get('formaPago').setValidators([Validators.required]);
+        //this.formaPagoForm.get('formaPago').updateValueAndValidity();
+        this.formaPagoForm.get('tipoPago').setValidators([Validators.required]);
+        this.formaPagoForm.get('tipoPago').updateValueAndValidity();
+      }
+      this.calcular();
+    });
+  }
+
+  async actualizar(): Promise<void> {
+    /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
+      return this.obtenerProducto(index);
+    }));*/
+    this.formaPagoForm.get('archivoFactura').setValue('');
+    this.formaPagoForm.get('archivoFactura').setValidators([]);
+    this.formaPagoForm.get('archivoFactura').updateValueAndValidity();
+
+    if (this.formaPagoForm.invalid) {
+      this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
+      return;
+    }
+
+    if (confirm('Esta seguro de guardar los datos') === true) {
+      if (Number(this.totalPagar) < Number(this.formaPagoForm.value.montoSubtotalCliente)) {
+        this.toaster.open('El monto ingresado no debe ser mayor al monto a pagar del pedido.', {type: 'danger'})
+        return;
+      } else {
+        const fechaTransformada = new Date(this.formaPagoForm.get('fechaEmisionFactura').value).toISOString();
+
+        const facturaFisicaValores: string[] = Object.values(this.formaPagoForm.value);
+        const facturaFisicaLlaves: string[] = Object.keys(this.formaPagoForm.value);
+        facturaFisicaLlaves.map((llaves, index) => {
+          if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago' && llaves !== 'facturacion' && llaves !== 'articulos') {
+            this.archivo.delete(llaves);
+            this.archivo.append(llaves, facturaFisicaValores[index]);
+          }
+        });
+        this.archivo.append('id', this.idPedido);
+        this.archivo.append('formaPago', JSON.stringify(this.formasPago));
+        this.archivo.append('fechaCargaFormaPago', this.fechaFactura);
+        this.archivo.append('fechaEmisionFactura', fechaTransformada);
+
+        this.pedidosService.actualizarPedidoFormaPagoFormData(this.archivo).subscribe((info) => {
+          this.modalService.dismissAll();
+          this.obtenerTransacciones();
+        }, error => this.toaster.open(error, {type: 'danger'}));
+      }
+
+    }
+  }
+
+  onSelectChange(event: any) {
+    const selectedValue = event.target.value;
+    if (selectedValue === 'rimpePopular' || selectedValue === 'facturaElectronica') {
+      this.mostrarInputComprobante = true;
+      this.formaPagoForm.get('numeroComprobante').setValidators([Validators.required]);
+      this.formaPagoForm.get('numeroComprobante').updateValueAndValidity();
+    } else {
+      this.mostrarInputComprobante = false;
+      this.formaPagoForm.get('numeroComprobante').setValidators([]);
+      this.formaPagoForm.get('numeroComprobante').updateValueAndValidity();
+    }
+  }
+
+  onFileSelected(event: any): void {
+    this.archivo.append('archivoFactura', event.target.files.item(0), event.target.files.item(0).name);
+    this.formaPagoForm.get('archivoFactura').setValue(event.target.files.item(0).name);
+  }
 }
