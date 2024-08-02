@@ -109,7 +109,10 @@
                   <button
                     *ngIf="transaccion.estado === 'Pendiente de entrega' || transaccion.estado === 'Por confirmar'"
                     class="btn btn-primary"
+                    [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
                     (click)="cargarFactura(facturacionModal, transaccion.id)">
+                      <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                            aria-hidden="true"></span>
                     Cargar evidencia de venta
                   </button>
                 </td>
@@ -762,7 +765,7 @@
               <div class="row">
                 <div class="col-md-6 col-12 mb-1">
                   <label>Fecha en la que se emitió la factura:</label>
-                  <input class="form-control mb-2" type="date" formControlName="fechaEmisionFactura"/>
+                  <input class="form-control mb-2" type="date" min="{{this.fechaMinima}}" max="{{this.fechaMaxima}}" formControlName="fechaEmisionFactura"/>
                   <div *ngIf="formasPagoForm.fechaEmisionFactura.errors"
                        class="invalid-feedback" style="display: block;">
                     <div *ngIf="formasPagoForm.fechaEmisionFactura.errors.required">

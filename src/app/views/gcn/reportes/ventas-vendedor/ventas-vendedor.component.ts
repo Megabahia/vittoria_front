@@ -58,6 +58,9 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
   };
   public iva;
   public usuario;
+  mostrarSpinner = false;
+  fechaMinima;
+  fechaMaxima = new Date().toISOString().slice(0, 10);
 
   constructor(
     private modalService: NgbModal,
@@ -301,7 +304,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
-    let subtotalPedido = 0;
+    let subtotalPedido: number;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
@@ -349,11 +352,12 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
 
   cargarFactura(modal, id): void {
     this.totalFormaPago = 0;
-    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
     this.idPedido = id;
     this.iniciarFormaPagoForm();
     this.formaPagoForm.get('archivoFactura').setValue('');
+    this.mostrarSpinner = true;
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
+      this.fechaMinima = info.created_at.slice(0, 10);
       this.formasPago = [];
       this.totalPagar = info.subtotal;
       if (modal._declarationTContainer.localNames[0] === 'facturacionModal') {
@@ -361,7 +365,9 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
         this.formaPagoForm.get('tipoPago').updateValueAndValidity();
       }
       this.calcular();
-    });
+      this.mostrarSpinner = false;
+      this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+    }, (error) => this.mostrarSpinner = false);
   }
 
   async actualizar(): Promise<void> {
