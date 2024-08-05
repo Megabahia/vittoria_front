@@ -235,7 +235,7 @@ export class ConsultaProductosComponent implements OnInit {
     }
 
     const datosCarrito = encodeURIComponent(JSON.stringify(this.carrito));
-    const baseUrl = environment.apiUrl;
+    const baseUrl = environment.apiUrlFront;
     const urlCompleta = `${baseUrl}/#/pages/pedido?cadena=${datosCarrito}`;
 
     // Abrir la URL en una nueva pestaña
