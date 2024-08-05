@@ -603,9 +603,9 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   //OBTENER PRODUCTO
   async obtenerProducto(productoWoocomerce): Promise<void> {
-
     return new Promise((resolve, reject) => {
       const data = {
+        prefijo: productoWoocomerce.tienda_producto,
         codigoBarras: productoWoocomerce.sku_del_producto,
       };
       this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {

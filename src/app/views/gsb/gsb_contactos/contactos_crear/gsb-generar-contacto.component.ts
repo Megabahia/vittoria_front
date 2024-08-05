@@ -290,6 +290,10 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
   }
 
   validarDatos(): void {
+    if (!this.validarNumeroCelular(this.notaContacto.value.whatsapp)){
+      this.toaster.open('Número de celular inválido.', {type: 'danger'});
+      return;
+    }
     const filters = {
       whatsapp: this.notaContacto.value.whatsapp
     };
@@ -309,6 +313,10 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
     });
   }
 
+  validarNumeroCelular(numero) {
+    const regex = /^0\d{9}$/;
+    return regex.test(numero);
+  }
 
   escogerCantidad(operacion, i, articulo): void {
     const cantidadControl = articulo;
