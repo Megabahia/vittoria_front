@@ -1,13 +1,257 @@
 <div class="app-content content ">
   <div class="content-wrapper">
+    <div class="content-header-title font-large-1">Ingresar contacto para venta</div>
     <div class="content-body">
-      <div class="card d-inline-flex p-2">
+      <div class="card d-inline-flex m-1 bg-danger" *ngIf="mostrarInformacionRepetida">
+        <div>
+          <h5 class="text-white text-center p-2">Usted va a ingresar un pedido de un usuario existente y solo se
+            acreditará <strong>SIEMPRE Y CUANDO LA VENTA SEA CONCRETADA</strong></h5>
+        </div>
+      </div>
+      <div class="card">
+        <form [formGroup]="notaContacto">
+          <div class="card invoice-preview-card">
+            <!-- Header starts -->
+            <div class="card-body invoice-padding pb-0">
+              <div class="row d-flex align-items-center">
+                <div class="col-md-2 col-12">
+                  <span class="mr-1">Fecha de venta:</span>
+                </div>
+                <div class="col-md-3 col-12">
+                  <input type="text"
+                         placeholder={{formatearFecha()}}
+                         class="form-control invoice-edit-input date-picker"
+                         disabled
+                  />
+                </div>
+                <div class="col-md-4 col-12">
+                  <span class="title text-danger">Hora: </span>
+                  <span class="text-danger">{{ horaPedido }}</span>
+                </div>
+              </div>
+            </div>
+            <!-- Header ends -->
+
+            <hr class="invoice-spacing"/>
+
+            <!-- Address and Contact starts -->
+            <div class="card-body invoice-padding pt-0">
+              <h4 class="invoice-title mb-2"
+                  [ngStyle]="{'color': titulo === 'Contacto existente' ? 'red':'blue'}">{{ titulo }}</h4>
+              <div class="row">
+                <div class="col-md-4 col-12">
+                  <label>Nombres</label>
+                  <input class="form-control" type="text"
+                         formControlName="nombres"
+                  >
+                  <div *ngIf="notaContactoForm.nombres.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="notaContactoForm.nombres.errors.required">
+                      Requerido
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <label>Apellidos</label>
+                  <input class="form-control" type="text"
+                         formControlName="apellidos"
+                  >
+
+                </div>
+                <div class="col-md-4 col-12">
+                  <label>Número de WhatsApp</label>
+                  <input class="form-control" type="text"
+                         formControlName="whatsapp"
+                         (change)="validarDatos()"
+                  >
+                  <div *ngIf="notaContactoForm.whatsapp.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="notaContactoForm.whatsapp.errors.required">
+                      Requerido
+                    </div>
+                    <div *ngIf="notaContactoForm.whatsapp.errors.minlength">
+                      Ingrese minimo 10 digitos
+                    </div>
+                    <div *ngIf="notaContactoForm.whatsapp.errors.maxlength">
+                      Ingrese maximo 10 digitos
+                    </div>
+                    <div *ngIf="notaContactoForm.whatsapp.errors.pattern">
+                      Ingrese solo numeros
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row ml-1">
+              <div class="col-md-5 col-12">
+                <p><strong>Usuario:</strong> {{ currentUser.usuario.nombres }} {{ currentUser.usuario.apellidos }}</p>
+                <p><strong>Canal:</strong> {{ currentUser.usuario.canal }}</p>
+              </div>
+              <!--<div class="col-md-5 col-12">
+                <select class="form-control" id="canalProductoPrincipal" disabled>
+                  <option value="" disabled>- Seleccione -</option>
+                  <option [value]="canal" *ngFor="let canal of listaCanalesProducto"
+                          [selected]="canal === this.canalSeleccionado">
+                    {{ canal }}
+                  </option>
+                </select>
+              </div>-->
+            </div>
+            <hr class="invoice-spacing"/>
+            <div class="card-body invoice-padding">
+              <div formArrayName="articulos">
+                <form class="source-item">
+                  <div class="card">
+                    <div data-repeater-list="group-a"
+                         *ngFor="let detalle of notaContacto.get('articulos')['controls']; let i = index;">
+                      <ng-container class="row border-primary" [formGroup]="detalle">
+                        <div class="repeater-wrapper border-primary rounded mb-1" data-repeater-item>
+                          <div class="row px-1">
+                            <div class="row ml-1">
+                              <div class="col-md-10 col-12 bg-primary">
+                                <strong>Detalles del Producto #{{ i + 1 }}</strong>
+                              </div>
+                              <div class="col-md-2 col-12 text-center">
+                                <a (click)="removerItemExtra(i)" data-repeater-delete>
+                                  <i-feather name='trash' class="rounded-circle text-white bg-danger"></i-feather>
+                                </a>
+                              </div>
+                            </div>
+                            <div class="col-12 d-flex product-details-border position-relative pr-0">
+                              <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                <div class="col-lg-4 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                  <p class="card-text col-title mb-md-50 mb-0">
+                                    Enlace del producto
+                                  </p>
+                                  <input class="form-control" type="text"
+                                         formControlName="urlProducto">
+                                  <div *ngIf="detalle.controls.urlProducto.errors"
+                                       class="invalid-feedback"
+                                       style="display: block;">
+                                    <div *ngIf="detalle.controls.urlProducto.errors.required">
+                                      Requerido
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-lg-3 col-12 my-lg-0 my-2">
+                                  <p class="quantity-title col-title mb-md-50 mb-0">
+                                    Cantidad
+                                  </p>
+                                  <div class="quantity-counter-wrapper">
+                                    <core-touchspin>
+                                      <div class="btn-group touchspin-wrapper">
+                                        <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-down"
+                                                (click)="escogerCantidad('restar', i, detalle)"
+                                        >
+                                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                               viewBox="0 0 24 24"
+                                               fill="none" stroke="currentColor" stroke-width="2"
+                                               stroke-linecap="round"
+                                               stroke-linejoin="round" class="feather feather-minus">
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                          </svg><!----><!----></button>
+                                        <input type="number" pattern="\d*" maxlength="4"
+                                               class="form-control ng-untouched ng-pristine ng-valid"
+                                               step="1" min="1"
+                                               max="10"
+                                               disabled
+                                               formControlName="cantidad"
+                                        >
+
+                                        <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-up"
+                                                (click)="escogerCantidad('sumar', i, detalle)"
+                                        >
+                                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                               viewBox="0 0 24 24"
+                                               fill="none" stroke="currentColor" stroke-width="2"
+                                               stroke-linecap="round"
+                                               stroke-linejoin="round" class="feather feather-plus">
+                                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                          </svg><!----><!----></button>
+                                      </div>
+                                    </core-touchspin>
+                                    <div *ngIf="detalle.controls.cantidad.errors"
+                                         class="invalid-feedback"
+                                         style="display: block;">
+                                      <div *ngIf="detalle.controls.cantidad.errors.required">
+                                        Requerido
+                                      </div>
+                                      <div *ngIf="detalle.controls.cantidad.errors.min">
+                                        Ingrese minimo 1
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!--<input type="text" class="form-control"
+                                         formControlName="cantidad"
+                                         (change)="calcular()"
+                                  />-->
+                                </div>
+                                <div class="col-lg-3 col-12 my-lg-0 my-2">
+                                  <p class="card-text col-title mb-md-50 mb-0">
+                                    Precio publicado
+                                  </p>
+                                  <input type="text" class="form-control"
+                                         formControlName="valorUnitario"
+                                         placeholder="00.00"
+                                         (change)="calcular()"
+                                  />
+                                  <div *ngIf="detalle.controls.valorUnitario.errors"
+                                       class="invalid-feedback"
+                                       style="display: block;">
+                                    <div *ngIf="detalle.controls.valorUnitario.errors.required">
+                                      Requerido
+                                    </div>
+                                    <div *ngIf="detalle.controls.valorUnitario.errors.pattern">
+                                      Ingrese valores válidos
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                  <p class="card-text col-title mb-md-50 mb-0">
+                                    Total
+                                  </p>
+                                  <label>{{ detalle.controls.precio.value }}</label>
+                                </div>
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="row mx-1">
+                <div class="col-12 px-0">
+                  <button type="button" class="btn btn-primary btn-sm btn-add-new"
+                          data-repeater-create>
+                    <i-feather name="plus" class="mr-25 edit-user"></i-feather>
+                    <span class="align-middle" (click)="agregarItemExtra()">Añadir URL del producto</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <hr class="invoice-spacing"/>
+          </div>
+        </form>
+        <div class="mx-2">
+          <button
+            [ngClass]="{'btn-danger': tituloBoton === 'Guardar contacto existente', 'btn-primary': tituloBoton === 'Guardar contacto'}"
+            class="btn mx-1 mb-1"
+            (click)="guardarContacto()"
+          >{{ tituloBoton }}
+          </button>
+        </div>
+      </div>
+      <!--<div class="card d-inline-flex p-2">
         <h1>Ingresar contacto para venta</h1>
         <button class="btn btn-primary mx-1"
                 (click)="crearNuevoContacto(notaContactoModalAdd)"
         >Nuevo Contacto
         </button>
-      </div>
+      </div>-->
 
     </div>
   </div>
@@ -25,6 +269,8 @@
       <form [formGroup]="notaContacto">
         <div class="card invoice-preview-card">
           <!-- Header starts -->
+          <h6 class="bg-danger text-white text-center">Usted va a ingresar un pedido de un usuario existente y solo se
+            acreditará <strong>SIEPRE Y CUANDO LA VENTA SEA CONCRETADA</strong></h6>
           <div class="card-body invoice-padding pb-0">
             <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
               <div class="d-flex align-items-center mb-1">
@@ -110,14 +356,15 @@
               <label>{{ currentUser.usuario.nombres }} {{ currentUser.usuario.apellidos }}</label>
             </div>
             <div class="col-md-5 col-12">
-              <label for="canalProducto">Canal</label>
-              <select class="form-control" id="canalProducto" disabled>
+              <label class="font-weight-bold">Canal</label><br/>
+              <label>{{ currentUser.usuario.canal }}</label>
+              <!--<select class="form-control" id="canalProducto" disabled>
                 <option value="" disabled>- Seleccione -</option>
                 <option [value]="canal" *ngFor="let canal of listaCanalesProducto"
                         [selected]="canal === this.canalSeleccionado">
                   {{ canal }}
                 </option>
-              </select>
+              </select>-->
             </div>
           </div>
           <hr class="invoice-spacing"/>

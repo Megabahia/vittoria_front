@@ -788,7 +788,7 @@
                 <div class="col-md-6 col-12">
                   <div class="form-group">
                     <label for="totalCobroSubtotal">Ingrese el monto del subtotal de la factura</label>
-                    <input class="form-control" type="text" id="totalCobroSubtotal"
+                    <input class="form-control" type="text" id="totalCobroSubtotal" placeholder="00.00"
                            formControlName="montoSubtotalCliente"/>
                   </div>
                   <div *ngIf="formasPagoForm.montoSubtotalCliente.errors"
@@ -797,7 +797,7 @@
                       Requerido
                     </div>
                     <div *ngIf="formasPagoForm.montoSubtotalCliente.errors.pattern">
-                      Ingrese valores válidos y unicamente dos decimales
+                      Ingrese valores válidos, en formato 00.00 y unicamente dos decimales
                     </div>
                   </div>
                 </div>

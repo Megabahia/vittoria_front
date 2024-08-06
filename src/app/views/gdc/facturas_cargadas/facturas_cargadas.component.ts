@@ -338,9 +338,8 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
         this.infoTipoPago = 'Factura electrónica';
       }
       this.listaPedido = info;
-      console.log('listaPedido', this.listaPedido);
       this.formaPagoForm.get('id').setValue(info.id);
-      this.formaPagoForm.get('montoSubtotalAprobado').setValue(info.montoSubtotalCliente);
+      //this.formaPagoForm.get('montoSubtotalAprobado').setValue(info.montoSubtotalCliente);
     });
   }
 
@@ -443,6 +442,16 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
   extraerHora(dateTimeString: string): string {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(' ')[0];
+  }
+
+  formatearFechaYAgregarDia(fechaStr: string): string {
+    let fecha = new Date(fechaStr);
+    fecha.setDate(fecha.getDate() + 1); // Añade un día
+
+    const dia = fecha.getDate().toString().padStart(2, '0');
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // getMonth() es 0-index
+    const anio = fecha.getFullYear();
+    return `${dia}-${mes}-${anio}`;
   }
 
 }

@@ -187,13 +187,12 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
     this.funcion = 'editar';
 
     await this.integracionesEnviosService.obtenerIntegracionEnvio(id).subscribe(async (result) => {
-      console.log('resutl', result);
-      await this.paramForm.patchValue({...result});
-      this.paramForm.get('pais').setValue(this.pais);
-      await this.obtenerCiudad();
-      await this.obtenerCiudadDestino();
-      await this.obtenerSector();
-      await this.obtenerSectorDestino();
+      this.paramForm.reset();
+      this.paramForm.patchValue({...result});
+      this.obtenerCiudad();
+      this.obtenerCiudadDestino();
+      this.obtenerSector();
+      this.obtenerSectorDestino();
     });
   }
 
@@ -277,7 +276,7 @@ export class IntegracionEnvioComponent implements OnInit, AfterViewInit {
   }
 
   obtenerCiudad(): void {
-    this.paramServiceAdm.obtenerListaHijos(this.provincia, 'PROVINCIA').subscribe((info) => {
+    this.paramServiceAdm.obtenerListaHijos(this.paramForm.value.provincia, 'PROVINCIA').subscribe((info) => {
       this.ciudadOpciones = info;
     });
   }

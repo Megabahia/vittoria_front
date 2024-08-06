@@ -9,6 +9,8 @@ import {Toaster} from "ngx-toast-notifications";
 import {IntegracionesEnviosService} from "../../../services/admin/integraciones_envios.service";
 import {ProductosService} from "../../../services/mdp/productos/productos.service";
 import {AuthService} from "../../../services/admin/auth.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {environment} from "../../../../environments/environment";
 
 interface ProductoProcesado {
   canal?: string;
@@ -52,11 +54,12 @@ export class ConsultaProductosComponent implements OnInit {
   integracionProducto;
   totalProductosEnOrigen;
 
-  mostrarSelectCourier = false;
+  mostrarDatosEnvio = false;
 
   couriers: any[] = [];
-  courierSeleccionado;
-  dataOrigenProductoEnvio;
+
+  carrito: any[] = [];
+
   mostrarDatosProducto = false;
 
   sectorOpciones;
@@ -67,7 +70,8 @@ export class ConsultaProductosComponent implements OnInit {
     private _router: Router,
     private integracionesEnviosService: IntegracionesEnviosService,
     private productosService: ProductosService,
-    private authService: AuthService
+    private authService: AuthService,
+    private modalService: NgbModal,
   ) {
     /*const ref = document.referrer;
     const host = document.location.host;
@@ -175,20 +179,74 @@ export class ConsultaProductosComponent implements OnInit {
           sectorDestino: this.sector
         }).subscribe((result) => {
           if (result.cont === 0) {
+            this.mostrarDatosEnvio = false;
             this.toaster.open(`No existe datos de envío`);
+          } else {
+
+            this.mostrarDatosEnvio = true;
+            this.integracionEnvio.push({envio: {...result.info}, datos_producto: producto});
+            this.integracionEnvio.sort((a, b) => {
+              return a.envio['0'].distancia - b.envio['0'].distancia; // De menor a mayor
+            });
           }
-          this.integracionEnvio.push({envio: {...result.info}, datos_producto: producto});
-          this.integracionEnvio.sort((a, b) => {
-            return a.envio['0'].distancia - b.envio['0'].distancia; // De menor a mayor
-          });
         });
       })
     }
   }
 
-  cerrarSesion() {
+  agregarCarrito(datos) {
+    const productoExistente = this.carrito.find(p => p.sku_del_producto === datos.codigoBarras && p.tienda_producto === datos.prefijo);
+
+    if (productoExistente) {
+      productoExistente.cantidad_en_el_carrito++;
+      productoExistente.total_del_articulo = productoExistente.cantidad_en_el_carrito * productoExistente.precio_del_producto;
+    } else {
+      const nuevoProducto = {
+        sku_del_producto: datos.codigoBarras,
+        nombre_del_producto: datos.nombre,
+        precio_del_producto: datos.precioVentaA,
+        cantidad_en_el_carrito: 1,
+        total_del_articulo: datos.precioVentaA,
+        imagen_del_producto: datos.imagen_principal,
+        tienda_producto: datos.prefijo
+      };
+      this.carrito.push(nuevoProducto);
+    }
+  }
+
+  verCarrito(modal): void {
+    if (this.carrito.length < 1) {
+      this.toaster.open('No existe productos en el carrito', {type: 'danger'});
+      return;
+    }
+    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+  }
+
+  eliminarProductoCarrito(i) {
+    if (i >= 0 && i < this.carrito.length) {
+      this.carrito.splice(i, 1);
+    }
+  }
+
+  finalizarPedido(){
+    if (this.carrito.length < 1) {
+      this.toaster.open('No existe productos en el carrito', {type: 'danger'});
+      return;
+    }
+
+    const datosCarrito = encodeURIComponent(JSON.stringify(this.carrito));
+    const baseUrl = environment.apiUrlFront;
+    const urlCompleta = `${baseUrl}/#/pages/pedido?cadena=${datosCarrito}`;
+
+    // Abrir la URL en una nueva pestaña
+    window.open(urlCompleta, '_blank');
+
+  }
+
+  cerrarSesion(): void {
     this.authService.signOut();
   }
+
 
 }
 

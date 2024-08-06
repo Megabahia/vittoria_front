@@ -70,6 +70,8 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
     this.funcion = 'insertar';
     this.paramForm.reset();
     this.paramForm.get('pais').setValue(this.pais);
+    this.obtenerProvincias();
+
   }
 
 
@@ -106,7 +108,6 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
       modulo: 'adm',
       seccion: 'param'
     };
-
     this.obtenerProvincias();
   }
 
@@ -142,11 +143,13 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   }
 
   async editarParametro(id): Promise<void> {
+    this.paramForm.reset();
     this.idParametro = id;
     this.funcion = 'editar';
     await this.integracionesService.obtenerIntegracion(id).subscribe(async (result) => {
       this.paramForm.patchValue({...result});
-      this.obtenerCiudad();
+      await this.obtenerCiudad();
+      await this.obtenerSector();
     });
   }
 
@@ -275,7 +278,7 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   }
 
   obtenerCiudad(): void {
-    this.paramServiceAdm.obtenerListaHijos(this.provincia, 'PROVINCIA').subscribe((info) => {
+    this.paramServiceAdm.obtenerListaHijos(this.paramForm.value.provincia, 'PROVINCIA').subscribe((info) => {
       this.ciudadOpciones = info;
     });
   }
