@@ -239,6 +239,7 @@ export class PedidoWoocomerceComponent implements OnInit {
   }
 
   crearDetalleGrupoGardar(data): any {
+    console.log(data)
     return this.formBuilder.group({
       id: [data.id],
       codigo: [data.codigo],
@@ -356,7 +357,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       delete producto.imagen_principal;
     });
 
-    if (!this.selectClient) {
+    /*if (!this.selectClient) {
       this.toaster.open('Seleccione si es cliente o no', {type: 'danger'});
       return;
     }
@@ -369,25 +370,23 @@ export class PedidoWoocomerceComponent implements OnInit {
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
-    }
+    }*/
 
     if (confirm('Esta seguro de guardar los datos') === true) {
 
       this.notaPedido.value.pedidos.map((data) => {
-        console.log('DATA', data)
         this.notaPedido.patchValue({
           ...this.notaPedido.value,
           envio: {...this.notaPedido.value.facturacion},
         });
         data.articulos.forEach((articulo, i) => {
-          this.detallesArray.removeAt(i);
+          //this.detallesArray.removeAt(i);
+          console.log('ARTICULO', articulo);
           this.agregarItem(articulo);
         });
 
-
-        const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
+       /* const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
         const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
-
 
         facturaFisicaLlaves.map((llaves, index) => {
           if (llaves !== 'archivoMetodoPago') {
@@ -413,7 +412,7 @@ export class PedidoWoocomerceComponent implements OnInit {
           this.numeroPedido.push(result.numeroPedido);
           this.toaster.open('Pedido guardado', {type: 'success'});
           this.mostrarContenidoPantalla = false;
-        }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
+        }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));*/
       });
     }
   }
