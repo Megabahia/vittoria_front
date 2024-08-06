@@ -11,6 +11,7 @@ import {ProductosService} from "../../../services/mdp/productos/productos.servic
 import {AuthService} from "../../../services/admin/auth.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {environment} from "../../../../environments/environment";
+import Decimal from "decimal.js";
 
 interface ProductoProcesado {
   canal?: string;
@@ -31,6 +32,7 @@ export class ConsultaProductosComponent implements OnInit {
   public notaPedido: FormGroup;
   archivo: FormData = new FormData();
 
+  habilitarFinalizarPedido = true;
   tipoIdentificacion;
   datos: any[] = [];
   pais = 'Ecuador';
@@ -63,6 +65,8 @@ export class ConsultaProductosComponent implements OnInit {
   mostrarDatosProducto = false;
 
   sectorOpciones;
+
+  cantidadProductoCarrito = 1;
 
   constructor(
     private paramServiceAdm: ParamServiceAdm,
@@ -98,6 +102,7 @@ export class ConsultaProductosComponent implements OnInit {
   }
 
   async obtenerProducto(): Promise<void> {
+    this.mostrarDatosEnvio = false;
     if (!this.codigoBarras && !this.nombreProducto) {
       this.toaster.open('Ingrese un dato para buscar producto', {type: 'danger'});
       return;
@@ -190,17 +195,15 @@ export class ConsultaProductosComponent implements OnInit {
             });
           }
         });
-      })
+      });
     }
   }
 
-  agregarCarrito(datos) {
+  agregarCarrito(modal, datos) {
+    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
     const productoExistente = this.carrito.find(p => p.sku_del_producto === datos.codigoBarras && p.tienda_producto === datos.prefijo);
 
-    if (productoExistente) {
-      productoExistente.cantidad_en_el_carrito++;
-      productoExistente.total_del_articulo = productoExistente.cantidad_en_el_carrito * productoExistente.precio_del_producto;
-    } else {
+    if (!productoExistente) {
       const nuevoProducto = {
         sku_del_producto: datos.codigoBarras,
         nombre_del_producto: datos.nombre,
@@ -212,6 +215,7 @@ export class ConsultaProductosComponent implements OnInit {
       };
       this.carrito.push(nuevoProducto);
     }
+
   }
 
   verCarrito(modal): void {
@@ -228,9 +232,16 @@ export class ConsultaProductosComponent implements OnInit {
     }
   }
 
-  finalizarPedido(){
+  finalizarPedido() {
     if (this.carrito.length < 1) {
       this.toaster.open('No existe productos en el carrito', {type: 'danger'});
+      return;
+    }
+
+    const datosInvalidos = this.carrito.map((datos) => datos.cantidad_en_el_carrito < 1);
+
+    if (datosInvalidos) {
+      this.toaster.open('Valores inválidos', {type: 'danger'});
       return;
     }
 
@@ -247,7 +258,15 @@ export class ConsultaProductosComponent implements OnInit {
     this.authService.signOut();
   }
 
-
+  escogerCantidad(operacion, i, datos): void {
+    if (operacion === 'sumar') {
+      datos.cantidad_en_el_carrito++;
+      datos.total_del_articulo = datos.cantidad_en_el_carrito * datos.precio_del_producto;
+    } else if (operacion === 'restar' && datos.cantidad_en_el_carrito > 0){
+      datos.cantidad_en_el_carrito--;
+      datos.total_del_articulo = datos.cantidad_en_el_carrito * datos.precio_del_producto;
+    }
+  }
 }
 
 
