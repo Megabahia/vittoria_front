@@ -88,7 +88,7 @@
                 {{transaccion.fechaCargaFormaPago}}
               </td>
               <td>
-                {{transaccion.fechaEmisionFactura | date: 'dd-MM-yyyy'}}
+                {{formatearFechaYAgregarDia(transaccion.fechaEmisionFactura)}}
               </td>
               <td>
                 {{ transaccion.subtotal | currency }}
@@ -548,7 +548,7 @@
                 </div>
                 <div class="row">
                   <div class="col-12">
-                    <label><strong>Fecha en la que se emitió la factura:</strong> {{ listaPedido?.fechaEmisionFactura | date: 'dd-MM-yyyy' }}</label>
+                    <label><strong>Fecha en la que se emitió la factura:</strong> {{ formatearFechaYAgregarDia(listaPedido?.fechaEmisionFactura) }}</label>
                   </div>
                 </div>
                 <div class="row">
@@ -568,7 +568,7 @@
                     <div class="form-group">
                       <label class="font-weight-bold">Ingrese el monto del subtotal de la factura
                         aprobada</label>
-                      <input class="form-control" type="text"
+                      <input class="form-control" type="text" placeholder="00.00"
                              formControlName="montoSubtotalAprobado"/>
                     </div>
                     <div *ngIf="formasPagoForm.montoSubtotalAprobado.errors"
@@ -577,7 +577,7 @@
                         Requerido
                       </div>
                       <div *ngIf="formasPagoForm.montoSubtotalAprobado.errors.pattern">
-                        Ingrese valores válidos y unicamente dos decimales
+                        Ingrese valores válidos, en formato 00.00 y unicamente dos decimales
                       </div>
                     </div>
                   </div>
