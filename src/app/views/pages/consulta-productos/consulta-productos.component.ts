@@ -211,7 +211,8 @@ export class ConsultaProductosComponent implements OnInit {
         cantidad_en_el_carrito: 1,
         total_del_articulo: datos.precioVentaA,
         imagen_del_producto: datos.imagen_principal,
-        tienda_producto: datos.prefijo
+        tienda_producto: datos.prefijo,
+        canal: datos.canal
       };
       this.carrito.push(nuevoProducto);
     }
@@ -238,12 +239,12 @@ export class ConsultaProductosComponent implements OnInit {
       return;
     }
 
-    const datosInvalidos = this.carrito.map((datos) => datos.cantidad_en_el_carrito < 1);
+    /*const datosInvalidos = this.carrito.map((datos) => datos.cantidad_en_el_carrito < 1);
 
     if (datosInvalidos) {
       this.toaster.open('Valores inválidos', {type: 'danger'});
       return;
-    }
+    }*/
 
     const datosCarrito = encodeURIComponent(JSON.stringify(this.carrito));
     const baseUrl = environment.apiUrlFront;

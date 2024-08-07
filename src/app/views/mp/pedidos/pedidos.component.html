@@ -356,8 +356,7 @@
                     </div>
                   </div>
                   <div class="col-4 mt-2">
-                    <label>Canal de pedido: </label>
-                    <label> {{ notaPedido.value.canal }}</label>
+                    <label><strong>Canal de pedido:</strong> {{ notaPedido.value.canal }}</label>
                   </div>
                   <!-- Address and Contact ends -->
                   <hr class="invoice-spacing"/>
@@ -369,6 +368,11 @@
                              *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
                           <ng-container [formGroup]="detalle">
                             <div class="repeater-wrapper" data-repeater-item>
+                              <div class="row">
+                                <div class="col-md-12 col-12">
+                                  <label class="d-block text-info"><strong>Canal del producto</strong>: {{ detalle.controls.canal.value }}</label>
+                                </div>
+                              </div>
                               <div class="row">
                                 <div class="col-lg-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                   <p class="card-text col-title mb-md-50 mb-0">

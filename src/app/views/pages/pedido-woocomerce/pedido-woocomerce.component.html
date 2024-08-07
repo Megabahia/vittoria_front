@@ -7,71 +7,11 @@
     <div formArrayName="pedidos">
       <div *ngFor="let tienda of notaPedido.get('pedidos')['controls']; let j = index;">
         <div class="card">
-          <h3 class="py-1 px-2 font-weight-bold bg-primary">Datos de producto</h3>
           <ng-container [formGroup]="tienda">
-            <div>
+            <h3 class="py-1 px-2 font-weight-bold bg-primary">Tienda {{ tienda.controls.prefijo.value }}</h3>
+            <!--<div>
               <h3 class="m-2">Tienda: {{ tienda.controls.prefijo.value }}</h3>
-              <div class="m-2 border" *ngIf="mostrarDatosEnvio">
-                <div class="card" *ngIf="tienda.controls.articulos.value.length !== 0">
-                  <h5 class="pl-3 pt-2">DATOS DE ENVIO<label class="text-muted">(Datos
-                    obligatorios) <strong class="text-info">(Primero seleccione ciudad de destino en datos de
-                      facturación)</strong></label></h5>
-                  <div class="row px-4 pb-2">
-                    <div class="col-md-3">
-                      <label for="envio">Costo de envio:</label>
-                      <select id="envio" class="form-control"
-                              (change)="onChangeCombo($event, j)">
-                        <option value="">- Selecciona un costo de envío -</option>
-                        <option
-                          *ngFor="let op of this.notaPedido.get('pedidos')['controls'][j]['controls'].couries.value"
-                          [value]="op.nombre">
-                          {{ op.nombre }}
-                        </option>
-                      </select>
-                      <div *ngIf="tienda.controls.precioEnvio.errors"
-                           class="invalid-feedback" style="display: block;">
-                        <div *ngIf="tienda.controls.precioEnvio.errors.required">
-                          Requerido
-                        </div>
-                        <div *ngIf="tienda.controls.precioEnvio.errors.min">
-                          Minimo 1
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-3">
-                      <label for="segundo">Forma de pago:</label>
-                      <select id="segundo" class="form-control"
-                              formControlName="formaPago" (change)="onSelectFormaPago($event)">
-                        <option value="" selected>- Seleccion forma de pago -</option>
-                        <option
-                          *ngFor="let op of this.notaPedido.get('pedidos')['controls'][j]['controls'].listaFormasPagos.value"
-                          [value]="op.nombre">{{ op.nombre }}
-                        </option>
-                      </select>
-                      <div *ngIf="this.notaPedido.get('pedidos')['controls'][j]['controls'].formasPagos.errors"
-                           class="invalid-feedback" style="display: block;">
-                        <div
-                          *ngIf="this.notaPedido.get('pedidos')['controls'][j]['controls'].formasPagos.errors.required">
-                          Requerido
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div
-                        *ngIf="this.notaPedido.get('pedidos')['controls'][j]['controls'].formasPagos.value == 'Transferencia'"
-                        class="col-md-5">
-                        <h6 class="text-uppercase">Datos de cuenta: <br>BANCO PICHINCHA<br>CUENTA:
-                          {{ this.notaPedido.get('pedidos')['controls'][j]['controls'].numeroCuenta.value }}
-                          <br>Nombre: {{ this.notaPedido.get('pedidos')['controls'][j]['controls'].nombreCuenta.value }}
-                          <br>
-                        </h6>
-                        <!--                                  <input class="form-control-file" type="file" (change)="onFileSelected($event)">-->
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            </div>-->
             <div class="py-1" formArrayName="articulos">
               <div *ngFor="let articulo of tienda.get('articulos').controls; let i = index">
                 <ng-container [formGroup]="articulo">
@@ -176,6 +116,65 @@
                     </div>
                   </div>
                 </ng-container>
+              </div>
+            </div>
+            <div class="m-2" *ngIf="mostrarDatosEnvio">
+              <div class="card border border-warning bg-light-warning" *ngIf="tienda.controls.articulos.value.length !== 0">
+                <h5 class="pl-3 pt-2">DATOS DE ENVIO<label class="text-muted">(Datos
+                  obligatorios) <strong class="text-info">(Primero seleccione ciudad de destino en datos de
+                    facturación)</strong></label></h5>
+                <div class="row px-4 pb-2">
+                  <div class="col-md-3 col-12">
+                    <label for="envio">Costo de envio:</label>
+                    <select id="envio" class="form-control"
+                            (change)="onChangeCombo($event, j)">
+                      <option value="">- Selecciona un costo de envío -</option>
+                      <option
+                        *ngFor="let op of this.notaPedido.get('pedidos')['controls'][j]['controls'].couries.value"
+                        [value]="op.nombre">
+                        {{ op.nombre }}
+                      </option>
+                    </select>
+                    <div *ngIf="tienda.controls.precioEnvio.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="tienda.controls.precioEnvio.errors.required">
+                        Requerido
+                      </div>
+                      <div *ngIf="tienda.controls.precioEnvio.errors.min">
+                        Minimo 1
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-12">
+                    <label for="segundo">Forma de pago:</label>
+                    <select id="segundo" class="form-control"
+                            formControlName="formaPago" (change)="onSelectFormaPago($event)">
+                      <option value="" selected>- Seleccion forma de pago -</option>
+                      <option
+                        *ngFor="let op of this.notaPedido.get('pedidos')['controls'][j]['controls'].listaFormasPagos.value"
+                        [value]="op.nombre">{{ op.nombre }}
+                      </option>
+                    </select>
+                    <div *ngIf="this.notaPedido.get('pedidos')['controls'][j]['controls'].formasPagos.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div
+                        *ngIf="this.notaPedido.get('pedidos')['controls'][j]['controls'].formasPagos.errors.required">
+                        Requerido
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div
+                      *ngIf="notaPedido.value.pedidos[j].formaPago === 'Transferencia'">
+                      <h6 class="text-uppercase">Datos de cuenta BANCO PICHINCHA<br>CUENTA:
+                        {{ this.notaPedido.get('pedidos')['controls'][j]['controls'].numeroCuenta.value }}
+                        <br>Nombre: {{ this.notaPedido.get('pedidos')['controls'][j]['controls'].nombreCuenta.value }}
+                        <br>
+                      </h6>
+                      <input class="form-control-file" type="file" (change)="onFileSelected($event)">
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </ng-container>
@@ -365,7 +364,7 @@
           <div class="col-md-3 col-12">
             <label for="ciudadContacto">Ciudad</label>
             <select class="form-control" name="ciudadContacto" formControlName="ciudad"
-                    id="ciudadContacto" (change)="obtenerCostosEnvio()">
+                    id="ciudadContacto" (change)="obtenerSector()">
               <option value="" selected>- Seleccione -</option>
               <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
                 {{ ciudad.nombre }}
@@ -374,6 +373,21 @@
             <div *ngIf="facturacionForm.ciudad.errors"
                  class="invalid-feedback" style="display: block;">
               <div *ngIf="facturacionForm.ciudad.errors.required">
+                Requerido
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-12">
+            <label class="form-label" for="sectorOrigen">Sector <span class="text-danger">*</span></label>
+            <select class="form-control" id="sectorOrigen" formControlName="sector" (change)="obtenerCostosEnvio()">
+              <option value="" selected>- Seleccione -</option>
+              <option value="{{sector.nombre}}" *ngFor="let sector of sectorOpciones">
+                {{ sector.nombre }}
+              </option>
+            </select>
+            <div *ngIf="facturacionForm.sector.errors"
+                 class="invalid-feedback" style="display: block;">
+              <div *ngIf="facturacionForm.sector.errors.required">
                 Requerido
               </div>
             </div>
