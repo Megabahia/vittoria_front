@@ -280,6 +280,7 @@
             <th>Nombre</th>
             <th>Valor Unitario</th>
             <th style="text-align: end">Cantidad</th>
+            <th style="text-align: end">de</th>
             <th style="text-align: start">productos</th>
             <th>Total</th>
             <th>Acciones</th>
@@ -292,7 +293,7 @@
             <td>{{ producto.sku_del_producto }}</td>
             <td>{{ producto.nombre_del_producto }}</td>
             <td>{{ producto.precio_del_producto | currency }}</td>
-            <td colspan="2">
+            <td colspan="3">
               <core-touchspin>
                 <div class="btn-group touchspin-wrapper">
                   <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-down px-1 py-1"

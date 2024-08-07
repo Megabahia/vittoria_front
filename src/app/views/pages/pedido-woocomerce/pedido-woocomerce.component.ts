@@ -364,7 +364,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       delete producto.imagen_principal;
     });
 
-    /*if (!this.selectClient) {
+    if (!this.selectClient) {
       this.toaster.open('Seleccione si es cliente o no', {type: 'danger'});
       return;
     }
@@ -377,7 +377,7 @@ export class PedidoWoocomerceComponent implements OnInit {
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
-    }*/
+    }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
 
