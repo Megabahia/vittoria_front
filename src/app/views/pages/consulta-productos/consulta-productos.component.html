@@ -158,101 +158,114 @@
           <div class="row" *ngFor="let item of integracionEnvio; let i = index">
             <div class="col-md-12">
               <div class="card bg-light border shadow-lg">
-                <div class="px-1 pt-1 bg-info">
-                  <div class="row">
-                    <div class="col-md-6 col-12">
-                      <h3 class="text-white">Información del producto #{{ i + 1 }}</h3>
-                    </div>
-                    <div class="col-md-6 col-12 mb-1 d-flex justify-content-end">
-                      <button class="btn btn-light mb-0 pb-0" (click)="agregarCarrito(miCarrito, item.datos_producto)">
-                        Añadir al carrito
-                        <i-feather name="shopping-cart"></i-feather>
-                      </button>
-                    </div>
-                  </div>
+                <div class="px-1 bg-info">
+                    <h3 class="text-white p-1">Información del producto #{{ i + 1 }}</h3>
                 </div>
-                <div class="row card-body">
+                <div class="card-body">
                   <!-- Información de Envío -->
-                  <div class="col-md-6">
-                    <div class="row">
-                      <div class="card w-100 border-primary mx-2 mb-2">
-                        <div class="p-1 bg-primary">
-                          <h5>Detalles de la tienda</h5>
+                  <div class="row">
+                    <div class="card w-100 border-primary mx-2 mb-2">
+                      <div class="p-1 bg-primary">
+                        <h5>Detalles de la tienda</h5>
+                      </div>
+                      <div class="row card-body p-2">
+                        <div class="col-md-6 col-12">
+                          <p><strong>Tienda del producto:</strong> {{ item.datos_producto.tienda }} => <a
+                            href="{{item.datos_producto.link_tienda}}" target="_blank">Ver tienda</a></p>
                         </div>
-                        <div class="card-body p-2">
-                          <p><strong>Tienda del producto:</strong> {{ item.datos_producto.tienda }}</p>
+                        <div class="col-md-6 col-12">
                           <p><strong>Dirección de la tienda:</strong> {{ item.envio['0'].pais }}
                             , {{ item.envio['0'].provincia }}, {{ item.envio['0'].ciudad }}
                             , {{ item.envio['0'].sector }}
                           </p>
-                          <p><strong>Link del catálogo de la tienda:</strong> <a
-                            href="{{item.datos_producto.link_tienda}}"
-                            target="_blank"> {{ item.datos_producto.link_tienda }}</a></p>
                         </div>
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="card w-100 border-primary m-2">
-                        <div class="p-1 bg-primary">
-                          <h5>Detalles del envío</h5>
-                        </div>
-                        <div class="card-body p-2">
+                  </div>
+                  <div class="row">
+                    <div class="card w-100 border-primary m-2">
+                      <div class="p-1 bg-primary">
+                        <h5>Forma de entrega de producto</h5>
+                      </div>
+                      <div class="row card-body p-2">
+                        <div class="col-md-6 col-12">
                           <p><strong>Courier:</strong> {{ item.envio['0'].courier }}</p>
+                        </div>
+                        <div class="col-md-6 col-12">
                           <p><strong>Dirección de destino:</strong> {{ item.envio['0'].provinciaDestino }}
                             , {{ item.envio['0'].ciudadDestino }}, {{ item.envio['0'].sectorDestino }}</p>
+                        </div>
+                        <div class="col-md-6 col-12">
                           <p><strong>Distancia entre origen y destino:</strong> <span
                             class="text-danger"> {{ item.envio['0'].distancia }} km</span></p>
+                        </div>
+                        <div class="col-md-6 col-12">
                           <p><strong>Costo de envío:</strong> {{ item.envio['0'].costo | currency }}</p>
+                        </div>
+                        <div class="col-md-6 col-12">
                           <p><strong>Tiempo de entrega estimado:</strong> {{ item.envio['0'].tiempo_entrega }} horas</p>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-6">
-                    <div class="row">
-                      <div class="card w-100 border-primary mx-2 mb-2">
-                        <div class="p-1 bg-primary">
-                          <h5>Detalles del producto</h5>
-                        </div>
-                        <div class="card-body p-2">
+                  <div class="row">
+                    <div class="card w-100 border-primary m-2">
+                      <div class="p-1 bg-primary">
+                        <h5>Detalles de forma de pago</h5>
+                      </div>
+                      <div class="card-body p-2">
+                        <p><strong>Formas de pago:</strong>
+                          <ng-container *ngFor="let forma of item.envio['0'].formaPago; let last = last">
+                            <span *ngIf="forma.estado"> {{ forma.nombre }}<span *ngIf="!last">, </span></span>
+                          </ng-container>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="card w-100 border-primary mx-2 mb-2">
+                      <div class="p-1 bg-primary">
+                        <h5>Detalles del producto</h5>
+                      </div>
+                      <div class="row card-body p-2">
+                        <div class="col-md-7 col-12">
                           <p><strong>Nombre del producto:</strong> {{ item.datos_producto.nombre }}</p>
-                          <p><strong>Código del producto (SKU):</strong> {{ item.datos_producto.codigoBarras }}</p>
+                          <p><strong>Código del producto (SKU):</strong> {{ item.datos_producto.codigoBarras }} -
+                            <strong>Prefijo:</strong> {{ item.datos_producto.prefijo }}</p>
                           <p><strong>Desripción:</strong> {{ item.datos_producto.descripcion }}</p>
                           <p><strong>Link del catálogo de la categoría:</strong> <a
                             href="{{item.datos_producto.link_catalogo}}"
                             target="_blank"> {{ item.datos_producto.link_catalogo }}</a></p>
                           <div class="row">
-                            <div class="col-md-6 col-12">
+                            <div class="col-md-4 col-12">
                               <p><strong>Precio Venta:</strong> <span
                                 class="text-success"> {{ item.datos_producto.precioVentaA | currency }}</span></p>
+                            </div>
+                            <div class="col-md-4 col-12">
                               <p><strong>Precio Oferta:</strong> <span
                                 class="text-danger"> {{ item.datos_producto.precioOferta | currency }}</span></p>
-                              <p><strong>Stock real:</strong> {{ item.datos_producto.stock }}</p>
                             </div>
-                            <div class="col-md-6 col-12 text-right">
-                              <img
-                                [src]="item.datos_producto?.imagen_principal ? item.datos_producto?.imagen_principal : 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019'"
-                                class="img-fluid" alt="Imagen principal"
-                                style="height: 125px; width: 50%; object-fit: cover;">
+                            <div class="col-md-4 col-12">
+                              <p><strong>Stock real:</strong> {{ item.datos_producto.stock }}</p>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="card w-100 border-primary m-2">
-                        <div class="p-1 bg-primary">
-                          <h5>Detalles de forma de pago</h5>
-                        </div>
-                        <div class="card-body p-2">
-                          <p><strong>Formas de pago:</strong>
-                            <ng-container *ngFor="let forma of item.envio['0'].formaPago; let last = last">
-                              <span *ngIf="forma.estado"> {{ forma.nombre }}<span *ngIf="!last">, </span></span>
-                            </ng-container>
-                          </p>
+                        <div class="col-md-5 col-12 text-center">
+                          <img
+                            [src]="item.datos_producto?.imagen_principal ? item.datos_producto?.imagen_principal : 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019'"
+                            class="img-fluid" alt="Imagen principal"
+                            style="height: 200px; width: 50%; object-fit: cover;">
                         </div>
                       </div>
                     </div>
+                  </div>
+                </div>
+                <div class="card-footer bg-info">
+                  <div class="text-right">
+                    <button class="btn btn-light mb-0 pb-0" (click)="agregarCarrito(miCarrito, item.datos_producto)">
+                      Añadir al carrito
+                      <i-feather name="shopping-cart"></i-feather>
+                    </button>
                   </div>
                 </div>
               </div>
