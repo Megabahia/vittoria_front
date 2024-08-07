@@ -61,8 +61,10 @@
               <td>
                 {{ enmarcarNumeroTelefono(contacto.whatsapp) }}
               </td>
-              <td [style]="{'color': contacto.tipoContacto === 'original' ? 'green' : 'red' }">
-                {{ contacto.tipoContacto === 'original' ? 'Original' : 'Duplicado'}}
+              <td [title]="contacto.tipoContacto === 'duplicado' ? 'Será acreditado luego de finalizar el pedido' : ''"
+                  [style]="{'color': contacto.tipoContacto === 'original' ? 'green' : 'red',
+                  'text-decoration': contacto.tipoContacto === 'duplicado' ? 'underline' : 'none'}">
+                {{ contacto.tipoContacto === 'original' ? 'Original' : 'Duplicado' }}
               </td>
               <td>
                 <ul *ngFor="let productos of contacto.articulos">
@@ -71,7 +73,7 @@
               </td>
               <td
                 [ngStyle]="{'color': contacto.estado === 'NUEVO' ? 'black' : contacto.estado === 'CONTACTO FALSO' ? 'red' : contacto.estado === 'EN PROCESO DE VENTA' ? 'blue' : 'green'}">
-                {{contacto.estado}}
+                {{ contacto.estado }}
               </td>
             </tr>
             </tbody>

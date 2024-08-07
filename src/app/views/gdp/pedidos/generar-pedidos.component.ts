@@ -245,6 +245,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     this.canalSeleccionado = 'megabahia.megadescuento.com';
     this.iniciarNotaPedido();
     this.obtenerListaProductos();
+    this.cedulaABuscar = '';
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
   }
 
@@ -294,7 +295,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
         codigoBarras: '',
       }
     ).subscribe((info) => {
-      this.listaCanalesProducto = info.canal
+      this.listaCanalesProducto = info.canal;
     });
   }
 
@@ -440,26 +441,26 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     if (this.cedulaABuscar !== '') {
 
       this.clientesService.obtenerClientePorCedula({cedula: this.cedulaABuscar}).subscribe((info) => {
-        this.notaPedido.get('facturacion').get('nombres').setValue(info.nombres)
-        this.notaPedido.get('facturacion').get('apellidos').setValue(info.apellidos)
-        this.notaPedido.get('facturacion').get('correo').setValue(info.correo)
-        this.notaPedido.get('facturacion').get('identificacion').setValue(info.cedula)
-        this.notaPedido.get('facturacion').get('telefono').setValue(info.telefono)
-        this.notaPedido.get('facturacion').get('provincia').setValue(info.provinciaNacimiento)
-        this.notaPedido.get('facturacion').get('ciudad').setValue(info.ciudadNacimiento)
+        this.notaPedido.get('facturacion').get('nombres').setValue(info.nombres);
+        this.notaPedido.get('facturacion').get('apellidos').setValue(info.apellidos);
+        this.notaPedido.get('facturacion').get('correo').setValue(info.correo);
+        this.notaPedido.get('facturacion').get('identificacion').setValue(info.cedula);
+        this.notaPedido.get('facturacion').get('telefono').setValue(info.telefono);
+        this.notaPedido.get('facturacion').get('provincia').setValue(info.provinciaNacimiento);
+        this.notaPedido.get('facturacion').get('ciudad').setValue(info.ciudadNacimiento);
 
         this.obtenerCiudad();
         //this.notaPedido.get('facturacion').get('identificacion').disable();
       }, error => {
-        this.toaster.open(error, {type: 'danger'})
-        this.notaPedido.get('facturacion').get('nombres').setValue('')
-        this.notaPedido.get('facturacion').get('apellidos').setValue('')
-        this.notaPedido.get('facturacion').get('correo').setValue('')
-        this.notaPedido.get('facturacion').get('identificacion').setValue('')
-        this.notaPedido.get('facturacion').get('telefono').setValue('')
-        this.notaPedido.get('facturacion').get('provincia').setValue('')
-        this.notaPedido.get('facturacion').get('ciudad').setValue('')
-        this.obtenerCiudad()
+        this.toaster.open(error, {type: 'danger'});
+        this.notaPedido.get('facturacion').get('nombres').setValue('');
+        this.notaPedido.get('facturacion').get('apellidos').setValue('');
+        this.notaPedido.get('facturacion').get('correo').setValue('');
+        this.notaPedido.get('facturacion').get('identificacion').setValue('');
+        this.notaPedido.get('facturacion').get('telefono').setValue('');
+        this.notaPedido.get('facturacion').get('provincia').setValue('');
+        this.notaPedido.get('facturacion').get('ciudad').setValue('');
+        this.obtenerCiudad();
 
         //this.notaPedido.get('facturacion').get('identificacion').enable();
       })
