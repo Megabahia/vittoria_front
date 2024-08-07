@@ -173,8 +173,7 @@
                 <div class="col-md-4 col-12">
                   <label for="provinciaContacto">Provincia</label>
                   <select class="form-control" name="provinciaContacto" formControlName="provincia"
-                          (change)="obtenerCiudad()"
-                          [(ngModel)]="provincia" id="provinciaContacto">
+                          (change)="obtenerCiudad()" id="provinciaContacto">
                     <option value="" selected>- Seleccione -</option>
                     <option value="{{pais.nombre}}" *ngFor="let pais of provinciaOpciones">
                       {{ pais.nombre }}
@@ -189,8 +188,7 @@
                 </div>
                 <div class="col-md-4 col-12">
                   <label for="ciudadContacto">Ciudad</label>
-                  <select class="form-control" name="ciudadContacto" formControlName="ciudad"
-                          [(ngModel)]="ciudad" id="ciudadContacto">
+                  <select class="form-control" name="ciudadContacto" formControlName="ciudad" id="ciudadContacto">
                     <option value="" selected>- Seleccione -</option>
                     <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
                       {{ ciudad.nombre }}

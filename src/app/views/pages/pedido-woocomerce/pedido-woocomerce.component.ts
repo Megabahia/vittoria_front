@@ -57,7 +57,7 @@ export class PedidoWoocomerceComponent implements OnInit {
   costoEnvio;
   numeroCuenta;
   nombreCuenta;
-
+  sectorOpciones
   page = 1;
   page_size: any = 3;
   parametros;
@@ -162,6 +162,7 @@ export class PedidoWoocomerceComponent implements OnInit {
         pais: [this.pais, [Validators.required]],
         provincia: ['', [Validators.required]],
         ciudad: ['', [Validators.required]],
+        sector: ['', [Validators.required]],
         callePrincipal: ['', [Validators.required]],
         numero: ['', [Validators.required]],
         calleSecundaria: ['', [Validators.required]],
@@ -232,7 +233,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       imagen: [''],
       caracteristicas: [''],
       precios: [[]],
-      canal: [datos.canal],
+      canal: [datosBaseDatos.canal],
       imagen_principal: [datos.imagen_del_producto],
       prefijo: [datosBaseDatos.prefijo, []]
     });
@@ -265,6 +266,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       listaFormasPagos: ['', []],
       numeroCuenta: ['', []],
       nombreCuenta: ['', []],
+      canal: ['', []],
       precioEnvio: [0, [Validators.required, Validators.min(1)]],
       articulos: this.formBuilder.array([]),
     });
@@ -341,6 +343,12 @@ export class PedidoWoocomerceComponent implements OnInit {
     });
   }
 
+  obtenerSector(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.notaPedido.value.facturacion.ciudad, 'CIUDAD').subscribe((info) => {
+      this.sectorOpciones = info;
+    });
+  }
+
   generarID(): string {
     const numeroAleatorio = Math.floor(Math.random() * 1000000);
 
@@ -356,7 +364,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       delete producto.imagen_principal;
     });
 
-    if (!this.selectClient) {
+    /*if (!this.selectClient) {
       this.toaster.open('Seleccione si es cliente o no', {type: 'danger'});
       return;
     }
@@ -369,12 +377,11 @@ export class PedidoWoocomerceComponent implements OnInit {
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
-    }
+    }*/
 
     if (confirm('Esta seguro de guardar los datos') === true) {
 
       this.notaPedido.value.pedidos.map((data) => {
-        console.log('DATA', data)
         this.notaPedido.patchValue({
           ...this.notaPedido.value,
           envio: {...this.notaPedido.value.facturacion},
@@ -384,10 +391,8 @@ export class PedidoWoocomerceComponent implements OnInit {
           this.agregarItem(articulo);
         });
 
-
         const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
         const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
-
 
         facturaFisicaLlaves.map((llaves, index) => {
           if (llaves !== 'archivoMetodoPago') {
@@ -571,7 +576,7 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   onSelectFormaPago(e: any) {
     const selectValue = e.target.value;
-    console.log('notepedido', this.notaPedido.value);
+    console.log('notepedido', this.notaPedido.value.pedidos[0].formaPago);
     // if (selectValue !== '' && selectValue === 'Transferencia') {
     //   this.mostrarCargaComprobante = true;
     // } else {

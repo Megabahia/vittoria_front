@@ -22,7 +22,7 @@
     </div>
   </div>
   <div class="card" *ngIf="mostrarDatosProducto">
-  <!--<div class="card">-->
+    <!--<div class="card">-->
     <div class="container mt-1">
       <h4 class="mb-1 p-1 bg-light text-dark">Detalle del Producto</h4>
       <div class="card border-primary">
@@ -164,7 +164,7 @@
                       <h3 class="text-white">Información del producto #{{ i + 1 }}</h3>
                     </div>
                     <div class="col-md-6 col-12 mb-1 d-flex justify-content-end">
-                      <button class="btn btn-light mb-0 pb-0" (click)="agregarCarrito(item.datos_producto)">
+                      <button class="btn btn-light mb-0 pb-0" (click)="agregarCarrito(miCarrito, item.datos_producto)">
                         Añadir al carrito
                         <i-feather name="shopping-cart"></i-feather>
                       </button>
@@ -279,7 +279,8 @@
             <th>SKU</th>
             <th>Nombre</th>
             <th>Valor Unitario</th>
-            <th>Cantidad</th>
+            <th style="text-align: end">Cantidad</th>
+            <th style="text-align: start">productos</th>
             <th>Total</th>
             <th>Acciones</th>
           </tr>
@@ -291,7 +292,40 @@
             <td>{{ producto.sku_del_producto }}</td>
             <td>{{ producto.nombre_del_producto }}</td>
             <td>{{ producto.precio_del_producto | currency }}</td>
-            <td>{{ producto.cantidad_en_el_carrito }}</td>
+            <td colspan="2">
+              <core-touchspin>
+                <div class="btn-group touchspin-wrapper">
+                  <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-down px-1 py-1"
+                          (click)="escogerCantidad('restar', i, producto)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"
+                         viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round" class="feather feather-minus">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </button>
+                  <input type="number" pattern="\d*" maxlength="10"
+                         class="form-control form-control-lg ng-untouched ng-pristine ng-valid"
+                         step="1" min="1"
+                         max="10"
+                         disabled
+                         [(ngModel)]="producto.cantidad_en_el_carrito">
+
+                  <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-up px-1 py-1"
+                          (click)="escogerCantidad('sumar', i, producto)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"
+                         viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round" class="feather feather-plus">
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </button>
+                </div>
+              </core-touchspin>
+            </td>
             <td>{{ producto.total_del_articulo | currency }}</td>
             <td>
               <a (click)="eliminarProductoCarrito(i)" data-repeater-delete>
