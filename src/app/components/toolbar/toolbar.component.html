@@ -595,6 +595,13 @@
               <span class="menu-item text-truncate" data-i18n="List">Confirmación de facturas</span>
             </a>
           </li>
+          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
+              <a class="d-flex align-items-center" [routerLink]="['gdc/facturas/quejas']" data-toggle="tooltip"
+               data-placement="auto" title="Confirmación de quejas">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Confirmación de quejas</span>
+            </a>
+          </li>
         </ul>
       </li>
       <li class="nav-item" *ngIf="acciones.GCN.LEER">
