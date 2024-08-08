@@ -12,6 +12,7 @@ import {ProductosService} from '../../../services/mdp/productos/productos.servic
 import {Toaster} from 'ngx-toast-notifications';
 
 import {GmbMegabahiaService} from "../../../services/gmb/megbahia/gmb-megabahia.service";
+import {AuthService} from "../../../services/admin/auth.service";
 
 @Component({
   selector: 'app-despachos-entregados-megabahia',
@@ -56,6 +57,7 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
   factura;
   totalIva;
   parametroIva;
+  currentUser;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -76,7 +78,11 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
     private paramServiceAdm: ParamServiceAdm,
     private productosService: ProductosService,
     private toaster: Toaster,
+    private authService: AuthService,
+
   ) {
+    this.currentUser = this.authService.currentUserValue;
+
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
     this.facturarForm = this.formBuilder.group({
@@ -214,6 +220,7 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
 
   obtenerMegabahiaDespacho(): void {
     this.megabahiaService.obtenerListaMegabahiaDespachos({
+      codigoVendedor: this.currentUser.usuario.username,
       telefono: this.whatsapp,
       correo: this.correo,
       page: this.page - 1,

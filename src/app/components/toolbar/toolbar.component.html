@@ -308,26 +308,26 @@
         </ul>
       </li>
       <li class="ml-2">-------------------------------------</li>
-      <li class="nav-item" *ngIf="acciones.ADM.LEER">
+      <li class="nav-item" >
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice" title="GD Gestión de Drop Shipping">GD Gestión de Drop Shipping</span></a>
         <ul class="menu-content ng-star-inserted">
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
             <a class="d-flex align-items-center" [routerLink]="['gsb/gd_params']" data-toggle="tooltip"
                data-placement="auto" title="Parametrizaciones">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Parametrizaciones</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
             <a class="d-flex align-items-center" [routerLink]="['gsb/inventario/list']" data-toggle="tooltip"
                data-placement="auto" title="Super Barato">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Inventario</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
             <a class="d-flex align-items-center" [routerLink]="['gsb/inventario/reporte']" data-toggle="tooltip"
                data-placement="auto" title="Reporte de Inventario Super Barato">
               <i data-feather="circle"></i>
@@ -339,14 +339,14 @@
                title="Pedidos por Canal">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Registro de contactos</span></a>
             <ul class="menu-content">
-              <li class="nav-item">
+              <li class="nav-item" *ngIf="usuario.usuario.idRol === 58 || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 54">
                 <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/create']" data-toggle="tooltip"
                    data-placement="auto" title="Ingreso de contactos">
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Ingresar Contactos</span>
                 </a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" *ngIf="acciones.GCN.LEER">
                 <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/list/reporte']" data-toggle="tooltip"
                    data-placement="auto" title="Reporte de lista de contactos">
                   <i data-feather="circle"></i>
@@ -355,7 +355,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item has-sub ng-star-inserted">
+          <li class="nav-item has-sub ng-star-inserted" *ngIf="usuario.usuario.idRol === 1 || usuario.usuario.idRol === 61">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Concretar ventas">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Concretar ventas</span></a>
@@ -369,21 +369,21 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
             <a class="d-flex align-items-center" [routerLink]="['gsb/pedido']" data-toggle="tooltip"
                data-placement="auto" title="Pedido Super Barato">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Pedido Super Barato</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
             <a class="d-flex align-items-center" [routerLink]="['gsb/superbarato']" data-toggle="tooltip"
                data-placement="auto" title="Super Barato">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Despachar pedido Super Barato</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
             <a class="d-flex align-items-center" [routerLink]="['gsb/reportes']" data-toggle="tooltip"
                data-placement="auto" title="Reportes Super Barato">
               <i data-feather="circle"></i>
