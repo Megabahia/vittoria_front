@@ -99,7 +99,7 @@
                 {{ transaccion.fechaCargaFormaPagoQueja }}
               </td>
               <td class="text-warning">
-                {{ transaccion.fechaEmisionFacturaQueja | date: 'dd-MM-yyyy' }}
+                {{ formatearFechaYAgregarDia(transaccion.fechaEmisionFacturaQueja) }}
               </td>
               <td>
                 {{ transaccion.subtotal | currency }}

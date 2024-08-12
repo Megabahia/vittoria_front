@@ -60,9 +60,9 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   idSuperBarato;
   parametroIva;
   tipoIdentificacion;
-
+  desabilitarTomarContacto = false;
   idContacto;
-  currentUserValue
+  currentUserValue;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'

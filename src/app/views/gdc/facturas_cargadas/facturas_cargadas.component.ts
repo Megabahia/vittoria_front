@@ -351,18 +351,19 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
     }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
-      if (Number(this.formaPagoForm.value.montoSubtotalAprobado) > Number(this.listaPedido.subtotal)){
-        this.toaster.open('El valor no debe exceder el monto subtotal del pedido', {type: 'danger'});
-        return;
-      }else{
-        this.contactosService
-          .actualizarAprobarcionContacto(this.formaPagoForm.value.id, 'Entregado', Number(this.formaPagoForm.value.montoSubtotalAprobado))
-          .subscribe((info) => {
+      this.contactosService
+        .actualizarAprobarcionContacto(this.formaPagoForm.value.id, 'Entregado', Number(this.formaPagoForm.value.montoSubtotalAprobado))
+        .subscribe((info) => {
           this.toaster.open('Despacho aprobado', {type: 'success'});
           this.obtenerContactos();
           this.modalService.dismissAll();
         }, error => this.toaster.open(error, {type: 'danger'}));
-      }
+      /*if (Number(this.formaPagoForm.value.montoSubtotalAprobado) > Number(this.listaPedido.subtotal)){
+        this.toaster.open('El valor no debe exceder el monto subtotal del pedido', {type: 'danger'});
+        return;
+      }else{
+
+      }*/
     }
   }
 

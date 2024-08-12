@@ -351,17 +351,18 @@ export class FacturasQuejasComponent implements OnInit, AfterViewInit {
     }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
-      if (Number(this.formaPagoForm.value.montoSubtotalAprobadoQueja) > Number(this.listaPedido.subtotal)) {
+      this.contactosService.actualizarAprobarcionContactoQueja(this.formaPagoForm.value.id, 'Entregado', Number(this.formaPagoForm.value.montoSubtotalAprobadoQueja))
+        .subscribe((info) => {
+          this.toaster.open('Despacho aprobado', {type: 'success'});
+          this.obtenerContactos();
+          this.modalService.dismissAll();
+        }, error => this.toaster.open(error, {type: 'danger'}));
+      /*if (Number(this.formaPagoForm.value.montoSubtotalAprobadoQueja) > Number(this.listaPedido.subtotal)) {
         this.toaster.open('El valor no debe exceder el monto subtotal del pedido', {type: 'danger'});
         return;
       } else {
-        this.contactosService.actualizarAprobarcionContactoQueja(this.formaPagoForm.value.id, 'Entregado', Number(this.formaPagoForm.value.montoSubtotalAprobadoQueja))
-          .subscribe((info) => {
-            this.toaster.open('Despacho aprobado', {type: 'success'});
-            this.obtenerContactos();
-            this.modalService.dismissAll();
-          }, error => this.toaster.open(error, {type: 'danger'}));
-      }
+
+      }*/
     }
   }
 

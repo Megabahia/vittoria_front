@@ -254,9 +254,10 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info.map((item) => {
-        const resultado = this.calculoComision(item.estado, item.montoSubtotalCliente, item.total, item.montoSubtotalAprobado);
-        const resultadoFinal = this.calculoComisionFinal(item.estado, item.montoSubtotalQueja, item.montoSubtotalAprobadoQueja);
-        return {...item, comision: resultado, comision_final: resultadoFinal};
+        //const resultado = this.calculoComision(item.estado, item.montoSubtotalCliente, item.total, item.montoSubtotalAprobado);
+        //const resultadoFinal = this.calculoComisionFinal(item.estado, item.montoSubtotalQueja, item.montoSubtotalAprobadoQueja);
+        //return {...item, comision: resultado, comision_final: resultadoFinal};
+        return {...item};
       });
     });
   }

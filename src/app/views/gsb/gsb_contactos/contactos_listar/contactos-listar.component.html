@@ -94,7 +94,7 @@
                 </ng-template>
               </td>
               <td>
-                <button class="btn btn-sm btn-secondary" (click)="actualizarEstadoContacto(contacto, 'EN PROCESO DE VENTA')">
+                <button class="btn btn-sm btn-secondary" (click)="actualizarEstadoContacto(contacto, 'EN PROCESO DE VENTA')" [disabled]="desabilitarTomarContacto">
                   Tomar contacto para venta
                 </button>
               </td>

@@ -32,6 +32,7 @@ export class ConsultaProductosComponent implements OnInit {
   public notaPedido: FormGroup;
   archivo: FormData = new FormData();
 
+
   habilitarFinalizarPedido = true;
   tipoIdentificacion;
   datos: any[] = [];
@@ -268,6 +269,11 @@ export class ConsultaProductosComponent implements OnInit {
       datos.total_del_articulo = datos.cantidad_en_el_carrito * datos.precio_del_producto;
     }
   }
+
+  generarPedido(){
+
+  }
+
 }
 
 

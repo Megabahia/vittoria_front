@@ -84,8 +84,8 @@
                                 transaccion.estado === 'Despachado' || transaccion.estado === 'Empacado'|| transaccion.estado === 'Pendiente' ? 'yellow' : transaccion.estado === 'Por confirmar' ? 'black' : 'green'}">{{ transaccion.estado }}
                 </td>
                 <td class="text-warning">{{ transaccion.motivoNegacionPedido }}</td>
-                <td [ngStyle]="{'color':'blue'}">${{ transaccion.comision }}</td>
-                <td [ngStyle]="{'color':'red'}">${{ transaccion.comision_final }}</td>
+                <td [ngStyle]="{'color':'blue'}">${{ transaccion.comision ? transaccion.comision : '--' }}</td>
+                <td [ngStyle]="{'color':'red'}">${{ transaccion.comisionFinal ? transaccion.comisionFinal : '--' }}</td>
                 <td>{{ transaccion.facturacion.codigoVendedor }}</td>
                 <td>{{ transaccion.facturacion.nombreVendedor }}</td>
                 <td>{{ transaccion.companiaVendedor }}</td>
@@ -128,7 +128,7 @@
                     *ngIf="transaccion.estado === 'Entregado'"
                     class="btn btn-secondary"
                     (click)="exclamarReclamo(quejaModal, transaccion.id)">
-                    Exclamar reclamo
+                    Escalar reclamo
                   </button>
                 </td>
               </tr>
