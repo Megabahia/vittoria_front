@@ -144,7 +144,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
         numero: ['', [Validators.required]],
         calleSecundaria: ['', [Validators.required]],
         referencia: ['', [Validators.required]],
-        //gps: ['', []],
+        gps: ['', []],
         codigoUsuario: [this.obtenerUsuarioLogeado.usuario.username, []],
         nombreUsuario: [this.obtenerUsuarioLogeado.usuario.nombres + ' ' + this.obtenerUsuarioLogeado.usuario.apellidos, []],
         comprobantePago: ['', []],
@@ -166,6 +166,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       envios: ['', []],
       json: ['', []],
       tipoPago: [''],
+      montoPrevioPago: [0]
     });
   }
 
@@ -223,7 +224,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
     this.obtenerProvincias();
     this.obtenerCiudad();
     this.formatearFecha();
-    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+    this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
   }
 
   async guardarDespachoMegabahia(): Promise<void> {
@@ -324,11 +325,15 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
       // tslint:disable-next-line:radix
       const descuento = parseInt(detalles[index].get('descuento').value);
-      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      if (descuento > 0 && descuento <= 100) {
+        const totalDescuento = (valorUnitario * descuento) / 100;
+        detalles[index].get('precio').setValue((((valorUnitario - totalDescuento) * cantidad)).toFixed(2));
+      } else {
+        detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      }
       total += parseFloat(detalles[index].get('precio').value);
     });
-    total += parseFloat(this.notaPedido.get('envioTotal').value);
-
+    total += this.notaPedido.get('envioTotal').value;
     subtotalPedido = total / this.parametroIva;
     this.totalIva = (total - subtotalPedido).toFixed(2);
     this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
