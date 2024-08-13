@@ -264,14 +264,15 @@ export class ConsultaProductosComponent implements OnInit {
     if (operacion === 'sumar') {
       datos.cantidad_en_el_carrito++;
       datos.total_del_articulo = datos.cantidad_en_el_carrito * datos.precio_del_producto;
-    } else if (operacion === 'restar' && datos.cantidad_en_el_carrito > 0){
+    } else if (operacion === 'restar' && datos.cantidad_en_el_carrito > 0) {
       datos.cantidad_en_el_carrito--;
       datos.total_del_articulo = datos.cantidad_en_el_carrito * datos.precio_del_producto;
     }
   }
 
-  generarPedido(){
-
+  generarPedido(data: any): void {
+    localStorage.setItem('productoData', JSON.stringify(data));
+    window.open('#/gdp/pedidos', '_blank');
   }
 
 }

@@ -147,7 +147,6 @@
         </div>
       </div>
       <div class="row" *ngIf="mostrarDatosEnvio">
-
         <div class="container mt-1" style="border-color: #007bff !important;">
           <div class="row" *ngFor="let item of integracionEnvio; let i = index">
             <div class="col-md-12">
@@ -263,10 +262,15 @@
                       <i-feather name="shopping-cart"></i-feather>
                     </button>
                     <ng-template #botonGenerarPedido>
-                      <button class="btn btn-info mb-0 pb-0" (click)="generarPedido()">
+                      <button class="btn btn-info mb-0 pb-0"
+                         (click)="generarPedido(item.datos_producto)">
                         Generar Pedido
                         <i-feather name="package"></i-feather>
                       </button>
+                      <!--<button class="btn btn-info mb-0 pb-0" (click)="generarPedido(item.datos_producto)">
+                        Generar Pedido
+                        <i-feather name="package"></i-feather>
+                      </button>-->
                     </ng-template>
                   </div>
                 </div>
