@@ -58,11 +58,11 @@
           <div class="card-body invoice-padding pt-0">
             <div class="row">
               <div class="col-md-4 col-12">
-                <label style="color: red;">Metodo de envío</label>
+                <label style="color: red;">Método de envío</label>
                 <select class="form-control"
                         formControlName="metodoPago" (change)="onSelectChangePago($event)">
                   <option value="" selected>- Seleccione metodo de envío-</option>
-                  <option style="color: red;" value="{{pago.valor}}" *ngFor="let pago of listaMetodoPago">
+                  <option style="color: red;" value="{{pago.nombre}}" *ngFor="let pago of listaMetodoPago">
                     {{ pago.nombre }}
                   </option>
                 </select>
@@ -73,7 +73,8 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-5 col-12" *ngIf="mostrarInputArchivoComprobante">
+
+              <div class="col-md-4 col-12" *ngIf="mostrarInputArchivoComprobante">
                 <label>Cargar comrpobante de pago</label>
                 <input class="form-control-file" type="file" (change)="onFileSelectedComprobantePago($event)">
                 <div *ngIf="notaPedidoForm.archivoMetodoPago.errors"
@@ -83,15 +84,28 @@
                   </div>
                 </div>
               </div>
+              <div class="col-md-4 col-12" *ngIf="mostrarInputArchivoComprobante">
+                <label>Monto</label>
+                <input class="form-control" type="text" formControlName="montoPrevioPago" placeholder="00.00">
+                <div *ngIf="notaPedidoForm.montoPrevioPago.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="notaPedidoForm.montoPrevioPago.errors.required">
+                    Requerido
+                  </div>
+                  <div *ngIf="notaPedidoForm.montoPrevioPago.errors.pattern">
+                    Ingrese valores válidos, en formato 00.00 y unicamente dos decimales
+                  </div>
+                </div>
+              </div>
             </div>
             <!-- Address and Contact ends -->
             <hr class="invoice-spacing"/>
             <h4 class="invoice-title my-2 text-warning">Datos del producto</h4>
-            <div class="row mx-1">
+            <div class="row px-1">
               <label>Canal de producto: </label><br/>
               <label>{{ notaPedido.value.canal }}</label>
             </div>
-            <div class="mx-1" formArrayName="articulos">
+            <div class="px-1 bg-light" formArrayName="articulos">
               <form class="source-item">
                 <div data-repeater-list="group-a"
                      *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
@@ -538,25 +552,25 @@
             <div formGroupName="facturacion">
               <div class="row mb-1">
                 <div class="col-md-6">
-                  <label for="codigoUsuario" class="form-label">Codigo
+                  <label for="codigoVendedor" class="form-label">Codigo
                     Usuario:</label>
-                  <input type="text" class="form-control" id="codigoUsuario" formControlName="codigoUsuario" disabled
+                  <input type="text" class="form-control" id="codigoVendedor" formControlName="codigoVendedor" disabled
                   />
-                  <div *ngIf="facturacionForm.codigoUsuario.errors"
+                  <div *ngIf="facturacionForm.codigoVendedor.errors"
                        class="invalid-feedback" style="display: block;">
-                    <div *ngIf="facturacionForm.codigoUsuario.errors.required">
+                    <div *ngIf="facturacionForm.codigoVendedor.errors.required">
                       Requerido
                     </div>
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <label for="nombreUsuario" class="form-label">Nombre
+                  <label for="nombreVendedor" class="form-label">Nombre
                     Usuario:</label>
-                  <input type="text" class="form-control" id="nombreUsuario" formControlName="nombreUsuario" disabled
+                  <input type="text" class="form-control" id="nombreVendedor" formControlName="nombreVendedor" disabled
                   />
-                  <div *ngIf="facturacionForm.nombreUsuario.errors"
+                  <div *ngIf="facturacionForm.nombreVendedor.errors"
                        class="invalid-feedback" style="display: block;">
-                    <div *ngIf="facturacionForm.nombreUsuario.errors.required">
+                    <div *ngIf="facturacionForm.nombreVendedor.errors.required">
                       Requerido
                     </div>
                   </div>
@@ -566,7 +580,7 @@
           </div>
           <!-- Invoice Total ends -->
 
-          <hr class="invoice-spacing mt-0"/>
+          <!--<hr class="invoice-spacing mt-0"/>
           <div class="card-body invoice-padding">
             <div class="row">
               <div class="col-md-5 col-12">
@@ -579,9 +593,8 @@
                   </div>
                 </div>
               </div>
-
             </div>
-          </div>
+          </div>-->
         </div>
       </form>
     </div>

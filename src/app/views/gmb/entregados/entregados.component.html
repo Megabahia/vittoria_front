@@ -59,7 +59,7 @@
               <th>Estado</th>
               <th>Ver</th>
               <th>Comprobante pago</th>
-              <th>Comprobante venta</th>
+              <!--<th>Comprobante venta</th>-->
               <!--<th>Acciones</th>-->
             </tr>
             </thead>
@@ -68,8 +68,8 @@
             <tr *ngFor="let transaccion  of listaMegabahias; let i = index">
               <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
               <td [title]="transaccion.canal">{{ transaccion.canal | shorten }}</td>
-              <td>{{ transaccion.facturacion.codigoUsuario }}</td>
-              <td>{{ transaccion.facturacion.nombreUsuario }}</td>
+              <td>{{ transaccion.facturacion.codigoVendedor }}</td>
+              <td>{{ transaccion.facturacion.nombreVendedor }}</td>
               <td>{{ transaccion.vendedor }}</td>
               <td [title]="transaccion.numeroPedido">{{ transaccion.numeroDespacho  | shorten }}</td>
               <td [title]="transaccion.facturacion.nombres">{{ transaccion.facturacion.nombres | shorten }}</td>
@@ -88,11 +88,11 @@
                   <i-feather name="file-text" class="mr-25"></i-feather>
                 </a>
               </td>
-              <td>
+              <!--<td>
                 <a href="{{transaccion.archivoComprobanteVenta}}" *ngIf="transaccion.archivoComprobanteVenta" target="_blank">
                   <i-feather name="file-text" class="mr-25"></i-feather>
                 </a>
-              </td>
+              </td>-->
 
             </tr>
             </tbody>
@@ -311,6 +311,12 @@
                                   </div>
                                   <div class="col-lg-2 col-12 my-lg-0 my-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
+                                      Descuento
+                                    </p>
+                                    <label>{{ detalle.controls.descuento.value }}%</label>
+                                  </div>
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
                                       Total
                                     </p>
                                     <label>{{ detalle.controls.precio.value }}</label>
@@ -340,15 +346,15 @@
                   <div formGroupName="facturacion">
                     <div class="row mb-1">
                       <div class="col-md-6">
-                        <label for="codigoUsuario" class="form-label">Codigo
+                        <label for="codigoVendedor" class="form-label">Codigo
                           Usuario:</label>
-                        <input type="text" class="form-control" id="codigoUsuario" formControlName="codigoUsuario" disabled
+                        <input type="text" class="form-control" id="codigoVendedor" formControlName="codigoVendedor" disabled
                         />
                       </div>
                       <div class="col-md-6">
-                        <label for="nombreUsuario" class="form-label">Nombre
+                        <label for="nombreVendedor" class="form-label">Nombre
                           Usuario:</label>
-                        <input type="text" class="form-control" id="nombreUsuario" formControlName="nombreUsuario" disabled/>
+                        <input type="text" class="form-control" id="nombreVendedor" formControlName="nombreVendedor" disabled/>
                       </div>
                     </div>
                   </div>
