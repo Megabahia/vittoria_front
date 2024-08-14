@@ -1,0 +1,394 @@
+<div class="app-content content ">
+  <div class="content-wrapper">
+    <div class="content-body">
+      <div class="card">
+        <div class="card-header">
+          <h2>CONSULTA DE PRODUCTOS DROP SHIPPING</h2>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="card">
+          <div class="row p-2 d-flex align-items-center">
+            <div class="col-md-2 col-12 mt-2 ">
+              <h5>Filtros de búsqueda: <span class="text-danger">*</span></h5>
+            </div>
+            <div class="col-md-3 col-12 mt-2">
+              <input class="form-control" type="text" [(ngModel)]="codigoBarras" placeholder="Código de producto">
+            </div>
+            <div class="col-md-3 col-12 mt-2">
+              <input class="form-control" type="text" [(ngModel)]="nombreProducto" placeholder="Nombre de producto">
+            </div>
+            <div class="col-md-3 col-12 mt-2 ml-2">
+              <button class="btn btn-primary" (click)="obtenerProducto()">Consultar</button>
+            </div>
+          </div>
+        </div>
+        <div class="card" *ngIf="mostrarDatosProducto">
+          <!--<div class="card">-->
+          <div class="container mt-1">
+            <h4 class="mb-1 p-1 bg-light text-dark">Detalle del Producto</h4>
+            <div class="card border-primary">
+              <div class="card-header bg-primary text-white">
+                <h5 class="card-title">
+                  {{ producto?.nombre }}
+                  <h6>SKU: {{ producto?.codigoBarras }}</h6>
+                </h5>
+              </div>
+              <div class="card-body bg-light">
+                <ul class="list-unstyled mt-1">
+                  <li><strong>Descripción:</strong> {{ producto?.descripcion }}</li>
+                  <!--<li><strong>Precio Normal:</strong> <span
+                    class="text-success"> {{ producto?.precioVentaA | currency }}</span></li>
+                  <li><strong>Precio Oferta:</strong> <span
+                    class="text-danger"> {{ producto?.precioOferta | currency }}</span>
+                  </li>
+                  <li><strong>Cantidad en Stock real:</strong> {{ producto?.stock }}</li>
+                  <li><strong>Ubicación del producto (Origen):</strong> {{ producto?.canal }}</li>
+                  <li><strong>Tienda:</strong> {{ integracionProducto?.nombre }}</li>-->
+                </ul>
+                <!-- Fotos principal -->
+                <div class="row mx-0">
+                  <label style="font-size: small"><strong>Imagen principal: </strong></label>
+                  <div class="image-container">
+                    <img
+                      [src]="producto?.imagen_principal ? producto?.imagen_principal : 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019'"
+                      class="img-fluid" alt="Imagen principal"
+                      style="height: 200px; width: 100%; object-fit: cover;">
+                  </div>
+                </div>
+                <!-- Fotos del producto, si están disponibles -->
+                <div *ngIf="producto?.imagenes && producto?.imagenes.length > 0" class="row mx-0">
+                  <div *ngFor="let imagen of producto?.imagenes; let i = index" class="col-md-3 col-sm-3 p-2">
+                    <div class="image-container">
+                      <img [src]="imagen.imagen" class="img-fluid" alt="Imagen {{ i }}"
+                           style="height: 200px; width: 100%; object-fit: cover;">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-muted">
+                <small>Vittoria!</small>
+              </div>
+            </div>
+            <!--<div class="container mt-2">
+              <h2 class="mb-1">Origen de los productos por tienda</h2>
+              <div class="card">
+                 La fila debería estar fuera del bucle ngFor
+                <div class="row">
+                   ngFor aplicado a las columnas
+                  <div class="col-md-6 col-12 mb-2" *ngFor="let p of totalProductosEnOrigen; let i = index">
+                    <div class="card-body">
+                      <h5 class="card-title text-primary font-weight-bold">{{ p.tienda }}</h5>
+                      <p class="card-text">{{ p.descripcion }}</p>
+                      <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Producto:</strong> {{ p.nombre }} <span
+                          class="text-muted">({{ p.codigoBarras }})</span></li>
+                        <li class="list-group-item"><strong>Origen del producto:</strong> Ecuador, {{ p.ciudad }}
+                          , {{ p.sector }}
+                        </li>
+                        <li class="list-group-item"><strong>Precio normal:</strong> <span
+                          class="text-success"> {{ p.precioVentaA | currency }}</span></li>
+                        <li class="list-group-item"><strong>Precio oferta:</strong> <span
+                          class="text-danger"> {{ p.precioOferta | currency }}</span></li>
+                        <li class="list-group-item"><strong>Stock real:</strong> {{ p.stock }}</li>
+                        <li class="list-group-item"><strong>Courier:</strong> {{ p.courier }} (Costo envío: ${{ p.costo }})</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>-->
+          </div>
+          <div class="container mt-1">
+            <div class="row bg-primary pt-1 mb-1">
+              <div class="col-12">
+                <h4 class="mb-1">Seleccione los datos del destino del producto</h4>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 col-12">
+                <label>País</label>
+                <input class="form-control" type="text" [(ngModel)]="pais" disabled>
+              </div>
+              <div class="col-md-3 col-12">
+                <label for="provinciaContacto">Provincia destino <span class="text-danger">*</span></label>
+                <select class="form-control" (change)="obtenerCiudad()" id="provinciaContacto" [(ngModel)]="provincia">
+                  <option value="" selected>- Seleccione -</option>
+                  <option *ngFor="let opcion of provinciaOpciones" [value]="opcion.nombre">
+                    {{ opcion.nombre }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-3 col-12">
+                <label for="ciudadContacto">Ciudad destino <span class="text-danger">*</span></label>
+                <select class="form-control" id="ciudadContacto" [(ngModel)]="ciudad" (change)="obtenerSector()">
+                  <option value="" selected>- Seleccione -</option>
+                  <option *ngFor="let opcion of ciudadOpciones" [value]="opcion.nombre">
+                    {{ opcion.nombre }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-3 col-12">
+                <label class="form-label" for="sectorOrigen">Sector destino <span class="text-danger">*</span></label>
+                <select class="form-control" [(ngModel)]="sector" id="sectorOrigen">
+                  <option value="" selected>- Seleccione -</option>
+                  <option value="{{sector.nombre}}" *ngFor="let sector of sectorOpciones">
+                    {{ sector.nombre }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-3 col-12 mt-2">
+                <button class="btn btn-primary" (click)="consultarDatosEnvio()">Consultar</button>
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col-12 mb-2 text-center">
+                <h5>Las formas de entrega y el costo de envío se calcularán en base a la ubicación del cliente y la tienda mas
+                  cercana.</h5>
+              </div>
+            </div>
+            <div class="row" *ngIf="mostrarDatosEnvio">
+              <div class="container mt-1" style="border-color: #007bff !important;">
+                <div class="row" *ngFor="let item of integracionEnvio; let i = index">
+                  <div class="col-md-12">
+                    <div class="card bg-light border shadow-lg">
+                      <div class="px-1 bg-info">
+                        <h3 class="text-white p-1">Información del producto en la tienda
+                          <strong>{{ item.datos_producto.tienda }}</strong></h3>
+                      </div>
+                      <div class="card-body">
+                        <!-- Información de Envío -->
+                        <div class="row">
+                          <div class="card w-100 border-primary mx-2 mb-2">
+                            <div class="p-1 bg-primary">
+                              <h5>Detalles de la tienda</h5>
+                            </div>
+                            <div class="row card-body p-2">
+                              <div class="col-md-6 col-12">
+                                <p><strong>Tienda del producto:</strong> {{ item.datos_producto.tienda }} => <a
+                                  href="{{item.datos_producto.link_tienda}}" target="_blank">Ver tienda</a></p>
+                              </div>
+                              <div class="col-md-6 col-12">
+                                <p><strong>Dirección de la tienda:</strong> {{ item.envio['0'].pais }}
+                                  , {{ item.envio['0'].provincia }}, {{ item.envio['0'].ciudad }}
+                                  , {{ item.envio['0'].sector }}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="card w-100 border-primary m-2">
+                            <div class="p-1 bg-primary">
+                              <h5>Forma de entrega de producto</h5>
+                            </div>
+                            <div class="row card-body p-2">
+                              <div class="col-md-6 col-12">
+                                <p><strong>Courier:</strong> {{ item.envio['0'].courier }}</p>
+                              </div>
+                              <div class="col-md-6 col-12">
+                                <p><strong>Dirección de destino:</strong> {{ item.envio['0'].provinciaDestino }}
+                                  , {{ item.envio['0'].ciudadDestino }}, {{ item.envio['0'].sectorDestino }}</p>
+                              </div>
+                              <div class="col-md-6 col-12">
+                                <p><strong>Distancia entre origen y destino:</strong> <span
+                                  class="text-danger"> {{ item.envio['0'].distancia }} km</span></p>
+                              </div>
+                              <div class="col-md-6 col-12">
+                                <p><strong>Costo de envío:</strong> {{ item.envio['0'].costo | currency }}</p>
+                              </div>
+                              <div class="col-md-6 col-12">
+                                <p><strong>Tiempo de entrega estimado:</strong> {{ item.envio['0'].tiempo_entrega }} horas</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="card w-100 border-primary m-2">
+                            <div class="p-1 bg-primary">
+                              <h5>Detalles de forma de pago</h5>
+                            </div>
+                            <div class="card-body p-2">
+                              <p><strong>Formas de pago:</strong>
+                                <ng-container *ngFor="let forma of item.envio['0'].formaPago; let last = last">
+                                  <span *ngIf="forma.estado"> {{ forma.nombre }}<span *ngIf="!last">, </span></span>
+                                </ng-container>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="card w-100 border-primary mx-2 mb-2">
+                            <div class="p-1 bg-primary">
+                              <h5>Detalles del producto</h5>
+                            </div>
+                            <div class="row card-body p-2">
+                              <div class="col-md-7 col-12">
+                                <p><strong>Nombre del producto:</strong> {{ item.datos_producto.nombre }}</p>
+                                <p><strong>Código del producto (SKU):</strong> {{ item.datos_producto.codigoBarras }} -
+                                  <strong>Prefijo:</strong> {{ item.datos_producto.prefijo }}</p>
+                                <p><strong>Desripción:</strong> {{ item.datos_producto.descripcion }}</p>
+                                <p><strong>Link del catálogo de la categoría:</strong> <a
+                                  href="{{item.datos_producto.link_catalogo}}"
+                                  target="_blank"> {{ item.datos_producto.link_catalogo }}</a></p>
+                                <div class="row">
+                                  <div class="col-md-4 col-12">
+                                    <p><strong>Precio Venta:</strong> <span
+                                      class="text-success"> {{ item.datos_producto.precioVentaA | currency }}</span></p>
+                                  </div>
+                                  <div class="col-md-4 col-12">
+                                    <p><strong>Precio Oferta:</strong> <span
+                                      class="text-danger"> {{ item.datos_producto.precioOferta | currency }}</span></p>
+                                  </div>
+                                  <div class="col-md-4 col-12">
+                                    <p><strong>Stock real:</strong> {{ item.datos_producto.stock }}</p>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-5 col-12 text-center">
+                                <img
+                                  [src]="item.datos_producto?.imagen_principal ? item.datos_producto?.imagen_principal : 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019'"
+                                  class="img-fluid" alt="Imagen principal"
+                                  style="height: 200px; width: 50%; object-fit: cover;">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-footer bg-light-info">
+                        <div class="text-right">
+                          <button class="btn btn-info mb-0 pb-0" (click)="agregarCarrito(miCarrito, item.datos_producto)"
+                                  *ngIf="item.datos_producto.bodega_central === 1; else botonGenerarPedido">
+                            Añadir al carrito
+                            <i-feather name="shopping-cart"></i-feather>
+                          </button>
+                          <ng-template #botonGenerarPedido>
+                            <button class="btn btn-info mb-0 pb-0"
+                                    (click)="generarPedido(item.datos_producto)">
+                              Generar Pedido
+                              <i-feather name="package"></i-feather>
+                            </button>
+                            <!--<button class="btn btn-info mb-0 pb-0" (click)="generarPedido(item.datos_producto)">
+                              Generar Pedido
+                              <i-feather name="package"></i-feather>
+                            </button>-->
+                          </ng-template>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-100 mx-1 text-right">
+                <button class="btn btn-warning position-fixed mb-0 pb-0" style="top: 130px; right: 40px"
+                        (click)="verCarrito(miCarrito)">
+                  Ver mi carrito
+                  <i-feather name="shopping-bag"></i-feather>
+                  <strong>{{ carrito.length }}</strong>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #miCarrito let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title">Detalles de mi carrito</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                <tr>
+                  <th>Imagen</th>
+                  <th>Tienda</th>
+                  <th>SKU</th>
+                  <th>Nombre</th>
+                  <th>Valor Unitario</th>
+                  <th style="text-align: end">Cantidad</th>
+                  <th style="text-align: end">de</th>
+                  <th style="text-align: start">productos</th>
+                  <th>Total</th>
+                  <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let producto of carrito; let i = index">
+                  <td><img src="{{ producto.imagen_del_producto }}" alt="Producto" style="width: 50px; height: auto;"></td>
+                  <td>{{ producto.tienda_producto }}</td>
+                  <td>{{ producto.sku_del_producto }}</td>
+                  <td>{{ producto.nombre_del_producto }}</td>
+                  <td>{{ producto.precio_del_producto | currency }}</td>
+                  <td colspan="3">
+                    <core-touchspin>
+                      <div class="btn-group touchspin-wrapper">
+                        <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-down px-1 py-1"
+                                (click)="escogerCantidad('restar', i, producto)">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"
+                               viewBox="0 0 24 24"
+                               fill="none" stroke="currentColor" stroke-width="2"
+                               stroke-linecap="round"
+                               stroke-linejoin="round" class="feather feather-minus">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                          </svg>
+                        </button>
+                        <input type="number" pattern="\d*" maxlength="10"
+                               class="form-control form-control-lg ng-untouched ng-pristine ng-valid"
+                               step="1" min="1"
+                               max="10"
+                               disabled
+                               [(ngModel)]="producto.cantidad_en_el_carrito">
+
+                        <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-up px-1 py-1"
+                                (click)="escogerCantidad('sumar', i, producto)">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"
+                               viewBox="0 0 24 24"
+                               fill="none" stroke="currentColor" stroke-width="2"
+                               stroke-linecap="round"
+                               stroke-linejoin="round" class="feather feather-plus">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                          </svg>
+                        </button>
+                      </div>
+                    </core-touchspin>
+                  </td>
+                  <td>{{ producto.total_del_articulo | currency }}</td>
+                  <td>
+                    <a (click)="eliminarProductoCarrito(i)" data-repeater-delete>
+                      <i-feather name='trash' class="align-middle text-danger"></i-feather>
+                    </a>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="reset" class="btn btn-secondary"
+                    (click)="modal.dismiss( 'Cross click')">Cerrar
+            </button>
+            <button class="btn btn-primary mx-1" (click)="finalizarPedido()"
+            >Finalizar pedido
+            </button>
+          </div>
+        </ng-template>
+        <!--<div class="row">
+          <div class="col-md-3">
+            <button class="btn btn-secondary" (click)="cerrarSesion()">Cerrar</button>
+          </div>
+        </div>-->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+

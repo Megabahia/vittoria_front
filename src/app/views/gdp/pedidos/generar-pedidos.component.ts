@@ -287,7 +287,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
           this.obtenerContactos();
           this.abrirModalCupon(notaPedidoModal);
           this.myAngularxCode = `Numero de pedido: ${info.numeroPedido}`;
-          this.toaster.open('Pedido creado. Creado cupón...', {type: 'info'})
+          this.toaster.open('Pedido creado. Creando cupón...', {type: 'info'});
           this.captureScreen();
 
         }, error => this.toaster.open(error, {type: 'danger'})
@@ -392,7 +392,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
       delete info.articulos;
       this.notaPedido.patchValue({...info});
-      this.toaster.open('Captura realizada correctamente', {type: 'info'})
+      this.toaster.open('Cupón creado. Captura realizada', {type: 'info'});
       this.imagenCargada = true;
     }, error => this.toaster.open(error, {type: 'danger'}));
 

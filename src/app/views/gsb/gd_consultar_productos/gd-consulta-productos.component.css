@@ -1,0 +1,9 @@
+.position-relative {
+  cursor: pointer;
+}
+
+.badge {
+  transform: translate(-50%, -50%);
+  top: 0;
+  right: 0;
+}

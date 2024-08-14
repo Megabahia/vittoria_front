@@ -390,6 +390,13 @@
               <span class="menu-item text-truncate" data-i18n="List">Reportes Super Barato</span>
             </a>
           </li>
+          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
+            <a class="d-flex align-items-center" [routerLink]="['gsb/gd_consulta_productos']" data-toggle="tooltip"
+               data-placement="auto" title="Consulta de producto GD">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Consulta de productos</span>
+            </a>
+          </li>
         </ul>
       </li>
       <li class="nav-item" *ngIf="acciones.MP.LEER">
@@ -632,16 +639,16 @@
         <ul class="menu-content">
           <li class="nav-item">
             <a class="d-flex align-items-center" [routerLink]="['gmb/megabahia']" data-toggle="tooltip"
-               data-placement="auto" title="GMB Gestión de Despachos MEGABAHIA">
+               data-placement="auto" title="GMB Gestión de pedidos MEGABAHIA">
               <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Generar despacho</span>
+              <span class="menu-item text-truncate" data-i18n="List">Generar pedido</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="d-flex align-items-center" [routerLink]="['gmb/entregados']" data-toggle="tooltip"
-               data-placement="auto" title="Despachos realizados">
+               data-placement="auto" title="Pedidos realizados">
               <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Despachos realizados</span>
+              <span class="menu-item text-truncate" data-i18n="List">Pedidos realizados</span>
             </a>
           </li>
         </ul>
