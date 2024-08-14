@@ -270,7 +270,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     return new Promise((resolve, reject) => {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
-        canalProducto: this.detallesArray.value[i].canal,
+        canalProducto: this.detallesArray.value[i].canal || this.notaPedido.value.canal,
         canal: this.notaPedido.value.canal,
         valorUnitario: Number(this.detallesArray.controls[i].value.valorUnitario).toFixed(2)
       };
@@ -290,7 +290,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
                 this.detallesArray.controls[i].get('id').setValue(info.id);
                 this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
                 this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-                const precioProducto = info.precio;
+                const precioProducto = info.precioVentaA;
                 this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
                 this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
                 this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
