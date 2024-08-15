@@ -335,7 +335,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
             this.detallesArray.controls[i].get('id').setValue(info.id);
             this.detallesArray.controls[i].get('articulo').setValue(info.nombre || info.articulo);
             this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-            const precioProducto = info.precio;
+            const precioProducto = info.precioVentaA;
             this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
             this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
             this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
