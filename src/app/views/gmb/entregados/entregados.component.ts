@@ -220,7 +220,7 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
 
   obtenerMegabahiaDespacho(): void {
     this.megabahiaService.obtenerListaMegabahiaDespachos({
-      codigoVendedor: this.currentUser.usuario.username,
+      //codigoVendedor: this.currentUser.usuario.username,
       telefono: this.whatsapp,
       correo: this.correo,
       page: this.page - 1,
@@ -312,7 +312,12 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
       const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
       // tslint:disable-next-line:radix
       const descuento = parseInt(detalles[index].get('descuento').value);
-      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      if (descuento > 0 && descuento <= 100) {
+        const totalDescuento = (valorUnitario * descuento) / 100;
+        detalles[index].get('precio').setValue((((valorUnitario - totalDescuento) * cantidad)).toFixed(2));
+      } else {
+        detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      }
       total += parseFloat(detalles[index].get('precio').value);
     });
     total += parseFloat(this.notaPedido.get('envioTotal').value);

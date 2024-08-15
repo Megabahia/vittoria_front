@@ -46,15 +46,15 @@
           <table class="user-list-table table">
             <thead class="thead-light">
             <tr>
-              <th>Fecha despacho</th>
-              <th>Canal despacho</th>
+              <th>Fecha pedido</th>
+              <th>Canal pedido</th>
               <th>Código usuario</th>
               <th>Nombre usuario</th>
               <th>Vendedor</th>
-              <th>Numero Despacho</th>
+              <th>Numero pedido</th>
               <th>Nombres Facturación</th>
               <th>Apellidos Facturación</th>
-              <th>Metodo Pago</th>
+              <th>Metodo envío</th>
               <th>WhatspApp</th>
               <th>Estado</th>
               <th>Ver</th>
@@ -104,7 +104,7 @@
 
         <ng-template #notaPedidoModal let-modal>
           <div class="modal-header">
-            <h4 class="modal-title">Nota de Despacho MEGABAHIA</h4>
+            <h4 class="modal-title">Nota de pedido MEGABAHIA</h4>
             <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -119,7 +119,7 @@
                   <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
                     <div>
                       <div class="col-12 d-block mb-2">
-                        <span class="title">Fecha para despacho:</span>
+                        <span class="title">Fecha para pedido:</span>
                         <input type="text"
                                placeholder={{formatearFecha()}}
                                class="form-control invoice-edit-input date-picker"
@@ -131,7 +131,7 @@
                     </div>
                     <div>
                       <div class="col-12 d-block align-items-center">
-                        <span class="title">Número para Despacho:</span>
+                        <span class="title">Número para pedido:</span>
                         <input type="text"
                                class="form-control invoice-edit-input date-picker"
                                formControlName="numeroDespacho"
@@ -146,7 +146,7 @@
 
                 <!-- Address and Contact starts -->
                 <div class="card-body invoice-padding pt-0">
-                  <h4 class="invoice-title mb-2">Datos para el Despacho</h4>
+                  <h4 class="invoice-title mb-2">Datos para el pedido</h4>
                   <div formGroupName="facturacion">
                     <div class="row">
                       <div class="col-md-4 col-12">
@@ -347,13 +347,13 @@
                     <div class="row mb-1">
                       <div class="col-md-6">
                         <label for="codigoVendedor" class="form-label">Codigo
-                          Usuario:</label>
+                          Vendedor:</label>
                         <input type="text" class="form-control" id="codigoVendedor" formControlName="codigoVendedor" disabled
                         />
                       </div>
                       <div class="col-md-6">
                         <label for="nombreVendedor" class="form-label">Nombre
-                          Usuario:</label>
+                          Vendedor:</label>
                         <input type="text" class="form-control" id="nombreVendedor" formControlName="nombreVendedor" disabled/>
                       </div>
                     </div>

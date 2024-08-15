@@ -29,7 +29,7 @@
             <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
               <div>
                 <div class="col-12 d-block mb-2">
-                  <span class="title">Fecha para despacho:</span>
+                  <span class="title">Fecha para pedido:</span>
                   <input type="text"
                          placeholder={{formatearFecha()}}
                          class="form-control invoice-edit-input date-picker"
@@ -41,7 +41,7 @@
               </div>
               <div>
                 <div class="col-12 d-block align-items-center">
-                  <span class="title">Número para Despacho:</span>
+                  <span class="title">Número pedido:</span>
                   <input type="text"
                          class="form-control invoice-edit-input date-picker"
                          formControlName="numeroDespacho"
@@ -100,12 +100,12 @@
             </div>
             <!-- Address and Contact ends -->
             <hr class="invoice-spacing"/>
-            <h4 class="invoice-title my-2 text-warning">Datos del producto</h4>
-            <div class="row px-1">
+            <h4 class="invoice-title my-2 text-warning" *ngIf="mostrarDatosGmb">Datos del producto</h4>
+            <div class="row px-1" *ngIf="mostrarDatosGmb">
               <label>Canal de producto: </label><br/>
               <label>{{ notaPedido.value.canal }}</label>
             </div>
-            <div class="px-1 bg-light" formArrayName="articulos">
+            <div class="px-1 bg-light" formArrayName="articulos" *ngIf="mostrarDatosGmb">
               <form class="source-item">
                 <div data-repeater-list="group-a"
                      *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
@@ -274,7 +274,7 @@
                 </div>
               </div>
             </div>
-            <div class="row mx-1 mt-1">
+            <div class="row mx-1 mt-1" *ngIf="mostrarDatosGmb">
               <div class="col-12 px-0">
                 <button type="button" class="btn btn-primary btn-sm btn-add-new"
                         data-repeater-create>
@@ -283,8 +283,8 @@
                 </button>
               </div>
             </div>
-            <hr class="invoice-spacing"/>
-            <div class="row d-flex justify-content-end">
+            <hr class="invoice-spacing" *ngIf="mostrarDatosGmb"/>
+            <div class="row d-flex justify-content-end" *ngIf="mostrarDatosGmb">
               <div class="col-md-5 text-right">
                 <div class="invoice-total-wrapper">
                   <hr class="my-20"/>
@@ -314,8 +314,8 @@
                 </div>
               </div>
             </div>
-            <hr class="invoice-spacing"/>
-            <div formGroupName="facturacion">
+            <hr class="invoice-spacing" *ngIf="mostrarDatosGmb"/>
+            <div formGroupName="facturacion" *ngIf="mostrarDatosGmb">
               <h4 class="invoice-title my-2 text-warning">Datos para el pedido</h4>
               <div class="row">
                 <div class="col-md-4 col-12">
@@ -522,13 +522,13 @@
               </div>
             </div>
             <!-- Product Details ends -->
-            <hr class="invoice-spacing"/>
-            <h4 class="invoice-title my-2 text-warning">Datos de usuario</h4>
-            <div class="row">
+            <hr class="invoice-spacing" *ngIf="mostrarDatosGmb"/>
+            <h4 class="invoice-title my-2 text-warning" *ngIf="mostrarDatosGmb">Datos de usuario</h4>
+            <div class="row" *ngIf="mostrarDatosGmb">
               <div class="col-md-4 mt-1">
                 <label>Vendedor</label>
                 <select class="form-control"
-                        formControlName="vendedor">
+                        formControlName="vendedor" (change)="onSelectSeller($event)">
                   <option value="" selected>- Seleccione vendedor-</option>
                   <option value="{{ usuario.username }}" *ngFor="let usuario of listaUsuarios">
                     {{ usuario.username }} - {{ usuario.nombres }} {{ usuario.apellidos }}
@@ -546,14 +546,14 @@
           </div>
 
           <!-- Product Details ends -->
-          <hr class="invoice-spacing"/>
+          <hr class="invoice-spacing" *ngIf="mostrarDatosGmb"/>
           <!-- Invoice Total starts -->
-          <div class="card-body invoice-padding">
+          <div class="card-body invoice-padding" *ngIf="mostrarDatosGmb">
             <div formGroupName="facturacion">
               <div class="row mb-1">
                 <div class="col-md-6">
                   <label for="codigoVendedor" class="form-label">Codigo
-                    Usuario:</label>
+                    Vendedor:</label>
                   <input type="text" class="form-control" id="codigoVendedor" formControlName="codigoVendedor" disabled
                   />
                   <div *ngIf="facturacionForm.codigoVendedor.errors"
@@ -565,7 +565,7 @@
                 </div>
                 <div class="col-md-6">
                   <label for="nombreVendedor" class="form-label">Nombre
-                    Usuario:</label>
+                    Vendedor:</label>
                   <input type="text" class="form-control" id="nombreVendedor" formControlName="nombreVendedor" disabled
                   />
                   <div *ngIf="facturacionForm.nombreVendedor.errors"

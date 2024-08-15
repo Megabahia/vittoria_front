@@ -60,7 +60,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
   listaMetodoPago;
   listaCostoEnvio;
   mostrarInputArchivoComprobante = false;
-  costoEnvioSeleccionado;
+  mostrarDatosGmb = false;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -143,8 +143,8 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
         calleSecundaria: ['', [Validators.required]],
         referencia: ['', [Validators.required]],
         gps: ['', []],
-        codigoVendedor: [this.obtenerUsuarioLogeado.usuario.username, []],
-        nombreVendedor: [this.obtenerUsuarioLogeado.usuario.nombres + ' ' + this.obtenerUsuarioLogeado.usuario.apellidos, []],
+        codigoVendedor: ['', []],
+        nombreVendedor: ['', []],
         comprobantePago: ['', []],
       }),
       vendedor: ['', [Validators.required]],
@@ -249,14 +249,13 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       return;
     }
     this.notaPedido.get('envio').patchValue({...this.notaPedido.get('facturacion').value});
-    console.log(this.notaPedido);
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
     }
     if (confirm('Esta seguro de guardar los datos') === true) {
 
-      if (parseFloat(this.notaPedido.value.montoPrevioPago) !== parseFloat(this.notaPedido.value.total)){
+      if (this.notaPedido.value.montoPrevioPago && parseFloat(this.notaPedido.value.montoPrevioPago) !== parseFloat(this.notaPedido.value.total)){
         this.toaster.open('El monto ingresado no coincide con el total del pedido', {type: 'danger'});
         return;
       } else {
@@ -482,7 +481,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
 
   onSelectChangePago(e: any) {
     const selectedValue = e.target.value;
-    if (selectedValue === 'Previo Pago Servientrega' || selectedValue === 'Previo Pago Motorizado') {
+    if (selectedValue === 'Previo Pago Servientrega Nacional' || selectedValue === 'Previo Pago Motorizado en Quito') {
       this.mostrarInputArchivoComprobante = true;
       this.notaPedido.get('archivoMetodoPago').setValidators([Validators.required]);
       this.notaPedido.get('archivoMetodoPago').updateValueAndValidity();
@@ -496,7 +495,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       this.archivo.delete('archivoMetodoPago');
       this.mostrarInputArchivoComprobante = false;
     }
-
+    this.mostrarDatosGmb = true;
     this.paramServiceAdm.obtenerListaHijosEnvio(this.notaPedido.value.metodoPago).subscribe((result) => {
       this.listaCostoEnvio = result;
     });
@@ -510,6 +509,13 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
   onFileSelectedComprobantePago(event: any): void {
     this.archivo.append('archivoMetodoPago', event.target.files.item(0), event.target.files.item(0).name);
     this.notaPedido.get('archivoMetodoPago').setValue(event.target.files.item(0));
+
+  }
+
+  onSelectSeller(e: any){
+    const seller = this.listaUsuarios.find(value => value.username === e.target.value);
+    this.notaPedido.get('facturacion').get('codigoVendedor').setValue(seller.username);
+    this.notaPedido.get('facturacion').get('nombreVendedor').setValue(seller.nombres + ' ' +seller.apellidos);
 
   }
 

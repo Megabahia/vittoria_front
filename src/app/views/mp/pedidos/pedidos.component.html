@@ -52,7 +52,8 @@
                 <th>Metodo Pago</th>
                 <th>Provincia Envio</th>
                 <th>Ciudad Envio</th>
-                <th>comprobantePago</th>
+                <th>comprobante Pago</th>
+                <th>comprobante de pago por Vendedor</th>
                 <th>Telefono</th>
                 <th>Estado</th>
                 <th>Ver</th>
@@ -72,6 +73,12 @@
                 <td [title]="transaccion.envio.ciudad">{{ transaccion.envio.ciudad | shorten }}</td>
                 <td
                   [title]="transaccion.facturacion.comprobantePago">{{ transaccion.facturacion.comprobantePago | shorten }}
+                </td>
+                <td>
+                  <a href="{{transaccion.comprobanteVendedorGmb}}" *ngIf="transaccion.comprobanteVendedorGmb"
+                     target="_blank">
+                    <i-feather name="file-text" class="mr-25"></i-feather>
+                  </a>
                 </td>
                 <td>{{ transaccion.facturacion.telefono }}</td>
                 <td>{{ transaccion.estado }}</td>
@@ -344,15 +351,23 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-3 col-12">
-                    <label>Metodo Pago</label>
-                    <input class="form-control" type="text"
-                           formControlName="metodoPago" disabled>
-                    <div *ngIf="notaPedidoForm.metodoPago.errors"
-                         class="invalid-feedback" style="display: block;">
-                      <div *ngIf="notaPedidoForm.metodoPago.errors.required">
-                        Requerido
+                  <div class="row">
+                    <div class="col-md-3 col-12">
+                      <label>Metodo Pago</label>
+                      <input class="form-control" type="text"
+                             formControlName="metodoPago" disabled>
+                      <div *ngIf="notaPedidoForm.metodoPago.errors"
+                           class="invalid-feedback" style="display: block;">
+                        <div *ngIf="notaPedidoForm.metodoPago.errors.required">
+                          Requerido
+                        </div>
                       </div>
+                    </div>
+                    <div class="col-md-3 col-12 mt-2">
+                      <label>Ver comprobante cargado por vendedor
+                        <a href="{{notaPedido.value.comprobanteVendedorGmb}}" target="_blank" *ngIf="notaPedido.value.comprobanteVendedorGmb">Aquí</a>
+                      </label>
+
                     </div>
                   </div>
                   <div class="col-4 mt-2">
@@ -370,7 +385,8 @@
                             <div class="repeater-wrapper" data-repeater-item>
                               <div class="row">
                                 <div class="col-md-12 col-12">
-                                  <label class="d-block text-info"><strong>Canal del producto</strong>: {{ detalle.controls.canal.value }}</label>
+                                  <label class="d-block text-info"><strong>Ubicación del
+                                    producto</strong>: {{ detalle.controls.canal.value }}</label>
                                 </div>
                               </div>
                               <div class="row">
@@ -439,6 +455,12 @@
                                   </p>
                                   <label>{{ detalle.controls.valorUnitario.value }}</label>
                                 </div>
+                                <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                  <p class="card-text col-title mb-md-50 mb-0">
+                                    Descuento
+                                  </p>
+                                  <label>{{ detalle.controls.descuento.value }}%</label>
+                                </div>
                                 <div class="col-lg-1 col-12 my-lg-0 my-2">
                                   <p class="card-text col-title mb-md-50 mb-0">
                                     Total
@@ -452,29 +474,35 @@
                                     </div>
                                   </div>
                                 </div>
-                                <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                <!--<div class="col-lg-1 col-12 my-lg-0 my-2">
                                   <p class="card-text col-title mb-md-50 mb-0">
                                     Ubicación
                                   </p>
-                                  <label class="d-block text-wrap">{{ detalle.controls.canal.value | shorten}}</label>
-                                </div>
-                                <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                  <img
-                                    src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
-                                    *ngIf="detalle.controls?.imagen_principal" width="100px" height="100px" alt="">
-                                  <div *ngIf="!detalle.controls?.imagen_principal.value">
-                                    <button (click)="fileInput.click()">Seleccionar imagen</button>
-                                    <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png" style="display: none;">
+                                  <label class="d-block text-wrap">{{ detalle.controls.canal.value | shorten }}</label>
+                                </div>-->
+                                <div class="col-lg-2 col-12 my-lg-0 my-2 d-flex">
+                                  <div>
+
+                                    <img
+                                      src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
+                                      *ngIf="detalle.controls?.imagen_principal" width="100px" height="100px" alt="">
+                                    <div *ngIf="!detalle.controls?.imagen_principal.value">
+                                      <button (click)="fileInput.click()">Seleccionar imagen</button>
+                                      <input #fileInput type="file" (change)="cargarImagen(i,$event)"
+                                             accept=".jpg,.jpeg,.png" style="display: none;">
+                                    </div>
+                                  </div>
+                                  <div
+                                    class="d-flex flex-column align-items-center justify-content-between border-left border-left-black invoice-product-actions py-50">
+                                    <i-feather name="x"
+                                               class="cursor-pointer font-medium-3"
+                                               data-repeater-delete
+                                               (click)="removerItem(i)"></i-feather>
                                   </div>
 
+
                                 </div>
-                                <div
-                                  class="d-flex flex-column align-items-center justify-content-between border-left border-left-black invoice-product-actions py-50">
-                                  <i-feather name="x"
-                                             class="cursor-pointer font-medium-3"
-                                             data-repeater-delete
-                                             (click)="removerItem(i)"></i-feather>
-                                </div>
+
                               </div>
                             </div>
                           </ng-container>
@@ -542,6 +570,14 @@
                           </div>
                           <div class="invoice-total-item">
                             <p class="invoice-total-title text-primary font-weight-bold">
+                              Subtotal: ${{ notaPedido.controls.subtotal.value }}</p>
+                          </div>
+                          <div class="invoice-total-item">
+                            <p class="invoice-total-title text-primary font-weight-bold">
+                              IVA (15%): ${{ totalIva }}</p>
+                          </div>
+                          <div class="invoice-total-item">
+                            <p class="invoice-total-title text-primary font-weight-bold">
                               Total a pagar por el cliente: ${{ notaPedido.controls.total.value }}</p>
                           </div>
                         </div>
@@ -594,7 +630,8 @@
                         <div class="col-md-3 col-12">
                           <div class="form-group">
                             <label for="tipoIdentificacionEnvio">Tipo de Identificación</label>
-                            <select id="tipoIdentificacionEnvio" class="form-control" formControlName="tipoIdentificacion"
+                            <select id="tipoIdentificacionEnvio" class="form-control"
+                                    formControlName="tipoIdentificacion"
                                     (change)="onSelectChangeIdentificacionEnvio($event)">
                               <option value="" disabled>- Seleccione -</option>
                               <option value="cedula" selected>Cédula</option>
