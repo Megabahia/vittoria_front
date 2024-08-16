@@ -39,7 +39,7 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
     estado: '',
     instagram: '',
     username: '',
-    canal:'',
+    canal: '',
     pais: '',
     provincia: '',
     ciudad: '',
@@ -48,13 +48,15 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
     twitter: '',
     whatsapp: '',
     facebook: '',
+    tipoEnvio: '',
     imagen: new FormData()
   };
   empresas = [];
   provinciasOpciones;
   ciudadesOpciones;
   mostrarSpinner = false;
-
+  mostrarTipoEnvio = false;
+  listaMetodoPago;
   constructor(
     private usersService: UsersService,
     private globalParam: ParamServiceADM,
@@ -65,6 +67,10 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
     private paramServiceAdm: AdmParamService,
   ) {
     this.obtenerListaParametros();
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'METODO PAGO', '').subscribe((result) => {
+      this.listaMetodoPago = result.info;
+    });
   }
 
   get f() {
@@ -80,7 +86,7 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
       username: ['', [Validators.required]],
-      canal: ['',[Validators.required]],
+      canal: ['', [Validators.required]],
       email: ['', [Validators.required]],
       compania: ['', [Validators.required]],
       pais: ['', [Validators.required]],
@@ -89,6 +95,7 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
       telefono: ['', [Validators.required]],
       estado: ['', [Validators.required]],
       whatsapp: ['', [Validators.required]],
+      tipoEnvio: [''],
       idRol: [0, [Validators.min(1)]]
     });
     this.redesForm = this._formBuilder.group({
@@ -103,6 +110,11 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
     this.usersService.obtenerUsuario(this.idUsuario).subscribe((result) => {
       this.usuario = result;
       this.usuarioForm.patchValue({...result});
+
+      if (this.usuario.idRol === 50){
+        this.mostrarTipoEnvio = true;
+      }
+
       this.imagen = this.usuario.imagen;
       this.obtenerProvincias();
       this.obtenerCiudad();
@@ -202,5 +214,17 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
     await this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar).subscribe((result) => {
       this.canalOpciones = result.data;
     });
+  }
+
+  rolSeleccionado(e: any) {
+    if (e.target.value === '50') {
+      this.usuarioForm.get('tipoEnvio').setValidators([Validators.required]);
+      this.usuarioForm.get('tipoEnvio').updateValueAndValidity();
+      this.mostrarTipoEnvio = true;
+    } else {
+      this.usuarioForm.get('tipoEnvio').setValidators([]);
+      this.usuarioForm.get('tipoEnvio').updateValueAndValidity();
+      this.mostrarTipoEnvio = false;
+    }
   }
 }

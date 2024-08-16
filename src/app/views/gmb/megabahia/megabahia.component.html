@@ -524,8 +524,8 @@
             <!-- Product Details ends -->
             <hr class="invoice-spacing" *ngIf="mostrarDatosGmb"/>
             <h4 class="invoice-title my-2 text-warning" *ngIf="mostrarDatosGmb">Datos de usuario</h4>
-            <div class="row" *ngIf="mostrarDatosGmb">
-              <div class="col-md-4 mt-1">
+            <div class="row mt-1" *ngIf="mostrarDatosGmb">
+              <div class="col-md-4">
                 <label>Vendedor</label>
                 <select class="form-control"
                         formControlName="vendedor" (change)="onSelectSeller($event)">
@@ -542,6 +542,37 @@
                   </div>
                 </div>
               </div>
+              <div class="col-md-8 col-12" formGroupName="facturacion">
+                <div class="row">
+                  <div class="col-md-6 col-12">
+                    <label for="codigoVendedor" class="form-label">Codigo
+                      Vendedor:</label>
+                    <input type="text" class="form-control" id="codigoVendedor" formControlName="codigoVendedor"
+                           disabled
+                    />
+                    <div *ngIf="facturacionForm.codigoVendedor.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="facturacionForm.codigoVendedor.errors.required">
+                        Requerido
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <label for="nombreVendedor" class="form-label">Nombre
+                      Vendedor:</label>
+                    <input type="text" class="form-control" id="nombreVendedor" formControlName="nombreVendedor"
+                           disabled
+                    />
+                    <div *ngIf="facturacionForm.nombreVendedor.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="facturacionForm.nombreVendedor.errors.required">
+                        Requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
 
@@ -552,28 +583,17 @@
             <div formGroupName="facturacion">
               <div class="row mb-1">
                 <div class="col-md-6">
-                  <label for="codigoVendedor" class="form-label">Codigo
-                    Vendedor:</label>
-                  <input type="text" class="form-control" id="codigoVendedor" formControlName="codigoVendedor" disabled
+                  <label for="codigoUsuario" class="form-label">Codigo
+                    Usuario:</label>
+                  <input type="text" class="form-control" id="codigoUsuario" formControlName="codigoUsuario" disabled
                   />
-                  <div *ngIf="facturacionForm.codigoVendedor.errors"
-                       class="invalid-feedback" style="display: block;">
-                    <div *ngIf="facturacionForm.codigoVendedor.errors.required">
-                      Requerido
-                    </div>
-                  </div>
+
                 </div>
                 <div class="col-md-6">
-                  <label for="nombreVendedor" class="form-label">Nombre
-                    Vendedor:</label>
-                  <input type="text" class="form-control" id="nombreVendedor" formControlName="nombreVendedor" disabled
+                  <label for="nombreUsuario" class="form-label">Nombre
+                    Usuario:</label>
+                  <input type="text" class="form-control" id="nombreUsuario" formControlName="nombreUsuario" disabled
                   />
-                  <div *ngIf="facturacionForm.nombreVendedor.errors"
-                       class="invalid-feedback" style="display: block;">
-                    <div *ngIf="facturacionForm.nombreVendedor.errors.required">
-                      Requerido
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

@@ -59,7 +59,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   provinciaOpciones;
   ciudadOpcionesEnvio;
   provinciaOpcionesEnvio;
-  mostrarLabelProducto = false
+  mostrarLabelProducto = false;
+  mostrarBotonAutorizar = false;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -399,6 +400,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
+        this.mostrarBotonAutorizar = true;
       });
     }
   }

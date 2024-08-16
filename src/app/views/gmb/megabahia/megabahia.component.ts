@@ -145,6 +145,8 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
         gps: ['', []],
         codigoVendedor: ['', []],
         nombreVendedor: ['', []],
+        codigoUsuario: [this.obtenerUsuarioLogeado.usuario.username, []],
+        nombreUsuario: [this.obtenerUsuarioLogeado.full_name, []],
         comprobantePago: ['', []],
       }),
       vendedor: ['', [Validators.required]],
@@ -241,9 +243,9 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
   }
 
   async guardarDespachoMegabahia(): Promise<void> {
-    await Promise.all(this.detallesArray.controls.map((producto, index) => {
+    /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
-    }));
+    }));*/
     if (this.notaPedido.value.valorUnitario === 0) {
       this.toaster.open('Seleccione un precio que sea mayor a 0.', {type: 'danger'});
       return;
