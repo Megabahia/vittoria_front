@@ -22,6 +22,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public formaPagoForm: FormGroup;
+  public exclamoQuejaForm: FormGroup;
   public autorizarForm: FormGroup;
   menu;
   page = 1;
@@ -46,6 +47,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
   mostrarInputCobro;
   formasPago = [];
   totalPagar;
+  totalPagarQueja;
   idPedido;
   fechaFactura;
 
@@ -175,8 +177,25 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
     });
   }
 
+  iniciarFormaPagoQuejaForm(): void {
+    this.exclamoQuejaForm = this.formBuilder.group({
+      id: ['', []],
+      fechaCargaFormaPagoQueja: [this.fechaFactura],
+      tipoPagoQueja: ['', [Validators.required]],
+      fechaEmisionFacturaQueja: ['', [Validators.required]],
+      archivoFacturaQueja: ['', [Validators.required]],
+      montoSubtotalQueja: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
+      descripcionQueja: ['', [Validators.required]],
+      numeroComprobanteQueja: ['', [Validators.required]]
+    });
+  }
+
   get formasPagoForm() {
     return this.formaPagoForm['controls'];
+  }
+
+  get quejaForm() {
+    return this.exclamoQuejaForm['controls'];
   }
 
   iniciarPaginador(): void {
@@ -235,8 +254,10 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info.map((item) => {
-        const resultado = this.calculoComision(item.estado, item.montoSubtotalCliente, item.total, item.montoSubtotalAprobado);
-        return {...item, comision: resultado};
+        //const resultado = this.calculoComision(item.estado, item.montoSubtotalCliente, item.total, item.montoSubtotalAprobado);
+        //const resultadoFinal = this.calculoComisionFinal(item.estado, item.montoSubtotalQueja, item.montoSubtotalAprobadoQueja);
+        //return {...item, comision: resultado, comision_final: resultadoFinal};
+        return {...item};
       });
     });
   }
@@ -341,7 +362,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
 
     if (montoAprobado != null) {
       resultado = montoAprobado * this.comision;
-    } else if (montoSubtotal != null){
+    } else if (montoSubtotal != null) {
       resultado = montoSubtotal * this.comision;
     } else if (total != null) {
       resultado = (total / this.parametroIva) * this.comision;
@@ -350,12 +371,32 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
     return resultado.toFixed(2);
   }
 
+  calculoComisionFinal(estado, montoSubtotal, montoAprobado): string {
+    let resultado;
+    if (estado !== 'Entregado') {
+      return '--';
+    }
+
+    if (!montoSubtotal && !montoAprobado) {
+      return '--';
+    }
+
+    if (montoAprobado != null) {
+      resultado = montoAprobado * this.comision;
+    } else if (montoSubtotal != null) {
+      resultado = montoSubtotal * this.comision;
+    }
+
+    return resultado.toFixed(2);
+  }
+
   cargarFactura(modal, id): void {
+    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+
     this.totalFormaPago = 0;
     this.idPedido = id;
     this.iniciarFormaPagoForm();
     this.formaPagoForm.get('archivoFactura').setValue('');
-    this.mostrarSpinner = true;
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
       this.fechaMinima = info.created_at.slice(0, 10);
       this.formasPago = [];
@@ -365,15 +406,30 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
         this.formaPagoForm.get('tipoPago').updateValueAndValidity();
       }
       this.calcular();
-      this.mostrarSpinner = false;
-      this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
     }, (error) => this.mostrarSpinner = false);
   }
 
+  exclamarReclamo(modal, id): void {
+    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+
+    this.totalFormaPago = 0;
+    this.idPedido = id;
+    this.iniciarFormaPagoQuejaForm();
+    this.exclamoQuejaForm.get('archivoFacturaQueja').setValue('');
+    this.pedidosService.obtenerPedido(id).subscribe((info) => {
+      this.fechaMinima = info.created_at.slice(0, 10);
+      this.formasPago = [];
+      this.totalPagarQueja = info.subtotal;
+      if (modal._declarationTContainer.localNames[0] === 'quejaModal') {
+        this.exclamoQuejaForm.get('tipoPagoQueja').setValidators([Validators.required]);
+        this.exclamoQuejaForm.get('tipoPagoQueja').updateValueAndValidity();
+      }
+      this.calcular();
+    });
+  }
+
   async actualizar(): Promise<void> {
-    /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
-      return this.obtenerProducto(index);
-    }));*/
+
     this.formaPagoForm.get('archivoFactura').setValue('');
     this.formaPagoForm.get('archivoFactura').setValidators([]);
     this.formaPagoForm.get('archivoFactura').updateValueAndValidity();
@@ -408,6 +464,46 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
           this.obtenerTransacciones();
         }, error => this.toaster.open(error, {type: 'danger'}));
       }
+    }
+  }
+
+  async actualizarQueja(): Promise<void> {
+
+    this.exclamoQuejaForm.get('archivoFacturaQueja').setValue('');
+    this.exclamoQuejaForm.get('archivoFacturaQueja').setValidators([]);
+    this.exclamoQuejaForm.get('archivoFacturaQueja').updateValueAndValidity();
+
+    if (this.exclamoQuejaForm.invalid) {
+      this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
+      return;
+    }
+
+    if (confirm('Esta seguro de guardar los datos') === true) {
+      if (Number(this.totalPagarQueja) < Number(this.exclamoQuejaForm.value.montoSubtotalQueja)) {
+        this.toaster.open('El monto ingresado no debe ser mayor al monto a pagar del pedido.', {type: 'danger'});
+        return;
+      } else {
+
+        const fechaTransformada = new Date(this.exclamoQuejaForm.get('fechaEmisionFacturaQueja').value).toISOString();
+
+        const facturaFisicaValores: string[] = Object.values(this.exclamoQuejaForm.value);
+        const facturaFisicaLlaves: string[] = Object.keys(this.exclamoQuejaForm.value);
+        facturaFisicaLlaves.map((llaves, index) => {
+          if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago' && llaves !== 'facturacion' && llaves !== 'articulos') {
+            this.archivo.delete(llaves);
+            this.archivo.append(llaves, facturaFisicaValores[index]);
+          }
+        });
+        this.archivo.append('id', this.idPedido);
+        this.archivo.append('formaPago', JSON.stringify(this.formasPago));
+        this.archivo.append('fechaCargaFormaPagoQueja', this.fechaFactura);
+        this.archivo.append('fechaEmisionFacturaQueja', fechaTransformada);
+
+        this.pedidosService.actualizarPedidoQuejaFormData(this.archivo).subscribe((info) => {
+          this.modalService.dismissAll();
+          this.obtenerTransacciones();
+        }, error => this.toaster.open(error, {type: 'danger'}));
+      }
 
     }
   }
@@ -425,10 +521,26 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
     }
   }
 
+  onSelectChangeQueja(event: any): void {
+    const selectedValue = event.target.value;
+    if (selectedValue === 'rimpePopular' || selectedValue === 'facturaElectronica') {
+      this.mostrarInputComprobante = true;
+      this.exclamoQuejaForm.get('numeroComprobanteQueja').setValidators([Validators.required]);
+      this.exclamoQuejaForm.get('numeroComprobanteQueja').updateValueAndValidity();
+    } else {
+      this.mostrarInputComprobante = false;
+      this.exclamoQuejaForm.get('numeroComprobanteQueja').setValidators([]);
+      this.exclamoQuejaForm.get('numeroComprobanteQueja').updateValueAndValidity();
+    }
+  }
+
   onFileSelected(event: any): void {
     this.archivo.append('archivoFactura', event.target.files.item(0), event.target.files.item(0).name);
     this.formaPagoForm.get('archivoFactura').setValue(event.target.files.item(0).name);
   }
 
-
+  onFileSelectedQueja(event: any): void {
+    this.archivo.append('archivoFacturaQueja', event.target.files.item(0), event.target.files.item(0).name);
+    this.exclamoQuejaForm.get('archivoFacturaQueja').setValue(event.target.files.item(0).name);
+  }
 }

@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
-import {Color, Label} from 'ng2-charts';
+import {ChartDataSets} from 'chart.js';
+import {Color} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
 import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
 import {ParamService} from '../../../services/mp/param/param.service';
@@ -11,19 +11,20 @@ import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
 
-import {GmbMegabahiaService} from "../../../services/gmb/megbahia/gmb-megabahia.service";
-import {AuthService} from "../../../services/admin/auth.service";
+import {ContactosService} from '../../../services/gdc/contactos/contactos.service';
 
 @Component({
-  selector: 'app-despachos-entregados-megabahia',
-  templateUrl: './entregados.component.html',
+  selector: 'app-facturas-quejas-gdc',
+  templateUrl: './facturas_quejas.component.html',
   providers: [DatePipe]
 })
-export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
+export class FacturasQuejasComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @Input() paises;
   public notaPedido: FormGroup;
   public facturarForm: FormGroup;
+  public formaPagoForm: FormGroup;
+  public negarPedidoForm: FormGroup;
   public rechazoForm: FormGroup;
   datosProducto: FormData = new FormData();
 
@@ -31,7 +32,7 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
   page = 1;
   pageSize = 3;
   collectionSize;
-  listaMegabahias;
+  listaContactos;
   inicio = new Date();
   fin = new Date();
   transaccion: any;
@@ -41,9 +42,9 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
   provincia = '';
   ciudadOpciones;
   provinciaOpciones;
-  verificarMegabahia = false;
+  parametroIva;
   whatsapp = '';
-  correo = ''
+  correo = '';
   mostrarInputComprobante = false;
   mostrarCargarArchivo = false;
   mostrarInputTransaccion = false;
@@ -55,9 +56,10 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
   cliente;
   cedula;
   factura;
+  listaFormasPago;
+  listaPedido;
   totalIva;
-  parametroIva;
-  currentUser;
+  infoTipoPago = '';
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -73,16 +75,13 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
+    private pedidosService: PedidosService,
+    private contactosService: ContactosService,
     private paramService: ParamService,
-    private megabahiaService: GmbMegabahiaService,
     private paramServiceAdm: ParamServiceAdm,
     private productosService: ProductosService,
     private toaster: Toaster,
-    private authService: AuthService,
-
   ) {
-    this.currentUser = this.authService.currentUserValue;
-
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
     this.facturarForm = this.formBuilder.group({
@@ -112,71 +111,79 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
     this.barChartData = [this.datosTransferencias];
     this.obtenerOpciones();
     this.obtenerProvincias();
+    this.obtenerCiudad();
   }
 
   ngAfterViewInit(): void {
     this.iniciarPaginador();
-    this.obtenerMegabahiaDespacho();
+    this.obtenerContactos();
 
   }
 
   iniciarNotaPedido(): void {
     this.notaPedido = this.formBuilder.group({
+      id: ['', [Validators.required]],
       facturacion: this.formBuilder.group({
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.required, Validators.email]],
-        tipoIdentificacion: ['', [Validators.required]],
         identificacion: ['', []],
+        tipoIdentificacion: ['', []],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: [this.pais, [Validators.required]],
         provincia: ['', [Validators.required]],
         ciudad: ['', [Validators.required]],
-        callePrincipal: ['', [Validators.required]],
-        numero: ['', [Validators.required]],
-        calleSecundaria: ['', [Validators.required]],
-        referencia: ['', [Validators.required]],
-        //gps: ['', []],
         codigoVendedor: ['', []],
         nombreVendedor: ['', []],
         comprobantePago: ['', []],
       }),
-      vendedor: ['', [Validators.required]],
       articulos: this.formBuilder.array([], Validators.required),
-      total: [0, [Validators.required]],
-      subtotal: [0],
+      total: ['', [Validators.required]],
+      subtotal: ['', []],
       envioTotal: [0, [Validators.required]],
-      numeroDespacho: [this.generarID(), [Validators.required]],
+      numeroPedido: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
-      metodoPago: ['', [Validators.required]],
-      archivoMetodoPago: ['', [Validators.required]],
-      archivoComprobanteVenta: ['', [Validators.required]],
+      metodoPago: ['Contra-Entrega', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
-      canal: ['megabahia.megadescuento.com'],
-      estado: ['Pendiente de entrega'],
+      canal: ['Contacto Local'],
+      estado: ['Entregado'],
       envio: ['', []],
       envios: ['', []],
       json: ['', []],
+      numeroComprobante: [''],
       tipoPago: [''],
+      formaPago: [''],
+      numTransaccionTransferencia: [''],
+      totalCobroEfectivo: ['']
     });
   }
 
   iniciarPaginador(): void {
     this.paginator.pageChange.subscribe(() => {
-      this.obtenerMegabahiaDespacho();
+      this.obtenerContactos();
     });
   }
 
-  get autorizarFForm() {
-    return this.facturarForm['controls'];
+  iniciarFormaPagoForm(): void {
+    this.formaPagoForm = this.formBuilder.group({
+      id: [''],
+      montoSubtotalAprobadoQueja: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
+    });
   }
 
-  get rechazarFForm() {
-    return this.rechazoForm['controls'];
+  iniciarpedidoNegadooForm(): void {
+    this.negarPedidoForm = this.formBuilder.group({
+      id: ['', []],
+      motivoNegacionPedido: ['', [Validators.required]],
+    });
   }
 
-  get notaPedidoForm() {
-    return this.notaPedido['controls'];
+  get formasPagoForm() {
+    return this.formaPagoForm['controls'];
+  }
+
+  get negarForm() {
+    return this.negarPedidoForm['controls'];
   }
 
   get facturacionForm() {
@@ -196,16 +203,12 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
       id: [''],
       codigo: ['', [Validators.required]],
       articulo: ['', [Validators.required]],
-      valorUnitario: [0, [Validators.required, Validators.min(0.01)]],
+      valorUnitario: [0, [Validators.required]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
-      descuento: [0, [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]*$')]],
       imagen: ['', []],
       caracteristicas: ['', []],
-      precios: [[], []],
-      canal: [''],
-      woocommerceId: [''],
-      imagen_principal: ['', [Validators.required]]
+      descuento: [0, []]
     });
   }
 
@@ -218,45 +221,54 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
     this.calcular();
   }
 
-  obtenerMegabahiaDespacho(): void {
-    this.megabahiaService.obtenerListaMegabahiaDespachos({
-      //codigoVendedor: this.currentUser.usuario.username,
+  obtenerContactos(): void {
+    this.contactosService.obtenerListaContactos({
       telefono: this.whatsapp,
       correo: this.correo,
       page: this.page - 1,
       page_size: this.pageSize,
-      //inicio: this.inicio,
-      //fin: this.transformarFecha(this.fin),
-      //estado: ['Entregado'],
-      //canal: 'Megabahia Local'
+      estado: ['Queja'],
+      canal: 'Contacto Local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
-      this.listaMegabahias = info.info;
-      //this.listaFormasPago = info.info.formaPago;
+      this.listaContactos = info.info;
+      this.listaFormasPago = info.info.formaPago;
     });
   }
 
-  transformarFecha(fecha): string {
-    return this.datePipe.transform(fecha, 'yyyy-MM-dd');
-  }
-
-  obtenerMegabahia(modal, id): void {
+  obtenerContacto(modal, id): void {
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
-    this.megabahiaService.obtenerMegabahiaDespacho(id).subscribe((info) => {
-      if ( !info.envioTotal ){
-        info.envioTotal = 0;
+    this.contactosService.obtenerContacto(id).subscribe((info) => {
+      if (info.tipoPago === 'rimpePopular') {
+        this.mostrarInputComprobante = true;
+      } else if (info.tipoPago === 'facturaElectronica') {
+        this.mostrarInputComprobante = false;
+      } else {
+        this.mostrarInputComprobante = false;
+      }
+      if (info.formaPago === 'transferencia') {
+        this.mostrarInputTransaccion = true;
+        this.mostrarCargarArchivo = true;
+        this.mostrarInputCobro = false;
+
+      } else if (info.formaPago === 'efectivo') {
+        this.mostrarInputTransaccion = false;
+        this.mostrarCargarArchivo = false;
+        this.mostrarInputCobro = true;
+      } else {
+        this.mostrarInputTransaccion = false;
+        this.mostrarCargarArchivo = false;
+        this.mostrarInputCobro = false;
       }
       this.totalPagar = info.total;
       this.iniciarNotaPedido();
       this.horaPedido = this.extraerHora(info.created_at);
 
-      info.articulos.map((item): void => {
+      info.articulos.map((item: any): void => {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
-      this.obtenerCiudad();
       this.calcular();
-
     });
   }
 
@@ -268,13 +280,12 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
 
   async obtenerProducto(i): Promise<void> {
     return new Promise((resolve, reject) => {
-      let data = {
+      const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
         canal: this.notaPedido.value.canal,
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
-        //if(info.mensaje==''){
         if (info.codigoBarras) {
           this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
           this.detallesArray.controls[i].get('id').setValue(info.id);
@@ -306,36 +317,88 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
-    let subtotalPedido = 0;
+    let subtotalPedido: number;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
-      // tslint:disable-next-line:radix
-      const descuento = parseInt(detalles[index].get('descuento').value);
-      if (descuento > 0 && descuento <= 100) {
-        const totalDescuento = (valorUnitario * descuento) / 100;
-        detalles[index].get('precio').setValue((((valorUnitario - totalDescuento) * cantidad)).toFixed(2));
-      } else {
-        detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
-      }
+      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       total += parseFloat(detalles[index].get('precio').value);
     });
-    total += parseFloat(this.notaPedido.get('envioTotal').value);
     subtotalPedido = total / this.parametroIva;
     this.totalIva = (total - subtotalPedido).toFixed(2);
     this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
     this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 
+  obtenerPedido(id): void {
+    this.contactosService.obtenerContacto(id).subscribe((info) => {
+      if (info.tipoPagoQueja === 'rimpePopular') {
+        this.infoTipoPago = 'Rimpe popular';
+      } else if (info.tipoPagoQueja === 'facturaElectronica') {
+        this.infoTipoPago = 'Factura electrónica';
+      }
+      this.listaPedido = info;
+      this.formaPagoForm.get('id').setValue(info.id);
+      //this.formaPagoForm.get('montoSubtotalAprobado').setValue(info.montoSubtotalCliente);
+    });
+  }
+
+
+  async actualizarContactoAprobado(): Promise<void> {
+    if (this.formaPagoForm.invalid) {
+      this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
+      return;
+    }
+
+    if (confirm('Esta seguro de guardar los datos') === true) {
+      this.contactosService.actualizarAprobarcionContactoQueja(this.formaPagoForm.value.id, 'Entregado', Number(this.formaPagoForm.value.montoSubtotalAprobadoQueja))
+        .subscribe((info) => {
+          this.toaster.open('Despacho aprobado', {type: 'success'});
+          this.obtenerContactos();
+          this.modalService.dismissAll();
+        }, error => this.toaster.open(error, {type: 'danger'}));
+      /*if (Number(this.formaPagoForm.value.montoSubtotalAprobadoQueja) > Number(this.listaPedido.subtotal)) {
+        this.toaster.open('El valor no debe exceder el monto subtotal del pedido', {type: 'danger'});
+        return;
+      } else {
+
+      }*/
+    }
+  }
+
+  async aprobarContacto(modal, id): Promise<void> {
+    this.iniciarFormaPagoForm();
+    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+    this.obtenerPedido(id);
+  }
+
+  async actualizarNegarContacto(): Promise<void> {
+    if (this.negarPedidoForm.invalid) {
+      this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
+      return;
+    }
+
+    if (confirm('Esta seguro de guardar los datos') === true) {
+      this.contactosService
+        .actualizarNegacionContacto(this.negarPedidoForm.value.id, 'Pedido Negado', this.negarPedidoForm.value.motivoNegacionPedido)
+        .subscribe((info) => {
+          this.toaster.open('Despacho negado', {type: 'info'});
+          this.obtenerContactos();
+          this.modalService.dismissAll();
+
+        }, error => this.toaster.open(error, {type: 'info'}));
+    }
+  }
+
+  async negarContacto(modal, id): Promise<void> {
+    this.iniciarpedidoNegadooForm();
+    this.negarPedidoForm.get('id').setValue(id);
+    this.modalService.open(modal, {size: 'sm', backdrop: 'static'});
+
+  }
+
   obtenerFechaActual(): Date {
-    //const fecha= new Date();
-    //const dia= fecha.getDate().toString().padStart(2, '0');
-    //const mes= (fecha.getMonth() + 1).toString().padStart(2, '0');
-    //const anio= fecha.getFullYear().toString();
-    const fechaActual = new Date();
-
-    return fechaActual;
-
+    return new Date();
   }
 
   formatearFecha(): string {
@@ -364,31 +427,9 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onSelectChange(event: any) {
+  onSelectChange(event: any): void {
     const selectedValue = event.target.value;
-    if (selectedValue === 'rimpePopular') {
-      this.mostrarInputComprobante = true;
-    } else {
-      this.mostrarInputComprobante = false;
-    }
-  }
-
-  onSelectChangeFormaPago(event: any) {
-    const selectedValue = event.target.value;
-    if (selectedValue === 'transferencia') {
-      this.mostrarInputTransaccion = true;
-      this.mostrarCargarArchivo = true;
-      this.mostrarInputCobro = false;
-
-    } else if (selectedValue === 'efectivo') {
-      this.mostrarInputTransaccion = false;
-      this.mostrarCargarArchivo = false;
-      this.mostrarInputCobro = true;
-    } else {
-      this.mostrarInputTransaccion = false;
-      this.mostrarCargarArchivo = false;
-      this.mostrarInputCobro = false;
-    }
+    this.mostrarInputComprobante = selectedValue === 'rimpePopular';
   }
 
   onFileSelected(event: any): void {
@@ -397,59 +438,24 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
     // this.fileToUpload = event.target.files.item(0);
   }
 
-  guardarComprobanteTransferencia(): void {
-    if (this.archivo) {
-      const formData = new FormData();
-      formData.append('archivoFormaPago', this.fileToUpload, this.fileToUpload.name);
-    }
-  }
-
-  guardarArchivoTransaccion() {
-    if (this.archivo) {
-      const formData = new FormData();
-      formData.append('archivoFormaPago', 'asjfasijfnaskfjasfiasn');
-      formData.append('id', '555555');
-      //this.MegabahiasService.actualizarVentaFormData(formData)
-      //  .subscribe(() => {
-      //    this.modalService.dismissAll();
-      //  });
-
-    } else {
-      console.error('No se ha seleccionado ningún archivo.');
-    }
-
-  }
-
-  cargarImagen(i, event: any): void {
-    this.datosProducto = new FormData();
-
-    const id = this.detallesArray.controls[i].get('id').value;
-    const archivo = event.target.files[0];
-    if (archivo) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const nuevaImagen = e.target.result;
-        this.detallesArray.controls[i].get('imagen').setValue(nuevaImagen);
-        this.datosProducto.append('imagenes[' + 0 + ']id', '0');
-        this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
-        this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
-
-        try {
-          this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
-            this.toaster.open('Imagen actualizada con éxito', {type: "info"});
-          }, error => this.toaster.open('Error al actualizar la imagen.', {type: "danger"}));
-        } catch (error) {
-          this.toaster.open('Error al actualizar la imagen.', {type: "danger"});
-        }
-      };
-      reader.readAsDataURL(archivo);
-
-    }
-  }
 
   extraerHora(dateTimeString: string): string {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(' ')[0];
+  }
+
+  formatearFechaYAgregarDia(fechaStr: string): string {
+    if (!fechaStr) {
+      return '';
+    }
+
+    const fecha = new Date(fechaStr);
+    fecha.setDate(fecha.getDate() + 1); // Añade un día
+
+    const dia = fecha.getDate().toString().padStart(2, '0');
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // getMonth() es 0-index
+    const anio = fecha.getFullYear();
+    return `${dia}-${mes}-${anio}`;
   }
 
 }

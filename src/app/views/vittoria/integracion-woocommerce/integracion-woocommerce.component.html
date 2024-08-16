@@ -41,6 +41,7 @@
                 </th>
                 <th>Valor</th>
                 <th>Prefijo</th>
+                <th>Bodega central</th>
                 <th>Acciones</th>
               </tr>
               </thead>
@@ -54,6 +55,16 @@
                 </td>
                 <td> {{ parametro.valor }}</td>
                 <td> {{ parametro.prefijo }}</td>
+                <td>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input"
+                           id="customCheckBodegaCentral{{i}}"
+                           [(ngModel)]="parametro.bodega_central"
+                           (change)="onSelectCheckBodegaCentral(parametro, $event)"
+                    />
+                    <label class="custom-control-label" for="customCheckBodegaCentral{{i}}"></label>
+                  </div>
+                </td>
                 <td>
                   <a data-toggle="modal" data-target="#modals-slide-in"
                      (click)="editarParametro(parametro.id)">

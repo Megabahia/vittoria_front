@@ -147,19 +147,13 @@
         </div>
       </div>
       <div class="row" *ngIf="mostrarDatosEnvio">
-        <div class="w-100 m-1 text-right">
-          <button class="btn btn-warning mb-0 pb-0" (click)="verCarrito(miCarrito)">
-            Ver mi carrito
-            <i-feather name="shopping-bag"></i-feather>
-            <strong>{{ carrito.length }}</strong>
-          </button>
-        </div>
         <div class="container mt-1" style="border-color: #007bff !important;">
           <div class="row" *ngFor="let item of integracionEnvio; let i = index">
             <div class="col-md-12">
               <div class="card bg-light border shadow-lg">
                 <div class="px-1 bg-info">
-                    <h3 class="text-white p-1">Información del producto #{{ i + 1 }}</h3>
+                  <h3 class="text-white p-1">Información del producto en la tienda
+                    <strong>{{ item.datos_producto.tienda }}</strong></h3>
                 </div>
                 <div class="card-body">
                   <!-- Información de Envío -->
@@ -260,17 +254,37 @@
                     </div>
                   </div>
                 </div>
-                <div class="card-footer bg-info">
+                <div class="card-footer bg-light-info">
                   <div class="text-right">
-                    <button class="btn btn-light mb-0 pb-0" (click)="agregarCarrito(miCarrito, item.datos_producto)">
+                    <button class="btn btn-info mb-0 pb-0" (click)="agregarCarrito(miCarrito, item.datos_producto)"
+                            *ngIf="item.datos_producto.bodega_central === 1; else botonGenerarPedido">
                       Añadir al carrito
                       <i-feather name="shopping-cart"></i-feather>
                     </button>
+                    <ng-template #botonGenerarPedido>
+                      <button class="btn btn-info mb-0 pb-0"
+                         (click)="generarPedido(item.datos_producto)">
+                        Generar Pedido
+                        <i-feather name="package"></i-feather>
+                      </button>
+                      <!--<button class="btn btn-info mb-0 pb-0" (click)="generarPedido(item.datos_producto)">
+                        Generar Pedido
+                        <i-feather name="package"></i-feather>
+                      </button>-->
+                    </ng-template>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+        <div class="w-100 m-1 text-right">
+          <button class="btn btn-warning position-fixed mb-0 pb-0" style="top: 20px; right: 25px"
+                  (click)="verCarrito(miCarrito)">
+            Ver mi carrito
+            <i-feather name="shopping-bag"></i-feather>
+            <strong>{{ carrito.length }}</strong>
+          </button>
         </div>
       </div>
     </div>

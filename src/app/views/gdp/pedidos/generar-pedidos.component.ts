@@ -33,6 +33,9 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   public rechazoForm: FormGroup;
   datosProducto: FormData = new FormData();
 
+  productoDesdeConsulta: any;
+  productoNuevoCodigo = '';
+
   menu;
   page = 1;
   pageSize = 3;
@@ -49,13 +52,13 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   provinciaOpciones;
   verificarContacto = false;
   whatsapp = '';
-  correo = ''
+  correo = '';
   usuarioActual;
   canalSeleccionado = 'megabahia.megadescuento.com';
-  cedulaABuscar = ''
+  cedulaABuscar = '';
   clientes;
   cliente;
-  cedula
+  cedula;
   parametroDireccion;
   descuentoCupon;
   myAngularxCode;
@@ -79,6 +82,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
   parametroIva;
+
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -91,6 +95,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     private productosService: ProductosService,
     private toaster: Toaster,
   ) {
+
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
     this.autorizarForm = this.formBuilder.group({
@@ -128,10 +133,16 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       modulo: 'mdm',
       seccion: 'clientesTransac'
     };
+    this.canalSeleccionado = 'megabahia.megadescuento.com';
+    this.iniciarNotaPedido();
+    this.obtenerListaProductos();
+    this.cedulaABuscar = '';
     this.barChartData = [this.datosTransferencias];
     this.obtenerOpciones();
     this.obtenerProvincias();
     this.obtenerCiudad();
+
+    this.obtenerProductoDesdeConsulta();
   }
 
   ngAfterViewInit(): void {
@@ -276,7 +287,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
           this.obtenerContactos();
           this.abrirModalCupon(notaPedidoModal);
           this.myAngularxCode = `Numero de pedido: ${info.numeroPedido}`;
-
+          this.toaster.open('Pedido creado. Creando cupón...', {type: 'info'});
           this.captureScreen();
 
         }, error => this.toaster.open(error, {type: 'danger'})
@@ -381,9 +392,9 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
       delete info.articulos;
       this.notaPedido.patchValue({...info});
-      this.toaster.open('Captura realizada correctamente', {type: 'info'})
+      this.toaster.open('Cupón creado. Captura realizada', {type: 'info'});
       this.imagenCargada = true;
-    }, error => this.toaster.open(error, {type: 'danger'}))
+    }, error => this.toaster.open(error, {type: 'danger'}));
 
   }
 
@@ -439,7 +450,6 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   obtenerClienteCedula(): void {
 
     if (this.cedulaABuscar !== '') {
-
       this.clientesService.obtenerClientePorCedula({cedula: this.cedulaABuscar}).subscribe((info) => {
         this.notaPedido.get('facturacion').get('nombres').setValue(info.nombres);
         this.notaPedido.get('facturacion').get('apellidos').setValue(info.apellidos);
@@ -463,7 +473,10 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
         this.obtenerCiudad();
 
         //this.notaPedido.get('facturacion').get('identificacion').enable();
-      })
+      });
+    } else {
+      this.toaster.open('Ingrese una cédula', {type: 'danger'});
+      return;
     }
   }
 
@@ -592,6 +605,18 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     }
     this.tipoIdentificacion = selectedValue
 
+  }
+
+  obtenerProductoDesdeConsulta(){
+    const data = localStorage.getItem('productoData');
+    if (data) {
+      this.productoDesdeConsulta = JSON.parse(data);
+      console.log(this.productoDesdeConsulta);
+      this.agregarItem();
+      this.detallesArray.controls[0].get('codigo').setValue(this.productoDesdeConsulta.codigoBarras);
+      this.obtenerProducto(0)
+      localStorage.removeItem('productoData');
+    }
   }
 
 }

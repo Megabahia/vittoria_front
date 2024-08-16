@@ -4,6 +4,7 @@ import {Color} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
 import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
 import {ParamService} from '../../../services/mp/param/param.service';
+//import {ParamService as ParamServiceMdm} from '../../../services/mdm/param/param.service';
 import {ParamService as ParamServiceAdm} from '../../../services/admin/param.service';
 
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -59,7 +60,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
   listaMetodoPago;
   listaCostoEnvio;
   mostrarInputArchivoComprobante = false;
-  costoEnvioSeleccionado;
+  mostrarDatosGmb = false;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -108,9 +109,6 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       this.listaMetodoPago = result.info;
     });
 
-    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'COSTO ENVIO', '').subscribe((result) => {
-      this.listaCostoEnvio = result.info;
-    });
   }
 
   ngOnInit(): void {
@@ -144,9 +142,9 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
         numero: ['', [Validators.required]],
         calleSecundaria: ['', [Validators.required]],
         referencia: ['', [Validators.required]],
-        //gps: ['', []],
-        codigoUsuario: [this.obtenerUsuarioLogeado.usuario.username, []],
-        nombreUsuario: [this.obtenerUsuarioLogeado.usuario.nombres + ' ' + this.obtenerUsuarioLogeado.usuario.apellidos, []],
+        gps: ['', []],
+        codigoVendedor: ['', []],
+        nombreVendedor: ['', []],
         comprobantePago: ['', []],
       }),
       vendedor: ['', [Validators.required]],
@@ -157,15 +155,31 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       numeroDespacho: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['', [Validators.required]],
-      archivoMetodoPago: ['', [Validators.required]],
-      archivoComprobanteVenta: ['', [Validators.required]],
+      archivoMetodoPago: [''],
+      archivoComprobanteVenta: [''],
       verificarPedido: [true, [Validators.required]],
       canal: ['megabahia.megadescuento.com'],
       estado: ['Pendiente de entrega'],
-      envio: ['', []],
+      envio: this.formBuilder.group({
+        nombres: ['', []],
+        apellidos: ['', []],
+        correo: ['', []],
+        tipoIdentificacion: ['', []],
+        identificacion: ['', []],
+        telefono: ['', []],
+        pais: [this.pais, []],
+        provincia: ['', []],
+        ciudad: ['', []],
+        callePrincipal: ['', []],
+        numero: ['', []],
+        calleSecundaria: ['', []],
+        referencia: ['', []],
+        gps: ['', []],
+      }),
       envios: ['', []],
       json: ['', []],
       tipoPago: [''],
+      montoPrevioPago: ['']
     });
   }
 
@@ -223,7 +237,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
     this.obtenerProvincias();
     this.obtenerCiudad();
     this.formatearFecha();
-    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+    this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
   }
 
   async guardarDespachoMegabahia(): Promise<void> {
@@ -234,34 +248,40 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       this.toaster.open('Seleccione un precio que sea mayor a 0.', {type: 'danger'});
       return;
     }
+    this.notaPedido.get('envio').patchValue({...this.notaPedido.get('facturacion').value});
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
     }
     if (confirm('Esta seguro de guardar los datos') === true) {
-      const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
-      const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
-      facturaFisicaLlaves.map((llaves, index) => {
-        if (llaves !== 'archivoMetodoPago' && llaves !== 'archivoComprobanteVenta') {
-          if (llaves === 'articulos' || llaves === 'facturacion') {
-            this.archivo.delete(llaves);
-            this.archivo.append(llaves, JSON.stringify(facturaFisicaValores[index]));
-          } else {
-            this.archivo.delete(llaves);
-            this.archivo.append(llaves, facturaFisicaValores[index]);
-          }
-        }
-      });
-      this.archivo.delete('envio')
-      this.archivo.delete('envios')
-      this.archivo.delete('json')
-      this.archivo.delete('tipoPago')
 
-      this.megabahiaService.crearNuevoMegabahiaDespacho(this.archivo).subscribe((info) => {
-          this.modalService.dismissAll();
-          this.notaPedido.patchValue({...info});
-        }, error => this.toaster.open(error, {type: 'danger'})
-      );
+      if (this.notaPedido.value.montoPrevioPago && parseFloat(this.notaPedido.value.montoPrevioPago) !== parseFloat(this.notaPedido.value.total)){
+        this.toaster.open('El monto ingresado no coincide con el total del pedido', {type: 'danger'});
+        return;
+      } else {
+        const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
+        const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
+        facturaFisicaLlaves.map((llaves, index) => {
+          if (llaves !== 'archivoMetodoPago' && llaves !== 'archivoComprobanteVenta') {
+            if (llaves === 'articulos' || llaves === 'facturacion' || llaves === 'envio') {
+              this.archivo.delete(llaves);
+              this.archivo.append(llaves, JSON.stringify(facturaFisicaValores[index]));
+            } else {
+              this.archivo.delete(llaves);
+              this.archivo.append(llaves, facturaFisicaValores[index]);
+            }
+          }
+        });
+        this.archivo.delete('envios');
+        this.archivo.delete('json');
+        this.archivo.delete('tipoPago');
+
+        this.megabahiaService.crearNuevoMegabahiaDespacho(this.archivo).subscribe((info) => {
+            this.modalService.dismissAll();
+            this.notaPedido.patchValue({...info});
+          }, error => this.toaster.open(error, {type: 'danger'})
+        );
+      }
     }
   }
 
@@ -324,11 +344,15 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
       // tslint:disable-next-line:radix
       const descuento = parseInt(detalles[index].get('descuento').value);
-      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      if (descuento > 0 && descuento <= 100) {
+        const totalDescuento = (valorUnitario * descuento) / 100;
+        detalles[index].get('precio').setValue((((valorUnitario - totalDescuento) * cantidad)).toFixed(2));
+      } else {
+        detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      }
       total += parseFloat(detalles[index].get('precio').value);
     });
     total += parseFloat(this.notaPedido.get('envioTotal').value);
-
     subtotalPedido = total / this.parametroIva;
     this.totalIva = (total - subtotalPedido).toFixed(2);
     this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
@@ -457,16 +481,24 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
 
   onSelectChangePago(e: any) {
     const selectedValue = e.target.value;
-    if (selectedValue === 'previo_pago_servientrega' || selectedValue === 'previo_pago_motorizado') {
+    if (selectedValue === 'Previo Pago Servientrega Nacional' || selectedValue === 'Previo Pago Motorizado en Quito') {
       this.mostrarInputArchivoComprobante = true;
       this.notaPedido.get('archivoMetodoPago').setValidators([Validators.required]);
       this.notaPedido.get('archivoMetodoPago').updateValueAndValidity();
+      this.notaPedido.get('montoPrevioPago').setValidators([Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]);
+      this.notaPedido.get('montoPrevioPago').updateValueAndValidity();
     } else {
       this.notaPedido.get('archivoMetodoPago').setValidators([]);
       this.notaPedido.get('archivoMetodoPago').updateValueAndValidity();
+      this.notaPedido.get('montoPrevioPago').setValidators([]);
+      this.notaPedido.get('montoPrevioPago').updateValueAndValidity();
       this.archivo.delete('archivoMetodoPago');
       this.mostrarInputArchivoComprobante = false;
     }
+    this.mostrarDatosGmb = true;
+    this.paramServiceAdm.obtenerListaHijosEnvio(this.notaPedido.value.metodoPago).subscribe((result) => {
+      this.listaCostoEnvio = result;
+    });
   }
 
   onFileSelectedComprobanteVenta(event: any): void {
@@ -477,6 +509,13 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
   onFileSelectedComprobantePago(event: any): void {
     this.archivo.append('archivoMetodoPago', event.target.files.item(0), event.target.files.item(0).name);
     this.notaPedido.get('archivoMetodoPago').setValue(event.target.files.item(0));
+
+  }
+
+  onSelectSeller(e: any){
+    const seller = this.listaUsuarios.find(value => value.username === e.target.value);
+    this.notaPedido.get('facturacion').get('codigoVendedor').setValue(seller.username);
+    this.notaPedido.get('facturacion').get('nombreVendedor').setValue(seller.nombres + ' ' +seller.apellidos);
 
   }
 

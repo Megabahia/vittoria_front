@@ -26,7 +26,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   public autorizarForm: FormGroup;
   public rechazoForm: FormGroup;
   datosProducto: FormData = new FormData();
-
+  parametroIva
+  totalIva
   menu;
   page = 1;
   pageSize = 3;
@@ -85,6 +86,10 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       motivo: ['', [Validators.required]],
       estado: ['Rechazado', [Validators.required]],
     });
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
+      this.parametroIva = parseFloat(result.info[0].valor);
+    });
   }
 
   ngOnInit(): void {
@@ -142,12 +147,14 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
+      subtotal: ['', [Validators.required]],
       envioTotal: ['', [Validators.required]],
       numeroPedido: ['', [Validators.required]],
       created_at: ['', [Validators.required]],
       metodoPago: ['', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
       canal: ['', []],
+      comprobanteVendedorGmb: ['']
     });
   }
 
@@ -190,6 +197,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
       imagen: ['', []],
+      descuento: [0],
       caracteristicas: ['', []],
       bodega: ['', []],
       canal: [''],
@@ -250,6 +258,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       info.articulos.forEach((item, index) => {
         this.obtenerProducto(index);
       });
+
+      this.calcular();
     });
   }
 
@@ -270,7 +280,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     return new Promise((resolve, reject) => {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
-        canalProducto: this.detallesArray.value[i].canal,
+        canalProducto: this.detallesArray.value[i].canal || this.notaPedido.value.canal,
         canal: this.notaPedido.value.canal,
         valorUnitario: Number(this.detallesArray.controls[i].value.valorUnitario).toFixed(2)
       };
@@ -290,7 +300,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
                 this.detallesArray.controls[i].get('id').setValue(info.id);
                 this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
                 this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-                const precioProducto = info.precio;
+                const precioProducto = info.precioVentaA;
                 this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
                 this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
                 this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
@@ -325,7 +335,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
             this.detallesArray.controls[i].get('id').setValue(info.id);
             this.detallesArray.controls[i].get('articulo').setValue(info.nombre || info.articulo);
             this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-            const precioProducto = info.precio;
+            const precioProducto = info.precioVentaA;
             this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
             this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
             this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
@@ -349,13 +359,24 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
+    let subtotalPedido = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
-      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      // tslint:disable-next-line:radix
+      const descuento = parseInt(detalles[index].get('descuento').value);
+      if (descuento > 0 && descuento <= 100) {
+        const totalDescuento = (valorUnitario * descuento) / 100;
+        detalles[index].get('precio').setValue((((valorUnitario - totalDescuento) * cantidad)).toFixed(2));
+      } else {
+        detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      }
       total += parseFloat(detalles[index].get('precio').value);
     });
-    total += this.notaPedido.get('envioTotal').value;
+    total += parseFloat(this.notaPedido.get('envioTotal').value);
+    subtotalPedido = total / this.parametroIva;
+    this.totalIva = (total - subtotalPedido).toFixed(2);
+    this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
     this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 
@@ -371,6 +392,9 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     if (!this.ciudadPresenteFacturacion || !this.ciudadPresenteEnvio) {
       return;
     }
+
+    delete this.notaPedido.value.comprobanteVendedorGmb;
+
     if (confirm('Esta seguro de actualizar los datos') === true) {
       this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();

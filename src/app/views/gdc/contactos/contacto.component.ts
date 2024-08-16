@@ -669,12 +669,14 @@ export class ContactoComponent implements OnInit, AfterViewInit {
   quitarPagoTransferencia() {
     this.eliminarDatoArregloFormaPago('transferencia');
     this.archivo.delete('archivoFormaPago');
+    this.notaPedido.get('numTransaccionTransferencia').setValue('');
     this.notaPedido.get('montoTransferencia').setValue(0);
-    this.calcularTotalFormaPago();
     this.notaPedido.get('numTransaccionTransferencia').setValidators([]);
     this.notaPedido.get('numTransaccionTransferencia').updateValueAndValidity();
     this.notaPedido.get('montoTransferencia').setValidators([]);
+    this.notaPedido.get('montoTransferencia').setValue(0);
     this.notaPedido.get('montoTransferencia').updateValueAndValidity();
+    this.calcularTotalFormaPago();
     this.mostrarCargarArchivo = false;
     this.mostrarInputTransaccion = false;
   }
@@ -684,6 +686,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
     this.mostrarCargarArchivoCredito = false;
     this.archivo.delete('archivoFormaPagoCredito');
     this.notaPedido.get('montoCredito').setValue(0);
+    this.notaPedido.get('numTransaccionCredito').setValue('');
     this.calcularTotalFormaPago();
     this.notaPedido.get('numTransaccionCredito').setValidators([]);
     this.notaPedido.get('numTransaccionCredito').updateValueAndValidity();

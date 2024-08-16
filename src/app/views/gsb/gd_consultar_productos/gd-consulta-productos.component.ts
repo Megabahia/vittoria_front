@@ -1,32 +1,24 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ValidacionesPropias} from "../../../utils/customer.validators";
-import {ParamService as ParamServiceAdm} from "../../../services/admin/param.service";
-import {PedidosService} from "../../../services/mp/pedidos/pedidos.service";
-import {logger} from "codelyzer/util/logger";
-import {Toaster} from "ngx-toast-notifications";
-import {IntegracionesEnviosService} from "../../../services/admin/integraciones_envios.service";
-import {ProductosService} from "../../../services/mdp/productos/productos.service";
-import {AuthService} from "../../../services/admin/auth.service";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {environment} from "../../../../environments/environment";
-import Decimal from "decimal.js";
-
-interface ProductoProcesado {
-  canal?: string;
-
-  [key: string]: any; // Esto permite cualquier nombre de clave adicional
-}
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ParamService as ParamServiceAdm} from '../../../services/admin/param.service';
+import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
+import {logger} from 'codelyzer/util/logger';
+import {Toaster} from 'ngx-toast-notifications';
+import {IntegracionesEnviosService} from '../../../services/admin/integraciones_envios.service';
+import {ProductosService} from '../../../services/mdp/productos/productos.service';
+import {AuthService} from '../../../services/admin/auth.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {environment} from '../../../../environments/environment';
 
 @Component({
-  selector: 'app-consulta-productos',
-  templateUrl: './consulta-productos.component.html',
-  styleUrls: ['./consulta-productos.component.css']
+  selector: 'app-gd-consulta-productos',
+  templateUrl: './gd-consulta-productos.component.html',
+  styleUrls: ['./gd-consulta-productos.component.css']
 })
 
 
-export class ConsultaProductosComponent implements OnInit {
+export class GdConsultaProductosComponent implements OnInit {
 
   @Input() paises;
   public notaPedido: FormGroup;
@@ -78,24 +70,6 @@ export class ConsultaProductosComponent implements OnInit {
     private authService: AuthService,
     private modalService: NgbModal,
   ) {
-    /*const ref = document.referrer;
-    const host = document.location.host;
-    if (ref !== 'https://superbarato.megadescuento.com/') {
-      if (host !== '209.145.61.41:4201') {
-        this._router.navigate([
-          '/auth/signin'
-        ]);
-        localStorage.clear();
-        return;
-      }
-    }*/
-    const navbar = document.getElementById('navbar');
-    const toolbar = document.getElementById('toolbar');
-    if (navbar && toolbar) {
-      navbar.style.display = 'none';
-      toolbar.style.display = 'none';
-    }
-
   }
 
   ngOnInit(): void {

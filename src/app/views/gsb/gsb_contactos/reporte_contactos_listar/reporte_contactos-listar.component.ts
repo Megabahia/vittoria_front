@@ -12,6 +12,7 @@ import {ContactosService} from '../../../../services/mdm/personas/contactos/cont
 import {SuperBaratoService} from '../../../../services/gsb/superbarato/super-barato.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {ValidacionesPropias} from "../../../../utils/customer.validators";
+import {AuthService} from "../../../../services/admin/auth.service";
 
 @Component({
   selector: 'app-gsb-reporte-contactos-listar',
@@ -67,7 +68,7 @@ export class ReporteContactosListarComponent implements OnInit, AfterViewInit {
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
   canalPrincipal = '';
-
+  currentUser;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -77,7 +78,10 @@ export class ReporteContactosListarComponent implements OnInit, AfterViewInit {
     private superBaratoService: SuperBaratoService,
     private toaster: Toaster,
     private productosService: ProductosService,
+    private authService: AuthService,
   ) {
+    this.currentUser = this.authService.currentUserValue;
+
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
 
@@ -221,6 +225,7 @@ export class ReporteContactosListarComponent implements OnInit, AfterViewInit {
     this.contactoService.obtenerLista({
       page: this.page - 1,
       page_size: this.pageSize,
+      nombreUsuario: `${this.currentUser.usuario.nombres} ${this.currentUser.usuario.apellidos}`
       //inicio: this.inicio,
       //fin: this.transformarFecha(this.fin),
     }).subscribe((info) => {
