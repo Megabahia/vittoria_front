@@ -1,7 +1,7 @@
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from 'src/environments/environment';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 const apiUrl: string = environment.apiUrl;
 
@@ -45,6 +45,7 @@ export interface Producto {
   peso;
   tamanio;
   link_catalogo;
+  link_tienda;
 }
 
 export interface FichaTecnicaProducto {
@@ -59,6 +60,10 @@ export interface FichaTecnicaProducto {
   providedIn: 'root'
 })
 export class ProductosService {
+
+  //COMPARTIR DATOS
+  private dataSource = new BehaviorSubject<any>(null);
+  currentData = this.dataSource.asObservable();
 
   constructor(private http: HttpClient) {
   }
@@ -118,7 +123,8 @@ export class ProductosService {
       ],
       peso: 0,
       tamanio: 0,
-      link_catalogo: ''
+      link_catalogo: '',
+      link_tienda: ''
     };
   }
 
@@ -130,6 +136,10 @@ export class ProductosService {
       nombreAtributo: '',
       valor: ''
     };
+  }
+
+  updateData(data: any) {
+    this.dataSource.next(data);
   }
 
   obtenerListaProductos(datos) {

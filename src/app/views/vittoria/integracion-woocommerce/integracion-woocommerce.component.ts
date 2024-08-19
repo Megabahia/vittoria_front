@@ -70,6 +70,8 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
     this.funcion = 'insertar';
     this.paramForm.reset();
     this.paramForm.get('pais').setValue(this.pais);
+    this.obtenerProvincias();
+
   }
 
 
@@ -92,7 +94,6 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
       }),
       despachos_omniglobal: [0, []],
       valor: ['', [Validators.required]],
-      //MIGRACION
       tipoCanal: ['', [Validators.required]],
       pais: [this.pais, [Validators.required]],
       provincia: ['', [Validators.required]],
@@ -100,13 +101,13 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
       sector: [''],
       latitud: [''],
       longitud: [''],
-      prefijo: ['', [Validators.required, Validators.maxLength(4)]]
+      prefijo: ['', [Validators.required, Validators.maxLength(4)]],
+      bodega_central: [0, []],
     });
     this.menu = {
       modulo: 'adm',
       seccion: 'param'
     };
-
     this.obtenerProvincias();
   }
 
@@ -142,11 +143,13 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   }
 
   async editarParametro(id): Promise<void> {
+    this.paramForm.reset();
     this.idParametro = id;
     this.funcion = 'editar';
     await this.integracionesService.obtenerIntegracion(id).subscribe(async (result) => {
       this.paramForm.patchValue({...result});
-      this.obtenerCiudad();
+      await this.obtenerCiudad();
+      await this.obtenerSector();
     });
   }
 
@@ -242,6 +245,20 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
 
   }
 
+  onSelectCheckBodegaCentral(datos, event: any): void {
+    const inputElement = event.target as HTMLInputElement;
+    const bodegaCentral = inputElement.checked ? 1 : 0;
+    this.paramForm.patchValue({...datos});
+    this.paramForm.get('bodega_central').setValue(bodegaCentral);
+    this.integracionesService.editarIntegracion(this.paramForm.value).subscribe((result) => {
+        this.obtenerListaParametros();
+        this.toaster.open('Parámetro actualizado', {type: 'success'});
+      },
+      (error) => {
+        this.toaster.open(error, {type: 'danger'});
+      });
+  }
+
   onSelectCheckDespacho(event: any): void {
     const inputElement = event.target as HTMLInputElement;
     this.habilitarDatosDespacho = inputElement.checked ? 1 : 0;
@@ -275,7 +292,7 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   }
 
   obtenerCiudad(): void {
-    this.paramServiceAdm.obtenerListaHijos(this.provincia, 'PROVINCIA').subscribe((info) => {
+    this.paramServiceAdm.obtenerListaHijos(this.paramForm.value.provincia, 'PROVINCIA').subscribe((info) => {
       this.ciudadOpciones = info;
     });
   }

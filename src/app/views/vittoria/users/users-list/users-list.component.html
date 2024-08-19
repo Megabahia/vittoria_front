@@ -320,6 +320,19 @@
                         <div *ngIf="f.idRol.errors">Rol es requerido</div>
                       </div>
                     </div>
+                    <div class="form-group">
+                      <label class="form-label">Tipo de envío courier</label>
+                      <select class="form-control form-control-lg"
+                              formControlName="tipoEnvio" [(ngModel)]="nuevoUsuario.tipoEnvio">
+                        <option value="" selected>- Seleccione tipo de envío-</option>
+                        <option value="{{pago.nombre}}" *ngFor="let pago of listaMetodoPago">
+                          {{ pago.nombre }}
+                        </option>
+                      </select>
+                      <div *ngIf="submitted && f.tipoEnvio.errors" class="invalid-feedback" style="display: block;">
+                        <div *ngIf="f.tipoEnvio.errors">Tipo de envío es requerido</div>
+                      </div>
+                    </div>
                     <button class="btn btn-primary mr-1" aria-label="Close" (click)="guardarUsuario()">
                       <span *ngIf="cargando" class="spinner-border spinner-border-sm"></span>
                       Guardar

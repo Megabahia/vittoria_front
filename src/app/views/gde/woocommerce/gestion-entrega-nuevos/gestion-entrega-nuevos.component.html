@@ -63,7 +63,7 @@
               <tbody>
               <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
                 <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
-                <td>{{ transaccion.fechaHoraConfirmacion }}</td>
+                <td>{{ transaccion.fechaHoraConfirmacion | date: 'dd-MM-yyyy'}}</td>
                 <td [title]="transaccion.canal">{{ transaccion.canal | shorten }}</td>
                 <td [title]="transaccion.tipoFacturacion">{{ transaccion.tipoFacturacion | shorten }}</td>
                 <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido | shorten }}</td>
@@ -72,6 +72,18 @@
                 <td>{{ transaccion.facturacion.telefono }}</td>
                 <td [title]="transaccion.urlMetodoPago">
                   <a *ngIf="transaccion.urlMetodoPago" [href]="transaccion.urlMetodoPago" target="_blank">Ver</a>
+                </td>
+                <td>
+                  <a href="{{transaccion.archivoMetodoPago}}" *ngIf="transaccion.archivoMetodoPago"
+                     target="_blank">
+                    <i-feather name="file-text" class="mr-25"></i-feather>
+                  </a>
+                </td>
+                <td>
+                  <a href="{{transaccion.comprobanteVendedorGmb}}" *ngIf="transaccion.comprobanteVendedorGmb"
+                     target="_blank">
+                    <i-feather name="file-text" class="mr-25"></i-feather>
+                  </a>
                 </td>
                 <td [title]="transaccion.metodoPago" style="color: blue">{{ transaccion.metodoPago | shorten }}</td>
                 <td>{{ transaccion.estado }}</td>
@@ -406,6 +418,7 @@
                                          src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
                                          *ngIf="detalle.controls?.imagen_principal" width="100px" height="100px" alt="">
                                   </div>
+
                                 </div>
                               </div>
                             </ng-container>
@@ -462,6 +475,16 @@
                             <div class="invoice-total-item">
                               <p class="invoice-total-title text-primary font-weight-bold">
                                 Total Envio: ${{ notaPedido.controls.envioTotal.value }}</p>
+                            </div>
+                            <hr class="my-50"/>
+
+                            <div class="invoice-total-item">
+                              <p class="invoice-total-title text-primary font-weight-bold">
+                                Subtotal: ${{ notaPedido.controls.subtotal.value }}</p>
+                            </div>
+                            <div class="invoice-total-item">
+                              <p class="invoice-total-title text-primary font-weight-bold">
+                                IVA (15%): ${{ totalIva }}</p>
                             </div>
                             <div class="invoice-total-item">
                               <p class="invoice-total-title text-primary font-weight-bold">

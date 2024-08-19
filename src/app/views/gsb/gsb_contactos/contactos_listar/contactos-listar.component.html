@@ -37,11 +37,12 @@
           <table class="user-list-table table">
             <thead class="thead-light">
             <tr>
-              <th>Fecha de contacto</th>
-              <th style="color: blue">Hora de Contacto</th>
+              <th>Fecha de ingreso de contacto</th>
+              <th style="color: blue">Hora de ingreso de contacto</th>
               <th>Nombres</th>
               <th>Apellidos</th>
               <th>WhatsApp</th>
+              <th>Tipo de contacto</th>
               <th>URL Productos</th>
               <th>Estado del contacto</th>
               <th>Tiempo para concretar la venta</th>
@@ -65,6 +66,9 @@
                     alt="wsp"
                     width="30" height="30">
                 </a>
+              </td>
+              <td [style]="{'color': contacto.tipoContacto === 'original' ? 'green' : 'red' }">
+                {{ contacto.tipoContacto === 'original' ? 'Original' : 'Duplicado'}}
               </td>
               <td>
                 <ul *ngFor="let productos of contacto.articulos">
@@ -90,13 +94,13 @@
                 </ng-template>
               </td>
               <td>
-                <button class="btn btn-sm btn-secondary" (click)="actualizarEstadoContacto(contacto, 'EN PROCESO DE VENTA')">
+                <button class="btn btn-sm btn-secondary" (click)="actualizarEstadoContacto(contacto, 'EN PROCESO DE VENTA')" [disabled]="desabilitarTomarContacto">
                   Tomar contacto para venta
                 </button>
               </td>
               <td>
                 <a *ngIf="contacto.estado === 'EN PROCESO DE VENTA'"  class="btn btn-sm border-primary"
-                   [routerLink]="['/pages/consulta/producto']" target="_blank">
+                   [routerLink]="['/gsb/gd_consulta_productos']" target="_blank">
                   Consultar productos
                 </a>
               </td>

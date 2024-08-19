@@ -60,6 +60,9 @@ export class PedidosService {
   actualizarPedidoFormaPagoFormData(datos: FormData): Observable<any> {
     return this.http.post<any>(`${apiUrl}/api/v3/orders/update/formaPago/${datos.get('id')}`, datos);
   }
+  actualizarPedidoQuejaFormData(datos: FormData): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/api/v3/orders/update/queja/${datos.get('id')}`, datos);
+  }
 
   obtenerPedido(id): Observable<any> {
     return this.http.get<any>(`${apiUrl}/api/v3/orders/listOne/${id}`);

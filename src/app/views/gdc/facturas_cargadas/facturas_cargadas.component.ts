@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
-import {Color, Label} from 'ng2-charts';
+import {ChartDataSets} from 'chart.js';
+import {Color} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
 import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
 import {ParamService} from '../../../services/mp/param/param.service';
@@ -10,7 +10,6 @@ import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
-import {v4 as uuidv4} from 'uuid';
 
 import {ContactosService} from '../../../services/gdc/contactos/contactos.service';
 
@@ -265,7 +264,7 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
       this.iniciarNotaPedido();
       this.horaPedido = this.extraerHora(info.created_at);
 
-      info.articulos.map((item): void => {
+      info.articulos.map((item: any): void => {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
@@ -287,7 +286,6 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
-        //if(info.mensaje==''){
         if (info.codigoBarras) {
           this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
           this.detallesArray.controls[i].get('id').setValue(info.id);
@@ -319,7 +317,7 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
-    let subtotalPedido = 0;
+    let subtotalPedido: number;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
@@ -341,7 +339,7 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
       }
       this.listaPedido = info;
       this.formaPagoForm.get('id').setValue(info.id);
-      this.formaPagoForm.get('montoSubtotalAprobado').setValue(info.montoSubtotalCliente);
+      //this.formaPagoForm.get('montoSubtotalAprobado').setValue(info.montoSubtotalCliente);
     });
   }
 
@@ -353,16 +351,19 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
     }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
-      if (Number(this.formaPagoForm.value.montoSubtotalAprobado) > Number(this.listaPedido.subtotal)){
-        this.toaster.open('El valor no debe exceder el monto subtotal del pedido', {type: 'danger'});
-        return;
-      }else{
-        this.contactosService.actualizarAprobarcionContacto(this.formaPagoForm.value.id, 'Entregado', Number(this.formaPagoForm.value.montoSubtotalAprobado)).subscribe((info) => {
+      this.contactosService
+        .actualizarAprobarcionContacto(this.formaPagoForm.value.id, 'Entregado', Number(this.formaPagoForm.value.montoSubtotalAprobado))
+        .subscribe((info) => {
           this.toaster.open('Despacho aprobado', {type: 'success'});
           this.obtenerContactos();
           this.modalService.dismissAll();
         }, error => this.toaster.open(error, {type: 'danger'}));
-      }
+      /*if (Number(this.formaPagoForm.value.montoSubtotalAprobado) > Number(this.listaPedido.subtotal)){
+        this.toaster.open('El valor no debe exceder el monto subtotal del pedido', {type: 'danger'});
+        return;
+      }else{
+
+      }*/
     }
   }
 
@@ -379,7 +380,9 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
     }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
-      this.contactosService.actualizarNegacionContacto(this.negarPedidoForm.value.id, 'Pedido Negado', this.negarPedidoForm.value.motivoNegacionPedido).subscribe((info) => {
+      this.contactosService
+        .actualizarNegacionContacto(this.negarPedidoForm.value.id, 'Pedido Negado', this.negarPedidoForm.value.motivoNegacionPedido)
+        .subscribe((info) => {
         this.toaster.open('Despacho negado', {type: 'info'});
         this.obtenerContactos();
         this.modalService.dismissAll();
@@ -396,10 +399,7 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
   }
 
   obtenerFechaActual(): Date {
-    const fechaActual = new Date();
-
-    return fechaActual;
-
+    return new Date();
   }
 
   formatearFecha(): string {
@@ -428,13 +428,9 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onSelectChange(event: any) {
+  onSelectChange(event: any): void {
     const selectedValue = event.target.value;
-    if (selectedValue === 'rimpePopular') {
-      this.mostrarInputComprobante = true;
-    } else {
-      this.mostrarInputComprobante = false;
-    }
+    this.mostrarInputComprobante = selectedValue === 'rimpePopular';
   }
 
   onFileSelected(event: any): void {
@@ -447,6 +443,16 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
   extraerHora(dateTimeString: string): string {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(' ')[0];
+  }
+
+  formatearFechaYAgregarDia(fechaStr: string): string {
+    let fecha = new Date(fechaStr);
+    fecha.setDate(fecha.getDate() + 1); // Añade un día
+
+    const dia = fecha.getDate().toString().padStart(2, '0');
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // getMonth() es 0-index
+    const anio = fecha.getFullYear();
+    return `${dia}-${mes}-${anio}`;
   }
 
 }

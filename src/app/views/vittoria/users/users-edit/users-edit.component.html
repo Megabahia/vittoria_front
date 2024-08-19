@@ -130,6 +130,7 @@
                       <div class="form-group">
                         <label for="role">Rol</label>
                         <select class="form-control" name="idRol" formControlName="idRol" [(ngModel)]="usuario.idRol"
+                                (change)="rolSeleccionado($event)"
                                 id="role">
                           <option value="0" selected>- Seleccione rol -</option>
                           <option value="{{rol.id}}" *ngFor="let rol of roles">
@@ -223,7 +224,21 @@
                         </div>
                       </div>
                     </div>
-
+                    <div class="col-md-4" *ngIf="mostrarTipoEnvio">
+                      <div class="form-group">
+                        <label>Tipo de envío courier</label>
+                        <select class="form-control form-control-lg"
+                                formControlName="tipoEnvio" [(ngModel)]="usuario.tipoEnvio">
+                          <option value="" selected>- Seleccione tipo de envío-</option>
+                          <option value="{{pago.nombre}}" *ngFor="let pago of listaMetodoPago">
+                            {{ pago.nombre }}
+                          </option>
+                        </select>
+                        <div *ngIf="submitted && f.tipoEnvio.errors" class="invalid-feedback" style="display: block;">
+                          <div *ngIf="f.tipoEnvio.errors.required">Tipo de envío es requerida</div>
+                        </div>
+                      </div>
+                    </div>
                     <div class="col-12 d-flex flex-sm-row flex-column mt-2">
                       <a class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1" (click)="actualizarUsuario()">Guardar
                         cambios</a>

@@ -10,6 +10,7 @@ import {UsersService} from '../../../../services/admin/users.service';
 import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
+import {ParamService as ParamServiceAdm} from '../../../../services/admin/param.service';
 
 @Component({
   selector: 'app-gestion-entrega-despacho',
@@ -21,6 +22,8 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
+  totalIva;
+  parametroIva;
   menu;
   page = 1;
   pageSize = 3;
@@ -54,6 +57,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
     private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
     private toaster: Toaster,
+    private paramServiceAdm: ParamServiceAdm,
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
@@ -63,6 +67,10 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       codigoConfirmacion: ['', [Validators.required]],
       fechaHoraConfirmacion: ['', [Validators.required]],
       tipoFacturacion: ['', [Validators.required]],
+    });
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
+      this.parametroIva = parseFloat(result.info[0].valor);
     });
   }
 
@@ -121,6 +129,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       }),
       articulos: this.formBuilder.array([]),
       total: ['', []],
+      subtotal: ['', []],
       envioTotal: ['', []],
       numeroPedido: ['', []],
       created_at: ['', []],
@@ -163,6 +172,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
       imagen: ['', []],
+      descuento: ['', []],
       caracteristicas: ['', []],
       bodega: ['', []],
       canal: [''],
@@ -214,6 +224,8 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, canal: this.cortarUrlHastaCom(info.canal)});
+      this.calcular();
+
     });
   }
 
@@ -284,13 +296,24 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
+    let subtotalPedido = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
-      const cantidad = parseFloat(detalles[index].get('cantidad').value);
-      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
+      // tslint:disable-next-line:radix
+      const descuento = parseInt(detalles[index].get('descuento').value);
+      if (descuento > 0 && descuento <= 100) {
+        const totalDescuento = (valorUnitario * descuento) / 100;
+        detalles[index].get('precio').setValue((((valorUnitario - totalDescuento) * cantidad)).toFixed(2));
+      } else {
+        detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      }
       total += parseFloat(detalles[index].get('precio').value);
     });
-    total += this.notaPedido.get('envioTotal').value;
+    total += parseFloat(this.notaPedido.get('envioTotal').value);
+    subtotalPedido = total / this.parametroIva;
+    this.totalIva = (total - subtotalPedido).toFixed(2);
+    this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
     this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 

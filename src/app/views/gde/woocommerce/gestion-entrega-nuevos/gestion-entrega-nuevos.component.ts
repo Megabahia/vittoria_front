@@ -8,12 +8,14 @@ import {Color} from 'ng2-charts';
 import {ParamService} from '../../../../services/mp/param/param.service';
 import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
 import {ParamService as ParamServiceGE} from '../../../../services/gde/param/param.service';
+
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
 import {v4 as uuidv4} from 'uuid';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import {ParamService as ParamServiceAdm} from "../../../../services/admin/param.service";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -29,6 +31,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
   public generarGuiaForm: FormGroup;
+  totalIva
   menu;
   page = 1;
   pageSize = 3;
@@ -59,6 +62,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
   lastYear = 0;
   lastMonth = 0;
   guiaNumber = '';
+  parametroIva;
 
   constructor(
     private modalService: NgbModal,
@@ -70,6 +74,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     private paramServiceGE: ParamServiceGE,
     private productosService: ProductosService,
     private toaster: Toaster,
+    private paramServiceAdm: ParamServiceAdm,
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
@@ -82,6 +87,10 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     });
     this.generarGuiaForm = this.formBuilder.group({
       generarGuia: ['', [Validators.required]],
+    });
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
+      this.parametroIva = parseFloat(result.info[0].valor);
     });
   }
 
@@ -189,7 +198,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
       imagen: ['', []],
-      descuento: [0, [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]*$')]],
+      descuento: ['', []],
       imagen_principal: [''],
       caracteristicas: ['', []],
       bodega: ['', []],
@@ -243,6 +252,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, canal: this.cortarUrlHastaCom(info.canal)});
+      this.calcular();
     });
   }
 
@@ -323,13 +333,24 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
+    let subtotalPedido = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
-      const cantidad = parseFloat(detalles[index].get('cantidad').value);
-      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
+      // tslint:disable-next-line:radix
+      const descuento = parseInt(detalles[index].get('descuento').value);
+      if (descuento > 0 && descuento <= 100) {
+        const totalDescuento = (valorUnitario * descuento) / 100;
+        detalles[index].get('precio').setValue((((valorUnitario - totalDescuento) * cantidad)).toFixed(2));
+      } else {
+        detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      }
       total += parseFloat(detalles[index].get('precio').value);
     });
-    total += this.notaPedido.get('envioTotal').value;
+    total += parseFloat(this.notaPedido.get('envioTotal').value);
+    subtotalPedido = total / this.parametroIva;
+    this.totalIva = (total - subtotalPedido).toFixed(2);
+    this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
     this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 

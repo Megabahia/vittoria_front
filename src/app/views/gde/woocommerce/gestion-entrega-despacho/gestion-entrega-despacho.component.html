@@ -53,7 +53,9 @@
                 <th>Nombres Facturación</th>
                 <th>Apellidos Facturación</th>
                 <th>Metodo Pago</th>
+                <th>Url Comprobante Pago</th>
                 <th>Comprobante Pago</th>
+                <th>Comprobante Pago cargado por vendedor</th>
                 <th>Evidencia Empacado</th>
                 <th>Telefono</th>
                 <th>Estado</th>
@@ -76,6 +78,18 @@
                 <td [title]="transaccion.metodoPago">{{ transaccion.metodoPago | shorten }}</td>
                 <td [title]="transaccion.urlMetodoPago">
                   <a *ngIf="transaccion.urlMetodoPago" [href]="transaccion.urlMetodoPago" target="_blank">Ver</a>
+                </td>
+                <td>
+                  <a href="{{transaccion.archivoMetodoPago}}" *ngIf="transaccion.archivoMetodoPago"
+                     target="_blank">
+                    <i-feather name="file-text" class="mr-25"></i-feather>
+                  </a>
+                </td>
+                <td>
+                  <a href="{{transaccion.comprobanteVendedorGmb}}" *ngIf="transaccion.comprobanteVendedorGmb"
+                     target="_blank">
+                    <i-feather name="file-text" class="mr-25"></i-feather>
+                  </a>
                 </td>
                 <td>
                   <a *ngIf="transaccion.fotoEmpaque"
@@ -403,6 +417,12 @@
                                       </div>
                                     </div>
                                   </div>
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Descuento
+                                    </p>
+                                    <label>{{ detalle.controls.descuento.value }}%</label>
+                                  </div>
                                   <div class="col-lg-1 col-12 my-lg-0 my-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
                                       Total
@@ -484,6 +504,16 @@
                             <div class="invoice-total-item">
                               <p class="invoice-total-title text-primary font-weight-bold">
                                 Total Envio: ${{ notaPedido.controls.envioTotal.value }}</p>
+                            </div>
+                            <hr class="my-50"/>
+
+                            <div class="invoice-total-item">
+                              <p class="invoice-total-title text-primary font-weight-bold">
+                                Subtotal: ${{ notaPedido.controls.subtotal.value }}</p>
+                            </div>
+                            <div class="invoice-total-item">
+                              <p class="invoice-total-title text-primary font-weight-bold">
+                                IVA (15%): ${{ totalIva }}</p>
                             </div>
                             <div class="invoice-total-item">
                               <p class="invoice-total-title text-primary font-weight-bold">
