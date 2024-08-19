@@ -10,6 +10,7 @@ import {ParamService as ParamServiceGDE} from '../../../../services/gde/param/pa
 import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
+import {ParamService as ParamServiceAdm} from "../../../../services/admin/param.service";
 
 @Component({
   selector: 'app-gestion-entrega-devolucion',
@@ -43,6 +44,9 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
   public couriers = [];
   usuario;
 
+  totalIva
+  parametroIva
+
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -53,6 +57,7 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
     private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
     private toaster: Toaster,
+    private paramServiceAdm: ParamServiceAdm
   ) {
     this.usuario = JSON.parse(localStorage.getItem('currentUser'));
     this.inicio.setMonth(this.inicio.getMonth() - 3);
@@ -62,6 +67,11 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
       evidenciaFotoEmpaque: ['', [Validators.required]],
       evidenciaVideoEmpaque: ['', []],
     });
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
+      this.parametroIva = parseFloat(result.info[0].valor);
+    });
+
   }
 
   ngOnInit(): void {
@@ -169,7 +179,9 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
       caracteristicas: ['', []],
       bodega: ['', []],
       canal: [''],
-      woocommerceId: ['']
+      woocommerceId: [''],
+      descuento: ['', []],
+      imagen_principal: ['', [Validators.required]]
     });
   }
 
@@ -215,6 +227,8 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, canal: this.cortarUrlHastaCom(info.canal)});
+
+      this.calcular();
     });
   }
 
@@ -295,13 +309,24 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
+    let subtotalPedido = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
-      const cantidad = parseFloat(detalles[index].get('cantidad').value);
-      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
+      // tslint:disable-next-line:radix
+      const descuento = parseInt(detalles[index].get('descuento').value);
+      if (descuento > 0 && descuento <= 100) {
+        const totalDescuento = (valorUnitario * descuento) / 100;
+        detalles[index].get('precio').setValue((((valorUnitario - totalDescuento) * cantidad)).toFixed(2));
+      } else {
+        detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      }
       total += parseFloat(detalles[index].get('precio').value);
     });
-    total += this.notaPedido.get('envioTotal').value;
+    total += parseFloat(this.notaPedido.get('envioTotal').value);
+    subtotalPedido = total / this.parametroIva;
+    this.totalIva = (total - subtotalPedido).toFixed(2);
+    this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
     this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 
