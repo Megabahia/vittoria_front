@@ -189,6 +189,8 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
       imagen: ['', []],
+      descuento: [0, [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]*$')]],
+      imagen_principal: [''],
       caracteristicas: ['', []],
       bodega: ['', []],
       canal: [''],
@@ -687,16 +689,17 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       {text: articulo.codigo, fontSize: 10},
       {text: articulo.cantidad, fontSize: 10},
       {text: articulo.articulo, fontSize: 10},
-      {text: articulo.valorUnitario, fontSize: 10},
-      {text: articulo.precio, fontSize: 10},
+      //{text: articulo.valorUnitario, fontSize: 10},
+      //{text: articulo.precio, fontSize: 10},
     ]);
 
     const tableData = [
       [{text: 'Código', style: 'bold', fontSize: 12},
         {text: 'Cantidad', style: 'bold', fontSize: 12},
         {text: 'Nombre', style: 'bold', fontSize: 12},
-        {text: 'Valor unitario', style: 'bold', fontSize: 12},
-        {text: 'Total', style: 'bold', fontSize: 12}],
+        // {text: 'Valor unitario', style: 'bold', fontSize: 12},
+        // {text: 'Total', style: 'bold', fontSize: 12}
+      ],
       ...tableRaws
     ];
 
@@ -721,29 +724,29 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
             body: tableData,
           }
         },
-        {
-          text: 'Total envío: $' + this.notaPedido.value.envioTotal,
-          style: 'bold',
-          fontSize: 12,
-          margin: [0, 10, 0, 0],
-          alignment: 'end'
-        },
+        // {
+        //   text: 'Total envío: $' + this.notaPedido.value.envioTotal,
+        //   style: 'bold',
+        //   fontSize: 12,
+        //   margin: [0, 10, 0, 0],
+        //   alignment: 'end'
+        // },
         {text: 'Total a pagar por el cliente: $' + this.notaPedido.value.total, style: 'bold', fontSize: 12},
         '\n',
-        {text: 'Datos entrega', style: 'bold', fontSize: 12},
-        {text: 'Nombres: ' + this.notaPedido.value.facturacion.nombres, fontSize: 12},
-        {text: 'Apellidos: ' + this.notaPedido.value.facturacion.apellidos, fontSize: 12},
-        {text: 'Correo: ' + this.notaPedido.value.facturacion.correo, fontSize: 12},
-        {text: 'Número de identificación: ' + this.notaPedido.value.facturacion.identificacion, fontSize: 12},
-        {text: 'Teléfono: ' + this.notaPedido.value.facturacion.telefono, fontSize: 12},
-        {text: 'País: ' + this.notaPedido.value.facturacion.pais, fontSize: 12},
-        {text: 'Provincia: ' + this.notaPedido.value.facturacion.provincia, fontSize: 12},
-        {text: 'Ciudad: ' + this.notaPedido.value.facturacion.ciudad, fontSize: 12},
-        {text: 'Calle principal: ' + this.notaPedido.value.facturacion.callePrincipal, fontSize: 12},
-        {text: 'Número: ' + this.notaPedido.value.facturacion.numero, fontSize: 12},
-        {text: 'Calle secundaria : ' + this.notaPedido.value.facturacion.calleSecundaria, fontSize: 12},
-        {text: 'Referencia: ' + this.notaPedido.value.facturacion.referencia, fontSize: 12},
-        {text: 'GPS: ' + this.notaPedido.value.facturacion.gps, fontSize: 12}
+        // {text: 'Datos entrega', style: 'bold', fontSize: 12},
+        // {text: 'Nombres: ' + this.notaPedido.value.facturacion.nombres, fontSize: 12},
+        // {text: 'Apellidos: ' + this.notaPedido.value.facturacion.apellidos, fontSize: 12},
+        // {text: 'Correo: ' + this.notaPedido.value.facturacion.correo, fontSize: 12},
+        // {text: 'Número de identificación: ' + this.notaPedido.value.facturacion.identificacion, fontSize: 12},
+        // {text: 'Teléfono: ' + this.notaPedido.value.facturacion.telefono, fontSize: 12},
+        // {text: 'País: ' + this.notaPedido.value.facturacion.pais, fontSize: 12},
+        // {text: 'Provincia: ' + this.notaPedido.value.facturacion.provincia, fontSize: 12},
+        // {text: 'Ciudad: ' + this.notaPedido.value.facturacion.ciudad, fontSize: 12},
+        // {text: 'Calle principal: ' + this.notaPedido.value.facturacion.callePrincipal, fontSize: 12},
+        // {text: 'Número: ' + this.notaPedido.value.facturacion.numero, fontSize: 12},
+        // {text: 'Calle secundaria : ' + this.notaPedido.value.facturacion.calleSecundaria, fontSize: 12},
+        // {text: 'Referencia: ' + this.notaPedido.value.facturacion.referencia, fontSize: 12},
+        // {text: 'GPS: ' + this.notaPedido.value.facturacion.gps, fontSize: 12}
       ],
     };
 
