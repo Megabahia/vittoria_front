@@ -724,7 +724,6 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
             body: tableData,
           }
         },
-
         // {
         //   text: 'Total envío: $' + this.notaPedido.value.envioTotal,
         //   style: 'bold',
