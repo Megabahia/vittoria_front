@@ -292,9 +292,9 @@
                     <p class="invoice-total-title text-primary font-weight-bold">
                       Total Envio:
                     </p>
-                    <select class="form-control" formControlName="envioTotal" (change)="calcular()">
-                      <option value="{{0}}" selected>- Seleccione costo de envío-</option>
-                      <option value="{{envio.valor}}" *ngFor="let envio of listaCostoEnvio">
+                    <select class="form-control" (change)="nombreEnvioSeleccionado($event)">
+                      <option value="" selected>- Seleccione costo de envío-</option>
+                      <option *ngFor="let envio of listaCostoEnvio" [ngValue]="envio">
                         {{ envio.nombre }} - {{ envio.valor }}
                       </option>
                     </select>

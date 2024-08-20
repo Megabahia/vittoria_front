@@ -58,6 +58,7 @@
                 <th style="color: blue">Metodo Envío</th>
                 <th>Estado</th>
                 <th>Ver Pedido</th>
+                <th>Ver guía generada</th>
                 <th>Acciones</th>
               </tr>
               </thead>
@@ -96,6 +97,17 @@
                   </a>
                 </td>
                 <td>
+                  <a href="{{ transaccion.guiServiEntrega }}" *ngIf="transaccion.metodoPago === 'Previo Pago Servientrega Nacional' && transaccion.guiServiEntrega; else archivoGuia"
+                     target="_blank">
+                    <i-feather name="file-text" class="mr-25"></i-feather>
+                  </a>
+                  <ng-template #archivoGuia>
+                    <a href="{{ transaccion.archivoGuia}}" *ngIf="transaccion.archivoGuia"
+                       target="_blank">
+                      <i-feather name="file-text" class="mr-25"></i-feather>
+                    </a>
+                  </ng-template>
+                </td>                <td>
                   <button class="btn btn-sm btn-info" *ngIf="!transaccion.verificarGeneracionGuia"
                           (click)="generarGuia(seleccionarGuiaModal, transaccion.id)"
                   >
@@ -475,6 +487,8 @@
                           <div class="invoice-total-wrapper">
                             <hr class="my-50"/>
                             <div class="invoice-total-item">
+                              <p class="invoice-total-title text-warning font-weight-bold">
+                                Envio: {{ notaPedido.controls.nombreEnvio.value }}</p>
                               <p class="invoice-total-title text-primary font-weight-bold">
                                 Total Envio: ${{ notaPedido.controls.envioTotal.value }}</p>
                             </div>
@@ -1037,6 +1051,8 @@
             <div class="invoice-total-wrapper">
               <hr class="my-50"/>
               <div class="invoice-total-item">
+                <!--<p class="invoice-total-title text-warning font-weight-bold">
+                  Envio: {{ notaPedido.controls.nombreEnvio.value }}</p>-->
                 <p class="invoice-total-title text-primary font-weight-bold">
                   Total Envio: ${{ notaPedido.controls.envioTotal.value }}
                 </p>

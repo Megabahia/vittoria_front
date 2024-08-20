@@ -134,7 +134,8 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       numeroPedido: ['', []],
       created_at: ['', []],
       metodoPago: ['', [Validators.required]],
-      canal: ['', []]
+      canal: ['', []],
+      nombreEnvio: ['']
     });
   }
 

@@ -93,8 +93,6 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       this.parametroIva = parseFloat(result.info[0].valor);
     });
 
-
-
   }
 
   ngOnInit(): void {
@@ -161,7 +159,8 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       guiServiEntrega: [''],
       metodoPago: ['', [Validators.required]],
       numeroGuia: ['', []],
-      canal: ['', []]
+      canal: ['', []],
+      nombreEnvio: ['']
     });
   }
 
@@ -455,8 +454,8 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     }).subscribe((info) => {
       //this.printButtonRef.nativeElement.click();
       this.createPDF();
-      this.obtenerTransacciones();
       this.modalService.dismissAll();
+      this.obtenerTransacciones();
     });
   }
 
@@ -544,6 +543,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
           body: tableData,
         }
       },
+      {text: 'Envío: ' + this.notaPedido.value.nombreEnvio, style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
       {text: 'Total envío: $' + this.notaPedido.value.envioTotal, style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
       {text: 'Total a pagar por el cliente: $' + this.notaPedido.value.total, style: 'bold', fontSize: 10, color: '#FF0000'},
       '\n',
@@ -583,6 +583,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
           body: tableData2,
         }
       },
+      {text: 'Envío: ' + this.notaPedido.value.nombreEnvio, style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
       {text: 'Total envío: $' + this.notaPedido.value.envioTotal, style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
       {text: 'Total a pagar por el cliente: $' + this.notaPedido.value.total, style: 'bold', fontSize: 10, color: '#FF0000'},
       '\n',
@@ -623,6 +624,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
           body: tableData3,
         }
       },
+      {text: 'Envío: ' + this.notaPedido.value.nombreEnvio, style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
       {text: 'Total envío: $' + this.notaPedido.value.envioTotal, style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
       {text: 'Total a pagar por el cliente: $' + this.notaPedido.value.total, style: 'bold', fontSize: 10, color: '#FF0000'},
       '\n',
@@ -806,15 +808,15 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       const archivoPDF = new File([blob], `${this.notaPedido.value.facturacion.nombres}.pdf`, {type: 'application/pdf'});
 
       // Crea un nuevo FormData y adjunta el archivo PDF
-      const formData = new FormData();
-      formData.append('archivoGuia', archivoPDF);
+      //const formData = new FormData();
+      //formData.append('archivoGuia', archivoPDF);
 
       // Agrega cualquier otro dato necesario al FormData
-      formData.append('id', this.notaPedido.value.id);
+      //formData.append('id', this.notaPedido.value.id);
 
       // Llama al método de actualización del servicio con el FormData
-      this.pedidosService.actualizarPedidoFormData(formData)
-        .subscribe();
+      //this.pedidosService.actualizarPedidoFormData(formData)
+      //  .subscribe();
     });
     pdf.open();
 
@@ -853,7 +855,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
 
   obtenerListaMetodoEnvio(): any{
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'METODO PAGO', '').subscribe((result) => {
-      this.listaMetodoPago = result.info;
+      this.listaMetodoPago = result.data;
     });
   }
 

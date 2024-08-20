@@ -61,6 +61,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   provinciaOpcionesEnvio;
   mostrarLabelProducto = false;
   mostrarBotonAutorizar = false;
+
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -155,7 +156,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       metodoPago: ['', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
       canal: ['', []],
-      comprobanteVendedorGmb: ['']
+      comprobanteVendedorGmb: [''],
+      nombreEnvio: ['']
     });
   }
 
@@ -194,11 +196,12 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       id: [''],
       codigo: ['', [Validators.required]],
       articulo: ['', [Validators.required]],
-      valorUnitario: [0, [Validators.required]],
+      valorUnitario: [0, [Validators.required, Validators.min(0.01)]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
+      precios: [[], []],
       imagen: ['', []],
-      descuento: [0],
+      descuento: [0, [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]*$')]],
       caracteristicas: ['', []],
       bodega: ['', []],
       canal: [''],
@@ -208,7 +211,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   }
 
   agregarItem(): void {
-    this.mostrarLabelProducto=false
+    this.mostrarLabelProducto = false
     this.detallesArray.push(this.crearDetalleGrupo());
   }
 
@@ -277,6 +280,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       this.opciones = info;
     });
   }
+
   async obtenerProducto(i): Promise<void> {
     return new Promise((resolve, reject) => {
       const data = {
@@ -301,7 +305,9 @@ export class PedidosComponent implements OnInit, AfterViewInit {
                 this.detallesArray.controls[i].get('id').setValue(info.id);
                 this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
                 this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-                const precioProducto = info.precioVentaA;
+                this.detallesArray.controls[i].get('descuento').setValue(this.detallesArray.controls[i].get('descuento').value ?? 0);
+                this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
+                const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
                 this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
                 this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
                 this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
@@ -336,14 +342,16 @@ export class PedidosComponent implements OnInit, AfterViewInit {
             this.detallesArray.controls[i].get('id').setValue(info.id);
             this.detallesArray.controls[i].get('articulo').setValue(info.nombre || info.articulo);
             this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-            const precioProducto = info.precioVentaA;
+            this.detallesArray.controls[i].get('descuento').setValue(this.detallesArray.controls[i].get('descuento').value ?? 0);
+            this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
+            const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
             this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
             this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
             this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
             this.detallesArray.controls[i].get('imagen_principal').setValue(info.imagen_principal);
             this.detallesArray.controls[i].get('bodega').setValue('');
-            this.detallesArray.controls[i].get('canal').setValue(info.canal)
-            this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
+            this.detallesArray.controls[i].get('canal').setValue(info.canal);
+            this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId);
             this.detallesArray.controls[i].get('cantidad').setValidators([
               Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
             ]);
@@ -356,6 +364,15 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     });
   }
 
+  extraerPrecios(info: any) {
+    const precios = [];
+    Object.keys(info).forEach(clave => {
+      if (clave.startsWith('precioVenta')) {
+        precios.push({clave: clave, valor: info[clave]});
+      }
+    });
+    return precios;
+  }
 
   calcular(): void {
     const detalles = this.detallesArray.controls;

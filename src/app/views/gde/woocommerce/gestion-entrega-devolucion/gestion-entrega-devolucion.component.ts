@@ -138,7 +138,8 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
       created_at: ['', []],
       metodoPago: ['', [Validators.required]],
       estado: ['', []],
-      canal: ['', []]
+      canal: ['', []],
+      nombreEnvio: ['']
     });
   }
 
