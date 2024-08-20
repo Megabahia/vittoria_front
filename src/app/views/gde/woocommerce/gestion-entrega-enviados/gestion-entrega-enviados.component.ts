@@ -10,6 +10,7 @@ import {ParamService as ParamServiceGDE} from '../../../../services/gde/param/pa
 import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {Toaster} from "ngx-toast-notifications";
+import {ParamService as ParamServiceAdm} from "../../../../services/admin/param.service";
 
 @Component({
   selector: 'app-gestion-entrega-enviados',
@@ -33,6 +34,8 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   archivo: FormData = new FormData();
   pedido;
   horaPedido;
+  totalIva;
+  parametroIva;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -53,6 +56,8 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
     private paramServiceGDE: ParamServiceGDE,
     private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
+    private paramServiceAdm: ParamServiceAdm,
+
   ) {
     this.usuario = JSON.parse(localStorage.getItem('currentUser'));
     this.inicio.setMonth(this.inicio.getMonth() - 3);
@@ -63,6 +68,10 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       evidenciaVideoEmpaque: ['', []],
       tipoPago: ['', [Validators.required]],
       evidenciaPago: ['', [Validators.required]]
+    });
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
+      this.parametroIva = parseFloat(result.info[0].valor);
     });
   }
 
@@ -129,7 +138,8 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       numeroGuia: ['', []],
       created_at: ['', []],
       metodoPago: ['', [Validators.required]],
-      canal: ['', []]
+      canal: ['', []],
+      nombreEnvio: ['']
     });
   }
 
@@ -168,9 +178,11 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
+      descuento: ['', []],
       bodega: ['', []],
       canal: [''],
-      woocommerceId: ['']
+      woocommerceId: [''],
+      imagen_principal: ['', [Validators.required]]
     });
   }
 
@@ -216,6 +228,8 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, canal: this.cortarUrlHastaCom(info.canal)});
+
+      this.calcular();
     });
   }
 
@@ -283,13 +297,24 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
+    let subtotalPedido = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
-      const cantidad = parseFloat(detalles[index].get('cantidad').value);
-      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
+      // tslint:disable-next-line:radix
+      const descuento = parseInt(detalles[index].get('descuento').value);
+      if (descuento > 0 && descuento <= 100) {
+        const totalDescuento = (valorUnitario * descuento) / 100;
+        detalles[index].get('precio').setValue((((valorUnitario - totalDescuento) * cantidad)).toFixed(2));
+      } else {
+        detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      }
       total += parseFloat(detalles[index].get('precio').value);
     });
-    total += this.notaPedido.get('envioTotal').value;
+    total += parseFloat(this.notaPedido.get('envioTotal').value);
+    subtotalPedido = total / this.parametroIva;
+    this.totalIva = (total - subtotalPedido).toFixed(2);
+    this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
     this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 

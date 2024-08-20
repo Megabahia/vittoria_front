@@ -50,6 +50,7 @@ export class ProfileComponent implements OnInit {
     twitter: '',
     whatsapp: '',
     facebook: '',
+    tipoEnvio: '',
     imagen: new FormData(),
     canal: ''
   };
@@ -99,6 +100,7 @@ export class ProfileComponent implements OnInit {
       pais: ['', [Validators.required]],
       telefono: ['', [Validators.required]],
       estado: ['', [Validators.required]],
+      tipoEnvio: [''],
       whatsapp: ['', [Validators.required]],
       idRol: [0, [Validators.min(1)]],
       canal: ['', [Validators.required]]

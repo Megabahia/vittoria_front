@@ -134,7 +134,8 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       numeroPedido: ['', []],
       created_at: ['', []],
       metodoPago: ['', [Validators.required]],
-      canal: ['', []]
+      canal: ['', []],
+      nombreEnvio: ['']
     });
   }
 
@@ -176,7 +177,8 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       caracteristicas: ['', []],
       bodega: ['', []],
       canal: [''],
-      woocommerceId: ['']
+      woocommerceId: [''],
+      imagen_principal: ['', []]
     });
   }
 
@@ -202,9 +204,9 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  obtenerCouriers(pais, provincia, ciudad): void {
+  obtenerCouriers(tipoEnvio): void {
     this.usersService.obtenerListaUsuarios({
-      page: 0, page_size: 10, idRol: 50, estado: 'Activo', pais, provincia, ciudad
+      page: 0, page_size: 10, idRol: 50, estado: 'Activo', tipoEnvio
     }).subscribe((info) => {
       this.couriers = info.info;
     });
@@ -340,6 +342,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       correoCourier: ['', [Validators.required]],
       archivoGuia: [''],
       estado: ['Despachado', [Validators.required]],
+      metodoPago: [transaccion.metodoPago, [Validators.required]],
       envio: this.formBuilder.group({
         nombres: [transaccion.envio.nombres, []],
         apellidos: [transaccion.envio.apellidos, []],
@@ -355,9 +358,8 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
         referencia: [transaccion.envio.referencia, []],
         gps: [transaccion.envio.gps, []],
       }),
-
     });
-    this.obtenerCouriers(transaccion.envio.pais, transaccion.envio.provincia, transaccion.envio.ciudad);
+    this.obtenerCouriers(transaccion.metodoPago);
   }
 
   procesarAutorizacionEnvio(): void {
@@ -420,8 +422,8 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
 
   verGuia(id?: any) {
     this.pedidosService.obtenerPedido(id ? id : this.autorizarForm.value.id).subscribe((info) => {
-      if (info.archivoGuia === null) {
-        window.alert('No existe guías en este pedido');
+      if (info.metodoPago === 'Previo Pago Servientrega Nacional') {
+        window.open(info.guiServiEntrega, '_blank');
       } else {
         window.open(info.archivoGuia, '_blank');
       }

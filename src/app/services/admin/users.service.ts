@@ -20,6 +20,7 @@ export interface NuevoUsuario {
   whatsapp: string;
   idRol: number;
   estado: string;
+  tipoEnvio: string;
 }
 
 export interface Usuario {
@@ -40,6 +41,7 @@ export interface Usuario {
   instagram: string;
   whatsapp: string;
   facebook: string;
+  tipoEnvio: string;
   imagen: FormData;
 }
 

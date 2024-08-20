@@ -65,6 +65,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
   }];
+  selectedEnvio: any;
   datosTransferencias = {
     data: [], label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)'
   };
@@ -106,7 +107,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
     });
 
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'METODO PAGO', '').subscribe((result) => {
-      this.listaMetodoPago = result.info;
+      this.listaMetodoPago = result.data;
     });
 
   }
@@ -145,6 +146,8 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
         gps: ['', []],
         codigoVendedor: ['', []],
         nombreVendedor: ['', []],
+        codigoUsuario: [this.obtenerUsuarioLogeado.usuario.username, []],
+        nombreUsuario: [this.obtenerUsuarioLogeado.full_name, []],
         comprobantePago: ['', []],
       }),
       vendedor: ['', [Validators.required]],
@@ -157,7 +160,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       metodoPago: ['', [Validators.required]],
       archivoMetodoPago: [''],
       archivoComprobanteVenta: [''],
-      verificarPedido: [true, [Validators.required]],
+      verificarPedido: [false, [Validators.required]],
       canal: ['megabahia.megadescuento.com'],
       estado: ['Pendiente de entrega'],
       envio: this.formBuilder.group({
@@ -179,7 +182,8 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       envios: ['', []],
       json: ['', []],
       tipoPago: [''],
-      montoPrevioPago: ['']
+      montoPrevioPago: [''],
+      nombreEnvio: ['']
     });
   }
 
@@ -241,9 +245,9 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
   }
 
   async guardarDespachoMegabahia(): Promise<void> {
-    await Promise.all(this.detallesArray.controls.map((producto, index) => {
+    /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
-    }));
+    }));*/
     if (this.notaPedido.value.valorUnitario === 0) {
       this.toaster.open('Seleccione un precio que sea mayor a 0.', {type: 'danger'});
       return;
@@ -255,7 +259,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
     }
     if (confirm('Esta seguro de guardar los datos') === true) {
 
-      if (this.notaPedido.value.montoPrevioPago && parseFloat(this.notaPedido.value.montoPrevioPago) !== parseFloat(this.notaPedido.value.total)){
+      if (this.notaPedido.value.montoPrevioPago && parseFloat(this.notaPedido.value.montoPrevioPago) !== parseFloat(this.notaPedido.value.total)) {
         this.toaster.open('El monto ingresado no coincide con el total del pedido', {type: 'danger'});
         return;
       } else {
@@ -333,6 +337,16 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
         }*/
       }, error => this.toaster.open(error, {type: 'danger'}));
     });
+  }
+
+  nombreEnvioSeleccionado(envio: any) {
+    const selectedValue = envio.target.value;
+    let [nombre, valor] = selectedValue.split('-').map(part => part.trim());
+    valor = parseFloat(valor);
+    this.notaPedido.get('envioTotal').setValue(valor);
+    this.notaPedido.get('nombreEnvio').setValue(nombre);
+    this.calcular();
+
   }
 
   calcular(): void {
@@ -512,10 +526,10 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
 
   }
 
-  onSelectSeller(e: any){
+  onSelectSeller(e: any) {
     const seller = this.listaUsuarios.find(value => value.username === e.target.value);
     this.notaPedido.get('facturacion').get('codigoVendedor').setValue(seller.username);
-    this.notaPedido.get('facturacion').get('nombreVendedor').setValue(seller.nombres + ' ' +seller.apellidos);
+    this.notaPedido.get('facturacion').get('nombreVendedor').setValue(seller.nombres + ' ' + seller.apellidos);
 
   }
 
