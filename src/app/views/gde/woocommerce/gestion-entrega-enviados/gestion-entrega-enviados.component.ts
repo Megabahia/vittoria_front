@@ -354,7 +354,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   procesarAutorizacionEnvio(): void {
     if (confirm('Esta seguro de despachar') === true) {
 
-      if (this.evidenciasForm.value.totalCobroEfectivo > this.pedido.total || this.evidenciasForm.value.montoTransferencia > this.pedido.total) {
+      if (this.evidenciasForm.value.totalCobroEfectivo < this.pedido.total || this.evidenciasForm.value.montoTransferencia < this.pedido.total) {
         this.toaster.open('El monto ingresado no coincide con el total del pedido', {type: "danger"});
         return;
       } else {
