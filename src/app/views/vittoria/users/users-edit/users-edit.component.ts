@@ -69,7 +69,7 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
     this.obtenerListaParametros();
 
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'METODO PAGO', '').subscribe((result) => {
-      this.listaMetodoPago = result.info;
+      this.listaMetodoPago = result.data;
     });
   }
 

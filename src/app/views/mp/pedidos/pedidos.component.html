@@ -906,7 +906,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12">
+        <div class="col-12" *ngIf="!detallePedido.metodoPago.includes('Contra Entrega')">
           <div class="form-group">
             <label for="largeInput">Ingreso Numero Transacción</label>
             <input class="form-control form-control-lg" type="text" id="largeInput"
@@ -919,7 +919,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12">
+        <div class="col-12" *ngIf="!detallePedido.metodoPago.includes('Contra Entrega')">
           <div class="form-group">
             <label for="largeInput">URL Método Pago</label>
             <input class="form-control form-control-lg" type="text" id="largeInput"
@@ -932,7 +932,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12">
+        <div class="col-12" *ngIf="!detallePedido.metodoPago.includes('Contra Entrega')">
           <div class="form-group">
             <label for="customFile">Cargar Metodo Pago</label>
             <div class="custom-file">

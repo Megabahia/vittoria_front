@@ -543,7 +543,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
           body: tableData,
         }
       },
-      {text: 'Envío: ' + this.notaPedido.value.nombreEnvio, style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
+      {text: 'Envío: ' + this.notaPedido.value.nombreEnvio ? this.notaPedido.value.nombreEnvio : '', style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
       {text: 'Total envío: $' + this.notaPedido.value.envioTotal, style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
       {text: 'Total a pagar por el cliente: $' + this.notaPedido.value.total, style: 'bold', fontSize: 10, color: '#FF0000'},
       '\n',
@@ -583,7 +583,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
           body: tableData2,
         }
       },
-      {text: 'Envío: ' + this.notaPedido.value.nombreEnvio, style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
+      {text: 'Envío: ' + this.notaPedido.value.nombreEnvio ? this.notaPedido.value.nombreEnvio : '', style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
       {text: 'Total envío: $' + this.notaPedido.value.envioTotal, style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
       {text: 'Total a pagar por el cliente: $' + this.notaPedido.value.total, style: 'bold', fontSize: 10, color: '#FF0000'},
       '\n',
@@ -624,7 +624,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
           body: tableData3,
         }
       },
-      {text: 'Envío: ' + this.notaPedido.value.nombreEnvio, style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
+      {text: 'Envío: ' + this.notaPedido.value.nombreEnvio ? this.notaPedido.value.nombreEnvio : '', style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
       {text: 'Total envío: $' + this.notaPedido.value.envioTotal, style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
       {text: 'Total a pagar por el cliente: $' + this.notaPedido.value.total, style: 'bold', fontSize: 10, color: '#FF0000'},
       '\n',
