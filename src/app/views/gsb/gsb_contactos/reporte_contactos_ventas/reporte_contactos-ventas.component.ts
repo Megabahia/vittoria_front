@@ -1,11 +1,9 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild, Inject, LOCALE_ID} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {Color, Label} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
 import {ParamService} from '../../../../services/mp/param/param.service';
 import {ParamService as ParamServiceAdm} from '../../../../services/admin/param.service';
-import {formatDate} from '@angular/common';
-import {Router} from '@angular/router';
 
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
@@ -13,17 +11,15 @@ import {Toaster} from 'ngx-toast-notifications';
 import {ContactosService} from '../../../../services/mdm/personas/contactos/contactos.service';
 import {SuperBaratoService} from '../../../../services/gsb/superbarato/super-barato.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
-import {ValidacionesPropias} from '../../../../utils/customer.validators';
-import {GdParamService} from '../../../../services/gsb/param/param.service';
-import {AuthService} from '../../../../services/admin/auth.service';
+import {ValidacionesPropias} from "../../../../utils/customer.validators";
+import {AuthService} from "../../../../services/admin/auth.service";
 
 @Component({
-  selector: 'app-gsb-contactos-listar',
-  templateUrl: './contactos-listar.component.html',
-  styleUrls: ['contactos-listar.component.css'],
+  selector: 'app-gsb-reporte-contactos-ventas',
+  templateUrl: './reporte_contactos-ventas.component.html',
   providers: [DatePipe]
 })
-export class ContactosListarComponent implements OnInit, AfterViewInit {
+export class ReporteContactosVentasComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @Input() paises;
   public notaPedido: FormGroup;
@@ -54,15 +50,12 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   cedula;
   factura;
   totalIva;
-  horaContactoVenta;
+  datosContacto;
   canalSeleccionado = '';
   listaCanalesProducto;
   idSuperBarato;
   parametroIva;
   tipoIdentificacion;
-  estadoGestionSeleccionado = '';
-  idContacto;
-  currentUserValue;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -74,10 +67,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
   canalPrincipal = '';
-  parametroTiempo;
-  listaEstadoContacto;
-  columnaAcciones = false;
-
+  currentUser;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -87,35 +77,19 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     private superBaratoService: SuperBaratoService,
     private toaster: Toaster,
     private productosService: ProductosService,
-    private paramServiceMdm: GdParamService,
-    private router: Router,
     private authService: AuthService,
-    @Inject(LOCALE_ID) public locale: string
   ) {
-    this.currentUserValue = this.authService.currentUserValue;
+    this.currentUser = this.authService.currentUserValue;
+
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
 
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
       this.parametroIva = parseFloat(result.info[0].valor);
     });
-
-    this.paramServiceMdm.obtenerListaParametrosGd({
-      page: this.page - 1,
-      page_size: this.pageSize,
-      tipo: 'TIEMPO',
-      nombre: 'Tiempo Venta'
-    }).subscribe((result) => {
-      // tslint:disable-next-line:radix
-      this.parametroTiempo = parseInt(result.info[0].valor);
-    });
     /*this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'COMISION', 'Comision').subscribe((result) => {
       this.comision = parseFloat(result.info[0].valor);
     });*/
-
-    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'ESTADO CONTACTO', '').subscribe((result) => {
-      this.listaEstadoContacto = result.data;
-    });
   }
 
   ngOnInit(): void {
@@ -157,18 +131,18 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       total: ['', [Validators.required]],
       subtotal: [0],
       envioTotal: [0, []],
-      numeroPedido: ['', [Validators.required]],
+      numeroPedido: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['Contra-Entrega', [Validators.required]],
       verificarPedido: [true, []],
       canal: ['Super Barato'],
-      estado: ['Pendiente de entrega'],
+      estado: ['Entregado'],
       envio: ['', []],
       envios: ['', []],
       json: ['', []],
       numeroComprobante: [''],
-      tipoPago: [''],
-      formaPago: [''],
+      tipoPago: ['',],
+      formaPago: ['',],
       numTransaccionTransferencia: [''],
       numTransaccionCredito: [''],
       totalCobroEfectivo: ['']
@@ -183,6 +157,10 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
 
   get notaPedidoForm() {
     return this.notaPedido['controls'];
+  }
+
+  get envioForm() {
+    return this.notaPedido.get('envio')['controls'];
   }
 
   get facturacionForm() {
@@ -218,8 +196,8 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   crearDetalleGrupoProductoExtra(): any {
     return this.formBuilder.group({
       urlProducto: ['', [Validators.required]],
-      valorUnitario: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d+)?$')]],
-      cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
+      valorUnitario: [0],
+      cantidad: [0],
       precio: [0],
     });
   }
@@ -246,7 +224,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     this.contactoService.obtenerLista({
       page: this.page - 1,
       page_size: this.pageSize,
-      estadoGestion: true
+      estadoGestion: false
       //inicio: this.inicio,
       //fin: this.transformarFecha(this.fin),
     }).subscribe((info) => {
@@ -274,12 +252,9 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
 
   obtenerDatosContacto(modal, id): void {
     this.notaPedido.reset();
-    this.detallesArrayProductoExtra.clear();
-
     this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
 
     this.contactoService.obtenerContacto(id).subscribe((info) => {
-      this.idContacto = info.id;
       this.horaPedido = this.extraerHora(info.created_at);
       this.canalPrincipal = info.canal;
       this.canalSeleccionado = this.canalPrincipal;
@@ -292,20 +267,10 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       this.notaPedido.get('numeroPedido').setValue(this.generarID());
       this.notaPedido.get('metodoPago').setValue(info.metodoPago);
       this.notaPedido.get('facturacion').get('pais').setValue(this.pais);
-      this.notaPedido.get('facturacion').get('codigoVendedor').setValue(this.currentUserValue.usuario.username);
-      this.notaPedido.get('facturacion').get('nombreVendedor').setValue(this.currentUserValue.full_name);
       this.notaPedido.get('facturacion').get('nombres').setValue(info.nombres);
       this.notaPedido.get('facturacion').get('apellidos').setValue(info.apellidos);
       this.notaPedido.get('facturacion').get('telefono').setValue(info.whatsapp);
       this.notaPedido.get('productoExtra').setValue(info.articulos);
-
-      this.notaPedido.get('metodoPago').setValue('Contra-Entrega');
-      this.notaPedido.get('verificarPedido').setValue(true);
-      this.notaPedido.get('canal').setValue('Super Barato');
-      this.notaPedido.get('estado').setValue('Pendiente de entrega');
-      this.notaPedido.get('envioTotal').setValue(0);
-
-      this.calcular();
 
     });
   }
@@ -318,6 +283,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       this.toaster.open('Seleccione un precio que sea mayor a 0.', {type: 'danger'});
       return;
     }
+    console.log(this.notaPedido)
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
@@ -328,14 +294,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
           this.notaPedido.reset();
 
           this.notaPedido.patchValue({...info, id: this.idSuperBarato});
-
-          this.contactoService.actualizarEstadoContacto(this.idContacto, 'CONCRETADO VENTA').subscribe((data) => {
-            this.obtenerContactos();
-          }, error => {
-            this.toaster.open(error, {type: 'danger'});
-          });
-
-          //this.obtenerDatosSuperBarato();
+          this.obtenerDatosSuperBarato();
 
         }, error => this.toaster.open(error, {type: 'danger'})
       );
@@ -430,11 +389,11 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       detallesProductoExtra[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       totalProdExtra += parseFloat(detallesProductoExtra[index].get('precio').value);
     });
-    total = total + totalProdExtra + this.notaPedido.get('envioTotal').value;
+    total += this.notaPedido.get('envioTotal').value;
     subtotalPedido = total / this.parametroIva;
     this.totalIva = (total - subtotalPedido).toFixed(2);
     this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
-    this.notaPedido.get('total').setValue((total).toFixed(2));
+    this.notaPedido.get('total').setValue((total + totalProdExtra).toFixed(2));
   }
 
 
@@ -467,12 +426,12 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     return date.toTimeString().split(' ')[0];
   }
 
-  openWhatsApp(event: Event, numero, nombre, apellido): void {
+  openWhatsApp(event: Event, numero): void {
     event.preventDefault();
     const modifiedNumber = (numero.startsWith('0') ? numero.substring(1) : numero);
     const internationalNumber = '593' + modifiedNumber;
-    const message = encodeURIComponent(`Hola Sr.(a)(ita). ${nombre} ${apellido}\n\nLe saludamos desde nuestra organización Vittoria.\n\nMuchas gracias por confiar en nosotros.\n\n¡Bievenido!`);
-    const whatsappUrl = `https://web.whatsapp.com/send/?phone=${internationalNumber}&text=${message}`;
+    //const imageUrl = encodeURIComponent(imagen);  // URL de la imagen que deseas enviar
+    const whatsappUrl = `https://web.whatsapp.com/send/?phone=${internationalNumber}`;
     window.open(whatsappUrl, '_blank');  // Abrir WhatsApp en una nueva pestaña
   }
 
@@ -510,47 +469,15 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
 
   }
 
-  enmarcarNumeroTelefono(numero: any): string {
-    if (numero.length <= 4) {
+
+  enmarcarNumeroTelefono(numero: any): string{
+    if (numero.length <= 4){
       return numero;
     }
     const ultimosDigitos = numero.slice(-4);
     const numerosEnmascarados = numero.slice(0, -4).replace(/./g, '*');
+
     return numerosEnmascarados + ultimosDigitos;
-  }
-
-  calcularTiempoConcretar(contacto: any): string {
-    const fechaContacto = new Date(contacto.created_at);
-    fechaContacto.setMinutes(fechaContacto.getMinutes() + this.parametroTiempo);
-    return formatDate(fechaContacto, 'HH:mm:ss', this.locale);
-  }
-
-  esTiempoSobrepasado(contacto: any): boolean {
-    const fechaContacto = new Date(contacto.created_at);
-    fechaContacto.setMinutes(fechaContacto.getMinutes() + this.parametroTiempo);
-    const tiempoConcretar = fechaContacto;
-    const ahora = new Date();
-    return ahora > tiempoConcretar;
-  }
-
-  actualizarEstadoContacto(contacto, estado) {
-    this.contactoService.actualizarEstadoContacto(contacto.id, estado).subscribe((data) => {
-      this.columnaAcciones = true;
-      this.toaster.open('Estado del contacto actualizado.', {type: 'success'});
-      this.obtenerContactos();
-    }, error => {
-      this.toaster.open(error, {type: 'danger'});
-    });
-  }
-
-  guardarEstadoGestion(contacto) {
-    this.contactoService.actualizarEstadoGestionContacto(contacto.id, contacto.estadoGestion).subscribe((data) => {
-      this.columnaAcciones = true;
-      this.toaster.open('Estado del contacto actualizado.', {type: 'success'});
-      this.obtenerContactos();
-    }, error => {
-      this.toaster.open(error, {type: 'danger'});
-    });
   }
 
 }

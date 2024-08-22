@@ -12,12 +12,11 @@ import {ParamService as ParamServiceAdm} from '../../../../services/admin/param.
 import {Toaster} from 'ngx-toast-notifications';
 
 @Component({
-  selector: 'app-centro-negocio',
-  templateUrl: './centro-negocio.component.html',
-  styleUrls: ['./centro-negocio.component.css'],
+  selector: 'app-centro-negocio-metodo-envio',
+  templateUrl: './centro-negocio-metodo-envio.component.html',
   providers: [DatePipe]
 })
-export class CentroNegocioComponent implements OnInit, AfterViewInit {
+export class CentroNegocioMetodoEnvioComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
@@ -70,7 +69,8 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
   public iva;
   public usuario;
   public totalVentas = 0;
-
+  listaMetodoPago;
+  metodoEnvio = '';
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -105,6 +105,10 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
         this.empresas = info;
       }
     );
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'METODO PAGO', '').subscribe((result) => {
+      this.listaMetodoPago = result.data;
+    });
   }
 
   ngOnInit(): void {
@@ -275,7 +279,7 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
       rol: this.usuario.usuario.idRol,
       estado: this.estadoSeleccionado === '' ? '' : [this.estadoSeleccionado],
       usuarioVendedor: this.usuarioSeleccionado,
-      canal: 'Contacto Local'
+      metodoPago: this.metodoEnvio
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info.map((item) => {

@@ -61,7 +61,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   provinciaOpcionesEnvio;
   mostrarLabelProducto = false;
   mostrarBotonAutorizar = false;
-
+  detallePedido;
+  listaEstadoContacto;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -92,6 +93,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
       this.parametroIva = parseFloat(result.info[0].valor);
     });
+
   }
 
   ngOnInit(): void {
@@ -240,6 +242,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
   obtenerTransaccion(modal, id): void {
     this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
+    this.iniciarNotaPedido();
 
     this.obtenerProvincias();
     this.obtenerProvinciasEnvio();
@@ -252,16 +255,17 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       this.horaPedido = this.extraerHora(info.created_at);
 
       this.validarCiudadEnProvincia(info.facturacion.provincia, info.facturacion.ciudad, info.envio.provincia, info.envio.ciudad);
-      this.iniciarNotaPedido();
+      /*info.articulos.forEach((item, index) => {
+        this.obtenerProducto(index);
+      });*/
 
       info.articulos.map((item): void => {
         this.agregarItem();
       });
+
       this.notaPedido.patchValue({...info, verificarPedido: true, canal: this.cortarUrlHastaCom(info.canal)});
 
-      /*info.articulos.forEach((item, index) => {
-        this.obtenerProducto(index);
-      });*/
+
 
       this.calcular();
     });
@@ -399,9 +403,9 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   }
 
   async actualizar(): Promise<void> {
-    await Promise.all(this.detallesArray.controls.map((producto, index) => {
+    /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
-    }));
+    }));*/
     this.validarCiudadEnProvincia(this.notaPedido.value.facturacion.provincia, this.notaPedido.value.facturacion.ciudad, this.notaPedido.value.envio.provincia, this.notaPedido.value.envio.ciudad);
     if (this.notaPedido.invalid) {
       this.toaster.open('Pedido Incompleto', {type: 'danger'});
@@ -423,6 +427,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   }
 
   procesarEnvio(modal, transaccion): void {
+    this.detallePedido = transaccion;
     this.archivo = new FormData();
     this.modalService.open(modal);
     const tipoFacturacion = transaccion.metodoPago === CONTRA_ENTREGA ? 'rimpePopular' : 'facturacionElectronica';

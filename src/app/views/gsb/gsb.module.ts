@@ -23,6 +23,9 @@ import {
 } from "./gsb_contactos/reporte_contactos_listar/reporte_contactos-listar.component";
 import {GdParamsComponent} from "./gd_params/gd_params.component";
 import {GdConsultaProductosComponent} from "./gd_consultar_productos/gd-consulta-productos.component";
+import {
+  ReporteContactosVentasComponent
+} from "./gsb_contactos/reporte_contactos_ventas/reporte_contactos-ventas.component";
 
 @NgModule({
   declarations: [
@@ -37,7 +40,8 @@ import {GdConsultaProductosComponent} from "./gd_consultar_productos/gd-consulta
     ContactosListarComponent,
     ReporteContactosListarComponent,
     GdParamsComponent,
-    GdConsultaProductosComponent
+    GdConsultaProductosComponent,
+    ReporteContactosVentasComponent
   ],
   exports: [
     GsbProductosListarComponent

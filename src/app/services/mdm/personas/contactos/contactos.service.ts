@@ -68,6 +68,10 @@ export class ContactosService {
     const payload = { estado: nuevoEstado };
     return this.http.post<any>(`${apiUrl}/mdm/contactos/update/${id}`, payload);
   }
+  actualizarEstadoGestionContacto(id, nuevoEstado) {
+    const payload = { estadoGestion: nuevoEstado };
+    return this.http.post<any>(`${apiUrl}/mdm/contactos/update/${id}`, payload);
+  }
 
   eliminarContacto(id) {
     return this.http.delete<any>(`${apiUrl}/mdm/contactos/delete/${id}`);

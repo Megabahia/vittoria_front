@@ -36,6 +36,9 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   horaPedido;
   totalIva;
   parametroIva;
+  mostrarCargaComprobante = false;
+  mostrarMontoEfectivo = false;
+  mostrarMontoTransferencia = false;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -57,7 +60,6 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
     private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
     private paramServiceAdm: ParamServiceAdm,
-
   ) {
     this.usuario = JSON.parse(localStorage.getItem('currentUser'));
     this.inicio.setMonth(this.inicio.getMonth() - 3);
@@ -67,7 +69,8 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       evidenciaFotoEmpaque: ['', [Validators.required]],
       evidenciaVideoEmpaque: ['', []],
       tipoPago: ['', [Validators.required]],
-      evidenciaPago: ['', [Validators.required]]
+      evidenciaPago: ['', [Validators.required]],
+
     });
 
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
@@ -331,6 +334,9 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   procesarEnvio(modal, transaccion): void {
     this.archivo = new FormData();
     this.modalService.open(modal);
+    this.mostrarMontoEfectivo = false;
+    this.mostrarMontoTransferencia = false;
+    this.mostrarCargaComprobante = false;
     this.evidenciasForm = this.formBuilder.group({
       id: [transaccion.id, [Validators.required]],
       evidenciaFotoEmpaque: ['', [Validators.required]],
@@ -338,28 +344,37 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       tipoPago: ['', [Validators.required]],
       evidenciaPago: ['', [Validators.required]],
       estado: ['Envio', []],
+      totalCobroEfectivo: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
+      montoTransferencia: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]]
     });
-    this.obtenerTransaccion(transaccion.id)
+    this.obtenerTransaccion(transaccion.id);
     this.pedido = transaccion;
   }
 
   procesarAutorizacionEnvio(): void {
     if (confirm('Esta seguro de despachar') === true) {
-      const facturaFisicaValores: string[] = Object.values(this.evidenciasForm.value);
-      const facturaFisicaLlaves: string[] = Object.keys(this.evidenciasForm.value);
-      facturaFisicaLlaves.map((llaves, index) => {
-        if (facturaFisicaValores[index] && llaves !== 'evidenciaFotoEmpaque' && llaves !== 'evidenciaVideoEmpaque') {
-          this.archivo.append(llaves, facturaFisicaValores[index]);
-        }
-      });
-      if (this.evidenciasForm.value.evidenciaFotoEmpaque === '') {
-        this.toaster.open('Complete los campos requeridos.', {type: 'warning'})
+
+      if (this.evidenciasForm.value.totalCobroEfectivo > this.pedido.total || this.evidenciasForm.value.montoTransferencia > this.pedido.total) {
+        this.toaster.open('El monto ingresado no coincide con el total del pedido', {type: "danger"});
         return;
+      } else {
+
+        const facturaFisicaValores: string[] = Object.values(this.evidenciasForm.value);
+        const facturaFisicaLlaves: string[] = Object.keys(this.evidenciasForm.value);
+        facturaFisicaLlaves.map((llaves, index) => {
+          if (facturaFisicaValores[index] && llaves !== 'evidenciaFotoEmpaque' && llaves !== 'evidenciaVideoEmpaque') {
+            this.archivo.append(llaves, facturaFisicaValores[index]);
+          }
+        });
+        if (this.evidenciasForm.value.evidenciaFotoEmpaque === '') {
+          this.toaster.open('Complete los campos requeridos.', {type: 'warning'})
+          return;
+        }
+        this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
+          this.modalService.dismissAll();
+          this.obtenerTransacciones();
+        });
       }
-      this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
-        this.modalService.dismissAll();
-        this.obtenerTransacciones();
-      });
     }
   }
 
@@ -397,6 +412,20 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   extraerHora(dateTimeString: string): string {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(' ')[0];
+  }
+
+  onSelectTIpoPago(e: any) {
+    if (e.target.value === 'transferencia') {
+      this.mostrarCargaComprobante = true;
+      this.mostrarMontoTransferencia = true;
+      this.mostrarMontoEfectivo = false;
+      this.evidenciasForm.get('totalCobroEfectivo').setValue('');
+    } else {
+      this.mostrarCargaComprobante = false;
+      this.mostrarMontoTransferencia = false;
+      this.mostrarMontoEfectivo = true;
+      this.evidenciasForm.get('montoTransferencia').setValue('');
+    }
   }
 
 }
