@@ -65,6 +65,7 @@ export class PedidoWoocomerceComponent implements OnInit {
   integracionProducto;
   formasPagoCourier: any[] = [];
   creacionPedidos;
+  paginaWoocommerce = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -77,17 +78,20 @@ export class PedidoWoocomerceComponent implements OnInit {
     private productosService: ProductosService,
     private integracionesService: IntegracionesService
   ) {
-    /*const ref = document.referrer;
+    const ref = document.referrer;
     const host = document.location.host;
-    if (ref !== 'https://superbarato.megadescuento.com/') {
-      if (host !== '209.145.61.41:4201') {
-        this._router.navigate([
-          '/auth/signin'
-        ]);
-        localStorage.clear();
-        return;
-      }
-    }*/
+    this.paginaWoocommerce = ref;
+    console.log('ref', ref);
+    console.log('host', host);
+    // if (ref !== 'https://superbarato.megadescuento.com/') {
+    //   if (host !== '209.145.61.41:4201') {
+    //     this._router.navigate([
+    //       '/auth/signin'
+    //     ]);
+    //     localStorage.clear();
+    //     return;
+    //   }
+    // }
     this.iniciarNotaPedido();
     const navbar = document.getElementById('navbar');
     const toolbar = document.getElementById('toolbar');
