@@ -54,7 +54,12 @@ export class SignInComponent implements OnInit {
           // this.router.navigate(['/admin/management']);
           this.sharedDataService.setSharedData(true);
           this.mostrarSpinner = false;
-          window.location.href = '';
+          if (localStorage.getItem('productosWoocommerce')) {
+            this.router.navigate(['gsb/pedido_woocommerce/crear']);
+            // window.location.href = '#/gsb/pedido_woocommerce/crear';
+          } else {
+            window.location.href = '';
+          }
         }, (error) => {
           this.abrirModal(this.errorAuth);
           this.mostrarSpinner = false;

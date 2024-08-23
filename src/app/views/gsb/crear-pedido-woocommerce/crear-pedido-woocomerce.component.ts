@@ -111,10 +111,12 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('ENTRA A NGONINIT DE PEDIDO WOOCOMMERCE')
-    this.route.queryParams.subscribe(params => {
-        if (params) {
-          // Decodificamos y parseamos el JSON de la cadena que recibimos
-          const productos = JSON.parse(decodeURIComponent(params.cadena));
+    console.log(localStorage.getItem('productosWoocommerce'));
+    // this.route.queryParams.subscribe(params => {
+    //     if (params) {
+    //       // Decodificamos y parseamos el JSON de la cadena que recibimos
+    const params = JSON.parse(localStorage.getItem('productosWoocommerce'));
+          const productos = JSON.parse(params.cadena);
 
           // Procesar cada producto para normalizar claves y valores
           const productosProcesados: ProductoProcesado[] = productos.map(producto => {
@@ -136,11 +138,11 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
           // Si quieres agregar todos los productos al arreglo `this.datos`
           this.datos.push(...productosProcesados);
-        } else {
-          return;
-        }
-      }
-    );
+    //     } else {
+    //       return;
+    //     }
+    //   }
+    // );
 
 
     this.obtenerProvincias();
