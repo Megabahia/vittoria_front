@@ -37,6 +37,12 @@ export class ContactosService {
     const payload = { estado: nuevoEstado, montoSubtotalAprobado: montoSubtotal };
     return this.http.post<any>(`${apiUrl}/gdc/contact/update/${id}`, payload);
   }
+
+  actualizarAprobarcionContactoQueja(id, nuevoEstado, montoSubtotal) {
+    const payload = { estado: nuevoEstado, montoSubtotalAprobadoQueja: montoSubtotal };
+    return this.http.post<any>(`${apiUrl}/gdc/contact/update/${id}`, payload);
+  }
+
   actualizarNegacionContacto(id, nuevoEstado, motivo) {
     const payload = { estado: nuevoEstado, motivoNegacionPedido: motivo };
     return this.http.post<any>(`${apiUrl}/gdc/contact/update/${id}`, payload);

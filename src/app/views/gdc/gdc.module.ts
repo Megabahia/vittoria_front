@@ -13,6 +13,7 @@ import {ContactoComponent} from "./contactos/contacto.component";
 import {VentasComponent} from "./ventas/ventas.component";
 import {EntregadosComponent} from "./entregados/entregados.component";
 import {FacturasCargadasComponent} from "./facturas_cargadas/facturas_cargadas.component";
+import {FacturasQuejasComponent} from "./confirmar_quejas/facturas_quejas.component";
 
 
 
@@ -22,7 +23,8 @@ import {FacturasCargadasComponent} from "./facturas_cargadas/facturas_cargadas.c
     ContactoComponent,
     VentasComponent,
     EntregadosComponent,
-    FacturasCargadasComponent
+    FacturasCargadasComponent,
+    FacturasQuejasComponent
   ],
   imports: [
     CommonModule,

@@ -10,6 +10,7 @@ import {ParamService as ParamServiceGDE} from '../../../../services/gde/param/pa
 import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {Toaster} from "ngx-toast-notifications";
+import {ParamService as ParamServiceAdm} from "../../../../services/admin/param.service";
 
 @Component({
   selector: 'app-gestion-entrega-enviados',
@@ -33,6 +34,11 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   archivo: FormData = new FormData();
   pedido;
   horaPedido;
+  totalIva;
+  parametroIva;
+  mostrarCargaComprobante = false;
+  mostrarMontoEfectivo = false;
+  mostrarMontoTransferencia = false;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -53,6 +59,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
     private paramServiceGDE: ParamServiceGDE,
     private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
+    private paramServiceAdm: ParamServiceAdm,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('currentUser'));
     this.inicio.setMonth(this.inicio.getMonth() - 3);
@@ -62,7 +69,12 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       evidenciaFotoEmpaque: ['', [Validators.required]],
       evidenciaVideoEmpaque: ['', []],
       tipoPago: ['', [Validators.required]],
-      evidenciaPago: ['', [Validators.required]]
+      evidenciaPago: ['', [Validators.required]],
+
+    });
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
+      this.parametroIva = parseFloat(result.info[0].valor);
     });
   }
 
@@ -129,7 +141,8 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       numeroGuia: ['', []],
       created_at: ['', []],
       metodoPago: ['', [Validators.required]],
-      canal: ['', []]
+      canal: ['', []],
+      nombreEnvio: ['']
     });
   }
 
@@ -168,9 +181,11 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
+      descuento: ['', []],
       bodega: ['', []],
       canal: [''],
-      woocommerceId: ['']
+      woocommerceId: [''],
+      imagen_principal: ['', [Validators.required]]
     });
   }
 
@@ -216,6 +231,8 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, canal: this.cortarUrlHastaCom(info.canal)});
+
+      this.calcular();
     });
   }
 
@@ -283,13 +300,24 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
+    let subtotalPedido = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
-      const cantidad = parseFloat(detalles[index].get('cantidad').value);
-      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
+      // tslint:disable-next-line:radix
+      const descuento = parseInt(detalles[index].get('descuento').value);
+      if (descuento > 0 && descuento <= 100) {
+        const totalDescuento = (valorUnitario * descuento) / 100;
+        detalles[index].get('precio').setValue((((valorUnitario - totalDescuento) * cantidad)).toFixed(2));
+      } else {
+        detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      }
       total += parseFloat(detalles[index].get('precio').value);
     });
-    total += this.notaPedido.get('envioTotal').value;
+    total += parseFloat(this.notaPedido.get('envioTotal').value);
+    subtotalPedido = total / this.parametroIva;
+    this.totalIva = (total - subtotalPedido).toFixed(2);
+    this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
     this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 
@@ -306,6 +334,9 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   procesarEnvio(modal, transaccion): void {
     this.archivo = new FormData();
     this.modalService.open(modal);
+    this.mostrarMontoEfectivo = false;
+    this.mostrarMontoTransferencia = false;
+    this.mostrarCargaComprobante = false;
     this.evidenciasForm = this.formBuilder.group({
       id: [transaccion.id, [Validators.required]],
       evidenciaFotoEmpaque: ['', [Validators.required]],
@@ -313,28 +344,37 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       tipoPago: ['', [Validators.required]],
       evidenciaPago: ['', [Validators.required]],
       estado: ['Envio', []],
+      totalCobroEfectivo: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
+      montoTransferencia: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]]
     });
-    this.obtenerTransaccion(transaccion.id)
+    this.obtenerTransaccion(transaccion.id);
     this.pedido = transaccion;
   }
 
   procesarAutorizacionEnvio(): void {
     if (confirm('Esta seguro de despachar') === true) {
-      const facturaFisicaValores: string[] = Object.values(this.evidenciasForm.value);
-      const facturaFisicaLlaves: string[] = Object.keys(this.evidenciasForm.value);
-      facturaFisicaLlaves.map((llaves, index) => {
-        if (facturaFisicaValores[index] && llaves !== 'evidenciaFotoEmpaque' && llaves !== 'evidenciaVideoEmpaque') {
-          this.archivo.append(llaves, facturaFisicaValores[index]);
-        }
-      });
-      if (this.evidenciasForm.value.evidenciaFotoEmpaque === '') {
-        this.toaster.open('Complete los campos requeridos.', {type: 'warning'})
+
+      if (this.evidenciasForm.value.totalCobroEfectivo < this.pedido.total || this.evidenciasForm.value.montoTransferencia < this.pedido.total) {
+        this.toaster.open('El monto ingresado no coincide con el total del pedido', {type: "danger"});
         return;
+      } else {
+
+        const facturaFisicaValores: string[] = Object.values(this.evidenciasForm.value);
+        const facturaFisicaLlaves: string[] = Object.keys(this.evidenciasForm.value);
+        facturaFisicaLlaves.map((llaves, index) => {
+          if (facturaFisicaValores[index] && llaves !== 'evidenciaFotoEmpaque' && llaves !== 'evidenciaVideoEmpaque') {
+            this.archivo.append(llaves, facturaFisicaValores[index]);
+          }
+        });
+        if (this.evidenciasForm.value.evidenciaFotoEmpaque === '') {
+          this.toaster.open('Complete los campos requeridos.', {type: 'warning'})
+          return;
+        }
+        this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
+          this.modalService.dismissAll();
+          this.obtenerTransacciones();
+        });
       }
-      this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
-        this.modalService.dismissAll();
-        this.obtenerTransacciones();
-      });
     }
   }
 
@@ -372,6 +412,20 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   extraerHora(dateTimeString: string): string {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(' ')[0];
+  }
+
+  onSelectTIpoPago(e: any) {
+    if (e.target.value === 'transferencia') {
+      this.mostrarCargaComprobante = true;
+      this.mostrarMontoTransferencia = true;
+      this.mostrarMontoEfectivo = false;
+      this.evidenciasForm.get('totalCobroEfectivo').setValue('');
+    } else {
+      this.mostrarCargaComprobante = false;
+      this.mostrarMontoTransferencia = false;
+      this.mostrarMontoEfectivo = true;
+      this.evidenciasForm.get('montoTransferencia').setValue('');
+    }
   }
 
 }

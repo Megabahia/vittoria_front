@@ -94,7 +94,6 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
       }),
       despachos_omniglobal: [0, []],
       valor: ['', [Validators.required]],
-      //MIGRACION
       tipoCanal: ['', [Validators.required]],
       pais: [this.pais, [Validators.required]],
       provincia: ['', [Validators.required]],
@@ -102,7 +101,8 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
       sector: [''],
       latitud: [''],
       longitud: [''],
-      prefijo: ['', [Validators.required, Validators.maxLength(4)]]
+      prefijo: ['', [Validators.required, Validators.maxLength(4)]],
+      bodega_central: [0, []],
     });
     this.menu = {
       modulo: 'adm',
@@ -243,6 +243,20 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
     this.pedidoOmniglobal = inputElement.checked ? 1 : 0;
     this.paramForm.get('pedidos_omniglobal').setValue(this.pedidoOmniglobal);
 
+  }
+
+  onSelectCheckBodegaCentral(datos, event: any): void {
+    const inputElement = event.target as HTMLInputElement;
+    const bodegaCentral = inputElement.checked ? 1 : 0;
+    this.paramForm.patchValue({...datos});
+    this.paramForm.get('bodega_central').setValue(bodegaCentral);
+    this.integracionesService.editarIntegracion(this.paramForm.value).subscribe((result) => {
+        this.obtenerListaParametros();
+        this.toaster.open('Parámetro actualizado', {type: 'success'});
+      },
+      (error) => {
+        this.toaster.open(error, {type: 'danger'});
+      });
   }
 
   onSelectCheckDespacho(event: any): void {

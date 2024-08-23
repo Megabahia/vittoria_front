@@ -308,26 +308,26 @@
         </ul>
       </li>
       <li class="ml-2">-------------------------------------</li>
-      <li class="nav-item" *ngIf="acciones.ADM.LEER">
+      <li class="nav-item" >
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice" title="GD Gestión de Drop Shipping">GD Gestión de Drop Shipping</span></a>
         <ul class="menu-content ng-star-inserted">
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
             <a class="d-flex align-items-center" [routerLink]="['gsb/gd_params']" data-toggle="tooltip"
                data-placement="auto" title="Parametrizaciones">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Parametrizaciones</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
             <a class="d-flex align-items-center" [routerLink]="['gsb/inventario/list']" data-toggle="tooltip"
                data-placement="auto" title="Super Barato">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Inventario</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
             <a class="d-flex align-items-center" [routerLink]="['gsb/inventario/reporte']" data-toggle="tooltip"
                data-placement="auto" title="Reporte de Inventario Super Barato">
               <i data-feather="circle"></i>
@@ -339,14 +339,14 @@
                title="Pedidos por Canal">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Registro de contactos</span></a>
             <ul class="menu-content">
-              <li class="nav-item">
+              <li class="nav-item" *ngIf="usuario.usuario.idRol === 58 || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 54">
                 <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/create']" data-toggle="tooltip"
                    data-placement="auto" title="Ingreso de contactos">
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Ingresar Contactos</span>
                 </a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" *ngIf="acciones.GCN.LEER">
                 <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/list/reporte']" data-toggle="tooltip"
                    data-placement="auto" title="Reporte de lista de contactos">
                   <i data-feather="circle"></i>
@@ -355,7 +355,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item has-sub ng-star-inserted">
+          <li class="nav-item has-sub ng-star-inserted" *ngIf="usuario.usuario.idRol === 1 || usuario.usuario.idRol === 61">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Concretar ventas">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Concretar ventas</span></a>
@@ -367,27 +367,41 @@
                   <span class="menu-item text-truncate" data-i18n="List">Listar Contactos</span>
                 </a>
               </li>
+              <li class="nav-item" *ngIf="acciones.GCN.LEER">
+                <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/list/reporte/venta']" data-toggle="tooltip"
+                   data-placement="auto" title="Reporte de lista de ventas">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Reporte de contactos por ventas</span>
+                </a>
+              </li>
             </ul>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
             <a class="d-flex align-items-center" [routerLink]="['gsb/pedido']" data-toggle="tooltip"
                data-placement="auto" title="Pedido Super Barato">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Pedido Super Barato</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
             <a class="d-flex align-items-center" [routerLink]="['gsb/superbarato']" data-toggle="tooltip"
                data-placement="auto" title="Super Barato">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Despachar pedido Super Barato</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
             <a class="d-flex align-items-center" [routerLink]="['gsb/reportes']" data-toggle="tooltip"
                data-placement="auto" title="Reportes Super Barato">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Reportes Super Barato</span>
+            </a>
+          </li>
+          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
+            <a class="d-flex align-items-center" [routerLink]="['gsb/gd_consulta_productos']" data-toggle="tooltip"
+               data-placement="auto" title="Consulta de producto GD">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Consulta de productos</span>
             </a>
           </li>
         </ul>
@@ -529,6 +543,12 @@
                data-placement="auto" title="Gestión de devolución de paquetes">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Gestión de devolución de paquetes</span></a>
           </li>
+          <li *ngIf="acciones.GDE.CREAR" class="nav-item {{menuToolbar['gde']['reporteVentas']}}">
+            <a class="d-flex align-items-center" href="#/gde/reportes"
+               data-toggle="tooltip"
+               data-placement="auto" title="Reporte de entregas">
+              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reporte de entregas</span></a>
+          </li>
         </ul>
       </li>
       <li class="nav-item" *ngIf="acciones.ADM.LEER">
@@ -595,6 +615,13 @@
               <span class="menu-item text-truncate" data-i18n="List">Confirmación de facturas</span>
             </a>
           </li>
+          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
+              <a class="d-flex align-items-center" [routerLink]="['gdc/facturas/quejas']" data-toggle="tooltip"
+               data-placement="auto" title="Confirmación de quejas">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Confirmación de quejas</span>
+            </a>
+          </li>
         </ul>
       </li>
       <li class="nav-item" *ngIf="acciones.GCN.LEER">
@@ -604,37 +631,51 @@
         <ul class="menu-content">
           <li class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}">
             <a class="d-flex align-items-center" href="#/gcn/reporte-ventas-vendedor/list" data-toggle="tooltip"
-               data-placement="auto" title="Reporte de ventas por vendedor">
+               data-placement="auto" title="Reporte de ventas por contacto local">
               <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas por vendedor</span>
+              <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas por contacto local</span>
+            </a>
+          </li>
+          <li class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}">
+            <a class="d-flex align-items-center" href="#/gcn/reporte-ventas-vendedor-metodo-envio/list" data-toggle="tooltip"
+               data-placement="auto" title="Reporte de ventas por método de envío">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas por método de envío</span>
             </a>
           </li>
           <li *ngIf="usuario.usuario.idRol !== 58 && usuario.usuario.idRol !== 52 || usuario.usuario.idRol === 54" class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}">
             <a class="d-flex align-items-center" href="#/gcn/reporte-ventas-centro-negocio/list" data-toggle="tooltip"
-               data-placement="auto" title="Reporte de ventas del centro de negocio">
+               data-placement="auto" title="Reporte de ventas del centro de negocio por contacto local">
               <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas del centro de negocio</span>
+              <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas del centro de negocio por contacto local</span>
+            </a>
+          </li>
+          <li *ngIf="usuario.usuario.idRol !== 58 && usuario.usuario.idRol !== 52 || usuario.usuario.idRol === 54" class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}">
+            <a class="d-flex align-items-center" href="#/gcn/reporte-ventas-centro-negocio-metodo-envio/list" data-toggle="tooltip"
+               data-placement="auto" title="Reporte de ventas del centro de negocio por método de envío">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas del centro de negocio por método de envío</span>
             </a>
           </li>
         </ul>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="usuario.usuario.idRol === 59 || usuario.usuario.idRol === 1">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice">GMB Gestión de Despachos MEGABAHIA</span></a>
         <ul class="menu-content">
           <li class="nav-item">
             <a class="d-flex align-items-center" [routerLink]="['gmb/megabahia']" data-toggle="tooltip"
-               data-placement="auto" title="GMB Gestión de Despachos MEGABAHIA">
+               data-placement="auto" title="GMB Gestión de pedidos MEGABAHIA">
               <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Generar despacho</span>
+              <span class="menu-item text-truncate" data-i18n="List">Generar pedido</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="d-flex align-items-center" [routerLink]="['gmb/entregados']" data-toggle="tooltip"
-               data-placement="auto" title="Despachos realizados">
+               data-placement="auto" title="Pedidos realizados">
               <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Despachos realizados</span>
+              <span class="menu-item text-truncate" data-i18n="List">Pedidos realizados</span>
             </a>
           </li>
         </ul>

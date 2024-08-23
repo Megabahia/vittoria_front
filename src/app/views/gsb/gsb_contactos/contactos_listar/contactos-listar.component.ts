@@ -60,9 +60,9 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   idSuperBarato;
   parametroIva;
   tipoIdentificacion;
-
+  estadoGestionSeleccionado = '';
   idContacto;
-  currentUserValue
+  currentUserValue;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -75,7 +75,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   mostrarSpinner = false;
   canalPrincipal = '';
   parametroTiempo;
-
+  listaEstadoContacto;
   columnaAcciones = false;
 
   constructor(
@@ -112,6 +112,10 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     /*this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'COMISION', 'Comision').subscribe((result) => {
       this.comision = parseFloat(result.info[0].valor);
     });*/
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'ESTADO CONTACTO', '').subscribe((result) => {
+      this.listaEstadoContacto = result.data;
+    });
   }
 
   ngOnInit(): void {
@@ -242,6 +246,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     this.contactoService.obtenerLista({
       page: this.page - 1,
       page_size: this.pageSize,
+      estadoGestion: true
       //inicio: this.inicio,
       //fin: this.transformarFecha(this.fin),
     }).subscribe((info) => {
@@ -530,6 +535,16 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
 
   actualizarEstadoContacto(contacto, estado) {
     this.contactoService.actualizarEstadoContacto(contacto.id, estado).subscribe((data) => {
+      this.columnaAcciones = true;
+      this.toaster.open('Estado del contacto actualizado.', {type: 'success'});
+      this.obtenerContactos();
+    }, error => {
+      this.toaster.open(error, {type: 'danger'});
+    });
+  }
+
+  guardarEstadoGestion(contacto) {
+    this.contactoService.actualizarEstadoGestionContacto(contacto.id, contacto.estadoGestion).subscribe((data) => {
       this.columnaAcciones = true;
       this.toaster.open('Estado del contacto actualizado.', {type: 'success'});
       this.obtenerContactos();

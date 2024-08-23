@@ -52,9 +52,9 @@
                 <th>Numero Pedido</th>
                 <th>Nombres Facturación</th>
                 <th>Apellidos Facturación</th>
-                <th>Metodo Pago</th>
-                <th>Comprobante Pago</th>
                 <th>Telefono</th>
+                <th>Comprobante Pago</th>
+                <th style="color: blue">Metodo envío</th>
                 <th>Estado</th>
                 <th>Ver Pedido</th>
                 <th>Acciones</th>
@@ -71,11 +71,11 @@
                 <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido | shorten }}</td>
                 <td [title]="transaccion.facturacion.nombres">{{ transaccion.facturacion.nombres | shorten }}</td>
                 <td [title]="transaccion.facturacion.apellidos">{{ transaccion.facturacion.apellidos | shorten }}</td>
-                <td [title]="transaccion.metodoPago">{{ transaccion.metodoPago | shorten }}</td>
+                <td>{{ transaccion.facturacion.telefono }}</td>
                 <td [title]="transaccion.urlMetodoPago">
                   <a *ngIf="transaccion.urlMetodoPago" [href]="transaccion.urlMetodoPago" target="_blank">Ver</a>
                 </td>
-                <td>{{ transaccion.facturacion.telefono }}</td>
+                <td [title]="transaccion.metodoPago" style="color: blue">{{ transaccion.metodoPago | shorten }}</td>
                 <td>{{ transaccion.estado }}</td>
                 <td>
                   <a (click)="obtenerTransaccion(transaccion.id)" data-toggle="modal"
@@ -333,7 +333,7 @@
                             <ng-container [formGroup]="detalle">
                               <div class="repeater-wrapper" data-repeater-item>
                                 <div class="row">
-                                  <div class="col-lg-1 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                  <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
                                       Código
                                     </p>
@@ -379,13 +379,6 @@
                                       </div>
                                     </div>
                                   </div>
-                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                    <p class="card-text col-title mb-md-50 mb-0">
-                                      Características
-                                    </p>
-                                    <label [innerHTML]="detalle.controls.caracteristicas.value"></label>
-
-                                  </div>
                                   <div class="col-lg-1 col-12 my-lg-0 my-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
                                       Precio
@@ -398,6 +391,13 @@
                                         Requerido
                                       </div>
                                     </div>
+                                  </div>
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Descuento
+                                    </p>
+                                    <label>{{ detalle.controls.descuento.value ? detalle.controls.descuento.value : '0' }}
+                                      %</label>
                                   </div>
                                   <div class="col-lg-1 col-12 my-lg-0 my-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
@@ -412,12 +412,7 @@
                                       </div>
                                     </div>
                                   </div>
-                                  <div class="col-lg-1 col-12 my-lg-0 my-2">
-                                    <p class="card-text col-title mb-md-50 mb-0">
-                                      Ubicación
-                                    </p>
-                                    <label class="d-block text-wrap">{{ detalle.controls.canal.value }}</label>
-                                  </div>
+
                                   <div class="col-md-2 border-left">
                                     <img class="img-detalle" alt="producto"
                                          src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
@@ -478,8 +473,20 @@
                           <div class="invoice-total-wrapper">
                             <hr class="my-50"/>
                             <div class="invoice-total-item">
+                              <p class="invoice-total-title text-warning font-weight-bold">
+                                Envio: {{ notaPedido.controls.nombreEnvio.value }}</p>
                               <p class="invoice-total-title text-primary font-weight-bold">
                                 Total Envio: ${{ notaPedido.controls.envioTotal.value }}</p>
+                            </div>
+                            <hr class="my-50"/>
+
+                            <div class="invoice-total-item">
+                              <p class="invoice-total-title text-primary font-weight-bold">
+                                Subtotal: ${{ notaPedido.controls.subtotal.value }}</p>
+                            </div>
+                            <div class="invoice-total-item">
+                              <p class="invoice-total-title text-primary font-weight-bold">
+                                IVA (15%): ${{ totalIva }}</p>
                             </div>
                             <div class="invoice-total-item">
                               <p class="invoice-total-title text-primary font-weight-bold">

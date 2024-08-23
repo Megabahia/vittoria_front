@@ -49,6 +49,8 @@
               <th>Concretar la venta</th>
               <th>Consultar productos</th>
               <th>Accion</th>
+              <th>Estado</th>
+              <th>Guardar</th>
             </tr>
             </thead>
 
@@ -94,19 +96,32 @@
                 </ng-template>
               </td>
               <td>
-                <button class="btn btn-sm btn-secondary" (click)="actualizarEstadoContacto(contacto, 'EN PROCESO DE VENTA')">
+                <button class="btn btn-sm btn-secondary" (click)="actualizarEstadoContacto(contacto, 'EN PROCESO DE VENTA')" [disabled]="contacto.estado === 'EN PROCESO DE VENTA'">
                   Tomar contacto para venta
                 </button>
               </td>
               <td>
                 <a *ngIf="contacto.estado === 'EN PROCESO DE VENTA'"  class="btn btn-sm border-primary"
-                   [routerLink]="['/pages/consulta/producto']" target="_blank">
+                   [routerLink]="['/gsb/gd_consulta_productos']" target="_blank">
                   Consultar productos
                 </a>
               </td>
               <td>
-                <button *ngIf="contacto.estado === 'EN PROCESO DE VENTA'" class="btn btn-primary" (click)="obtenerDatosContacto(notaPedidoModal, contacto.id)">Generar
+                <button *ngIf="contacto.estado === 'EN PROCESO DE VENTA' || contacto.estado === 'CONTACTO FALSO'" class="btn btn-primary" (click)="obtenerDatosContacto(notaPedidoModal, contacto.id)">Generar
                   Pedido
+                </button>
+              </td>
+              <td>
+                <select class="form-control width-150" name="provinciaFact" [(ngModel)]="contacto.estadoGestion">
+                  <option [value]="null">- Seleccione -</option>
+                  <option [value]="estado.nombre" *ngFor="let estado of listaEstadoContacto">
+                    {{ estado.nombre }}
+                  </option>
+                </select>
+              </td>
+              <td>
+                <button class="btn btn-primary" (click)="guardarEstadoGestion(contacto)" [disabled]="!contacto.estadoGestion || contacto.estadoGestion === 'null'">
+                  Guardar
                 </button>
               </td>
             </tr>

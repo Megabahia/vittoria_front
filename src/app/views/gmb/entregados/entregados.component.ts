@@ -12,6 +12,7 @@ import {ProductosService} from '../../../services/mdp/productos/productos.servic
 import {Toaster} from 'ngx-toast-notifications';
 
 import {GmbMegabahiaService} from "../../../services/gmb/megbahia/gmb-megabahia.service";
+import {AuthService} from "../../../services/admin/auth.service";
 
 @Component({
   selector: 'app-despachos-entregados-megabahia',
@@ -56,6 +57,7 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
   factura;
   totalIva;
   parametroIva;
+  currentUser;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -76,7 +78,11 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
     private paramServiceAdm: ParamServiceAdm,
     private productosService: ProductosService,
     private toaster: Toaster,
+    private authService: AuthService,
+
   ) {
+    this.currentUser = this.authService.currentUserValue;
+
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
     this.facturarForm = this.formBuilder.group({
@@ -131,8 +137,8 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
         calleSecundaria: ['', [Validators.required]],
         referencia: ['', [Validators.required]],
         //gps: ['', []],
-        codigoUsuario: ['', []],
-        nombreUsuario: ['', []],
+        codigoVendedor: ['', []],
+        nombreVendedor: ['', []],
         comprobantePago: ['', []],
       }),
       vendedor: ['', [Validators.required]],
@@ -214,6 +220,7 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
 
   obtenerMegabahiaDespacho(): void {
     this.megabahiaService.obtenerListaMegabahiaDespachos({
+      //codigoVendedor: this.currentUser.usuario.username,
       telefono: this.whatsapp,
       correo: this.correo,
       page: this.page - 1,
@@ -305,7 +312,12 @@ export class EntregadosMegabahiaComponent implements OnInit, AfterViewInit {
       const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
       // tslint:disable-next-line:radix
       const descuento = parseInt(detalles[index].get('descuento').value);
-      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      if (descuento > 0 && descuento <= 100) {
+        const totalDescuento = (valorUnitario * descuento) / 100;
+        detalles[index].get('precio').setValue((((valorUnitario - totalDescuento) * cantidad)).toFixed(2));
+      } else {
+        detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      }
       total += parseFloat(detalles[index].get('precio').value);
     });
     total += parseFloat(this.notaPedido.get('envioTotal').value);

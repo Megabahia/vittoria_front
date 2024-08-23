@@ -48,12 +48,14 @@ export class UsersListComponent implements OnInit, AfterViewInit {
     whatsapp: '',
     idRol: 0,
     estado: 'Activo',
-    canal: ''
+    canal: '',
+    tipoEnvio: ''
+
   };
   empresas = [];
   provinciasOpciones;
   ciudadesOpciones;
-
+  listaMetodoPago
   constructor(
     private servicioUsuarios: UsersService,
     private modalService: NgbModal,
@@ -63,6 +65,10 @@ export class UsersListComponent implements OnInit, AfterViewInit {
 
   ) {
     this.obtenerListaParametros();
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'METODO PAGO', '').subscribe((result) => {
+      this.listaMetodoPago = result.info;
+    });
   }
 
   ngOnInit(): void {
@@ -76,6 +82,7 @@ export class UsersListComponent implements OnInit, AfterViewInit {
       pais: ['', [Validators.required]],
       provincia: ['', [Validators.required]],
       ciudad: ['', [Validators.required]],
+      tipoEnvio: ['', [Validators.required]],
       telefono: ['', [Validators.required, Validators.maxLength(10),
         Validators.minLength(10), Validators.pattern('^[0-9]*$')]],
       whatsapp: ['', [Validators.required, Validators.maxLength(10),

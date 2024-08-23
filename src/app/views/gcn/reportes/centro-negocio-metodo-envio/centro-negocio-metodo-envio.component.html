@@ -1,0 +1,1018 @@
+<div class="app-content content ">
+  <div class="content-overlay"></div>
+  <div class="header-navbar-shadow"></div>
+  <div class="content-wrapper">
+    <div class="content-header row">
+    </div>
+    <div class="content-body">
+      <!-- users list start -->
+      <section class="app-user-list">
+        <!-- users filter start -->
+        <div class="card">
+          <h5 class="card-header">Filtros de búsqueda</h5>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="inicio">
+              </div>
+              <div class="col-md-4">
+                <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="fin">
+              </div>
+              <div class="col-md-4">
+                <button class="btn btn-primary" (click)="obtenerTransacciones()">
+                  <i-feather name='search' class="edit-user"></i-feather>
+                </button>
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-md-4 mt-3">
+                <div class="form-group">
+                  <select class="form-control"
+                          [(ngModel)]="estadoSeleccionado">
+                    <option value="" selected>- Seleccione estado-</option>
+                    <option value="{{estado}}" *ngFor="let estado of listaEstados">
+                      {{ estado }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4 mt-3">
+                <div class="form-group">
+                  <select class="form-control"
+                          [(ngModel)]="usuarioSeleccionado">
+                    <option value="" selected>- Seleccione usuario-</option>
+                    <option value="{{usuario.username}}" *ngFor="let usuario of listaUsuariosCompania">
+                      {{ usuario.username }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4 mt-3">
+                <div class="form-group">
+                  <select class="form-control" [(ngModel)]="centroNegocioSeleccionado">
+                    <option value="" selected>- Seleccione centro de negocio-</option>
+                    <option value="{{empresa.valor}}" *ngFor="let empresa of empresas">
+                      {{ empresa.valor }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <select class="form-control" name="metodoEnvio"
+                        [(ngModel)]="metodoEnvio" id="metodoEnvio">
+                  <option value="" selected>- Seleccione método de envío -</option>
+                  <option value="{{metodo.nombre}}" *ngFor="let metodo of listaMetodoPago">
+                    {{ metodo.nombre }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <button class="btn btn-primary" (click)="obtenerTransacciones()">
+                  <i-feather name='search' class="edit-user"></i-feather>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!--<h5 class="px-2 pb-2">Total de ventas de pedidos <u>Entregados</u> (Subtotal) ${{ suma_total }}</h5>-->
+        </div>
+        <div class="card">
+          <div class="card-datatable table-responsive pt-0">
+            <div class="row m-75">
+              <div class="col-md-12 col-6">
+                <label>Mostrar</label>
+                <select class="form-control-sm" [(ngModel)]="pageSize"
+                        (change)="obtenerTransacciones()">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+                <button class="btn btn-success waves-effect waves-float waves-light mx-1"
+                        type="button" (click)="reporteProductosStock()" [ngClass]="{'loading': enviando}"
+                        [disabled]="enviando">
+                  <span *ngIf="enviando" class="spinner-border spinner-border-sm" role="status"
+                        aria-hidden="true"></span>
+                  Exportar a Excel
+                </button>
+
+              </div>
+            </div>
+            <table class="user-list-table table">
+              <thead class="thead-light">
+              <tr>
+                <th>Fecha Pedido</th>
+                <th>Canal Pedido</th>
+                <th>Numero Pedido</th>
+                <th>Nombres Facturación</th>
+                <th>Apellidos Facturación</th>
+                <th>Metodo Pago</th>
+                <th>Telefono</th>
+                <th>Estado</th>
+                <th>Motivo de pedido negado</th>
+                <th>Comisión</th>
+                <th>Comisión final</th>
+                <th>Código vendedor</th>
+                <th>Nombre vendedor</th>
+                <th>Centro de negocio</th>
+                <th>Ver</th>
+                <th>Cupón</th>
+                <th>Monto subtotal a pagar del pedido</th>
+                <th>Monto subtotal ingresado en evidencia</th>
+                <th>Monto subtotal aprobado</th>
+                <th>Evidencia de factura</th>
+                <th>Monto subtotal ingresado en queja</th>
+                <th>Monto subtotal por queja aprobado</th>
+                <th>Evidencia de queja</th>
+                <th>Cargar evidencia de venta</th>
+              </tr>
+              </thead>
+
+              <tbody>
+              <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
+                <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
+                <td>{{ transaccion.canal | shorten }}</td>
+                <td>{{ transaccion.numeroPedido }}</td>
+                <td>{{ transaccion.facturacion.nombres }}</td>
+                <td>{{ transaccion.facturacion.apellidos }}</td>
+                <td>{{ transaccion.metodoPago }}</td>
+                <td>{{ transaccion.facturacion.telefono }}</td>
+                <td [ngStyle]="{'color': transaccion.estado === 'Devolucion' || transaccion.estado === 'Rechazado' || transaccion.estado === 'Pendiente de entrega' ? 'red' :
+                                transaccion.estado === 'Despachado' || transaccion.estado === 'Empacado'|| transaccion.estado === 'Pendiente' ? 'yellow' : transaccion.estado === 'Por confirmar' ? 'black' : 'green'}">{{ transaccion.estado }}
+                </td>
+                <td>{{ transaccion.motivoNegacionPedido }}</td>
+                <td [ngStyle]="{'color':'blue'}">${{ transaccion.comision ? transaccion.comision : '--' }}</td>
+                <td [ngStyle]="{'color':'red'}">${{ transaccion.comisionFinal ? transaccion.comisionFinal : '--' }}</td>
+                <td>{{ transaccion.facturacion.codigoVendedor }}</td>
+                <td>{{ transaccion.facturacion.nombreVendedor }}</td>
+                <td>{{ transaccion.companiaVendedor }}</td>
+                <td>
+                  <a (click)="obtenerTransaccion(transaccion.id)" data-toggle="modal"
+                     data-target="#verfactura">
+                    <i-feather name="eye" class="mr-25"></i-feather>
+                  </a>
+                </td>
+                <td>
+                  <a *ngIf="transaccion.fotoCupon!=null" href="{{transaccion.fotoCupon}}" target="_blank">
+                    <i-feather name="image" class="mr-25"></i-feather>
+                  </a>
+                  <span *ngIf="transaccion.fotoCupon===null">No existe cupón.</span>
+                </td>
+                <td>{{ transaccion.subtotal | currency }}</td>
+                <td class="text-info">{{ transaccion.montoSubtotalCliente | currency }}</td>
+                <td class="text-success">{{ transaccion.montoSubtotalAprobado | currency }}</td>
+                <td>
+                  <a href="{{transaccion.archivoFactura}}" *ngIf="transaccion.archivoFactura" target="_blank">
+                    <i-feather name="file-text" class="mr-25"></i-feather>
+                  </a>
+                </td>
+                <td class="text-warning">{{ transaccion.montoSubtotalQueja | currency }}</td>
+                <td class="text-warning">{{ transaccion.montoSubtotalAprobadoQueja | currency }}</td>
+                <td>
+                  <a href="{{transaccion.archivoFacturaQueja}}" *ngIf="transaccion.archivoFacturaQueja" target="_blank">
+                    <i-feather name="file-text" class="mr-25"></i-feather>
+                  </a>
+                </td>
+                <td>
+                  <button
+                    *ngIf="transaccion.estado === 'Pendiente de entrega' || transaccion.estado === 'Por confirmar'"
+                    class="btn btn-primary"
+                    (click)="cargarFactura(facturacionModal, transaccion.id)">
+                    Cargar evidencia de venta
+                  </button>
+                  <button
+                    *ngIf="transaccion.estado === 'Entregado'"
+                    class="btn btn-secondary"
+                    (click)="exclamarReclamo(quejaModal, transaccion.id)">
+                    Escalar reclamo
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+          </div>
+          <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
+                          [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+
+          <div class="modal fade" id="verfactura" tabindex="-1" role="dialog"
+               aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+              <div class="modal-content">
+                <form [formGroup]="notaPedido">
+                  <div class="card invoice-preview-card">
+                    <!-- Header starts -->
+                    <div class="card-body invoice-padding pb-0">
+                      <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+                        <div>
+                          <div class="col-12 d-block mb-2">
+                            <span class="title">Fecha Pedido:</span>
+                            <input type="text"
+                                   class="form-control invoice-edit-input date-picker"
+                                   value="{{notaPedido.controls.created_at.value | date: 'dd-MM-yyyy'}}"
+                                   disabled/>
+                            <span class="title text-danger">Hora: </span>
+                            <span class="text-danger">{{ horaPedido }}</span>
+                          </div>
+                        </div>
+                        <div>
+                          <div class="col-12 d-block align-items-center">
+                            <span class="title">Número de pedido:</span>
+                            <input type="text"
+                                   class="form-control invoice-edit-input date-picker"
+                                   value="{{notaPedido.controls.numeroPedido.value}}"
+                                   disabled/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Header ends -->
+
+                    <hr class="invoice-spacing"/>
+
+                    <!-- Address and Contact starts -->
+                    <div class="card-body invoice-padding pt-0">
+                      <h4 class="invoice-title mb-2">Datos para la factura</h4>
+                      <div formGroupName="facturacion">
+                        <div class="row">
+                          <div class="col-md-4 col-12">
+                            <label>Nombres</label>
+                            <input class="form-control" type="text"
+                                   formControlName="nombres" disabled>
+                            <div *ngIf="facturacionForm.nombres.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="facturacionForm.nombres.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Apellidos</label>
+                            <input class="form-control" type="text"
+                                   formControlName="apellidos" disabled>
+                            <div *ngIf="facturacionForm.apellidos.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="facturacionForm.apellidos.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Correo</label>
+                            <input class="form-control" type="text"
+                                   formControlName="correo" disabled>
+                            <div *ngIf="facturacionForm.correo.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="facturacionForm.correo.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <div class="form-group">
+                              <label for="tipoIdentificacion">Tipo de Identificación</label>
+                              <select id="tipoIdentificacion" class="form-control" formControlName="tipoIdentificacion"
+                                      disabled>
+                                <option value="" disabled>- Seleccione -</option>
+                                <option value="cedula" selected>Cédula</option>
+                                <option value="ruc">RUC</option>
+                                <option value="pasaporte">Pasaporte</option>
+                              </select>
+
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Numero Identificación</label>
+                            <input class="form-control" type="text"
+                                   formControlName="identificacion"
+                                   disabled
+                            >
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Teléfono</label>
+                            <input class="form-control" type="text"
+                                   formControlName="telefono" disabled>
+                            <div *ngIf="facturacionForm.telefono.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="facturacionForm.telefono.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Pais</label>
+                            <input class="form-control" type="text"
+                                   formControlName="pais" disabled>
+                            <div *ngIf="facturacionForm.pais.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="facturacionForm.pais.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Provincia</label>
+                            <input class="form-control" type="text"
+                                   formControlName="provincia" disabled>
+                            <div *ngIf="facturacionForm.provincia.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="facturacionForm.provincia.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-4">
+                            <label>Ciudad</label>
+                            <input class="form-control" type="text"
+                                   formControlName="ciudad" disabled>
+                            <div *ngIf="facturacionForm.ciudad.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="facturacionForm.ciudad.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Calle Principal</label>
+                            <input class="form-control" type="text"
+                                   formControlName="callePrincipal" disabled>
+                            <div *ngIf="facturacionForm.callePrincipal.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="facturacionForm.callePrincipal.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Número</label>
+                            <input class="form-control" type="text"
+                                   formControlName="numero" disabled>
+                            <div *ngIf="facturacionForm.numero.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="facturacionForm.numero.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Calle Secundaria</label>
+                            <input class="form-control" type="text"
+                                   formControlName="calleSecundaria" disabled>
+                            <div *ngIf="facturacionForm.calleSecundaria.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="facturacionForm.calleSecundaria.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Referencia</label>
+                            <input class="form-control" type="text"
+                                   formControlName="referencia" disabled>
+                            <div *ngIf="facturacionForm.referencia.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="facturacionForm.referencia.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>GPS</label>
+                            <input class="form-control" type="text"
+                                   formControlName="gps" disabled>
+                            <div *ngIf="facturacionForm.gps.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="facturacionForm.gps.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4 col-12">
+                      <label>Método Pago</label>
+                      <input class="form-control" type="text"
+                             formControlName="metodoPago" disabled>
+                      <div *ngIf="notaPedidoForm.metodoPago.errors"
+                           class="invalid-feedback" style="display: block;">
+                        <div *ngIf="notaPedidoForm.metodoPago.errors.required">
+                          Requerido
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Address and Contact ends -->
+                    <hr class="invoice-spacing"/>
+                    <!-- Product Details starts -->
+                    <div class="card-body invoice-padding">
+                      <div formArrayName="articulos">
+                        <form class="source-item">
+                          <div data-repeater-list="group-a"
+                               *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
+                            <ng-container class="row" [formGroup]="detalle">
+                              <div class="repeater-wrapper" data-repeater-item>
+                                <div class="row">
+                                  <div class="col-12 d-flex product-details-border position-relative pr-0">
+                                    <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                        <p class="card-text col-title mb-md-50 mb-0">
+                                          Código
+                                        </p>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"
+                                                  id="basic-addon1">{{ detalle.controls.prefijo?.value }}</span>
+                                          </div>
+                                          <input class="form-control" type="text"
+                                                 (change)="obtenerProducto(i)"
+                                                 formControlName="codigo"
+                                                 disabled>
+                                          <div *ngIf="detalle.controls.codigo.errors"
+                                               class="invalid-feedback"
+                                               style="display: block;">
+                                            <div *ngIf="detalle.controls.codigo.errors.required">
+                                              Requerido
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                        <p class="card-text col-title mb-md-50 mb-0">
+                                          Cantidad
+                                        </p>
+                                        <input type="text" class="form-control"
+                                               formControlName="cantidad"
+                                               (change)="calcular()"
+                                               disabled
+                                        />
+                                        <div *ngIf="detalle.controls.cantidad.errors"
+                                             class="invalid-feedback"
+                                             style="display: block;" disabled>
+                                          <div *ngIf="detalle.controls.cantidad.errors.required">
+                                            Requerido
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                        <p class="card-text col-title mb-md-50 mb-0">
+                                          Nombre
+                                        </p>
+                                        <!--<input type="text" class="form-control"
+                                               formControlName="articulo"
+                                               disabled
+                                        />-->
+                                        <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
+
+                                        <div *ngIf="detalle.controls.articulo.errors"
+                                             class="invalid-feedback"
+                                             style="display: block;">
+                                          <div *ngIf="detalle.controls.articulo.errors.required">
+                                            Requerido
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                        <p class="card-text col-title mb-md-50 mb-0">
+                                          Precio
+                                        </p>
+                                        <label>${{ detalle.controls.valorUnitario.value }}</label>
+                                        <div *ngIf="detalle.controls.valorUnitario.errors"
+                                             class="invalid-feedback"
+                                             style="display: block;">
+                                          <div *ngIf="detalle.controls.valorUnitario.errors.required">
+                                            Requerido
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-lg-2 col-12 my-lg-0 my-2 text-danger">
+                                        <p class="card-text col-title mb-md-50 mb-0">
+                                          Descuento
+                                        </p>
+                                        <label
+                                          class="d-block text-wrap text-danger">{{ detalle.controls.descuento.value }}
+                                          %</label>
+                                      </div>
+                                      <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                        <p class="card-text col-title mb-md-50 mb-0">
+                                          Total
+                                        </p>
+                                        <label>${{ detalle.controls.precio.value }}</label>
+                                        <div *ngIf="detalle.controls.precio.errors"
+                                             class="invalid-feedback"
+                                             style="display: block;">
+                                          <div *ngIf="detalle.controls.precio.errors.required">
+                                            Requerido
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-2 border-left">
+                                        <img class="img-detalle"
+                                             src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
+                                             *ngIf="detalle.controls?.imagen_principal" width="100px" height="100px"
+                                             alt="">
+                                      </div>
+                                    </div>
+
+                                  </div>
+                                </div>
+                              </div>
+                            </ng-container>
+                          </div>
+                        </form>
+                        <div *ngIf="notaPedidoForm.articulos.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="notaPedidoForm.articulos.errors?.required">
+                            Artciulos es requerido
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body invoice-padding">
+
+                    </div>
+                    <!-- Product Details ends -->
+                    <hr class="invoice-spacing"/>
+                    <!-- Invoice Total starts -->
+                    <div class="card-body invoice-padding">
+                      <div formGroupName="facturacion">
+                        <div class="row mb-1">
+                          <div class="col-md-6 col-12">
+                            <label for="codigoVendedor" class="form-label">Codigo
+                              Vendedor:</label>
+                            <input type="text" class="form-control" id="codigoVendedor"
+                                   formControlName="codigoVendedor" disabled/>
+                            <div *ngIf="facturacionForm.codigoVendedor.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="facturacionForm.codigoVendedor.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6 col-12">
+                            <label for="nombreVendedor" class="form-label">Nombre
+                              Vendedor:</label>
+                            <input type="text" class="form-control" id="nombreVendedor"
+                                   formControlName="nombreVendedor" disabled/>
+                            <div *ngIf="facturacionForm.nombreVendedor.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="facturacionForm.nombreVendedor.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-7"></div>
+                        <div class="col-md-5 text-right">
+                          <div class="invoice-total-wrapper">
+                            <!--<div class="invoice-total-item">
+                                <p class="invoice-total-title">Subtotal:
+                                    ${{notaPedido.controls.subtotal.value}}</p>
+                            </div>
+                            <div class="invoice-total-item">
+                                <p class="invoice-total-title">{{iva?.descripcion}}:
+                                    ${{notaPedido.controls.iva.value}}</p>
+                            </div>-->
+                            <hr class="my-50"/>
+                            <div class="invoice-total-item">
+                              <p class="invoice-total-title text-primary font-weight-bold">
+                                Subtotal: ${{ notaPedido.controls.subtotal.value }}</p>
+                            </div>
+                            <div class="invoice-total-item">
+                              <p class="invoice-total-title text-primary font-weight-bold">
+                                IVA (15%): ${{ totalIva }}</p>
+                            </div>
+                            <div class="invoice-total-item">
+                              <p class="invoice-total-title text-danger font-weight-bold">
+                                Total a pagar por el cliente: ${{ notaPedido.controls.total.value }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Invoice Total ends -->
+
+                    <hr class="invoice-spacing mt-0"/>
+                    <h2>Datos Envió</h2>
+                    <div class="card-body invoice-padding pt-0">
+                      <div formGroupName="envio">
+                        <div class="row">
+                          <div class="col-md-4 col-12">
+                            <label>Nombres</label>
+                            <input class="form-control" type="text"
+                                   formControlName="nombres" disabled>
+                            <div *ngIf="envioForm.nombres.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="envioForm.nombres.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Apellidos</label>
+                            <input class="form-control" type="text"
+                                   formControlName="apellidos" disabled>
+                            <div *ngIf="envioForm.apellidos.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="envioForm.apellidos.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Correo</label>
+                            <input class="form-control" type="text"
+                                   formControlName="correo" disabled>
+                            <div *ngIf="envioForm.correo.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="envioForm.correo.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <div class="form-group">
+                              <label for="tipoIdentificacionEnvio">Tipo de Identificación</label>
+                              <select id="tipoIdentificacionEnvio" class="form-control"
+                                      formControlName="tipoIdentificacion"
+                                      disabled>
+                                <option value="" disabled>- Seleccione -</option>
+                                <option value="cedula" selected>Cédula</option>
+                                <option value="ruc">RUC</option>
+                                <option value="pasaporte">Pasaporte</option>
+                              </select>
+
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Numero Identificación</label>
+                            <input class="form-control" type="text"
+                                   formControlName="identificacion"
+                                   disabled
+                            >
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Teléfono</label>
+                            <input class="form-control" type="text"
+                                   formControlName="telefono" disabled>
+                            <div *ngIf="envioForm.telefono.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="envioForm.telefono.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Pais</label>
+                            <input class="form-control" type="text"
+                                   formControlName="pais" disabled>
+                            <div *ngIf="envioForm.pais.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="envioForm.pais.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Provincia</label>
+                            <input class="form-control" type="text"
+                                   formControlName="provincia" disabled>
+                            <div *ngIf="envioForm.provincia.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="envioForm.provincia.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Ciudad</label>
+                            <input class="form-control" type="text"
+                                   formControlName="ciudad" disabled>
+                            <div *ngIf="envioForm.ciudad.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="envioForm.ciudad.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Calle Principal</label>
+                            <input class="form-control" type="text"
+                                   formControlName="callePrincipal" disabled>
+                            <div *ngIf="envioForm.callePrincipal.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="envioForm.callePrincipal.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Número</label>
+                            <input class="form-control" type="text"
+                                   formControlName="numero" disabled>
+                            <div *ngIf="envioForm.numero.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="envioForm.numero.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Calle Secundaria</label>
+                            <input class="form-control" type="text"
+                                   formControlName="calleSecundaria" disabled>
+                            <div *ngIf="envioForm.calleSecundaria.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="envioForm.calleSecundaria.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Referencia</label>
+                            <input class="form-control" type="text"
+                                   formControlName="referencia" disabled>
+                            <div *ngIf="envioForm.referencia.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="envioForm.referencia.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>GPS</label>
+                            <input class="form-control" type="text"
+                                   formControlName="gps" disabled>
+                            <div *ngIf="envioForm.gps.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="envioForm.gps.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4 col-12">
+                            <label>Canal Envio</label>
+                            <input class="form-control" type="text"
+                                   formControlName="canalEnvio" disabled>
+                            <div *ngIf="envioForm.canalEnvio.errors"
+                                 class="invalid-feedback" style="display: block;">
+                              <div *ngIf="envioForm.canalEnvio.errors.required">
+                                Requerido
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row p-2">
+                      <div class="col-12">
+                        <button type="reset" class="btn btn-secondary"
+                                data-dismiss="modal">Cerrar
+                        </button>
+                      </div>
+                    </div>
+
+
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <hr/>
+        </div>
+      </section>
+      <ng-template #facturacionModal let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title">Carga de las evidencias de venta</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-content">
+          <div class="card-body invoice-padding">
+            <div class="col-12">
+              <p class="bg-primary text-center">Por favor, carga el archivo de la factura y el monto del subtotal de la
+                factura para reflejar la evidencia de la venta.</p>
+            </div>
+          </div>
+          <form [formGroup]="formaPagoForm">
+            <div class="card-body invoice-padding">
+              <div class="row">
+                <div class="col-md-6 col-12 mb-1">
+                  <label>Fecha de la carga de evidencia:</label>
+                  <input class="form-control mb-2" type="text" disabled formControlName="fechaCargaFormaPago"/>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 col-12 mb-1">
+                  <div class="form-group">
+                    <label for="tipoPago">Tipo de Factura</label>
+                    <select id="tipoPago" class="form-control" formControlName="tipoPago"
+                            (change)="onSelectChange($event)">
+                      <option value="" selected>- Seleccione el tipo de factura-</option>
+                      <option value="facturaElectronica">Factura electrónica</option>
+                      <option value="rimpePopular">Rimpe popular</option>
+                    </select>
+                    <div *ngIf="formasPagoForm.tipoPago.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="formasPagoForm.tipoPago.errors.required">
+                        Requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-12" *ngIf="mostrarInputComprobante">
+                  <div class="form-group">
+                    <label for="numeroComprobante">Ingreso número de comprobante</label>
+                    <input class="form-control" type="text" id="numeroComprobante"
+                           formControlName="numeroComprobante"/>
+                  </div>
+                  <div *ngIf="formasPagoForm.numeroComprobante.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="formasPagoForm.numeroComprobante.errors.required">
+                      Requerido
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 col-12 mb-1">
+                  <label>Fecha en la que se emitió la factura:</label>
+                  <input class="form-control mb-2" type="date" formControlName="fechaEmisionFactura"/>
+                  <div *ngIf="formasPagoForm.fechaEmisionFactura.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="formasPagoForm.fechaEmisionFactura.errors.required">
+                      Requerido
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 col-12 my-1">
+                  <label>Evidencia de venta (Factura o comprobante)</label>
+                  <input class="form-control-file" type="file" (change)="onFileSelected($event)">
+                  <div *ngIf="formasPagoForm.archivoFactura.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="formasPagoForm.archivoFactura.errors.required">
+                      Requerido
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-12">
+                  <div class="form-group">
+                    <label for="totalCobroSubtotal">Ingrese el monto del subtotal de la factura</label>
+                    <input class="form-control" type="text" id="totalCobroSubtotal"
+                           formControlName="montoSubtotalCliente"/>
+                  </div>
+                  <div *ngIf="formasPagoForm.montoSubtotalCliente.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="formasPagoForm.montoSubtotalCliente.errors.required">
+                      Requerido
+                    </div>
+                    <div *ngIf="formasPagoForm.montoSubtotalCliente.errors.pattern">
+                      Ingrese valores válidos y unicamente dos decimales
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="reset" class="btn btn-secondary"
+                  (click)="modal.dismiss('Cross click')">Cerrar
+          </button>
+          <button class="btn btn-primary mx-1"
+                  (click)="actualizar()"
+          >Cargar evidencias
+          </button>
+        </div>
+      </ng-template>
+      <!-- MODAL QUEJA -->
+      <ng-template #quejaModal let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title">Exclamar queja</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-content">
+          <div class="card-body invoice-padding">
+            <div class="col-12">
+              <p class="bg-warning text-center">Por favor, realice la corrección de los datos y describa la queja de la
+                venta.</p>
+            </div>
+          </div>
+          <form [formGroup]="exclamoQuejaForm">
+            <div class="card-body invoice-padding">
+              <div class="row">
+                <div class="col-md-6 col-12 mb-1">
+                  <label>Fecha de la carga de evidencia de la queja:</label>
+                  <input class="form-control mb-2" type="text" disabled formControlName="fechaCargaFormaPagoQueja"/>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 col-12 mb-1">
+                  <div class="form-group">
+                    <label for="tipoPagoQueja">Tipo de Factura de la queja</label>
+                    <select id="tipoPagoQueja" class="form-control" formControlName="tipoPagoQueja"
+                            (change)="onSelectChangeQueja($event)">
+                      <option value="" selected>- Seleccione el tipo de factura-</option>
+                      <option value="facturaElectronica">Factura electrónica</option>
+                      <option value="rimpePopular">Rimpe popular</option>
+                    </select>
+                    <div *ngIf="quejaForm.tipoPagoQueja.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="quejaForm.tipoPagoQueja.errors.required">
+                        Requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-12" *ngIf="mostrarInputComprobante">
+                  <div class="form-group">
+                    <label for="numeroComprobanteQueja">Ingreso número de comprobante de queja</label>
+                    <input class="form-control" type="text" id="numeroComprobanteQueja"
+                           formControlName="numeroComprobanteQueja"/>
+                  </div>
+                  <div *ngIf="quejaForm.numeroComprobanteQueja.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="quejaForm.numeroComprobanteQueja.errors.required">
+                      Requerido
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 col-12 mb-1">
+                  <label>Fecha en la que se emitió la factura de la queja:</label>
+                  <input class="form-control mb-2" type="date" min="{{this.fechaMinima}}" max="{{this.fechaMaxima}}"
+                         formControlName="fechaEmisionFacturaQueja"/>
+                  <div *ngIf="quejaForm.fechaEmisionFacturaQueja.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="quejaForm.fechaEmisionFacturaQueja.errors.required">
+                      Requerido
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 col-12 my-1">
+                  <label>Evidencia de venta de la queja (Factura o comprobante)</label>
+                  <input class="form-control-file" type="file" (change)="onFileSelectedQueja($event)">
+                  <div *ngIf="quejaForm.archivoFacturaQueja.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="quejaForm.archivoFacturaQueja.errors.required">
+                      Requerido
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-12">
+                  <div class="form-group">
+                    <label for="totalCobroSubtotalQueja">Ingrese el monto del subtotal de la facturade la queja</label>
+                    <input class="form-control" type="text" id="totalCobroSubtotalQueja" placeholder="00.00"
+                           formControlName="montoSubtotalQueja"/>
+                  </div>
+                  <div *ngIf="quejaForm.montoSubtotalQueja.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="quejaForm.montoSubtotalQueja.errors.required">
+                      Requerido
+                    </div>
+                    <div *ngIf="quejaForm.montoSubtotalQueja.errors.pattern">
+                      Ingrese valores válidos, en formato 00.00 y unicamente dos decimales
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 col-12 my-1">
+                  <label>Descripción de queja</label>
+                  <textarea class="form-control" type="text" rows="4"
+                            formControlName="descripcionQueja"></textarea>
+                  <div *ngIf="quejaForm.descripcionQueja.errors"
+                       class="invalid-feedback" style="display: block;">
+                    <div *ngIf="quejaForm.descripcionQueja.errors.required">
+                      Requerido
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="reset" class="btn btn-secondary"
+                  (click)="modal.dismiss('Cross click')">Cerrar
+          </button>
+          <button class="btn btn-primary mx-1"
+                  (click)="actualizarQueja()"
+          >Cargar evidencias
+          </button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+

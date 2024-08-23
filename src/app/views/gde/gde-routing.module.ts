@@ -5,9 +5,16 @@ import {ParamsComponent} from '../gde/params/params.component';
 import {GestionEntregaComponent} from './gestion-entrega/gestion-entrega.component';
 import {GdeComponent} from './gde.component';
 import {GestionEntregaNuevosComponent} from './woocommerce/gestion-entrega-nuevos/gestion-entrega-nuevos.component';
-import {GestionEntregaDespachoComponent} from './woocommerce/gestion-entrega-despacho/gestion-entrega-despacho.component';
-import {GestionEntregaEnviadosComponent} from './woocommerce/gestion-entrega-enviados/gestion-entrega-enviados.component';
-import {GestionEntregaDevolucionComponent} from './woocommerce/gestion-entrega-devolucion/gestion-entrega-devolucion.component';
+import {
+  GestionEntregaDespachoComponent
+} from './woocommerce/gestion-entrega-despacho/gestion-entrega-despacho.component';
+import {
+  GestionEntregaEnviadosComponent
+} from './woocommerce/gestion-entrega-enviados/gestion-entrega-enviados.component';
+import {
+  GestionEntregaDevolucionComponent
+} from './woocommerce/gestion-entrega-devolucion/gestion-entrega-devolucion.component';
+import {ReporteEntregasComponent} from "./reportes/reporte-entregas.component";
 
 const routes: Routes = [
   {
@@ -22,6 +29,9 @@ const routes: Routes = [
             path: 'list', component: ParamsComponent, canActivate: [AuthGuard]
           }
         ]
+      },
+      {
+        path: 'reportes', component: ReporteEntregasComponent, canActivate: [AuthGuard]
       },
       {
         path: 'gestionEntrega', children: [

@@ -21,6 +21,7 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
+  public exclamoQuejaForm: FormGroup;
   public formaPagoForm: FormGroup;
 
   menu;
@@ -54,6 +55,11 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
   totalPagar;
   idPedido;
   fechaFactura;
+  totalPagarQueja;
+  totalFormaPago
+  fechaMinima;
+  fechaMaxima = new Date().toISOString().slice(0, 10);
+
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -190,9 +196,27 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
     });
   }
 
+  iniciarFormaPagoQuejaForm(): void {
+    this.exclamoQuejaForm = this.formBuilder.group({
+      id: ['', []],
+      fechaCargaFormaPagoQueja: [this.fechaFactura],
+      tipoPagoQueja: ['', [Validators.required]],
+      fechaEmisionFacturaQueja: ['', [Validators.required]],
+      archivoFacturaQueja: ['', [Validators.required]],
+      montoSubtotalQueja: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
+      descripcionQueja: ['', [Validators.required]],
+      numeroComprobanteQueja: ['', [Validators.required]]
+    });
+  }
+
   get autorizarFForm() {
     return this.autorizarForm['controls'];
   }
+
+  get quejaForm() {
+    return this.exclamoQuejaForm['controls'];
+  }
+
 
   get notaPedidoForm() {
     return this.notaPedido['controls'];
@@ -250,12 +274,13 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
       compania: this.centroNegocioSeleccionado,
       rol: this.usuario.usuario.idRol,
       estado: this.estadoSeleccionado === '' ? '' : [this.estadoSeleccionado],
-      usuarioVendedor: this.usuarioSeleccionado
+      usuarioVendedor: this.usuarioSeleccionado,
+      canal: 'Contacto Local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info.map((item) => {
-        const resultado = this.calculoComision(item.estado, item.montoSubtotalCliente, item.total, item.montoSubtotalAprobado);
-        return {...item, comision: resultado};
+        //const resultado = this.calculoComision(item.estado, item.montoSubtotalCliente, item.total, item.montoSubtotalAprobado);
+        return {...item};
       });
       this.listaEstados = info.estados;
       this.listaUsuariosCompania = this.listaUsuariosCompania.length === 0 ? info.usuarios : this.listaUsuariosCompania;
@@ -324,11 +349,18 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
-    let subtotalPedido = 0;
+    let subtotalPedido: number;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
-
+      // tslint:disable-next-line:radix
+      const descuento = parseInt(detalles[index].get('descuento').value);
+      if (descuento > 0 && descuento <= 100) {
+        const totalDescuento = (valorUnitario * descuento) / 100;
+        detalles[index].get('precio').setValue((((valorUnitario - totalDescuento) * cantidad)).toFixed(2));
+      } else {
+        detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      }
       total += parseFloat(detalles[index].get('precio').value);
     });
     subtotalPedido = total / this.parametroIva;
@@ -442,6 +474,47 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
     }
   }
 
+  async actualizarQueja(): Promise<void> {
+
+    this.exclamoQuejaForm.get('archivoFacturaQueja').setValue('');
+    this.exclamoQuejaForm.get('archivoFacturaQueja').setValidators([]);
+    this.exclamoQuejaForm.get('archivoFacturaQueja').updateValueAndValidity();
+
+    if (this.exclamoQuejaForm.invalid) {
+      this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
+      return;
+    }
+
+    if (confirm('Esta seguro de guardar los datos') === true) {
+      if (Number(this.totalPagarQueja) < Number(this.exclamoQuejaForm.value.montoSubtotalQueja)) {
+        this.toaster.open('El monto ingresado no debe ser mayor al monto a pagar del pedido.', {type: 'danger'});
+        return;
+      } else {
+
+        const fechaTransformada = new Date(this.exclamoQuejaForm.get('fechaEmisionFacturaQueja').value).toISOString();
+
+        const facturaFisicaValores: string[] = Object.values(this.exclamoQuejaForm.value);
+        const facturaFisicaLlaves: string[] = Object.keys(this.exclamoQuejaForm.value);
+        facturaFisicaLlaves.map((llaves, index) => {
+          if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago' && llaves !== 'facturacion' && llaves !== 'articulos') {
+            this.archivo.delete(llaves);
+            this.archivo.append(llaves, facturaFisicaValores[index]);
+          }
+        });
+        this.archivo.append('id', this.idPedido);
+        this.archivo.append('formaPago', JSON.stringify(this.formasPago));
+        this.archivo.append('fechaCargaFormaPagoQueja', this.fechaFactura);
+        this.archivo.append('fechaEmisionFacturaQueja', fechaTransformada);
+
+        this.pedidosService.actualizarPedidoQuejaFormData(this.archivo).subscribe((info) => {
+          this.modalService.dismissAll();
+          this.obtenerTransacciones();
+        }, error => this.toaster.open(error, {type: 'danger'}));
+      }
+
+    }
+  }
+
   onSelectChange(event: any) {
     const selectedValue = event.target.value;
     if (selectedValue === 'rimpePopular' || selectedValue === 'facturaElectronica') {
@@ -455,8 +528,45 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
     }
   }
 
+  onSelectChangeQueja(event: any): void {
+    const selectedValue = event.target.value;
+    if (selectedValue === 'rimpePopular' || selectedValue === 'facturaElectronica') {
+      this.mostrarInputComprobante = true;
+      this.exclamoQuejaForm.get('numeroComprobanteQueja').setValidators([Validators.required]);
+      this.exclamoQuejaForm.get('numeroComprobanteQueja').updateValueAndValidity();
+    } else {
+      this.mostrarInputComprobante = false;
+      this.exclamoQuejaForm.get('numeroComprobanteQueja').setValidators([]);
+      this.exclamoQuejaForm.get('numeroComprobanteQueja').updateValueAndValidity();
+    }
+  }
+
   onFileSelected(event: any): void {
     this.archivo.append('archivoFactura', event.target.files.item(0), event.target.files.item(0).name);
     this.formaPagoForm.get('archivoFactura').setValue(event.target.files.item(0).name);
+  }
+
+  onFileSelectedQueja(event: any): void {
+    this.archivo.append('archivoFacturaQueja', event.target.files.item(0), event.target.files.item(0).name);
+    this.exclamoQuejaForm.get('archivoFacturaQueja').setValue(event.target.files.item(0).name);
+  }
+
+  exclamarReclamo(modal, id): void {
+    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+
+    this.totalFormaPago = 0;
+    this.idPedido = id;
+    this.iniciarFormaPagoQuejaForm();
+    this.exclamoQuejaForm.get('archivoFacturaQueja').setValue('');
+    this.pedidosService.obtenerPedido(id).subscribe((info) => {
+      this.fechaMinima = info.created_at.slice(0, 10);
+      this.formasPago = [];
+      this.totalPagarQueja = info.subtotal;
+      if (modal._declarationTContainer.localNames[0] === 'quejaModal') {
+        this.exclamoQuejaForm.get('tipoPagoQueja').setValidators([Validators.required]);
+        this.exclamoQuejaForm.get('tipoPagoQueja').updateValueAndValidity();
+      }
+      this.calcular();
+    });
   }
 }
