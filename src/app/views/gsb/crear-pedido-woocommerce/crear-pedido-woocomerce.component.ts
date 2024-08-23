@@ -75,7 +75,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   cedulaABuscar = '';
   whatsappABuscar = '';
   correoABuscar = '';
-
+  paginaWoocommerce
   constructor(
     private route: ActivatedRoute,
     private _router: Router,
@@ -90,6 +90,11 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     private authService: AuthService
   ) {
     console.log('ENTRA A D¿CONSTRUCTOR DE PEDIDO WOOCOMMERCE');
+
+    const ref = document.referrer;
+    const host = document.location.host;
+    this.paginaWoocommerce = ref;
+
     this.currentUser = this.authService.currentUserValue;
 
     this.iniciarNotaPedido();
