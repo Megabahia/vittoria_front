@@ -26,6 +26,7 @@ import {GdConsultaProductosComponent} from "./gd_consultar_productos/gd-consulta
 import {
   ReporteContactosVentasComponent
 } from "./gsb_contactos/reporte_contactos_ventas/reporte_contactos-ventas.component";
+import {CrearPedidoWoocomerceComponent} from "./crear-pedido-woocommerce/crear-pedido-woocomerce.component";
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import {
     ReporteContactosListarComponent,
     GdParamsComponent,
     GdConsultaProductosComponent,
-    ReporteContactosVentasComponent
+    ReporteContactosVentasComponent,
+    CrearPedidoWoocomerceComponent
   ],
   exports: [
     GsbProductosListarComponent
