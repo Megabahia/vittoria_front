@@ -9,6 +9,8 @@ import {IntegracionesEnviosService} from '../../../services/admin/integraciones_
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {IntegracionesService} from '../../../services/admin/integraciones.service';
 import Decimal from 'decimal.js';
+import {AuthService} from "../../../services/admin/auth.service";
+import {ClientesService} from "../../../services/mdm/personas/clientes/clientes.service";
 
 interface ProductoProcesado {
   canal?: string;
@@ -17,13 +19,12 @@ interface ProductoProcesado {
 }
 
 @Component({
-  selector: 'app-pedido-woocomerce',
-  templateUrl: './pedido-woocomerce.component.html',
-  styleUrls: ['./pedido-woocomerce.component.css']
+  selector: 'app-crear-pedido-woocomerce',
+  templateUrl: './crear-pedido-woocomerce.component.html',
 })
 
 
-export class PedidoWoocomerceComponent implements OnInit {
+export class CrearPedidoWoocomerceComponent implements OnInit {
 
   @Input() paises;
   public notaPedido: FormGroup;
@@ -36,7 +37,7 @@ export class PedidoWoocomerceComponent implements OnInit {
   provinciaOpciones;
   seleccionPrimerCombo: any;
   seleccionSegundoCombo: any;
-  esCliente;
+  noEsCliente = false;
   enviarCorreo = false;
   correoCliente;
   codigoCorreo;
@@ -64,73 +65,85 @@ export class PedidoWoocomerceComponent implements OnInit {
   parametrosIntegracionesCanal;
   integracionProducto;
   formasPagoCourier: any[] = [];
-  creacionPedidos;
-  paginaWoocommerce = '';
-
+  parametroIva;
+  totalIva;
+  currentUser;
+  mostrarInputArchivoComprobante = false;
+  listaCostoEnvio;
+  listaMetodoPago;
+  mostrarDatosGmb = false;
+  cedulaABuscar = '';
+  whatsappABuscar = '';
+  correoABuscar = '';
+  paginaWoocommerce
   constructor(
     private route: ActivatedRoute,
     private _router: Router,
     private formBuilder: FormBuilder,
+    private clientesService: ClientesService,
     private paramServiceAdm: ParamServiceAdm,
     private pedidosService: PedidosService,
     private toaster: Toaster,
     private integracionesEnviosService: IntegracionesEnviosService,
     private productosService: ProductosService,
-    private integracionesService: IntegracionesService
+    private integracionesService: IntegracionesService,
+    private authService: AuthService
   ) {
+    console.log('ENTRA A D¿CONSTRUCTOR DE PEDIDO WOOCOMMERCE');
+
     const ref = document.referrer;
     const host = document.location.host;
     this.paginaWoocommerce = ref;
-    console.log('ref', ref);
-    console.log('host', host);
-    // if (ref !== 'https://superbarato.megadescuento.com/') {
-    //   if (host !== '209.145.61.41:4201') {
-    //     this._router.navigate([
-    //       '/auth/signin'
-    //     ]);
-    //     localStorage.clear();
-    //     return;
-    //   }
-    // }
-    this.iniciarNotaPedido();
-    const navbar = document.getElementById('navbar');
-    const toolbar = document.getElementById('toolbar');
-    if (navbar && toolbar) {
-      navbar.style.display = 'none';
-      toolbar.style.display = 'none';
-    }
 
+    this.currentUser = this.authService.currentUserValue;
+
+    this.iniciarNotaPedido();
     this.obtenerListaParametrosCanal();
 
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.page_size, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
+      this.parametroIva = parseFloat(result.info[0].valor);
+    });
 
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.page_size, 'METODO PAGO', '').subscribe((result) => {
+      this.listaMetodoPago = result.data;
+    });
   }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      // Decodificamos y parseamos el JSON de la cadena que recibimos
-      const productos = JSON.parse(decodeURIComponent(params.cadena));
+    console.log('ENTRA A NGONINIT DE PEDIDO WOOCOMMERCE')
+    console.log(localStorage.getItem('productosWoocommerce'));
+    // this.route.queryParams.subscribe(params => {
+    //     if (params) {
+    //       // Decodificamos y parseamos el JSON de la cadena que recibimos
+    const params = JSON.parse(localStorage.getItem('productosWoocommerce'));
+          const productos = JSON.parse(params.cadena);
 
-      // Procesar cada producto para normalizar claves y valores
-      const productosProcesados: ProductoProcesado[] = productos.map(producto => {
-        const productoProcesado: ProductoProcesado = {};
+          // Procesar cada producto para normalizar claves y valores
+          const productosProcesados: ProductoProcesado[] = productos.map(producto => {
+            const productoProcesado: ProductoProcesado = {};
 
-        Object.entries(producto).forEach(([clave, valor]) => {
-          // Normalizar la clave a minúsculas sin tildes ni caracteres especiales
-          const claveNormalizada = this.normalizarClave(clave);
+            Object.entries(producto).forEach(([clave, valor]) => {
+              // Normalizar la clave a minúsculas sin tildes ni caracteres especiales
+              const claveNormalizada = this.normalizarClave(clave);
 
-          // Asignar el valor a la nueva clave en el objeto procesado
-          productoProcesado[claveNormalizada] = valor;
-        });
+              // Asignar el valor a la nueva clave en el objeto procesado
+              productoProcesado[claveNormalizada] = valor;
+            });
 
-        // Agregar el canal al producto procesado
-        productoProcesado.canal = params.canal;
+            // Agregar el canal al producto procesado
+            productoProcesado.canal = params.canal;
 
-        return productoProcesado;
-      });
+            return productoProcesado;
+          });
 
-      // Si quieres agregar todos los productos al arreglo `this.datos`
-      this.datos.push(...productosProcesados);
-    });
+          // Si quieres agregar todos los productos al arreglo `this.datos`
+          this.datos.push(...productosProcesados);
+    //     } else {
+    //       return;
+    //     }
+    //   }
+    // );
+
 
     this.obtenerProvincias();
     this.obtenerCiudad();
@@ -171,22 +184,25 @@ export class PedidoWoocomerceComponent implements OnInit {
         numero: ['', [Validators.required]],
         calleSecundaria: ['', [Validators.required]],
         referencia: ['', [Validators.required]],
-        codigoVendedor: ['', [Validators.required]],
-        nombreVendedor: ['', [Validators.required]]
+        gps: [''],
+        codigoVendedor: [this.currentUser.usuario.username, [Validators.required]],
+        nombreVendedor: [this.currentUser.full_name, [Validators.required]]
       }),
       articulos: this.formBuilder.array([]),
       pedidos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
-      envioTotal: [''],
+      envioTotal: [0],
+      subtotal: [0],
       numeroPedido: [''],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
-      metodoPago: ['Contra-Entrega', [Validators.required]],
+      metodoPago: ['', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
       canal: ['superbarato.megadescuento.com', []],
       estado: ['Pendiente', []],
       tipoEnvio: [''],
       tipoPago: [''],
       archivoMetodoPago: [''],
+      comprobanteVendedorGmb: [''],
       envio: this.formBuilder.group({
         nombres: [''],
         apellidos: [''],
@@ -207,6 +223,8 @@ export class PedidoWoocomerceComponent implements OnInit {
       envios: ['', []],
       json: ['', []],
       formasEnvio: ['', []],
+      montoPrevioPago: [''],
+      nombreEnvio: ['']
     });
   }
 
@@ -226,7 +244,7 @@ export class PedidoWoocomerceComponent implements OnInit {
     return this.notaPedido.get('pedidos') as FormArray;
   }
 
-  crearDetalleGrupo(datos: any, datosBaseDatos): any {
+  crearDetalleGrupo(datos: any, datosBaseDatos, preciosVentas): any {
     return this.formBuilder.group({
       id: [''],
       codigo: [datos.sku_del_producto],
@@ -236,7 +254,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       precio: [datos.total_del_articulo || 0],
       imagen: [''],
       caracteristicas: [''],
-      precios: [[]],
+      precios: [preciosVentas],
       canal: [datosBaseDatos.canal],
       imagen_principal: [datos.imagen_del_producto],
       prefijo: [datosBaseDatos.prefijo, []]
@@ -266,12 +284,12 @@ export class PedidoWoocomerceComponent implements OnInit {
       ciudad: [ciudad, []],
       couries: ['', []],
       formasPagos: ['', [Validators.required]],
-      formaPago: ['', [Validators.required]],
+      formaPago: ['', ],
       listaFormasPagos: ['', []],
       numeroCuenta: ['', []],
       nombreCuenta: ['', []],
       canal: ['', []],
-      precioEnvio: [0, [Validators.required, Validators.min(1)]],
+      precioEnvio: [0],
       articulos: this.formBuilder.array([]),
     });
   }
@@ -324,6 +342,7 @@ export class PedidoWoocomerceComponent implements OnInit {
   calcular(): void {
     const pedidos = this.notaPedido.get('pedidos')['controls'];
     let total = 0;
+    let subtotalPedido = 0;
     pedidos.map((pedido) => {
       total += parseFloat(pedido.value.precioEnvio ?? 0);
       pedido.value.articulos.forEach((item, index) => {
@@ -332,7 +351,12 @@ export class PedidoWoocomerceComponent implements OnInit {
         total += cantidad * valorUnitario;
       });
     });
-    this.notaPedido.get('total').setValue(total);
+    total += parseFloat(this.notaPedido.get('envioTotal').value);
+    subtotalPedido = total / this.parametroIva;
+    this.totalIva = (total - subtotalPedido).toFixed(2);
+    this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
+    this.notaPedido.get('total').setValue(total.toFixed(2));
+
   }
 
   obtenerProvincias(): void {
@@ -378,6 +402,7 @@ export class PedidoWoocomerceComponent implements OnInit {
       return;
     }
 
+    console.log(this.notaPedido);
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
@@ -399,7 +424,7 @@ export class PedidoWoocomerceComponent implements OnInit {
         const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
 
         facturaFisicaLlaves.map((llaves, index) => {
-          if (llaves !== 'archivoMetodoPago') {
+          if (llaves !== 'comprobanteVendedorGmb') {
             if (llaves === 'articulos' || llaves === 'facturacion' || llaves === 'envio') {
               this.archivo.delete(llaves);
               this.archivo.append(llaves, JSON.stringify(facturaFisicaValores[index]));
@@ -411,7 +436,7 @@ export class PedidoWoocomerceComponent implements OnInit {
         });
 
         this.archivo.append('numeroPedido', this.generarID());
-        this.archivo.append('envioTotal', data.precioEnvio.toString());
+        this.archivo.append('envioTotal', this.notaPedido.value.envioTotal);
         this.archivo.append('tipoPago', data.formasPagos);
 
         this.archivo.delete('envios');
@@ -449,22 +474,27 @@ export class PedidoWoocomerceComponent implements OnInit {
 
   onFileSelected(event: any): void {
     if (this.seleccionPrimerCombo !== '') {
-      this.archivo.append('archivoMetodoPago', event.target.files.item(0), event.target.files.item(0).name);
+      this.archivo.append('comprobanteVendedorGmb', event.target.files.item(0), event.target.files.item(0).name);
+      this.notaPedido.get('comprobanteVendedorGmb').setValue(event.target.files.item(0).name)
     } else {
-      this.archivo.delete('archivoMetodoPago');
+      this.archivo.delete('comprobanteVendedorGmb');
+      this.notaPedido.get('comprobanteVendedorGmb').setValue('');
     }
   }
 
   onSelectChangeCliente(event: any): void {
     const selectValue = event.target.value;
     this.selectClient = selectValue;
-    if (selectValue === 'esCliente') {
+    if (selectValue === 'noEsCliente') {
       this.mostrarContenido = false;
       this.mostrarContenidoFacturacion = false;
       this.mostrarDatosEnvio = false;
-      this.esCliente = true;
+      this.noEsCliente = true;
+      this.cedulaABuscar = '';
+      this.whatsappABuscar = '';
+      this.correoABuscar = '';
     } else {
-      this.esCliente = false;
+      this.noEsCliente = false;
       this.enviarCorreo = false;
       this.mostrarContenido = true;
       this.mostrarContenidoFacturacion = true;
@@ -618,8 +648,10 @@ export class PedidoWoocomerceComponent implements OnInit {
         codigoBarras: productoWoocomerce.sku_del_producto,
       };
       this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
+
         this.productoBuscar.push({...info.producto});
         const prefijo = info.producto.prefijo; // Asumiendo que cada producto tiene un atributo 'prefijo'
+
         if (!this.numeroPedidos[prefijo]) {
           this.numeroPedidos[prefijo] = []; // Inicializa el arreglo si el prefijo es nuevo
           this.agregarItemPedidos(info.producto, info.integraciones_canal.ciudad);
@@ -630,13 +662,25 @@ export class PedidoWoocomerceComponent implements OnInit {
         const posicion = this.notaPedido.get('pedidos').value.findIndex(articulo => articulo.prefijo === prefijo);
 
         // Usa el método tiendaArray para obtener el FormArray y agregar el valor
+        const preciosVenta= [...this.extraerPrecios(info.producto)];
         this.tiendaArray(posicion).push(
-          this.crearDetalleGrupo(productoWoocomerce, info.producto)
+          this.crearDetalleGrupo(productoWoocomerce, info.producto, preciosVenta)
         );
+        console.log(preciosVenta)
         resolve(); // Resolver la promesa
         this.calcular();
       }, error => this.toaster.open(error, {type: 'danger'}));
     });
+  }
+
+  extraerPrecios(info: any) {
+    const precios = [];
+    Object.keys(info).forEach(clave => {
+      if (clave.startsWith('precioVenta')) {
+        precios.push({clave: clave, valor: info[clave]});
+      }
+    });
+    return precios;
   }
 
   mostrarDatosEnvioConScroll() {
@@ -672,6 +716,84 @@ export class PedidoWoocomerceComponent implements OnInit {
   getTotalFormatted(): string {
     const totalValue = this.notaPedido.controls.total.value;
     return !isNaN(totalValue) && totalValue !== null ? (+totalValue).toFixed(2) : '0.00';
+  }
+
+  onSelectChangePago(e: any) {
+    const selectedValue = e.target.value;
+    if (selectedValue === 'Previo Pago Servientrega Nacional' || selectedValue === 'Previo Pago Motorizado en Quito') {
+      this.mostrarInputArchivoComprobante = true;
+      this.notaPedido.get('comprobanteVendedorGmb').setValidators([Validators.required]);
+      this.notaPedido.get('comprobanteVendedorGmb').updateValueAndValidity();
+      this.notaPedido.get('montoPrevioPago').setValidators([Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]);
+      this.notaPedido.get('montoPrevioPago').updateValueAndValidity();
+    } else {
+      this.notaPedido.get('comprobanteVendedorGmb').setValidators([]);
+      this.notaPedido.get('comprobanteVendedorGmb').updateValueAndValidity();
+      this.notaPedido.get('montoPrevioPago').setValidators([]);
+      this.notaPedido.get('montoPrevioPago').updateValueAndValidity();
+      this.archivo.delete('comprobanteVendedorGmb');
+      this.mostrarInputArchivoComprobante = false;
+    }
+    this.mostrarDatosGmb = true;
+    this.paramServiceAdm.obtenerListaHijosEnvio(this.notaPedido.value.metodoPago).subscribe((result) => {
+      this.listaCostoEnvio = result;
+    });
+  }
+
+  onFileSelectedComprobantePago(event: any): void {
+    this.archivo.append('archivoMetodoPago', event.target.files.item(0), event.target.files.item(0).name);
+    this.notaPedido.get('archivoMetodoPago').setValue(event.target.files.item(0));
+  }
+
+  nombreEnvioSeleccionado(envio: any) {
+    const selectedValue = envio.target.value;
+    let [nombre, valor] = selectedValue.split('-').map(part => part.trim());
+    valor = parseFloat(valor);
+    this.notaPedido.get('envioTotal').setValue(valor ? valor : 0);
+    this.notaPedido.get('nombreEnvio').setValue(nombre);
+    this.calcular();
+
+  }
+
+  obtenerClienteCedula(): void {
+
+    if (this.cedulaABuscar !== '' || this.whatsappABuscar !== '' || this.correoABuscar !== '') {
+
+      const datos = {
+        cedula: this.cedulaABuscar,
+        whatsApp: this.whatsappABuscar,
+        correo: this.correoABuscar,
+      };
+
+      this.clientesService.obtenerClientePorCedula(datos).subscribe((info) => {
+        this.mostrarContenido = true;
+        this.notaPedido.get('facturacion').get('nombres').setValue(info.nombres);
+        this.notaPedido.get('facturacion').get('apellidos').setValue(info.apellidos);
+        this.notaPedido.get('facturacion').get('correo').setValue(info.correo);
+        this.notaPedido.get('facturacion').get('identificacion').setValue(info.cedula);
+        this.notaPedido.get('facturacion').get('telefono').setValue(info.telefono);
+        this.notaPedido.get('facturacion').get('provincia').setValue(info.provinciaNacimiento);
+        this.notaPedido.get('facturacion').get('ciudad').setValue(info.ciudadNacimiento);
+
+        this.obtenerCiudad();
+        //this.notaPedido.get('facturacion').get('identificacion').disable();
+      }, error => {
+        this.toaster.open(error, {type: 'danger'});
+        this.notaPedido.get('facturacion').get('nombres').setValue('');
+        this.notaPedido.get('facturacion').get('apellidos').setValue('');
+        this.notaPedido.get('facturacion').get('correo').setValue('');
+        this.notaPedido.get('facturacion').get('identificacion').setValue('');
+        this.notaPedido.get('facturacion').get('telefono').setValue('');
+        this.notaPedido.get('facturacion').get('provincia').setValue('');
+        this.notaPedido.get('facturacion').get('ciudad').setValue('');
+        this.obtenerCiudad();
+
+        //this.notaPedido.get('facturacion').get('identificacion').enable();
+      });
+    } else {
+      this.toaster.open('Ingrese un campo para buscar', {type: 'danger'});
+      return;
+    }
   }
 }
 

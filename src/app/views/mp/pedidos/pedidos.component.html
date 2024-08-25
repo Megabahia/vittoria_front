@@ -443,13 +443,29 @@
                                     </div>
                                   </div>
                                 </div>
-                                <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                <div class="col-lg-2 col-12 my-lg-0 my-2">
                                   <p class="card-text col-title mb-md-50 mb-0">
-                                    Características
+                                    Precio
                                   </p>
-                                  <label [innerHTML]="detalle.controls.caracteristicas.value"></label>
+                                  <select class="form-control" formControlName="valorUnitario" (change)="calcular()">
+                                    <option value="" selected>- Seleccione -</option>
+                                    <option *ngFor="let producto of detalle.controls.precios.value"
+                                            [value]="producto.valor">
+                                      {{ producto.clave.slice(-1) }} - ${{ producto.valor }}
+                                    </option>
+                                  </select>
+                                  <div *ngIf="detalle.controls.valorUnitario.errors"
+                                       class="invalid-feedback"
+                                       style="display: block;">
+                                    <div *ngIf="detalle.controls.valorUnitario.errors.required">
+                                      Requerido
+                                    </div>
+                                    <div *ngIf="detalle.controls.valorUnitario.errors.min">
+                                      Selecione un precio mayor a 0
+                                    </div>
+                                  </div>
                                 </div>
-                                <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                <!--<div class="col-lg-1 col-12 my-lg-0 my-2">
                                   <p class="card-text col-title mb-md-50 mb-0">
                                     Precio
                                   </p>
@@ -460,6 +476,34 @@
                                     Descuento
                                   </p>
                                   <label>{{ detalle.controls.descuento.value }}%</label>
+                                </div>-->
+                                <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                  <p class="card-text col-title mb-md-50 mb-0">
+                                    Descuento
+                                  </p>
+                                  <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text" id="descuentoPorcentaje">%</span>
+                                    </div>
+                                    <input type="text" class="form-control" aria-describedby="descuentoPorcentaje"
+                                           formControlName="descuento" (change)="calcular()">
+                                  </div>
+                                  <div *ngIf="detalle.controls.descuento.errors"
+                                       class="invalid-feedback"
+                                       style="display: block;">
+                                    <div *ngIf="detalle.controls.descuento.errors.required">
+                                      Requerido
+                                    </div>
+                                    <div *ngIf="detalle.controls.descuento.errors.pattern">
+                                      Ingrese solo números
+                                    </div>
+                                    <div *ngIf="detalle.controls.descuento.errors.min">
+                                      Mínimo 0%
+                                    </div>
+                                    <div *ngIf="detalle.controls.descuento.errors.max">
+                                      Máximo 100%
+                                    </div>
+                                  </div>
                                 </div>
                                 <div class="col-lg-1 col-12 my-lg-0 my-2">
                                   <p class="card-text col-title mb-md-50 mb-0">
@@ -565,6 +609,8 @@
                         <div class="invoice-total-wrapper">
                           <hr class="my-50"/>
                           <div class="invoice-total-item">
+                            <p class="invoice-total-title text-warning font-weight-bold">
+                              Envio: {{ notaPedido.controls.nombreEnvio.value }}</p>
                             <p class="invoice-total-title text-primary font-weight-bold">
                               Total Envio: ${{ notaPedido.controls.envioTotal.value }}</p>
                           </div>
@@ -860,7 +906,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12">
+        <div class="col-12" *ngIf="!detallePedido.metodoPago.includes('Contra Entrega')">
           <div class="form-group">
             <label for="largeInput">Ingreso Numero Transacción</label>
             <input class="form-control form-control-lg" type="text" id="largeInput"
@@ -873,7 +919,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12">
+        <div class="col-12" *ngIf="!detallePedido.metodoPago.includes('Contra Entrega')">
           <div class="form-group">
             <label for="largeInput">URL Método Pago</label>
             <input class="form-control form-control-lg" type="text" id="largeInput"
@@ -886,7 +932,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12">
+        <div class="col-12" *ngIf="!detallePedido.metodoPago.includes('Contra Entrega')">
           <div class="form-group">
             <label for="customFile">Cargar Metodo Pago</label>
             <div class="custom-file">

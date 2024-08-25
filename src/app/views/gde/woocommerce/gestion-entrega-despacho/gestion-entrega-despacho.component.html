@@ -45,19 +45,19 @@
               <thead class="thead-light">
               <tr>
                 <th>Fecha Pedido</th>
-                <th>Fecha Despacho</th>
                 <th>Fecha Empacado</th>
+                <th>Fecha Despacho</th>
                 <th>Canal Pedido</th>
                 <th>Tipo Facturación</th>
                 <th>Numero Pedido</th>
                 <th>Nombres Facturación</th>
                 <th>Apellidos Facturación</th>
-                <th>Metodo Pago</th>
+                <th>Telefono</th>
                 <th>Url Comprobante Pago</th>
                 <th>Comprobante Pago</th>
                 <th>Comprobante Pago cargado por vendedor</th>
                 <th>Evidencia Empacado</th>
-                <th>Telefono</th>
+                <th style="color: blue">Metodo envío</th>
                 <th>Estado</th>
                 <th>Ver Pedido</th>
                 <th>Ver Guía</th>
@@ -68,14 +68,14 @@
               <tbody>
               <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
                 <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
-                <td>{{ transaccion.fechaHoraConfirmacion }}</td>
                 <td>{{ transaccion.fechaEmpacado | date: 'dd-MM-yyyy' }}</td>
+                <td>{{ transaccion.fechaHoraConfirmacion | date: 'dd-MM-yyyy' }}</td>
                 <td [title]="transaccion.canal">{{ transaccion.canal | shorten }}</td>
                 <td [title]="transaccion.tipoFacturacion">{{ transaccion.tipoFacturacion | shorten }}</td>
                 <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido | shorten }}</td>
                 <td [title]="transaccion.facturacion.nombres">{{ transaccion.facturacion.nombres | shorten }}</td>
                 <td [title]="transaccion.facturacion.apellidos">{{ transaccion.facturacion.apellidos | shorten }}</td>
-                <td [title]="transaccion.metodoPago">{{ transaccion.metodoPago | shorten }}</td>
+                <td>{{ transaccion.facturacion.telefono }}</td>
                 <td [title]="transaccion.urlMetodoPago">
                   <a *ngIf="transaccion.urlMetodoPago" [href]="transaccion.urlMetodoPago" target="_blank">Ver</a>
                 </td>
@@ -101,7 +101,7 @@
                     Ver Video
                   </a>
                 </td>
-                <td>{{ transaccion.facturacion.telefono }}</td>
+                <td [title]="transaccion.metodoPago" style="color: blue">{{ transaccion.metodoPago | shorten }}</td>
                 <td>{{ transaccion.estado }}</td>
                 <td>
                   <a (click)="obtenerTransaccion(transaccion.id)" data-toggle="modal"
@@ -350,7 +350,7 @@
                               <div class="repeater-wrapper" data-repeater-item>
                                 <div class="row">
 
-                                  <div class="col-lg-1 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                  <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
                                       Código
                                     </p>
@@ -397,13 +397,6 @@
                                       </div>
                                     </div>
                                   </div>
-                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                    <p class="card-text col-title mb-md-50 mb-0">
-                                      Características
-                                    </p>
-                                    <label [innerHTML]="detalle.controls.caracteristicas.value"></label>
-
-                                  </div>
                                   <div class="col-lg-1 col-12 my-lg-0 my-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
                                       Precio
@@ -421,7 +414,7 @@
                                     <p class="card-text col-title mb-md-50 mb-0">
                                       Descuento
                                     </p>
-                                    <label>{{ detalle.controls.descuento.value }}%</label>
+                                    <label>{{ detalle.controls.descuento.value ? detalle.controls.descuento.value : '0' }}%</label>
                                   </div>
                                   <div class="col-lg-1 col-12 my-lg-0 my-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
@@ -436,12 +429,7 @@
                                       </div>
                                     </div>
                                   </div>
-                                  <div class="col-lg-1 col-12 my-lg-0 my-2">
-                                    <p class="card-text col-title mb-md-50 mb-0">
-                                      Ubicación
-                                    </p>
-                                    <label class="d-block text-wrap">{{ detalle.controls.canal.value }}</label>
-                                  </div>
+
                                   <div class="col-md-2 border-left">
                                     <img class="img-detalle" alt="producto"
                                          src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
@@ -502,6 +490,8 @@
                           <div class="invoice-total-wrapper">
                             <hr class="my-50"/>
                             <div class="invoice-total-item">
+                              <p class="invoice-total-title text-warning font-weight-bold">
+                                Envio: {{ notaPedido.controls.nombreEnvio.value }}</p>
                               <p class="invoice-total-title text-primary font-weight-bold">
                                 Total Envio: ${{ notaPedido.controls.envioTotal.value }}</p>
                             </div>
@@ -566,7 +556,8 @@
                           <div class="col-md-3 col-12">
                             <div class="form-group">
                               <label for="tipoIdentificacionEnvio">Tipo de Identificación</label>
-                              <select id="tipoIdentificacionEnvio" class="form-control" formControlName="tipoIdentificacion"
+                              <select id="tipoIdentificacionEnvio" class="form-control"
+                                      formControlName="tipoIdentificacion"
                                       disabled>
                                 <option value="" disabled>- Seleccione -</option>
                                 <option value="cedula" selected>Cédula</option>
@@ -792,6 +783,10 @@
                 <label>Referencia</label>
                 <input class="form-control" type="text"
                        formControlName="referencia" disabled>
+              </div>
+              <div class="col-4">
+                <label>Método de envío</label>
+                <input class="form-control" type="text" formControlName="metodoPago" disabled>
               </div>
             </div>
           </div>
