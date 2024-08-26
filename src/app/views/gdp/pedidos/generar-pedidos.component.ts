@@ -179,7 +179,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       envioTotal: [0, [Validators.required]],
       numeroPedido: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
-      metodoPago: ['Contra-Entrega', [Validators.required]],
+      metodoPago: ['Pago Contra Entrega en Quito', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
       canal: ['Contacto Local', []],
       estado: ['Pendiente de entrega', []],
@@ -273,9 +273,9 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   }
 
   async guardarVenta(notaPedidoModal): Promise<void> {
-    await Promise.all(this.detallesArray.controls.map((producto, index) => {
+    /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
-    }));
+    }));*/
     if (this.notaPedido.value.valorUnitario === 0) {
       this.toaster.open('Seleccione un precio que sea mayor a 0.', {type: 'danger'});
       return;
@@ -629,8 +629,9 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     const data = localStorage.getItem('productoDataPedidoWoocommerce');
     if (data) {
       this.dataPedidoWoocommerce = JSON.parse(data);
-      this.notaPedido.patchValue({...this.dataPedidoWoocommerce});
+      this.obtenerProvincias();
       this.obtenerCiudad();
+      this.notaPedido.patchValue({...this.dataPedidoWoocommerce});
       this.dataPedidoWoocommerce.articulos.map((datos, index) => {
         this.agregarItem();
         this.detallesArray.controls[index].get('codigo').setValue(datos.codigo);

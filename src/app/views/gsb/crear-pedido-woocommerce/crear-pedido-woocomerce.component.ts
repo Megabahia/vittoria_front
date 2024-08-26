@@ -811,6 +811,11 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   }
 
   generarPedido(): void {
+    if (this.notaPedido.invalid) {
+      this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
+      return;
+    }
+
     // Acceder a los valores actuales del formulario
     const formData = this.notaPedido.value;
 

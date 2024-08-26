@@ -374,12 +374,21 @@
                   <div class="col-md-7"></div>
                   <div class="col-md-5 text-right">
                     <div class="invoice-total-wrapper">
+                      <hr class="my-50"/>
                       <div class="invoice-total-item">
                         <p class="invoice-total-title text-primary font-weight-bold">
                           Total Envio: ${{ notaPedido.controls.envioTotal.value }}</p>
                       </div>
                       <div class="invoice-total-item">
                         <p class="invoice-total-title text-primary font-weight-bold">
+                          Subtotal: ${{ notaPedido.controls.subtotal.value }}</p>
+                      </div>
+                      <div class="invoice-total-item">
+                        <p class="invoice-total-title text-primary font-weight-bold">
+                          IVA (15%): ${{ totalIva }}</p>
+                      </div>
+                      <div class="invoice-total-item">
+                        <p class="invoice-total-title text-danger font-weight-bold">
                           Total a pagar por el cliente: ${{ notaPedido.controls.total.value }}</p>
                       </div>
                     </div>

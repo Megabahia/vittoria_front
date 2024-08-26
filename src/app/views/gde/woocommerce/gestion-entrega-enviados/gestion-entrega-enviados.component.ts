@@ -354,27 +354,36 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   procesarAutorizacionEnvio(): void {
     if (confirm('Esta seguro de despachar') === true) {
 
-      if (this.evidenciasForm.value.totalCobroEfectivo < this.pedido.total || this.evidenciasForm.value.montoTransferencia < this.pedido.total) {
-        this.toaster.open('El monto ingresado no coincide con el total del pedido', {type: "danger"});
-        return;
-      } else {
-
-        const facturaFisicaValores: string[] = Object.values(this.evidenciasForm.value);
-        const facturaFisicaLlaves: string[] = Object.keys(this.evidenciasForm.value);
-        facturaFisicaLlaves.map((llaves, index) => {
-          if (facturaFisicaValores[index] && llaves !== 'evidenciaFotoEmpaque' && llaves !== 'evidenciaVideoEmpaque') {
-            this.archivo.append(llaves, facturaFisicaValores[index]);
-          }
-        });
-        if (this.evidenciasForm.value.evidenciaFotoEmpaque === '') {
-          this.toaster.open('Complete los campos requeridos.', {type: 'warning'})
+      if (!this.mostrarMontoEfectivo && !this.mostrarMontoTransferencia) {
+        this.evidenciasForm.get('montoTransferencia').setValidators([]);
+        this.evidenciasForm.get('montoTransferencia').updateValueAndValidity();
+        this.evidenciasForm.get('totalCobroEfectivo').setValidators([]);
+        this.evidenciasForm.get('totalCobroEfectivo').updateValueAndValidity();
+      } else if (this.mostrarMontoEfectivo || this.mostrarMontoTransferencia) {
+        if (this.evidenciasForm.value.totalCobroEfectivo < this.pedido.total || this.evidenciasForm.value.montoTransferencia < this.pedido.total) {
+          this.toaster.open('El monto ingresado no coincide con el total del pedido', {type: "danger"});
           return;
         }
-        this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
-          this.modalService.dismissAll();
-          this.obtenerTransacciones();
-        });
+        return;
       }
+
+
+      const facturaFisicaValores: string[] = Object.values(this.evidenciasForm.value);
+      const facturaFisicaLlaves: string[] = Object.keys(this.evidenciasForm.value);
+      facturaFisicaLlaves.map((llaves, index) => {
+        if (facturaFisicaValores[index] && llaves !== 'evidenciaFotoEmpaque' && llaves !== 'evidenciaVideoEmpaque') {
+          this.archivo.append(llaves, facturaFisicaValores[index]);
+        }
+      });
+      if (this.evidenciasForm.value.evidenciaFotoEmpaque === '') {
+        this.toaster.open('Complete los campos requeridos.', {type: 'warning'})
+        return;
+      }
+      this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
+        this.modalService.dismissAll();
+        this.obtenerTransacciones();
+      });
+
     }
   }
 

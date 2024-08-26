@@ -63,7 +63,7 @@
               <tbody>
               <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
                 <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
-                <td>{{ transaccion.fechaHoraConfirmacion }}</td>
+                <td>{{ transaccion.fechaHoraConfirmacion | date: 'dd-MM-yyyy'}}</td>
                 <td [title]="transaccion.canal">{{ transaccion.canal | shorten }}</td>
                 <td [title]="transaccion.canalEnvio">{{ transaccion.canalEnvio | shorten }}</td>
                 <td [title]="transaccion.tipoFacturacion">{{ transaccion.tipoFacturacion | shorten }}</td>
