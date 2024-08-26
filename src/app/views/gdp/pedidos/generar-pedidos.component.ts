@@ -82,6 +82,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
   parametroIva;
+  dataPedidoWoocommerce;
 
   constructor(
     private modalService: NgbModal,
@@ -142,7 +143,12 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     this.obtenerProvincias();
     this.obtenerCiudad();
 
-    this.obtenerProductoDesdeConsulta();
+    if (localStorage.getItem('productoData')) {
+      this.obtenerProductoDesdeConsulta();
+    } else if (localStorage.getItem('productoDataPedidoWoocommerce')) {
+      this.obtenerDatosPedidoWoocommerce();
+    }
+
   }
 
   ngAfterViewInit(): void {
@@ -274,6 +280,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       this.toaster.open('Seleccione un precio que sea mayor a 0.', {type: 'danger'});
       return;
     }
+    console.log(this.notaPedido);
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
@@ -318,7 +325,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     return new Promise((resolve, reject) => {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
-        canalProducto: this.canalSeleccionado,
+        canalProducto: this.detallesArray.value[i].canal ?this.detallesArray.value[i].canal : this.canalSeleccionado,
         canal: this.notaPedido.value.canal,
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
@@ -607,17 +614,36 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
   }
 
-  obtenerProductoDesdeConsulta(){
+  obtenerProductoDesdeConsulta() {
     const data = localStorage.getItem('productoData');
     if (data) {
       this.productoDesdeConsulta = JSON.parse(data);
-      console.log(this.productoDesdeConsulta);
       this.agregarItem();
       this.detallesArray.controls[0].get('codigo').setValue(this.productoDesdeConsulta.codigoBarras);
-      this.obtenerProducto(0)
+      this.obtenerProducto(0);
       localStorage.removeItem('productoData');
     }
   }
+
+  obtenerDatosPedidoWoocommerce() {
+    const data = localStorage.getItem('productoDataPedidoWoocommerce');
+    if (data) {
+      this.dataPedidoWoocommerce = JSON.parse(data);
+      this.notaPedido.patchValue({...this.dataPedidoWoocommerce});
+      this.obtenerCiudad();
+      this.dataPedidoWoocommerce.articulos.map((datos, index) => {
+        this.agregarItem();
+        this.detallesArray.controls[index].get('codigo').setValue(datos.codigo);
+        this.obtenerProducto(index);
+      });
+
+      this.notaPedido.get('numeroPedido').setValue(this.generarID());
+      this.notaPedido.get('canal').setValue('Contacto Local');
+      localStorage.removeItem('productoDataPedidoWoocommerce');
+    }
+
+  }
+
 
 }
 

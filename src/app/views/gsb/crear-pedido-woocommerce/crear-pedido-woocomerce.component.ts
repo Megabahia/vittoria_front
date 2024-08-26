@@ -76,6 +76,9 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   whatsappABuscar = '';
   correoABuscar = '';
   paginaWoocommerce
+  mostrarBotonEnviarGDP = false;
+  mostrarBoton = true;
+
   constructor(
     private route: ActivatedRoute,
     private _router: Router,
@@ -93,7 +96,8 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
     const ref = document.referrer;
     const host = document.location.host;
-    this.paginaWoocommerce = ref;
+    const domain = document.domain;
+    this.paginaWoocommerce = domain;
 
     this.currentUser = this.authService.currentUserValue;
 
@@ -116,28 +120,28 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     //     if (params) {
     //       // Decodificamos y parseamos el JSON de la cadena que recibimos
     const params = JSON.parse(localStorage.getItem('productosWoocommerce'));
-          const productos = JSON.parse(params.cadena);
+    const productos = JSON.parse(params.cadena);
 
-          // Procesar cada producto para normalizar claves y valores
-          const productosProcesados: ProductoProcesado[] = productos.map(producto => {
-            const productoProcesado: ProductoProcesado = {};
+    // Procesar cada producto para normalizar claves y valores
+    const productosProcesados: ProductoProcesado[] = productos.map(producto => {
+      const productoProcesado: ProductoProcesado = {};
 
-            Object.entries(producto).forEach(([clave, valor]) => {
-              // Normalizar la clave a minúsculas sin tildes ni caracteres especiales
-              const claveNormalizada = this.normalizarClave(clave);
+      Object.entries(producto).forEach(([clave, valor]) => {
+        // Normalizar la clave a minúsculas sin tildes ni caracteres especiales
+        const claveNormalizada = this.normalizarClave(clave);
 
-              // Asignar el valor a la nueva clave en el objeto procesado
-              productoProcesado[claveNormalizada] = valor;
-            });
+        // Asignar el valor a la nueva clave en el objeto procesado
+        productoProcesado[claveNormalizada] = valor;
+      });
 
-            // Agregar el canal al producto procesado
-            productoProcesado.canal = params.canal;
+      // Agregar el canal al producto procesado
+      productoProcesado.canal = params.canal;
 
-            return productoProcesado;
-          });
+      return productoProcesado;
+    });
 
-          // Si quieres agregar todos los productos al arreglo `this.datos`
-          this.datos.push(...productosProcesados);
+    // Si quieres agregar todos los productos al arreglo `this.datos`
+    this.datos.push(...productosProcesados);
     //     } else {
     //       return;
     //     }
@@ -283,8 +287,8 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       prefijo: [datos.prefijo, []],
       ciudad: [ciudad, []],
       couries: ['', []],
-      formasPagos: ['', [Validators.required]],
-      formaPago: ['', ],
+      formasPagos: [''],
+      formaPago: [''],
       listaFormasPagos: ['', []],
       numeroCuenta: ['', []],
       nombreCuenta: ['', []],
@@ -401,8 +405,6 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       this.toaster.open('Debe haber al menos 1 artículo', {type: 'danger'});
       return;
     }
-
-    console.log(this.notaPedido);
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
@@ -411,10 +413,12 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     if (confirm('Esta seguro de guardar los datos') === true) {
 
       this.notaPedido.value.pedidos.map((data) => {
+
         this.notaPedido.patchValue({
           ...this.notaPedido.value,
           envio: {...this.notaPedido.value.facturacion},
         });
+
         data.articulos.forEach((articulo, i) => {
           this.detallesArray.removeAt(i);
           this.agregarItem(articulo);
@@ -448,7 +452,9 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
           this.toaster.open('Pedido guardado', {type: 'success'});
           this.mostrarContenidoPantalla = false;
         }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
+        localStorage.removeItem('productosWoocommerce');
       });
+
     }
   }
 
@@ -662,7 +668,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
         const posicion = this.notaPedido.get('pedidos').value.findIndex(articulo => articulo.prefijo === prefijo);
 
         // Usa el método tiendaArray para obtener el FormArray y agregar el valor
-        const preciosVenta= [...this.extraerPrecios(info.producto)];
+        const preciosVenta = [...this.extraerPrecios(info.producto)];
         this.tiendaArray(posicion).push(
           this.crearDetalleGrupo(productoWoocomerce, info.producto, preciosVenta)
         );
@@ -726,6 +732,12 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       this.notaPedido.get('comprobanteVendedorGmb').updateValueAndValidity();
       this.notaPedido.get('montoPrevioPago').setValidators([Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]);
       this.notaPedido.get('montoPrevioPago').updateValueAndValidity();
+      this.mostrarBotonEnviarGDP = false;
+      this.mostrarBoton = true;
+    } else if (selectedValue === 'Retiro en local') {
+      this.mostrarBotonEnviarGDP = true;
+      this.mostrarBoton = false;
+
     } else {
       this.notaPedido.get('comprobanteVendedorGmb').setValidators([]);
       this.notaPedido.get('comprobanteVendedorGmb').updateValueAndValidity();
@@ -733,6 +745,8 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       this.notaPedido.get('montoPrevioPago').updateValueAndValidity();
       this.archivo.delete('comprobanteVendedorGmb');
       this.mostrarInputArchivoComprobante = false;
+      this.mostrarBotonEnviarGDP = false;
+      this.mostrarBoton = true;
     }
     this.mostrarDatosGmb = true;
     this.paramServiceAdm.obtenerListaHijosEnvio(this.notaPedido.value.metodoPago).subscribe((result) => {
@@ -794,6 +808,29 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       this.toaster.open('Ingrese un campo para buscar', {type: 'danger'});
       return;
     }
+  }
+
+  generarPedido(): void {
+    // Acceder a los valores actuales del formulario
+    const formData = this.notaPedido.value;
+
+    // Extraer los artículos del primer objeto de 'pedidos' y asignarlos a 'articulos'
+    if (formData.pedidos && formData.pedidos.length > 0) {
+      formData.articulos = formData.pedidos[0].articulos;
+    }
+
+    // Eliminar el campo 'pedidos'
+    delete formData.pedidos;
+
+    // Ahora 'formData' contiene 'articulos' actualizados y 'pedidos' ha sido eliminado
+    console.log(formData);
+
+
+    localStorage.setItem('productoDataPedidoWoocommerce', JSON.stringify(formData));
+    localStorage.removeItem('productosWoocommerce');
+
+    //window.open('#/gdp/pedidos', '_blank');
+    window.open('#/gdp/pedidos');
   }
 }
 

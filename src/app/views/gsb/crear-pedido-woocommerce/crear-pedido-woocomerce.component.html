@@ -2,7 +2,7 @@
   <div class="content-wrapper">
     <div class="content-body">
       <div class="card" *ngIf="mostrarContenidoPantalla">
-        <h2 class="card-header font-weight-bold">PEDIDO {{paginaWoocommerce}}</h2>
+        <h2 class="card-header font-weight-bold">PEDIDO {{ paginaWoocommerce }}</h2>
         <h3 class="py-1 px-2 font-weight-bold bg-primary mb-0">Bienvenido {{ currentUser.full_name }}</h3>
       </div>
       <div *ngIf="mostrarContenidoPantalla">
@@ -470,7 +470,7 @@
                   </div>
                 </div>
                 <div class="col-md-3 col-12">
-                  <label class="form-label" for="sectorOrigen">Sector <span class="text-danger">*</span></label>
+                  <label class="form-label" for="sectorOrigen">Sector</label>
                   <select class="form-control" id="sectorOrigen" formControlName="sector">
                     <option value="" selected>- Seleccione -</option>
                     <option value="{{sector.nombre}}" *ngFor="let sector of sectorOpciones">
@@ -579,13 +579,15 @@
             </div>
           </div>
           <div class="row">
-            <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="guardarVenta()">Enviar Pedido
+            <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="guardarVenta()" *ngIf="mostrarBoton">
+              Enviar Pedido
+            </button>
+            <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="generarPedido()"
+                    *ngIf="mostrarBotonEnviarGDP">Generar pedido
             </button>
           </div>
         </form>
-
       </div>
-
       <div class="container text-center p-5 mt-5 border shadow rounded" *ngIf="!mostrarContenidoPantalla">
         <h2 class="mb-3">¡Gracias por tu compra!</h2>
         <p class="lead">Tu pedido ha sido procesado con éxito.</p>
