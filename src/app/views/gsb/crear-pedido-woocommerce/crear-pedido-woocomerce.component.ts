@@ -114,39 +114,68 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('ENTRA A NGONINIT DE PEDIDO WOOCOMMERCE')
-    console.log(localStorage.getItem('productosWoocommerce'));
-    // this.route.queryParams.subscribe(params => {
-    //     if (params) {
-    //       // Decodificamos y parseamos el JSON de la cadena que recibimos
-    const params = JSON.parse(localStorage.getItem('productosWoocommerce'));
-    const productos = JSON.parse(params.cadena);
+    if (!localStorage.getItem('productosWoocommerce')) {
+      this.route.queryParams.subscribe(params => {
+        // Decodificamos y parseamos el JSON de la cadena que recibimos
+        const productos = JSON.parse(decodeURIComponent(params.cadena));
 
-    // Procesar cada producto para normalizar claves y valores
-    const productosProcesados: ProductoProcesado[] = productos.map(producto => {
-      const productoProcesado: ProductoProcesado = {};
+        // Procesar cada producto para normalizar claves y valores
+        const productosProcesados: ProductoProcesado[] = productos.map(producto => {
+          const productoProcesado: ProductoProcesado = {};
 
-      Object.entries(producto).forEach(([clave, valor]) => {
-        // Normalizar la clave a minúsculas sin tildes ni caracteres especiales
-        const claveNormalizada = this.normalizarClave(clave);
+          Object.entries(producto).forEach(([clave, valor]) => {
+            // Normalizar la clave a minúsculas sin tildes ni caracteres especiales
+            const claveNormalizada = this.normalizarClave(clave);
 
-        // Asignar el valor a la nueva clave en el objeto procesado
-        productoProcesado[claveNormalizada] = valor;
+            // Asignar el valor a la nueva clave en el objeto procesado
+            productoProcesado[claveNormalizada] = valor;
+          });
+
+          // Agregar el canal al producto procesado
+          productoProcesado.canal = params.canal;
+
+          return productoProcesado;
+        });
+
+        // Si quieres agregar todos los productos al arreglo `this.datos`
+        this.datos.push(...productosProcesados);
+      });
+    } else {
+      // this.route.queryParams.subscribe(params => {
+      //     if (params) {
+      //       // Decodificamos y parseamos el JSON de la cadena que recibimos
+      const params = JSON.parse(localStorage.getItem('productosWoocommerce'));
+      const productos = JSON.parse(params.cadena);
+
+      // Procesar cada producto para normalizar claves y valores
+      const productosProcesados: ProductoProcesado[] = productos.map(producto => {
+        const productoProcesado: ProductoProcesado = {};
+
+        Object.entries(producto).forEach(([clave, valor]) => {
+          // Normalizar la clave a minúsculas sin tildes ni caracteres especiales
+          const claveNormalizada = this.normalizarClave(clave);
+
+          // Asignar el valor a la nueva clave en el objeto procesado
+          productoProcesado[claveNormalizada] = valor;
+        });
+
+        // Agregar el canal al producto procesado
+        productoProcesado.canal = params.canal;
+
+        return productoProcesado;
       });
 
-      // Agregar el canal al producto procesado
-      productoProcesado.canal = params.canal;
+      // Si quieres agregar todos los productos al arreglo `this.datos`
+      this.datos.push(...productosProcesados);
+      //     } else {
+      //       return;
+      //     }
+      //   }
+      // );
+      localStorage.removeItem('productosWoocommerce');
 
-      return productoProcesado;
-    });
 
-    // Si quieres agregar todos los productos al arreglo `this.datos`
-    this.datos.push(...productosProcesados);
-    //     } else {
-    //       return;
-    //     }
-    //   }
-    // );
+    }
 
 
     this.obtenerProvincias();
@@ -452,7 +481,6 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
           this.toaster.open('Pedido guardado', {type: 'success'});
           this.mostrarContenidoPantalla = false;
         }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
-        localStorage.removeItem('productosWoocommerce');
       });
 
     }
