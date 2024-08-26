@@ -56,6 +56,7 @@ export class SignInComponent implements OnInit {
           this.mostrarSpinner = false;
           if (localStorage.getItem('productosWoocommerce')) {
             const baseUrl = environment.apiUrlFront;
+
             //this.router.navigate(['#/gsb/pedido_woocommerce/crear']);
             window.location.href = `http://localhost:4200/#/gsb/pedido_woocommerce/crear`;
             window.location.reload();
