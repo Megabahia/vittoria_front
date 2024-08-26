@@ -639,6 +639,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
       this.notaPedido.get('numeroPedido').setValue(this.generarID());
       this.notaPedido.get('canal').setValue('Contacto Local');
+      this.notaPedido.get('estado').setValue('Pendiente de entrega');
       localStorage.removeItem('productoDataPedidoWoocommerce');
     }
 
