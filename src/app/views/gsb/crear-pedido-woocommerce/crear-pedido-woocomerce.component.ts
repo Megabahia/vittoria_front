@@ -172,8 +172,6 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       //     }
       //   }
       // );
-      localStorage.removeItem('productosWoocommerce');
-
 
     }
 
@@ -482,6 +480,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
           this.mostrarContenidoPantalla = false;
         }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
       });
+      localStorage.removeItem('productosWoocommerce');
 
     }
   }
