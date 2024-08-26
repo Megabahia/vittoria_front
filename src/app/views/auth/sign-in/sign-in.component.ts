@@ -51,12 +51,14 @@ export class SignInComponent implements OnInit {
       this.authService.signIn({username: this.username, password: this.password})
         .pipe(first())
         .subscribe((result) => {
-          // this.router.navigate(['/admin/management']);
+          //this.router.navigate(['/admin/management']);
           this.sharedDataService.setSharedData(true);
           this.mostrarSpinner = false;
           if (localStorage.getItem('productosWoocommerce')) {
-            this.router.navigate(['gsb/pedido_woocommerce/crear']);
-            // window.location.href = '#/gsb/pedido_woocommerce/crear';
+            const baseUrl = environment.apiUrlFront;
+            //this.router.navigate(['#/gsb/pedido_woocommerce/crear']);
+            window.location.href = `http://localhost:4200/#/gsb/pedido_woocommerce/crear`;
+            window.location.reload();
           } else {
             window.location.href = '';
           }
