@@ -699,7 +699,6 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
         this.tiendaArray(posicion).push(
           this.crearDetalleGrupo(productoWoocomerce, info.producto, preciosVenta)
         );
-        console.log(preciosVenta)
         resolve(); // Resolver la promesa
         this.calcular();
       }, error => this.toaster.open(error, {type: 'danger'}));
@@ -817,6 +816,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
         this.notaPedido.get('facturacion').get('ciudad').setValue(info.ciudadNacimiento);
 
         this.obtenerCiudad();
+        this.obtenerSector();
         //this.notaPedido.get('facturacion').get('identificacion').disable();
       }, error => {
         this.toaster.open(error, {type: 'danger'});

@@ -280,7 +280,6 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       this.toaster.open('Seleccione un precio que sea mayor a 0.', {type: 'danger'});
       return;
     }
-    console.log(this.notaPedido);
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
@@ -299,9 +298,11 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
         }, error => this.toaster.open(error, {type: 'danger'})
       );
+      this.hablilitarBotonGuardar = true;
     } else {
       this.hablilitarBotonGuardar = true;
     }
+    this.iniciarNotaPedido();
   }
 
   obtenerListaProductos(): void {
@@ -325,8 +326,8 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     return new Promise((resolve, reject) => {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
-        canalProducto: this.detallesArray.value[i].canal ?this.detallesArray.value[i].canal : this.canalSeleccionado,
-        canal: this.notaPedido.value.canal,
+        canalProducto: this.detallesArray.value[i].canal ? this.detallesArray.value[i].canal : this.canalSeleccionado,
+        canal: this.canalSeleccionado,
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
@@ -625,18 +626,18 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  obtenerDatosPedidoWoocommerce() {
+  async obtenerDatosPedidoWoocommerce() {
     const data = localStorage.getItem('productoDataPedidoWoocommerce');
     if (data) {
       this.dataPedidoWoocommerce = JSON.parse(data);
-      this.obtenerProvincias();
-      this.obtenerCiudad();
       this.notaPedido.patchValue({...this.dataPedidoWoocommerce});
       this.dataPedidoWoocommerce.articulos.map((datos, index) => {
         this.agregarItem();
         this.detallesArray.controls[index].get('codigo').setValue(datos.codigo);
         this.obtenerProducto(index);
       });
+      this.obtenerCiudad();
+      //this.obtenerSector();
 
       this.notaPedido.get('numeroPedido').setValue(this.generarID());
       this.notaPedido.get('canal').setValue('Contacto Local');
@@ -646,6 +647,10 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
   }
 
-
+  /*obtenerSector(): void {
+    this.paramServiceAdm.obtenerListaHijos(this.notaPedido.value.ciudad, 'CIUDAD').subscribe((info) => {
+      this.sectorOpciones = info;
+    });
+  }*/
 }
 

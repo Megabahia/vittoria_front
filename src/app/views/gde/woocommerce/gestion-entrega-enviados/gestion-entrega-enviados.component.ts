@@ -361,10 +361,9 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
         this.evidenciasForm.get('totalCobroEfectivo').updateValueAndValidity();
       } else if (this.mostrarMontoEfectivo || this.mostrarMontoTransferencia) {
         if (this.evidenciasForm.value.totalCobroEfectivo < this.pedido.total || this.evidenciasForm.value.montoTransferencia < this.pedido.total) {
-          this.toaster.open('El monto ingresado no coincide con el total del pedido', {type: "danger"});
+          this.toaster.open('El monto ingresado no es el correcto', {type: "danger"});
           return;
         }
-        return;
       }
 
 
