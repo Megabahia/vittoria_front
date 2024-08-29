@@ -167,7 +167,6 @@ export class ProspectosClientesEditComponent implements OnInit {
         informacionAdicional: ['compra desde la url', []],
         descuento: [0, []],
         impuesto: [0, []],
-        valorDescuento: [0, [Validators.required]],
         total: [0, [Validators.required, Validators.min(1)]],
         prospectoClienteEncabezado: [this.prospectoForm.get('id').value, []],
       })
@@ -181,6 +180,7 @@ export class ProspectosClientesEditComponent implements OnInit {
 
   obtenerProducto(i): void {
     this.productosServicer.obtenerProductoPorCodigo({
+      canalProducto: 'vittoria-test.netlify.app',
       codigoBarras: this.fDetalles.controls[i].get('codigo').value,
       lugarVentaCiudad: this.prospectoForm.get('ciudad').value,
       canal: this.prospectoForm.get('canalOrigen').value,

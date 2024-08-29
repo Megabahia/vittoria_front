@@ -8,7 +8,7 @@
         >Nuevo Pedido
         </button>-->
         <!-- Address and Contact starts -->
-        <div class="card-body pt-2">
+        <div class="card-body pt-2" *ngIf="mostrarFiltroCliente">
           <h4 class="invoice-title mb-2">Filtro de cliente</h4>
           <div class="row">
             <div class="col-sm-2">
@@ -38,6 +38,14 @@
                     <span class="title mr-1">Fecha de venta:</span>
                     <input type="text"
                            placeholder={{formatearFecha()}}
+                           class="form-control invoice-edit-input date-picker"
+                           disabled
+                    />
+                  </div>
+                  <div class="d-flex align-items-center mb-1" *ngIf="mostrarInputNumPedido">
+                    <span class="title mr-1">Número de pedido:</span>
+                    <input type="text"
+                           [value]="notaPedido.value?.numeroPedido"
                            class="form-control invoice-edit-input date-picker"
                            disabled
                     />

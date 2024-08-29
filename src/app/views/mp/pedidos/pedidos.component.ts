@@ -265,8 +265,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
       this.notaPedido.patchValue({...info, verificarPedido: true, canal: this.cortarUrlHastaCom(info.canal)});
 
-
-
       this.calcular();
     });
   }

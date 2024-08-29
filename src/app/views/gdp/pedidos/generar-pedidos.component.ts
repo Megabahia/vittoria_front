@@ -83,6 +83,8 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   mostrarSpinner = false;
   parametroIva;
   dataPedidoWoocommerce;
+  mostrarFiltroCliente = true;
+  mostrarInputNumPedido = false;
 
   constructor(
     private modalService: NgbModal,
@@ -146,6 +148,8 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     if (localStorage.getItem('productoData')) {
       this.obtenerProductoDesdeConsulta();
     } else if (localStorage.getItem('productoDataPedidoWoocommerce')) {
+      this.mostrarFiltroCliente = false;
+      this.mostrarInputNumPedido = true;
       this.obtenerDatosPedidoWoocommerce();
     }
 
@@ -295,14 +299,15 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
           this.myAngularxCode = `Numero de pedido: ${info.numeroPedido}`;
           this.toaster.open('Pedido creado. Creando cupón...', {type: 'info'});
           this.captureScreen();
-
+          this.mostrarFiltroCliente = true;
+          this.mostrarInputNumPedido = false;
         }, error => this.toaster.open(error, {type: 'danger'})
       );
       this.hablilitarBotonGuardar = true;
     } else {
       this.hablilitarBotonGuardar = true;
     }
-    this.iniciarNotaPedido();
+
   }
 
   obtenerListaProductos(): void {
@@ -326,29 +331,29 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     return new Promise((resolve, reject) => {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
-        canalProducto: this.detallesArray.value[i].canal ? this.detallesArray.value[i].canal : this.canalSeleccionado,
+        //canalProducto: this.detallesArray.value[i].canal ? this.detallesArray.value[i].canal : this.canalSeleccionado,
         canal: this.canalSeleccionado,
-        valorUnitario: this.detallesArray.controls[i].value.valorUnitario
+        //valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
-      this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
+      this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
         //if(info.mensaje==''){
-        if (info.codigoBarras) {
+        if (info.producto.codigoBarras) {
           this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
-          this.detallesArray.controls[i].get('id').setValue(info.id);
-          this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+          this.detallesArray.controls[i].get('id').setValue(info.producto.id);
+          this.detallesArray.controls[i].get('articulo').setValue(info.producto.nombre);
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-          this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
+          this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info.producto)]);
           const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
           this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
           this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
-          this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
-          this.detallesArray.controls[i].get('imagen_principal').setValue(info?.imagen_principal);
+          this.detallesArray.controls[i].get('imagen').setValue(info.producto?.imagen);
+          this.detallesArray.controls[i].get('imagen_principal').setValue(info.producto?.imagen_principal);
           this.detallesArray.controls[i].get('cantidad').setValidators([
-            Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
+            Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info.producto?.stock)
           ]);
           this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
-          this.detallesArray.controls[i].get('canal').setValue(info.canal)
-          this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
+          this.detallesArray.controls[i].get('canal').setValue(info.producto.canal);
+          this.detallesArray.controls[i].get('woocommerceId').setValue(info.producto.woocommerceId);
           this.calcular();
           resolve();
         } else {
@@ -368,7 +373,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     const precios = [];
     Object.keys(info).forEach(clave => {
       if (clave.startsWith('precioVenta')) {
-        precios.push({clave: clave, valor: info[clave]});
+        precios.push({clave: clave, valor: info[clave] ? info[clave] : 0});
       }
     });
     return precios;
@@ -402,6 +407,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       this.notaPedido.patchValue({...info});
       this.toaster.open('Cupón creado. Captura realizada', {type: 'info'});
       this.imagenCargada = true;
+
     }, error => this.toaster.open(error, {type: 'danger'}));
 
   }
@@ -639,13 +645,14 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       this.obtenerCiudad();
       //this.obtenerSector();
 
-      this.notaPedido.get('numeroPedido').setValue(this.generarID());
+      //this.notaPedido.get('numeroPedido').setValue(this.generarID());
       this.notaPedido.get('canal').setValue('Contacto Local');
       this.notaPedido.get('estado').setValue('Pendiente de entrega');
       localStorage.removeItem('productoDataPedidoWoocommerce');
     }
 
   }
+
 
   /*obtenerSector(): void {
     this.paramServiceAdm.obtenerListaHijos(this.notaPedido.value.ciudad, 'CIUDAD').subscribe((info) => {

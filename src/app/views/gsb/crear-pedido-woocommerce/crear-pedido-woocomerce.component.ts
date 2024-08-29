@@ -92,8 +92,12 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     private integracionesService: IntegracionesService,
     private authService: AuthService
   ) {
-    console.log('ENTRA A D¿CONSTRUCTOR DE PEDIDO WOOCOMMERCE');
-
+    const navbar = document.getElementById('navbar');
+    const toolbar = document.getElementById('toolbar');
+    if (navbar && toolbar) {
+      navbar.style.display = 'none';
+      toolbar.style.display = 'none';
+    }
     const ref = document.referrer;
     const host = document.location.host;
     const domain = document.domain;
@@ -224,7 +228,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       total: ['', [Validators.required]],
       envioTotal: [0],
       subtotal: [0],
-      numeroPedido: [''],
+      numeroPedido: [this.generarID()],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['', [Validators.required]],
       verificarPedido: [false, [Validators.required]],
@@ -403,9 +407,13 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   }
 
   obtenerSector(): void {
-    this.paramServiceAdm.obtenerListaHijos(this.notaPedido.value.facturacion.ciudad, 'CIUDAD').subscribe((info) => {
-      this.sectorOpciones = info;
-    });
+    if (this.notaPedido.value.facturacion.ciudad !== 'Quito') {
+      this.sectorOpciones = [{nombre: this.notaPedido.value.facturacion.ciudad}];
+    } else {
+      this.paramServiceAdm.obtenerListaHijos(this.notaPedido.value.facturacion.ciudad, 'CIUDAD').subscribe((info) => {
+        this.sectorOpciones = info;
+      });
+    }
   }
 
   generarID(): string {
@@ -423,15 +431,15 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       delete producto.imagen_principal;
     });
 
+    if (this.notaPedido.get('pedidos').value.length === 0) {
+      this.toaster.open('Debe haber al menos 1 artículo', {type: 'danger'});
+      return;
+    }
     if (!this.selectClient) {
       this.toaster.open('Seleccione si es cliente o no', {type: 'danger'});
       return;
     }
 
-    if (this.notaPedido.get('pedidos').value.length === 0) {
-      this.toaster.open('Debe haber al menos 1 artículo', {type: 'danger'});
-      return;
-    }
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
@@ -752,33 +760,57 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
   onSelectChangePago(e: any) {
     const selectedValue = e.target.value;
-    if (selectedValue === 'Previo Pago Servientrega Nacional' || selectedValue === 'Previo Pago Motorizado en Quito') {
-      this.mostrarInputArchivoComprobante = true;
-      this.notaPedido.get('comprobanteVendedorGmb').setValidators([Validators.required]);
-      this.notaPedido.get('comprobanteVendedorGmb').updateValueAndValidity();
-      this.notaPedido.get('montoPrevioPago').setValidators([Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]);
-      this.notaPedido.get('montoPrevioPago').updateValueAndValidity();
-      this.mostrarBotonEnviarGDP = false;
-      this.mostrarBoton = true;
-    } else if (selectedValue === 'Retiro en local') {
-      this.mostrarBotonEnviarGDP = true;
-      this.mostrarBoton = false;
+    this.resetValidationAndFlags(); // Resetear validaciones y flags antes de aplicar condiciones específicas
 
-    } else {
-      this.notaPedido.get('comprobanteVendedorGmb').setValidators([]);
-      this.notaPedido.get('comprobanteVendedorGmb').updateValueAndValidity();
-      this.notaPedido.get('montoPrevioPago').setValidators([]);
-      this.notaPedido.get('montoPrevioPago').updateValueAndValidity();
-      this.archivo.delete('comprobanteVendedorGmb');
-      this.mostrarInputArchivoComprobante = false;
-      this.mostrarBotonEnviarGDP = false;
-      this.mostrarBoton = true;
+    switch (selectedValue) {
+      case 'Previo Pago Servientrega Nacional':
+      case 'Previo Pago Motorizado en Quito':
+        this.handlePrevioPago();
+        break;
+      case 'Retiro en local':
+        this.handleRetiroEnLocal();
+        break;
+      default:
+        this.handleDefault();
+        break;
     }
-    this.mostrarDatosGmb = true;
+
+    this.updateEnvioList(selectedValue);
+    this.mostrarDatosGmb = true; // Se mueve fuera del switch ya que se aplica en todos los casos
+  }
+
+  private resetValidationAndFlags() {
+    this.notaPedido.get('comprobanteVendedorGmb').setValidators([]);
+    this.notaPedido.get('montoPrevioPago').setValidators([]);
+    this.notaPedido.get('comprobanteVendedorGmb').updateValueAndValidity();
+    this.notaPedido.get('montoPrevioPago').updateValueAndValidity();
+    this.archivo.delete('comprobanteVendedorGmb');
+    this.mostrarBotonEnviarGDP = this.mostrarInputArchivoComprobante = this.mostrarBoton = false;
+  }
+
+  private handlePrevioPago() {
+    this.mostrarInputArchivoComprobante = true;
+    this.notaPedido.get('comprobanteVendedorGmb').setValidators([Validators.required]);
+    this.notaPedido.get('montoPrevioPago').setValidators([Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]);
+    this.notaPedido.get('comprobanteVendedorGmb').updateValueAndValidity();
+    this.notaPedido.get('montoPrevioPago').updateValueAndValidity();
+    this.mostrarBoton = true;
+  }
+
+  private handleRetiroEnLocal() {
+    this.mostrarBotonEnviarGDP = true;
+  }
+
+  private handleDefault() {
+    this.mostrarBoton = true;
+  }
+
+  private updateEnvioList(selectedValue: string) {
     this.paramServiceAdm.obtenerListaHijosEnvio(this.notaPedido.value.metodoPago).subscribe((result) => {
-      this.listaCostoEnvio = result;
+      this.listaCostoEnvio = selectedValue === 'Retiro en local' ? result : result.filter(envio => envio.nombre !== "Gratis");
     });
   }
+
 
   onFileSelectedComprobantePago(event: any): void {
     this.archivo.append('archivoMetodoPago', event.target.files.item(0), event.target.files.item(0).name);
@@ -854,15 +886,16 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     // Eliminar el campo 'pedidos'
     delete formData.pedidos;
 
-    // Ahora 'formData' contiene 'articulos' actualizados y 'pedidos' ha sido eliminado
-    console.log(formData);
-
-
     localStorage.setItem('productoDataPedidoWoocommerce', JSON.stringify(formData));
     localStorage.removeItem('productosWoocommerce');
 
     //window.open('#/gdp/pedidos', '_blank');
     window.open('#/gdp/pedidos');
+  }
+
+  irInicio() {
+    window.open('#/admin/management');
+    localStorage.removeItem('productosWoocommerce');
   }
 }
 

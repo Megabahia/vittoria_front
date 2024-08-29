@@ -359,9 +359,14 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
         this.evidenciasForm.get('montoTransferencia').updateValueAndValidity();
         this.evidenciasForm.get('totalCobroEfectivo').setValidators([]);
         this.evidenciasForm.get('totalCobroEfectivo').updateValueAndValidity();
-      } else if (this.mostrarMontoEfectivo || this.mostrarMontoTransferencia) {
-        if (this.evidenciasForm.value.totalCobroEfectivo < this.pedido.total || this.evidenciasForm.value.montoTransferencia < this.pedido.total) {
-          this.toaster.open('El monto ingresado no es el correcto', {type: "danger"});
+      } else if (this.mostrarMontoEfectivo) {
+        if (Number(this.evidenciasForm.value.totalCobroEfectivo) < this.pedido.total) {
+          this.toaster.open('El monto efectivo ingresado no es el correcto', {type: "danger"});
+          return;
+        }
+      } else if (this.mostrarMontoTransferencia) {
+        if (Number(this.evidenciasForm.value.montoTransferencia) < this.pedido.total) {
+          this.toaster.open('El monto de transferencia ingresado no es el correcto', {type: "danger"});
           return;
         }
       }
@@ -386,7 +391,9 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  seleccionarCourier(event): void {
+  seleccionarCourier(event)
+    :
+    void {
     this.paramServiceGDE.obtenerListaPadres(event.target.value).subscribe((info) => {
       info.map((item) => {
         if ('NOMBRE_COURIER' === item.nombre) {
@@ -405,11 +412,17 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  cargarArchivo(event, nombreCampo): void {
+  cargarArchivo(event, nombreCampo)
+    :
+    void {
     this.archivo.append(nombreCampo, event.target.files[0]);
   }
 
-  cortarUrlHastaCom(url: string): string {
+  cortarUrlHastaCom(url
+                      :
+                      string
+  ):
+    string {
     if (url.startsWith('http://') || url.startsWith('https://')) {
       const match = url.match(/https?:\/\/[^\/]+\.com/);
       return match ? match[0] : url;  // Devuelve la URL cortada o la original si no se encuentra .com
@@ -417,12 +430,19 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
     return url;
   }
 
-  extraerHora(dateTimeString: string): string {
+  extraerHora(dateTimeString
+                :
+                string
+  ):
+    string {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(' ')[0];
   }
 
-  onSelectTIpoPago(e: any) {
+  onSelectTIpoPago(e
+                     :
+                     any
+  ) {
     if (e.target.value === 'transferencia') {
       this.mostrarCargaComprobante = true;
       this.mostrarMontoTransferencia = true;
