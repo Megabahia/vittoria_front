@@ -98,10 +98,10 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       navbar.style.display = 'none';
       toolbar.style.display = 'none';
     }
-    const ref = document.referrer;
+    /*const ref = document.referrer;
     const host = document.location.host;
     const domain = document.domain;
-    this.paginaWoocommerce = domain;
+    this.paginaWoocommerce = domain;*/
 
     this.currentUser = this.authService.currentUserValue;
 
@@ -112,9 +112,6 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       this.parametroIva = parseFloat(result.info[0].valor);
     });
 
-    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.page_size, 'METODO PAGO', '').subscribe((result) => {
-      this.listaMetodoPago = result.data;
-    });
   }
 
   ngOnInit(): void {
@@ -137,6 +134,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
           // Agregar el canal al producto procesado
           productoProcesado.canal = params.canal;
+          this.paginaWoocommerce = 'Vittoria';
 
           return productoProcesado;
         });
@@ -150,6 +148,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       //       // Decodificamos y parseamos el JSON de la cadena que recibimos
       const params = JSON.parse(localStorage.getItem('productosWoocommerce'));
       const productos = JSON.parse(params.cadena);
+      this.paginaWoocommerce = params.canal;
 
       // Procesar cada producto para normalizar claves y valores
       const productosProcesados: ProductoProcesado[] = productos.map(producto => {
@@ -187,6 +186,18 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     });
 
     this.notaPedido.updateValueAndValidity();
+
+    if (this.paginaWoocommerce === 'contraentrega.megadescuento.com') {
+      this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.page_size, 'METODO PAGO', '').subscribe((result) => {
+        const metodoPago = result.data.find(metodo => metodo.nombre === 'Pago Contra Entrega a Nivel Nacional por Servientrega');
+        this.listaMetodoPago = metodoPago ? [metodoPago] : []; // Asegura que el resultado sea siempre un array
+      });
+    } else {
+      this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.page_size, 'METODO PAGO', '').subscribe((result) => {
+        this.listaMetodoPago = result.data.filter(metodo => metodo.nombre !== 'Pago Contra Entrega a Nivel Nacional por Servientrega');
+      });
+    }
+
   }
 
   tiendaArray(posicion: number): FormArray | null {
@@ -807,7 +818,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
   private updateEnvioList(selectedValue: string) {
     this.paramServiceAdm.obtenerListaHijosEnvio(this.notaPedido.value.metodoPago).subscribe((result) => {
-      this.listaCostoEnvio = selectedValue === 'Retiro en local' ? result : result.filter(envio => envio.nombre !== "Gratis");
+      this.listaCostoEnvio = selectedValue === 'Retiro en local' || selectedValue === 'Pago Contra Entrega a Nivel Nacional por Servientrega' ? result : result.filter(envio => envio.nombre !== "Gratis");
     });
   }
 

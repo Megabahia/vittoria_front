@@ -87,6 +87,7 @@ export class ToolbarComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem('currentUser'));
+    console.log(this.usuario);
     this.acciones = this.usuario.acciones;
     // this.selectMenu();
   }
