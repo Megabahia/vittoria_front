@@ -497,9 +497,9 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
           this.numeroPedido.push(result.numeroPedido);
           this.toaster.open('Pedido guardado', {type: 'success'});
           this.mostrarContenidoPantalla = false;
+          localStorage.removeItem('productosWoocommerce');
         }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
       });
-      localStorage.removeItem('productosWoocommerce');
 
     }
   }
