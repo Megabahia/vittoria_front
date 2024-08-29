@@ -243,7 +243,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['', [Validators.required]],
       verificarPedido: [false, [Validators.required]],
-      canal: ['superbarato.megadescuento.com', []],
+      canal: [this.paginaWoocommerce, []],
       estado: ['Pendiente', []],
       tipoEnvio: [''],
       tipoPago: [''],
