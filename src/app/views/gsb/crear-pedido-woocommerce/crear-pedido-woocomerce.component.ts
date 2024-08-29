@@ -105,7 +105,6 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
     this.currentUser = this.authService.currentUserValue;
 
-    this.iniciarNotaPedido();
     this.obtenerListaParametrosCanal();
 
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.page_size, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
@@ -178,6 +177,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
     }
 
+    this.iniciarNotaPedido();
 
     this.obtenerProvincias();
     this.obtenerCiudad();
