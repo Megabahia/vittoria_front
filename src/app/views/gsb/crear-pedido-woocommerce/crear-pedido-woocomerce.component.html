@@ -1,5 +1,14 @@
+<!--<div class="app-content content ">
+  <div class="content-wrapper">
+    <div class="content-body">
+
+    </div>
+  </div>
+</div>-->
+
 <div class="card" *ngIf="mostrarContenidoPantalla">
-  <h2 class="card-header font-weight-bold">{{paginaWoocommerce}}</h2>
+  <h2 class="card-header font-weight-bold">PEDIDO DESDE {{ paginaWoocommerce | uppercase}}</h2>
+  <h3 class="py-1 px-2 font-weight-bold bg-primary mb-0">Bienvenido {{ currentUser.full_name }}</h3>
 </div>
 <div *ngIf="mostrarContenidoPantalla">
 
@@ -8,8 +17,8 @@
       <div *ngFor="let tienda of notaPedido.get('pedidos')['controls']; let j = index;">
         <div class="card">
           <ng-container [formGroup]="tienda">
-            <h3 class="py-1 px-2 font-weight-bold bg-primary">Tienda {{ tienda.controls.prefijo.value }}</h3>
-            <!--<div>
+            <!--<h3 class="py-1 px-2 font-weight-bold bg-primary">Tienda {{ tienda.controls.prefijo.value }}</h3>
+            <div>
               <h3 class="m-2">Tienda: {{ tienda.controls.prefijo.value }}</h3>
             </div>-->
             <div class="py-1" formArrayName="articulos">
@@ -118,8 +127,9 @@
                 </ng-container>
               </div>
             </div>
-            <div class="m-2" *ngIf="mostrarDatosEnvio">
-              <div class="card border border-warning bg-light-warning" *ngIf="tienda.controls.articulos.value.length !== 0">
+            <!--<div class="m-2" *ngIf="mostrarDatosEnvio">
+              <div class="card border border-warning bg-light-warning"
+                   *ngIf="tienda.controls.articulos.value.length !== 0">
                 <h5 class="pl-3 pt-2">DATOS DE ENVIO<label class="text-muted">(Datos
                   obligatorios) <strong class="text-info">(Primero seleccione ciudad de destino en datos de
                     facturación)</strong></label></h5>
@@ -176,19 +186,82 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div>-->
           </ng-container>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-7"></div>
-      <div class="col-md-5 text-right mt-2">
+    <div class="card bg-light-warning">
+      <div class="row p-2">
+        <div class="col-md-4 col-12">
+          <label>Método de envío</label>
+          <select class="form-control"
+                  formControlName="metodoPago" (change)="onSelectChangePago($event)">
+            <option value="" selected>- Seleccione metodo de envío-</option>
+            <option value="{{pago.nombre}}" *ngFor="let pago of listaMetodoPago">
+              {{ pago.nombre }}
+            </option>
+          </select>
+          <div *ngIf="notaPedidoForm.metodoPago.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaPedidoForm.metodoPago.errors.required">
+              Requerido
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-12" *ngIf="mostrarInputArchivoComprobante">
+          <label>Cargar comrpobante de pago</label>
+          <input class="form-control-file" type="file" (change)="onFileSelected($event)">
+          <div *ngIf="notaPedidoForm.comprobanteVendedorGmb.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaPedidoForm.comprobanteVendedorGmb.errors.required">
+              Requerido
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-12" *ngIf="mostrarInputArchivoComprobante">
+          <label>Monto</label>
+          <input class="form-control" type="text" formControlName="montoPrevioPago" placeholder="00.00">
+          <div *ngIf="notaPedidoForm.montoPrevioPago.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaPedidoForm.montoPrevioPago.errors.required">
+              Requerido
+            </div>
+            <div *ngIf="notaPedidoForm.montoPrevioPago.errors.pattern">
+              Ingrese valores válidos, en formato 00.00 y unicamente dos decimales
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="row d-flex justify-content-end">
+      <div class="col-md-5 text-right">
         <div class="invoice-total-wrapper">
+          <hr class="my-20"/>
           <div class="invoice-total-item">
-            <p class="invoice-total-title text-primary mr-3 font-weight-bold">
-              Total a pagar: ${{ getTotalFormatted() }}
+            <p class="invoice-total-title text-primary font-weight-bold">
+              Total Envio:
             </p>
+            <select class="form-control" (change)="nombreEnvioSeleccionado($event)">
+              <option value="" selected>- Seleccione costo de envío-</option>
+              <option *ngFor="let envio of listaCostoEnvio" [ngValue]="envio">
+                {{ envio.nombre }} - {{ envio.valor }}
+              </option>
+            </select>
+
+          </div>
+          <div class="invoice-total-item">
+            <p class="invoice-total-title text-primary font-weight-bold">
+              Subtotal: ${{ notaPedido.controls.subtotal.value }}</p>
+          </div>
+          <div class="invoice-total-item">
+            <p class="invoice-total-title text-primary font-weight-bold">
+              IVA (15%): ${{ totalIva }}</p>
+          </div>
+          <div class="invoice-total-item">
+            <p class="invoice-total-title text-primary font-weight-bold">
+              Total a pagar por el cliente: ${{ notaPedido.controls.total.value }}</p>
           </div>
         </div>
       </div>
@@ -197,30 +270,57 @@
   <div class="card">
     <div class="row p-2">
       <div class="col-md-3 col-12">
-        <h5>¿Usted es nuestro cliente?</h5>
-        <select id="cliente" class="form-control" (change)="onSelectChangeCliente($event)" [disabled]="disabledCombo">
+        <h5 class="text-danger">¿Es cliente nuevo?</h5>
+        <select id="cliente" class="form-control" (change)="onSelectChangeCliente($event)"
+                [disabled]="disabledCombo">
           <option value="" disabled selected>- Seleccione -</option>
           <option value="esCliente">SI</option>
           <option value="noEsCliente">NO</option>
         </select>
       </div>
-      <div class="col-md-4 col-12" *ngIf="esCliente">
-        <label style="color: blue">Por favor ingrese su correo electrónico registrado:</label>
+      <div class="col-md-9 col-12" *ngIf="noEsCliente">
+        <h6>Buscar cliente</h6>
+        <div class="row">
+          <div class="col-md-3 col-12">
+            <input class="form-control" type="text" placeholder="Cédula"
+                   [(ngModel)]="cedulaABuscar"
+            >
+          </div>
+          <label class="mt-1">O</label>
+          <div class="col-md-3 col-12">
+            <input class="form-control" type="text" placeholder="Número WhatsApp"
+                   [(ngModel)]="whatsappABuscar"
+            >
+          </div>
+          <label class="mt-1">O</label>
+
+          <div class="col-md-3 col-12">
+            <input class="form-control" type="text" placeholder="Correo electrónico"
+                   [(ngModel)]="correoABuscar"
+            >
+          </div>
+          <div class="col-2">
+            <button class="btn btn-primary" (click)="obtenerClienteCedula()">
+              <i-feather name='search' class="edit-user"></i-feather>
+            </button>
+          </div>
+        </div>
+        <!--<label style="color: blue">Por favor ingrese su correo electrónico registrado:</label>
         <div class="d-flex justify-content-between align-items-center">
           <input type="text" class="form-control" [(ngModel)]="correoCliente"/>
           <button class="btn btn-primary ml-2" style="width: 300px" (click)="enviarCorreoCliente()">Generar código
           </button>
         </div>
         <label class="mt-1 text-warning">Al correo electrónico se va a enviar un código para cargar su información
-        </label>
+        </label>-->
       </div>
-      <div class="col-md-4 col-12" *ngIf="enviarCorreo">
+      <!--<div class="col-md-4 col-12" *ngIf="enviarCorreo">
         <label style="color: blue">Ingrese el código enviado a su correo electrónico:</label>
         <div class="d-flex justify-content-between align-items-center">
           <input type="text" class="form-control" [(ngModel)]="codigoCorreo"/>
           <button class="btn btn-primary ml-2" (click)="validarCodigoCorreo()">Enviar codigo</button>
         </div>
-      </div>
+      </div>-->
     </div>
   </div>
 
@@ -378,8 +478,8 @@
             </div>
           </div>
           <div class="col-md-3 col-12">
-            <label class="form-label" for="sectorOrigen">Sector <span class="text-danger">*</span></label>
-            <select class="form-control" id="sectorOrigen" formControlName="sector" (change)="obtenerCostosEnvio()">
+            <label class="form-label" for="sectorOrigen">Sector</label>
+            <select class="form-control" id="sectorOrigen" formControlName="sector">
               <option value="" selected>- Seleccione -</option>
               <option value="{{sector.nombre}}" *ngFor="let sector of sectorOpciones">
                 {{ sector.nombre }}
@@ -440,10 +540,17 @@
               </div>
             </div>
           </div>
+          <div class="col-md-3 col-12">
+            <label>GPS</label>
+            <input class="form-control" type="text"
+                   formControlName="gps"
+            >
+
+          </div>
         </div>
-        <div class="row px-4 pb-2 d-flex justify-content-end">
+        <!--<div class="row px-4 pb-2 d-flex justify-content-end">
           <button class="btn btn-primary" (click)="mostrarDatosEnvioConScroll()">Datos de envío y pago</button>
-        </div>
+        </div>-->
       </div>
     </div>
     <div class="card p-2" *ngIf="mostrarContenido">
@@ -454,7 +561,7 @@
           <div class="col-md-4 col-12">
             <label>Código Vendedor</label>
             <input class="form-control" type="text"
-                   formControlName="codigoVendedor"
+                   formControlName="codigoVendedor" disabled
             >
             <div *ngIf="facturacionForm.codigoVendedor.errors"
                  class="invalid-feedback" style="display: block;">
@@ -467,7 +574,7 @@
           <div class="col-md-4 col-12">
             <label>Nombre Vendedor</label>
             <input class="form-control" type="text"
-                   formControlName="nombreVendedor"
+                   formControlName="nombreVendedor" disabled
             >
             <div *ngIf="facturacionForm.nombreVendedor.errors"
                  class="invalid-feedback" style="display: block;">
@@ -480,13 +587,17 @@
       </div>
     </div>
     <div class="row">
-      <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="guardarVenta()">Enviar Pedido
+      <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="guardarVenta()" *ngIf="mostrarBoton">
+        Enviar Pedido
       </button>
+      <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="generarPedido()"
+              *ngIf="mostrarBotonEnviarGDP">Generar pedido
+      </button>
+      <button (click)="irInicio()" class="btn btn-secondary my-2 mx-2 col-md-1 col-12">Inicio</button>
+
     </div>
   </form>
-
 </div>
-
 <div class="container text-center p-5 mt-5 border shadow rounded" *ngIf="!mostrarContenidoPantalla">
   <h2 class="mb-3">¡Gracias por tu compra!</h2>
   <p class="lead">Tu pedido ha sido procesado con éxito.</p>
@@ -499,7 +610,7 @@
     <p>Su número de pedido {{ i + 1 }} es: <strong>{{ numero }}</strong>.</p>
   </div>
   <div class="mt-4">
-    <a href="https://superbarato.megadescuento.com" class="btn btn-primary">Ir a la tienda</a>
+    <a href="https://superbarato.megadescuento.com" class="btn btn-primary m-1">Ir a la tienda</a>
+    <button (click)="irInicio()" class="btn btn-secondary">Inicio</button>
   </div>
 </div>
-

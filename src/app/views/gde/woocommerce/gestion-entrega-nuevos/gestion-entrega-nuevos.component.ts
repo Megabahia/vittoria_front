@@ -475,7 +475,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       {text: articulo.cantidad, fontSize: 5},
       {text: articulo.articulo, fontSize: 5},
       {text: articulo.valorUnitario, fontSize: 5},
-      {text: `${articulo.descuento}%`, fontSize: 5},
+      {text: `${articulo.descuento ? articulo.descuento : '0'}%`, fontSize: 5},
       {text: articulo.precio, fontSize: 5},
     ]);
     const tableRaws2 = this.notaPedido.value.articulos.map(articulo2 => [

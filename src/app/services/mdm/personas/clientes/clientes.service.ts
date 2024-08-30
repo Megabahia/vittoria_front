@@ -386,8 +386,8 @@ export class ClientesService {
     return this.http.delete<any>(`${apiUrl}/mdm/clientes/parientes-cliente/delete/${id}`);
   }
 
-  obtenerClientePorCedula(cedula) {
-    return this.http.post<any>(`${apiUrl}/mdm/clientes/listOne/cedula/`, cedula);
+  obtenerClientePorCedula(datos) {
+    return this.http.post<any>(`${apiUrl}/mdm/clientes/listOne/cedula/`, datos);
   }
 
   obtenerClientePorTelefono(telefono) {

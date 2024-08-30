@@ -23,6 +23,8 @@ import {
 } from "./pedidos-canal/pedido-tiendamulticompras/pedido-tiendamulticompras.component";
 import {PedidoTodomegacentroComponent} from "./pedidos-canal/pedido-todomegacentro/pedido-todomegacentro.component";
 import {PedidoVittoriaComponent} from "./pedidos-canal/pedido-vittoria/pedido-vittoria.component";
+import {LandingEditComponent} from "./pedidos-landing/landing-edit/landing-edit.component";
+import {LandingListComponent} from "./pedidos-landing/landing-list/landing-list.component";
 
 
 
@@ -40,7 +42,9 @@ import {PedidoVittoriaComponent} from "./pedidos-canal/pedido-vittoria/pedido-vi
     PedidoSuperbaratoComponent,
     PedidoTiendamulticomprasComponent,
     PedidoTodomegacentroComponent,
-    PedidoVittoriaComponent
+    PedidoVittoriaComponent,
+    LandingEditComponent,
+    LandingListComponent
   ],
   imports: [
     CommonModule,

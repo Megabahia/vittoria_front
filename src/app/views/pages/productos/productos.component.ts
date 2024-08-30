@@ -73,6 +73,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
     this.productoService.obtenerProductoFree(this.rutaActiva.snapshot.params.id, {estadoLanding: true}).subscribe((info) => {
       this.productoInactivo = false;
       this.producto = info;
+
       const cuentaForm = this._formBuilder.group({
         articulo: [this.producto.nombre, []],
         valorUnitario: [this.producto.precioLandingOferta, []],
@@ -83,6 +84,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
         descuento: [0, []],
         impuesto: [0, []],
         valorDescuento: [0, []],
+        imagen_principal: [this.producto.imagen_principal, []],
         total: [this.producto.precioLandingOferta * 1, []],
       });
       if (!this.producto.envioNivelNacional) {
@@ -153,7 +155,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
       const nombreVendedor: any = info.find((item: any) => {
         return item.nombre === 'NOMBRE_VENDEDOR';
       });
-      this.pospectoForm.get('nombreVendedor').setValue(nombreVendedor.valor);
+      this.pospectoForm.get('nombreVendedor').setValue(nombreVendedor?.valor);
       this.imagenServientrega = info.find((item: any) => {
         return item.nombre === 'IMAGEN_COURIER';
       });

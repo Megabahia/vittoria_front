@@ -451,7 +451,7 @@
                                     <option value="" selected>- Seleccione -</option>
                                     <option *ngFor="let producto of detalle.controls.precios.value"
                                             [value]="producto.valor">
-                                      {{ producto.clave.slice(-1) }} - ${{ producto.valor }}
+                                      {{ producto.clave }} - ${{ producto.valor }}
                                     </option>
                                   </select>
                                   <div *ngIf="detalle.controls.valorUnitario.errors"

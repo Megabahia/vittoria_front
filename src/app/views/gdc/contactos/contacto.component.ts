@@ -418,7 +418,7 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
       facturaFisicaLlaves.map((llaves, index) => {
-        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago' && llaves !== 'facturacion' && llaves !== 'articulos') {
+        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago' && llaves !== 'facturacion' && llaves !== 'articulos' && llaves !== 'envio') {
           this.archivo.delete(llaves);
           this.archivo.append(llaves, facturaFisicaValores[index]);
         }

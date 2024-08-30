@@ -12,11 +12,10 @@ import {ValidacionesPropias} from '../../../../utils/customer.validators';
 import Decimal from 'decimal.js';
 
 @Component({
-  styleUrls: ['./prospectos-clientes-edit.component.css'],
-  selector: 'app-prospectos-clientes-edit',
-  templateUrl: './prospectos-clientes-edit.component.html',
+  selector: 'app-landing-edit',
+  templateUrl: './landing-edit.component.html',
 })
-export class ProspectosClientesEditComponent implements OnInit {
+export class LandingEditComponent implements OnInit {
   @Output() messageEvent = new EventEmitter<string>();
   @ViewChild('eliminarImagenMdl') eliminarImagenMdl;
   @ViewChild('eliminarProspectoMdl') eliminarProspectoMdl;

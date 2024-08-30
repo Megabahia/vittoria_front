@@ -354,31 +354,46 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   procesarAutorizacionEnvio(): void {
     if (confirm('Esta seguro de despachar') === true) {
 
-      if (this.evidenciasForm.value.totalCobroEfectivo < this.pedido.total || this.evidenciasForm.value.montoTransferencia < this.pedido.total) {
-        this.toaster.open('El monto ingresado no coincide con el total del pedido', {type: "danger"});
-        return;
-      } else {
-
-        const facturaFisicaValores: string[] = Object.values(this.evidenciasForm.value);
-        const facturaFisicaLlaves: string[] = Object.keys(this.evidenciasForm.value);
-        facturaFisicaLlaves.map((llaves, index) => {
-          if (facturaFisicaValores[index] && llaves !== 'evidenciaFotoEmpaque' && llaves !== 'evidenciaVideoEmpaque') {
-            this.archivo.append(llaves, facturaFisicaValores[index]);
-          }
-        });
-        if (this.evidenciasForm.value.evidenciaFotoEmpaque === '') {
-          this.toaster.open('Complete los campos requeridos.', {type: 'warning'})
+      if (!this.mostrarMontoEfectivo && !this.mostrarMontoTransferencia) {
+        this.evidenciasForm.get('montoTransferencia').setValidators([]);
+        this.evidenciasForm.get('montoTransferencia').updateValueAndValidity();
+        this.evidenciasForm.get('totalCobroEfectivo').setValidators([]);
+        this.evidenciasForm.get('totalCobroEfectivo').updateValueAndValidity();
+      } else if (this.mostrarMontoEfectivo) {
+        if (Number(this.evidenciasForm.value.totalCobroEfectivo) < this.pedido.total) {
+          this.toaster.open('El monto efectivo ingresado no es el correcto', {type: "danger"});
           return;
         }
-        this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
-          this.modalService.dismissAll();
-          this.obtenerTransacciones();
-        });
+      } else if (this.mostrarMontoTransferencia) {
+        if (Number(this.evidenciasForm.value.montoTransferencia) < this.pedido.total) {
+          this.toaster.open('El monto de transferencia ingresado no es el correcto', {type: "danger"});
+          return;
+        }
       }
+
+
+      const facturaFisicaValores: string[] = Object.values(this.evidenciasForm.value);
+      const facturaFisicaLlaves: string[] = Object.keys(this.evidenciasForm.value);
+      facturaFisicaLlaves.map((llaves, index) => {
+        if (facturaFisicaValores[index] && llaves !== 'evidenciaFotoEmpaque' && llaves !== 'evidenciaVideoEmpaque') {
+          this.archivo.append(llaves, facturaFisicaValores[index]);
+        }
+      });
+      if (this.evidenciasForm.value.evidenciaFotoEmpaque === '') {
+        this.toaster.open('Complete los campos requeridos.', {type: 'warning'})
+        return;
+      }
+      this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
+        this.modalService.dismissAll();
+        this.obtenerTransacciones();
+      });
+
     }
   }
 
-  seleccionarCourier(event): void {
+  seleccionarCourier(event)
+    :
+    void {
     this.paramServiceGDE.obtenerListaPadres(event.target.value).subscribe((info) => {
       info.map((item) => {
         if ('NOMBRE_COURIER' === item.nombre) {
@@ -397,11 +412,17 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  cargarArchivo(event, nombreCampo): void {
+  cargarArchivo(event, nombreCampo)
+    :
+    void {
     this.archivo.append(nombreCampo, event.target.files[0]);
   }
 
-  cortarUrlHastaCom(url: string): string {
+  cortarUrlHastaCom(url
+                      :
+                      string
+  ):
+    string {
     if (url.startsWith('http://') || url.startsWith('https://')) {
       const match = url.match(/https?:\/\/[^\/]+\.com/);
       return match ? match[0] : url;  // Devuelve la URL cortada o la original si no se encuentra .com
@@ -409,12 +430,19 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
     return url;
   }
 
-  extraerHora(dateTimeString: string): string {
+  extraerHora(dateTimeString
+                :
+                string
+  ):
+    string {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(' ')[0];
   }
 
-  onSelectTIpoPago(e: any) {
+  onSelectTIpoPago(e
+                     :
+                     any
+  ) {
     if (e.target.value === 'transferencia') {
       this.mostrarCargaComprobante = true;
       this.mostrarMontoTransferencia = true;

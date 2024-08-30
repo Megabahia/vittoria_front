@@ -19,6 +19,9 @@ export class AuthGuard implements CanActivate {
     if (currentUser && this.authService.isLoggedIn()) {
       return true;
     }
+    if (route.queryParams) {
+      localStorage.setItem('productosWoocommerce', JSON.stringify(route.queryParams));
+    }
     this.router.navigate(['/auth/signin']);
     return false;
   }

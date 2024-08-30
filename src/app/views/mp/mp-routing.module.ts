@@ -17,6 +17,16 @@ import {PedidoContraentregaComponent} from "./pedidos-canal/pedido-contraentrega
 import {PedidoMaxidescuentoComponent} from "./pedidos-canal/pedido-maxidescuento/pedido-maxidescuento.component";
 import {PedidoVittoriaComponent} from "./pedidos-canal/pedido-vittoria/pedido-vittoria.component";
 import {PedidoSuperbaratoComponent} from "./pedidos-canal/pedido-superbarato/pedido-superbarato.component";
+import {
+  ProspectosClientesListComponent
+} from "../mdm/prospectos-clientes/prospectos-clientes-list/prospectos-clientes-list.component";
+import {
+  ProspectosClientesAddCsvComponent
+} from "../mdm/prospectos-clientes/prospectos-clientes-add-csv/prospectos-clientes-add-csv.component";
+import {
+  ProspectosClientesAddXlsxComponent
+} from "../mdm/prospectos-clientes/prospectos-clientes-add-xlsx/prospectos-clientes-add-xlsx.component";
+import {LandingListComponent} from "./pedidos-landing/landing-list/landing-list.component";
 
 const routes: Routes = [{
   path: '', component: MdpComponent, children: [
@@ -36,6 +46,13 @@ const routes: Routes = [{
     },
     {
       path: 'pedidos-rechazados', component: PedidosRechazadosComponent, canActivate: [AuthGuard]
+    },
+    {
+      path: 'landing', children: [
+        {path: '', redirectTo: 'list', pathMatch: 'full'}, {
+          path: 'list', component: LandingListComponent, canActivate: [AuthGuard]
+        },
+      ]
     },
     {
       path: 'pedido-canal', children: [
