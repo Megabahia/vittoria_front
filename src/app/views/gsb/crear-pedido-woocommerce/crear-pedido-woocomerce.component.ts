@@ -11,6 +11,7 @@ import {IntegracionesService} from '../../../services/admin/integraciones.servic
 import Decimal from 'decimal.js';
 import {AuthService} from "../../../services/admin/auth.service";
 import {ClientesService} from "../../../services/mdm/personas/clientes/clientes.service";
+import {environment} from "../../../../environments/environment";
 
 interface ProductoProcesado {
   canal?: string;
@@ -133,7 +134,8 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
           // Agregar el canal al producto procesado
           productoProcesado.canal = params.canal;
-          this.paginaWoocommerce = 'vittoria-test.netlify.app';
+          const baseUrl = environment.apiUrlFront.replace('https://', '');
+          this.paginaWoocommerce = baseUrl;
 
           return productoProcesado;
         });
