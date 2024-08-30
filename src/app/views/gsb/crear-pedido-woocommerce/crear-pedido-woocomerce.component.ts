@@ -133,7 +133,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
           // Agregar el canal al producto procesado
           productoProcesado.canal = params.canal;
-          this.paginaWoocommerce = 'Vittoria';
+          this.paginaWoocommerce = 'vittoria-test.netlify.app';
 
           return productoProcesado;
         });
