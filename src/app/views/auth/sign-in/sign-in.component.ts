@@ -59,7 +59,7 @@ export class SignInComponent implements OnInit {
 
             //this.router.navigate(['#/gsb/pedido_woocommerce/crear']);
             window.location.href = `${baseUrl}/#/gsb/pedido_woocommerce/crear`;
-            window.location.reload();
+            //window.location.reload();
           } else {
             window.location.href = '';
           }

@@ -52,7 +52,8 @@ export class ProfileComponent implements OnInit {
     facebook: '',
     tipoEnvio: '',
     imagen: new FormData(),
-    canal: ''
+    canal: '',
+    password: ''
   };
   mostrar = true;
 
