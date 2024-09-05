@@ -171,6 +171,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
       // Si quieres agregar todos los productos al arreglo `this.datos`
       this.datos.push(...productosProcesados);
+      localStorage.removeItem('productosWoocommerce');
       //     } else {
       //       return;
       //     }
@@ -499,7 +500,6 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
           this.numeroPedido.push(result.numeroPedido);
           this.toaster.open('Pedido guardado', {type: 'success'});
           this.mostrarContenidoPantalla = false;
-          localStorage.removeItem('productosWoocommerce');
         }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
       });
 
@@ -900,7 +900,6 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     delete formData.pedidos;
 
     localStorage.setItem('productoDataPedidoWoocommerce', JSON.stringify(formData));
-    localStorage.removeItem('productosWoocommerce');
 
     //window.open('#/gdp/pedidos', '_blank');
     window.open('#/gdp/pedidos');
@@ -908,7 +907,6 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
   irInicio() {
     window.open('#/admin/management');
-    localStorage.removeItem('productosWoocommerce');
   }
 }
 
