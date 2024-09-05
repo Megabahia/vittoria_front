@@ -21,6 +21,7 @@ export interface NuevoUsuario {
   idRol: number;
   estado: string;
   tipoEnvio: string;
+  password: string;
 }
 
 export interface Usuario {
@@ -42,6 +43,7 @@ export interface Usuario {
   whatsapp: string;
   facebook: string;
   tipoEnvio: string;
+  password: string;
   imagen: FormData;
 }
 

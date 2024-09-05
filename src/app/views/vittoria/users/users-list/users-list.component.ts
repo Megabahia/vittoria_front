@@ -34,7 +34,8 @@ export class UsersListComponent implements OnInit, AfterViewInit {
   collectionSize;
   vista;
   email: string = '';
-  companiaBuscar:string=''
+  companiaBuscar: string = ''
+  mostrarInputContrasenia = false;
   nuevoUsuario: NuevoUsuario = {
     nombres: '',
     apellidos: '',
@@ -49,20 +50,20 @@ export class UsersListComponent implements OnInit, AfterViewInit {
     idRol: 0,
     estado: 'Activo',
     canal: '',
-    tipoEnvio: ''
-
+    tipoEnvio: '',
+    password: ''
   };
   empresas = [];
   provinciasOpciones;
   ciudadesOpciones;
   listaMetodoPago
+
   constructor(
     private servicioUsuarios: UsersService,
     private modalService: NgbModal,
     private _formBuilder: FormBuilder,
     private paramService: ParamService,
     private paramServiceAdm: AdmParamService,
-
   ) {
     this.obtenerListaParametros();
 
@@ -78,6 +79,7 @@ export class UsersListComponent implements OnInit, AfterViewInit {
       username: ['', [Validators.required]],
       canal: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
+      password: [''],
       compania: ['', [Validators.required]],
       pais: ['', [Validators.required]],
       provincia: ['', [Validators.required]],
@@ -233,4 +235,18 @@ export class UsersListComponent implements OnInit, AfterViewInit {
       this.ciudadesOpciones = info;
     });
   }
+
+  onChangeCheckContrasenia(e: any): void {
+    const isCheck = e.target.checked;
+    if (isCheck) {
+      this.mostrarInputContrasenia = true;
+      this.usuarioForm.get('password').setValidators([Validators.required, Validators.minLength(8)]);
+      this.usuarioForm.get('password').updateValueAndValidity();
+    } else {
+      this.mostrarInputContrasenia = false;
+      this.usuarioForm.get('password').setValidators([]);
+      this.usuarioForm.get('password').updateValueAndValidity();
+    }
+  }
+
 }

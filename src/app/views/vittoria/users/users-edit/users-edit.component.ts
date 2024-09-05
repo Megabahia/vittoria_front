@@ -49,6 +49,7 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
     whatsapp: '',
     facebook: '',
     tipoEnvio: '',
+    password: '',
     imagen: new FormData()
   };
   empresas = [];
