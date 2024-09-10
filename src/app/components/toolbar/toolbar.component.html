@@ -168,7 +168,7 @@
           </li>
         </ul>
       </li>
-      <li class="nav-item" *ngIf="acciones.MDP.LEER">
+      <li class="nav-item" *ngIf="acciones.MDP.LEER && usuario.usuario.idRol !== 59">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice">MDP Master Data Products</span></a>
@@ -323,7 +323,7 @@
         </ul>
       </li>
       <li class="ml-2">-------------------------------------</li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="usuario.usuario.idRol === 62 || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 61 || usuario.usuario.idRol === 58 || usuario.usuario.idRol === 54">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice" title="GD Gestión de Drop Shipping">GD Gestión de Drop Shipping</span></a>
@@ -383,27 +383,7 @@
               </li>
             </ul>
           </li>
-          <!--<li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
-            <a class="d-flex align-items-center" [routerLink]="['gsb/pedido']" data-toggle="tooltip"
-               data-placement="auto" title="Pedido Super Barato">
-              <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Pedido Super Barato</span>
-            </a>
-          </li>
-          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
-            <a class="d-flex align-items-center" [routerLink]="['gsb/superbarato']" data-toggle="tooltip"
-               data-placement="auto" title="Super Barato">
-              <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Despachar pedido Super Barato</span>
-            </a>
-          </li>
-          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
-            <a class="d-flex align-items-center" [routerLink]="['gsb/reportes']" data-toggle="tooltip"
-               data-placement="auto" title="Reportes Super Barato">
-              <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Reportes Super Barato</span>
-            </a>
-          </li>-->
+
           <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
             <a class="d-flex align-items-center" [routerLink]="['gsb/gd_consulta_productos']" data-toggle="tooltip"
                data-placement="auto" title="Consulta de producto GD">
@@ -533,7 +513,7 @@
           </li>
         </ul>
       </li>
-      <li class="nav-item" *ngIf="acciones.GDE.LEER || acciones.GDE_EMPACADO.CREAR || acciones.GDE_DESPACHO.CREAR">
+      <li class="nav-item" *ngIf="acciones.GDE.LEER || acciones.GDE_EMPACADO.CREAR || acciones.GDE_DESPACHO.CREAR || usuario.usuario.idRol === 51">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice">GDE Gestión de entregas</span></a>
@@ -551,7 +531,7 @@
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Gestión de empacado</span></a>
           </li>
-          <li *ngIf="acciones.GDE.CREAR || acciones.GDE_DESPACHO.CREAR"
+          <li *ngIf="acciones.GDE.CREAR || acciones.GDE_DESPACHO.CREAR || usuario.usuario.idRol === 51"
               class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceDespacho']}}">
             <a class="d-flex align-items-center" href="#/gde/gestionEntrega/woocommerce/despacho" data-toggle="tooltip"
                data-placement="auto" title="Gestión de despacho">
@@ -564,7 +544,7 @@
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Gestión de enviado</span></a>
           </li>
-          <li *ngIf="acciones.GDE.CREAR" class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceDevolucion']}}">
+          <li *ngIf="acciones.GDE.CREAR || usuario.usuario.idRol === 51" class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceDevolucion']}}">
             <a class="d-flex align-items-center" href="#/gde/gestionEntrega/woocommerce/devolucion-paquetes"
                data-toggle="tooltip"
                data-placement="auto" title="Gestión de devolución de paquetes">
