@@ -381,8 +381,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
     if (archivo) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        const nuevaImagen = e.target.result;
-        this.detallesArray.controls[i].get('imagen_principal').setValue(nuevaImagen);
+        //const nuevaImagen = e.target.result;
         this.datosProducto.append('imagen_principal', archivo)
         //this.datosProducto.append('imagenes[' + 0 + ']id', '0');
         //this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
@@ -390,6 +389,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
         this.datosProducto.append('canal', this.detallesArray.controls[i].get('canal').value);
         try {
           this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
+            this.detallesArray.controls[i].get('imagen_principal').setValue(producto.imagen_principal);
             this.toaster.open('Imagen actualizada con éxito', {type: "info"});
           }, error => this.toaster.open('Error al actualizar la imagen.', {type: "danger"}));
         } catch (error) {
@@ -489,7 +489,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       page: this.page - 1, page_size: this.pageSize
     })
       .subscribe((result) => {
-        this.listaUsuarios = result.usuarios;
+        this.listaUsuarios = result.usuarios.filter((u) => u.rolId === 58);
       });
   }
 

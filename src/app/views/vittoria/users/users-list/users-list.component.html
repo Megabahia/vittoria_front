@@ -84,6 +84,7 @@
                     <label class="custom-control-label" for="customCheckAll"></label>
                   </div>
                 </th>
+                <th>Nombres</th>
                 <th>Usuario</th>
                 <th>Canal</th>
                 <th>Correo</th>
@@ -101,6 +102,7 @@
                     <label class="custom-control-label" for="customCheck{{usuario.id}}"></label>
                   </div>
                 </td>
+
                 <td>
                   <div class="d-flex justify-content-left align-items-center">
                     <div class="avatar mr-1 bg-light-danger">
@@ -111,6 +113,9 @@
                         <span class="font-weight-bold">{{ usuario.nombres }} {{ usuario.apellidos }}</span></a>
                     </div>
                   </div>
+                </td>
+                <td>
+                  {{ usuario.username }}
                 </td>
                 <td>{{ usuario.canal }}</td>
                 <td>{{ usuario.email }}</td>

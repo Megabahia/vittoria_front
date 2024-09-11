@@ -328,6 +328,9 @@
                     <div *ngIf="facturacionForm.nombres.errors.required">
                       Requerido
                     </div>
+                    <div *ngIf="facturacionForm.nombres.errors.pattern">
+                      No es válido datos numéricos
+                    </div>
                   </div>
                 </div>
                 <div class="col-md-4 col-12">
@@ -339,6 +342,9 @@
                        class="invalid-feedback" style="display: block;">
                     <div *ngIf="facturacionForm.apellidos.errors.required">
                       Requerido
+                    </div>
+                    <div *ngIf="facturacionForm.apellidos.errors.pattern">
+                      No es válido datos numéricos
                     </div>
                   </div>
                 </div>
