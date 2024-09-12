@@ -495,7 +495,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
 
   onSelectChangePago(e: any) {
     const selectedValue = e.target.value;
-    if (selectedValue === 'Previo Pago Servientrega Nacional' || selectedValue === 'Previo Pago Motorizado en Quito') {
+    if (selectedValue === 'Previo Pago Servientrega Nacional' || selectedValue === 'Previo Pago Motorizado en Quito' || selectedValue === 'Previo Pago Transporte Interprovincial') {
       this.mostrarInputArchivoComprobante = true;
       this.notaPedido.get('archivoMetodoPago').setValidators([Validators.required]);
       this.notaPedido.get('archivoMetodoPago').updateValueAndValidity();
