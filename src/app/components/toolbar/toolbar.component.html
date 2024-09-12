@@ -168,12 +168,12 @@
           </li>
         </ul>
       </li>
-      <li class="nav-item" *ngIf="acciones.MDP.LEER && usuario.usuario.idRol !== 59">
+      <li class="nav-item" *ngIf="acciones.MDP.LEER">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice">MDP Master Data Products</span></a>
         <ul class="menu-content ng-star-inserted">
-          <li class="nav-item {{menuToolbar['mdp']['param']}}" *ngIf="usuario.usuario.idRol !== 60">
+          <li class="nav-item {{menuToolbar['mdp']['param']}}" *ngIf="usuario.usuario.idRol !== 60 && usuario.usuario.idRol !== 59">
             <a class="d-flex align-items-center" href="#/mdp/parametrizaciones" data-toggle="tooltip"
                data-placement="auto" title="Parametrizaciones Administracion">
               <i data-feather="circle"></i>
@@ -242,19 +242,19 @@
               </li>-->
             </ul>
           </li>
-          <li class="nav-item has-sub ng-star-inserted" *ngIf="usuario.usuario.idRol !== 59">
+          <li class="nav-item has-sub ng-star-inserted">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Administración de productos">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración productos</span></a>
             <ul class="menu-content">
 
-              <li class="nav-item {{menuToolbar['mdp']['cat']}}">
+              <li class="nav-item {{menuToolbar['mdp']['cat']}}" *ngIf="usuario.usuario.idRol !== 59">
                 <a class="d-flex align-items-center" href="#/mdp/categorias" data-toggle="tooltip"
                    data-placement="auto" title="Administrar categorias">
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Administración de categorias</span></a>
               </li>
-              <li class="nav-item {{menuToolbar['mdp']['subCat']}}">
+              <li class="nav-item {{menuToolbar['mdp']['subCat']}}" *ngIf="usuario.usuario.idRol !== 59">
                 <a class="d-flex align-items-center" href="#/mdp/subcategorias" data-toggle="tooltip"
                    data-placement="auto" title="Administrar subcategorías">
                   <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración subcategorías</span></a>
@@ -264,40 +264,40 @@
                    data-placement="auto" title="Listado de productos">
                   <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Listado de productos</span></a>
               </li>
-              <li class="nav-item {{menuToolbar['mdp']['prodBusq']}}">
+              <li class="nav-item {{menuToolbar['mdp']['prodBusq']}}" *ngIf="usuario.usuario.idRol !== 59">
                 <a class="d-flex align-items-center" href="#/mdp/productos/search" data-toggle="tooltip"
                    data-placement="auto" title="Buscar productos">
                   <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                      data-i18n="List">Buscar productos</span></a>
               </li>
-              <li class="nav-item {{menuToolbar['mdp']['stockAct']}}">
+              <li class="nav-item {{menuToolbar['mdp']['stockAct']}}" *ngIf="usuario.usuario.idRol !== 59">
                 <a class="d-flex align-items-center" href="#/mdp/productos/actualizarStock" data-toggle="tooltip"
                    data-placement="auto" title="Actualizar Stock de productos">
                   <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                      data-i18n="List">Actualizar Stock</span></a>
               </li>
-              <li class="nav-item {{menuToolbar['mdp']['abastRep']}}">
+              <li class="nav-item {{menuToolbar['mdp']['abastRep']}}" *ngIf="usuario.usuario.idRol !== 59">
                 <a class="d-flex align-items-center" href="#/mdp/reportes/abastecimiento" data-toggle="tooltip"
                    data-placement="auto" title="Reporte de abastecimiento">
                   <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reporte de abastecimiento</span></a>
               </li>
-              <li class="nav-item {{menuToolbar['mdp']['stockRep']}}">
+              <li class="nav-item {{menuToolbar['mdp']['stockRep']}}"*ngIf="usuario.usuario.idRol !== 59">
                 <a class="d-flex align-items-center" href="#/mdp/reportes/stock" data-toggle="tooltip"
                    data-placement="auto" title="Reporte de stock">
                   <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                      data-i18n="List">Reporte de stock</span></a>
               </li>
-              <li class="nav-item {{menuToolbar['mdp']['caduRep']}}">
+              <li class="nav-item {{menuToolbar['mdp']['caduRep']}}" *ngIf="usuario.usuario.idRol !== 59">
                 <a class="d-flex align-items-center" href="#/mdp/reportes/caducidad" data-toggle="tooltip"
                    data-placement="auto" title="Reporte de caducidad de productos">
                   <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reporte de caducidad de productos</span></a>
               </li>
-              <li class="nav-item {{menuToolbar['mdp']['rotaRep']}}">
+              <li class="nav-item {{menuToolbar['mdp']['rotaRep']}}" *ngIf="usuario.usuario.idRol !== 59">
                 <a class="d-flex align-items-center" href="#/mdp/reportes/rotacion" data-toggle="tooltip"
                    data-placement="auto" title="Reporte de rotación de productos">
                   <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reporte de rotación de productos</span></a>
               </li>
-              <li class="nav-item {{menuToolbar['mdp']['refilRep']}}">
+              <li class="nav-item {{menuToolbar['mdp']['refilRep']}}" *ngIf="usuario.usuario.idRol !== 59">
                 <a class="d-flex align-items-center" href="#/mdp/reportes/refil" data-toggle="tooltip"
                    data-placement="auto" title="Reporte refil">
                   <i data-feather="circle"></i><span class="menu-item text-truncate"
@@ -305,7 +305,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item has-sub ng-star-inserted" *ngIf="usuario.usuario.idRol !== 60">
+          <li class="nav-item has-sub ng-star-inserted" *ngIf="usuario.usuario.idRol !== 60 && usuario.usuario.idRol !== 59">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Administración de stock virtual">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración de stock virtual</span></a>
