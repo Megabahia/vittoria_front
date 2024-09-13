@@ -219,6 +219,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       precios: [[], []],
       canal: [''],
       woocommerceId: [''],
+      observaciones: ['', [Validators.maxLength(40)]],
       imagen_principal: ['', [Validators.required]]
     });
   }

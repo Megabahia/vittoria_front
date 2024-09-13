@@ -201,6 +201,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       bodega: ['', []],
       canal: [''],
       woocommerceId: [''],
+      observaciones: ['', [Validators.maxLength(40)]],
       imagen_principal: ['', [Validators.required]]
     });
   }
@@ -288,6 +289,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
                 this.detallesArray.controls[i].get('id').setValue(info.id);
                 this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
                 this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
+                this.detallesArray.controls[i].get('observaciones').setValue(this.detallesArray.controls[i].get('observaciones').value);
                 this.detallesArray.controls[i].get('descuento').setValue(this.detallesArray.controls[i].get('descuento').value ?? 0);
                 this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
                 const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
@@ -325,6 +327,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
             this.detallesArray.controls[i].get('id').setValue(info.id);
             this.detallesArray.controls[i].get('articulo').setValue(info.nombre || info.articulo);
             this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
+            this.detallesArray.controls[i].get('observaciones').setValue(this.detallesArray.controls[i].get('observaciones').value);
             this.detallesArray.controls[i].get('descuento').setValue(this.detallesArray.controls[i].get('descuento').value ?? 0);
             this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
             const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
