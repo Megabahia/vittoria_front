@@ -39,8 +39,9 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
   opciones;
   ciudadPresenteFacturacion = true;
   ciudadPresenteEnvio = true;
-  horaPedido
-
+  horaPedido;
+  parametroIva;
+  totalIva;
   pais = 'Ecuador';
   ciudad = '';
   provincia = '';
@@ -50,7 +51,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
   provinciaOpciones;
   ciudadOpcionesEnvio;
   provinciaOpcionesEnvio;
-
+  detallePedido;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -83,6 +84,9 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       id: ['', [Validators.required]],
       motivo: ['', [Validators.required]],
       estado: ['Rechazado', [Validators.required]],
+    });
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
+      this.parametroIva = parseFloat(result.info[0].valor);
     });
   }
 
@@ -140,11 +144,14 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
+      subtotal: ['', [Validators.required]],
       envioTotal: ['', [Validators.required]],
       numeroPedido: ['', [Validators.required]],
       created_at: ['', [Validators.required]],
       metodoPago: ['', [Validators.required]],
       canal: ['', []],
+      nombreEnvio: [''],
+      comprobanteVendedorGmb: [''],
     });
   }
 
@@ -187,12 +194,14 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       valorUnitario: [0, [Validators.required]],
       cantidad: [0, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       precio: [0, [Validators.required]],
+      precios: [[], []],
       imagen: [''],
+      descuento: [0, [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]*$')]],
       caracteristicas: ['', []],
       bodega: ['', []],
-      canal:[''],
-      woocommerceId:[''],
-      imagen_principal:['', [Validators.required]]
+      canal: [''],
+      woocommerceId: [''],
+      imagen_principal: ['', [Validators.required]]
     });
   }
 
@@ -239,6 +248,9 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, canal: this.cortarUrlHastaCom(info.canal)});
+
+      this.calcular();
+
     });
   }
 
@@ -257,98 +269,116 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  obtenerProducto(i): void {
-    const data = {
-      codigoBarras: this.detallesArray.value[i].codigo,
-      canal: this.notaPedido.value.canal,
-      canalProducto: this.notaPedido.value.canal,
-      valorUnitario: Number(this.detallesArray.controls[i].value.valorUnitario).toFixed(2)
-    };
+  async obtenerProducto(i): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const data = {
+        codigoBarras: this.detallesArray.value[i].codigo,
+        canalProducto: this.detallesArray.value[i].canal || this.notaPedido.value.canal,
+        canal: this.notaPedido.value.canal,
+        valorUnitario: Number(this.detallesArray.controls[i].value.valorUnitario).toFixed(2)
+      };
+      const codigoBodega = this.detallesArray.value[i].codigo.slice(-2);
 
-    const codigoBodega = this.detallesArray.value[i].codigo.slice(-2);
+      this.paramService.obtenerListaValor({valor: codigoBodega}).subscribe((param) => {
+        if (this.detallesArray.value[i].codigo.endsWith('MD')) {
+          this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
+            if (info.mensaje === '') {
+              if (info.codigoBarras) {
+                this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
+                this.detallesArray.controls[i].get('id').setValue(info.id);
+                this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
+                this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
+                this.detallesArray.controls[i].get('descuento').setValue(this.detallesArray.controls[i].get('descuento').value ?? 0);
+                this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
+                const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
+                this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
+                this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
+                this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
+                this.detallesArray.controls[i].get('imagen_principal').setValue(info?.imagen_principal);
+                this.detallesArray.controls[i].get('bodega').setValue(param[0].nombre);
+                if (info.canal !== '') {
+                  this.detallesArray.controls[i].get('canal').setValue(info.canal)
+                } else {
+                  this.detallesArray.controls[i].get('canal').setValue(this.notaPedido.value.canal)
+                }
+                this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
 
-    this.paramService.obtenerListaValor({valor: codigoBodega}).subscribe((param) => {
-      if (this.detallesArray.value[i].codigo.endsWith('MD')) {
-        this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
-          if (info.codigoBarras) {
-            // this.detallesArray.value[i].codigo = info.codigo;
+                this.detallesArray.controls[i].get('cantidad').setValidators([
+                  Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
+                ]);
+                this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
+                this.calcular();
+                resolve();
+              } else {
+                this.detallesArray.controls[i].get('articulo').setValue('');
+                this.toaster.open('Producto no existente, agregue un producto que se encuentre en la lista de productos.', {type: 'danger'});
+                reject(new Error('No existe el producto a buscar')); // Rechaza la promesa si no se encuentra el producto
+              }// Resuelve la promesa una vez completadas todas las asignaciones
+
+            } else {
+              this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
+              window.alert('Existen inconsistencias con los precios de los productos.');
+            }
+          });
+        } else {
+          this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
             this.detallesArray.controls[i].get('id').setValue(info.id);
-            this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
-            this.detallesArray.controls[i].get('cantidad').setValue(1);
-            this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
-            this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
+            this.detallesArray.controls[i].get('articulo').setValue(info.nombre || info.articulo);
+            this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
+            this.detallesArray.controls[i].get('descuento').setValue(this.detallesArray.controls[i].get('descuento').value ?? 0);
+            this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
+            const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
+            this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
+            this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
             this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
-            this.detallesArray.controls[i].get('imagen_principal').setValue(info?.imagen_principal);
-            this.detallesArray.controls[i].get('bodega').setValue(param[0].nombre);
-
+            this.detallesArray.controls[i].get('imagen_principal').setValue(info.imagen_principal);
+            this.detallesArray.controls[i].get('bodega').setValue('');
+            this.detallesArray.controls[i].get('canal').setValue(info.canal);
+            this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId);
+            this.detallesArray.controls[i].get('cantidad').setValidators([
+              Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
+            ]);
+            this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
             this.calcular();
-          } else {
-            // this.comprobarProductos[i] = false;
-            // this.mensaje = 'No existe el producto a buscar';
-            // this.abrirModal(this.mensajeModal);
-          }
-        }, (error) => {
-
-        });
-
-      } else {
-        this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
-          if (info.codigoBarras) {
-            // this.detallesArray.value[i].codigo = info.codigo;
-            console.log('dato', this.detallesArray.controls[i].get('articulo'));
-            this.detallesArray.controls[i].get('id').setValue(info.id);
-            this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
-            this.detallesArray.controls[i].get('cantidad').setValue(1);
-            this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
-            this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
-            this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
-            this.detallesArray.controls[i].get('imagen_principal').setValue(info?.imagen_principal);
-            this.detallesArray.controls[i].get('bodega').setValue('DESCONOCIDO');
-            this.calcular();
-          } else {
-            // this.comprobarProductos[i] = false;
-            // this.mensaje = 'No existe el producto a buscar';
-            // this.abrirModal(this.mensajeModal);
-          }
-        }, (error) => {
-        });
-      }
-    })
-
-
-    this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
-      if (info.codigoBarras) {
-        // this.detallesArray.value[i].codigo = info.codigo;
-        console.log('dato', this.detallesArray.controls[i].get('articulo'));
-        console.log(info)
-        this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
-        this.detallesArray.controls[i].get('cantidad').setValue(1);
-        this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
-        this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
-        this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
-        this.detallesArray.controls[i].get('imagen_principal').setValue(info?.imagen_principal);
-
-        this.calcular();
-      } else {
-        // this.comprobarProductos[i] = false;
-        // this.mensaje = 'No existe el producto a buscar';
-        // this.abrirModal(this.mensajeModal);
-      }
-    }, (error) => {
-
+            resolve();
+          });
+        }
+      });
     });
+  }
+
+  extraerPrecios(info: any) {
+    const precios = [];
+    Object.keys(info).forEach(clave => {
+      if (clave.startsWith('precioVenta')) {
+        precios.push({clave: clave, valor: info[clave]});
+      }
+    });
+    return precios;
   }
 
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
+    let subtotalPedido = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
-      const cantidad = parseFloat(detalles[index].get('cantidad').value);
-      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
+      // tslint:disable-next-line:radix
+      const descuento = parseInt(detalles[index].get('descuento').value);
+      if (descuento > 0 && descuento <= 100) {
+        const totalDescuento = (valorUnitario * descuento) / 100;
+        detalles[index].get('precio').setValue((((valorUnitario - totalDescuento) * cantidad)).toFixed(2));
+      } else {
+        detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      }
       total += parseFloat(detalles[index].get('precio').value);
     });
-    total += this.notaPedido.get('envioTotal').value;
+    total += parseFloat(this.notaPedido.get('envioTotal').value);
+    subtotalPedido = total / this.parametroIva;
+    this.totalIva = (total - subtotalPedido).toFixed(2);
+
+    this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
     this.notaPedido.get('total').setValue(total.toFixed(2));
   }
 
@@ -360,6 +390,9 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       this.notaPedido.value.envio.provincia,
       this.notaPedido.value.envio.ciudad
     );
+
+    delete this.notaPedido.value.comprobanteVendedorGmb;
+
     if (confirm('Esta seguro de actualizar los datos') === true) {
       if (this.notaPedido.invalid || !this.ciudadPresenteFacturacion || !this.ciudadPresenteEnvio) {
         this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
@@ -373,11 +406,12 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
   }
 
   procesarEnvio(modal, transaccion): void {
+    this.detallePedido = transaccion;
     this.modalService.open(modal);
     const tipoFacturacion = transaccion.metodoPago === CONTRA_ENTREGA ? 'rimpePopular' : 'facturacionElectronica';
     this.autorizarForm = this.formBuilder.group({
       id: [transaccion.id, [Validators.required]],
-      metodoConfirmacion: ['', [Validators.required]],
+      metodoConfirmacion: [transaccion.metodoConfirmacion, [Validators.required]],
       codigoConfirmacion: ['', transaccion.metodoPago === PREVIO_PAGO ? [Validators.required] : []],
       fechaHoraConfirmacion: [this.datePipe.transform(new Date(), 'yyyy-MM-ddThh:mm:ss.SSSZ'), [Validators.required]],
       tipoFacturacion: [tipoFacturacion, [Validators.required]],
@@ -385,6 +419,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       estado: ['Autorizado', [Validators.required]],
     });
   }
+
 
   procesarRechazo(modal, transaccion): void {
     this.modalService.open(modal);
@@ -475,10 +510,10 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
 
         try {
           this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
-            this.toaster.open('Imagen actualizada con éxito',{type:"info"});
-          },error => this.toaster.open('Error al actualizar la imagen.', {type:"danger"}));
+            this.toaster.open('Imagen actualizada con éxito', {type: "info"});
+          }, error => this.toaster.open('Error al actualizar la imagen.', {type: "danger"}));
         } catch (error) {
-          this.toaster.open('Error al actualizar la imagen.', {type:"danger"});
+          this.toaster.open('Error al actualizar la imagen.', {type: "danger"});
         }
       };
       reader.readAsDataURL(archivo);
@@ -526,7 +561,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
     } else {
       this.notaPedido.get('envio')['controls']['identificacion'].setValidators(
         [Validators.required, Validators.minLength(5)]
-      )
+      );
       this.notaPedido.get('envio')['controls']['identificacion'].updateValueAndValidity();
     }
   }
@@ -536,6 +571,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       this.provinciaOpciones = info;
     });
   }
+
   obtenerProvinciasEnvio(): void {
     this.paramServiceAdm.obtenerListaHijos(this.pais, 'PAIS').subscribe((info) => {
       this.provinciaOpcionesEnvio = info;
@@ -547,6 +583,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       this.ciudadOpciones = info;
     });
   }
+
   obtenerCiudadEnvio(): void {
     this.paramServiceAdm.obtenerListaHijos(this.provinciaEnvio, 'PROVINCIA').subscribe((info) => {
       this.ciudadOpcionesEnvio = info;
