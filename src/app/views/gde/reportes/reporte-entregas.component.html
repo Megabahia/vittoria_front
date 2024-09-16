@@ -59,7 +59,7 @@
                 <th>Nombre vendedor</th>
                 <th>Centro de negocio</th>
                 <th>Ver</th>
-                <th>Cupón</th>
+                <th>Guía</th>
                 <th>Monto subtotal a pagar del pedido</th>
                 <!--<th>Monto subtotal ingresado en evidencia</th>
                 <th>Monto subtotal aprobado</th>
@@ -97,10 +97,9 @@
                   </a>
                 </td>
                 <td>
-                  <a *ngIf="transaccion.fotoCupon!=null" href="{{transaccion.fotoCupon}}" target="_blank">
-                    <i-feather name="image" class="mr-25"></i-feather>
+                  <a *ngIf="transaccion.archivoGuia!=null" href="{{transaccion.archivoGuia}}" target="_blank">
+                    <i-feather name="file-text" class="mr-25"></i-feather>
                   </a>
-                  <span *ngIf="transaccion.fotoCupon===null">No existe cupón.</span>
                 </td>
                 <td>{{ transaccion.subtotal | currency }}</td>
                 <!--<td class="text-info">{{ transaccion.montoSubtotalCliente | currency }}</td>

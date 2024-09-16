@@ -182,6 +182,7 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
       canal: [''],
       woocommerceId: [''],
       descuento: ['', []],
+      observaciones: [''],
       imagen_principal: ['', [Validators.required]]
     });
   }
@@ -259,6 +260,7 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
                 this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
                 this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
                 this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
+                this.detallesArray.controls[i].get('observaciones').setValue(this.detallesArray.controls[i].get('observaciones').value);
                 const precioProducto = info.precio;
                 this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
                 this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
@@ -287,6 +289,7 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
               this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
               this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
               this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
+              this.detallesArray.controls[i].get('observaciones').setValue(this.detallesArray.controls[i].get('observaciones').value);
               const precioProducto = info.precio;
               this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
               this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);

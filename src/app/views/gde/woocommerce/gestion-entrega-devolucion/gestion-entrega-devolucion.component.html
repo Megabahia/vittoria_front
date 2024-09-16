@@ -333,21 +333,37 @@
                             <ng-container [formGroup]="detalle">
                               <div class="repeater-wrapper" data-repeater-item>
                                 <div class="row">
-                                  <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
-                                    <p class="card-text col-title mb-md-50 mb-0">
-                                      Código
-                                    </p>
-                                    <input class="form-control" type="text"
-                                           (change)="obtenerProducto(i)"
-                                           formControlName="codigo"
-                                           disabled>
-                                    <div *ngIf="detalle.controls.codigo.errors"
-                                         class="invalid-feedback"
-                                         style="display: block;">
-                                      <div *ngIf="detalle.controls.codigo.errors.required">
-                                        Requerido
+                                  <div class="col-lg-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                    <div class="row pl-1">
+                                      <p class="card-text col-title mb-md-50 mb-0">
+                                        Código
+                                      </p>
+                                      <input class="form-control" type="text" formControlName="codigo"
+                                             (change)="obtenerProducto(i)"
+                                             [ngClass]="{'disabled-input': detalle.controls.codigo.value != ''}">
+
+                                      <div *ngIf="detalle.controls.codigo.errors"
+                                           class="invalid-feedback"
+                                           style="display: block;">
+                                        <div *ngIf="detalle.controls.codigo.errors.required">
+                                          Requerido
+                                        </div>
                                       </div>
                                     </div>
+                                    <div class="row pl-1">
+                                      <p class="card-text col-title mb-md-50 mb-0">
+                                        Nombre
+                                      </p>
+                                      <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
+
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Observaciones
+                                    </p>
+                                    <label>{{ detalle.controls.observaciones.value }}</label>
+
                                   </div>
                                   <div class="col-lg-1 col-12 my-lg-0 my-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
@@ -366,19 +382,7 @@
                                       </div>
                                     </div>
                                   </div>
-                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                    <p class="card-text col-title mb-md-50 mb-0">
-                                      Nombre
-                                    </p>
-                                    <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
-                                    <div *ngIf="detalle.controls.articulo.errors"
-                                         class="invalid-feedback"
-                                         style="display: block;">
-                                      <div *ngIf="detalle.controls.articulo.errors.required">
-                                        Requerido
-                                      </div>
-                                    </div>
-                                  </div>
+
                                   <div class="col-lg-1 col-12 my-lg-0 my-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
                                       Precio

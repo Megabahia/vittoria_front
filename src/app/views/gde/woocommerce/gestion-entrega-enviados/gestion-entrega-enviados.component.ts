@@ -184,6 +184,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       descuento: ['', []],
       bodega: ['', []],
       canal: [''],
+      observaciones: [''],
       woocommerceId: [''],
       imagen_principal: ['', [Validators.required]]
     });
@@ -257,6 +258,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
             console.log('dato', this.detallesArray.controls[i].get('articulo'));
             this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
             this.detallesArray.controls[i].get('cantidad').setValue(1);
+            this.detallesArray.controls[i].get('observaciones').setValue(this.detallesArray.controls[i].get('observaciones').value);
             this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
             this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
             this.detallesArray.controls[i].get('bodega').setValue(param[0].nombre);
@@ -276,9 +278,9 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
         }).subscribe((info) => {
           if (info.codigoBarras) {
             // this.detallesArray.value[i].codigo = info.codigo;
-            console.log('dato', this.detallesArray.controls[i].get('articulo'));
             this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
             this.detallesArray.controls[i].get('cantidad').setValue(1);
+            this.detallesArray.controls[i].get('observaciones').setValue(this.detallesArray.controls[i].get('observaciones').value);
             this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
             this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
             this.detallesArray.controls[i].get('bodega').setValue('DESCONOCIDO');

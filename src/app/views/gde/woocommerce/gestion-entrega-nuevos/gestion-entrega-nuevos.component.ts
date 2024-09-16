@@ -64,6 +64,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
   guiaNumber = '';
   parametroIva;
   listaMetodoPago;
+
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -207,6 +208,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       bodega: ['', []],
       canal: [''],
       woocommerceId: [''],
+      observaciones: [''],
       imagen_principal: ['', [Validators.required]]
     });
   }
@@ -300,6 +302,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
             console.log('dato', this.detallesArray.controls[i].get('articulo'));
             this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
             this.detallesArray.controls[i].get('cantidad').setValue(1);
+            this.detallesArray.controls[i].get('observaciones').setValue(this.detallesArray.controls[i].get('observaciones').value);
             this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
             this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
             this.detallesArray.controls[i].get('bodega').setValue(param[0].nombre);
@@ -322,6 +325,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
             console.log('dato', this.detallesArray.controls[i].get('articulo'));
             this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
             this.detallesArray.controls[i].get('cantidad').setValue(1);
+            this.detallesArray.controls[i].get('observaciones').setValue(this.detallesArray.controls[i].get('observaciones').value);
             this.detallesArray.controls[i].get('valorUnitario').setValue(info.precioVentaA);
             this.detallesArray.controls[i].get('precio').setValue(info.precioVentaA * 1);
             this.detallesArray.controls[i].get('bodega').setValue('DESCONOCIDO');
@@ -473,7 +477,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     const tableRaws = this.notaPedido.value.articulos.map(articulo => [
       {text: articulo.codigo, fontSize: 5},
       {text: articulo.cantidad, fontSize: 5},
-      {text: articulo.articulo, fontSize: 5},
+      {text: `${articulo.articulo} ${articulo.observaciones ? '(' + articulo.observaciones + ')' : ''}`, fontSize: 5},
       {text: articulo.valorUnitario, fontSize: 5},
       {text: `${articulo.descuento ? articulo.descuento : '0'}%`, fontSize: 5},
       {text: articulo.precio, fontSize: 5},
@@ -481,7 +485,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     const tableRaws2 = this.notaPedido.value.articulos.map(articulo2 => [
       {text: articulo2.codigo, fontSize: 5},
       {text: articulo2.cantidad, fontSize: 5},
-      {text: articulo2.articulo, fontSize: 5},
+      {text: `${articulo2.articulo} ${articulo2.observaciones ? '(' + articulo2.observaciones + ')' : ''}`, fontSize: 5},
       {text: articulo2.valorUnitario, fontSize: 5},
       {text: `${articulo2.descuento ? articulo2.descuento : '0'}%`, fontSize: 5},
       {text: articulo2.precio, fontSize: 5},
@@ -489,7 +493,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     const tableRaws3 = this.notaPedido.value.articulos.map(articulo3 => [
       {text: articulo3.codigo, fontSize: 5},
       {text: articulo3.cantidad, fontSize: 5},
-      {text: articulo3.articulo, fontSize: 5},
+      {text: `${articulo3.articulo} ${articulo3.observaciones ? '(' + articulo3.observaciones + ')' : ''}`, fontSize: 5},
       {text: articulo3.valorUnitario, fontSize: 5},
       {text: `${articulo3.descuento ? articulo3.descuento : '0'}%`, fontSize: 5},
       {text: articulo3.precio, fontSize: 5},
@@ -543,9 +547,19 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
           body: tableData,
         }
       },
-      {text: 'Envío: ' + this.notaPedido.value.nombreEnvio ? this.notaPedido.value.nombreEnvio : '', style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
+      {
+        text: 'Envío: ' + this.notaPedido.value.nombreEnvio ? this.notaPedido.value.nombreEnvio : '',
+        style: 'bold',
+        fontSize: 8,
+        margin: [0, 10, 0, 0]
+      },
       {text: 'Total envío: $' + this.notaPedido.value.envioTotal, style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
-      {text: 'Total a pagar por el cliente: $' + this.notaPedido.value.total, style: 'bold', fontSize: 10, color: '#FF0000'},
+      {
+        text: 'Total a pagar por el cliente: $' + this.notaPedido.value.total,
+        style: 'bold',
+        fontSize: 10,
+        color: '#FF0000'
+      },
       '\n',
       {text: 'Datos entrega', style: 'bold', fontSize: 8},
       {text: 'Nombres: ' + this.notaPedido.value.facturacion.nombres, fontSize: 8},
@@ -583,9 +597,19 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
           body: tableData2,
         }
       },
-      {text: 'Envío: ' + this.notaPedido.value.nombreEnvio ? this.notaPedido.value.nombreEnvio : '', style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
+      {
+        text: 'Envío: ' + this.notaPedido.value.nombreEnvio ? this.notaPedido.value.nombreEnvio : '',
+        style: 'bold',
+        fontSize: 8,
+        margin: [0, 10, 0, 0]
+      },
       {text: 'Total envío: $' + this.notaPedido.value.envioTotal, style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
-      {text: 'Total a pagar por el cliente: $' + this.notaPedido.value.total, style: 'bold', fontSize: 10, color: '#FF0000'},
+      {
+        text: 'Total a pagar por el cliente: $' + this.notaPedido.value.total,
+        style: 'bold',
+        fontSize: 10,
+        color: '#FF0000'
+      },
       '\n',
       {text: 'Datos entrega', style: 'bold', fontSize: 8},
       {text: 'Nombres: ' + this.notaPedido.value.facturacion.nombres, fontSize: 8},
@@ -624,9 +648,19 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
           body: tableData3,
         }
       },
-      {text: 'Envío: ' + this.notaPedido.value.nombreEnvio ? this.notaPedido.value.nombreEnvio : '', style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
+      {
+        text: 'Envío: ' + this.notaPedido.value.nombreEnvio ? this.notaPedido.value.nombreEnvio : '',
+        style: 'bold',
+        fontSize: 8,
+        margin: [0, 10, 0, 0]
+      },
       {text: 'Total envío: $' + this.notaPedido.value.envioTotal, style: 'bold', fontSize: 8, margin: [0, 10, 0, 0]},
-      {text: 'Total a pagar por el cliente: $' + this.notaPedido.value.total, style: 'bold', fontSize: 10, color: '#FF0000'},
+      {
+        text: 'Total a pagar por el cliente: $' + this.notaPedido.value.total,
+        style: 'bold',
+        fontSize: 10,
+        color: '#FF0000'
+      },
       '\n',
       {text: 'Datos entrega', style: 'bold', fontSize: 8},
       {text: 'Nombres: ' + this.notaPedido.value.facturacion.nombres, fontSize: 8},
@@ -853,7 +887,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
 
   }
 
-  obtenerListaMetodoEnvio(): any{
+  obtenerListaMetodoEnvio(): any {
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'METODO PAGO', '').subscribe((result) => {
       this.listaMetodoPago = result.data;
     });
