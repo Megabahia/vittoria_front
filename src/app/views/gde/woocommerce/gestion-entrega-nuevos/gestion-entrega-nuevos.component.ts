@@ -477,7 +477,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     const tableRaws = this.notaPedido.value.articulos.map(articulo => [
       {text: articulo.codigo, fontSize: 5},
       {text: articulo.cantidad, fontSize: 5},
-      {text: `${articulo.articulo} ${articulo.observaciones ? (articulo.observaciones) : ''}`, fontSize: 5},
+      {text: `${articulo.articulo} ${articulo.observaciones ? '(' + articulo.observaciones + ')' : ''}`, fontSize: 5},
       {text: articulo.valorUnitario, fontSize: 5},
       {text: `${articulo.descuento ? articulo.descuento : '0'}%`, fontSize: 5},
       {text: articulo.precio, fontSize: 5},
@@ -485,7 +485,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     const tableRaws2 = this.notaPedido.value.articulos.map(articulo2 => [
       {text: articulo2.codigo, fontSize: 5},
       {text: articulo2.cantidad, fontSize: 5},
-      {text: `${articulo2.articulo} ${articulo2.observaciones ? (articulo2.observaciones) : ''}`, fontSize: 5},
+      {text: `${articulo2.articulo} ${articulo2.observaciones ? '(' + articulo2.observaciones + ')' : ''}`, fontSize: 5},
       {text: articulo2.valorUnitario, fontSize: 5},
       {text: `${articulo2.descuento ? articulo2.descuento : '0'}%`, fontSize: 5},
       {text: articulo2.precio, fontSize: 5},
@@ -493,7 +493,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     const tableRaws3 = this.notaPedido.value.articulos.map(articulo3 => [
       {text: articulo3.codigo, fontSize: 5},
       {text: articulo3.cantidad, fontSize: 5},
-      {text: `${articulo3.articulo} ${articulo3.observaciones ? (articulo3.observaciones) : ''}`, fontSize: 5},
+      {text: `${articulo3.articulo} ${articulo3.observaciones ? '(' + articulo3.observaciones + ')' : ''}`, fontSize: 5},
       {text: articulo3.valorUnitario, fontSize: 5},
       {text: `${articulo3.descuento ? articulo3.descuento : '0'}%`, fontSize: 5},
       {text: articulo3.precio, fontSize: 5},

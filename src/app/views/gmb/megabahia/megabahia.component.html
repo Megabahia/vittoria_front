@@ -117,44 +117,46 @@
                           <div class="row w-100 pr-lg-0 pr-1 py-2">
                             <div class="col-lg-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
                               <div class="row px-1">
-                                <p class="card-text col-title mb-md-50 mb-0">
-                                  Código Producto
-                                </p>
-                                <input class="form-control" type="text"
-                                       (change)="obtenerProducto(i)"
-                                       formControlName="codigo"
-                                       [ngClass]="{'disabled-input': detalle.controls.codigo.value != ''}">
-                                <div *ngIf="detalle.controls.codigo.errors"
-                                     class="invalid-feedback"
-                                     style="display: block;">
-                                  <div *ngIf="detalle.controls.codigo.errors.required">
-                                    Requerido
+                                <div class="col-12">
+                                  <p class="card-text col-title mb-md-50 mb-0">
+                                    Código Producto
+                                  </p>
+                                  <input class="form-control" type="text"
+                                         (change)="obtenerProducto(i)"
+                                         formControlName="codigo"
+                                         [ngClass]="{'disabled-input': detalle.controls.codigo.value != ''}">
+                                  <div *ngIf="detalle.controls.codigo.errors"
+                                       class="invalid-feedback"
+                                       style="display: block;">
+                                    <div *ngIf="detalle.controls.codigo.errors.required">
+                                      Requerido
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                               <div class="row px-1">
-                                <p class="card-text col-title mb-md-50 mb-0">
-                                  Nombre
-                                </p>
-                                <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
+                                <div class="col-12">
+                                  <p class="card-text col-title mb-md-50 mb-0">
+                                    Nombre
+                                  </p>
+                                  <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
 
-                                <div *ngIf="detalle.controls.articulo.errors"
-                                     class="invalid-feedback"
-                                     style="display: block;">
-                                  <div *ngIf="detalle.controls.articulo.errors.required">
-                                    Requerido
+                                  <div *ngIf="detalle.controls.articulo.errors"
+                                       class="invalid-feedback"
+                                       style="display: block;">
+                                    <div *ngIf="detalle.controls.articulo.errors.required">
+                                      Requerido
+                                    </div>
                                   </div>
                                 </div>
-
                               </div>
-
                             </div>
                             <div class="col-lg-2 col-12 my-lg-0 my-2">
                               <p class="card-text col-title mb-md-50 mb-0">
                                 Observaciones
                               </p>
                               <input class="form-control" type="text"
-                                     formControlName="observaciones" >
+                                     formControlName="observaciones">
                               <div *ngIf="detalle.controls.observaciones.errors"
                                    class="invalid-feedback"
                                    style="display: block;">
@@ -186,26 +188,26 @@
                               </div>
                             </div>
                             <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                <p class="card-text col-title mb-md-50 mb-0">
-                                  Valor Unitario
-                                </p>
-                                <select class="form-control" formControlName="valorUnitario" (change)="calcular()">
-                                  <option value="" selected>- Seleccione -</option>
-                                  <option *ngFor="let producto of detalle.controls.precios.value"
-                                          [value]="producto.valor">
-                                    {{ producto.clave.slice(-1) }} - ${{ producto.valor }}
-                                  </option>
-                                </select>
-                                <div *ngIf="detalle.controls.valorUnitario.errors"
-                                     class="invalid-feedback"
-                                     style="display: block;">
-                                  <div *ngIf="detalle.controls.valorUnitario.errors.required">
-                                    Requerido
-                                  </div>
-                                  <div *ngIf="detalle.controls.valorUnitario.errors.min">
-                                    Selecione un precio mayor a 0
-                                  </div>
+                              <p class="card-text col-title mb-md-50 mb-0">
+                                Valor Unitario
+                              </p>
+                              <select class="form-control" formControlName="valorUnitario" (change)="calcular()">
+                                <option value="" selected>- Seleccione -</option>
+                                <option *ngFor="let producto of detalle.controls.precios.value"
+                                        [value]="producto.valor">
+                                  {{ producto.clave.slice(-1) }} - ${{ producto.valor }}
+                                </option>
+                              </select>
+                              <div *ngIf="detalle.controls.valorUnitario.errors"
+                                   class="invalid-feedback"
+                                   style="display: block;">
+                                <div *ngIf="detalle.controls.valorUnitario.errors.required">
+                                  Requerido
                                 </div>
+                                <div *ngIf="detalle.controls.valorUnitario.errors.min">
+                                  Selecione un precio mayor a 0
+                                </div>
+                              </div>
                             </div>
                             <div class="col-lg-2 col-12 my-lg-0 my-2">
                               <p class="card-text col-title mb-md-50 mb-0">
