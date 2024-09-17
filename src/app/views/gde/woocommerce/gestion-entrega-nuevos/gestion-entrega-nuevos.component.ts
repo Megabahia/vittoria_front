@@ -275,6 +275,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
         this.mostrarImprimirGuia = false;
         this.notaPedido.get('guiServiEntrega').setValidators([Validators.required]);
         this.notaPedido.get('guiServiEntrega').updateValueAndValidity();
+        this.obtenerTransacciones();
       }
       //this.obtenerGuias();
       this.modalService.open(modal, {size: 'xl'});
