@@ -46,17 +46,18 @@
               <tr>
                 <th>Fecha Pedido</th>
                 <th>Fecha Autorización</th>
+                <th>Fecha Envío</th>
                 <th>Canal Pedido</th>
-                <th>Canal Envio</th>
-                <th>Tipo Facturación</th>
+                <th>Courier Envio</th>
                 <th>Numero Pedido</th>
-                <th>Nombres Facturación</th>
-                <th>Apellidos Facturación</th>
+                <th>Numero Guía</th>
+                <th>Nombres Cliente</th>
+                <th>Apellidos Cliente</th>
                 <th>Telefono</th>
-                <th>Comprobante Pago</th>
-                <th style="color: blue">Metodo envío</th>
+                <th>Metodo envío</th>
                 <th>Estado</th>
                 <th>Ver Pedido</th>
+                <th>Ver guía</th>
                 <th>Acciones</th>
               </tr>
               </thead>
@@ -64,19 +65,21 @@
               <tbody>
               <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
                 <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
-                <td>{{ transaccion.fechaHoraConfirmacion }}</td>
+                <td>{{ transaccion.fechaHoraConfirmacion | date: 'dd-MM-yyyy' }}</td>
+                <td>{{ transaccion.fechaEntrega }}</td>
                 <td [title]="transaccion.canal">{{ transaccion.canal | shorten }}</td>
                 <td [title]="transaccion.canalEnvio">{{ transaccion.canalEnvio | shorten }}</td>
-                <td [title]="transaccion.tipoFacturacion">{{ transaccion.tipoFacturacion | shorten }}</td>
-                <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido | shorten }}</td>
+                <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido }}</td>
+                <td [title]="transaccion.numeroGuia">{{ transaccion.numeroGuia}}</td>
                 <td [title]="transaccion.facturacion.nombres">{{ transaccion.facturacion.nombres | shorten }}</td>
                 <td [title]="transaccion.facturacion.apellidos">{{ transaccion.facturacion.apellidos | shorten }}</td>
                 <td>{{ transaccion.facturacion.telefono }}</td>
-                <td [title]="transaccion.urlMetodoPago">
+                <!--<td [title]="transaccion.urlMetodoPago">
                   <a *ngIf="transaccion.urlMetodoPago" [href]="transaccion.urlMetodoPago" target="_blank">Ver</a>
-                </td>
-                <td [title]="transaccion.metodoPago" style="color: blue">{{ transaccion.metodoPago | shorten }}</td>
-                <td>{{ transaccion.estado }}</td>
+                </td>-->
+                <td [title]="transaccion.metodoPago"
+                    [ngStyle]="{'color': transaccion.metodoPago.includes('Contra Entrega') ? 'red' : transaccion.metodoPago === 'Previo Pago Servientrega Nacional' ? 'green' : transaccion.metodo === 'Previo Pago Motorizado en Quito' ? 'blue' : 'black'}">{{ transaccion.metodoPago | shorten }}
+                </td>                <td>{{ transaccion.estado }}</td>
                 <td>
                   <a (click)="obtenerTransaccion(transaccion.id)" data-toggle="modal"
                      data-target="#verfactura">
@@ -84,7 +87,12 @@
                   </a>
                 </td>
                 <td>
-                  <button (click)="procesarEnvio(transaccion)" class="btn btn-sm btn-primary">
+                  <a href="{{transaccion.archivoGuia}}" *ngIf="transaccion.archivoGuia" target="_blank">
+                    <i-feather name="file-text" class="mr-25"></i-feather>
+                  </a>
+                </td>
+                <td>
+                  <button (click)="procesarDevolucion(devolucionModal, transaccion)" class="btn btn-sm btn-primary">
                     Devolución Paquete
                   </button>
                 </td>
@@ -340,7 +348,7 @@
                                       </p>
                                       <input class="form-control" type="text" formControlName="codigo"
                                              (change)="obtenerProducto(i)"
-                                             [ngClass]="{'disabled-input': detalle.controls.codigo.value != ''}">
+                                             disabled>
 
                                       <div *ngIf="detalle.controls.codigo.errors"
                                            class="invalid-feedback"
@@ -696,3 +704,21 @@
   </div>
 </div>
 
+<ng-template #devolucionModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Pedido no entregado</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h5>¿Qué recibió?</h5>
+    <h6 class="p-2 text-center text-info">{{this.transaccionDevolucion.motivo}}</h6>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
+    <button (click)="procesarEnvio()" class="btn btn-primary">
+      Confirmar
+    </button>
+  </div>
+</ng-template>
