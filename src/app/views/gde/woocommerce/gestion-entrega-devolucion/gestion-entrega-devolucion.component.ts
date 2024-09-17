@@ -46,7 +46,7 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
 
   totalIva
   parametroIva
-
+  transaccionDevolucion;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -202,7 +202,7 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
       page_size: this.pageSize,
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
-      estado: ['Despachado'],
+      estado: ['Pedido devuelto'],
       canalEnvio: 50 === this.usuario.usuario.idRol ? this.usuario.usuario.username : '',
     }).subscribe((info) => {
       this.collectionSize = info.cont;
@@ -344,11 +344,15 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
     }
   }
 
-  procesarEnvio(transaccion): void {
-    console.log('transaccion', transaccion);
+  procesarDevolucion(modal,transaccion) {
+    this.modalService.open(modal);
+    this.transaccionDevolucion = transaccion;
+  }
+
+  procesarEnvio(): void {
     if (confirm('Esta seguro de actualizar los datos') === true) {
-      transaccion.articulos.map(articulo => this.agregarItem());
-      this.notaPedido.patchValue({...transaccion, estado: 'Paquete Ingresado Stock'});
+      this.transaccionDevolucion.articulos.map(articulo => this.agregarItem());
+      this.notaPedido.patchValue({...this.transaccionDevolucion, estado: 'Paquete Ingresado Stock'});
       this.pedidosService.devolucion(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();

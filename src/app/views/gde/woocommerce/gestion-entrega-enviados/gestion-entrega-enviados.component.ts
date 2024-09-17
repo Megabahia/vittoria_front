@@ -22,6 +22,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public evidenciasForm: FormGroup;
+  public evidenciasNoEntrega: FormGroup;
   menu;
   page = 1;
   pageSize = 3;
@@ -39,6 +40,8 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   mostrarCargaComprobante = false;
   mostrarMontoEfectivo = false;
   mostrarMontoTransferencia = false;
+  valorSeleccionadoAccion;
+  mostrarBotonAccion: boolean[] = [];
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -154,6 +157,9 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
 
   get autorizarFForm() {
     return this.evidenciasForm['controls'];
+  }
+  get evidenciasNoEntregaForm() {
+    return this.evidenciasNoEntrega['controls'];
   }
 
   get notaPedidoForm() {
@@ -441,10 +447,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
     return date.toTimeString().split(' ')[0];
   }
 
-  onSelectTIpoPago(e
-                     :
-                     any
-  ) {
+  onSelectTIpoPago(e: any) {
     if (e.target.value === 'transferencia') {
       this.mostrarCargaComprobante = true;
       this.mostrarMontoTransferencia = true;
@@ -455,6 +458,40 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       this.mostrarMontoTransferencia = false;
       this.mostrarMontoEfectivo = true;
       this.evidenciasForm.get('montoTransferencia').setValue('');
+    }
+  }
+
+  pedidoEntregago(e: any, i: number) {
+    this.valorSeleccionadoAccion = e.target.value;
+
+    if (this.valorSeleccionadoAccion !== '') {
+      this.mostrarBotonAccion[i] = true;
+    } else {
+      this.mostrarBotonAccion[i] = false;
+    }
+  }
+
+  razonPedidoNoEntregado(modal, transaccion): void {
+    this.modalService.open(modal);
+    this.evidenciasNoEntrega = this.formBuilder.group({
+      id: [transaccion.id, [Validators.required]],
+      motivo: ['', [Validators.required]],
+      estado: ['Pedido devuelto']
+    });
+    this.pedido = transaccion;
+  }
+
+  procesarMotivoNoEntrega(){
+    if (confirm('Esta seguro de despachar') === true) {
+      if (this.evidenciasNoEntrega.value.motivo === '') {
+        this.toaster.open('Complete los campos requeridos.', {type: 'danger'});
+        return;
+      }
+      this.pedidosService.actualizarPedido(this.evidenciasNoEntrega.value).subscribe((info) => {
+        this.modalService.dismissAll();
+        this.obtenerTransacciones();
+      });
+
     }
   }
 
