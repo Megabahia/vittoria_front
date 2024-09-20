@@ -35,7 +35,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
   opciones;
   archivo: FormData = new FormData();
   horaPedido
-
+  numeroCourier;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -46,6 +46,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
   public couriers = [];
   mostrarSpinner = false;
   archivoGuiaInvalid = false;
+  pedidoWhatsApp;
 
   constructor(
     private modalService: NgbModal,
@@ -132,6 +133,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       subtotal: ['', []],
       envioTotal: ['', []],
       numeroPedido: ['', []],
+      numeroGuia: ['', []],
       created_at: ['', []],
       metodoPago: ['', [Validators.required]],
       canal: ['', []],
@@ -364,6 +366,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
       }),
     });
     this.obtenerCouriers(transaccion.metodoPago);
+    this.pedidoWhatsApp = transaccion;
   }
 
   obtenerFechaActualFomateada(): { fecha: string, hora: string } {
@@ -381,12 +384,12 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
     };
   }
 
-  procesarAutorizacionEnvio(): void {
+  procesarAutorizacionEnvio(e: any): void {
     if (this.autorizarForm.invalid || this.archivoGuiaInvalid) {
       this.toaster.open('Campos vacios', {type: 'danger'});
-      console.log('form', this.autorizarForm);
       return;
     }
+
     if (confirm('Esta seguro de despachar') === true) {
       this.mostrarSpinner = true;
       const facturaFisicaValores: string[] = Object.values(this.autorizarForm.value);
@@ -396,6 +399,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
           this.archivo.append(llaves, facturaFisicaValores[index]);
         }
       });
+      this.abrirWhatsApp(e);
       this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
@@ -411,6 +415,7 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
         this.autorizarForm.get('correoCourier').setValue(item.email);
         this.autorizarForm.get('canalEnvio').setValue(item.username);
         this.autorizarForm.get('codigoCourier').setValue(item.username);
+        this.numeroCourier = item.whatsapp;
       }
     });
   }
@@ -460,6 +465,22 @@ export class GestionEntregaDespachoComponent implements OnInit, AfterViewInit {
   extraerHora(dateTimeString: string): string {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(' ')[0];
+  }
+
+  abrirWhatsApp(event: Event): void {
+    event.preventDefault();
+    const numero = this.numeroCourier;
+    const modifiedNumber = (numero.startsWith('0') ? numero.substring(1) : numero);
+    const internationalNumber = '593' + modifiedNumber;
+    const fecha = this.pedidoWhatsApp.created_at.split('T')[0];
+    const mensajeEncabezado = `*Hola, aquí tienes los datos del pedido despachado:*\n\nFecha de pedido: ${fecha}\nNúmero de pedido: ${this.pedidoWhatsApp.numeroPedido}\nNúmero guía: ${this.pedidoWhatsApp.numeroGuia}\n*Método de envío: ${this.pedidoWhatsApp.metodoPago}*`;
+    const mensajeProductos = this.pedidoWhatsApp.articulos.map((articulo, index) => `*Producto ${index + 1}*\nCódigo: ${articulo.codigo}\nNombre: ${articulo.articulo}\nCantidad: ${articulo.cantidad}\nPrecio: $${articulo.valorUnitario}\nDescuento: ${articulo.descuento}%\nTotal: $${articulo.precio}\n\n`);
+    const mensajeDetallePrecios = `Envío a: ${this.pedidoWhatsApp.nombreEnvio ?? ''}\nTotal de envío: $${this.pedidoWhatsApp.envioTotal}\n*Total a pagar por el cliente: $${this.pedidoWhatsApp.total}*`;
+    const mensajeEnvio = `*Datos de entrega:*\nNombre: ${this.pedidoWhatsApp.facturacion.nombres} ${this.pedidoWhatsApp.facturacion.apellidos}\nCorreo: ${this.pedidoWhatsApp.facturacion.correo}\nNúmero de identificación: ${this.pedidoWhatsApp.facturacion.identificacion}\nTeléfono: ${this.pedidoWhatsApp.facturacion.telefono}\nLocalidad: ${this.pedidoWhatsApp.facturacion.ciudad}, ${this.pedidoWhatsApp.facturacion.provincia}, ${this.pedidoWhatsApp.facturacion.pais}\nCalle principal: ${this.pedidoWhatsApp.facturacion.callePrincipal}\nNúmero de casa: ${this.pedidoWhatsApp.facturacion.numero}\nCalle secundaria: ${this.pedidoWhatsApp.facturacion.calleSecundaria}\nReferencia: ${this.pedidoWhatsApp.facturacion.referencia}\nGPS:\n${this.pedidoWhatsApp.facturacion.gps}`;
+    const message = encodeURIComponent(`${mensajeEncabezado}\n\n*Datos del producto*\n${mensajeProductos}*Datos de envío*\n${mensajeDetallePrecios}\n\n${mensajeEnvio}`);
+
+    const whatsappUrl = `https://web.whatsapp.com/send/?phone=${internationalNumber}&text=${message}`;
+    window.open(whatsappUrl, '_blank');  // Abrir WhatsApp en una nueva pestaña
   }
 }
 

@@ -15,6 +15,7 @@ import {
   GestionEntregaDevolucionComponent
 } from './woocommerce/gestion-entrega-devolucion/gestion-entrega-devolucion.component';
 import {ReporteEntregasComponent} from "./reportes/reporte-entregas.component";
+import {ReportePedidosComponent} from "./reportes/pedidos/reporte-pedidos.component";
 
 const routes: Routes = [
   {
@@ -32,6 +33,9 @@ const routes: Routes = [
       },
       {
         path: 'reportes', component: ReporteEntregasComponent, canActivate: [AuthGuard]
+      },
+      {
+        path: 'reportes/pedidos', component: ReportePedidosComponent, canActivate: [AuthGuard]
       },
       {
         path: 'gestionEntrega', children: [

@@ -55,6 +55,7 @@
                 <th>Metodo Envío</th>
                 <th>Estado</th>
                 <th>Ver guía</th>
+                <th>Enviar pedido a Courier</th>
                 <th>¿El pedido fue entregado?</th>
                 <th>Acciones</th>
               </tr>
@@ -64,7 +65,7 @@
               <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
                 <td class="text-danger">{{ transaccion.fechaEntrega }}</td>
                 <td class="text-danger">{{ transaccion.horaEntrega }}</td>
-                <td [title]="transaccion.canalEnvio">{{ transaccion.canalEnvio | shorten }}</td>
+                <td [title]="transaccion.codigoCourier">{{ transaccion.codigoCourier | shorten }}</td>
                 <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido }}</td>
                 <td [title]="transaccion.numeroGuia">{{ transaccion.numeroGuia }}</td>
                 <td [title]="transaccion.facturacion.nombres">{{ transaccion.facturacion.nombres | shorten }}</td>
@@ -86,6 +87,14 @@
                     <i-feather name="eye" class="mr-25"></i-feather>
                   </a>
                 </td>-->
+                <td>
+                  <a (click)="abrirWhatsApp($event, transaccion)">
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png"
+                      alt="wsp"
+                      width="30" height="30">
+                  </a>
+                </td>
                 <td>
                   <select class="form-control width-150" (change)="pedidoEntregago($event ,i)">
                     <option value="" selected>- Seleccione -</option>

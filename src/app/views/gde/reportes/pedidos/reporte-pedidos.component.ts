@@ -4,20 +4,20 @@ import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ChartDataSets} from 'chart.js';
 import {Color} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
-import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
-import {ParamService} from '../../../services/mp/param/param.service';
-import {ParamService as ParamServiceMDP} from '../../../services/mdp/param/param.service';
-import {ParamService as ParamServiceAdm} from '../../../services/admin/param.service';
+import {PedidosService} from '../../../../services/mp/pedidos/pedidos.service';
+import {ParamService} from '../../../../services/mp/param/param.service';
+import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/param.service';
+import {ParamService as ParamServiceAdm} from '../../../../services/admin/param.service';
 
-import {ProductosService} from '../../../services/mdp/productos/productos.service';
+import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
 
 @Component({
-  selector: 'app-reporte-entregas',
-  templateUrl: './reporte-entregas.component.html',
+  selector: 'app-reporte-pedidos',
+  templateUrl: './reporte-pedidos.component.html',
   providers: [DatePipe]
 })
-export class ReporteEntregasComponent implements OnInit, AfterViewInit {
+export class ReportePedidosComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   public notaPedido: FormGroup;
   public formaPagoForm: FormGroup;
@@ -251,9 +251,6 @@ export class ReporteEntregasComponent implements OnInit, AfterViewInit {
       page_size: this.pageSize,
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
-      codigoVendedor: this.usuario.usuario.username,
-      rol: this.usuario.usuario.idRol,
-      estado: ['Envio']
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info.map((item) => {

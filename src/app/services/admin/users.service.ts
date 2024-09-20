@@ -83,6 +83,10 @@ export class UsersService {
     return this.http.get<any>(`${apiUrl}/adm/usuarios/listOne/${id}`);
   }
 
+  obtenerUsuarioCourier(data): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/adm/usuarios/listOneCourier/`, data);
+  }
+
   actualizarUsuario(usuario: Usuario): Observable<any> {
     const usuarioActualizado: NuevoUsuario = usuario;
     return this.http.post<any>(`${apiUrl}/adm/usuarios/update/${usuario.id}`, usuarioActualizado);

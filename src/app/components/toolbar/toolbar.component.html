@@ -173,7 +173,8 @@
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice">MDP Master Data Products</span></a>
         <ul class="menu-content ng-star-inserted">
-          <li class="nav-item {{menuToolbar['mdp']['param']}}" *ngIf="usuario.usuario.idRol !== 60 && usuario.usuario.idRol !== 59">
+          <li class="nav-item {{menuToolbar['mdp']['param']}}"
+              *ngIf="usuario.usuario.idRol !== 60 && usuario.usuario.idRol !== 59">
             <a class="d-flex align-items-center" href="#/mdp/parametrizaciones" data-toggle="tooltip"
                data-placement="auto" title="Parametrizaciones Administracion">
               <i data-feather="circle"></i>
@@ -281,7 +282,7 @@
                    data-placement="auto" title="Reporte de abastecimiento">
                   <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reporte de abastecimiento</span></a>
               </li>
-              <li class="nav-item {{menuToolbar['mdp']['stockRep']}}"*ngIf="usuario.usuario.idRol !== 59">
+              <li class="nav-item {{menuToolbar['mdp']['stockRep']}}" *ngIf="usuario.usuario.idRol !== 59">
                 <a class="d-flex align-items-center" href="#/mdp/reportes/stock" data-toggle="tooltip"
                    data-placement="auto" title="Reporte de stock">
                   <i data-feather="circle"></i><span class="menu-item text-truncate"
@@ -305,7 +306,8 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item has-sub ng-star-inserted" *ngIf="usuario.usuario.idRol !== 60 && usuario.usuario.idRol !== 59">
+          <li class="nav-item has-sub ng-star-inserted"
+              *ngIf="usuario.usuario.idRol !== 60 && usuario.usuario.idRol !== 59">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Administración de stock virtual">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración de stock virtual</span></a>
@@ -323,7 +325,8 @@
         </ul>
       </li>
       <li class="ml-2">-------------------------------------</li>
-      <li class="nav-item" *ngIf="usuario.usuario.idRol === 62 || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 61 || usuario.usuario.idRol === 58 || usuario.usuario.idRol === 54">
+      <li class="nav-item"
+          *ngIf="usuario.usuario.idRol === 62 || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 61 || usuario.usuario.idRol === 58 || usuario.usuario.idRol === 54">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice" title="GD Gestión de Drop Shipping">GD Gestión de Drop Shipping</span></a>
@@ -391,7 +394,8 @@
               <span class="menu-item text-truncate" data-i18n="List">Consulta de productos</span>
             </a>
           </li>
-          <li class="nav-item" *ngIf="(usuario.usuario.idRol === 62 && usuario.usuario.canal === 'superbarato.megadescuento.com') || (usuario.usuario.idRol === 62 && usuario.usuario.canal === 'contraentrega.megadescuento.com') || usuario.usuario.idRol === 1">
+          <li class="nav-item"
+              *ngIf="(usuario.usuario.idRol === 62 && usuario.usuario.canal === 'superbarato.megadescuento.com') || (usuario.usuario.idRol === 62 && usuario.usuario.canal === 'contraentrega.megadescuento.com') || usuario.usuario.idRol === 1">
             <a class="d-flex align-items-center" [routerLink]="['gsb/pedido_woocommerce/crear']" data-toggle="tooltip"
                data-placement="auto" title="Generar Pedido Woocommerce">
               <i data-feather="circle"></i>
@@ -513,7 +517,8 @@
           </li>
         </ul>
       </li>
-      <li class="nav-item" *ngIf="acciones.GDE.LEER || acciones.GDE_EMPACADO.CREAR || acciones.GDE_DESPACHO.CREAR || usuario.usuario.idRol === 51">
+      <li class="nav-item"
+          *ngIf="acciones.GDE.LEER || acciones.GDE_EMPACADO.CREAR || acciones.GDE_DESPACHO.CREAR || usuario.usuario.idRol === 51">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice">GDE Gestión de entregas</span></a>
@@ -544,7 +549,8 @@
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Gestión de enviado</span></a>
           </li>
-          <li *ngIf="acciones.GDE.CREAR || usuario.usuario.idRol === 51" class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceDevolucion']}}">
+          <li *ngIf="acciones.GDE.CREAR || usuario.usuario.idRol === 51"
+              class="nav-item {{menuToolbar['gde']['gestEntregaWoocommerceDevolucion']}}">
             <a class="d-flex align-items-center" href="#/gde/gestionEntrega/woocommerce/devolucion-paquetes"
                data-toggle="tooltip"
                data-placement="auto" title="Gestión de devolución de paquetes">
@@ -556,6 +562,13 @@
                data-placement="auto" title="Reporte de entregas">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Reporte de entregas</span></a>
+          </li>
+          <li *ngIf="usuario.usuario.idRol === 1">
+            <a class="d-flex align-items-center" href="#/gde/reportes/pedidos"
+               data-toggle="tooltip"
+               data-placement="auto" title="Reporte de pedidos">
+              <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                                 data-i18n="List">Reporte de pedidos</span></a>
           </li>
         </ul>
       </li>

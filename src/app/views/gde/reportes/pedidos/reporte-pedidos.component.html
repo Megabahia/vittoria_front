@@ -60,7 +60,6 @@
                 <th>Centro de negocio</th>
                 <th>Ver</th>
                 <th>Guía</th>
-                <th>Monto subtotal a pagar del pedido</th>
                 <!--<th>Monto subtotal ingresado en evidencia</th>
                 <th>Monto subtotal aprobado</th>
                 <th>Evidencia de factura</th>
@@ -80,7 +79,7 @@
                 <td>{{ transaccion.facturacion.apellidos }}</td>
                 <td>{{ transaccion.metodoPago }}</td>
                 <td>{{ transaccion.facturacion.telefono }}</td>
-                <td [ngStyle]="{'color': transaccion.estado === 'Devolucion' || transaccion.estado === 'Rechazado' || transaccion.estado === 'Pendiente de entrega' || transaccion.estado === 'Pedido Negado' ? 'red' :
+                <td [ngStyle]="{'color': transaccion.estado === 'Devolucion' || transaccion.estado === 'Rechazado' || transaccion.estado === 'Pendiente de entrega' || transaccion.estado === 'Pedido Negado' || transaccion.estado ==='Pedido devuelto' ? 'red' :
                                 transaccion.estado === 'Despachado' || transaccion.estado === 'Empacado'|| transaccion.estado === 'Pendiente' ? 'yellow' : transaccion.estado === 'Por confirmar' ? 'black' : 'green'}">{{ transaccion.estado }}
                 </td>
                 <!--<td class="text-warning">{{ transaccion.motivoNegacionPedido }}</td>
@@ -101,35 +100,7 @@
                     <i-feather name="file-text" class="mr-25"></i-feather>
                   </a>
                 </td>
-                <td>{{ transaccion.subtotal | currency }}</td>
-                <!--<td class="text-info">{{ transaccion.montoSubtotalCliente | currency }}</td>
-                <td class="text-success">{{ transaccion.montoSubtotalAprobado | currency }}</td>
-                <td>
-                  <a href="{{transaccion.archivoFactura}}" *ngIf="transaccion.archivoFactura" target="_blank">
-                    <i-feather name="file-text" class="mr-25"></i-feather>
-                  </a>
-                </td>
-                <td class="text-warning">{{ transaccion.montoSubtotalQueja | currency }}</td>
-                <td class="text-warning">{{ transaccion.montoSubtotalAprobadoQueja | currency }}</td>
-                <td>
-                  <a href="{{transaccion.archivoFacturaQueja}}" *ngIf="transaccion.archivoFacturaQueja" target="_blank">
-                    <i-feather name="file-text" class="mr-25"></i-feather>
-                  </a>
-                </td>
-                <td>
-                  <button
-                    *ngIf="transaccion.estado === 'Pendiente de entrega' || transaccion.estado === 'Por confirmar'"
-                    class="btn btn-primary"
-                    (click)="cargarFactura(facturacionModal, transaccion.id)">
-                    Cargar evidencia de venta
-                  </button>
-                  <button
-                    *ngIf="transaccion.estado === 'Entregado'"
-                    class="btn btn-secondary"
-                    (click)="exclamarReclamo(quejaModal, transaccion.id)">
-                    Escalar reclamo
-                  </button>
-                </td>-->
+
               </tr>
               </tbody>
             </table>
