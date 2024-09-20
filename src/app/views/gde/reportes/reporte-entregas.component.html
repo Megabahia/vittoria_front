@@ -352,111 +352,97 @@
                         <form class="source-item">
                           <div data-repeater-list="group-a"
                                *ngFor="let detalle of notaPedido.get('articulos')['controls']; let i = index;">
-                            <ng-container class="row" [formGroup]="detalle">
+                            <ng-container [formGroup]="detalle">
                               <div class="repeater-wrapper" data-repeater-item>
                                 <div class="row">
-                                  <div class="col-12 d-flex product-details-border position-relative pr-0">
-                                    <div class="row w-100 pr-lg-0 pr-1 py-2">
-                                      <div class="col-lg-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
-                                        <p class="card-text col-title mb-md-50 mb-0">
-                                          Código
-                                        </p>
-                                        <div class="input-group">
-                                          <div class="input-group-prepend">
-                                            <span class="input-group-text"
-                                                  id="basic-addon1">{{ detalle.controls.prefijo?.value }}</span>
-                                          </div>
-                                          <input class="form-control" type="text"
-                                                 (change)="obtenerProducto(i)"
-                                                 formControlName="codigo"
-                                                 disabled>
-                                          <div *ngIf="detalle.controls.codigo.errors"
-                                               class="invalid-feedback"
-                                               style="display: block;">
-                                            <div *ngIf="detalle.controls.codigo.errors.required">
-                                              Requerido
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="col-lg-1 col-12 my-lg-0 my-2">
-                                        <p class="card-text col-title mb-md-50 mb-0">
-                                          Cantidad
-                                        </p>
-                                        <input type="text" class="form-control"
-                                               formControlName="cantidad"
-                                               (change)="calcular()"
-                                               disabled
-                                        />
-                                        <div *ngIf="detalle.controls.cantidad.errors"
-                                             class="invalid-feedback"
-                                             style="display: block;" disabled>
-                                          <div *ngIf="detalle.controls.cantidad.errors.required">
-                                            Requerido
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                        <p class="card-text col-title mb-md-50 mb-0">
-                                          Nombre
-                                        </p>
-                                        <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
+                                  <div class="col-lg-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                    <div class="row pl-1">
+                                      <p class="card-text col-title mb-md-50 mb-0">
+                                        Código
+                                      </p>
+                                      <input class="form-control" type="text" formControlName="codigo"
+                                             (change)="obtenerProducto(i)"
+                                             [ngClass]="{'disabled-input': detalle.controls.codigo.value != ''}">
 
-                                        <div *ngIf="detalle.controls.articulo.errors"
-                                             class="invalid-feedback"
-                                             style="display: block;">
-                                          <div *ngIf="detalle.controls.articulo.errors.required">
-                                            Requerido
-                                          </div>
+                                      <div *ngIf="detalle.controls.codigo.errors"
+                                           class="invalid-feedback"
+                                           style="display: block;">
+                                        <div *ngIf="detalle.controls.codigo.errors.required">
+                                          Requerido
                                         </div>
-                                      </div>
-                                      <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                        <p class="card-text col-title mb-md-50 mb-0">
-                                          Características
-                                        </p>
-                                        <label [innerHTML]="detalle.controls.caracteristicas.value"></label>
-                                      </div>
-                                      <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                        <p class="card-text col-title mb-md-50 mb-0">
-                                          Precio
-                                        </p>
-                                        <label>${{ detalle.controls.valorUnitario.value }}</label>
-                                        <div *ngIf="detalle.controls.valorUnitario.errors"
-                                             class="invalid-feedback"
-                                             style="display: block;">
-                                          <div *ngIf="detalle.controls.valorUnitario.errors.required">
-                                            Requerido
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="col-lg-2 col-12 my-lg-0 my-2 text-danger">
-                                        <p class="card-text col-title mb-md-50 mb-0">
-                                          Descuento
-                                        </p>
-                                        <label
-                                          class="d-block text-wrap text-danger">{{ detalle.controls.descuento.value }}
-                                          %</label>
-                                      </div>
-                                      <div class="col-lg-1 col-12 my-lg-0 my-2 text-danger">
-                                        <p class="card-text col-title mb-md-50 mb-0">
-                                          Total
-                                        </p>
-                                        <label class="text-danger"> ${{ detalle.controls.precio.value }}</label>
-                                        <div *ngIf="detalle.controls.precio.errors"
-                                             class="invalid-feedback"
-                                             style="display: block;">
-                                          <div *ngIf="detalle.controls.precio.errors.required">
-                                            Requerido
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="col-md-2 border-left">
-                                        <img class="img-detalle"
-                                             src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
-                                             *ngIf="detalle.controls?.imagen_principal" width="100px" height="100px"
-                                             alt="">
                                       </div>
                                     </div>
+                                    <div class="row pl-1">
+                                      <p class="card-text col-title mb-md-50 mb-0">
+                                        Nombre:
+                                      </p>
+                                      <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
+
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Observaciones
+                                    </p>
+                                    <label>{{ detalle.controls.observaciones.value }}</label>
+
+                                  </div>
+                                  <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Cantidad
+                                    </p>
+                                    <input type="text" class="form-control"
+                                           formControlName="cantidad"
+                                           (change)="calcular()"
+                                           disabled
+                                    />
+                                    <div *ngIf="detalle.controls.cantidad.errors"
+                                         class="invalid-feedback"
+                                         style="display: block;" disabled>
+                                      <div *ngIf="detalle.controls.cantidad.errors.required">
+                                        Requerido
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Precio
+                                    </p>
+                                    <label>{{ detalle.controls.valorUnitario.value }}</label>
+                                    <div *ngIf="detalle.controls.valorUnitario.errors"
+                                         class="invalid-feedback"
+                                         style="display: block;">
+                                      <div *ngIf="detalle.controls.valorUnitario.errors.required">
+                                        Requerido
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Descuento
+                                    </p>
+                                    <label>{{ detalle.controls.descuento.value ? detalle.controls.descuento.value : '0' }}
+                                      %</label>
+                                  </div>
+                                  <div class="col-lg-1 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0">
+                                      Total
+                                    </p>
+                                    <label>{{ detalle.controls.precio.value }}</label>
+                                    <div *ngIf="detalle.controls.precio.errors"
+                                         class="invalid-feedback"
+                                         style="display: block;">
+                                      <div *ngIf="detalle.controls.precio.errors.required">
+                                        Requerido
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-2 border-left mt-2">
+                                    <img class="img-detalle"
+                                         src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
+                                         *ngIf="detalle.controls?.imagen_principal" width="100px" height="100px" alt="">
+
                                   </div>
                                 </div>
                               </div>
@@ -505,15 +491,15 @@
                         <div class="col-md-7"></div>
                         <div class="col-md-5 text-right">
                           <div class="invoice-total-wrapper">
-                            <!--<div class="invoice-total-item">
-                                <p class="invoice-total-title">Subtotal:
-                                    ${{notaPedido.controls.subtotal.value}}</p>
-                            </div>
-                            <div class="invoice-total-item">
-                                <p class="invoice-total-title">{{iva?.descripcion}}:
-                                    ${{notaPedido.controls.iva.value}}</p>
-                            </div>-->
                             <hr class="my-50"/>
+                            <div class="invoice-total-item">
+                              <p class="invoice-total-title text-warning font-weight-bold">
+                                Envio: {{ notaPedido.controls.nombreEnvio.value }}</p>
+                              <p class="invoice-total-title text-primary font-weight-bold">
+                                Total Envio: ${{ notaPedido.controls.envioTotal.value }}</p>
+                            </div>
+                            <hr class="my-50"/>
+
                             <div class="invoice-total-item">
                               <p class="invoice-total-title text-primary font-weight-bold">
                                 Subtotal: ${{ notaPedido.controls.subtotal.value }}</p>
@@ -523,7 +509,7 @@
                                 IVA (15%): ${{ totalIva }}</p>
                             </div>
                             <div class="invoice-total-item">
-                              <p class="invoice-total-title text-danger font-weight-bold">
+                              <p class="invoice-total-title text-primary font-weight-bold">
                                 Total a pagar por el cliente: ${{ notaPedido.controls.total.value }}</p>
                             </div>
                           </div>

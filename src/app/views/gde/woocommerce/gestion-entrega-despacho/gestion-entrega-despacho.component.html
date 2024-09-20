@@ -355,8 +355,7 @@
                                         Código
                                       </p>
                                       <input class="form-control" type="text" formControlName="codigo"
-                                             (change)="obtenerProducto(i)"
-                                             [ngClass]="{'disabled-input': detalle.controls.codigo.value != ''}">
+                                             disabled>
 
                                       <div *ngIf="detalle.controls.codigo.errors"
                                            class="invalid-feedback"
@@ -368,7 +367,7 @@
                                     </div>
                                     <div class="row pl-1">
                                       <p class="card-text col-title mb-md-50 mb-0">
-                                        Nombre
+                                        Nombre:
                                       </p>
                                       <label class="d-block text-wrap">{{ detalle.controls.articulo.value }}</label>
 
@@ -840,14 +839,16 @@
         </div>
         <div class="col-12">
           <div class="form-group">
-            <label>Guía</label>
-            <div class="custom-file">
-              <input type="file" class="custom-file-input" id="customFile"
-                     accept="image/png, image/gif, image/jpeg, application/pdf"
-                     (change)="cargarArchivo($event, 'archivoGuia')"
-                     formControlName="archivoGuia"/>
-              <label class="custom-file-label" for="customFile" id="archivoGuialbl">Cargar nueva guía</label>
+            <div *ngIf="autorizarForm.value.metodoPago.includes('Servientrega')">
+              <label>Guía</label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="customFile"
+                       accept="image/png, image/gif, image/jpeg, application/pdf"
+                       (change)="cargarArchivo($event, 'archivoGuia')"
+                       formControlName="archivoGuia"/>
+                <label class="custom-file-label" for="customFile" id="archivoGuialbl">Cargar nueva guía</label>
 
+              </div>
             </div>
             <div class="mt-2">
               <a (click)="verGuia()">
@@ -901,7 +902,7 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
-    <button type="button" class="btn btn-primary" (click)="procesarAutorizacionEnvio()"
+    <button type="button" class="btn btn-primary" (click)="procesarAutorizacionEnvio($event)"
             [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
             <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
                   aria-hidden="true"></span>

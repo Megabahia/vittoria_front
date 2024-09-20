@@ -11,12 +11,13 @@ import {ParamService as ParamServiceMDP} from '../../../../services/mdp/param/pa
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {Toaster} from "ngx-toast-notifications";
 import {ParamService as ParamServiceAdm} from "../../../../services/admin/param.service";
+import {UsersService} from "../../../../services/admin/users.service";
 
 @Component({
   selector: 'app-gestion-entrega-enviados',
   templateUrl: './gestion-entrega-enviados.component.html',
   styleUrls: ['./gestion-entrega-enviados.component.css'],
-  providers: [DatePipe],
+  providers: [DatePipe, UsersService],
 })
 export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
@@ -50,6 +51,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
     data: [], label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)'
   };
   public couriers = [];
+  courierPedido
   usuario;
 
   constructor(
@@ -63,6 +65,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
     private paramServiceMDP: ParamServiceMDP,
     private productosService: ProductosService,
     private paramServiceAdm: ParamServiceAdm,
+    private usersService: UsersService,
   ) {
     this.usuario = JSON.parse(localStorage.getItem('currentUser'));
     this.inicio.setMonth(this.inicio.getMonth() - 3);
@@ -158,6 +161,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   get autorizarFForm() {
     return this.evidenciasForm['controls'];
   }
+
   get evidenciasNoEntregaForm() {
     return this.evidenciasNoEntrega['controls'];
   }
@@ -481,7 +485,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
     this.pedido = transaccion;
   }
 
-  procesarMotivoNoEntrega(){
+  procesarMotivoNoEntrega() {
     if (confirm('Esta seguro de despachar') === true) {
       if (this.evidenciasNoEntrega.value.motivo === '') {
         this.toaster.open('Complete los campos requeridos.', {type: 'danger'});
@@ -493,6 +497,36 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
       });
 
     }
+  }
+
+  obtenerCourier(codigoCourier, emailCourier): void {
+    this.usersService.obtenerUsuarioCourier({
+      email: emailCourier,
+      username: codigoCourier
+    }).subscribe((info) => {
+      this.courierPedido = info.info;
+    });
+  }
+
+  abrirWhatsApp(event: Event, pedidoWhatsApp): void {
+    event.preventDefault();
+    this.obtenerCourier(pedidoWhatsApp.codigoCourier, pedidoWhatsApp.correoCourier);
+
+    setTimeout(()=> {
+      const numero = this.courierPedido.map(dato => dato.whatsapp)[0];
+      const modifiedNumber = (numero.startsWith('0') ? numero.substring(1) : numero);
+      const internationalNumber = '593' + modifiedNumber;
+      const fecha = pedidoWhatsApp.created_at.split('T')[0];
+      const mensajeEncabezado = `*Hola, aquí tienes los datos del pedido despachado:*\n\nFecha de pedido: ${fecha}\nNúmero de pedido: ${pedidoWhatsApp.numeroPedido}\nNúmero guía: ${pedidoWhatsApp.numeroGuia}\n*Método de envío: ${pedidoWhatsApp.metodoPago}*`;
+      const mensajeProductos = pedidoWhatsApp.articulos.map((articulo, index) => `*Producto ${index + 1}*\nCódigo: ${articulo.codigo}\nNombre: ${articulo.articulo}\nCantidad: ${articulo.cantidad}\nPrecio: $${articulo.valorUnitario}\nDescuento: ${articulo.descuento}%\nTotal: $${articulo.precio}\n\n`);
+      const mensajeDetallePrecios = `Envío a: ${pedidoWhatsApp.nombreEnvio ?? ''}\nTotal de envío: $${pedidoWhatsApp.envioTotal}\n*Total a pagar por el cliente: $${pedidoWhatsApp.total}*`;
+      const mensajeEnvio = `*Datos de entrega:*\nNombre: ${pedidoWhatsApp.facturacion.nombres} ${pedidoWhatsApp.facturacion.apellidos}\nCorreo: ${pedidoWhatsApp.facturacion.correo}\nNúmero de identificación: ${pedidoWhatsApp.facturacion.identificacion}\nTeléfono: ${pedidoWhatsApp.facturacion.telefono}\nLocalidad: ${pedidoWhatsApp.facturacion.ciudad}, ${pedidoWhatsApp.facturacion.provincia}, ${pedidoWhatsApp.facturacion.pais}\nCalle principal: ${pedidoWhatsApp.facturacion.callePrincipal}\nNúmero de casa: ${pedidoWhatsApp.facturacion.numero}\nCalle secundaria: ${pedidoWhatsApp.facturacion.calleSecundaria}\nReferencia: ${pedidoWhatsApp.facturacion.referencia}\nGPS:\n${pedidoWhatsApp.facturacion.gps}`;
+      const message = encodeURIComponent(`${mensajeEncabezado}\n\n*Datos del producto*\n${mensajeProductos}*Datos de envío*\n${mensajeDetallePrecios}\n\n${mensajeEnvio}`);
+
+      const whatsappUrl = `https://web.whatsapp.com/send/?phone=${internationalNumber}&text=${message}`;
+      window.open(whatsappUrl, '_blank');  // Abrir WhatsApp en una nueva pestaña
+    },2000)
+
   }
 
 }
