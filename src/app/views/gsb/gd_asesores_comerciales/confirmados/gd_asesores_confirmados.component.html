@@ -1,0 +1,73 @@
+<div class="app-content content ">
+  <div class="content-wrapper">
+    <div class="content-body">
+      <div class="card">
+        <h3 class="card-header">Asesoras Comerciales Confirmadas</h3>
+        <!--<div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <button class="btn btn-primary" (click)="obtenerAsesoresRegistrados()">
+                <i-feather name='search' class="edit-user"></i-feather>
+              </button>
+            </div>
+          </div>
+        </div>-->
+      </div>
+      <div class="card">
+        <div class="card-datatable table-responsive pt-0">
+          <div class="row m-75">
+            <div class="col-lg-12 col-xl-6">
+              <label>Mostrar</label>
+              <select class="form-control-sm" [(ngModel)]="pageSize"
+                      (change)="obtenerAsesoresRegistrados()">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+
+            </div>
+          </div>
+          <table class="user-list-table table">
+            <thead class="thead-light">
+            <tr>
+              <th>Fecha de registro</th>
+              <th>Nombres</th>
+              <th>Apellidos</th>
+              <th>Correo electrónico</th>
+              <th>Localidad</th>
+              <th>Teléfono</th>
+              <th>Fecha de nacimiento</th>
+              <th>Género</th>
+              <th>Estado</th>
+              <th>Accion</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let transaccion  of listaAsesores; let i = index">
+              <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
+              <td>{{ transaccion.nombres }}</td>
+              <td>{{ transaccion.apellidos }}</td>
+              <td>{{ transaccion.email }}</td>
+              <td>{{ transaccion.pais }}, {{ transaccion.provincia }}, {{ transaccion.ciudad }}</td>
+              <td>{{ transaccion.whatsapp }}</td>
+              <td>{{ transaccion.fecha_nacimiento | date: 'dd-MM-yyyy' }}</td>
+              <td>{{ transaccion.gender }}</td>
+              <td>{{ transaccion.estado }}</td>
+              <td>
+                <!--<a class="btn btn-primary" (click)="confirmarAsesor(transaccion,'Confirmado')">
+                  Confirmar Asesora
+                </a>-->
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
+                        [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+
+      </div>
+    </div>
+  </div>
+</div>

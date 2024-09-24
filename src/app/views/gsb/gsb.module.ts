@@ -27,6 +27,8 @@ import {
   ReporteContactosVentasComponent
 } from "./gsb_contactos/reporte_contactos_ventas/reporte_contactos-ventas.component";
 import {CrearPedidoWoocomerceComponent} from "./crear-pedido-woocommerce/crear-pedido-woocomerce.component";
+import {GdRegistrosAsesoresComponent} from "./gd_asesores_comerciales/registros/gd_registros_asesores.component";
+import {GdAsesoresConfirmadosComponent} from "./gd_asesores_comerciales/confirmados/gd_asesores_confirmados.component";
 
 @NgModule({
   declarations: [
@@ -43,7 +45,9 @@ import {CrearPedidoWoocomerceComponent} from "./crear-pedido-woocommerce/crear-p
     GdParamsComponent,
     GdConsultaProductosComponent,
     ReporteContactosVentasComponent,
-    CrearPedidoWoocomerceComponent
+    CrearPedidoWoocomerceComponent,
+    GdRegistrosAsesoresComponent,
+    GdAsesoresConfirmadosComponent
   ],
   exports: [
     GsbProductosListarComponent

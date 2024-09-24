@@ -3,7 +3,8 @@ import {RouterModule, Routes} from '@angular/router';
 import {ProductosComponent} from './productos/productos.component';
 import {CalculadoraComponent} from './calculadora/calculadora.component';
 import {PedidoWoocomerceComponent} from './pedido-woocomerce/pedido-woocomerce.component';
-import {ConsultaProductosComponent} from "./consulta-productos/consulta-productos.component";
+import {ConsultaProductosComponent} from './consulta-productos/consulta-productos.component';
+import {RegistroAsesoraComponent} from './registro-asesora/registro-asesora.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,10 @@ const routes: Routes = [
   {
     path: 'consulta/producto',
     component: ConsultaProductosComponent,
+  },
+  {
+    path: 'registro/asesora',
+    component: RegistroAsesoraComponent,
   },
 ];
 
