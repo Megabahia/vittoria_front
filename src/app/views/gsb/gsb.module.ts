@@ -29,6 +29,9 @@ import {
 import {CrearPedidoWoocomerceComponent} from "./crear-pedido-woocommerce/crear-pedido-woocomerce.component";
 import {GdRegistrosAsesoresComponent} from "./gd_asesores_comerciales/registros/gd_registros_asesores.component";
 import {GdAsesoresConfirmadosComponent} from "./gd_asesores_comerciales/confirmados/gd_asesores_confirmados.component";
+import {
+  GdBilleteraDigitalAsesoresComponent
+} from "./gd_asesores_comerciales/billetera_digital/gd_billetera_digital_asesores.component";
 
 @NgModule({
   declarations: [
@@ -47,7 +50,8 @@ import {GdAsesoresConfirmadosComponent} from "./gd_asesores_comerciales/confirma
     ReporteContactosVentasComponent,
     CrearPedidoWoocomerceComponent,
     GdRegistrosAsesoresComponent,
-    GdAsesoresConfirmadosComponent
+    GdAsesoresConfirmadosComponent,
+    GdBilleteraDigitalAsesoresComponent
   ],
   exports: [
     GsbProductosListarComponent

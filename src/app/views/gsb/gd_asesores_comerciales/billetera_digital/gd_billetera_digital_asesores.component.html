@@ -2,16 +2,8 @@
   <div class="content-wrapper">
     <div class="content-body">
       <div class="card">
-        <h3 class="card-header">Asesoras Comerciales Registradas</h3>
-        <!--<div class="card-body">
-          <div class="row">
-            <div class="col-md-4">
-              <button class="btn btn-primary" (click)="obtenerAsesoresRegistrados()">
-                <i-feather name='search' class="edit-user"></i-feather>
-              </button>
-            </div>
-          </div>
-        </div>-->
+        <h3 class="card-header">Billetera digital de asesoras</h3>
+
       </div>
       <div class="card">
         <div class="card-datatable table-responsive pt-0">
@@ -40,7 +32,7 @@
               <th>Fecha de nacimiento</th>
               <th>Género</th>
               <th>Estado</th>
-              <th>Accion</th>
+              <th>Movimientos</th>
             </tr>
             </thead>
 
@@ -56,8 +48,8 @@
               <td>{{ transaccion.gender }}</td>
               <td>{{ transaccion.estado }}</td>
               <td>
-                <a class="btn btn-primary" (click)="confirmarAsesor(transaccion,'Activo')">
-                  Confirmar Asesora
+                <a class="btn btn-primary" (click)="confirmarAsesor(transaccion,'Confirmado')">
+                  Movimientos
                 </a>
               </td>
             </tr>

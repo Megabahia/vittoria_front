@@ -15,11 +15,11 @@ import {SuperBaratoService} from "../../../../services/gsb/superbarato/super-bar
 import {AsesoresService} from "../../../../services/admin/asesores.service";
 
 @Component({
-  selector: 'app-gd-registros-asesores',
-  templateUrl: './gd_registros_asesores.component.html',
+  selector: 'app-gd_billetera_digital_asesores',
+  templateUrl: './gd_billetera_digital_asesores.component.html',
   providers: [DatePipe]
 })
-export class GdRegistrosAsesoresComponent implements OnInit, AfterViewInit {
+export class GdBilleteraDigitalAsesoresComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @Input() paises;
   public asesorForm: FormGroup;
@@ -124,7 +124,7 @@ export class GdRegistrosAsesoresComponent implements OnInit, AfterViewInit {
     this.asesorService.obtenerAsesoresRegistrados({
       page: this.page - 1,
       page_size: this.pageSize,
-      estado: 'Registrado',
+      estado: 'Activo',
       state: 1
     }).subscribe((info) => {
       this.collectionSize = info.cont;
@@ -133,14 +133,12 @@ export class GdRegistrosAsesoresComponent implements OnInit, AfterViewInit {
   }
 
   async confirmarAsesor(asesor, estado): Promise<void> {
-    if (confirm('Esta seguro de guardar los datos') === true) {
-      this.asesorService.confirmarAsesor(asesor.id, estado).subscribe(value => {
-        this.toaster.open('Asesor confirmado.', {type: 'success'});
-        this.obtenerAsesoresRegistrados();
-      }, error => {
-        this.toaster.open(error, {type: 'danger'});
-      });
-    }
+    this.asesorService.confirmarAsesor(asesor.id, estado).subscribe(value => {
+      this.toaster.open('Asesor confirmado.', {type: 'success'});
+      this.obtenerAsesoresRegistrados();
+    }, error => {
+      this.toaster.open(error, {type: 'danger'});
+    });
   }
 
   obtenerFechaActual(): Date {
