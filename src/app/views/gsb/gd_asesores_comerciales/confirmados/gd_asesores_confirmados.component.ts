@@ -122,7 +122,8 @@ export class GdAsesoresConfirmadosComponent implements OnInit, AfterViewInit {
             page_size: this.pageSize,
         }).subscribe((info) => {
             this.collectionSize = info.cont;
-            this.listaAsesores = info.info.filter(asesor => asesor.estado !== 'Registrado');
+            //this.listaAsesores = info.info.filter(asesor => asesor.estado !== 'Registrado');
+            this.listaAsesores = info.info;
         });
     }
 
