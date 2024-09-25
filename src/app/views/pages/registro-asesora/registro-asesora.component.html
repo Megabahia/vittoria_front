@@ -1,0 +1,164 @@
+<div class="card">
+  <div class="card-header bg-primary d-flex justify-content-center align-items-center">
+    <img src="assets/images/ico/apple-icon-120.png" width="50">
+    <h3 class="font-weight-bold ml-2">Bienvenido/a a VITTORIA</h3>
+  </div>
+  <div class="card-body">
+    <h2 class="text-center mt-2 mx-2 text-primary">Asesoras comerciales</h2>
+    <p class="text-center text-warning">Ingrese los campos para el registro de la asesora comercial</p>
+    <div class="container d-flex justify-content-center mt-2">
+      <div class="card border-primary">
+        <form [formGroup]="asesorForm">
+          <div class="row p-2">
+            <div class="col-md-4 col-12">
+              <label>Nombres</label>
+              <input class="form-control" type="text" formControlName="nombres"
+              >
+              <div *ngIf="notaAsesorForm.nombres.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="notaAsesorForm.nombres.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label>Apellidos</label>
+              <input class="form-control" type="text" formControlName="apellidos"
+              >
+              <div *ngIf="notaAsesorForm.apellidos.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="notaAsesorForm.apellidos.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label>Correo electrónico</label>
+              <input class="form-control" type="text" formControlName="email"
+              >
+              <div *ngIf="notaAsesorForm.email.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="notaAsesorForm.email.errors.required">
+                  Requerido
+                </div>
+                <div *ngIf="notaAsesorForm.email.errors.email">
+                  Correo Inválido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label>País</label>
+              <input class="form-control" type="text" disabled formControlName="pais"
+              >
+              <div *ngIf="notaAsesorForm.pais.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="notaAsesorForm.pais.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label>Provincia</label>
+              <select class="form-control" name="provinciaAsesor"
+                      (change)="obtenerCiudad()" id="provinciaAsesor" formControlName="provincia">
+                <option value="" selected>- Seleccione -</option>
+                <option value="{{pais.nombre}}" *ngFor="let pais of provinciaOpciones">
+                  {{ pais.nombre }}
+                </option>
+              </select>
+              <div *ngIf="notaAsesorForm.provincia.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="notaAsesorForm.provincia.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label>Ciudad</label>
+              <select class="form-control" name="ciudadAsesora"
+                      id="ciudadAsesora" formControlName="ciudad">
+                <option value="" selected>- Seleccione -</option>
+                <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
+                  {{ ciudad.nombre }}
+                </option>
+              </select>
+              <div *ngIf="notaAsesorForm.ciudad.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="notaAsesorForm.ciudad.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label>Número de Celular</label>
+              <input class="form-control" type="text" formControlName="whatsapp"
+              >
+              <div *ngIf="notaAsesorForm.whatsapp.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="notaAsesorForm.whatsapp.errors.required">
+                  Requerido
+                </div>
+                <div *ngIf="notaAsesorForm.whatsapp.errors.minlength">
+                  Ingrese minimo 10 digitos
+                </div>
+                <div *ngIf="notaAsesorForm.whatsapp.errors.maxlength">
+                  Ingrese maximo 10 digitos
+                </div>
+                <div *ngIf="notaAsesorForm.whatsapp.errors.pattern">
+                  Ingrese solo numeros
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label>Fecha de nacimiento</label>
+              <input class="form-control" type="date" formControlName="fecha_nacimiento"
+              >
+              <div *ngIf="notaAsesorForm.fecha_nacimiento.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="notaAsesorForm.fecha_nacimiento.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <label>Género</label>
+              <select class="form-control" name="generoAsesora"
+                      id="generoAsesora" formControlName="gender">
+                <option value="" selected>- Seleccione -</option>
+                <option value="{{genero.nombre}}" *ngFor="let genero of generos">
+                  {{ genero.nombre }}
+                </option>
+              </select>
+              <div *ngIf="notaAsesorForm.gender.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="notaAsesorForm.gender.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row d-flex justify-content-center">
+            <div class="form-group">
+              <ngx-recaptcha2 [(ngModel)]="captcha" [ngModelOptions]="{standalone: true}"
+                              [siteKey]="siteKey" (success)="captchaValidado($event) ">
+              </ngx-recaptcha2>
+              <div *ngIf="submitted && !captcha" style="display: block;" class="invalid-feedback">
+                <div>Captcha requerido</div>
+              </div>
+            </div>
+          </div>
+          <div class="row d-flex justify-content-end">
+            <div class="col-md-1 col-12 my-2">
+              <button class="btn btn-light" (click)="irInicio()">Inicio
+              </button>
+            </div>
+            <div class=" col-md-2 col-12 my-2">
+              <button class="btn btn-primary text-primary" (click)="guardarAsesor()">Guardar
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

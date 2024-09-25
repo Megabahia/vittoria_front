@@ -1,0 +1,192 @@
+<div class="app-content content ">
+  <div class="content-wrapper">
+    <div class="content-body">
+      <div class="card">
+        <h3 class="card-header">Asesoras Comerciales Confirmadas</h3>
+        <!--<div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <button class="btn btn-primary" (click)="obtenerAsesoresRegistrados()">
+                <i-feather name='search' class="edit-user"></i-feather>
+              </button>
+            </div>
+          </div>
+        </div>-->
+      </div>
+      <div class="card">
+        <div class="card-datatable table-responsive pt-0">
+          <div class="row m-75">
+            <div class="col-lg-12 col-xl-6">
+              <label>Mostrar</label>
+              <select class="form-control-sm" [(ngModel)]="pageSize"
+                      (change)="obtenerAsesoresRegistrados()">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+
+            </div>
+          </div>
+          <table class="user-list-table table">
+            <thead class="thead-light">
+            <tr>
+              <th>Fecha de registro</th>
+              <th>Nombres</th>
+              <th>Apellidos</th>
+              <th>Correo electrónico</th>
+              <th>Localidad</th>
+              <th>Teléfono</th>
+              <th>Fecha de nacimiento</th>
+              <th>Género</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+              <th>Cargar Datos cuenta bancaria</th>
+              <th>Cargar saldo</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let transaccion  of listaAsesores; let i = index">
+              <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
+              <td>{{ transaccion.nombres }}</td>
+              <td>{{ transaccion.apellidos }}</td>
+              <td>{{ transaccion.email }}</td>
+              <td>{{ transaccion.pais }}, {{ transaccion.provincia }}, {{ transaccion.ciudad }}</td>
+              <td>{{ transaccion.whatsapp }}</td>
+              <td>{{ transaccion.fecha_nacimiento | date: 'dd-MM-yyyy' }}</td>
+              <td>{{ transaccion.gender }}</td>
+              <td [style]="{color: transaccion.estado === 'Activo' ? 'green' : 'red'}">{{ transaccion.estado }}</td>
+              <td>
+                <a class="btn btn-success mb-1 w-100"
+                   (click)="activarDesactivarAsesor('activar', transaccion,'Activo')"
+                   *ngIf="transaccion.estado === 'Inactivo'; else botonDesctivar">
+                  Activar
+                </a>
+                <ng-template #botonDesctivar>
+                  <a class="btn btn-danger mb-1 w-100"
+                     (click)="activarDesactivarAsesor('desactivar', transaccion,'Inactivo')">
+                    Desactivar
+                  </a>
+                </ng-template>
+              </td>
+              <td>
+                <a class="btn btn-primary mb-1 w-100"
+                   (click)="abrirModalCuentaBancaria(datosCuentaBancaria, transaccion)"
+                   *ngIf="transaccion.state===1;else infoBanco">
+                  Datos Cuenta Bancaria
+                </a>
+                <ng-template #infoBanco>
+                  <label>Para cargar los datos de banco, el asesor debe estar activo</label>
+                </ng-template>
+              </td>
+              <td>
+                <div>
+                  <input type="text" class="form-control" placeholder="00.00" [(ngModel)]="transaccion.saldo_asesor">
+                  <a class="btn btn-primary text-center pb-0"
+                     (click)="actualizarSaldoAsesor(transaccion.id, transaccion.saldo_asesor)">
+                    <i-feather name="check"></i-feather>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
+                        [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+
+      </div>
+    </div>
+    <ng-template #datosCuentaBancaria let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title">Carga de datos bancarios</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-content">
+
+        <form [formGroup]="asesorBancoForm">
+          <div class="card-body invoice-padding">
+            <div class="row">
+              <div class="col-12">
+                <label>Banco</label>
+                <input class="form-control" type="text" formControlName="nombre_banco">
+                <div *ngIf="notaAsesorBancoForm.nombre_banco.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="notaAsesorBancoForm.nombre_banco.errors.required">
+                    Requerido
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 my-1">
+                <label>Número de cuenta</label>
+                <input class="form-control" type="text" formControlName="numero_cuenta">
+                <div *ngIf="notaAsesorBancoForm.numero_cuenta.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="notaAsesorBancoForm.numero_cuenta.errors.required">
+                    Requerido
+                  </div>
+                  <div *ngIf="notaAsesorBancoForm.numero_cuenta.errors.maxlength">
+                    Mínimo 13 caracteres
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <label>Tipo de cuenta</label>
+                <input class="form-control" type="text" formControlName="tipo_cuenta">
+                <div *ngIf="notaAsesorBancoForm.tipo_cuenta.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="notaAsesorBancoForm.tipo_cuenta.errors.required">
+                    Requerido
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 my-1">
+                <label>Numero de Identificación</label>
+                <input class="form-control" type="text" formControlName="identificacion">
+                <div *ngIf="notaAsesorBancoForm.identificacion.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="notaAsesorBancoForm.identificacion.errors.required">
+                    Requerido
+                  </div>
+                  <div *ngIf="notaAsesorBancoForm.identificacion.errors.pattern">
+                    Ingrese solo numeros
+                  </div>
+                  <div *ngIf="notaAsesorBancoForm.identificacion.errors.identificacionInvalid">
+                    Identificacion no valida
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <label>Ver el archivo cargado. <a href="{{ asesorBancoForm.value.archivoCedula }}" target="_blank"
+                                                  *ngIf="asesorBancoForm.value.archivoCedula">Aquí</a></label>
+              </div>
+              <div class="col-12">
+                <label>Cédula de la asesora</label>
+                <input class="form-control-file" type="file" (change)="onFileSelected($event)">
+                <div *ngIf="notaAsesorBancoForm.archivoCedula.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="notaAsesorBancoForm.archivoCedula.errors.required">
+                    Requerido
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-secondary"
+                (click)="modal.dismiss('Cross click')">Cerrar
+        </button>
+        <button class="btn btn-primary mx-1" (click)="actualizar()"
+        >Guardar datos
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+
