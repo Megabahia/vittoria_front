@@ -88,9 +88,7 @@ export class RegistroAsesoraComponent implements OnInit {
         this.toaster.open('Registro incompleto', {type: 'danger'});
         return;
       }
-
       this.asesorForm.get('fecha_nacimiento').setValue(this.transforarFechaNacimiento(this.asesorForm.value.fecha_nacimiento))
-
       this.asesorService.insertarAsesor(this.asesorForm.value).subscribe((info) => {
         this.toaster.open('Asesora registrada', {type: 'success'});
       }, error => this.toaster.open(error, {type: 'danger'}));
