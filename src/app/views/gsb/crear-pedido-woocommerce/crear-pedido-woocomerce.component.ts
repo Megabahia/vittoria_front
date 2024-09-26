@@ -198,7 +198,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       });
     } else {
       this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.page_size, 'METODO PAGO', '').subscribe((result) => {
-        this.listaMetodoPago = result.data.filter(metodo => metodo.nombre !== 'Pago Contra Entrega a Nivel Nacional por Servientrega');
+        this.listaMetodoPago = result.data.filter(metodo => metodo.nombre !== 'Retiro en local' && metodo.nombre !== 'Previo Pago Transporte Interprovincial');
       });
     }
 

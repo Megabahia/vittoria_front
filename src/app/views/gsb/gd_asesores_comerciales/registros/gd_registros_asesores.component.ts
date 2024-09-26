@@ -13,6 +13,7 @@ import {Toaster} from 'ngx-toast-notifications';
 import {ValidacionesPropias} from "../../../../utils/customer.validators";
 import {SuperBaratoService} from "../../../../services/gsb/superbarato/super-barato.service";
 import {AsesoresService} from "../../../../services/admin/asesores.service";
+import {GdParamService} from "../../../../services/gsb/param/param.service";
 
 @Component({
   selector: 'app-gd-registros-asesores',
@@ -58,6 +59,7 @@ export class GdRegistrosAsesoresComponent implements OnInit, AfterViewInit {
   canalSeleccionado = '';
   listaCanalesProducto;
   formasPago = [];
+  idAsesor = '';
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -69,7 +71,7 @@ export class GdRegistrosAsesoresComponent implements OnInit, AfterViewInit {
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
   canalPrincipal = '';
-
+  listaBancos;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -95,17 +97,9 @@ export class GdRegistrosAsesoresComponent implements OnInit, AfterViewInit {
 
   iniciarAsesor(): void {
     this.asesorForm = this.formBuilder.group({
-      nombres: ['', [Validators.required]],
-      apellidos: ['', [Validators.required]],
-      created_at: [this.obtenerFechaActual(), [Validators.required]],
+      id: [''],
       estado: ['Activo'],
-      fecha_nacimiento: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      pais: [this.pais, [Validators.required]],
-      provincia: ['', [Validators.required]],
-      ciudad: ['', [Validators.required]],
-      whatsapp: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
-      gender: ['', [Validators.required]]
+      observaciones: ['', [Validators.required]],
     });
   }
 
@@ -124,7 +118,7 @@ export class GdRegistrosAsesoresComponent implements OnInit, AfterViewInit {
     this.asesorService.obtenerAsesoresRegistrados({
       page: this.page - 1,
       page_size: this.pageSize,
-      estado: 'Registrado',
+      estado: ['Registrado'],
       state: 1
     }).subscribe((info) => {
       this.collectionSize = info.cont;
@@ -132,15 +126,22 @@ export class GdRegistrosAsesoresComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async confirmarAsesor(asesor, estado): Promise<void> {
+  async confirmarAsesor(): Promise<void> {
     if (confirm('Esta seguro de guardar los datos') === true) {
-      this.asesorService.confirmarAsesor(asesor.id, estado).subscribe(value => {
+
+      this.asesorForm.get('id').setValue(this.idAsesor);
+      this.asesorService.confirmarAsesor(this.asesorForm.value).subscribe(value => {
         this.toaster.open('Asesor confirmado.', {type: 'success'});
         this.obtenerAsesoresRegistrados();
       }, error => {
         this.toaster.open(error, {type: 'danger'});
       });
     }
+  }
+  abrirModalConfirmar(modal, transaccion){
+    this.modalService.open(modal, {size: 'md', backdrop: 'static'});
+    this.idAsesor = transaccion.id;
+    this.iniciarAsesor();
   }
 
   obtenerFechaActual(): Date {

@@ -7,11 +7,11 @@ import {AsesoresService} from "../../../services/admin/asesores.service";
 import {Toaster} from "ngx-toast-notifications";
 
 @Component({
-  selector: 'app-registro-asesora',
-  templateUrl: './registro-asesora.component.html',
-  styleUrls: ['./registro-asesora.component.css']
+  selector: 'app-registro-asesores',
+  templateUrl: './registro-asesores.component.html',
+  styleUrls: ['./registro-asesores.component.css']
 })
-export class RegistroAsesoraComponent implements OnInit {
+export class RegistroAsesoresComponent implements OnInit {
 
   public asesorForm: FormGroup;
 
@@ -22,6 +22,7 @@ export class RegistroAsesoraComponent implements OnInit {
   captcha: boolean;
   siteKey: string;
   submitted = false;
+  mostrarContenidoPantalla = true;
   generos = [
     {
       nombre: 'Masculino'
@@ -85,18 +86,22 @@ export class RegistroAsesoraComponent implements OnInit {
     this.submitted = true;
     if (this.captcha) {
       if (this.asesorForm.invalid) {
-        this.toaster.open('Registro incompleto', {type: 'danger'});
+        this.toaster.open('Completrar los campos', {type: 'danger'});
         return;
       }
-      this.asesorForm.get('fecha_nacimiento').setValue(this.transforarFechaNacimiento(this.asesorForm.value.fecha_nacimiento))
+      this.asesorForm.get('fecha_nacimiento').setValue(this.transforarFechaNacimiento(this.asesorForm.value.fecha_nacimiento));
+
       this.asesorService.insertarAsesor(this.asesorForm.value).subscribe((info) => {
-        this.toaster.open('Asesora registrada', {type: 'success'});
-      }, error => this.toaster.open(error, {type: 'danger'}));
+        this.toaster.open('Asesor/a registrado/a', {type: 'success'});
+        this.mostrarContenidoPantalla = false;
+      }, error => this.toaster.open('El correo ya existe', {type: 'danger'}));
     }
   }
 
   irInicio() {
-    window.open('#/admin/management');
+    //window.open('#/pages/registro/asesores');
+    this.mostrarContenidoPantalla = true;
+    this.iniciarAsesor();
   }
 
   obtenerProvincias(): void {
@@ -118,5 +123,21 @@ export class RegistroAsesoraComponent implements OnInit {
 
   transforarFechaNacimiento(fechaSeleccionada): Date {
     return new Date(fechaSeleccionada);
+  }
+
+  validarEdad(): void {
+    const hoy = new Date();
+    const fechaNacimiento = new Date(this.asesorForm.value.fecha_nacimiento);
+    let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+    const mes = hoy.getMonth() - fechaNacimiento.getMonth();
+
+    if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+      edad--;
+    }
+
+    if (edad < 18) {
+      this.toaster.open('Debe tener o ser mayor a 18 años', {type: 'danger'});
+      this.asesorForm.get('fecha_nacimiento').setValue('');
+    }
   }
 }

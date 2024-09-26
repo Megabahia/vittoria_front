@@ -124,7 +124,7 @@ export class GdBilleteraDigitalAsesoresComponent implements OnInit, AfterViewIni
     this.asesorService.obtenerAsesoresRegistrados({
       page: this.page - 1,
       page_size: this.pageSize,
-      estado: 'Activo',
+      estado: ['Activo'],
       state: 1
     }).subscribe((info) => {
       this.collectionSize = info.cont;
@@ -132,14 +132,14 @@ export class GdBilleteraDigitalAsesoresComponent implements OnInit, AfterViewIni
     });
   }
 
-  async confirmarAsesor(asesor, estado): Promise<void> {
+  /*async confirmarAsesor(asesor, estado): Promise<void> {
     this.asesorService.confirmarAsesor(asesor.id, estado).subscribe(value => {
       this.toaster.open('Asesor confirmado.', {type: 'success'});
       this.obtenerAsesoresRegistrados();
     }, error => {
       this.toaster.open(error, {type: 'danger'});
     });
-  }
+  }*/
 
   obtenerFechaActual(): Date {
     const fechaActual = new Date();

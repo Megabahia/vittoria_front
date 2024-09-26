@@ -25,9 +25,9 @@ export class AsesoresService {
     return this.http.get<any>(`${apiUrl}/mdm/asesores/listOne/${id}`);
   }
 
-  confirmarAsesor(id, nuevoEstado) {
-    const payload = {estado: nuevoEstado};
-    return this.http.post<any>(`${apiUrl}/mdm/asesores/update/status/${id}`, payload);
+  confirmarAsesor(datos) {
+    //const payload = {estado: nuevoEstado};
+    return this.http.post<any>(`${apiUrl}/mdm/asesores/update/status/${datos.id}`, datos);
   }
 
   activarDesactivarAsesor(id, nuevoEstado, status) {

@@ -4,7 +4,7 @@ import {ProductosComponent} from './productos/productos.component';
 import {CalculadoraComponent} from './calculadora/calculadora.component';
 import {PedidoWoocomerceComponent} from './pedido-woocomerce/pedido-woocomerce.component';
 import {ConsultaProductosComponent} from './consulta-productos/consulta-productos.component';
-import {RegistroAsesoraComponent} from './registro-asesora/registro-asesora.component';
+import {RegistroAsesoresComponent} from './registro-asesores/registro-asesores.component';
 
 const routes: Routes = [
   {
@@ -27,8 +27,8 @@ const routes: Routes = [
     component: ConsultaProductosComponent,
   },
   {
-    path: 'registro/asesora',
-    component: RegistroAsesoraComponent,
+    path: 'registro/asesores',
+    component: RegistroAsesoresComponent,
   },
 ];
 

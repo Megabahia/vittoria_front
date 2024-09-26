@@ -8,7 +8,7 @@ export const environment = {
   apiUrlFront: 'https://vittoria-test.netlify.app',
   apiUrlServientrega: 'https://181.39.87.158:8021',
   //apiUrl: 'http://127.0.0.1:8000',
- // apiUrlFront: 'http://localhost:4200',
+  //apiUrlFront: 'http://localhost:4200',
   setKey: '6Le9XCgpAAAAAGLvVLmTUsLr057fNVB6J1-ejMum',
   roles: {
     rol: {
