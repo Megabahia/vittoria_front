@@ -58,7 +58,7 @@ export class SignInComponent implements OnInit {
             const baseUrl = environment.apiUrlFront;
 
             //this.router.navigate(['#/gsb/pedido_woocommerce/crear']);
-            window.location.href = `${baseUrl}/#/gsb/pedido_woocommerce/crear`;
+            window.location.href = `${baseUrl}/#/gd/pedido_woocommerce/crear`;
             //window.location.reload();
           } else {
             window.location.href = '';
