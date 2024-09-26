@@ -2,16 +2,12 @@ import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core'
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {Color, Label} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
-import {PedidosService} from '../../../../services/mp/pedidos/pedidos.service';
-import {ParamService} from '../../../../services/mp/param/param.service';
 import {ParamService as ParamServiceAdm} from '../../../../services/admin/param.service';
 
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
-import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
 import {ValidacionesPropias} from '../../../../utils/customer.validators';
-import {SuperBaratoService} from '../../../../services/gsb/superbarato/super-barato.service';
 import {AsesoresService} from '../../../../services/admin/asesores.service';
 
 @Component({
@@ -29,7 +25,6 @@ export class GdAsesoresConfirmadosComponent implements OnInit, AfterViewInit {
     page = 1;
     pageSize = 3;
     collectionSize;
-    listaSuperBarato;
     inicio = new Date();
     fin = new Date();
     transaccion: any;
@@ -59,7 +54,6 @@ export class GdAsesoresConfirmadosComponent implements OnInit, AfterViewInit {
     listaCanalesProducto;
     formasPago = [];
     idAsesor;
-    saldoAsesora;
     public barChartData: ChartDataSets[] = [];
     public barChartColors: Color[] = [{
         backgroundColor: '#84D0FF'
@@ -122,8 +116,8 @@ export class GdAsesoresConfirmadosComponent implements OnInit, AfterViewInit {
             page_size: this.pageSize,
         }).subscribe((info) => {
             this.collectionSize = info.cont;
-            //this.listaAsesores = info.info.filter(asesor => asesor.estado !== 'Registrado');
-            this.listaAsesores = info.info;
+          this.listaAsesores = info.info.filter(asesor => asesor.estado !== 'Registrado');
+            //this.listaAsesores = info.info;
         });
     }
 
