@@ -55,6 +55,8 @@ export class GdAsesoresConfirmadosComponent implements OnInit, AfterViewInit {
   listaCanalesProducto;
   formasPago = [];
   idAsesor;
+
+  listaCostoInicial;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -82,6 +84,9 @@ export class GdAsesoresConfirmadosComponent implements OnInit, AfterViewInit {
     });
     this.paramService.obtenerListaPadresGd('TIPO CUENTA').subscribe((result) => {
       this.listaTipoCuenta = result;
+    });
+    this.paramService.obtenerListaPadresGd('SALDO INICIAL\t').subscribe((result) => {
+      this.listaCostoInicial = parseFloat(result);
     });
   }
 

@@ -88,7 +88,13 @@
               </td>
               <td>
                 <div>
-                  <input type="text" class="form-control" placeholder="00.00" [(ngModel)]="transaccion.saldo_asesor">
+                  <select class="form-control" [(ngModel)]="transaccion.saldo_asesor">
+                    <option value="">- Seleccione -</option>
+                    <option [value]="costoInicial.valor" *ngFor="let costoInicial of listaCostoInicial">
+                      {{ costoInicial.valor | currency}}
+                    </option>
+                  </select>
+                  <!--<input type="text" class="form-control" placeholder="00.00" >-->
                   <a class="btn btn-primary text-center pb-0"
                      (click)="actualizarSaldoAsesor(transaccion.id, transaccion.saldo_asesor)">
                     <i-feather name="check"></i-feather>

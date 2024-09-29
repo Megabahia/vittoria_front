@@ -429,13 +429,29 @@
                   <span class="menu-item text-truncate" data-i18n="List">Configurar Asesor@s Confirmados</span>
                 </a>
               </li>
-              <li class="nav-item">
-                <a class="d-flex align-items-center" [routerLink]="['gd/asesor/list/billetera/digital']" data-toggle="tooltip"
-                   data-placement="auto" title="Billetera digital de Asesor@s">
-                  <i data-feather="circle"></i>
-                  <span class="menu-item text-truncate" data-i18n="List">Billetera digital de Asesor@s</span>
-                </a>
+              <li class="nav-item has-sub ng-star-inserted">
+                <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
+                   title="Pedidos por Canal">
+                  <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                                     data-i18n="List">Billetera digital</span></a>
+                <ul class="menu-content">
+                  <li class="nav-item">
+                    <a class="d-flex align-items-center" data-toggle="tooltip"
+                       data-placement="auto" title="Cargar saldo billetera digital">
+                      <i data-feather="circle"></i>
+                      <span class="menu-item text-truncate" data-i18n="List">Cargar saldo billetera digital</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="d-flex align-items-center" data-toggle="tooltip"
+                       data-placement="auto" title="Movimientos billetera digital">
+                      <i data-feather="circle"></i>
+                      <span class="menu-item text-truncate" data-i18n="List">Movimientos billetera digital</span>
+                    </a>
+                  </li>
+                </ul>
               </li>
+
             </ul>
           </li>
         </ul>
