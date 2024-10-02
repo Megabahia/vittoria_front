@@ -708,8 +708,11 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   escogerCantidad(operacion, i, articulo): void {
     const cantidadControl = articulo;
     let cantidad = +articulo.get('cantidad').value;
-    cantidad = operacion === 'sumar' ? Math.min(cantidad + 1) : Math.max(cantidad - 1, 0);
+
+    cantidad = operacion === 'sumar' ? Math.min(cantidad + 1, 3) : Math.max(cantidad - 1, 1);
+
     cantidadControl.get('cantidad').setValue(cantidad);
+
     const total = +new Decimal(cantidadControl.get('valorUnitario').value).mul(cantidad).toFixed(2).toString();
     cantidadControl.get('precio').setValue(total);
     this.notaPedido.updateValueAndValidity();
@@ -722,7 +725,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       const data = {
         prefijo: productoWoocomerce.tienda_producto,
         codigoBarras: productoWoocomerce.sku_del_producto,
-        state: 1,
+        estado: 'Activo',
         cantidad: productoWoocomerce.cantidad_en_el_carrito
       };
       this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {

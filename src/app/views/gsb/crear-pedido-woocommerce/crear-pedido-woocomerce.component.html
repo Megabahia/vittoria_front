@@ -59,14 +59,14 @@
                                      stroke-linejoin="round" class="feather feather-minus">
                                   <line x1="5" y1="12" x2="19" y2="12"></line>
                                 </svg><!----><!----></button>
-                              <input type="number" pattern="\d*" maxlength="4"
+                              <input type="number" pattern="\d*" maxlength="1"
                                      class="form-control ng-untouched ng-pristine ng-valid"
-                                     step="1" min="1"
-                                     max="10"
+                                     step="1"
+                                     min="1"
+                                     max="3"
                                      disabled
                                      formControlName="cantidad"
                               >
-
                               <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-up"
                                       (click)="escogerCantidad('sumar', i, articulo)"
                               >
