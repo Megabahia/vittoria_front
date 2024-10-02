@@ -2,17 +2,17 @@ import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core'
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {Color, Label} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
-import {PedidosService} from '../../../../services/mp/pedidos/pedidos.service';
-import {ParamService} from '../../../../services/mp/param/param.service';
-import {ParamService as ParamServiceAdm} from '../../../../services/admin/param.service';
+import {PedidosService} from '../../../../../services/mp/pedidos/pedidos.service';
+import {ParamService} from '../../../../../services/mp/param/param.service';
+import {ParamService as ParamServiceAdm} from '../../../../../services/admin/param.service';
 
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
-import {ProductosService} from '../../../../services/mdp/productos/productos.service';
+import {ProductosService} from '../../../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
-import {ValidacionesPropias} from "../../../../utils/customer.validators";
-import {SuperBaratoService} from "../../../../services/gsb/superbarato/super-barato.service";
-import {AsesoresService} from "../../../../services/admin/asesores.service";
+import {ValidacionesPropias} from "../../../../../utils/customer.validators";
+import {SuperBaratoService} from "../../../../../services/gsb/superbarato/super-barato.service";
+import {AsesoresService} from "../../../../../services/admin/asesores.service";
 
 @Component({
   selector: 'app-gd_billetera_digital_asesores',
@@ -21,6 +21,7 @@ import {AsesoresService} from "../../../../services/admin/asesores.service";
 })
 export class GdBilleteraDigitalAsesoresComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
+  @ViewChild(NgbPagination) paginatorMovimientos: NgbPagination;
   @Input() paises;
   public asesorForm: FormGroup;
 
@@ -29,6 +30,7 @@ export class GdBilleteraDigitalAsesoresComponent implements OnInit, AfterViewIni
   page = 1;
   pageSize = 3;
   collectionSize;
+  collectionSizeMovimientos;
   listaSuperBarato;
   inicio = new Date();
   fin = new Date();
@@ -69,7 +71,8 @@ export class GdBilleteraDigitalAsesoresComponent implements OnInit, AfterViewIni
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
   canalPrincipal = '';
-
+  listaMovimientosAsesor;
+  asesorId;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -114,6 +117,11 @@ export class GdBilleteraDigitalAsesoresComponent implements OnInit, AfterViewIni
       this.obtenerAsesoresRegistrados();
     });
   }
+  iniciarPaginadorMovimientos(): void {
+    this.paginatorMovimientos.pageChange.subscribe(() => {
+      this.obtenerMovimientosAsesor();
+    });
+  }
 
 
   get notaAsesorForm() {
@@ -130,6 +138,22 @@ export class GdBilleteraDigitalAsesoresComponent implements OnInit, AfterViewIni
       this.collectionSize = info.cont;
       this.listaAsesores = info.info;
     });
+  }
+  obtenerMovimientosAsesor(): void {
+    this.asesorService.obtenerMovimientosPorAsesor({
+      page: this.page - 1,
+      page_size: this.pageSize,
+      asesor: this.asesorId
+    }).subscribe((info) => {
+      this.collectionSizeMovimientos = info.cont;
+      this.listaMovimientosAsesor = info.allData;
+    });
+  }
+
+  abrirMovimintos(modal, transaccion) {
+    this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
+    this.asesorId = transaccion;
+    this.obtenerMovimientosAsesor();
   }
 
   /*async confirmarAsesor(asesor, estado): Promise<void> {

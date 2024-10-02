@@ -48,7 +48,7 @@
               <td>{{ transaccion.gender }}</td>
               <td>{{ transaccion.estado }}</td>
               <td>
-                <a class="btn btn-primary" >
+                <a class="btn btn-primary" (click)="abrirMovimintos(movimientos, transaccion.id)">
                   Movimientos
                 </a>
               </td>
@@ -61,5 +61,57 @@
 
       </div>
     </div>
+
   </div>
 </div>
+<ng-template #movimientos let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Movimientos</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-content">
+    <div class="table-responsive">
+      <table class="user-list-table table">
+        <thead class="thead-light">
+        <tr>
+          <th>Fecha</th>
+          <th>Tipo de Movimiento</th>
+          <th>Observaciones</th>
+          <th>Comprobante</th>
+          <th>Número de transacción</th>
+          <th>Saldo</th>
+          <th>Descuento</th>
+          <th style="color: red">Saldo total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let transaccion  of listaMovimientosAsesor; let i = index">
+          <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
+          <td>{{ transaccion.tipo_movimiento }}</td>
+          <td>{{ transaccion.observaciones }}</td>
+          <td>
+            <a href="{{transaccion.archivo_comprobante}}" *ngIf="transaccion.archivo_comprobante" target="_blank">
+              <i-feather name="file-text" class="mr-25"></i-feather>
+            </a>
+          </td>
+          <td>{{ transaccion.numero_transaccion || '' }}</td>
+          <td>{{ transaccion.saldo_ingreso }}</td>
+          <td>{{ transaccion.saldo_egreso }}</td>
+          <td style="color: red">{{ transaccion.saldo_total }}</td>
+
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--<ngb-pagination #paginatorMovimientos [collectionSize]="collectionSizeMovimientos" [(page)]="page" [pageSize]="pageSize"
+                    [maxSize]="5" [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>-->
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-secondary"
+            (click)="modal.dismiss('Cross click')">Cerrar
+    </button>
+
+  </div>
+</ng-template>

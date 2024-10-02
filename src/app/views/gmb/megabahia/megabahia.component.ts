@@ -106,7 +106,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       this.parametroIva = parseFloat(result.info[0].valor);
     });
 
-    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'METODO PAGO', '').subscribe((result) => {
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'METODO PAGO', '', 'megabahia.megadescuento.com').subscribe((result) => {
       this.listaMetodoPago = result.data;
     });
 

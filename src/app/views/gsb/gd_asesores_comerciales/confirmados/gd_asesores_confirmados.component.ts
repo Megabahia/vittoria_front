@@ -55,6 +55,7 @@ export class GdAsesoresConfirmadosComponent implements OnInit, AfterViewInit {
   listaCanalesProducto;
   formasPago = [];
   idAsesor;
+  saldoInicial;
 
   listaCostoInicial;
   public barChartData: ChartDataSets[] = [];
@@ -85,8 +86,8 @@ export class GdAsesoresConfirmadosComponent implements OnInit, AfterViewInit {
     this.paramService.obtenerListaPadresGd('TIPO CUENTA').subscribe((result) => {
       this.listaTipoCuenta = result;
     });
-    this.paramService.obtenerListaPadresGd('SALDO INICIAL\t').subscribe((result) => {
-      this.listaCostoInicial = parseFloat(result);
+    this.paramService.obtenerListaPadresGd('SALDO INICIAL').subscribe((result) => {
+      this.listaCostoInicial = result;
     });
   }
 
@@ -191,15 +192,38 @@ export class GdAsesoresConfirmadosComponent implements OnInit, AfterViewInit {
   }
 
   async actualizarSaldoAsesor(id, saldo) {
-    if (saldo < 0 && saldo) {
-      this.toaster.open('Ingrese un valor mayor a 0', {type: 'warning'});
+    if (saldo === '' || !saldo) {
+      this.toaster.open('Seleccione un saldo inicial válido', {type: 'warning'});
       return;
     }
     if (confirm('Esta seguro de guardar los datos') === true) {
-      await this.asesorService.actualizarAsesor(id, {saldo_asesor: saldo}).subscribe((info) => {
+      await this.asesorService.actualizarAsesor(id, {saldo_asesor: parseFloat(saldo)}).subscribe((info) => {
         this.toaster.open('Saldo guardado correctamente', {type: 'success'});
         this.modalService.dismissAll();
         this.obtenerAsesoresRegistrados();
+      }, error => this.toaster.open(error, {type: 'danger'}));
+    }
+  }
+
+  guardarMovimientos(id, saldo): Promise<void> {
+
+    this.saldoInicial = saldo;
+
+    if (this.saldoInicial === '' || !this.saldoInicial) {
+      this.toaster.open('Seleccione un saldo inicial válido', {type: 'warning'});
+      return;
+    }
+    if (confirm('Esta seguro de guardar los datos') === true) {
+      this.asesorService.crearMovimiento({
+        tipo_movimiento: 'Saldo incial',
+        saldo_ingreso: parseFloat(this.saldoInicial),
+        created_at: this.obtenerFechaActual(),
+        observaciones: '',
+        asesor: id,
+        saldo_egreso: 0,
+        saldo_total: parseFloat(this.saldoInicial)
+      }).subscribe((info) => {
+        this.toaster.open('Datos guardados correctamente', {type: 'success'});
       }, error => this.toaster.open(error, {type: 'danger'}));
     }
   }
@@ -239,17 +263,9 @@ export class GdAsesoresConfirmadosComponent implements OnInit, AfterViewInit {
     }
   }
 
-
-  obtenerProvincias(): void {
-    this.paramServiceAdm.obtenerListaHijos(this.pais, 'PAIS').subscribe((info) => {
-      this.provinciaOpciones = info;
-    });
-  }
-
-  obtenerCiudad(): void {
-    this.paramServiceAdm.obtenerListaHijos(this.provincia, 'PROVINCIA').subscribe((info) => {
-      this.ciudadOpciones = info;
-    });
+  obtenerFechaActual(): Date {
+    const fechaActual = new Date();
+    return fechaActual;
   }
 
 }

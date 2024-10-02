@@ -31,8 +31,11 @@ import {GdRegistrosAsesoresComponent} from './gd_asesores_comerciales/registros/
 import {GdAsesoresConfirmadosComponent} from './gd_asesores_comerciales/confirmados/gd_asesores_confirmados.component';
 import {
   GdBilleteraDigitalAsesoresComponent
-} from './gd_asesores_comerciales/billetera_digital/gd_billetera_digital_asesores.component';
+} from './gd_asesores_comerciales/billetera_digital/movimientos/gd_billetera_digital_asesores.component';
 import {GdRegistroAsesoresComponent} from './gd_asesores_comerciales/registro_asesores/registro-asesores.component';
+import {
+  GdCargarSaldoBilleteraDigitalComponent
+} from "./gd_asesores_comerciales/billetera_digital/cargar-saldo/gd_cargar_saldo_billetera_digital.component";
 
 @NgModule({
   declarations: [
@@ -53,7 +56,8 @@ import {GdRegistroAsesoresComponent} from './gd_asesores_comerciales/registro_as
     GdRegistrosAsesoresComponent,
     GdAsesoresConfirmadosComponent,
     GdBilleteraDigitalAsesoresComponent,
-    GdRegistroAsesoresComponent
+    GdRegistroAsesoresComponent,
+    GdCargarSaldoBilleteraDigitalComponent
   ],
   exports: [
     GsbProductosListarComponent

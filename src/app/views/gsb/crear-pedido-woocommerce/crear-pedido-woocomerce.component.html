@@ -13,7 +13,8 @@
 <div *ngIf="mostrarContenidoPantalla">
 
   <form [formGroup]="notaPedido">
-    <div formArrayName="pedidos">
+    <a class="btn btn-primary m-2" *ngIf="mostrarBotonVolverCatalogo" href="https://superbarato.megadescuento.com">Volver a catálogo</a>
+    <div formArrayName="pedidos" *ngIf="!mostrarBotonVolverCatalogo">
       <div *ngFor="let tienda of notaPedido.get('pedidos')['controls']; let j = index;">
         <div class="card">
           <ng-container [formGroup]="tienda">
@@ -127,74 +128,15 @@
                 </ng-container>
               </div>
             </div>
-            <!--<div class="m-2" *ngIf="mostrarDatosEnvio">
-              <div class="card border border-warning bg-light-warning"
-                   *ngIf="tienda.controls.articulos.value.length !== 0">
-                <h5 class="pl-3 pt-2">DATOS DE ENVIO<label class="text-muted">(Datos
-                  obligatorios) <strong class="text-info">(Primero seleccione ciudad de destino en datos de
-                    facturación)</strong></label></h5>
-                <div class="row px-4 pb-2">
-                  <div class="col-md-3 col-12">
-                    <label for="envio">Costo de envio:</label>
-                    <select id="envio" class="form-control"
-                            (change)="onChangeCombo($event, j)">
-                      <option value="">- Selecciona un costo de envío -</option>
-                      <option
-                        *ngFor="let op of this.notaPedido.get('pedidos')['controls'][j]['controls'].couries.value"
-                        [value]="op.nombre">
-                        {{ op.nombre }}
-                      </option>
-                    </select>
-                    <div *ngIf="tienda.controls.precioEnvio.errors"
-                         class="invalid-feedback" style="display: block;">
-                      <div *ngIf="tienda.controls.precioEnvio.errors.required">
-                        Requerido
-                      </div>
-                      <div *ngIf="tienda.controls.precioEnvio.errors.min">
-                        Minimo 1
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-3 col-12">
-                    <label for="segundo">Forma de pago:</label>
-                    <select id="segundo" class="form-control"
-                            formControlName="formaPago" (change)="onSelectFormaPago($event)">
-                      <option value="" selected>- Seleccion forma de pago -</option>
-                      <option
-                        *ngFor="let op of this.notaPedido.get('pedidos')['controls'][j]['controls'].listaFormasPagos.value"
-                        [value]="op.nombre">{{ op.nombre }}
-                      </option>
-                    </select>
-                    <div *ngIf="this.notaPedido.get('pedidos')['controls'][j]['controls'].formasPagos.errors"
-                         class="invalid-feedback" style="display: block;">
-                      <div
-                        *ngIf="this.notaPedido.get('pedidos')['controls'][j]['controls'].formasPagos.errors.required">
-                        Requerido
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6 col-12">
-                    <div
-                      *ngIf="notaPedido.value.pedidos[j].formaPago === 'Transferencia'">
-                      <h6 class="text-uppercase">Datos de cuenta BANCO PICHINCHA<br>CUENTA:
-                        {{ this.notaPedido.get('pedidos')['controls'][j]['controls'].numeroCuenta.value }}
-                        <br>Nombre: {{ this.notaPedido.get('pedidos')['controls'][j]['controls'].nombreCuenta.value }}
-                        <br>
-                      </h6>
-                      <input class="form-control-file" type="file" (change)="onFileSelected($event)">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>-->
+
           </ng-container>
         </div>
       </div>
     </div>
-    <div class="card bg-light-warning">
+    <div class="card bg-light-warning" *ngIf="!mostrarBotonVolverCatalogo">
       <div class="row p-2">
         <div class="col-md-4 col-12">
-          <label>Método de envío</label>
+          <label>Forma de entrega del producto</label>
           <select class="form-control"
                   formControlName="metodoPago" (change)="onSelectChangePago($event)">
             <option value="" selected>- Seleccione metodo de envío-</option>
@@ -235,7 +177,7 @@
       </div>
 
     </div>
-    <div class="row d-flex justify-content-end">
+    <div class="row d-flex justify-content-end" *ngIf="!mostrarBotonVolverCatalogo">
       <div class="col-md-5 text-right">
         <div class="invoice-total-wrapper">
           <hr class="my-20"/>
@@ -267,7 +209,7 @@
       </div>
     </div>
   </form>
-  <div class="card">
+  <div class="card" *ngIf="!mostrarBotonVolverCatalogo">
     <div class="row p-2">
       <div class="col-md-3 col-12">
         <h5 class="text-danger">¿Es cliente nuevo?</h5>
@@ -324,7 +266,7 @@
     </div>
   </div>
 
-  <form [formGroup]="notaPedido">
+  <form [formGroup]="notaPedido" *ngIf="!mostrarBotonVolverCatalogo">
     <div class="card" *ngIf="mostrarContenido">
       <div formGroupName="facturacion">
         <h3 class="py-1 px-2 font-weight-bold bg-primary">Datos de facturación y entrega </h3>
@@ -435,9 +377,9 @@
           </div>
         </div>
         <hr/>
-        <h5 class="pl-3">DATOS DE DIRECCIÓN <label class="text-muted">(Datos
+        <h5 class="pl-3" *ngIf="mostrarDatosDireccion">DATOS DE DIRECCIÓN <label class="text-muted">(Datos
           obligatorios)</label></h5>
-        <div class="row px-4 pb-2">
+        <div class="row px-4 pb-2" *ngIf="mostrarDatosDireccion">
           <div class="col-md-3 col-12">
             <label>País</label>
             <input class="form-control" type="text"
@@ -593,7 +535,7 @@
       <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="generarPedido()"
               *ngIf="mostrarBotonEnviarGDP">Generar pedido
       </button>
-      <button (click)="irInicio()" class="btn btn-secondary my-2 mx-2 col-md-1 col-12">Inicio</button>
+      <!--<button (click)="irInicio()" class="btn btn-secondary my-2 mx-2 col-md-1 col-12">Inicio</button>-->
 
     </div>
   </form>
@@ -611,6 +553,6 @@
   </div>
   <div class="mt-4">
     <a href="https://superbarato.megadescuento.com" class="btn btn-primary m-1">Ir a la tienda</a>
-    <button (click)="irInicio()" class="btn btn-secondary">Inicio</button>
+    <!--<button (click)="irInicio()" class="btn btn-secondary">Inicio</button>-->
   </div>
 </div>

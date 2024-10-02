@@ -42,4 +42,13 @@ export class AsesoresService {
   actualizarAsesor(id, datos): Observable<any> {
     return this.http.post<any>(`${apiUrl}/mdm/asesores/update/${id}`, datos);
   }
+
+  //MOVIMIENTOS
+  crearMovimiento(datos): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/mdm/asesores/create/movimiento/`, datos);
+  }
+
+  obtenerMovimientosPorAsesor(datos): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/mdm/asesores/list/movimientos`, datos);
+  }
 }

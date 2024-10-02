@@ -393,7 +393,7 @@
             </a>
           </li>
           <li class="nav-item"
-              *ngIf="(usuario.usuario.idRol === 62 && usuario.usuario.canal === 'superbarato.megadescuento.com') || (usuario.usuario.idRol === 62 && usuario.usuario.canal === 'contraentrega.megadescuento.com') || usuario.usuario.idRol === 1">
+              *ngIf="(usuario.usuario.idRol === 62 && usuario.usuario.canal === 'superbarato.megadescuento.com') || (usuario.usuario.idRol === 62 && usuario.usuario.canal === 'contraentrega.megadescuento.com') || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 63">
             <a class="d-flex align-items-center" [routerLink]="['gd/pedido_woocommerce/crear']" data-toggle="tooltip"
                data-placement="auto" title="Generar Pedido Woocommerce">
               <i data-feather="circle"></i>
@@ -431,19 +431,19 @@
               </li>
               <li class="nav-item has-sub ng-star-inserted">
                 <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
-                   title="Pedidos por Canal">
+                   title="Billetera digital">
                   <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                      data-i18n="List">Billetera digital</span></a>
                 <ul class="menu-content">
                   <li class="nav-item">
-                    <a class="d-flex align-items-center" data-toggle="tooltip"
+                    <a class="d-flex align-items-center" data-toggle="tooltip" [routerLink]="['gd/asesor/billetera/digital/cargar_saldo']"
                        data-placement="auto" title="Cargar saldo billetera digital">
                       <i data-feather="circle"></i>
                       <span class="menu-item text-truncate" data-i18n="List">Cargar saldo billetera digital</span>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="d-flex align-items-center" data-toggle="tooltip"
+                    <a class="d-flex align-items-center" data-toggle="tooltip" [routerLink]="['gd/asesor/list/billetera/digital/movimientos']"
                        data-placement="auto" title="Movimientos billetera digital">
                       <i data-feather="circle"></i>
                       <span class="menu-item text-truncate" data-i18n="List">Movimientos billetera digital</span>
