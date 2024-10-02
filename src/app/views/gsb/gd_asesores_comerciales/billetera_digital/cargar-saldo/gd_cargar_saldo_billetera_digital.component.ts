@@ -2,35 +2,28 @@ import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core'
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {Color, Label} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
-import {PedidosService} from '../../../../services/mp/pedidos/pedidos.service';
-import {ParamService} from '../../../../services/mp/param/param.service';
-import {ParamService as ParamServiceAdm} from '../../../../services/admin/param.service';
 
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
-import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
-import {ValidacionesPropias} from "../../../../utils/customer.validators";
-import {SuperBaratoService} from "../../../../services/gsb/superbarato/super-barato.service";
-import {AsesoresService} from "../../../../services/admin/asesores.service";
-import {GdParamService} from "../../../../services/gsb/param/param.service";
+import {AsesoresService} from "../../../../../services/admin/asesores.service";
+import {GdParamService} from "../../../../../services/gsb/param/param.service";
 
 @Component({
-  selector: 'app-gd-registros-asesores',
-  templateUrl: './gd_registros_asesores.component.html',
+  selector: 'app-gd_cargar_saldo_billetera_digital',
+  templateUrl: './gd_cargar_saldo_billetera_digital.component.html',
   providers: [DatePipe]
 })
-export class GdRegistrosAsesoresComponent implements OnInit, AfterViewInit {
+export class GdCargarSaldoBilleteraDigitalComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @Input() paises;
-  public asesorForm: FormGroup;
+  public movimientoAsesorForm: FormGroup;
 
   listaAsesores;
   menu;
   page = 1;
   pageSize = 3;
   collectionSize;
-  listaSuperBarato;
   inicio = new Date();
   fin = new Date();
   transaccion: any;
@@ -59,7 +52,8 @@ export class GdRegistrosAsesoresComponent implements OnInit, AfterViewInit {
   canalSeleccionado = '';
   listaCanalesProducto;
   formasPago = [];
-  idAsesor = '';
+  idAsesor;
+  listaSaldo;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -71,15 +65,17 @@ export class GdRegistrosAsesoresComponent implements OnInit, AfterViewInit {
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
   canalPrincipal = '';
-  listaBancos;
+
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
     private toaster: Toaster,
     private asesorService: AsesoresService,
-    private paramServiceAdm: ParamServiceAdm,
+    private paramService: GdParamService,
   ) {
-
+    this.paramService.obtenerListaPadresGd('SALDO INICIAL').subscribe((result) => {
+      this.listaSaldo = result;
+    });
   }
 
   ngOnInit(): void {
@@ -95,11 +91,16 @@ export class GdRegistrosAsesoresComponent implements OnInit, AfterViewInit {
     this.iniciarPaginador();
   }
 
-  iniciarAsesor(): void {
-    this.asesorForm = this.formBuilder.group({
-      id: [''],
-      estado: ['Activo'],
+  iniciarMovimientoAsesor(): void {
+    this.movimientoAsesorForm = this.formBuilder.group({
+      tipo_movimiento: ['Carga de saldo', [Validators.required]],
+      saldo_ingreso: ['', [Validators.required]],
+      created_at: [this.obtenerFechaActual(), [Validators.required]],
       observaciones: ['', [Validators.required]],
+      archivo_comprobante: ['', [Validators.required]],
+      numero_transaccion: ['', [Validators.required]],
+      asesor: [this.idAsesor, [Validators.required]],
+      saldo_egreso: [0],
     });
   }
 
@@ -110,15 +111,15 @@ export class GdRegistrosAsesoresComponent implements OnInit, AfterViewInit {
   }
 
 
-  get notaAsesorForm() {
-    return this.asesorForm['controls'];
+  get notaMovimientoAsesorForm() {
+    return this.movimientoAsesorForm['controls'];
   }
 
   obtenerAsesoresRegistrados(): void {
     this.asesorService.obtenerAsesoresRegistrados({
       page: this.page - 1,
       page_size: this.pageSize,
-      estado: ['Registrado'],
+      estado: ['Activo'],
       state: 1
     }).subscribe((info) => {
       this.collectionSize = info.cont;
@@ -126,38 +127,45 @@ export class GdRegistrosAsesoresComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async confirmarAsesor(): Promise<void> {
-    if (confirm('Esta seguro de guardar los datos') === true) {
-
-      this.asesorForm.get('id').setValue(this.idAsesor);
-      this.asesorService.confirmarAsesor(this.asesorForm.value).subscribe(value => {
-        this.toaster.open('Asesor confirmado.', {type: 'success'});
-        this.obtenerAsesoresRegistrados();
-      }, error => {
-        this.toaster.open(error, {type: 'danger'});
-      });
-    }
-  }
-  abrirModalConfirmar(modal, transaccion){
+  abrirModalCargaSaldo(modal, transaccion) {
     this.modalService.open(modal, {size: 'md', backdrop: 'static'});
     this.idAsesor = transaccion.id;
-    this.iniciarAsesor();
+    this.iniciarMovimientoAsesor();
   }
+
 
   obtenerFechaActual(): Date {
     const fechaActual = new Date();
     return fechaActual;
   }
 
-  obtenerProvincias(): void {
-    this.paramServiceAdm.obtenerListaHijos(this.pais, 'PAIS').subscribe((info) => {
-      this.provinciaOpciones = info;
-    });
+  onFileSelected(event: any): void {
+    this.archivo.append('archivo_comprobante', event.target.files.item(0), event.target.files.item(0).name);
+    this.movimientoAsesorForm.get('archivo_comprobante').setValue(event.target.files.item(0).name);
   }
 
-  obtenerCiudad(): void {
-    this.paramServiceAdm.obtenerListaHijos(this.provincia, 'PROVINCIA').subscribe((info) => {
-      this.ciudadOpciones = info;
-    });
+  guardarMovimientos(): Promise<void> {
+
+    if (this.movimientoAsesorForm.invalid) {
+      this.toaster.open('Revise que los campos estén completos', {type: 'danger'});
+      return;
+    }
+
+    if (confirm('Esta seguro de guardar los datos') === true) {
+      const asesorFisicaValores: string[] = Object.values(this.movimientoAsesorForm.value);
+      const asesorFisicaLlaves: string[] = Object.keys(this.movimientoAsesorForm.value);
+      asesorFisicaLlaves.map((llaves, index) => {
+        if (asesorFisicaValores[index] && llaves !== 'archivo_comprobante') {
+          this.archivo.delete(llaves);
+          this.archivo.append(llaves, asesorFisicaValores[index]);
+        }
+      });
+
+      this.asesorService.crearMovimiento(this.archivo).subscribe((info) => {
+        this.toaster.open('Datos guardados correctamente', {type: 'success'});
+        this.modalService.dismissAll();
+        this.obtenerAsesoresRegistrados();
+      }, error => this.toaster.open(error, {type: 'danger'}));
+    }
   }
 }

@@ -323,7 +323,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async obtenerProducto(i): Promise<void> {
+  async obtenerProducto(i, canalProducto = ''): Promise<void> {
     if (this.canalSeleccionado === '') {
       this.toaster.open('Seleccione un canal y vuelva a buscar', {type: 'danger'});
       return;
@@ -332,7 +332,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
         //canalProducto: this.detallesArray.value[i].canal ? this.detallesArray.value[i].canal : this.canalSeleccionado,
-        canal: this.canalSeleccionado,
+        canal: canalProducto !== '' ? canalProducto : this.canalSeleccionado,
         //valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
       this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
@@ -365,7 +365,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
           this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
           window.alert('Existen inconsistencias con los precios de los productos.');
         }*/
-      });
+      }, error => this.toaster.open(error, {type: 'danger'}));
     });
   }
 
@@ -640,7 +640,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       this.dataPedidoWoocommerce.articulos.map((datos, index) => {
         this.agregarItem();
         this.detallesArray.controls[index].get('codigo').setValue(datos.codigo);
-        this.obtenerProducto(index);
+        this.obtenerProducto(index, datos.canal);
       });
       this.obtenerCiudad();
       //this.obtenerSector();

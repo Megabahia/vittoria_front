@@ -1,11 +1,11 @@
-<div class="card">
+<div class="card" *ngIf="mostrarContenidoPantalla">
   <div class="card-header bg-primary d-flex justify-content-center align-items-center">
     <img src="assets/images/ico/apple-icon-120.png" width="50">
     <h3 class="font-weight-bold ml-2">Bienvenido/a a VITTORIA</h3>
   </div>
   <div class="card-body">
-    <h2 class="text-center mt-2 mx-2 text-primary">Asesoras comerciales</h2>
-    <p class="text-center text-warning">Ingrese los campos para el registro de la asesora comercial</p>
+    <h2 class="text-center mt-2 mx-2 text-primary">Aliad@s comerciales</h2>
+    <p class="text-center text-warning">Ingrese sus datos para el registro</p>
     <div class="container d-flex justify-content-center mt-2">
       <div class="card border-primary">
         <form [formGroup]="asesorForm">
@@ -75,8 +75,8 @@
             </div>
             <div class="col-md-4 col-12">
               <label>Ciudad</label>
-              <select class="form-control" name="ciudadAsesora"
-                      id="ciudadAsesora" formControlName="ciudad">
+              <select class="form-control" name="ciudadAsesor"
+                      id="ciudadAsesor" formControlName="ciudad">
                 <option value="" selected>- Seleccione -</option>
                 <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
                   {{ ciudad.nombre }}
@@ -112,6 +112,7 @@
             <div class="col-md-4 col-12">
               <label>Fecha de nacimiento</label>
               <input class="form-control" type="date" formControlName="fecha_nacimiento"
+                     (change)="validarEdad()"
               >
               <div *ngIf="notaAsesorForm.fecha_nacimiento.errors"
                    class="invalid-feedback" style="display: block;">
@@ -122,8 +123,8 @@
             </div>
             <div class="col-md-4 col-12">
               <label>Género</label>
-              <select class="form-control" name="generoAsesora"
-                      id="generoAsesora" formControlName="gender">
+              <select class="form-control" name="generoAsesor"
+                      id="generoAsesor" formControlName="gender">
                 <option value="" selected>- Seleccione -</option>
                 <option value="{{genero.nombre}}" *ngFor="let genero of generos">
                   {{ genero.nombre }}
@@ -147,18 +148,32 @@
               </div>
             </div>
           </div>
-          <div class="row d-flex justify-content-end">
-            <div class="col-md-1 col-12 my-2">
+          <div class="row d-flex justify-content-center">
+            <!--<div class="col-md-1 col-12 my-2">
               <button class="btn btn-light" (click)="irInicio()">Inicio
               </button>
-            </div>
-            <div class=" col-md-2 col-12 my-2">
-              <button class="btn btn-primary text-primary" (click)="guardarAsesor()">Guardar
+            </div>-->
+            <div class="col-md-4 col-12 my-2">
+              <button class="btn btn-primary text-primary w-100" (click)="guardarAsesor()">Enviar
               </button>
             </div>
           </div>
         </form>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="container text-center p-5 mt-5 border shadow rounded" *ngIf="!mostrarContenidoPantalla">
+  <h2 class="mb-3">¡Gracias por su registro!</h2>
+  <p class="lead">Un@ de nuestr@s asesor@s se pondrá en contacto con usted a la brevedad posible.</p>
+  <div class="my-4">
+    <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Order Success" class="img-fluid"
+         style="width: 100px;">
+  </div>
+  <p>Valoramos mucho tu preferencia y trabajamos continuamente para ofrecerte lo mejor.</p>
+
+  <div class="mt-4">
+    <button (click)="irInicio()" class="btn btn-secondary">Cerrar</button>
   </div>
 </div>

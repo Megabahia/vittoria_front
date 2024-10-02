@@ -2,7 +2,7 @@
   <div class="content-wrapper">
     <div class="content-body">
       <div class="card">
-        <h3 class="card-header">Asesoras Comerciales Confirmadas</h3>
+        <h3 class="card-header">Asesor@s Comerciales Confirmadas</h3>
         <!--<div class="card-body">
           <div class="row">
             <div class="col-md-4">
@@ -41,8 +41,9 @@
               <th>Género</th>
               <th>Estado</th>
               <th>Acciones</th>
+              <th>Archivo Cédula</th>
               <th>Cargar Datos cuenta bancaria</th>
-              <th>Cargar saldo</th>
+              <th>Cargar saldo inicial</th>
             </tr>
             </thead>
 
@@ -71,6 +72,11 @@
                 </ng-template>
               </td>
               <td>
+                <a href="{{transaccion.archivoCedula}}" *ngIf="transaccion.archivoCedula" target="_blank">
+                  <i-feather name="file-text" class="mr-25"></i-feather>
+                </a>
+              </td>
+              <td>
                 <a class="btn btn-primary mb-1 w-100"
                    (click)="abrirModalCuentaBancaria(datosCuentaBancaria, transaccion)"
                    *ngIf="transaccion.state===1;else infoBanco">
@@ -82,9 +88,15 @@
               </td>
               <td>
                 <div>
-                  <input type="text" class="form-control" placeholder="00.00" [(ngModel)]="transaccion.saldo_asesor">
+                  <select class="form-control" [(ngModel)]="transaccion.saldo_asesor">
+                    <option value="" selected>- Seleccione -</option>
+                    <option [value]="costoInicial.valor" *ngFor="let costoInicial of listaCostoInicial">
+                      $ {{ costoInicial.valor}}
+                    </option>
+                  </select>
+                  <!--<input type="text" class="form-control" placeholder="00.00" >-->
                   <a class="btn btn-primary text-center pb-0"
-                     (click)="actualizarSaldoAsesor(transaccion.id, transaccion.saldo_asesor)">
+                     (click)="guardarMovimientos(transaccion.id, transaccion.saldo_asesor)">
                     <i-feather name="check"></i-feather>
                   </a>
                 </div>
@@ -94,7 +106,7 @@
           </table>
         </div>
         <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
-                        [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+                        [maxSize]="5" [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
 
       </div>
     </div>
@@ -111,8 +123,13 @@
           <div class="card-body invoice-padding">
             <div class="row">
               <div class="col-12">
-                <label>Banco</label>
-                <input class="form-control" type="text" formControlName="nombre_banco">
+                <label for="banco">Banco</label>
+                <select class="form-control" id="banco" formControlName="nombre_banco">
+                  <option value="">- Seleccione -</option>
+                  <option [value]="banco.nombre" *ngFor="let banco of listaBancos">
+                    {{ banco.nombre }}
+                  </option>
+                </select>
                 <div *ngIf="notaAsesorBancoForm.nombre_banco.errors"
                      class="invalid-feedback" style="display: block;">
                   <div *ngIf="notaAsesorBancoForm.nombre_banco.errors.required">
@@ -134,14 +151,36 @@
                 </div>
               </div>
               <div class="col-12">
-                <label>Tipo de cuenta</label>
-                <input class="form-control" type="text" formControlName="tipo_cuenta">
+                <label for="tipoCuenta">Tipo de cuenta</label>
+                <select class="form-control" id="tipoCuenta" formControlName="tipo_cuenta">
+                  <option value="">- Seleccione -</option>
+                  <option [value]="tipo.nombre" *ngFor="let tipo of listaTipoCuenta">
+                    {{ tipo.nombre }}
+                  </option>
+                </select>
                 <div *ngIf="notaAsesorBancoForm.tipo_cuenta.errors"
                      class="invalid-feedback" style="display: block;">
                   <div *ngIf="notaAsesorBancoForm.tipo_cuenta.errors.required">
                     Requerido
                   </div>
                 </div>
+              </div>
+              <div class="col-12 mt-1">
+                <label for="tipoIdentificacion">Tipo de Identificación</label>
+                <select id="tipoIdentificacion" class="form-control" formControlName="tipoIdentificacion"
+                        (change)="onSelectChangeIdentificacion($event)">
+                  <option value="" disabled>- Seleccione -</option>
+                  <option value="Cedula" selected>Cédula</option>
+                  <option value="RUC">RUC</option>
+                  <option value="Pasaporte">Pasaporte</option>
+                </select>
+                <div *ngIf="notaAsesorBancoForm.tipoIdentificacion.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="notaAsesorBancoForm.tipoIdentificacion.errors.required">
+                    Requerido
+                  </div>
+                </div>
+
               </div>
               <div class="col-12 my-1">
                 <label>Numero de Identificación</label>
@@ -157,14 +196,16 @@
                   <div *ngIf="notaAsesorBancoForm.identificacion.errors.identificacionInvalid">
                     Identificacion no valida
                   </div>
+                  <div *ngIf="notaAsesorBancoForm.identificacion.errors.rucInvalid">
+                    RUC no valido
+                  </div>
+                  <div *ngIf="notaAsesorBancoForm.identificacion.errors.minlength">
+                    Mínimo 5 caracteres
+                  </div>
                 </div>
               </div>
               <div class="col-12">
-                <label>Ver el archivo cargado. <a href="{{ asesorBancoForm.value.archivoCedula }}" target="_blank"
-                                                  *ngIf="asesorBancoForm.value.archivoCedula">Aquí</a></label>
-              </div>
-              <div class="col-12">
-                <label>Cédula de la asesora</label>
+                <label>Cédula de el/la asesor/a</label>
                 <input class="form-control-file" type="file" (change)="onFileSelected($event)">
                 <div *ngIf="notaAsesorBancoForm.archivoCedula.errors"
                      class="invalid-feedback" style="display: block;">

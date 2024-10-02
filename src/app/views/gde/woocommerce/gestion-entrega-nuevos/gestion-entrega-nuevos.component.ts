@@ -31,7 +31,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
   public notaPedido: FormGroup;
   public autorizarForm: FormGroup;
   public generarGuiaForm: FormGroup;
-  totalIva
+  totalIva;
   menu;
   page = 1;
   pageSize = 3;
@@ -103,7 +103,6 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     };
     this.barChartData = [this.datosTransferencias];
     this.obtenerOpciones();
-    this.obtenerListaMetodoEnvio();
   }
 
   ngAfterViewInit(): void {
@@ -263,8 +262,11 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
   }
 
   generarGuia(modal, id): void {
+
+
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
       this.iniciarNotaPedido();
+      this.obtenerListaMetodoEnvio(info.canal);
       info.articulos.map((item): void => {
         this.agregarItem();
       });
@@ -739,6 +741,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
   }
 
   guardarGuiaServiEntrega() {
+
     if (!this.fileToUpload) {
       return alert('Cargue el comprobante del método de envío');
     }
@@ -890,8 +893,8 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
 
   }
 
-  obtenerListaMetodoEnvio(): any {
-    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'METODO PAGO', '').subscribe((result) => {
+  obtenerListaMetodoEnvio(canal): any {
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'METODO PAGO', '', canal).subscribe((result) => {
       this.listaMetodoPago = result.data;
     });
   }

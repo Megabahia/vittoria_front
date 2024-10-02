@@ -78,7 +78,10 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   correoABuscar = '';
   paginaWoocommerce
   mostrarBotonEnviarGDP = false;
+  mostrarDatosDireccion = true;
   mostrarBoton = true;
+  mostrarBotonVolverCatalogo = false;
+  pedidoMismoOrigen = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -191,16 +194,21 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
     this.notaPedido.updateValueAndValidity();
 
-    if (this.paginaWoocommerce === 'contraentrega.megadescuento.com') {
+    /*if (this.paginaWoocommerce === 'contraentrega.megadescuento.com') {
       this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.page_size, 'METODO PAGO', '').subscribe((result) => {
         const metodoPago = result.data.find(metodo => metodo.nombre === 'Pago Contra Entrega a Nivel Nacional por Servientrega');
         this.listaMetodoPago = metodoPago ? [metodoPago] : []; // Asegura que el resultado sea siempre un array
       });
     } else {
       this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.page_size, 'METODO PAGO', '').subscribe((result) => {
-        this.listaMetodoPago = result.data.filter(metodo => metodo.nombre !== 'Pago Contra Entrega a Nivel Nacional por Servientrega');
+        this.listaMetodoPago = result.data.filter(metodo => metodo.nombre !== 'Retiro en local' && metodo.nombre !== 'Previo Pago Transporte Interprovincial');
       });
-    }
+    }*/
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.page_size, 'METODO PAGO', '', this.paginaWoocommerce).subscribe((result) => {
+      //const metodoPago = result.data.find(metodo => metodo.nombre === 'Pago Contra Entrega a Nivel Nacional por Servientrega');
+      this.listaMetodoPago = result.data; // Asegura que el resultado sea siempre un array
+    });
 
   }
 
@@ -227,13 +235,13 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
         tipoIdentificacion: [this.tipoIdentificacion, [Validators.required]],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: [this.pais, [Validators.required]],
-        provincia: ['', [Validators.required]],
-        ciudad: ['', [Validators.required]],
-        sector: ['', [Validators.required]],
-        callePrincipal: ['', [Validators.required]],
-        numero: ['', [Validators.required]],
-        calleSecundaria: ['', [Validators.required]],
-        referencia: ['', [Validators.required]],
+        provincia: [''],
+        ciudad: [''],
+        sector: [''],
+        callePrincipal: [''],
+        numero: [''],
+        calleSecundaria: [''],
+        referencia: [''],
         gps: [''],
         codigoVendedor: [this.currentUser.usuario.username, [Validators.required]],
         nombreVendedor: [this.currentUser.full_name, [Validators.required]]
@@ -450,13 +458,25 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       this.toaster.open('Debe haber al menos 1 artículo', {type: 'danger'});
       return;
     }
+
+    if (!this.pedidoMismoOrigen) {
+      alert('No puede realizar el pedido con la forma de entrega seleccionada. Los productos son de diferente origen')
+      return;
+    }
+
     if (!this.selectClient) {
       this.toaster.open('Seleccione si es cliente o no', {type: 'danger'});
       return;
     }
 
+
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
+      return;
+    }
+
+    if (this.notaPedido.value.total > 100) {
+      this.toaster.open('El pedido no debe exceder el total de 100 dólares.', {type: 'warning'});
       return;
     }
 
@@ -619,7 +639,8 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   async obtenerDatosProducto(): Promise<void> {
     return new Promise((resolve, reject) => {
       const data = {
-        canal: this.detallesArray.value[0].canal
+        canal: this.detallesArray.value[0].canal,
+        state: 1
       };
 
       this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
@@ -701,6 +722,8 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       const data = {
         prefijo: productoWoocomerce.tienda_producto,
         codigoBarras: productoWoocomerce.sku_del_producto,
+        state: 1,
+        cantidad: productoWoocomerce.cantidad_en_el_carrito
       };
       this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
 
@@ -723,7 +746,11 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
         );
         resolve(); // Resolver la promesa
         this.calcular();
-      }, error => this.toaster.open(error, {type: 'danger'}));
+        this.mostrarBotonVolverCatalogo = false;
+      }, error => {
+        this.toaster.open(error.error, {type: 'danger'});
+        this.mostrarBotonVolverCatalogo = true;
+      });
     });
   }
 
@@ -778,20 +805,44 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
     switch (selectedValue) {
       case 'Previo Pago Servientrega Nacional':
+      case 'Previo Pago Transporte Interprovincial':
       case 'Previo Pago Motorizado en Quito':
         this.handlePrevioPago();
+        this.pedidoMismoOrigen = true;
         break;
       case 'Retiro en local':
         this.handleRetiroEnLocal();
+        this.pedidoMismoOrigen = true;
+        break;
+      case 'Pago Contra Entrega en Quito':
+      case 'Pago Contra Entrega a Nivel Nacional por Servientrega':
+        this.handleContraEntrega();
+        this.handleDefault();
         break;
       default:
         this.handleDefault();
+        this.pedidoMismoOrigen = true;
         break;
     }
 
     this.updateEnvioList(selectedValue);
-    this.mostrarDatosGmb = true; // Se mueve fuera del switch ya que se aplica en todos los casos
+    this.mostrarDatosGmb = true;
   }
+
+  private handleContraEntrega() {
+    const pedidos = this.notaPedido.value.pedidos;
+    const primerPrefijo = pedidos[0]?.prefijo;
+
+    const diferentesPrefijos = pedidos.some(pedido => pedido.prefijo !== primerPrefijo);
+
+    if (diferentesPrefijos) {
+      this.pedidoMismoOrigen = false;
+    } else {
+      this.pedidoMismoOrigen = true;
+    }
+
+  }
+
 
   private resetValidationAndFlags() {
     this.notaPedido.get('comprobanteVendedorGmb').setValidators([]);
@@ -813,10 +864,46 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
   private handleRetiroEnLocal() {
     this.mostrarBotonEnviarGDP = true;
+    this.mostrarDatosDireccion = false;
+
+    this.notaPedido.get('facturacion')['controls']['pais'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['pais'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['provincia'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['provincia'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['ciudad'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['ciudad'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['sector'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['sector'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['callePrincipal'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['callePrincipal'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['numero'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['numero'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['calleSecundaria'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['calleSecundaria'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['referencia'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['referencia'].updateValueAndValidity();
   }
 
   private handleDefault() {
     this.mostrarBoton = true;
+    this.mostrarDatosDireccion = true;
+
+    this.notaPedido.get('facturacion')['controls']['pais'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['pais'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['provincia'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['provincia'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['ciudad'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['ciudad'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['sector'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['sector'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['callePrincipal'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['callePrincipal'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['numero'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['numero'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['calleSecundaria'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['calleSecundaria'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['referencia'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['referencia'].updateValueAndValidity();
   }
 
   private updateEnvioList(selectedValue: string) {
@@ -893,8 +980,12 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     const formData = this.notaPedido.value;
 
     // Extraer los artículos del primer objeto de 'pedidos' y asignarlos a 'articulos'
+
     if (formData.pedidos && formData.pedidos.length > 0) {
-      formData.articulos = formData.pedidos[0].articulos;
+      formData.pedidos.forEach((pedido) => {
+        const articulos = pedido.articulos;
+        formData.articulos.push(...articulos); // Aquí expandimos el array de artículos directamente
+      });
     }
 
     // Eliminar el campo 'pedidos'
