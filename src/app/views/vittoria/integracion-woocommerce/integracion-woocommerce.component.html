@@ -213,6 +213,47 @@
                     <label class="form-label" for="lng">Longitud origen de canal:</label>
                     <input type="text" id="lng" class="form-control" formControlName="longitud"/>
                   </div>
+                  <div class="form-group">
+                    <label class="form-label" for="decripcionDireccion">Descripción de la dirección:</label>
+                    <input type="text" id="decripcionDireccion" class="form-control"
+                           formControlName="descripcion_direccion"/>
+                    <div *ngIf="f.descripcion_direccion.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.descripcion_direccion.errors.required">La descripción de la dirección es requerida
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="mapa">Enlace de GPS:</label>
+                    <input type="text" id="mapa" class="form-control" formControlName="direccion_mapa"/>
+                    <div *ngIf="f.direccion_mapa.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.direccion_mapa.errors.required">El enlace de gps es requerido
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="atencion">Hora de atención:</label>
+                    <input type="text" id="atencion" class="form-control" formControlName="hora_atencion"/>
+                    <div *ngIf="f.hora_atencion.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.hora_atencion.errors.required">La hora de atencion es requerida
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="descuento">Descuento a aplicar:</label>
+                    <input type="text" id="descuento" class="form-control" formControlName="descuento"/>
+                    <div *ngIf="f.descuento.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.descuento.errors.required">El descuento a aplicar es requerido
+                      </div>
+                      <div *ngIf="f.descuento.errors.max">El descuento a aplicarse es máximo 100%
+                      </div>
+                      <div *ngIf="f.descuento.errors.pattern">El valor ingresado no es válido
+                      </div>
+                    </div>
+                  </div>
 
                   <label class="form-label font-weight-bold mb-2" for="basic-icon-default-email">Pedidos gestionados
                     por:</label>

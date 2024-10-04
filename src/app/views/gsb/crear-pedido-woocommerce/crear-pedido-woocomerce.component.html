@@ -7,262 +7,280 @@
 </div>-->
 
 <div class="card" *ngIf="mostrarContenidoPantalla">
-  <h2 class="card-header font-weight-bold">PEDIDO DESDE {{ paginaWoocommerce | uppercase}}</h2>
+  <h2 class="card-header font-weight-bold">PEDIDO DESDE {{ paginaWoocommerce | uppercase }}</h2>
   <h3 class="py-1 px-2 font-weight-bold bg-primary mb-0">Bienvenido {{ currentUser.full_name }}</h3>
 </div>
 <div *ngIf="mostrarContenidoPantalla">
-
   <form [formGroup]="notaPedido">
-    <a class="btn btn-primary m-2" *ngIf="mostrarBotonVolverCatalogo" href="https://superbarato.megadescuento.com">Volver a catálogo</a>
+    <a class="btn btn-primary m-2" *ngIf="mostrarBotonVolverCatalogo" href="https://superbarato.megadescuento.com">Volver
+      a catálogo</a>
     <div formArrayName="pedidos" *ngIf="!mostrarBotonVolverCatalogo">
-      <div *ngFor="let tienda of notaPedido.get('pedidos')['controls']; let j = index;">
-        <div class="card">
-          <ng-container [formGroup]="tienda">
-            <!--<h3 class="py-1 px-2 font-weight-bold bg-primary">Tienda {{ tienda.controls.prefijo.value }}</h3>
-            <div>
-              <h3 class="m-2">Tienda: {{ tienda.controls.prefijo.value }}</h3>
-            </div>-->
-            <div class="py-1" formArrayName="articulos">
-              <div *ngFor="let articulo of tienda.get('articulos').controls; let i = index">
-                <ng-container [formGroup]="articulo">
-                  <div class="repeater-wrapper" data-repeater-item>
-                    <div class="row px-2 mt-1">
-                      <div class="col-md-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
-                        <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
-                          Código producto
-                        </p>
-                        <label style="font-size: small">{{ articulo.controls.codigo.value }}</label>
-                      </div>
-                      <div class="col-md-3 col-12 my-lg-0 my-2">
-                        <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
-                          Nombre producto
-                        </p>
-                        <label class="d-block text-wrap"
-                               style="font-size: small">{{ articulo.controls.articulo.value }}</label>
-                      </div>
-
-                      <!--CANTIDAD-->
-                      <div class="item-quantity">
-                        <p class="quantity-title col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
-                          Cantidad del producto
-                        </p>
-                        <div class="quantity-counter-wrapper">
-                          <core-touchspin>
-                            <div class="btn-group touchspin-wrapper">
-                              <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-down"
-                                      (click)="escogerCantidad('restar', i, articulo)"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                     viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2"
-                                     stroke-linecap="round"
-                                     stroke-linejoin="round" class="feather feather-minus">
-                                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg><!----><!----></button>
-                              <input type="number" pattern="\d*" maxlength="1"
-                                     class="form-control ng-untouched ng-pristine ng-valid"
-                                     step="1"
-                                     min="1"
-                                     max="3"
-                                     disabled
-                                     formControlName="cantidad"
-                              >
-                              <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-up"
-                                      (click)="escogerCantidad('sumar', i, articulo)"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                     viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2"
-                                     stroke-linecap="round"
-                                     stroke-linejoin="round" class="feather feather-plus">
-                                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg><!----><!----></button>
-                            </div>
-                          </core-touchspin>
-                          <div *ngIf="articulo.controls.cantidad.errors"
-                               class="invalid-feedback"
-                               style="display: block;">
-                            <div *ngIf="articulo.controls.cantidad.errors.required">
-                              Requerido
-                            </div>
-                            <div *ngIf="articulo.controls.cantidad.errors.min">
-                              Ingrese minimo 1
-                            </div>
-                          </div>
+      <div class="card">
+        <div class="card-body px-0">
+          <div *ngFor="let tienda of notaPedido.get('pedidos')['controls']; let j = index;">
+            <ng-container [formGroup]="tienda">
+              <!--<h3 class="py-1 px-2 font-weight-bold bg-primary">Tienda {{ tienda.controls.prefijo.value }}</h3>
+              <div>
+                <h3 class="m-2">Tienda: {{ tienda.controls.prefijo.value }}</h3>
+              </div>-->
+              <div class="py-1" formArrayName="articulos">
+                <div *ngFor="let articulo of tienda.get('articulos').controls; let i = index">
+                  <ng-container [formGroup]="articulo">
+                    <label style="font-size: small"
+                           class="text-info px-2">Tienda: {{ articulo.controls.canal.value }}</label>
+                    <div class="repeater-wrapper" data-repeater-item>
+                      <div class="row px-2 mt-1">
+                        <div class="col-md-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                          <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
+                            Código producto
+                          </p>
+                          <label style="font-size: small">{{ articulo.controls.codigo.value }}</label>
+                        </div>
+                        <div class="col-md-3 col-12 my-lg-0 my-2">
+                          <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
+                            Nombre producto
+                          </p>
+                          <label class="d-block text-wrap"
+                                 style="font-size: small">{{ articulo.controls.articulo.value }}</label>
                         </div>
 
-                      </div>
-                      <!--PRECIO-->
-                      <div class="col-md-1 col-12 my-lg-0 my-2">
-                        <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
-                          Precio
-                        </p>
-                        <label style="font-size: small">{{ articulo.controls.valorUnitario.value }}</label>
-                      </div>
-                      <div class="col-md-1 col-12 my-lg-0 my-2">
-                        <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
-                          Total
-                        </p>
-                        <label style="font-size: small">{{ articulo.controls.precio.value }}</label>
-                      </div>
-                      <div class="col-md-2 col-12 my-lg-0 my-2">
-                        <img
-                          src="{{articulo.controls?.imagen_principal.value ? articulo.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
-                          *ngIf="articulo.controls?.imagen_principal" width="150px" height="150px" alt="">
-                        <!--<div *ngIf="!detalle.controls?.imagen_principal.value">
-                          <button (click)="fileInput.click()">Seleccionar imagen</button>
-                          <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png"
-                                 style="display: none;">
-                        </div>-->
-                      </div>
-                      <div
-                        class="d-flex flex-column align-items-center justify-content-between border-left border-left-black invoice-product-actions py-50 px-2">
-                        <i-feather name="trash"
-                                   class="cursor-pointer text-danger"
-                                   data-repeater-delete
-                                   (click)="removerItem(tienda, i, j)"></i-feather>
+                        <!--CANTIDAD-->
+                        <div class="item-quantity">
+                          <p class="quantity-title col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
+                            Cantidad del producto
+                          </p>
+                          <div class="quantity-counter-wrapper">
+                            <core-touchspin>
+                              <div class="btn-group touchspin-wrapper">
+                                <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-down"
+                                        (click)="escogerCantidad('restar', i, articulo)"
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                       viewBox="0 0 24 24"
+                                       fill="none" stroke="currentColor" stroke-width="2"
+                                       stroke-linecap="round"
+                                       stroke-linejoin="round" class="feather feather-minus">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                  </svg><!----><!----></button>
+                                <input type="number" pattern="\d*" maxlength="1"
+                                       class="form-control ng-untouched ng-pristine ng-valid"
+                                       step="1"
+                                       min="1"
+                                       max="3"
+                                       disabled
+                                       formControlName="cantidad"
+                                >
+                                <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-up"
+                                        (click)="escogerCantidad('sumar', i, articulo)"
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                       viewBox="0 0 24 24"
+                                       fill="none" stroke="currentColor" stroke-width="2"
+                                       stroke-linecap="round"
+                                       stroke-linejoin="round" class="feather feather-plus">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                  </svg><!----><!----></button>
+                              </div>
+                            </core-touchspin>
+                            <div *ngIf="articulo.controls.cantidad.errors"
+                                 class="invalid-feedback"
+                                 style="display: block;">
+                              <div *ngIf="articulo.controls.cantidad.errors.required">
+                                Requerido
+                              </div>
+                              <div *ngIf="articulo.controls.cantidad.errors.min">
+                                Ingrese minimo 1
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                        <!--PRECIO-->
+                        <div class="col-md-1 col-12 my-lg-0 my-2">
+                          <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
+                            Precio
+                          </p>
+                          <label style="font-size: small">{{ articulo.controls.valorUnitario.value }}</label>
+                        </div>
+                        <div class="col-md-1 col-12 my-lg-0 my-2">
+                          <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
+                            Total
+                          </p>
+                          <label style="font-size: small">{{ articulo.controls.precio.value }}</label>
+                        </div>
+                        <div class="col-md-2 col-12 my-lg-0 my-2">
+                          <img
+                            src="{{articulo.controls?.imagen_principal.value ? articulo.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
+                            *ngIf="articulo.controls?.imagen_principal" width="150px" height="150px" alt="">
+                          <!--<div *ngIf="!detalle.controls?.imagen_principal.value">
+                            <button (click)="fileInput.click()">Seleccionar imagen</button>
+                            <input #fileInput type="file" (change)="cargarImagen(i,$event)" accept=".jpg,.jpeg,.png"
+                                   style="display: none;">
+                          </div>-->
+                        </div>
+                        <div
+                          class="d-flex flex-column align-items-center justify-content-between border-left border-left-black invoice-product-actions py-50 px-2">
+                          <i-feather name="trash"
+                                     class="cursor-pointer text-danger"
+                                     data-repeater-delete
+                                     (click)="removerItem(tienda, i, j)"></i-feather>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </ng-container>
+                  </ng-container>
+                </div>
               </div>
-            </div>
 
-          </ng-container>
+            </ng-container>
+          </div>
         </div>
       </div>
     </div>
-    <div class="card bg-light-warning" *ngIf="!mostrarBotonVolverCatalogo">
-      <div class="row p-2">
-        <div class="col-md-4 col-12">
-          <label>Forma de entrega del producto</label>
-          <select class="form-control"
-                  formControlName="metodoPago" (change)="onSelectChangePago($event)">
-            <option value="" selected>- Seleccione metodo de envío-</option>
-            <option value="{{pago.nombre}}" *ngFor="let pago of listaMetodoPago">
-              {{ pago.nombre }}
-            </option>
-          </select>
-          <div *ngIf="notaPedidoForm.metodoPago.errors"
-               class="invalid-feedback" style="display: block;">
-            <div *ngIf="notaPedidoForm.metodoPago.errors.required">
-              Requerido
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-12" *ngIf="mostrarInputArchivoComprobante">
-          <label>Cargar comrpobante de pago</label>
-          <input class="form-control-file" type="file" (change)="onFileSelected($event)">
-          <div *ngIf="notaPedidoForm.comprobanteVendedorGmb.errors"
-               class="invalid-feedback" style="display: block;">
-            <div *ngIf="notaPedidoForm.comprobanteVendedorGmb.errors.required">
-              Requerido
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-12" *ngIf="mostrarInputArchivoComprobante">
-          <label>Monto</label>
-          <input class="form-control" type="text" formControlName="montoPrevioPago" placeholder="00.00">
-          <div *ngIf="notaPedidoForm.montoPrevioPago.errors"
-               class="invalid-feedback" style="display: block;">
-            <div *ngIf="notaPedidoForm.montoPrevioPago.errors.required">
-              Requerido
-            </div>
-            <div *ngIf="notaPedidoForm.montoPrevioPago.errors.pattern">
-              Ingrese valores válidos, en formato 00.00 y unicamente dos decimales
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-    <div class="row d-flex justify-content-end" *ngIf="!mostrarBotonVolverCatalogo">
-      <div class="col-md-5 text-right">
-        <div class="invoice-total-wrapper">
-          <hr class="my-20"/>
-          <div class="invoice-total-item">
-            <p class="invoice-total-title text-primary font-weight-bold">
-              Total Envio:
-            </p>
-            <select class="form-control" (change)="nombreEnvioSeleccionado($event)">
-              <option value="" selected>- Seleccione costo de envío-</option>
-              <option *ngFor="let envio of listaCostoEnvio" [ngValue]="envio">
-                {{ envio.nombre }} - {{ envio.valor }}
+    <div class="card" *ngIf="!mostrarBotonVolverCatalogo">
+      <div class="card-body bg-light-warning">
+        <div class="row">
+          <div class="col-md-4 col-12">
+            <label>Forma de entrega del producto</label>
+            <select class="form-control"
+                    formControlName="metodoPago" (change)="onSelectChangePago($event)">
+              <option value="" selected>- Seleccione metodo de envío-</option>
+              <option value="{{pago.nombre}}" *ngFor="let pago of listaMetodoPago">
+                {{ pago.nombre }}
               </option>
             </select>
-
+            <div *ngIf="notaPedidoForm.metodoPago.errors"
+                 class="invalid-feedback" style="display: block;">
+              <div *ngIf="notaPedidoForm.metodoPago.errors.required">
+                Requerido
+              </div>
+            </div>
           </div>
-          <div class="invoice-total-item">
-            <p class="invoice-total-title text-primary font-weight-bold">
-              Subtotal: ${{ notaPedido.controls.subtotal.value }}</p>
+          <div class="col-md-4 col-12" *ngIf="mostrarInputArchivoComprobante">
+            <label>Cargar comrpobante de pago</label>
+            <input class="form-control-file" type="file" (change)="onFileSelected($event)">
+            <div *ngIf="notaPedidoForm.comprobanteVendedorGmb.errors"
+                 class="invalid-feedback" style="display: block;">
+              <div *ngIf="notaPedidoForm.comprobanteVendedorGmb.errors.required">
+                Requerido
+              </div>
+            </div>
           </div>
-          <div class="invoice-total-item">
-            <p class="invoice-total-title text-primary font-weight-bold">
-              IVA (15%): ${{ totalIva }}</p>
+          <div class="col-md-4 col-12" *ngIf="mostrarInputArchivoComprobante">
+            <label>Monto</label>
+            <input class="form-control" type="text" formControlName="montoPrevioPago" placeholder="00.00">
+            <div *ngIf="notaPedidoForm.montoPrevioPago.errors"
+                 class="invalid-feedback" style="display: block;">
+              <div *ngIf="notaPedidoForm.montoPrevioPago.errors.required">
+                Requerido
+              </div>
+              <div *ngIf="notaPedidoForm.montoPrevioPago.errors.pattern">
+                Ingrese valores válidos, en formato 00.00 y unicamente dos decimales
+              </div>
+            </div>
           </div>
-          <div class="invoice-total-item">
-            <p class="invoice-total-title text-primary font-weight-bold">
-              Total a pagar por el cliente: ${{ notaPedido.controls.total.value }}</p>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="row d-flex justify-content-end" *ngIf="!mostrarBotonVolverCatalogo">
+          <div class="col-md-8 text-right">
+            <div class="invoice-total-wrapper">
+              <div class="invoice-total-item row mb-1">
+                <div class="col-md-6 d-flex justify-content-end align-items-center">
+                  <p class="invoice-total-title text-primary font-weight-bold">
+                    Método Envio:
+                  </p>
+                </div>
+                <div class="col-md-6">
+                  <select class="form-control" (change)="nombreEnvioSeleccionado($event)">
+                    <option value="" selected>- Seleccione costo de envío-</option>
+                    <option *ngFor="let envio of listaCostoEnvio" [ngValue]="envio">
+                      {{ envio.nombre }} - {{ envio.valor }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="invoice-total-item">
+                <p class="invoice-total-title text-primary font-weight-bold">
+                  Costo envío: ${{ notaPedido.controls.envioTotal.value }}</p>
+              </div>
+              <div class="invoice-total-item">
+                <p class="invoice-total-title text-primary font-weight-bold">
+                  Subtotal: ${{ notaPedido.controls.subtotal.value }}</p>
+              </div>
+              <div class="invoice-total-item">
+                <p class="invoice-total-title text-primary font-weight-bold">
+                  IVA (15%): ${{ totalIva }}</p>
+              </div>
+              <div class="invoice-total-item">
+                <p class="invoice-total-title text-primary font-weight-bold">
+                  Total a pagar por el cliente: ${{ notaPedido.controls.total.value }}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </form>
   <div class="card" *ngIf="!mostrarBotonVolverCatalogo">
-    <div class="row p-2">
-      <div class="col-md-3 col-12">
-        <h5 class="text-danger">¿Es cliente nuevo?</h5>
-        <select id="cliente" class="form-control" (change)="onSelectChangeCliente($event)"
-                [disabled]="disabledCombo">
-          <option value="" disabled selected>- Seleccione -</option>
-          <option value="esCliente">SI</option>
-          <option value="noEsCliente">NO</option>
-        </select>
-      </div>
-      <div class="col-md-9 col-12" *ngIf="noEsCliente">
-        <h6>Buscar cliente</h6>
-        <div class="row">
-          <div class="col-md-3 col-12">
-            <input class="form-control" type="text" placeholder="Cédula"
-                   [(ngModel)]="cedulaABuscar"
-            >
-          </div>
-          <label class="mt-1">O</label>
-          <div class="col-md-3 col-12">
-            <input class="form-control" type="text" placeholder="Número WhatsApp"
-                   [(ngModel)]="whatsappABuscar"
-            >
-          </div>
-          <label class="mt-1">O</label>
+    <div class="card-header">
+      <h3>Datos del cliente para la entrega del producto</h3>
+    </div>
+    <div class="card-body px-2">
+      <div class="row">
+        <div class="col-md-3 col-12">
+          <h5 class="text-danger">¿Es cliente nuevo?</h5>
+          <select id="cliente" class="form-control" (change)="onSelectChangeCliente($event)"
+                  [disabled]="disabledCombo">
+            <option value="" disabled selected>- Seleccione -</option>
+            <option value="esCliente">SI</option>
+            <option value="noEsCliente">NO</option>
+          </select>
+        </div>
+        <div class="col-md-9 col-12" *ngIf="noEsCliente">
+          <h6>Buscar cliente</h6>
+          <div class="row">
+            <div class="col-md-3 col-12">
+              <input class="form-control" type="text" placeholder="Cédula"
+                     [(ngModel)]="cedulaABuscar"
+              >
+            </div>
+            <label class="mt-1">O</label>
+            <div class="col-md-3 col-12">
+              <input class="form-control" type="text" placeholder="Número WhatsApp"
+                     [(ngModel)]="whatsappABuscar"
+              >
+            </div>
+            <label class="mt-1">O</label>
 
-          <div class="col-md-3 col-12">
-            <input class="form-control" type="text" placeholder="Correo electrónico"
-                   [(ngModel)]="correoABuscar"
-            >
+            <div class="col-md-3 col-12">
+              <input class="form-control" type="text" placeholder="Correo electrónico"
+                     [(ngModel)]="correoABuscar"
+              >
+            </div>
+            <div class="col-2">
+              <button class="btn btn-primary" (click)="obtenerClienteCedula()">
+                <i-feather name='search' class="edit-user"></i-feather>
+              </button>
+            </div>
           </div>
-          <div class="col-2">
-            <button class="btn btn-primary" (click)="obtenerClienteCedula()">
-              <i-feather name='search' class="edit-user"></i-feather>
+          <!--<label style="color: blue">Por favor ingrese su correo electrónico registrado:</label>
+          <div class="d-flex justify-content-between align-items-center">
+            <input type="text" class="form-control" [(ngModel)]="correoCliente"/>
+            <button class="btn btn-primary ml-2" style="width: 300px" (click)="enviarCorreoCliente()">Generar código
             </button>
           </div>
+          <label class="mt-1 text-warning">Al correo electrónico se va a enviar un código para cargar su información
+          </label>-->
         </div>
-        <!--<label style="color: blue">Por favor ingrese su correo electrónico registrado:</label>
-        <div class="d-flex justify-content-between align-items-center">
-          <input type="text" class="form-control" [(ngModel)]="correoCliente"/>
-          <button class="btn btn-primary ml-2" style="width: 300px" (click)="enviarCorreoCliente()">Generar código
-          </button>
-        </div>
-        <label class="mt-1 text-warning">Al correo electrónico se va a enviar un código para cargar su información
-        </label>-->
+        <!--<div class="col-md-4 col-12" *ngIf="enviarCorreo">
+          <label style="color: blue">Ingrese el código enviado a su correo electrónico:</label>
+          <div class="d-flex justify-content-between align-items-center">
+            <input type="text" class="form-control" [(ngModel)]="codigoCorreo"/>
+            <button class="btn btn-primary ml-2" (click)="validarCodigoCorreo()">Enviar codigo</button>
+          </div>
+        </div>-->
       </div>
-      <!--<div class="col-md-4 col-12" *ngIf="enviarCorreo">
-        <label style="color: blue">Ingrese el código enviado a su correo electrónico:</label>
-        <div class="d-flex justify-content-between align-items-center">
-          <input type="text" class="form-control" [(ngModel)]="codigoCorreo"/>
-          <button class="btn btn-primary ml-2" (click)="validarCodigoCorreo()">Enviar codigo</button>
-        </div>
-      </div>-->
     </div>
   </div>
 
@@ -270,265 +288,269 @@
     <div class="card" *ngIf="mostrarContenido">
       <div formGroupName="facturacion">
         <h3 class="py-1 px-2 font-weight-bold bg-primary">Datos de facturación y entrega </h3>
-        <h5 class="pl-3">DATO PERSONALES <label class="text-muted">(Datos
-          obligatorios)</label></h5>
-        <div class="row px-4">
-          <div class="col-md-3 col-12">
-            <label>Nombres</label>
-            <input class="form-control" type="text"
-                   formControlName="nombres"
-            >
-            <div *ngIf="facturacionForm.nombres.errors"
-                 class="invalid-feedback" style="display: block;">
-              <div *ngIf="facturacionForm.nombres.errors.required">
-                Requerido
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-12">
-            <label>Apellidos</label>
-            <input class="form-control" type="text"
-                   formControlName="apellidos"
-            >
-            <div *ngIf="facturacionForm.apellidos.errors"
-                 class="invalid-feedback" style="display: block;">
-              <div *ngIf="facturacionForm.apellidos.errors.required">
-                Requerido
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-12">
-            <label>Correo electrónico</label>
-            <input class="form-control" type="text"
-                   formControlName="correo"
-            >
-            <div *ngIf="facturacionForm.correo.errors"
-                 class="invalid-feedback" style="display: block;">
-              <div *ngIf="facturacionForm.correo.errors.required">
-                Requerido
-              </div>
-              <div *ngIf="facturacionForm.correo.errors.email">
-                Correo Invalido
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-12">
-            <div class="form-group">
-              <label for="tipoIdentificacion">Tipo de Identificación</label>
-              <select id="tipoIdentificacion" class="form-control" formControlName="tipoIdentificacion"
-                      (change)="onSelectChangeIdentificacion($event)">
-                <option value="" disabled>- Seleccione -</option>
-                <option value="cedula" selected>Cédula</option>
-                <option value="ruc">RUC</option>
-                <option value="pasaporte">Pasaporte</option>
-              </select>
-              <div *ngIf="facturacionForm.tipoIdentificacion.errors"
+        <div class="card-body m-0 p-0">
+
+          <h5 class="pl-3">DATO PERSONALES <label class="text-muted">(Datos
+            obligatorios)</label></h5>
+          <div class="row px-4 w-100">
+            <div class="col-md-3 col-12">
+              <label>Nombres</label>
+              <input class="form-control" type="text"
+                     formControlName="nombres"
+              >
+              <div *ngIf="facturacionForm.nombres.errors"
                    class="invalid-feedback" style="display: block;">
-                <div *ngIf="facturacionForm.tipoIdentificacion.errors.required">
+                <div *ngIf="facturacionForm.nombres.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-12">
+              <label>Apellidos</label>
+              <input class="form-control" type="text"
+                     formControlName="apellidos"
+              >
+              <div *ngIf="facturacionForm.apellidos.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.apellidos.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-12">
+              <label>Correo electrónico</label>
+              <input class="form-control" type="text"
+                     formControlName="correo"
+              >
+              <div *ngIf="facturacionForm.correo.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.correo.errors.required">
+                  Requerido
+                </div>
+                <div *ngIf="facturacionForm.correo.errors.email">
+                  Correo Invalido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-12">
+              <div class="form-group">
+                <label for="tipoIdentificacion">Tipo de Identificación</label>
+                <select id="tipoIdentificacion" class="form-control" formControlName="tipoIdentificacion"
+                        (change)="onSelectChangeIdentificacion($event)">
+                  <option value="" disabled>- Seleccione -</option>
+                  <option value="cedula" selected>Cédula</option>
+                  <option value="ruc">RUC</option>
+                  <option value="pasaporte">Pasaporte</option>
+                </select>
+                <div *ngIf="facturacionForm.tipoIdentificacion.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="facturacionForm.tipoIdentificacion.errors.required">
+                    Requerido
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-12">
+              <label>Numero Identificación</label>
+              <input class="form-control" type="text"
+                     formControlName="identificacion"
+              >
+              <div *ngIf="facturacionForm.identificacion.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.identificacion.errors.required">
+                  Requerido
+                </div>
+                <div *ngIf="facturacionForm.identificacion.errors.pattern">
+                  Ingrese solo numeros
+                </div>
+                <div *ngIf="facturacionForm.identificacion.errors.identificacionInvalid">
+                  Identificacion no valida
+                </div>
+                <div *ngIf="facturacionForm.identificacion.errors.rucInvalid">
+                  RUC no valido
+                </div>
+                <div *ngIf="facturacionForm.identificacion.errors.minlength">
+                  Mínimo 5 caracteres
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-12">
+              <label>Número de WhatsApp</label>
+              <input class="form-control" type="text"
+                     formControlName="telefono"
+              >
+              <div *ngIf="facturacionForm.telefono.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.telefono.errors.required">
+                  Requerido
+                </div>
+                <div *ngIf="facturacionForm.telefono.errors.minlength">
+                  Ingrese minimo 10 digitos
+                </div>
+                <div *ngIf="facturacionForm.telefono.errors.maxlength">
+                  Ingrese maximo 10 digitos
+                </div>
+                <div *ngIf="facturacionForm.telefono.errors.pattern">
+                  Ingrese solo numeros
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h5 class="pl-3" *ngIf="mostrarDatosDireccion">DATOS DE DIRECCIÓN <label class="text-muted">(Datos
+            obligatorios)</label></h5>
+          <div class="row px-4 pb-2 w-100" *ngIf="mostrarDatosDireccion">
+            <div class="col-md-3 col-12">
+              <label>País</label>
+              <input class="form-control" type="text"
+                     formControlName="pais" disabled
+              >
+
+            </div>
+            <div class="col-md-3 col-12">
+              <label for="provinciaContacto">Provincia</label>
+              <select class="form-control" name="provinciaContacto" formControlName="provincia"
+                      (change)="obtenerCiudad()" id="provinciaContacto">
+                <option value="" selected>- Seleccione -</option>
+                <option value="{{pais.nombre}}" *ngFor="let pais of provinciaOpciones">
+                  {{ pais.nombre }}
+                </option>
+              </select>
+              <div *ngIf="facturacionForm.provincia.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.provincia.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-12">
+              <label for="ciudadContacto">Ciudad</label>
+              <select class="form-control" name="ciudadContacto" formControlName="ciudad"
+                      id="ciudadContacto" (change)="obtenerSector()">
+                <option value="" selected>- Seleccione -</option>
+                <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
+                  {{ ciudad.nombre }}
+                </option>
+              </select>
+              <div *ngIf="facturacionForm.ciudad.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.ciudad.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-12">
+              <label class="form-label" for="sectorOrigen">Sector</label>
+              <select class="form-control" id="sectorOrigen" formControlName="sector">
+                <option value="" selected>- Seleccione -</option>
+                <option value="{{sector.nombre}}" *ngFor="let sector of sectorOpciones">
+                  {{ sector.nombre }}
+                </option>
+              </select>
+              <div *ngIf="facturacionForm.sector.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.sector.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-12">
+              <label>Calle principal</label>
+              <input class="form-control" type="text"
+                     formControlName="callePrincipal"
+              >
+              <div *ngIf="facturacionForm.callePrincipal.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.callePrincipal.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-12">
+              <label>Número de casa</label>
+              <input class="form-control" type="text"
+                     formControlName="numero"
+              >
+              <div *ngIf="facturacionForm.numero.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.numero.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-12">
+              <label>Calle secundaria</label>
+              <input class="form-control" type="text"
+                     formControlName="calleSecundaria"
+              >
+              <div *ngIf="facturacionForm.calleSecundaria.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.calleSecundaria.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-12">
+              <label>Referencia</label>
+              <input class="form-control" type="text"
+                     formControlName="referencia"
+              >
+              <div *ngIf="facturacionForm.referencia.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.referencia.errors.required">
+                  Requerido
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-12">
+              <label>GPS</label>
+              <input class="form-control" type="text"
+                     formControlName="gps"
+              >
+
+            </div>
+          </div>
+          <!--<div class="row px-4 pb-2 d-flex justify-content-end">
+            <button class="btn btn-primary" (click)="mostrarDatosEnvioConScroll()">Datos de envío y pago</button>
+          </div>-->
+        </div>
+      </div>
+    </div>
+    <div class="card m-0 py-0" *ngIf="mostrarContenido">
+      <div class="card-body m-0 py-2">
+        <div formArrayName="facturacion">
+          <h5 class="pl-3">DATOS VENDEDOR</h5>
+          <div class="row px-4 pb-2 d-flex justify-content-between">
+            <div class="col-md-4 col-12">
+              <label>Código Vendedor</label>
+              <input class="form-control" type="text"
+                     formControlName="codigoVendedor" disabled
+              >
+              <div *ngIf="facturacionForm.codigoVendedor.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.codigoVendedor.errors.required">
+                  Requerido
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-4 col-12">
+              <label>Nombre Vendedor</label>
+              <input class="form-control" type="text"
+                     formControlName="nombreVendedor" disabled
+              >
+              <div *ngIf="facturacionForm.nombreVendedor.errors"
+                   class="invalid-feedback" style="display: block;">
+                <div *ngIf="facturacionForm.nombreVendedor.errors.required">
                   Requerido
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-3 col-12">
-            <label>Numero Identificación</label>
-            <input class="form-control" type="text"
-                   formControlName="identificacion"
-            >
-            <div *ngIf="facturacionForm.identificacion.errors"
-                 class="invalid-feedback" style="display: block;">
-              <div *ngIf="facturacionForm.identificacion.errors.required">
-                Requerido
-              </div>
-              <div *ngIf="facturacionForm.identificacion.errors.pattern">
-                Ingrese solo numeros
-              </div>
-              <div *ngIf="facturacionForm.identificacion.errors.identificacionInvalid">
-                Identificacion no valida
-              </div>
-              <div *ngIf="facturacionForm.identificacion.errors.rucInvalid">
-                RUC no valido
-              </div>
-              <div *ngIf="facturacionForm.identificacion.errors.minlength">
-                Mínimo 5 caracteres
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-12">
-            <label>Número de WhatsApp</label>
-            <input class="form-control" type="text"
-                   formControlName="telefono"
-            >
-            <div *ngIf="facturacionForm.telefono.errors"
-                 class="invalid-feedback" style="display: block;">
-              <div *ngIf="facturacionForm.telefono.errors.required">
-                Requerido
-              </div>
-              <div *ngIf="facturacionForm.telefono.errors.minlength">
-                Ingrese minimo 10 digitos
-              </div>
-              <div *ngIf="facturacionForm.telefono.errors.maxlength">
-                Ingrese maximo 10 digitos
-              </div>
-              <div *ngIf="facturacionForm.telefono.errors.pattern">
-                Ingrese solo numeros
-              </div>
-            </div>
-          </div>
-        </div>
-        <hr/>
-        <h5 class="pl-3" *ngIf="mostrarDatosDireccion">DATOS DE DIRECCIÓN <label class="text-muted">(Datos
-          obligatorios)</label></h5>
-        <div class="row px-4 pb-2" *ngIf="mostrarDatosDireccion">
-          <div class="col-md-3 col-12">
-            <label>País</label>
-            <input class="form-control" type="text"
-                   formControlName="pais" disabled
-            >
-
-          </div>
-          <div class="col-md-3 col-12">
-            <label for="provinciaContacto">Provincia</label>
-            <select class="form-control" name="provinciaContacto" formControlName="provincia"
-                    (change)="obtenerCiudad()" id="provinciaContacto">
-              <option value="" selected>- Seleccione -</option>
-              <option value="{{pais.nombre}}" *ngFor="let pais of provinciaOpciones">
-                {{ pais.nombre }}
-              </option>
-            </select>
-            <div *ngIf="facturacionForm.provincia.errors"
-                 class="invalid-feedback" style="display: block;">
-              <div *ngIf="facturacionForm.provincia.errors.required">
-                Requerido
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-12">
-            <label for="ciudadContacto">Ciudad</label>
-            <select class="form-control" name="ciudadContacto" formControlName="ciudad"
-                    id="ciudadContacto" (change)="obtenerSector()">
-              <option value="" selected>- Seleccione -</option>
-              <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
-                {{ ciudad.nombre }}
-              </option>
-            </select>
-            <div *ngIf="facturacionForm.ciudad.errors"
-                 class="invalid-feedback" style="display: block;">
-              <div *ngIf="facturacionForm.ciudad.errors.required">
-                Requerido
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-12">
-            <label class="form-label" for="sectorOrigen">Sector</label>
-            <select class="form-control" id="sectorOrigen" formControlName="sector">
-              <option value="" selected>- Seleccione -</option>
-              <option value="{{sector.nombre}}" *ngFor="let sector of sectorOpciones">
-                {{ sector.nombre }}
-              </option>
-            </select>
-            <div *ngIf="facturacionForm.sector.errors"
-                 class="invalid-feedback" style="display: block;">
-              <div *ngIf="facturacionForm.sector.errors.required">
-                Requerido
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-12">
-            <label>Calle principal</label>
-            <input class="form-control" type="text"
-                   formControlName="callePrincipal"
-            >
-            <div *ngIf="facturacionForm.callePrincipal.errors"
-                 class="invalid-feedback" style="display: block;">
-              <div *ngIf="facturacionForm.callePrincipal.errors.required">
-                Requerido
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-12">
-            <label>Número de casa</label>
-            <input class="form-control" type="text"
-                   formControlName="numero"
-            >
-            <div *ngIf="facturacionForm.numero.errors"
-                 class="invalid-feedback" style="display: block;">
-              <div *ngIf="facturacionForm.numero.errors.required">
-                Requerido
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-12">
-            <label>Calle secundaria</label>
-            <input class="form-control" type="text"
-                   formControlName="calleSecundaria"
-            >
-            <div *ngIf="facturacionForm.calleSecundaria.errors"
-                 class="invalid-feedback" style="display: block;">
-              <div *ngIf="facturacionForm.calleSecundaria.errors.required">
-                Requerido
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-12">
-            <label>Referencia</label>
-            <input class="form-control" type="text"
-                   formControlName="referencia"
-            >
-            <div *ngIf="facturacionForm.referencia.errors"
-                 class="invalid-feedback" style="display: block;">
-              <div *ngIf="facturacionForm.referencia.errors.required">
-                Requerido
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-12">
-            <label>GPS</label>
-            <input class="form-control" type="text"
-                   formControlName="gps"
-            >
-
-          </div>
-        </div>
-        <!--<div class="row px-4 pb-2 d-flex justify-content-end">
-          <button class="btn btn-primary" (click)="mostrarDatosEnvioConScroll()">Datos de envío y pago</button>
-        </div>-->
-      </div>
-    </div>
-    <div class="card p-2" *ngIf="mostrarContenido">
-      <div formArrayName="facturacion">
-        <h5 class="pl-3">DATOS VENDEDOR <label class="text-muted">(Datos
-          opcionales)</label></h5>
-        <div class="row px-4 pb-2 d-flex justify-content-between">
-          <div class="col-md-4 col-12">
-            <label>Código Vendedor</label>
-            <input class="form-control" type="text"
-                   formControlName="codigoVendedor" disabled
-            >
-            <div *ngIf="facturacionForm.codigoVendedor.errors"
-                 class="invalid-feedback" style="display: block;">
-              <div *ngIf="facturacionForm.codigoVendedor.errors.required">
-                Requerido
-              </div>
-            </div>
-
-          </div>
-          <div class="col-md-4 col-12">
-            <label>Nombre Vendedor</label>
-            <input class="form-control" type="text"
-                   formControlName="nombreVendedor" disabled
-            >
-            <div *ngIf="facturacionForm.nombreVendedor.errors"
-                 class="invalid-feedback" style="display: block;">
-              <div *ngIf="facturacionForm.nombreVendedor.errors.required">
-                Requerido
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="d-flex justify-content-center">
       <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="guardarVenta()" *ngIf="mostrarBoton">
         Enviar Pedido
       </button>

@@ -103,6 +103,10 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
       longitud: [''],
       prefijo: ['', [Validators.required, Validators.maxLength(4)]],
       bodega_central: [0, []],
+      descripcion_direccion: ['', [Validators.required]],
+      direccion_mapa: ['', [Validators.required]],
+      hora_atencion: ['', [Validators.required]],
+      descuento: [0, [Validators.required, Validators.max(100), Validators.pattern('^[0-9]+$')]],
     });
     this.menu = {
       modulo: 'adm',

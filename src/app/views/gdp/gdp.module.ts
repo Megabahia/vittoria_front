@@ -8,15 +8,17 @@ import {FlatpickrModule} from 'angularx-flatpickr';
 import {NgxDropzoneModule} from 'ngx-dropzone';
 import {GdpRoutingModule} from './gdp-routing.module';
 import {GdeModule} from '../gde/gde.module';
-import {GdpComponent} from "./gdp.component";
-import {GenerarPedidosComponent} from "./pedidos/generar-pedidos.component";
-import {QRCodeModule} from "angularx-qrcode";
+import {GdpComponent} from './gdp.component';
+import {GenerarPedidosComponent} from './pedidos/generar-pedidos.component';
+import {QRCodeModule} from 'angularx-qrcode';
+import {GenerarPedidosWoocommerceComponent} from './pedidos_woocommerce/generar-pedidos-woocommerce.component';
 
 
 @NgModule({
   declarations: [
     GdpComponent,
-    GenerarPedidosComponent
+    GenerarPedidosComponent,
+    GenerarPedidosWoocommerceComponent
   ],
   imports: [
     CommonModule,
