@@ -136,9 +136,9 @@ export class PedidosEntregaLocalEntregadosComponent implements OnInit, AfterView
       envioTotal: [0, [Validators.required]],
       numeroPedido: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
-      metodoPago: ['Contra-Entrega', [Validators.required]],
+      metodoPago: ['', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
-      canal: ['Contacto Local'],
+      canal: [''],
       estado: ['Entregado'],
       envio: ['', []],
       envios: ['', []],
@@ -215,9 +215,8 @@ export class PedidosEntregaLocalEntregadosComponent implements OnInit, AfterView
       estado: ['Entregado'],
     }).subscribe((info) => {
       this.collectionSize = info.cont;
-      this.listaContactos = info.info;
+      this.listaContactos = info.info.filter(item => item.canal !== "Contacto Local");
       this.listaFormasPago = info.info.formaPago;
-      this.toaster.open('Lista actualizada',{ type: 'success'});
     });
   }
 

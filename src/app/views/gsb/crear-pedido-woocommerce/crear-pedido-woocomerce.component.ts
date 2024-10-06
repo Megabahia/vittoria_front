@@ -963,6 +963,11 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
         this.notaPedido.get('facturacion').get('telefono').setValue(info.telefono);
         this.notaPedido.get('facturacion').get('provincia').setValue(info.provinciaNacimiento);
         this.notaPedido.get('facturacion').get('ciudad').setValue(info.ciudadNacimiento);
+        this.notaPedido.get('facturacion').get('callePrincipal').setValue(info.callePrincipal);
+        this.notaPedido.get('facturacion').get('numero').setValue(info.numero);
+        this.notaPedido.get('facturacion').get('calleSecundaria').setValue(info.calleSecundaria);
+        this.notaPedido.get('facturacion').get('referencia').setValue(info.referencia);
+        this.notaPedido.get('facturacion').get('gps').setValue(info.gps);
 
         this.obtenerCiudad();
         this.obtenerSector();
@@ -976,6 +981,11 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
         this.notaPedido.get('facturacion').get('telefono').setValue('');
         this.notaPedido.get('facturacion').get('provincia').setValue('');
         this.notaPedido.get('facturacion').get('ciudad').setValue('');
+        this.notaPedido.get('facturacion').get('callePrincipal').setValue('');
+        this.notaPedido.get('facturacion').get('numero').setValue('');
+        this.notaPedido.get('facturacion').get('calleSecundaria').setValue('');
+        this.notaPedido.get('facturacion').get('referencia').setValue('');
+        this.notaPedido.get('facturacion').get('gps').setValue('');
         this.obtenerCiudad();
 
         //this.notaPedido.get('facturacion').get('identificacion').enable();

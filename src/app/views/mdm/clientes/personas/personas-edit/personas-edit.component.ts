@@ -126,7 +126,12 @@ export class PersonasEditComponent implements OnInit {
     ingresosPromedioMensual: 0,
     gastosPromedioMensual: 0,
     estado: 0,
-    tipoIdentificacion: ''
+    tipoIdentificacion: '',
+    callePrincipal: '',
+    numero: '',
+    calleSecundaria: '',
+    referencia: '',
+    gps: '',
   };
 
   datosFisicos: DatosFisicos = {
