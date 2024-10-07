@@ -534,8 +534,8 @@
                                             <div class="form-group">
                                               <label>Calle principal</label>
                                               <input type="text" class="form-control" name="callePrincipal" formControlName="callePrincipal" [(ngModel)]="datosBasicos.callePrincipal">
-                                              <div *ngIf="submittedDatosBasicosForm && fdb.nombres.errors" class="invalid-feedback" style="display: block;">
-                                                <div *ngIf="fdb.nombres.errors.required">Calle principal es requerida
+                                              <div *ngIf="submittedDatosBasicosForm && fdb.callePrincipal.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="fdb.callePrincipal.errors.required">Calle principal es requerida
                                                 </div>
                                               </div>
                                             </div>
@@ -543,9 +543,9 @@
                                           <div class="col-md-4">
                                             <div class="form-group">
                                               <label>Número de casa</label>
-                                              <input type="text" class="form-control" name="numeroCasa" formControlName="numeroCasa" [(ngModel)]="datosBasicos.numero">
-                                              <div *ngIf="submittedDatosBasicosForm && fdb.nombres.errors" class="invalid-feedback" style="display: block;">
-                                                <div *ngIf="fdb.nombres.errors.required">Número de casa es requerida
+                                              <input type="text" class="form-control" name="numeroCasa" formControlName="numero" [(ngModel)]="datosBasicos.numero">
+                                              <div *ngIf="submittedDatosBasicosForm && fdb.numero.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="fdb.numero.errors.required">Número de casa es requerida
                                                 </div>
                                               </div>
                                             </div>
@@ -554,8 +554,8 @@
                                             <div class="form-group">
                                               <label>Calle secundaria</label>
                                               <input type="text" class="form-control" name="calleSecundaria" formControlName="calleSecundaria" [(ngModel)]="datosBasicos.calleSecundaria">
-                                              <div *ngIf="submittedDatosBasicosForm && fdb.nombres.errors" class="invalid-feedback" style="display: block;">
-                                                <div *ngIf="fdb.nombres.errors.required">Calle secundaria es requerida
+                                              <div *ngIf="submittedDatosBasicosForm && fdb.calleSecundaria.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="fdb.calleSecundaria.errors.required">Calle secundaria es requerida
                                                 </div>
                                               </div>
                                             </div>
@@ -564,8 +564,8 @@
                                             <div class="form-group">
                                               <label>Referencia</label>
                                               <input type="text" class="form-control" name="referencia" formControlName="referencia" [(ngModel)]="datosBasicos.referencia">
-                                              <div *ngIf="submittedDatosBasicosForm && fdb.nombres.errors" class="invalid-feedback" style="display: block;">
-                                                <div *ngIf="fdb.nombres.errors.required">Referencia es requerida
+                                              <div *ngIf="submittedDatosBasicosForm && fdb.referencia.errors" class="invalid-feedback" style="display: block;">
+                                                <div *ngIf="fdb.referencia.errors.required">Referencia es requerida
                                                 </div>
                                               </div>
                                             </div>

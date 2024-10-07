@@ -25,6 +25,10 @@ export class IntegracionesService {
     return this.http.post<any>(`${apiUrl}/adm/integraciones/update/${datos.id}`, datos);
   }
 
+  editarIntegracionFormData(datos: FormData): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/adm/integraciones/update/${datos.get('id')}`, datos);
+  }
+
   eliminarIntegracion(id): Observable<any> {
     return this.http.delete<any>(`${apiUrl}/adm/integraciones/delete/${id}`);
   }

@@ -74,6 +74,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   hablilitarBotonGuardar = true;
 
   integracionCanalCupon;
+  imagenCanal;
 
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -89,6 +90,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   dataPedidoWoocommerce;
   mostrarFiltroCliente = true;
   mostrarInputNumPedido = false;
+  base64Image: string | undefined;
 
   constructor(
     private modalService: NgbModal,
@@ -298,6 +300,8 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     if (confirm('Esta seguro de guardar los datos') === true) {
       this.hablilitarBotonGuardar = false;
       this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
+          this.imagenCanal = info.imagen_canal;
+
           this.modalService.dismissAll();
           this.notaPedido.patchValue({...info, id: this.idContacto});
           this.obtenerContactos();
@@ -647,10 +651,11 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  cerrarModal(){
+  cerrarModal() {
     this.modalService.dismissAll();
     this.iniciarNotaPedido();
   }
+
 
   /*async obtenerDatosPedidoWoocommerce() {
     const data = localStorage.getItem('productoDataPedidoWoocommerce');

@@ -90,6 +90,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
   mostrarInputNumPedido = false;
   desabilitarComboPrecios: boolean[] = [];
   integracionCanalCupon;
+  imagenCanal;
 
   constructor(
     private modalService: NgbModal,
@@ -102,7 +103,6 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
     private toaster: Toaster,
     private integracionesService: IntegracionesService,
     private authService: AuthService,
-
   ) {
     const navbar = document.getElementById('navbar');
     const toolbar = document.getElementById('toolbar');
@@ -291,6 +291,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
     if (confirm('Esta seguro de guardar los datos') === true) {
       this.hablilitarBotonGuardar = false;
       this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
+          this.imagenCanal = info.imagen_canal;
           this.modalService.dismissAll();
           this.notaPedido.patchValue({...info, id: this.idContacto});
           this.obtenerContactos();
@@ -634,7 +635,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
     this.mostrarContenidoPantalla = false;
   }
 
-  cerrarPantallaPedidoWoocommerce(){
+  cerrarPantallaPedidoWoocommerce() {
     this.authService.signOut();
   }
 

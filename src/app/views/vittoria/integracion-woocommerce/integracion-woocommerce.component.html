@@ -254,6 +254,15 @@
                       </div>
                     </div>
                   </div>
+                  <div class="form-group">
+                    <label class="form-label">
+                      Imagen del canal
+                    </label>
+                    <input type="file" (change)="onFileSelect($event)" accept=".jpg,.jpeg,.png"
+                           style="width: 260px" formControlName="imagen_principal">
+                    <img *ngIf="imageUrlPrincipal" [src]="imageUrlPrincipal" alt="Imagen principal" class="img-fluid mt-3"
+                         style="max-width: 250px; height: auto;">
+                  </div>
 
                   <label class="form-label font-weight-bold mb-2" for="basic-icon-default-email">Pedidos gestionados
                     por:</label>

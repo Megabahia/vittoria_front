@@ -960,6 +960,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
         this.notaPedido.get('facturacion').get('apellidos').setValue(info.apellidos);
         this.notaPedido.get('facturacion').get('correo').setValue(info.correo);
         this.notaPedido.get('facturacion').get('identificacion').setValue(info.cedula);
+        this.notaPedido.get('facturacion').get('tipoIdentificacion').setValue(info.tipoIdentificacion);
         this.notaPedido.get('facturacion').get('telefono').setValue(info.telefono);
         this.notaPedido.get('facturacion').get('provincia').setValue(info.provinciaNacimiento);
         this.notaPedido.get('facturacion').get('ciudad').setValue(info.ciudadNacimiento);
@@ -978,6 +979,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
         this.notaPedido.get('facturacion').get('apellidos').setValue('');
         this.notaPedido.get('facturacion').get('correo').setValue('');
         this.notaPedido.get('facturacion').get('identificacion').setValue('');
+        this.notaPedido.get('facturacion').get('tipoIdentificacion').setValue('');
         this.notaPedido.get('facturacion').get('telefono').setValue('');
         this.notaPedido.get('facturacion').get('provincia').setValue('');
         this.notaPedido.get('facturacion').get('ciudad').setValue('');
