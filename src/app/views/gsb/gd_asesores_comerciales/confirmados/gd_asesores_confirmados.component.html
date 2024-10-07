@@ -170,9 +170,9 @@
                 <select id="tipoIdentificacion" class="form-control" formControlName="tipoIdentificacion"
                         (change)="onSelectChangeIdentificacion($event)">
                   <option value="" disabled>- Seleccione -</option>
-                  <option value="Cedula" selected>Cédula</option>
-                  <option value="RUC">RUC</option>
-                  <option value="Pasaporte">Pasaporte</option>
+                  <option value="cedula" selected>Cédula</option>
+                  <option value="ruc">RUC</option>
+                  <option value="pasaporte">Pasaporte</option>
                 </select>
                 <div *ngIf="notaAsesorBancoForm.tipoIdentificacion.errors"
                      class="invalid-feedback" style="display: block;">

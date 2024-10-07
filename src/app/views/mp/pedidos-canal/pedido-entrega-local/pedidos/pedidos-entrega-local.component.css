@@ -1,0 +1,14 @@
+.disabled-input{
+  background-color: #ced4da;
+  border: 1px solid #ced4da;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.sticky-button {
+  position: -webkit-sticky; /* Soporte para Safari */
+  position: sticky;
+  top: 20px; /* Cambia este valor según necesites que se "pegue" al hacer scroll */
+  right: 20px;
+  z-index: 1000; /* Asegúrate que está sobre otros elementos */
+}

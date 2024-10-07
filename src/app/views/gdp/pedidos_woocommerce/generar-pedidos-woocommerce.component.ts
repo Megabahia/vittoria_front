@@ -19,14 +19,15 @@ import html2canvas from 'html2canvas';
 import {element} from "protractor";
 import {Download} from "angular-feather/icons";
 import {IntegracionesService} from "../../../services/admin/integraciones.service";
+import {AuthService} from "../../../services/admin/auth.service";
 
 @Component({
-  selector: 'app-generar-ventas',
-  templateUrl: './generar-pedidos.component.html',
-  styleUrls: ['generar-pedido.components.css'],
+  selector: 'app-generar-pedido-woocommerce',
+  templateUrl: './generar-pedidos-woocommerce.component.html',
+  styleUrls: ['generar-pedido-woocommerce.components.css'],
   providers: [DatePipe]
 })
-export class GenerarPedidosComponent implements OnInit, AfterViewInit {
+export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit {
   @Input() paises;
 
   public notaPedido: FormGroup;
@@ -55,7 +56,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   whatsapp = '';
   correo = '';
   usuarioActual;
-  canalSeleccionado = 'megabahia.megadescuento.com';
+  canalSeleccionado = 'superbarato.megadescuento.com';
   cedulaABuscar = '';
   clientes;
   cliente;
@@ -72,10 +73,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   tipoIdentificacion;
   totalIva;
   hablilitarBotonGuardar = true;
-
-  integracionCanalCupon;
-  imagenCanal;
-
+  mostrarContenidoPantalla = true;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -90,20 +88,28 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   dataPedidoWoocommerce;
   mostrarFiltroCliente = true;
   mostrarInputNumPedido = false;
-  base64Image: string | undefined;
+  desabilitarComboPrecios: boolean[] = [];
+  integracionCanalCupon;
+  imagenCanal;
 
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
-    private integracionesService: IntegracionesService,
     private clientesService: ClientesService,
     private contactosService: ContactosService,
     private paramService: ParamService,
     private paramServiceAdm: ParamServiceAdm,
     private productosService: ProductosService,
     private toaster: Toaster,
+    private integracionesService: IntegracionesService,
+    private authService: AuthService,
   ) {
-
+    const navbar = document.getElementById('navbar');
+    const toolbar = document.getElementById('toolbar');
+    if (navbar && toolbar) {
+      navbar.style.display = 'none';
+      toolbar.style.display = 'none';
+    }
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
     this.autorizarForm = this.formBuilder.group({
@@ -134,8 +140,6 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       this.parametroIva = parseFloat(result.info[0].valor);
     });
 
-    this.obtenerIntegracionCanal();
-
   }
 
   ngOnInit(): void {
@@ -143,7 +147,6 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       modulo: 'mdm',
       seccion: 'clientesTransac'
     };
-    this.canalSeleccionado = 'megabahia.megadescuento.com';
     this.iniciarNotaPedido();
     this.obtenerListaProductos();
     this.cedulaABuscar = '';
@@ -152,15 +155,11 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     this.obtenerProvincias();
     this.obtenerCiudad();
 
-    if (localStorage.getItem('productoData')) {
-      this.obtenerProductoDesdeConsulta();
-    }
-    /*else if (localStorage.getItem('productoDataPedidoWoocommerce')) {
-      this.mostrarFiltroCliente = false;
-      this.mostrarInputNumPedido = true;
+    if (localStorage.getItem('productoDataPedidoWoocommerce')) {
       this.obtenerDatosPedidoWoocommerce();
-    }*/
-
+    } else {
+      this.toaster.open('No existen datos de pedido desde woocommerce.', {type: 'danger'});
+    }
   }
 
   ngAfterViewInit(): void {
@@ -191,10 +190,10 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       envioTotal: [0, [Validators.required]],
       numeroPedido: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
-      metodoPago: ['Pago Contra Entrega en Quito', [Validators.required]],
+      metodoPago: ['', [Validators.required]],
       verificarPedido: [true, [Validators.required]],
-      canal: ['Contacto Local', []],
-      estado: ['Pendiente de entrega', []],
+      canal: ['', []],
+      estado: ['Pendiente de retiro', []],
       envio: ['', []],
       envios: ['', []],
       json: ['', []],
@@ -237,7 +236,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       imagen: [''],
       caracteristicas: ['', []],
       precios: [[], []],
-      canal: ['megabahia.megadescuento.com'],
+      canal: [''],
       woocommerceId: [''],
       imagen_principal: ['', [Validators.required]]
     });
@@ -260,22 +259,14 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       page_size: this.pageSize,
       //inicio: this.inicio,
       //fin: this.transformarFecha(this.fin),
-      //estado: ['Pendiente'],
-      canal: 'Contacto Local'
+      numeroPedido: this.dataPedidoWoocommerce.numeroPedido,
+      estado: ['Pendiente de retiro'],
+      canal: this.dataPedidoWoocommerce.canal
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaContactos = info.info;
       this.idContacto = info.info[0].id;
     });
-  }
-
-  crearNuevaVenta(modal): void {
-    this.hablilitarBotonGuardar = true;
-    this.canalSeleccionado = 'megabahia.megadescuento.com';
-    this.iniciarNotaPedido();
-    this.obtenerListaProductos();
-    this.cedulaABuscar = '';
-    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
   }
 
   obtenerOpciones(): void {
@@ -301,7 +292,6 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       this.hablilitarBotonGuardar = false;
       this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
           this.imagenCanal = info.imagen_canal;
-
           this.modalService.dismissAll();
           this.notaPedido.patchValue({...info, id: this.idContacto});
           this.obtenerContactos();
@@ -334,21 +324,14 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   }
 
   async obtenerProducto(i, canalProducto = ''): Promise<void> {
-    if (this.canalSeleccionado === '') {
-      this.toaster.open('Seleccione un canal y vuelva a buscar', {type: 'danger'});
-      return;
-    }
+
     return new Promise((resolve, reject) => {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
-        //canalProducto: this.detallesArray.value[i].canal ? this.detallesArray.value[i].canal : this.canalSeleccionado,
-        canal: canalProducto !== '' ? canalProducto : this.canalSeleccionado,
-        //valorUnitario: this.detallesArray.controls[i].value.valorUnitario
+        canal: canalProducto,
       };
       this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
-        //if(info.mensaje==''){
         if (info.producto.codigoBarras) {
-          this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
           this.detallesArray.controls[i].get('id').setValue(info.producto.id);
           this.detallesArray.controls[i].get('articulo').setValue(info.producto.nombre);
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
@@ -356,25 +339,21 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
           const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
           this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
           this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
-          this.detallesArray.controls[i].get('imagen').setValue(info.producto?.imagen);
           this.detallesArray.controls[i].get('imagen_principal').setValue(info.producto?.imagen_principal);
+          this.detallesArray.controls[i].get('canal').setValue(info.producto.canal);
+          this.detallesArray.controls[i].get('woocommerceId').setValue(info.producto.woocommerceId);
+
           this.detallesArray.controls[i].get('cantidad').setValidators([
             Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info.producto?.stock)
           ]);
           this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
-          this.detallesArray.controls[i].get('canal').setValue(info.producto.canal);
-          this.detallesArray.controls[i].get('woocommerceId').setValue(info.producto.woocommerceId);
           this.calcular();
           resolve();
         } else {
           this.detallesArray.controls[i].get('articulo').setValue('');
           this.toaster.open('Producto no existente, agregue un producto que se encuentre en la lista de productos.', {type: 'danger'});
           reject(new Error('No existe el producto a buscar')); // Rechaza la promesa si no se encuentra el producto
-        }// Resuelve la promesa una vez completadas todas las asignaciones
-        /*}else{
-          this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
-          window.alert('Existen inconsistencias con los precios de los productos.');
-        }*/
+        }
       }, error => this.toaster.open(error, {type: 'danger'}));
     });
   }
@@ -383,7 +362,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     const precios = [];
     Object.keys(info).forEach(clave => {
       if (clave.startsWith('precioVenta')) {
-        precios.push({clave: clave, valor: info[clave] ? info[clave] : 0});
+        precios.push({clave: clave, valor: info[clave] ? info[clave].toFixed(2) : 0});
       }
     });
     return precios;
@@ -645,7 +624,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   obtenerIntegracionCanal() {
     this.integracionesService.obtenerListaIntegraciones({
       page: this.page,
-      page_size: this.pageSize, valor: this.canalSeleccionado
+      page_size: this.pageSize, valor: this.dataPedidoWoocommerce.canal
     }).subscribe(async (result) => {
       this.integracionCanalCupon = result.info[0];
     });
@@ -653,30 +632,37 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
   cerrarModal() {
     this.modalService.dismissAll();
-    this.iniciarNotaPedido();
+    this.mostrarContenidoPantalla = false;
   }
 
+  cerrarPantallaPedidoWoocommerce() {
+    this.authService.signOut();
+  }
 
-  /*async obtenerDatosPedidoWoocommerce() {
+  async obtenerDatosPedidoWoocommerce() {
     const data = localStorage.getItem('productoDataPedidoWoocommerce');
+
     if (data) {
       this.dataPedidoWoocommerce = JSON.parse(data);
       this.notaPedido.patchValue({...this.dataPedidoWoocommerce});
+      this.canalSeleccionado = this.dataPedidoWoocommerce.canal;
+      this.notaPedido.get('canal').setValue(this.canalSeleccionado);
+      this.notaPedido.get('metodoPago').setValue(this.dataPedidoWoocommerce.metodoPago);
       this.dataPedidoWoocommerce.articulos.map((datos, index) => {
         this.agregarItem();
         this.detallesArray.controls[index].get('codigo').setValue(datos.codigo);
+        this.detallesArray.controls[index].get('cantidad').setValue(datos.cantidad);
+        this.detallesArray.controls[index].get('valorUnitario').setValue(parseFloat(datos.precio.toFixed(2)));
         this.obtenerProducto(index, datos.canal);
       });
+      this.notaPedido.get('canal').setValue(this.dataPedidoWoocommerce.canal);
+      this.notaPedido.get('estado').setValue('Pendiente de retiro');
       this.obtenerCiudad();
-      //this.obtenerSector();
-
-      //this.notaPedido.get('numeroPedido').setValue(this.generarID());
-      this.notaPedido.get('canal').setValue('Contacto Local');
-      this.notaPedido.get('estado').setValue('Pendiente de entrega');
+      this.obtenerIntegracionCanal();
       localStorage.removeItem('productoDataPedidoWoocommerce');
     }
 
-  }*/
+  }
 
 
   /*obtenerSector(): void {

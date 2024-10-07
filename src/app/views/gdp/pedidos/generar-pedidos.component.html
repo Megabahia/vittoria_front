@@ -438,11 +438,11 @@
             </div>
           </form>
         </div>
-        <div class="card-footer text-right">
+        <div class="card-footer text-center">
           <button class="btn btn-primary mx-1"
                   (click)="guardarVenta(notaPedidoModal)"
                   *ngIf="hablilitarBotonGuardar"
-          >Guardar
+          >Confirmar pedido
           </button>
         </div>
       </div>
@@ -479,7 +479,7 @@
         <div class="card-body invoice-padding pb-0 mb-2">
           <div class="d-flex flex-md-row flex-column justify-content-md-between align-items-start invoice-spacing mt-0">
             <div class="mb-md-0 mb-3 text-center text-md-left"> <!-- Centrado en móviles, izquierda en escritorio -->
-              <img src="../../../../assets/images/cupon/logo_cupon.png" alt="Logo"
+              <img src="{{ imagenCanal || './assets/images/no_existe.png' }}" alt="Logo"
                    style="max-width: 100%; height: auto; max-height: 120px;">
             </div>
             <div class="text-center text-md-right d-flex flex-column justify-content-end align-items-center">
@@ -516,20 +516,20 @@
           <br/>
           <br/>
           <span *ngIf="verDireccion">
-            Encuéntranos en QUITO: Av. 10 de Agosto N39-201 y José Arizaga, Sector La Y, frente al Hipermercado CORAL y junto a la Clínica AXXIS.
+            Encuéntranos en {{ this.integracionCanalCupon.ciudad }}: {{this.integracionCanalCupon.descripcion_direccion}}.
             <br>
             <br>
             <span>Dirección en mapa: </span>
-            <a href="{{parametroDireccion}}" target="_blank">{{ parametroDireccion }}</a>
+            <a href="{{ this.integracionCanalCupon.direccion_mapa }}" target="_blank">{{ this.integracionCanalCupon.direccion_mapa }}</a>
           </span>
           <br>
-          <span>Horario de Atención: Lunes a Sábado de 08:45 am a 18:15 pm</span>
+          <span>Horario de Atención: {{ this.integracionCanalCupon.hora_atencion }}</span>
         </div>
 
         <!-- Address and Contact ends -->
 
         <h5 class="text-danger text-center px-2">Presentando esta imagen, cuando usted retire su
-          pedido, OBTIENE un {{ descuentoCupon }} de ¡DESCUENTO ADICIONAL!
+          pedido, OBTIENE un {{ this.integracionCanalCupon.descuento }}% de ¡DESCUENTO ADICIONAL!
         </h5>
         <br>
         <h4 class="text-center" [ngStyle]="{'color':'blue'}">Su pedido #{{ notaPedido.value.numeroPedido }}</h4>
@@ -594,7 +594,7 @@
          class="btn btn-primary" role="button">Descargar imagen</a>-->
 
       <button type="reset" class="btn btn-secondary"
-              (click)="modal.dismiss( 'Cross click')" *ngIf="imagenCargada">Cerrar
+              (click)="cerrarModal()" *ngIf="imagenCargada">Cerrar
       </button>
     </div>
   </ng-template>

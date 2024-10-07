@@ -407,7 +407,7 @@
                                                  data-i18n="List">Asesor/a comercial</span></a>
             <ul class="menu-content">
               <li class="nav-item"
-                  >
+              >
                 <a class="d-flex align-items-center" [routerLink]="['gd/asesor/resgistro']" data-toggle="tooltip"
                    data-placement="auto" title="Registrar asesor@s comerciales">
                   <i data-feather="circle"></i>
@@ -415,7 +415,7 @@
                 </a>
               </li>
               <li class="nav-item"
-                  >
+              >
                 <a class="d-flex align-items-center" [routerLink]="['gd/asesor/list']" data-toggle="tooltip"
                    data-placement="auto" title="Asesor@s comerciales registrada">
                   <i data-feather="circle"></i>
@@ -436,14 +436,16 @@
                                                      data-i18n="List">Billetera digital</span></a>
                 <ul class="menu-content">
                   <li class="nav-item">
-                    <a class="d-flex align-items-center" data-toggle="tooltip" [routerLink]="['gd/asesor/billetera/digital/cargar_saldo']"
+                    <a class="d-flex align-items-center" data-toggle="tooltip"
+                       [routerLink]="['gd/asesor/billetera/digital/cargar_saldo']"
                        data-placement="auto" title="Cargar saldo billetera digital">
                       <i data-feather="circle"></i>
                       <span class="menu-item text-truncate" data-i18n="List">Cargar saldo billetera digital</span>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="d-flex align-items-center" data-toggle="tooltip" [routerLink]="['gd/asesor/list/billetera/digital/movimientos']"
+                    <a class="d-flex align-items-center" data-toggle="tooltip"
+                       [routerLink]="['gd/asesor/list/billetera/digital/movimientos']"
                        data-placement="auto" title="Movimientos billetera digital">
                       <i data-feather="circle"></i>
                       <span class="menu-item text-truncate" data-i18n="List">Movimientos billetera digital</span>
@@ -564,7 +566,30 @@
                   <span class="menu-item text-truncate" data-i18n="List">Pedido Superbarato</span>
                 </a>
               </li>
-
+              <li class="nav-item has-sub ng-star-inserted">
+                <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
+                   title="Pedidos entrega local">
+                  <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                                     data-i18n="List">Pedidos entrega local</span></a>
+                <ul class="menu-content">
+                  <li class="nav-item">
+                    <a class="d-flex align-items-center" [routerLink]="['mp/pedido-entrega-local/list']"
+                       data-toggle="tooltip"
+                       data-placement="auto" title="Pedidos">
+                      <i data-feather="circle"></i>
+                      <span class="menu-item text-truncate" data-i18n="List">Pedidos</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="d-flex align-items-center" [routerLink]="['mp/pedido-entrega-local/entregados']"
+                       data-toggle="tooltip"
+                       data-placement="auto" title="Pedidos entregados">
+                      <i data-feather="circle"></i>
+                      <span class="menu-item text-truncate" data-i18n="List">Pedidos entregados</span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
             </ul>
           </li>
         </ul>

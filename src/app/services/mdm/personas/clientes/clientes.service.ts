@@ -37,6 +37,11 @@ export interface DatosBasicos {
   gastosPromedioMensual;
   estado;
   tipoIdentificacion;
+  callePrincipal;
+  numero;
+  calleSecundaria;
+  referencia;
+  gps;
 }
 
 
