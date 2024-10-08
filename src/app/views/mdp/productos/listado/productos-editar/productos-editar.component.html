@@ -137,7 +137,8 @@
                 <div class="col-md-4 col-12">
                   <div class="form-group">
                     <label for="subCategoriaP">Subcategoría <span class="text-danger">*</span></label>
-                    <select class="form-control select2" id="subCategoriaP" name="subCategoria" formControlName="subCategoria"
+                    <select class="form-control select2" id="subCategoriaP" name="subCategoria"
+                            formControlName="subCategoria"
                             [(ngModel)]="producto.subCategoria">
                       <option value="" selected>- Seleccionar -</option>
                       <option *ngFor="let subcategoriasOp of subcategoriasOpciones"
@@ -207,7 +208,7 @@
                 </div>
               </div>
               <div class="row mx-2">
-              <h4 class="col-md-12 my-1 text-warning font-weight-bold">Precios</h4>
+                <h4 class="col-md-12 my-1 text-warning font-weight-bold">Precios</h4>
                 <div class="col-md-4 col-12">
                   <div class="form-group">
                     <label>Precio de venta A TodoMegacentro</label>
@@ -335,6 +336,33 @@
                       <div *ngIf="fp.precioLandingOferta.errors.required">Precio Landing Oferta es requerido</div>
                       <div *ngIf="fp.precioLandingOferta.errors.pattern">Solo se aceptan números decimales</div>
                     </div>-->
+                  </div>
+                </div>
+              </div>
+              <div class="row mx-2 my-1">
+                <h4 class="col-md-12 my-1 text-warning font-weight-bold">Comision</h4>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Porcentaje de comisión</label>
+                    <input type="text" class="form-control" formControlName="porcentaje_comision"
+                           [(ngModel)]="producto.porcentaje_comision">
+                    <div *ngIf="submittedProductoForm && fp.porcentaje_comision.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.porcentaje_comision.errors.pattern">Ingrese un valor válido</div>
+                      <div *ngIf="fp.porcentaje_comision.errors.max">Máximo un valor de 100</div>
+                      <div *ngIf="fp.porcentaje_comision.errors.min">Mínimo 0</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <label>Valor de comisión</label>
+                    <input type="text" class="form-control" formControlName="valor_comision" placeholder="00.00"
+                           [(ngModel)]="producto.valor_comision">
+                    <div *ngIf="submittedProductoForm && fp.valor_comision.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="fp.valor_comision.errors.pattern">Ingrese un valor válido</div>
+                    </div>
                   </div>
                 </div>
               </div>

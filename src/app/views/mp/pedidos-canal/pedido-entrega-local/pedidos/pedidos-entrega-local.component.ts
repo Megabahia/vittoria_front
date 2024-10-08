@@ -222,7 +222,9 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
       precios: [[], []],
       canal: [''],
       woocommerceId: [''],
-      imagen_principal: ['', [Validators.required]]
+      imagen_principal: ['', [Validators.required]],
+      porcentaje_comision: [''],
+      valor_comision: [''],
     });
   }
 
@@ -302,7 +304,8 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
         this.notaPedido.get('tipoPago').setValidators([Validators.required]);
         this.notaPedido.get('tipoPago').updateValueAndValidity();
       }
-      this.calcular()
+      this.calcular();
+      console.log(this.notaPedido.value);
     });
   }
 
@@ -706,6 +709,14 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
     let indice = this.formasPago.indexOf(valor);
     if (indice !== -1) {
       this.formasPago.splice(indice, 1);
+    }
+  }
+
+  valorComision(porcentaje, valor, precio){
+    if (valor){
+      return valor.toFixed(2);
+    }else{
+      return porcentaje+'% => ' + ((precio * porcentaje) / 100).toFixed(2);
     }
   }
 

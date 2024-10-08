@@ -356,11 +356,10 @@
                                     </div>
                                   </div>
                                   <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                    <p class="card-text col-title mb-md-50 mb-0">
-                                      Características
+                                    <p class="card-text col-title mb-md-50 mb-0 text-danger">
+                                      Valor comisión
                                     </p>
-                                    <label [innerHTML]="detalle.controls.caracteristicas.value"></label>
-
+                                    <label class="d-block text-wrap text-danger">{{ valorComision(detalle.controls.porcentaje_comision.value, detalle.controls.valor_comision.value, detalle.controls.precio.value) }}</label>
                                   </div>
                                   <div class="col-lg-2 col-12 my-lg-0 my-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
