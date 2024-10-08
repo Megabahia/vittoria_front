@@ -82,6 +82,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   mostrarBoton = true;
   mostrarBotonVolverCatalogo = false;
   pedidoMismoOrigen = true;
+  valorComision: number[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -188,7 +189,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
 
     this.datos.map((data, index) => {
-      this.obtenerProducto(this.datos[index]);
+      this.obtenerProducto(this.datos[index], index);
     });
 
     this.notaPedido.updateValueAndValidity();
@@ -311,7 +312,9 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       precios: [preciosVentas],
       canal: [datosBaseDatos.canal],
       imagen_principal: [datos.imagen_del_producto],
-      prefijo: [datosBaseDatos.prefijo, []]
+      prefijo: [datosBaseDatos.prefijo, []],
+      porcentaje_comision: [datosBaseDatos.porcentaje_comision, [Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]*$')]],
+      valor_comision: [datosBaseDatos.valor_comision],
     });
   }
 
@@ -328,7 +331,9 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       precios: [data.precios],
       canal: [data.canal],
       imagen_principal: [data.imagen_principal],
-      prefijo: [data.prefijo]
+      prefijo: [data.prefijo],
+      porcentaje_comision: [data.porcentaje_comision],
+      valor_comision: [data.valor_comision],
     });
   }
 
@@ -716,7 +721,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   }
 
   //OBTENER PRODUCTO
-  async obtenerProducto(productoWoocomerce): Promise<void> {
+  async obtenerProducto(productoWoocomerce, i): Promise<void> {
     return new Promise((resolve, reject) => {
       const data = {
         prefijo: productoWoocomerce.tienda_producto,
@@ -725,7 +730,6 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
         cantidad: productoWoocomerce.cantidad_en_el_carrito
       };
       this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
-        console.log('IMPRIMIR INFO PRODUCTO BUSCAR', info)
         this.productoBuscar.push({...info.producto});
         const prefijo = info.producto.prefijo; // Asumiendo que cada producto tiene un atributo 'prefijo'
 
@@ -761,7 +765,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
           this.mostrarBotonVolverCatalogo = false;
         }
-
+        this.calculoComision(info.producto.porcentaje_comision, info.producto.valor_comision, productoWoocomerce.total_del_articulo, i);
       }, error => {
         this.toaster.open(error.error, {type: 'danger'});
         this.mostrarBotonVolverCatalogo = true;
@@ -1028,6 +1032,15 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
   irInicio() {
     window.open('#/admin/management');
+  }
+
+  calculoComision(porcentaje, valor, precioProducto, i) {
+
+    if (valor) {
+      this.valorComision[i] = valor;
+    } else {
+      this.valorComision[i] = (porcentaje * precioProducto) / 100;
+    }
   }
 }
 

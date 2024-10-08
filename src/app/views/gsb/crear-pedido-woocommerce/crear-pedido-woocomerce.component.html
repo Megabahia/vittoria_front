@@ -28,6 +28,9 @@
                   <ng-container [formGroup]="articulo">
                     <label style="font-size: small"
                            class="text-info px-2">Tienda: {{ articulo.controls.canal.value }}</label>
+                    <label style="font-size: small"
+                           class="text-info px-2">Valor de
+                      comision: ${{ valorComision[i] || 0}}</label>
                     <div class="repeater-wrapper" data-repeater-item>
                       <div class="row px-2 mt-1">
                         <div class="col-md-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
@@ -36,14 +39,20 @@
                           </p>
                           <label style="font-size: small">{{ articulo.controls.codigo.value }}</label>
                         </div>
-                        <div class="col-md-3 col-12 my-lg-0 my-2">
+                        <div class="col-md-2 col-12 my-lg-0 my-2">
                           <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
                             Nombre producto
                           </p>
                           <label class="d-block text-wrap"
                                  style="font-size: small">{{ articulo.controls.articulo.value }}</label>
                         </div>
-
+                        <div class="col-md-1 col-12 my-lg-0 my-2" *ngIf="!articulo.controls.valor_comision.value">
+                          <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
+                            Porcentaje de comisión
+                          </p>
+                          <input type="text" class="form-control"
+                                 formControlName="porcentaje_comision" (change)="calculoComision(articulo.controls.porcentaje_comision.value, articulo.controls.valor_comision.value, articulo.controls.precio.value, i)">
+                        </div>
                         <!--CANTIDAD-->
                         <div class="item-quantity">
                           <p class="quantity-title col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">

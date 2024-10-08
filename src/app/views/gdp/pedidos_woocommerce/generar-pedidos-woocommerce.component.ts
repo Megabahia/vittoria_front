@@ -238,7 +238,9 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
       precios: [[], []],
       canal: [''],
       woocommerceId: [''],
-      imagen_principal: ['', [Validators.required]]
+      imagen_principal: ['', [Validators.required]],
+      porcentaje_comision: [0],
+      valor_comision: [0],
     });
   }
 
@@ -644,6 +646,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
 
     if (data) {
       this.dataPedidoWoocommerce = JSON.parse(data);
+      console.log('PRODUCTO DESDE WOOCOMMERC', this.dataPedidoWoocommerce)
       this.notaPedido.patchValue({...this.dataPedidoWoocommerce});
       this.canalSeleccionado = this.dataPedidoWoocommerce.canal;
       this.notaPedido.get('canal').setValue(this.canalSeleccionado);
@@ -653,6 +656,8 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
         this.detallesArray.controls[index].get('codigo').setValue(datos.codigo);
         this.detallesArray.controls[index].get('cantidad').setValue(datos.cantidad);
         this.detallesArray.controls[index].get('valorUnitario').setValue(parseFloat(datos.precio.toFixed(2)));
+        this.detallesArray.controls[index].get('porcentaje_comision').setValue(datos.porcentaje_comision);
+        this.detallesArray.controls[index].get('valor_comision').setValue(parseFloat(datos.valor_comision));
         this.obtenerProducto(index, datos.canal);
       });
       this.notaPedido.get('canal').setValue(this.dataPedidoWoocommerce.canal);
@@ -661,9 +666,15 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
       this.obtenerIntegracionCanal();
       localStorage.removeItem('productoDataPedidoWoocommerce');
     }
-
   }
 
+  valorComision(porcentaje, valor, precio){
+    if (valor){
+      return valor.toFixed(2);
+    }else{
+      return porcentaje+'% => ' + ((precio * porcentaje) / 100).toFixed(2);
+    }
+  }
 
   /*obtenerSector(): void {
     this.paramServiceAdm.obtenerListaHijos(this.notaPedido.value.ciudad, 'CIUDAD').subscribe((info) => {
