@@ -32,6 +32,9 @@ export class GestionInventarioService {
   cargarStockMegabahia(datos): Observable<any> {
     return this.http.post<any>(`${apiUrl}/mdp/gestion-inventario/cargar/stock/megabahia`, datos);
   }
+  cargarStockCanal(datos): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/mdp/gestion-inventario/cargar/stock/canales`, datos);
+  }
 
   exportar(): Observable<any> {
     const httpOptions = {

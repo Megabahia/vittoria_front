@@ -197,7 +197,8 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
       envio: ['', []],
       envios: ['', []],
       json: ['', []],
-      fotoCupon: ['', []]
+      fotoCupon: ['', []],
+      comision: [0]
     });
   }
 
@@ -241,6 +242,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
       imagen_principal: ['', [Validators.required]],
       porcentaje_comision: [0],
       valor_comision: [0],
+      monto_comision: [0]
     });
   }
 
@@ -373,18 +375,32 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
+    let comisionTotal = 0;
+    let comision = 0;
     let subtotalPedido = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
       detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+
+      if (!detalles[index].get('valor_comision').value) {
+        comision = (detalles[index].get('porcentaje_comision').value * detalles[index].get('precio').value) / 100;
+      } else {
+        comision = detalles[index].get('valor_comision').value * cantidad;
+      }
+
+      detalles[index].get('monto_comision').setValue((comision).toFixed(2));
+      comisionTotal += parseFloat(detalles[index].get('monto_comision').value);
       total += parseFloat(detalles[index].get('precio').value);
+
     });
     total += this.notaPedido.get('envioTotal').value;
     subtotalPedido = total / this.parametroIva;
     this.totalIva = (total - subtotalPedido).toFixed(2);
     this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
     this.notaPedido.get('total').setValue(total.toFixed(2));
+    this.notaPedido.get('comision').setValue(comisionTotal.toFixed(2));
+
   }
 
   async actualizar(): Promise<void> {
@@ -629,6 +645,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
       page_size: this.pageSize, valor: this.dataPedidoWoocommerce.canal
     }).subscribe(async (result) => {
       this.integracionCanalCupon = result.info[0];
+      console.log(this.dataPedidoWoocommerce.canal)
     });
   }
 
@@ -646,7 +663,6 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
 
     if (data) {
       this.dataPedidoWoocommerce = JSON.parse(data);
-      console.log('PRODUCTO DESDE WOOCOMMERC', this.dataPedidoWoocommerce)
       this.notaPedido.patchValue({...this.dataPedidoWoocommerce});
       this.canalSeleccionado = this.dataPedidoWoocommerce.canal;
       this.notaPedido.get('canal').setValue(this.canalSeleccionado);
@@ -658,6 +674,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
         this.detallesArray.controls[index].get('valorUnitario').setValue(parseFloat(datos.precio.toFixed(2)));
         this.detallesArray.controls[index].get('porcentaje_comision').setValue(datos.porcentaje_comision);
         this.detallesArray.controls[index].get('valor_comision').setValue(parseFloat(datos.valor_comision));
+        this.detallesArray.controls[index].get('monto_comision').setValue(parseFloat(datos.monto_comision));
         this.obtenerProducto(index, datos.canal);
       });
       this.notaPedido.get('canal').setValue(this.dataPedidoWoocommerce.canal);
