@@ -30,7 +30,7 @@ export class ParamService {
     descripcion,
     tipoVariable,
     valor,
-    idPadre
+    idPadre, canal
   ) {
     return this.http.post<any>(`${apiUrl}/adm/param/create/`, {
       nombre,
@@ -38,7 +38,8 @@ export class ParamService {
       descripcion,
       tipoVariable,
       valor,
-      idPadre
+      idPadre,
+      canal
     });
   }
 

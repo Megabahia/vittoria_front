@@ -163,7 +163,7 @@
                       parámetro:</label>
                     <input type="text" class="form-control dt-full-name"
                            id="basic-icon-default-fullname" name="nombreTipo"
-                           formControlName="nombreTipo" [(ngModel)]="nombreTipo"/>
+                           formControlName="nombreTipo" [(ngModel)]="nombreTipo" (change)="onChangeTipoPago($event)"/>
                     <div *ngIf="submitted && f.nombreTipo.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="f.nombreTipo.errors.required">Tipo del parámetro es requerido

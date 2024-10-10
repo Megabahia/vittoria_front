@@ -39,13 +39,13 @@ export class ParamsListComponent implements OnInit {
   padres;
   mostrarCanales = false;
   canalOpciones;
+
   // @ViewChild('padres') padres;
   constructor(
     private paramService: ParamService,
     private modalService: NgbModal,
     private _formBuilder: FormBuilder,
     private paramServiceAdm: AdmParamService,
-
   ) {
   }
 
@@ -97,12 +97,12 @@ export class ParamsListComponent implements OnInit {
     this.funcion = 'editar';
 
     await this.paramService.obtenerParametro(id).subscribe(async (result) => {
-      if(result.tipo === 'METODO PAGO'){
+      if (result.tipo === 'METODO PAGO') {
         this.mostrarCanales = true;
         await this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar).subscribe((result) => {
           this.canalOpciones = result.data;
         });
-      }else{
+      } else {
         this.mostrarCanales = false;
       }
       if (result.idPadre) {
@@ -137,8 +137,17 @@ export class ParamsListComponent implements OnInit {
     this.valor = '';
     this.idPadre = 0;
     this.submitted = false;
-
+    this.canal = '';
     this.funcion = 'insertar';
+    this.mostrarCanales = false;
+  }
+
+  onChangeTipoPago(e: any) {
+    if (e.target.value === 'METODO PAGO') {
+      this.mostrarCanales = true;
+    } else {
+      this.mostrarCanales = false;
+    }
   }
 
   async gestionarParametro() {
@@ -156,6 +165,7 @@ export class ParamsListComponent implements OnInit {
         this.tipoVariable,
         this.valor,
         this.idPadre,
+        this.canal,
       ).subscribe((result) => {
           this.obtenerListaParametros();
           this.dismissModal.nativeElement.click();

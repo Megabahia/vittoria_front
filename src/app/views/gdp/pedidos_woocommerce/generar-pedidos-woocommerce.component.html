@@ -259,12 +259,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-md-2 col-12 my-lg-0 my-2">
-                            <p class="card-text col-title mb-md-50 mb-0 text-danger">
-                              Valor comisión
-                            </p>
-                            <label class="d-block text-wrap text-danger">{{ valorComision(detalle.controls.porcentaje_comision.value, detalle.controls.valor_comision.value, detalle.controls.precio.value) }}</label>
-                          </div>
+
                           <div class="col-md-2 col-12 my-lg-0 my-2">
                             <p class="card-text col-title mb-md-50 mb-0 red text-danger">
                               Cantidad
@@ -323,6 +318,12 @@
                               </div>
                             </div>
                           </div>
+                          <div class="col-md-2 col-12 my-lg-0 my-2">
+                            <p class="card-text col-title mb-md-50 mb-0 text-danger">
+                              Monto comisión
+                            </p>
+                            <label class="d-block text-wrap text-danger">{{ detalle.controls.monto_comision.value }}</label>
+                          </div>
                           <div class="col-md-2 border-left">
                             <img class="img-detalle"
                                  src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
@@ -379,6 +380,10 @@
             <div class="col-md-7"></div>
             <div class="col-md-5 text-right">
               <div class="invoice-total-wrapper">
+                <div class="invoice-total-item">
+                  <p class="invoice-total-title text-warning font-weight-bold">
+                    Total comisión de este pedido: ${{ notaPedido.controls.comision.value }}</p>
+                </div>
                 <div class="invoice-total-item">
                   <p class="invoice-total-title text-primary font-weight-bold">
                     Total Envio: ${{ notaPedido.controls.envioTotal.value }}</p>
@@ -510,20 +515,20 @@
         <br/>
         <br/>
         <span *ngIf="verDireccion">
-            Encuéntranos en {{ integracionCanalCupon.ciudad }}: {{ integracionCanalCupon.descripcion_direccion }}.
+            Encuéntranos en {{ integracionCanalCupon.ciudad || ''}}: {{ integracionCanalCupon.descripcion_direccion || ''}}.
             <br>
             <br>
             <span>Dirección en mapa: </span>
-            <a href="{{integracionCanalCupon.direccion_mapa}}" target="_blank">{{ integracionCanalCupon.direccion_mapa }}</a>
+            <a *ngIf="integracionCanalCupon.direccion_mapa" href="{{integracionCanalCupon.direccion_mapa}}" target="_blank">{{ integracionCanalCupon.direccion_mapa }}</a>
           </span>
         <br>
-        <span>Horario de Atención: {{ integracionCanalCupon.hora_atencion }}</span>
+        <span>Horario de Atención: {{ integracionCanalCupon.hora_atencion || ''}}</span>
       </div>
 
       <!-- Address and Contact ends -->
 
       <h5 class="text-danger text-center px-2">Presentando esta imagen, cuando usted retire su
-        pedido, OBTIENE un {{ integracionCanalCupon.descuento }}% de ¡DESCUENTO ADICIONAL!
+        pedido, OBTIENE un {{ integracionCanalCupon.descuento || 0}}% de ¡DESCUENTO ADICIONAL!
       </h5>
       <br>
       <h4 class="text-center" [ngStyle]="{'color':'blue'}">Su pedido #{{ notaPedido.value.numeroPedido }}</h4>

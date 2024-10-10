@@ -12,8 +12,16 @@
 </div>
 <div *ngIf="mostrarContenidoPantalla">
   <form [formGroup]="notaPedido">
-    <a class="btn btn-primary m-2" *ngIf="mostrarBotonVolverCatalogo" href="https://superbarato.megadescuento.com">Volver
-      a catálogo</a>
+    <div *ngIf="mostrarBotonVolverCatalogo">
+      <div class="col-12 text-center">
+        <h4 class="bg-danger text-white m-5 p-2">Los productos seleccionados pertenecen a diferentes tiendas. Por favor,
+          realice pedidos separados para cada tienda.</h4>
+      </div>
+      <div class="col-12 text-center">
+        <a class="btn btn-primary m-2" href="https://superbarato.megadescuento.com">Volver
+          a catálogo</a>
+      </div>
+    </div>
     <div formArrayName="pedidos" *ngIf="!mostrarBotonVolverCatalogo">
       <div class="card">
         <div class="card-body px-0">
@@ -24,13 +32,11 @@
                 <h3 class="m-2">Tienda: {{ tienda.controls.prefijo.value }}</h3>
               </div>-->
               <div class="py-1" formArrayName="articulos">
+                <label style="font-size: small"
+                       class="text-info px-2">Tienda para le pedido: {{ tiendaProducto }}</label>
                 <div *ngFor="let articulo of tienda.get('articulos').controls; let i = index">
                   <ng-container [formGroup]="articulo">
-                    <label style="font-size: small"
-                           class="text-info px-2">Tienda: {{ articulo.controls.canal.value }}</label>
-                    <label style="font-size: small"
-                           class="text-info px-2">Valor de
-                      comision: ${{ valorComision[i] || 0}}</label>
+
                     <div class="repeater-wrapper" data-repeater-item>
                       <div class="row px-2 mt-1">
                         <div class="col-md-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
@@ -46,13 +52,7 @@
                           <label class="d-block text-wrap"
                                  style="font-size: small">{{ articulo.controls.articulo.value }}</label>
                         </div>
-                        <div class="col-md-1 col-12 my-lg-0 my-2" *ngIf="!articulo.controls.valor_comision.value">
-                          <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
-                            Porcentaje de comisión
-                          </p>
-                          <input type="text" class="form-control"
-                                 formControlName="porcentaje_comision" (change)="calculoComision(articulo.controls.porcentaje_comision.value, articulo.controls.valor_comision.value, articulo.controls.precio.value, i)">
-                        </div>
+
                         <!--CANTIDAD-->
                         <div class="item-quantity">
                           <p class="quantity-title col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
@@ -118,6 +118,12 @@
                           </p>
                           <label style="font-size: small">{{ articulo.controls.precio.value }}</label>
                         </div>
+                        <div class="col-md-1 col-12 my-lg-0 my-2">
+                          <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
+                            Monto de comisión
+                          </p>
+                          <label style="font-size: small">{{ articulo.controls.monto_comision.value }}</label>
+                        </div>
                         <div class="col-md-2 col-12 my-lg-0 my-2">
                           <img
                             src="{{articulo.controls?.imagen_principal.value ? articulo.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
@@ -143,6 +149,9 @@
 
             </ng-container>
           </div>
+        </div>
+        <div class="card-footer px-2 text-right">
+          <h4 class="text-danger">Total de comisión de este pedido: {{notaPedido.value.comision | currency}}</h4>
         </div>
       </div>
     </div>
@@ -579,8 +588,9 @@
          style="width: 100px;">
   </div>
   <p>Valoramos mucho tu preferencia y trabajamos continuamente para ofrecerte lo mejor.</p>
+  <p>El pedido realizado se a enciado al correo electrónico {{notaPedido.value.facturacion.correo}}.</p>
   <div *ngFor="let numero of numeroPedido; let i=index">
-    <p>Su número de pedido {{ i + 1 }} es: <strong>{{ numero }}</strong>.</p>
+    <p>Su número de pedido es: <strong>{{ numero }}</strong>.</p>
   </div>
   <div class="mt-4">
     <a href="https://superbarato.megadescuento.com" class="btn btn-primary m-1">Ir a la tienda</a>
