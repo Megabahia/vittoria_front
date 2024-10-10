@@ -528,7 +528,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
         this.pedidosService.crearPedidoSuperBarato(this.archivo).subscribe(result => {
           this.numeroPedido.push(result.numeroPedido);
-          this.toaster.open('Pedido guardado', {type: 'success'});
+          this.toaster.open('Pedido enviado', {type: 'success'});
           this.mostrarContenidoPantalla = false;
         }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
       });

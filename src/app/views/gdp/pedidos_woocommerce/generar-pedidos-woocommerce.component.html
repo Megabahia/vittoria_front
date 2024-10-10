@@ -287,7 +287,8 @@
                             <p class="card-text col-title mb-md-50 mb-0">
                               Valor Unitario
                             </p>
-                            <select class="form-control" formControlName="valorUnitario" (change)="calcular()" [disabled]="desabilitarComboPrecios[i]">
+                            <select class="form-control" formControlName="valorUnitario" (change)="calcular()"
+                                    [disabled]="desabilitarComboPrecios[i]">
                               <option value="" selected>- Seleccione -</option>
                               <option *ngFor="let producto of detalle.controls.precios.value"
                                       [value]="producto.valor">
@@ -322,7 +323,8 @@
                             <p class="card-text col-title mb-md-50 mb-0 text-danger">
                               Monto comisión
                             </p>
-                            <label class="d-block text-wrap text-danger">{{ detalle.controls.monto_comision.value }}</label>
+                            <label
+                              class="d-block text-wrap text-danger">{{ detalle.controls.monto_comision.value }}</label>
                           </div>
                           <div class="col-md-2 border-left">
                             <img class="img-detalle"
@@ -381,8 +383,10 @@
             <div class="col-md-5 text-right">
               <div class="invoice-total-wrapper">
                 <div class="invoice-total-item">
-                  <p class="invoice-total-title text-warning font-weight-bold">
-                    Total comisión de este pedido: ${{ notaPedido.controls.comision.value }}</p>
+                  <p class="invoice-total-title font-weight-bold">
+                    <span
+                      class="bg-warning text-white px-1">Total comisión de este pedido: ${{ notaPedido.controls.comision.value }}</span>
+                  </p>
                 </div>
                 <div class="invoice-total-item">
                   <p class="invoice-total-title text-primary font-weight-bold">
@@ -502,7 +506,7 @@
       <div class="card-body invoice-padding pt-0">
         <h4>
           Sr.(a)(ita). {{ notaPedido.value.facturacion.nombres }} {{ notaPedido.value.facturacion.apellidos }}</h4>
-        <span>Teléfono: {{ notaPedido.value.facturacion.telefono }}</span>
+        <span class="my-1">Si desea enviar el cupón al cliente a través del WhatsApp, presione el icono: {{ notaPedido.value.facturacion.telefono }}</span>
         <a (click)="openWhatsApp($event)"
            *ngIf="imagenCargada">
           <img
@@ -515,20 +519,22 @@
         <br/>
         <br/>
         <span *ngIf="verDireccion">
-            Encuéntranos en {{ integracionCanalCupon.ciudad || ''}}: {{ integracionCanalCupon.descripcion_direccion || ''}}.
+            Encuéntranos en {{ integracionCanalCupon.ciudad || '' }}
+          : {{ integracionCanalCupon.descripcion_direccion || '' }}.
             <br>
             <br>
             <span>Dirección en mapa: </span>
-            <a *ngIf="integracionCanalCupon.direccion_mapa" href="{{integracionCanalCupon.direccion_mapa}}" target="_blank">{{ integracionCanalCupon.direccion_mapa }}</a>
+            <a *ngIf="integracionCanalCupon.direccion_mapa" href="{{integracionCanalCupon.direccion_mapa}}"
+               target="_blank">{{ integracionCanalCupon.direccion_mapa }}</a>
           </span>
         <br>
-        <span>Horario de Atención: {{ integracionCanalCupon.hora_atencion || ''}}</span>
+        <span>Horario de Atención: {{ integracionCanalCupon.hora_atencion || '' }}</span>
       </div>
 
       <!-- Address and Contact ends -->
 
       <h5 class="text-danger text-center px-2">Presentando esta imagen, cuando usted retire su
-        pedido, OBTIENE un {{ integracionCanalCupon.descuento || 0}}% de ¡DESCUENTO ADICIONAL!
+        pedido, OBTIENE un {{ integracionCanalCupon.descuento || 0 }}% de ¡DESCUENTO ADICIONAL!
       </h5>
       <br>
       <h4 class="text-center" [ngStyle]="{'color':'blue'}">Su pedido #{{ notaPedido.value.numeroPedido }}</h4>
@@ -601,12 +607,13 @@
 
 <div class="container text-center p-5 mt-5 border shadow rounded" *ngIf="!mostrarContenidoPantalla">
   <h2 class="mb-3">¡Gracias por tu compra!</h2>
-  <p class="lead">Tu pedido ha sido procesado con éxito por la tienda {{notaPedido.value.canal}}.</p>
+  <p class="lead">Tu pedido ha sido procesado con éxito por la tienda {{ notaPedido.value.canal }}.</p>
   <div class="my-4">
     <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Order Success" class="img-fluid"
          style="width: 100px;">
   </div>
   <p>Valoramos mucho tu preferencia y trabajamos continuamente para ofrecerte lo mejor.</p>
+  <p>Los detalles del pedido se a envido al siguiente correo electrónico: {{ notaPedido.value.facturacion.correo }}.</p>
   <p>Su número de pedido es: <strong>{{ notaPedido.value.numeroPedido }}</strong>.</p>
   <div class="mt-4">
     <a (click)="cerrarPantallaPedidoWoocommerce()" class="btn btn-primary m-1">Cerrar</a>

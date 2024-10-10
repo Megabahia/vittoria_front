@@ -469,7 +469,8 @@
   <ng-template #notaPedidoModal let-modal>
     <div class="modal-header">
       <h4 class="modal-title">Cupón</h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')" *ngIf="imagenCargada">
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')"
+              *ngIf="imagenCargada">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -503,7 +504,8 @@
         <div class="card-body invoice-padding pt-0">
           <h4>
             Sr.(a)(ita). {{ notaPedido.value.facturacion.nombres }} {{ notaPedido.value.facturacion.apellidos }}</h4>
-          <span>Teléfono: {{ notaPedido.value.facturacion.telefono }}</span>
+          <span
+            class="my-1">Si desea enviar el cupón al cliente a través del WhatsApp, presione el icono: {{ notaPedido.value.facturacion.telefono }}</span>
           <a (click)="openWhatsApp($event)"
              *ngIf="imagenCargada">
             <img
@@ -516,11 +518,13 @@
           <br/>
           <br/>
           <span *ngIf="verDireccion">
-            Encuéntranos en {{ this.integracionCanalCupon.ciudad }}: {{this.integracionCanalCupon.descripcion_direccion}}.
+            Encuéntranos en {{ this.integracionCanalCupon.ciudad }}
+            : {{ this.integracionCanalCupon.descripcion_direccion }}.
             <br>
             <br>
             <span>Dirección en mapa: </span>
-            <a href="{{ this.integracionCanalCupon.direccion_mapa }}" target="_blank">{{ this.integracionCanalCupon.direccion_mapa }}</a>
+            <a href="{{ this.integracionCanalCupon.direccion_mapa }}"
+               target="_blank">{{ this.integracionCanalCupon.direccion_mapa }}</a>
           </span>
           <br>
           <span>Horario de Atención: {{ this.integracionCanalCupon.hora_atencion }}</span>
