@@ -174,7 +174,8 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
       numTransaccionCredito: [''],
       totalCobroEfectivo: [0],
       montoTransferencia: [0],
-      montoCredito: [0]
+      montoCredito: [0],
+      comision: [0]
     });
   }
 
@@ -223,8 +224,9 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
       canal: [''],
       woocommerceId: [''],
       imagen_principal: ['', [Validators.required]],
-      porcentaje_comision: [''],
-      valor_comision: [''],
+      porcentaje_comision: [0],
+      valor_comision: [0],
+      monto_comision: [0]
     });
   }
 
@@ -305,7 +307,6 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
         this.notaPedido.get('tipoPago').updateValueAndValidity();
       }
       this.calcular();
-      console.log(this.notaPedido.value);
     });
   }
 
@@ -380,6 +381,8 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
+    let comisionTotal = 0;
+    let comision = 0;
     let subtotalPedido = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
@@ -392,6 +395,16 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
       } else {
         detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       }
+
+      //COMISION
+      if (!detalles[index].get('valor_comision').value) {
+        comision = (detalles[index].get('porcentaje_comision').value * detalles[index].get('precio').value) / 100;
+      } else {
+        comision = detalles[index].get('valor_comision').value * cantidad;
+      }
+      detalles[index].get('monto_comision').setValue((comision).toFixed(2));
+      comisionTotal += parseFloat(detalles[index].get('monto_comision').value);
+
       total += parseFloat(detalles[index].get('precio').value);
     });
     total += this.notaPedido.get('envioTotal').value;
@@ -399,6 +412,8 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
     this.totalIva = (total - subtotalPedido).toFixed(2);
     this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
     this.notaPedido.get('total').setValue(total.toFixed(2));
+    this.notaPedido.get('comision').setValue(comisionTotal.toFixed(2));
+
   }
 
 

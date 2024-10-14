@@ -1,37 +1,18 @@
-<div class="card d-inline-flex p-2 w-100" *ngIf="mostrarContenidoPantalla">
+<div class="card d-inline-flex p-2 w-100 text-center" *ngIf="mostrarContenidoPantalla">
   <h1>Generador de pedido para punto de entrega</h1>
-  <!--<button class="btn btn-primary mx-1"
-          (click)="crearNuevaVenta(notaPedidoModalAdd)"
-  >Nuevo Pedido
-  </button>-->
-  <!-- Address and Contact starts
-  <div class="card-body pt-2" *ngIf="mostrarFiltroCliente">
-    <h4 class="invoice-title mb-2">Filtro de cliente</h4>
-    <div class="row">
-      <div class="col-sm-2">
-        <label>Número Identificación</label>
-      </div>
-      <div class="col-md-4 col-12">
-        <input class="form-control" type="text"
-               [(ngModel)]="cedulaABuscar"
-        >
-      </div>
-      <div class="col-4">
-        <button class="btn btn-primary" (click)="obtenerClienteCedula()">
-          <i-feather name='search' class="edit-user"></i-feather>
-        </button>
-      </div>
-    </div>
-  </div>-->
 </div>
 <div class="card" *ngIf="mostrarContenidoPantalla">
   <div class="card-body">
     <form [formGroup]="notaPedido">
       <div class="card invoice-preview-card">
+        <div class="card-header text-center bg-light">
+          <p class=" my-0 py-0 px-5">En este apartado usted podrá completar el pedido. La gestión de su pedido se llevará a cabo a
+            través de nuestra plataforma Vittoria en el apartado de MP Motor de Pedidos - Pedidos canal - Pedidos entrega local.</p>
+        </div>
         <!-- Header starts -->
         <div class="card-body invoice-padding pb-0">
           <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
-            <div class="d-flex align-items-center mb-1">
+            <div class="d-flex align-items-center my-1">
               <span class="title mr-1">Fecha de venta:</span>
               <input type="text"
                      placeholder={{formatearFecha()}}
@@ -51,7 +32,7 @@
           <!-- Header ends -->
           <hr class="invoice-spacing"/>
           <!-- Address and Contact starts -->
-          <h4 class="invoice-title mb-2">Datos del cliente</h4>
+          <h4 class="invoice-title mb-2 text-warning">Datos del cliente</h4>
           <div formGroupName="facturacion">
             <div class="row">
               <div class="col-md-4 col-12">
@@ -220,6 +201,8 @@
               </select>
             </div>
           </div>
+          <h4 class="invoice-title mb-2 text-warning">Datos de productos</h4>
+
           <div formArrayName="articulos">
             <form class="source-item">
               <div data-repeater-list="group-a"

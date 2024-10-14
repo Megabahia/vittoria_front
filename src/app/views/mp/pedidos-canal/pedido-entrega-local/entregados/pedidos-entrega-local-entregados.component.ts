@@ -54,6 +54,8 @@ export class PedidosEntregaLocalEntregadosComponent implements OnInit, AfterView
   cedula;
   factura;
   listaFormasPago;
+  totalIva;
+  parametroIva;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -89,6 +91,10 @@ export class PedidosEntregaLocalEntregadosComponent implements OnInit, AfterView
       motivo: ['', [Validators.required]],
       estado: ['Rechazado', [Validators.required]],
       fechaPedido: ['', [Validators.required]],
+    });
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
+      this.parametroIva = parseFloat(result.info[0].valor);
     });
   }
 
@@ -133,6 +139,7 @@ export class PedidosEntregaLocalEntregadosComponent implements OnInit, AfterView
       }),
       articulos: this.formBuilder.array([], Validators.required),
       total: ['', [Validators.required]],
+      subtotal: [0],
       envioTotal: [0, [Validators.required]],
       numeroPedido: [this.generarID(), [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
@@ -147,7 +154,8 @@ export class PedidosEntregaLocalEntregadosComponent implements OnInit, AfterView
       tipoPago: [''],
       formaPago: [''],
       numTransaccionTransferencia: [''],
-      totalCobroEfectivo: ['']
+      totalCobroEfectivo: [''],
+      comision: [0]
     });
   }
 
@@ -191,7 +199,12 @@ export class PedidosEntregaLocalEntregadosComponent implements OnInit, AfterView
       precio: [0, [Validators.required]],
       imagen: ['', []],
       caracteristicas: ['', []],
-      descuento:[0,[]]
+      canal: [''],
+      descuento:[0],
+      imagen_principal: ['', [Validators.required]],
+      porcentaje_comision: [0],
+      valor_comision: [0],
+      monto_comision: [0]
     });
   }
 
@@ -225,7 +238,7 @@ export class PedidosEntregaLocalEntregadosComponent implements OnInit, AfterView
   }
 
   obtenerContacto(modal, id): void {
-    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+    this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
     this.contactosService.obtenerContacto(id).subscribe((info) => {
       if (info.tipoPago === 'rimpePopular') {
         this.mostrarInputComprobante = true;
@@ -256,6 +269,7 @@ export class PedidosEntregaLocalEntregadosComponent implements OnInit, AfterView
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
+      this.calcular();
 
     });
   }
@@ -329,14 +343,39 @@ export class PedidosEntregaLocalEntregadosComponent implements OnInit, AfterView
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
+    let comisionTotal = 0;
+    let comision = 0;
+    let subtotalPedido = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
       const cantidad = parseFloat(detalles[index].get('cantidad').value || 0);
-      detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      // tslint:disable-next-line:radix
+      const descuento = parseInt(detalles[index].get('descuento').value);
+      if (descuento > 0 && descuento <= 100) {
+        const totalDescuento = (valorUnitario * descuento) / 100;
+        detalles[index].get('precio').setValue((((valorUnitario - totalDescuento) * cantidad)).toFixed(2));
+      } else {
+        detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
+      }
+
+      //COMISION
+      if (!detalles[index].get('valor_comision').value) {
+        comision = (detalles[index].get('porcentaje_comision').value * detalles[index].get('precio').value) / 100;
+      } else {
+        comision = detalles[index].get('valor_comision').value * cantidad;
+      }
+      detalles[index].get('monto_comision').setValue((comision).toFixed(2));
+      comisionTotal += parseFloat(detalles[index].get('monto_comision').value);
+
       total += parseFloat(detalles[index].get('precio').value);
     });
     total += this.notaPedido.get('envioTotal').value;
-    this.notaPedido.get('total').setValue(total);
+    subtotalPedido = total / this.parametroIva;
+    this.totalIva = (total - subtotalPedido).toFixed(2);
+    this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
+    this.notaPedido.get('total').setValue(total.toFixed(2));
+    this.notaPedido.get('comision').setValue(comisionTotal.toFixed(2));
+
   }
 
   async actualizar(): Promise<void> {

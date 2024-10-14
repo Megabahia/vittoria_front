@@ -47,6 +47,9 @@ export class ParamsListComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private paramServiceAdm: AdmParamService,
   ) {
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar).subscribe((result) => {
+      this.canalOpciones = result.data;
+    });
   }
 
   get f() {
@@ -99,9 +102,7 @@ export class ParamsListComponent implements OnInit {
     await this.paramService.obtenerParametro(id).subscribe(async (result) => {
       if (result.tipo === 'METODO PAGO') {
         this.mostrarCanales = true;
-        await this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar).subscribe((result) => {
-          this.canalOpciones = result.data;
-        });
+
       } else {
         this.mostrarCanales = false;
       }

@@ -7,8 +7,8 @@
 </div>-->
 
 <div class="card" *ngIf="mostrarContenidoPantalla">
-  <h2 class="card-header font-weight-bold">PEDIDO DESDE {{ paginaWoocommerce | uppercase }}</h2>
-  <h3 class="py-1 px-2 font-weight-bold bg-primary mb-0">Bienvenido {{ currentUser.full_name }}</h3>
+  <h2 class="py-1 px-2 font-weight-bold text-center">PEDIDO DESDE {{ paginaWoocommerce | uppercase }}</h2>
+  <h3 class="py-1 px-2 font-weight-bold bg-primary mb-0 text-center">Bienvenido {{ currentUser.full_name }}</h3>
 </div>
 <div *ngIf="mostrarContenidoPantalla">
   <form [formGroup]="notaPedido">
@@ -28,9 +28,12 @@
           <p class=" my-0 py-0 px-5">En este apartado se mostrarán los productos y
             los datos necesarios para completar el pedido. Su pedido será procesado según la forma de entrega seleccionada.
             Toda la gestión de su pedido se llevará a cabo a
-            través de nuestra plataforma Vittoria.</p>
+            través de nuestra plataforma Vittoria en el apartado de MP Motor de Pedidos - Pedidos Nuevos.</p>
         </div>
         <div class="card-body px-0">
+          <div class="px-2 py-1 bg-primary">
+            <h3>Productos para el pedido</h3>
+          </div>
           <div *ngFor="let tienda of notaPedido.get('pedidos')['controls']; let j = index;">
             <ng-container [formGroup]="tienda">
               <!--<h3 class="py-1 px-2 font-weight-bold bg-primary">Tienda {{ tienda.controls.prefijo.value }}</h3>
@@ -579,7 +582,7 @@
         Enviar Pedido
       </button>
       <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="generarPedido()"
-              *ngIf="mostrarBotonEnviarGDP">Generar pedido
+              *ngIf="mostrarBotonEnviarGDP">Enviar a generar pedido
       </button>
       <!--<button (click)="irInicio()" class="btn btn-secondary my-2 mx-2 col-md-1 col-12">Inicio</button>-->
 
