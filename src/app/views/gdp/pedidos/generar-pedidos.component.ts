@@ -288,6 +288,8 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));*/
+    console.log(this.notaPedido.value)
+
     if (this.notaPedido.value.valorUnitario === 0) {
       this.toaster.open('Seleccione un precio que sea mayor a 0.', {type: 'danger'});
       return;
@@ -301,10 +303,9 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       this.hablilitarBotonGuardar = false;
       this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
           this.imagenCanal = info.imagen_canal;
-
+          this.obtenerContactos();
           this.modalService.dismissAll();
           this.notaPedido.patchValue({...info, id: this.idContacto});
-          this.obtenerContactos();
           this.abrirModalCupon(notaPedidoModal);
           this.myAngularxCode = `Numero de pedido: ${info.numeroPedido}`;
           this.toaster.open('Pedido creado. Creando cupón...', {type: 'info'});
@@ -479,6 +480,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
         this.notaPedido.get('facturacion').get('apellidos').setValue(info.apellidos);
         this.notaPedido.get('facturacion').get('correo').setValue(info.correo);
         this.notaPedido.get('facturacion').get('identificacion').setValue(info.cedula);
+        this.notaPedido.get('facturacion').get('tipoIdentificacion').setValue(info.tipoIdentificacion);
         this.notaPedido.get('facturacion').get('telefono').setValue(info.telefono);
         this.notaPedido.get('facturacion').get('provincia').setValue(info.provinciaNacimiento);
         this.notaPedido.get('facturacion').get('ciudad').setValue(info.ciudadNacimiento);
@@ -522,6 +524,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
         try {
           this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
+            this.detallesArray.controls[i].get('imagen_principal').setValue(producto.imagen_principal);
             this.toaster.open('Imagen actualizada con éxito', {type: "info"});
           }, error => this.toaster.open('No se pudo actualizar la imagen.', {type: "danger"}));
         } catch (error) {

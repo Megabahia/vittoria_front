@@ -356,12 +356,6 @@
                                     </div>
                                   </div>
                                   <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                    <p class="card-text col-title mb-md-50 mb-0 text-danger">
-                                      Valor comisión
-                                    </p>
-                                    <label class="d-block text-wrap text-danger">{{ valorComision(detalle.controls.porcentaje_comision.value, detalle.controls.valor_comision.value, detalle.controls.precio.value) }}</label>
-                                  </div>
-                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
                                       Precio
                                     </p>
@@ -423,6 +417,13 @@
                                         Requerido
                                       </div>
                                     </div>
+                                  </div>
+                                  <div class="col-md-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0 text-danger">
+                                      Monto comisión
+                                    </p>
+                                    <label
+                                      class="d-block text-wrap text-danger">{{ detalle.controls.monto_comision.value }}</label>
                                   </div>
                                   <div class="col-md-2 border-left mt-2">
                                     <img class="img-detalle"
@@ -510,6 +511,12 @@
                     <div class="col-md-5 text-right">
                       <div class="invoice-total-wrapper">
                         <hr class="my-50"/>
+                        <div class="invoice-total-item">
+                          <p class="invoice-total-title font-weight-bold">
+                    <span
+                      class="bg-warning text-white px-1">Total comisión de este pedido: ${{ notaPedido.controls.comision.value }}</span>
+                          </p>
+                        </div>
                         <div class="invoice-total-item">
                           <p class="invoice-total-title text-primary font-weight-bold">
                             Total Envio: ${{ notaPedido.controls.envioTotal.value }}</p>
@@ -604,7 +611,9 @@
                           </div>
                         </div>
                         <div class="mt-1">
-                          <button type="button" class="btn btn-primary" (click)="agregarFormaPago()">Agregar forma de pago</button>
+                          <button type="button" class="btn btn-primary" (click)="agregarFormaPago()">Agregar forma de
+                            pago
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -641,9 +650,9 @@
                           <div *ngIf="notaPedidoForm.montoTransferencia.errors.required">
                             Requerido
                           </div>
-                            <div *ngIf="notaPedidoForm.montoTransferencia.errors.pattern">
-                                Ingreso solo numeros
-                            </div>
+                          <div *ngIf="notaPedidoForm.montoTransferencia.errors.pattern">
+                            Ingreso solo numeros
+                          </div>
                         </div>
                       </div>
                       <div class="col-md-2 col-12" *ngIf="mostrarInputTransaccion">
@@ -679,9 +688,9 @@
                           <div *ngIf="notaPedidoForm.montoCredito.errors.required">
                             Requerido
                           </div>
-                            <div *ngIf="notaPedidoForm.montoCredito.errors.pattern">
-                                Ingreso solo numeros
-                            </div>
+                          <div *ngIf="notaPedidoForm.montoCredito.errors.pattern">
+                            Ingreso solo numeros
+                          </div>
                         </div>
                       </div>
                       <div class="col-md-2 col-12" *ngIf="mostrarInputTransaccionCredito">

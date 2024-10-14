@@ -519,6 +519,8 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
 
         try {
           this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
+            this.detallesArray.controls[i].get('imagen_principal').setValue(producto.imagen_principal);
+
             this.toaster.open('Imagen actualizada con éxito', {type: "info"});
           }, error => this.toaster.open('No se pudo actualizar la imagen.', {type: "danger"}));
         } catch (error) {

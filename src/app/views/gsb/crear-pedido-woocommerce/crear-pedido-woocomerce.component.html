@@ -7,8 +7,8 @@
 </div>-->
 
 <div class="card" *ngIf="mostrarContenidoPantalla">
-  <h2 class="card-header font-weight-bold">PEDIDO DESDE {{ paginaWoocommerce | uppercase }}</h2>
-  <h3 class="py-1 px-2 font-weight-bold bg-primary mb-0">Bienvenido {{ currentUser.full_name }}</h3>
+  <h2 class="py-1 px-2 font-weight-bold text-center">PEDIDO DESDE {{ paginaWoocommerce | uppercase }}</h2>
+  <h3 class="py-1 px-2 font-weight-bold bg-primary mb-0 text-center">Bienvenido {{ currentUser.full_name }}</h3>
 </div>
 <div *ngIf="mostrarContenidoPantalla">
   <form [formGroup]="notaPedido">
@@ -24,7 +24,16 @@
     </div>
     <div formArrayName="pedidos" *ngIf="!mostrarBotonVolverCatalogo">
       <div class="card">
+        <div class="card-header text-center bg-light">
+          <p class=" my-0 py-0 px-5">En este apartado se mostrarán los productos y
+            los datos necesarios para completar el pedido. Su pedido será procesado según la forma de entrega seleccionada.
+            Toda la gestión de su pedido se llevará a cabo a
+            través de nuestra plataforma Vittoria en el apartado de MP Motor de Pedidos - Pedidos Nuevos.</p>
+        </div>
         <div class="card-body px-0">
+          <div class="px-2 py-1 bg-primary">
+            <h3>Productos para el pedido</h3>
+          </div>
           <div *ngFor="let tienda of notaPedido.get('pedidos')['controls']; let j = index;">
             <ng-container [formGroup]="tienda">
               <!--<h3 class="py-1 px-2 font-weight-bold bg-primary">Tienda {{ tienda.controls.prefijo.value }}</h3>
@@ -33,7 +42,7 @@
               </div>-->
               <div class="py-1" formArrayName="articulos">
                 <label style="font-size: small"
-                       class="text-info px-2">Tienda para le pedido: {{ tiendaProducto }}</label>
+                       class="text-info px-2">Tienda para el pedido: {{ tiendaProducto }}</label>
                 <div *ngFor="let articulo of tienda.get('articulos').controls; let i = index">
                   <ng-container [formGroup]="articulo">
 
@@ -150,8 +159,8 @@
             </ng-container>
           </div>
         </div>
-        <div class="card-footer px-2 text-right">
-          <h4 class="text-danger">Total de comisión de este pedido: {{notaPedido.value.comision | currency}}</h4>
+        <div class="card-footer bg-light-warning text-center">
+          <h4 class="text-warning">Total de comisión de este pedido: {{ notaPedido.value.comision | currency }}</h4>
         </div>
       </div>
     </div>
@@ -256,7 +265,7 @@
           </select>
         </div>
         <div class="col-md-9 col-12" *ngIf="noEsCliente">
-          <h6>Buscar cliente</h6>
+          <h6>Si no es clinete nuevo, ingrese uno de los 3 campos a continuación para buscar el cliente y completar los datos.</h6>
           <div class="row">
             <div class="col-md-3 col-12">
               <input class="form-control" type="text" placeholder="Cédula"
@@ -573,7 +582,7 @@
         Enviar Pedido
       </button>
       <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="generarPedido()"
-              *ngIf="mostrarBotonEnviarGDP">Generar pedido
+              *ngIf="mostrarBotonEnviarGDP">Enviar a generar pedido
       </button>
       <!--<button (click)="irInicio()" class="btn btn-secondary my-2 mx-2 col-md-1 col-12">Inicio</button>-->
 
@@ -582,18 +591,18 @@
 </div>
 <div class="container text-center p-5 mt-5 border shadow rounded" *ngIf="!mostrarContenidoPantalla">
   <h2 class="mb-3">¡Gracias por tu compra!</h2>
-  <p class="lead">Tu pedido ha sido procesado con éxito.</p>
+  <p class="lead">Tu pedido ha sido enviado a nuestra plataforma de Vittoria con éxito.</p>
   <div class="my-4">
     <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Order Success" class="img-fluid"
          style="width: 100px;">
   </div>
   <p>Valoramos mucho tu preferencia y trabajamos continuamente para ofrecerte lo mejor.</p>
-  <p>El pedido realizado se a enciado al correo electrónico {{notaPedido.value.facturacion.correo}}.</p>
+  <p class="my-1">El detalle del pedido realizado se a enviado al correo electrónico del cliente: {{ notaPedido.value.facturacion.correo }}.</p>
   <div *ngFor="let numero of numeroPedido; let i=index">
     <p>Su número de pedido es: <strong>{{ numero }}</strong>.</p>
   </div>
   <div class="mt-4">
-    <a href="https://superbarato.megadescuento.com" class="btn btn-primary m-1">Ir a la tienda</a>
+    <a href="https://superbarato.megadescuento.com" class="btn btn-primary m-1">Volver a la tienda</a>
     <!--<button (click)="irInicio()" class="btn btn-secondary">Inicio</button>-->
   </div>
 </div>

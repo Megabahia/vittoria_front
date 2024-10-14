@@ -528,7 +528,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
         this.pedidosService.crearPedidoSuperBarato(this.archivo).subscribe(result => {
           this.numeroPedido.push(result.numeroPedido);
-          this.toaster.open('Pedido guardado', {type: 'success'});
+          this.toaster.open('Pedido enviado', {type: 'success'});
           this.mostrarContenidoPantalla = false;
         }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
       });
@@ -845,6 +845,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     } else if (selectedValue.includes('Retiro')) {
       this.handleRetiroEnLocal();
       this.pedidoMismoOrigen = true;
+      alert("Nota: La forma de entrega del pedido es Retiro en Local, al completar el pedido en esta pantalla, se enviará el pedido al apartado de Generar Pedido para continuar desde ese punto.");
     } else if (selectedValue.includes('Pago Contra Entrega')) {
       this.handleContraEntrega();
       this.handleDefault();

@@ -830,8 +830,8 @@
             <label for="generarGuia">Método de envío</label>
             <select class="form-control" id="generarGuia"
                     formControlName="metodoPago" (change)="onSelectChange($event)">
-              <option value="" selected>- Seleccione metodo de envío-</option>
-              <option value="{{pago.nombre}}" *ngFor="let pago of listaMetodoPago">
+              <option value="">- Seleccione metodo de envío-</option>
+              <option [value]="pago.nombre" *ngFor="let pago of listaMetodoPago">
                 {{ pago.nombre }}
               </option>
             </select>

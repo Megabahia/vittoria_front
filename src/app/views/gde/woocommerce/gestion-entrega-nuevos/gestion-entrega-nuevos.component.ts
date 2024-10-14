@@ -266,10 +266,11 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
 
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
       this.iniciarNotaPedido();
-      this.obtenerListaMetodoEnvio(info.canal);
       info.articulos.map((item): void => {
         this.agregarItem();
+
       });
+      this.obtenerListaMetodoEnvio(info.articulos[0].canal);
       this.notaPedido.patchValue({...info});
 
       if (this.notaPedido.value.metodoPago === 'Previo Pago Servientrega Nacional') {
