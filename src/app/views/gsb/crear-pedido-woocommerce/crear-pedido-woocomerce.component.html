@@ -7,8 +7,8 @@
 </div>-->
 
 <div class="card" *ngIf="mostrarContenidoPantalla">
-  <h2 class="py-1 px-2 font-weight-bold text-center">PEDIDO DESDE {{ paginaWoocommerce | uppercase }}</h2>
-  <h3 class="py-1 px-2 font-weight-bold bg-primary mb-0 text-center">Bienvenido {{ currentUser.full_name }}</h3>
+  <h5 class="py-1 px-2 font-weight-bold text-center">PEDIDO DESDE {{ paginaWoocommerce | uppercase }}</h5>
+  <h2 class="py-1 px-2 font-weight-bold bg-primary mb-0 text-center">Bienvenido {{ currentUser.full_name }}</h2>
 </div>
 <div *ngIf="mostrarContenidoPantalla">
   <form [formGroup]="notaPedido">
@@ -27,8 +27,7 @@
         <div class="card-header text-center bg-light">
           <p class=" my-0 py-0 px-5">En este apartado se mostrarán los productos y
             los datos necesarios para completar el pedido. Su pedido será procesado según la forma de entrega seleccionada.
-            Toda la gestión de su pedido se llevará a cabo a
-            través de nuestra plataforma Vittoria en el apartado de MP Motor de Pedidos - Pedidos Nuevos.</p>
+            Toda la gestión de su pedido se llevará a cabo a través de nuestra plataforma Vittoria.</p>
         </div>
         <div class="card-body px-0">
           <div class="px-2 py-1 bg-primary">
@@ -42,7 +41,7 @@
               </div>-->
               <div class="py-1" formArrayName="articulos">
                 <label style="font-size: small"
-                       class="text-info px-2">Tienda para el pedido: {{ tiendaProducto }}</label>
+                       class="text-info px-2">Pedido para la tienda: {{ tiendaProducto }}</label>
                 <div *ngFor="let articulo of tienda.get('articulos').controls; let i = index">
                   <ng-container [formGroup]="articulo">
 
@@ -265,7 +264,7 @@
           </select>
         </div>
         <div class="col-md-9 col-12" *ngIf="noEsCliente">
-          <h6>Si no es clinete nuevo, ingrese uno de los 3 campos a continuación para buscar el cliente y completar los datos.</h6>
+          <h6>NO es cliente nuevo, ingrese uno de los 3 campos a continuación para buscar el cliente y completar los datos.</h6>
           <div class="row">
             <div class="col-md-3 col-12">
               <input class="form-control" type="text" placeholder="Cédula"
@@ -432,14 +431,13 @@
               <input class="form-control" type="text"
                      formControlName="pais" disabled
               >
-
             </div>
             <div class="col-md-3 col-12">
               <label for="provinciaContacto">Provincia</label>
               <select class="form-control" name="provinciaContacto" formControlName="provincia"
                       (change)="obtenerCiudad()" id="provinciaContacto">
-                <option value="" selected>- Seleccione -</option>
-                <option value="{{pais.nombre}}" *ngFor="let pais of provinciaOpciones">
+                <option value="">- Seleccione -</option>
+                <option [value]="pais.nombre" *ngFor="let pais of provinciaOpciones">
                   {{ pais.nombre }}
                 </option>
               </select>
@@ -454,8 +452,8 @@
               <label for="ciudadContacto">Ciudad</label>
               <select class="form-control" name="ciudadContacto" formControlName="ciudad"
                       id="ciudadContacto" (change)="obtenerSector()">
-                <option value="" selected>- Seleccione -</option>
-                <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
+                <option value="">- Seleccione -</option>
+                <option [ngValue]="ciudad.nombre" *ngFor="let ciudad of ciudadOpciones">
                   {{ ciudad.nombre }}
                 </option>
               </select>
@@ -470,7 +468,7 @@
               <label class="form-label" for="sectorOrigen">Sector</label>
               <select class="form-control" id="sectorOrigen" formControlName="sector">
                 <option value="" selected>- Seleccione -</option>
-                <option value="{{sector.nombre}}" *ngFor="let sector of sectorOpciones">
+                <option [ngValue]="sector.nombre" *ngFor="let sector of sectorOpciones">
                   {{ sector.nombre }}
                 </option>
               </select>
@@ -597,7 +595,7 @@
          style="width: 100px;">
   </div>
   <p>Valoramos mucho tu preferencia y trabajamos continuamente para ofrecerte lo mejor.</p>
-  <p class="my-1">El detalle del pedido realizado se a enviado al correo electrónico del cliente: {{ notaPedido.value.facturacion.correo }}.</p>
+  <p class="my-1">El detalle del pedido realizado se a enviado al correo electrónico del cliente: {{ currentUser.usuario.email }}.</p>
   <div *ngFor="let numero of numeroPedido; let i=index">
     <p>Su número de pedido es: <strong>{{ numero }}</strong>.</p>
   </div>

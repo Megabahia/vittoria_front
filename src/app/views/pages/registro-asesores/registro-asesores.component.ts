@@ -140,4 +140,14 @@ export class RegistroAsesoresComponent implements OnInit {
       this.asesorForm.get('fecha_nacimiento').setValue('');
     }
   }
+
+  openWhatsApp(event: Event): void {
+    event.preventDefault();
+    const numero = '0998541076';
+    const modifiedNumber = (numero.startsWith('0') ? numero.substring(1) : numero);
+    const internationalNumber = '593' + modifiedNumber;
+    //const imageUrl = encodeURIComponent(imagen);  // URL de la imagen que deseas enviar
+    const whatsappUrl = `https://web.whatsapp.com/send/?phone=${internationalNumber}`;
+    window.open(whatsappUrl, '_blank');  // Abrir WhatsApp en una nueva pestaña
+  }
 }

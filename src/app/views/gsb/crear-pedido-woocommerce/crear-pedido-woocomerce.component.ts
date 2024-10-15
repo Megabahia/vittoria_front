@@ -139,8 +139,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
           // Agregar el canal al producto procesado
           productoProcesado.canal = params.canal;
-          const baseUrl = environment.apiUrlFront.replace('https://', '');
-          this.paginaWoocommerce = baseUrl;
+          this.paginaWoocommerce = productoProcesado.canal;
 
           return productoProcesado;
         });
@@ -232,13 +231,13 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
         tipoIdentificacion: [this.tipoIdentificacion, [Validators.required]],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: [this.pais, [Validators.required]],
-        provincia: [''],
-        ciudad: [''],
-        sector: [''],
-        callePrincipal: [''],
-        numero: [''],
-        calleSecundaria: [''],
-        referencia: [''],
+        provincia: ['', [Validators.required]],
+        ciudad: ['', [Validators.required]],
+        sector: ['', [Validators.required]],
+        callePrincipal: ['', [Validators.required]],
+        numero: ['', [Validators.required]],
+        calleSecundaria: ['', [Validators.required]],
+        referencia: ['', [Validators.required]],
         gps: [''],
         codigoVendedor: [this.currentUser.usuario.username, [Validators.required]],
         nombreVendedor: [this.currentUser.full_name, [Validators.required]]
@@ -582,6 +581,10 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       this.enviarCorreo = false;
       this.mostrarContenido = true;
       this.mostrarContenidoFacturacion = true;
+      this.notaPedido.get('facturacion').reset();
+      this.notaPedido.get('facturacion').get('pais').setValue(this.pais);
+      this.notaPedido.get('facturacion').get('codigoVendedor').setValue(this.currentUser.usuario.username);
+      this.notaPedido.get('facturacion').get('nombreVendedor').setValue(this.currentUser.full_name);
     }
   }
 
@@ -842,10 +845,11 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     if (selectedValue.includes('Previo Pago')) {
       this.handlePrevioPago();
       this.pedidoMismoOrigen = true;
+      this.handleDefault();
     } else if (selectedValue.includes('Retiro')) {
       this.handleRetiroEnLocal();
       this.pedidoMismoOrigen = true;
-      alert("Nota: La forma de entrega del pedido es Retiro en Local, al completar el pedido en esta pantalla, se enviará el pedido al apartado de Generar Pedido para continuar desde ese punto.");
+      alert("Nota: La forma de entrega del pedido es Retiro en Local, al completar el pedido se enviará al local para que el cliente se acerque a retirar.");
     } else if (selectedValue.includes('Pago Contra Entrega')) {
       this.handleContraEntrega();
       this.handleDefault();

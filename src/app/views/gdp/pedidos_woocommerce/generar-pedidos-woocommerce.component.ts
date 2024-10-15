@@ -168,6 +168,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
 
   iniciarNotaPedido(): void {
     this.usuarioActual = JSON.parse(localStorage.getItem('currentUser'));
+    console.log(this.usuarioActual)
     this.notaPedido = this.formBuilder.group({
       id: [''],
       facturacion: this.formBuilder.group({
@@ -667,7 +668,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
       this.dataPedidoWoocommerce = JSON.parse(data);
       this.notaPedido.patchValue({...this.dataPedidoWoocommerce});
       this.canalSeleccionado = this.dataPedidoWoocommerce.canal;
-      this.notaPedido.get('canal').setValue(this.canalSeleccionado);
+      //this.notaPedido.get('canal').setValue(this.canalSeleccionado);
       this.notaPedido.get('metodoPago').setValue(this.dataPedidoWoocommerce.metodoPago);
       this.dataPedidoWoocommerce.articulos.map((datos, index) => {
         this.agregarItem();
