@@ -1,0 +1,17 @@
+.label-soporte {
+  display: inline-block;
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  position: absolute;
+  right: 60px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: blue;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.whatsapp-link:hover ~ .label-soporte {
+  opacity: 1;
+  transform: translateY(-50%) translateX(-10px);
+}
