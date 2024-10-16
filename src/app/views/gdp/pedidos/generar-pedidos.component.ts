@@ -657,6 +657,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   cerrarModal() {
     this.modalService.dismissAll();
     this.iniciarNotaPedido();
+    this.totalIva = 0;
   }
 
 
