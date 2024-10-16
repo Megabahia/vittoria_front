@@ -223,7 +223,7 @@ export class GdConsultaProductosComponent implements OnInit {
 
     const datosCarrito = encodeURIComponent(JSON.stringify(this.carrito));
     const baseUrl = environment.apiUrlFront;
-    const urlCompleta = `${baseUrl}/#/gsb/pedido_woocommerce/crear?cadena=${datosCarrito}`;
+    const urlCompleta = `${baseUrl}/#/gd/pedido_woocommerce/crear?canal=vittoria-test.netlify.app&cadena=${datosCarrito}`;
 
     // Abrir la URL en una nueva pestaña
     window.open(urlCompleta, '_blank');

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {IntegracionesService} from '../../../services/admin/integraciones.service';
@@ -15,6 +15,7 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @ViewChild('dismissModal') dismissModal;
   @ViewChild('mensajeModal') mensajeModal;
+  archivo: FormData = new FormData();
 
   cargando = false;
   mensaje = '';
@@ -50,7 +51,8 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   ciudadOpciones;
   provinciaOpciones;
   provincia = '';
-
+  imageUrlPrincipal: string | ArrayBuffer | null = null;
+  imagenPrinciplSeleccionada: File | null = null;
   // @ViewChild('padres') padres;
   constructor(
     private integracionesService: IntegracionesService,
@@ -103,6 +105,11 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
       longitud: [''],
       prefijo: ['', [Validators.required, Validators.maxLength(4)]],
       bodega_central: [0, []],
+      descripcion_direccion: ['', [Validators.required]],
+      direccion_mapa: ['', [Validators.required]],
+      hora_atencion: ['', [Validators.required]],
+      descuento: [0, [Validators.required, Validators.max(100), Validators.pattern('^[0-9]+$')]],
+      imagen_principal: [''],
     });
     this.menu = {
       modulo: 'adm',
@@ -159,10 +166,31 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
     }
+
+    const canalLlaves: string[] = Object.keys(this.paramForm.value);
+    const canalValores: string[] = Object.values(this.paramForm.value);
+
+    canalLlaves.map((llave, index) => {
+      if (llave !== 'imagen_principal') {
+        if (llave === 'pedidos_local' || llave === 'despachos_local') {
+          this.archivo.delete(llave);
+          this.archivo.append(llave, JSON.stringify(canalValores[index]));
+        } else {
+          this.archivo.delete(llave);
+          this.archivo.append(llave, canalValores[index]);
+        }
+      }
+    });
+
+    if (this.imagenPrinciplSeleccionada != null) {
+      this.archivo.delete('imagen_principal');
+      this.archivo.append('imagen_principal', this.imagenPrinciplSeleccionada);
+    }
+
     this.cargando = true;
     if (this.funcion === 'insertar') {
 
-      await this.integracionesService.insertarIntegracion(this.paramForm.value).subscribe((result) => {
+      await this.integracionesService.insertarIntegracion(this.archivo).subscribe((result) => {
           this.obtenerListaParametros();
           this.dismissModal.nativeElement.click();
           this.cargando = false;
@@ -180,7 +208,7 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
           this.abrirModalMensaje(this.mensajeModal);
         });
     } else if (this.funcion === 'editar') {
-      await this.integracionesService.editarIntegracion(this.paramForm.value).subscribe((result) => {
+      await this.integracionesService.editarIntegracionFormData(this.archivo).subscribe((result) => {
           this.obtenerListaParametros();
           this.dismissModal.nativeElement.click();
           this.cargando = false;
@@ -301,6 +329,23 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
     this.paramServiceAdm.obtenerListaHijos(this.paramForm.value.ciudad, 'CIUDAD').subscribe((info) => {
       this.sectorOpciones = info;
     });
+  }
+
+  onFileSelect(event: any): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length) {
+      this.imagenPrinciplSeleccionada = input.files[0]; // Almacena el archivo seleccionado globalmente
+      this.cargarImagenPrincipal(this.imagenPrinciplSeleccionada); // Carga la imagen para su visualización
+
+    }
+  }
+
+  private cargarImagenPrincipal(file: File): void {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.imageUrlPrincipal = e.target.result; // Almacena la URL de la imagen para visualización
+    };
+    reader.readAsDataURL(file);
   }
 
 }

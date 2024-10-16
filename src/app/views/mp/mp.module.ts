@@ -12,19 +12,25 @@ import { PedidosComponent } from './pedidos/pedidos.component';
 import { PedidosDevueltosComponent } from './pedidos-devueltos/pedidos-devueltos.component';
 import { PedidosRechazadosComponent } from './pedidos-rechazados/pedidos-rechazados.component';
 import {GdeModule} from '../gde/gde.module';
-import {PedidoMegabahiaComponent} from "./pedidos-canal/pedido-megabahia/pedido-megabahia.component";
-import {PedidoMayoristaComponent} from "./pedidos-canal/pedido-mayorista/pedido-mayorista.component";
-import {PedidoContraentregaComponent} from "./pedidos-canal/pedido-contraentrega/pedido-contraentrega.component";
-import {PedidoMaxidescuentoComponent} from "./pedidos-canal/pedido-maxidescuento/pedido-maxidescuento.component";
-import {PedidoMegadescuentoComponent} from "./pedidos-canal/pedido-megadescuento/pedido-megadescuento.component";
-import {PedidoSuperbaratoComponent} from "./pedidos-canal/pedido-superbarato/pedido-superbarato.component";
+import {PedidoMegabahiaComponent} from './pedidos-canal/pedido-megabahia/pedido-megabahia.component';
+import {PedidoMayoristaComponent} from './pedidos-canal/pedido-mayorista/pedido-mayorista.component';
+import {PedidoContraentregaComponent} from './pedidos-canal/pedido-contraentrega/pedido-contraentrega.component';
+import {PedidoMaxidescuentoComponent} from './pedidos-canal/pedido-maxidescuento/pedido-maxidescuento.component';
+import {PedidoMegadescuentoComponent} from './pedidos-canal/pedido-megadescuento/pedido-megadescuento.component';
+import {PedidoSuperbaratoComponent} from './pedidos-canal/pedido-superbarato/pedido-superbarato.component';
 import {
   PedidoTiendamulticomprasComponent
-} from "./pedidos-canal/pedido-tiendamulticompras/pedido-tiendamulticompras.component";
-import {PedidoTodomegacentroComponent} from "./pedidos-canal/pedido-todomegacentro/pedido-todomegacentro.component";
-import {PedidoVittoriaComponent} from "./pedidos-canal/pedido-vittoria/pedido-vittoria.component";
-import {LandingEditComponent} from "./pedidos-landing/landing-edit/landing-edit.component";
-import {LandingListComponent} from "./pedidos-landing/landing-list/landing-list.component";
+} from './pedidos-canal/pedido-tiendamulticompras/pedido-tiendamulticompras.component';
+import {PedidoTodomegacentroComponent} from './pedidos-canal/pedido-todomegacentro/pedido-todomegacentro.component';
+import {PedidoVittoriaComponent} from './pedidos-canal/pedido-vittoria/pedido-vittoria.component';
+import {LandingEditComponent} from './pedidos-landing/landing-edit/landing-edit.component';
+import {LandingListComponent} from './pedidos-landing/landing-list/landing-list.component';
+import {
+  PedidosEntregaLocalComponent
+} from "./pedidos-canal/pedido-entrega-local/pedidos/pedidos-entrega-local.component";
+import {
+  PedidosEntregaLocalEntregadosComponent
+} from "./pedidos-canal/pedido-entrega-local/entregados/pedidos-entrega-local-entregados.component";
 
 
 
@@ -44,7 +50,9 @@ import {LandingListComponent} from "./pedidos-landing/landing-list/landing-list.
     PedidoTodomegacentroComponent,
     PedidoVittoriaComponent,
     LandingEditComponent,
-    LandingListComponent
+    LandingListComponent,
+    PedidosEntregaLocalComponent,
+    PedidosEntregaLocalEntregadosComponent
   ],
   imports: [
     CommonModule,

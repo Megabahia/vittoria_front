@@ -141,7 +141,9 @@ export class ProductosEditarComponent implements OnInit {
       tamanio: [0, []],
       prefijo: ['', []],
       link_catalogo: [''],
-      link_tienda: ['']
+      link_tienda: [''],
+      porcentaje_comision: ['', [Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]*$')]],
+      valor_comision: ['', [Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
     });
     this.fichaTecnicaForm = this._formBuilder.group({
       codigo: ['', [Validators.required]],
@@ -259,6 +261,18 @@ export class ProductosEditarComponent implements OnInit {
     //   console.log(info);
     // });
     this.submittedProductoForm = true;
+
+    console.log(this.productoForm.value.porcentaje_comision, this.productoForm.value.valor_comision)
+
+    if (!this.productoForm.value.porcentaje_comision && !this.productoForm.value.valor_comision) {
+      this.toaster.open('Debe completar uno de los dos campos de comisión', {type: 'warning'});
+      return;
+    }
+    if (this.productoForm.value.porcentaje_comision && this.productoForm.value.valor_comision) {
+      this.toaster.open('Debe completar solo un campo de comisión', {type: 'warning'});
+      return;
+    }
+
     if (this.productoForm.invalid || this.invalidoTamanoVideo) {
       this.toaster.open('Llenar campos', {type: 'warning'});
       return;

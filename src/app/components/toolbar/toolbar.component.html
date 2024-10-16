@@ -181,14 +181,14 @@
               <span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
           </li>
           <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
-            <a class="d-flex align-items-center" [routerLink]="['gsb/inventario/list']" data-toggle="tooltip"
+            <a class="d-flex align-items-center" [routerLink]="['gd/inventario/list']" data-toggle="tooltip"
                data-placement="auto" title="Super Barato">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Inventario</span>
             </a>
           </li>
           <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
-            <a class="d-flex align-items-center" [routerLink]="['gsb/inventario/reporte']" data-toggle="tooltip"
+            <a class="d-flex align-items-center" [routerLink]="['gd/inventario/reporte']" data-toggle="tooltip"
                data-placement="auto" title="Reporte de Inventario Super Barato">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Reporte de Inventario</span>
@@ -234,6 +234,13 @@
                    data-placement="auto" title="Cargar Stock Productos">
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Cargar Megabahía</span></a>
+              </li>
+              <li class="nav-item {{menuToolbar['mdp']['param']}}">
+                <a class="d-flex align-items-center" href="#/mdp/gestion-proveedores/cargar-stock-canales"
+                   data-toggle="tooltip"
+                   data-placement="auto" title="Cargar inventario por canal">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Cargar inventario por canal</span></a>
               </li>
               <!--<li class="nav-item {{menuToolbar['mdp']['param']}}" *ngIf="usuario.usuario.idRol !== 59">
                 <a class="d-flex align-items-center" href="#/mdp/gestion-proveedores/productos" data-toggle="tooltip"
@@ -332,13 +339,12 @@
           <span class="menu-title text-truncate" data-i18n="Invoice" title="GD Gestión de Drop Shipping">GD Gestión de Drop Shipping</span></a>
         <ul class="menu-content ng-star-inserted">
           <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
-            <a class="d-flex align-items-center" [routerLink]="['gsb/gd_params']" data-toggle="tooltip"
+            <a class="d-flex align-items-center" [routerLink]="['gd/gd_params']" data-toggle="tooltip"
                data-placement="auto" title="Parametrizaciones">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Parametrizaciones</span>
             </a>
           </li>
-
           <li class="nav-item has-sub ng-star-inserted">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Pedidos por Canal">
@@ -347,14 +353,14 @@
             <ul class="menu-content">
               <li class="nav-item"
                   *ngIf="usuario.usuario.idRol === 58 || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 54">
-                <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/create']" data-toggle="tooltip"
+                <a class="d-flex align-items-center" [routerLink]="['gd/contacto/create']" data-toggle="tooltip"
                    data-placement="auto" title="Ingreso de contactos">
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Ingresar Contactos</span>
                 </a>
               </li>
               <li class="nav-item" *ngIf="acciones.GCN.LEER">
-                <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/list/reporte']" data-toggle="tooltip"
+                <a class="d-flex align-items-center" [routerLink]="['gd/contacto/list/reporte']" data-toggle="tooltip"
                    data-placement="auto" title="Reporte de lista de contactos">
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Reporte de lista de contactos</span>
@@ -370,14 +376,14 @@
                                                  data-i18n="List">Concretar ventas</span></a>
             <ul class="menu-content">
               <li class="nav-item">
-                <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/list']" data-toggle="tooltip"
+                <a class="d-flex align-items-center" [routerLink]="['gd/contacto/list']" data-toggle="tooltip"
                    data-placement="auto" title="Listar Contactos">
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Listar Contactos</span>
                 </a>
               </li>
               <li class="nav-item" *ngIf="acciones.GCN.LEER">
-                <a class="d-flex align-items-center" [routerLink]="['gsb/contacto/list/reporte/venta']"
+                <a class="d-flex align-items-center" [routerLink]="['gd/contacto/list/reporte/venta']"
                    data-toggle="tooltip"
                    data-placement="auto" title="Reporte de lista de ventas">
                   <i data-feather="circle"></i>
@@ -386,21 +392,76 @@
               </li>
             </ul>
           </li>
-
           <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
-            <a class="d-flex align-items-center" [routerLink]="['gsb/gd_consulta_productos']" data-toggle="tooltip"
+            <a class="d-flex align-items-center" [routerLink]="['gd/gd_consulta_productos']" data-toggle="tooltip"
                data-placement="auto" title="Consulta de producto GD">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Consulta de productos</span>
             </a>
           </li>
           <li class="nav-item"
-              *ngIf="(usuario.usuario.idRol === 62 && usuario.usuario.canal === 'superbarato.megadescuento.com') || (usuario.usuario.idRol === 62 && usuario.usuario.canal === 'contraentrega.megadescuento.com') || usuario.usuario.idRol === 1">
-            <a class="d-flex align-items-center" [routerLink]="['gsb/pedido_woocommerce/crear']" data-toggle="tooltip"
+              *ngIf="(usuario.usuario.idRol === 62 && usuario.usuario.canal === 'superbarato.megadescuento.com') || (usuario.usuario.idRol === 62 && usuario.usuario.canal === 'contraentrega.megadescuento.com') || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 63">
+            <a class="d-flex align-items-center" [routerLink]="['gd/pedido_woocommerce/crear']" data-toggle="tooltip"
                data-placement="auto" title="Generar Pedido Woocommerce">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Generar pedido woocommerce</span>
             </a>
+          </li>
+          <li class="nav-item has-sub ng-star-inserted" *ngIf="usuario.usuario.idRol === 1">
+            <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
+               title="Asesor/a comercial">
+              <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                                 data-i18n="List">Asesor/a comercial</span></a>
+            <ul class="menu-content">
+              <li class="nav-item"
+              >
+                <a class="d-flex align-items-center" [routerLink]="['gd/asesor/resgistro']" data-toggle="tooltip"
+                   data-placement="auto" title="Registrar asesor@s comerciales">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Registrar asesor@s comerciales</span>
+                </a>
+              </li>
+              <li class="nav-item"
+              >
+                <a class="d-flex align-items-center" [routerLink]="['gd/asesor/list']" data-toggle="tooltip"
+                   data-placement="auto" title="Asesor@s comerciales registrada">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Asesor@s comerciales registradas</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="d-flex align-items-center" [routerLink]="['gd/asesor/list/confirmados']" data-toggle="tooltip"
+                   data-placement="auto" title="Configurar Asesor@s Confirmados">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Configurar Asesor@s Confirmados</span>
+                </a>
+              </li>
+              <li class="nav-item has-sub ng-star-inserted">
+                <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
+                   title="Billetera digital">
+                  <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                                     data-i18n="List">Billetera digital</span></a>
+                <ul class="menu-content">
+                  <li class="nav-item">
+                    <a class="d-flex align-items-center" data-toggle="tooltip"
+                       [routerLink]="['gd/asesor/billetera/digital/cargar_saldo']"
+                       data-placement="auto" title="Cargar saldo billetera digital">
+                      <i data-feather="circle"></i>
+                      <span class="menu-item text-truncate" data-i18n="List">Cargar saldo billetera digital</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="d-flex align-items-center" data-toggle="tooltip"
+                       [routerLink]="['gd/asesor/list/billetera/digital/movimientos']"
+                       data-placement="auto" title="Movimientos billetera digital">
+                      <i data-feather="circle"></i>
+                      <span class="menu-item text-truncate" data-i18n="List">Movimientos billetera digital</span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+            </ul>
           </li>
         </ul>
       </li>
@@ -512,7 +573,30 @@
                   <span class="menu-item text-truncate" data-i18n="List">Pedido Superbarato</span>
                 </a>
               </li>
-
+              <li class="nav-item has-sub ng-star-inserted">
+                <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
+                   title="Pedidos entrega local">
+                  <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                                     data-i18n="List">Pedidos entrega local</span></a>
+                <ul class="menu-content">
+                  <li class="nav-item">
+                    <a class="d-flex align-items-center" [routerLink]="['mp/pedido-entrega-local/list']"
+                       data-toggle="tooltip"
+                       data-placement="auto" title="Pedidos">
+                      <i data-feather="circle"></i>
+                      <span class="menu-item text-truncate" data-i18n="List">Pedidos</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="d-flex align-items-center" [routerLink]="['mp/pedido-entrega-local/entregados']"
+                       data-toggle="tooltip"
+                       data-placement="auto" title="Pedidos entregados">
+                      <i data-feather="circle"></i>
+                      <span class="menu-item text-truncate" data-i18n="List">Pedidos entregados</span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
             </ul>
           </li>
         </ul>

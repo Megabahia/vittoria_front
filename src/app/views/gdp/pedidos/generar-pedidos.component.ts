@@ -18,6 +18,7 @@ import {environment} from "../../../../environments/environment";
 import html2canvas from 'html2canvas';
 import {element} from "protractor";
 import {Download} from "angular-feather/icons";
+import {IntegracionesService} from "../../../services/admin/integraciones.service";
 
 @Component({
   selector: 'app-generar-ventas',
@@ -71,6 +72,10 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   tipoIdentificacion;
   totalIva;
   hablilitarBotonGuardar = true;
+
+  integracionCanalCupon;
+  imagenCanal;
+
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -85,12 +90,12 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   dataPedidoWoocommerce;
   mostrarFiltroCliente = true;
   mostrarInputNumPedido = false;
+  base64Image: string | undefined;
 
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
-    private datePipe: DatePipe,
-    private pedidosService: PedidosService,
+    private integracionesService: IntegracionesService,
     private clientesService: ClientesService,
     private contactosService: ContactosService,
     private paramService: ParamService,
@@ -129,6 +134,8 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       this.parametroIva = parseFloat(result.info[0].valor);
     });
 
+    this.obtenerIntegracionCanal();
+
   }
 
   ngOnInit(): void {
@@ -147,11 +154,12 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
     if (localStorage.getItem('productoData')) {
       this.obtenerProductoDesdeConsulta();
-    } else if (localStorage.getItem('productoDataPedidoWoocommerce')) {
+    }
+    /*else if (localStorage.getItem('productoDataPedidoWoocommerce')) {
       this.mostrarFiltroCliente = false;
       this.mostrarInputNumPedido = true;
       this.obtenerDatosPedidoWoocommerce();
-    }
+    }*/
 
   }
 
@@ -280,6 +288,8 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));*/
+    console.log(this.notaPedido.value)
+
     if (this.notaPedido.value.valorUnitario === 0) {
       this.toaster.open('Seleccione un precio que sea mayor a 0.', {type: 'danger'});
       return;
@@ -292,9 +302,10 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     if (confirm('Esta seguro de guardar los datos') === true) {
       this.hablilitarBotonGuardar = false;
       this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
+          this.imagenCanal = info.imagen_canal;
+          this.obtenerContactos();
           this.modalService.dismissAll();
           this.notaPedido.patchValue({...info, id: this.idContacto});
-          this.obtenerContactos();
           this.abrirModalCupon(notaPedidoModal);
           this.myAngularxCode = `Numero de pedido: ${info.numeroPedido}`;
           this.toaster.open('Pedido creado. Creando cupón...', {type: 'info'});
@@ -323,7 +334,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async obtenerProducto(i): Promise<void> {
+  async obtenerProducto(i, canalProducto = ''): Promise<void> {
     if (this.canalSeleccionado === '') {
       this.toaster.open('Seleccione un canal y vuelva a buscar', {type: 'danger'});
       return;
@@ -332,7 +343,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
         //canalProducto: this.detallesArray.value[i].canal ? this.detallesArray.value[i].canal : this.canalSeleccionado,
-        canal: this.canalSeleccionado,
+        canal: canalProducto !== '' ? canalProducto : this.canalSeleccionado,
         //valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
       this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
@@ -365,7 +376,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
           this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
           window.alert('Existen inconsistencias con los precios de los productos.');
         }*/
-      });
+      }, error => this.toaster.open(error, {type: 'danger'}));
     });
   }
 
@@ -469,6 +480,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
         this.notaPedido.get('facturacion').get('apellidos').setValue(info.apellidos);
         this.notaPedido.get('facturacion').get('correo').setValue(info.correo);
         this.notaPedido.get('facturacion').get('identificacion').setValue(info.cedula);
+        this.notaPedido.get('facturacion').get('tipoIdentificacion').setValue(info.tipoIdentificacion);
         this.notaPedido.get('facturacion').get('telefono').setValue(info.telefono);
         this.notaPedido.get('facturacion').get('provincia').setValue(info.provinciaNacimiento);
         this.notaPedido.get('facturacion').get('ciudad').setValue(info.ciudadNacimiento);
@@ -512,6 +524,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
         try {
           this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
+            this.detallesArray.controls[i].get('imagen_principal').setValue(producto.imagen_principal);
             this.toaster.open('Imagen actualizada con éxito', {type: "info"});
           }, error => this.toaster.open('No se pudo actualizar la imagen.', {type: "danger"}));
         } catch (error) {
@@ -632,7 +645,23 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async obtenerDatosPedidoWoocommerce() {
+  obtenerIntegracionCanal() {
+    this.integracionesService.obtenerListaIntegraciones({
+      page: this.page,
+      page_size: this.pageSize, valor: this.canalSeleccionado
+    }).subscribe(async (result) => {
+      this.integracionCanalCupon = result.info[0];
+    });
+  }
+
+  cerrarModal() {
+    this.modalService.dismissAll();
+    this.iniciarNotaPedido();
+    this.totalIva = 0;
+  }
+
+
+  /*async obtenerDatosPedidoWoocommerce() {
     const data = localStorage.getItem('productoDataPedidoWoocommerce');
     if (data) {
       this.dataPedidoWoocommerce = JSON.parse(data);
@@ -640,7 +669,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       this.dataPedidoWoocommerce.articulos.map((datos, index) => {
         this.agregarItem();
         this.detallesArray.controls[index].get('codigo').setValue(datos.codigo);
-        this.obtenerProducto(index);
+        this.obtenerProducto(index, datos.canal);
       });
       this.obtenerCiudad();
       //this.obtenerSector();
@@ -651,7 +680,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       localStorage.removeItem('productoDataPedidoWoocommerce');
     }
 
-  }
+  }*/
 
 
   /*obtenerSector(): void {

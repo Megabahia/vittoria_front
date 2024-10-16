@@ -13,9 +13,9 @@ export class ParamService {
   constructor(private http: HttpClient) {
   }
 
-  obtenerListaParametros(page, page_size, tipo, nombre) {
+  obtenerListaParametros(page, page_size, tipo, nombre, canal= '') {
     return this.http.post<any>(`${apiUrl}/adm/param/list/`, {
-      page, page_size, tipo, nombre
+      page, page_size, tipo, nombre, canal
     });
 
   }
@@ -30,7 +30,7 @@ export class ParamService {
     descripcion,
     tipoVariable,
     valor,
-    idPadre
+    idPadre, canal
   ) {
     return this.http.post<any>(`${apiUrl}/adm/param/create/`, {
       nombre,
@@ -38,7 +38,8 @@ export class ParamService {
       descripcion,
       tipoVariable,
       valor,
-      idPadre
+      idPadre,
+      canal
     });
   }
 
@@ -49,14 +50,14 @@ export class ParamService {
     descripcion,
     tipoVariable,
     valor,
-    idPadre) {
+    idPadre, canal) {
     return this.http.post<any>(`${apiUrl}/adm/param/update/${id}`, {
       nombre,
       tipo,
       descripcion,
       tipoVariable,
       valor,
-      idPadre
+      idPadre, canal
     });
   }
 

@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {NgbPagination, NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {ParamService} from 'src/app/services/admin/param.service';
+import {ParamService as AdmParamService, ParamService} from 'src/app/services/admin/param.service';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 
 @Component({
@@ -33,16 +33,23 @@ export class ParamsListComponent implements OnInit {
   idParametro;
   tipoPadre = '';
   idPadre = 0;
+  canal = '';
   tipoVariable;
   valor;
   padres;
+  mostrarCanales = false;
+  canalOpciones;
 
   // @ViewChild('padres') padres;
   constructor(
     private paramService: ParamService,
     private modalService: NgbModal,
     private _formBuilder: FormBuilder,
+    private paramServiceAdm: AdmParamService,
   ) {
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar).subscribe((result) => {
+      this.canalOpciones = result.data;
+    });
   }
 
   get f() {
@@ -55,7 +62,8 @@ export class ParamsListComponent implements OnInit {
       nombreTipo: ['', [Validators.required]],
       descripcion: ['', [Validators.required]],
       tipoVariable: ['', [Validators.required]],
-      valor: ['', [Validators.required]]
+      valor: ['', [Validators.required]],
+      canal: ['']
     });
     this.menu = {
       modulo: 'adm',
@@ -92,8 +100,15 @@ export class ParamsListComponent implements OnInit {
     this.funcion = 'editar';
 
     await this.paramService.obtenerParametro(id).subscribe(async (result) => {
+      if (result.tipo === 'METODO PAGO') {
+        this.mostrarCanales = true;
+
+      } else {
+        this.mostrarCanales = false;
+      }
       if (result.idPadre) {
         await this.paramService.obtenerParametro(result.idPadre).subscribe(async (data) => {
+
           this.tipoPadre = data.tipo;
           await this.paramService.obtenerListaPadres(data.tipo).subscribe((result) => {
             this.padres = result;
@@ -110,6 +125,7 @@ export class ParamsListComponent implements OnInit {
       this.descripcion = result.descripcion;
       this.tipoVariable = result.tipoVariable;
       this.valor = result.valor;
+      this.canal = result.canal;
     });
   }
 
@@ -122,8 +138,17 @@ export class ParamsListComponent implements OnInit {
     this.valor = '';
     this.idPadre = 0;
     this.submitted = false;
-
+    this.canal = '';
     this.funcion = 'insertar';
+    this.mostrarCanales = false;
+  }
+
+  onChangeTipoPago(e: any) {
+    if (e.target.value === 'METODO PAGO') {
+      this.mostrarCanales = true;
+    } else {
+      this.mostrarCanales = false;
+    }
   }
 
   async gestionarParametro() {
@@ -140,7 +165,8 @@ export class ParamsListComponent implements OnInit {
         this.descripcion,
         this.tipoVariable,
         this.valor,
-        this.idPadre
+        this.idPadre,
+        this.canal,
       ).subscribe((result) => {
           this.obtenerListaParametros();
           this.dismissModal.nativeElement.click();
@@ -167,7 +193,8 @@ export class ParamsListComponent implements OnInit {
         this.descripcion,
         this.tipoVariable,
         this.valor,
-        this.idPadre).subscribe((result) => {
+        this.idPadre,
+        this.canal).subscribe((result) => {
           this.obtenerListaParametros();
           this.dismissModal.nativeElement.click();
           this.submitted = false;
@@ -225,4 +252,5 @@ export class ParamsListComponent implements OnInit {
       link.click();
     });
   }
+
 }

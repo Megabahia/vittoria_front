@@ -18,6 +18,18 @@ import {
   ReporteContactosVentasComponent
 } from './gsb_contactos/reporte_contactos_ventas/reporte_contactos-ventas.component';
 import {CrearPedidoWoocomerceComponent} from './crear-pedido-woocommerce/crear-pedido-woocomerce.component';
+import {RegistroAsesoresComponent} from '../pages/registro-asesores/registro-asesores.component';
+import {GdRegistrosAsesoresComponent} from './gd_asesores_comerciales/registros/gd_registros_asesores.component';
+import {
+  GdBilleteraDigitalAsesoresComponent
+} from './gd_asesores_comerciales/billetera_digital/movimientos/gd_billetera_digital_asesores.component';
+import {
+  GdRegistroAsesoresComponent
+} from './gd_asesores_comerciales/registro_asesores/registro-asesores.component';
+import {GdAsesoresConfirmadosComponent} from './gd_asesores_comerciales/confirmados/gd_asesores_confirmados.component';
+import {
+  GdCargarSaldoBilleteraDigitalComponent
+} from "./gd_asesores_comerciales/billetera_digital/cargar-saldo/gd_cargar_saldo_billetera_digital.component";
 
 const routes: Routes = [{
   path: '', component: GsbComponent, children: [
@@ -59,6 +71,26 @@ const routes: Routes = [{
         {
           path: 'create', component: GsbGenerarContactoComponent, canActivate: [AuthGuard],
         }
+      ],
+    },
+    {
+      path: 'asesor', children: [
+        {path: '', redirectTo: 'list', pathMatch: 'full'},
+        {
+          path: 'list', component: GdRegistrosAsesoresComponent, canActivate: [AuthGuard],
+        },
+        {
+          path: 'list/confirmados', component: GdAsesoresConfirmadosComponent, canActivate: [AuthGuard],
+        },
+        {
+          path: 'list/billetera/digital/movimientos', component: GdBilleteraDigitalAsesoresComponent, canActivate: [AuthGuard],
+        },
+        {
+          path: 'billetera/digital/cargar_saldo', component: GdCargarSaldoBilleteraDigitalComponent, canActivate: [AuthGuard],
+        },
+        {
+          path: 'resgistro', component: GdRegistroAsesoresComponent, canActivate: [AuthGuard],
+        },
       ],
     },
     {

@@ -10,8 +10,9 @@ import { ProductosComponent } from './productos/productos.component';
 import {NgxCaptchaModule} from 'ngx-captcha';
 import { CalculadoraComponent } from './calculadora/calculadora.component';
 import { PedidoWoocomerceComponent } from './pedido-woocomerce/pedido-woocomerce.component';
-import {GdeModule} from "../gde/gde.module";
-import {ConsultaProductosComponent} from "./consulta-productos/consulta-productos.component";
+import {GdeModule} from '../gde/gde.module';
+import {ConsultaProductosComponent} from './consulta-productos/consulta-productos.component';
+import { RegistroAsesoresComponent } from './registro-asesores/registro-asesores.component';
 
 
 
@@ -20,7 +21,8 @@ import {ConsultaProductosComponent} from "./consulta-productos/consulta-producto
     ProductosComponent,
     CalculadoraComponent,
     PedidoWoocomerceComponent,
-    ConsultaProductosComponent
+    ConsultaProductosComponent,
+    RegistroAsesoresComponent
   ],
     imports: [
         CommonModule,

@@ -23,7 +23,7 @@ export class SignInComponent implements OnInit {
   siteKey: string;
   submitted = false;
   mostrarSpinner = false;
-
+  mostrarRegistroAsesor = false;
   constructor(
     private modalService: NgbModal,
     private authService: AuthService,
@@ -33,6 +33,12 @@ export class SignInComponent implements OnInit {
   ) {
     this.siteKey = environment.setKey;
     this.captcha = false;
+
+    if (localStorage.getItem('productosWoocommerce')) {
+      this.mostrarRegistroAsesor = true;
+    } else {
+      this.mostrarRegistroAsesor = false;
+    }
   }
 
   ngOnInit(): void {
@@ -58,7 +64,7 @@ export class SignInComponent implements OnInit {
             const baseUrl = environment.apiUrlFront;
 
             //this.router.navigate(['#/gsb/pedido_woocommerce/crear']);
-            window.location.href = `${baseUrl}/#/gsb/pedido_woocommerce/crear`;
+            window.location.href = `${baseUrl}/#/gd/pedido_woocommerce/crear`;
             //window.location.reload();
           } else {
             window.location.href = '';
@@ -81,4 +87,6 @@ export class SignInComponent implements OnInit {
   cerrarModal(): void {
     this.modalService.dismissAll();
   }
+
+
 }

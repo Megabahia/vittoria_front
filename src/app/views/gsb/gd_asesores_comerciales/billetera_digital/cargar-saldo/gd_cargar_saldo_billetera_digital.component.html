@@ -1,0 +1,146 @@
+<div class="app-content content ">
+  <div class="content-wrapper">
+    <div class="content-body">
+      <div class="card">
+        <h3 class="card-header">Cargar saldo de asesor@s</h3>
+
+      </div>
+      <div class="card">
+        <div class="card-datatable table-responsive pt-0">
+          <div class="row m-75">
+            <div class="col-lg-12 col-xl-6">
+              <label>Mostrar</label>
+              <select class="form-control-sm" [(ngModel)]="pageSize"
+                      (change)="obtenerAsesoresRegistrados()">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+
+            </div>
+          </div>
+          <table class="user-list-table table">
+            <thead class="thead-light">
+            <tr>
+              <th>Fecha de registro</th>
+              <th>Nombres</th>
+              <th>Apellidos</th>
+              <th>Correo electrónico</th>
+              <th>Localidad</th>
+              <th>Teléfono</th>
+              <th>Fecha de nacimiento</th>
+              <th>Género</th>
+              <th>Estado</th>
+              <th>Carga de saldo</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let transaccion  of listaAsesores; let i = index">
+              <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
+              <td>{{ transaccion.nombres }}</td>
+              <td>{{ transaccion.apellidos }}</td>
+              <td>{{ transaccion.email }}</td>
+              <td>{{ transaccion.pais }}, {{ transaccion.provincia }}, {{ transaccion.ciudad }}</td>
+              <td>{{ transaccion.whatsapp }}</td>
+              <td>{{ transaccion.fecha_nacimiento | date: 'dd-MM-yyyy' }}</td>
+              <td>{{ transaccion.gender }}</td>
+              <td>{{ transaccion.estado }}</td>
+              <td>
+                <a class="btn btn-primary" (click)="abrirModalCargaSaldo(datosCargaSaldo, transaccion)">
+                  Cargar saldo
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
+                        [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+
+      </div>
+    </div>
+    <ng-template #datosCargaSaldo let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title">Carga de saldo de asesor</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-content">
+
+        <form [formGroup]="movimientoAsesorForm">
+          <div class="card-body invoice-padding">
+            <div class="row">
+              <div class="col-12">
+                <label for="saldo_ingreso">Carga de saldo</label>
+                <select class="form-control" id="saldo_ingreso" formControlName="saldo_ingreso">
+                  <option value="" selected>- Seleccione -</option>
+                  <option [value]="saldo.valor" *ngFor="let saldo of listaSaldo">
+                    $ {{ saldo.valor }}
+                  </option>
+                </select>
+                <div *ngIf="notaMovimientoAsesorForm.saldo_ingreso.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="notaMovimientoAsesorForm.saldo_ingreso.errors.required">
+                    Requerido
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 mt-2">
+                <label>Comprobante de transferencia</label>
+                <input class="form-control-file" type="file" (change)="onFileSelected($event)">
+                <div *ngIf="notaMovimientoAsesorForm.archivo_comprobante.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="notaMovimientoAsesorForm.archivo_comprobante.errors.required">
+                    Requerido
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 my-1">
+                <label>Numero de transacción</label>
+                <input class="form-control" type="text" formControlName="numero_transaccion">
+                <div *ngIf="notaMovimientoAsesorForm.numero_transaccion.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="notaMovimientoAsesorForm.numero_transaccion.errors.required">
+                    Requerido
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <label class="font-weight-bold">Fecha</label><br/>
+                <label class="font-weight-bold">{{movimientoAsesorForm.value.created_at | date: 'dd-MM-yyyy'}}</label>
+                <!--<input class="form-control" type="text" formControlName="created_at" disabled/>
+                <div *ngIf="notaMovimientoAsesorForm.created_at.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="notaMovimientoAsesorForm.created_at.errors.required">
+                    Requerido
+                  </div>
+                </div>-->
+              </div>
+              <div class="col-12 mt-2">
+                <label>Observaciones</label>
+                <textarea class="form-control" type="text" formControlName="observaciones" rows="4"> </textarea>
+                <div *ngIf="notaMovimientoAsesorForm.observaciones.errors"
+                     class="invalid-feedback" style="display: block;">
+                  <div *ngIf="notaMovimientoAsesorForm.observaciones.errors.required">
+                    Requerido
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-secondary"
+                (click)="modal.dismiss('Cross click')">Cerrar
+        </button>
+        <button class="btn btn-primary mx-1" (click)="guardarMovimientos()"
+        >Guardar datos
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</div>

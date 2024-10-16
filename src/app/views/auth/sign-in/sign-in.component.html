@@ -1,105 +1,110 @@
 <div class="app-content content ">
-    <div class="content-overlay"></div>
-    <div class="header-navbar-shadow"></div>
-    <div class="content-wrapper">
-        <div class="content-header row">
-        </div>
-        <div class="content-body">
-            <div class="auth-wrapper auth-v1 px-2">
-                <div class="auth-inner py-2">
-                    <!-- Login v1 -->
-                    <div class="card mb-0">
-                        <div class="card-body">
-                            <a href="javascript:void(0);" class="brand-logo">
-                                <img src="../../../../assets/images/logo.svg" width="160">
-                            </a>
+  <div class="content-overlay"></div>
+  <div class="header-navbar-shadow"></div>
+  <div class="content-wrapper">
 
-                            <h4 class="card-title mb-1">Bienvenido a Vittoria</h4>
+    <div class="content-header row">
+    </div>
+    <div class="content-body">
+      <div class="auth-wrapper auth-v1 px-2">
+        <div class="auth-inner py-2">
+          <!-- Login v1 -->
+          <div class="card mb-0">
+            <div class="card-body">
+              <a href="javascript:void(0);" class="brand-logo">
+                <img src="../../../../assets/images/logo.svg" width="160">
+              </a>
 
-                            <form class="auth-login-form mt-2" action="index.html" method="POST">
-                                <div class="form-group">
-                                    <label for="login-email" class="form-label">Correo Electronico</label>
-                                    <input type="text" class="form-control" id="login-email" name="login-email"
-                                           [(ngModel)]="username" placeholder="nombre@ejemplo.com"
-                                           aria-describedby="login-email" tabindex="1" autofocus/>
-                                    <div *ngIf="submitted && !username" style="display: block;"
-                                         class="invalid-feedback">
-                                        <div>Usuario requerido</div>
-                                    </div>
-                                </div>
+              <h4 class="card-title mb-1">Bienvenido a Vittoria</h4>
 
-                                <div class="form-group">
-                                    <div class="d-flex justify-content-between">
-                                        <label for="login-password">Contraseña</label>
-                                        <a href="#/auth/recuperar-pass">
-                                            <small>Olvidaste tu contraseña?</small>
-                                        </a>
-                                    </div>
-                                    <div class="input-group input-group-merge form-password-toggle">
-                                        <input type="password" class="form-control form-control-merge"
-                                               [(ngModel)]="password" id="login-password" name="login-password"
-                                               tabindex="2"
-                                               placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                               aria-describedby="login-password"
-                                        />
-                                        <div class="input-group-append">
+              <form class="auth-login-form mt-2" action="index.html" method="POST">
+                <div class="form-group">
+                  <label for="login-email" class="form-label">Correo Electronico</label>
+                  <input type="text" class="form-control" id="login-email" name="login-email"
+                         [(ngModel)]="username" placeholder="nombre@ejemplo.com"
+                         aria-describedby="login-email" tabindex="1" autofocus/>
+                  <div *ngIf="submitted && !username" style="display: block;"
+                       class="invalid-feedback">
+                    <div>Usuario requerido</div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="d-flex justify-content-between">
+                    <label for="login-password">Contraseña</label>
+                    <a href="#/auth/recuperar-pass">
+                      <small>Olvidaste tu contraseña?</small>
+                    </a>
+                  </div>
+                  <div class="input-group input-group-merge form-password-toggle">
+                    <input type="password" class="form-control form-control-merge"
+                           [(ngModel)]="password" id="login-password" name="login-password"
+                           tabindex="2"
+                           placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                           aria-describedby="login-password"
+                    />
+                    <div class="input-group-append">
                                             <span class="input-group-text cursor-pointer"><i
-                                                    data-feather="eye"></i></span>
-                                        </div>
+                                              data-feather="eye"></i></span>
+                    </div>
 
-                                    </div>
-                                    <div *ngIf="submitted && !password" style="display: block;"
-                                         class="invalid-feedback">
-                                        <div>Contraseña requerida</div>
-                                    </div>
+                  </div>
+                  <div *ngIf="submitted && !password" style="display: block;"
+                       class="invalid-feedback">
+                    <div>Contraseña requerida</div>
+                  </div>
 
-                                </div>
-                                <div class="form-group">
-                                    <div class="d-flex justify-content-center">
-                                        <ngx-recaptcha2 [(ngModel)]="captcha" [ngModelOptions]="{standalone: true}"
-                                                        [siteKey]=" siteKey " (success)="captchaValidado($event) ">
-                                        </ngx-recaptcha2>
+                </div>
+                <div class="py-1" *ngIf="mostrarRegistroAsesor">
+                  <label>Si usted no es vendedor/a o asesor/a, porfavor regístrese <a
+                    href="#/pages/registro/asesores" target="_blank">Aquí</a></label>
+                </div>
+                <div class="form-group">
+                  <div class="d-flex justify-content-center">
+                    <ngx-recaptcha2 [(ngModel)]="captcha" [ngModelOptions]="{standalone: true}"
+                                    [siteKey]=" siteKey " (success)="captchaValidado($event) ">
+                    </ngx-recaptcha2>
 
-                                    </div>
-                                    <div *ngIf="submitted && !captcha" style="display: block;" class="invalid-feedback">
-                                        <div>Captcha requerido</div>
-                                    </div>
-                                </div>
+                  </div>
+                  <div *ngIf="submitted && !captcha" style="display: block;" class="invalid-feedback">
+                    <div>Captcha requerido</div>
+                  </div>
+                </div>
 
 
-                                <a
-                                        class="btn btn-primary btn-block"
-                                        tabindex="4"
-                                        (click)="signIn()"
-                                        [ngClass]="{'loading': mostrarSpinner}"
-                                >
+                <a
+                  class="btn btn-primary btn-block"
+                  tabindex="4"
+                  (click)="signIn()"
+                  [ngClass]="{'loading': mostrarSpinner}"
+                >
                                     <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
                                           aria-hidden="true"></span>
-                                    Iniciar sesión
-                                </a>
-                            </form>
+                  Iniciar sesión
+                </a>
+              </form>
 
 
-                        </div>
-                    </div>
-                    <!-- /Login v1 -->
-                </div>
             </div>
-
+          </div>
+          <!-- /Login v1 -->
         </div>
+      </div>
+
     </div>
+  </div>
 </div>
 <ng-template #errorAuth let-modal>
-    <div class="modal-header ">
-        <h4 class="modal-title ">Error</h4>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <p>No puede iniciar sesión con las credenciales proporcionadas.</p>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-light " (click)="cerrarModal()">Cerrar</button>
-    </div>
+  <div class="modal-header ">
+    <h4 class="modal-title ">Error</h4>
+    <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
+      <span aria-hidden="true ">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <p>No puede iniciar sesión con las credenciales proporcionadas.</p>
+  </div>
+  <div class="modal-footer ">
+    <button type="button " class="btn btn-light " (click)="cerrarModal()">Cerrar</button>
+  </div>
 </ng-template>
