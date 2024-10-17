@@ -26,7 +26,8 @@
       <div class="card">
         <div class="card-header text-center bg-light">
           <p class=" my-0 py-0 px-5">En este apartado se mostrarán los productos y
-            los datos necesarios para completar el pedido. Su pedido será procesado según la forma de entrega seleccionada.
+            los datos necesarios para completar el pedido. Su pedido será procesado según la forma de entrega
+            seleccionada.
             Toda la gestión de su pedido se llevará a cabo a través de nuestra plataforma Vittoria.</p>
         </div>
         <div class="card-body px-0">
@@ -166,7 +167,7 @@
     <div class="card" *ngIf="!mostrarBotonVolverCatalogo">
       <div class="card-body bg-light-warning">
         <div class="row">
-          <div class="col-md-4 col-12">
+          <div class="col-md-3 col-12">
             <label>Forma de entrega del producto</label>
             <select class="form-control"
                     formControlName="metodoPago" (change)="onSelectChangePago($event)">
@@ -182,7 +183,14 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4 col-12" *ngIf="mostrarInputArchivoComprobante">
+          <div class="col-md-3 col-12 mt-2 mt-md-0" *ngIf="mostrarInputArchivoComprobante">
+            <h6 class="text-uppercase">{{ cuentaBancaria.nombre }}<br>NRO. CUENTA:
+              {{ cuentaBancaria.valor }}
+              <br>Nombre: {{ cuentaBancaria.descripcion }}
+              <br>
+            </h6>
+          </div>
+          <div class="col-md-3 col-12 mt-2 mt-md-0" *ngIf="mostrarInputArchivoComprobante">
             <label>Cargar comrpobante de pago</label>
             <input class="form-control-file" type="file" (change)="onFileSelected($event)">
             <div *ngIf="notaPedidoForm.comprobanteVendedorGmb.errors"
@@ -192,7 +200,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4 col-12" *ngIf="mostrarInputArchivoComprobante">
+          <div class="col-md-3 col-12 mt-2 mt-md-0" *ngIf="mostrarInputArchivoComprobante">
             <label>Monto</label>
             <input class="form-control" type="text" formControlName="montoPrevioPago" placeholder="00.00">
             <div *ngIf="notaPedidoForm.montoPrevioPago.errors"
@@ -211,6 +219,11 @@
         <div class="row d-flex justify-content-end" *ngIf="!mostrarBotonVolverCatalogo">
           <div class="col-md-8 text-right">
             <div class="invoice-total-wrapper">
+              <div class="invoice-total-item">
+                <p class="invoice-total-title font-weight-bold" *ngIf="formaEntrega">
+                  Tiempo de entrega: {{ formaEntrega.tiempo_entrega}}
+                </p>
+              </div>
               <div class="invoice-total-item row mb-1">
                 <div class="col-md-6 d-flex justify-content-end align-items-center">
                   <p class="invoice-total-title text-primary font-weight-bold">
@@ -263,28 +276,29 @@
             <option value="noEsCliente">NO</option>
           </select>
         </div>
-        <div class="col-md-9 col-12" *ngIf="noEsCliente">
-          <h6>NO es cliente nuevo, ingrese uno de los 3 campos a continuación para buscar el cliente y completar los datos.</h6>
+        <div class="col-md-9 col-12 mt-md-0 mt-2" *ngIf="noEsCliente">
+          <h6>NO es cliente nuevo, ingrese uno de los 3 campos a continuación para buscar el cliente y completar los
+            datos.</h6>
           <div class="row">
             <div class="col-md-3 col-12">
-              <input class="form-control" type="text" placeholder="Cédula"
+              <input class="form-control" type="text" placeholder="Cédula" (change)="obtenerClienteCedula()"
                      [(ngModel)]="cedulaABuscar"
               >
             </div>
             <label class="mt-1">O</label>
             <div class="col-md-3 col-12">
-              <input class="form-control" type="text" placeholder="Número WhatsApp"
+              <input class="form-control" type="text" placeholder="Número WhatsApp" (change)="obtenerClienteCedula()"
                      [(ngModel)]="whatsappABuscar"
               >
             </div>
             <label class="mt-1">O</label>
 
             <div class="col-md-3 col-12">
-              <input class="form-control" type="text" placeholder="Correo electrónico"
+              <input class="form-control" type="text" placeholder="Correo electrónico" (change)="obtenerClienteCedula()"
                      [(ngModel)]="correoABuscar"
               >
             </div>
-            <div class="col-2">
+            <div class="col-md-2 col-12 mt-md-0 mt-2">
               <button class="btn btn-primary" (click)="obtenerClienteCedula()">
                 <i-feather name='search' class="edit-user"></i-feather>
               </button>
@@ -528,7 +542,7 @@
               </div>
             </div>
             <div class="col-md-3 col-12">
-              <label>GPS</label>
+              <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a> </label>
               <input class="form-control" type="text"
                      formControlName="gps"
               >
@@ -589,13 +603,14 @@
 </div>
 <div class="container text-center p-5 mt-5 border shadow rounded" *ngIf="!mostrarContenidoPantalla">
   <h2 class="mb-3">¡Gracias por tu compra!</h2>
-  <p class="lead">Tu pedido ha sido enviado a nuestra plataforma de Vittoria con éxito.</p>
+  <p class="lead">Tu pedido ha sido enviado a nuestra plataforma Vittoria con éxito.</p>
   <div class="my-4">
     <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Order Success" class="img-fluid"
          style="width: 100px;">
   </div>
   <p>Valoramos mucho tu preferencia y trabajamos continuamente para ofrecerte lo mejor.</p>
-  <p class="my-1">El detalle del pedido realizado se a enviado al correo electrónico del cliente: {{ currentUser.usuario.email }}.</p>
+  <p class="my-1">El detalle del pedido realizado se ha enviado al correo electrónico del/la
+    vendedor/a: {{ currentUser.usuario.email }}.</p>
   <div *ngFor="let numero of numeroPedido; let i=index">
     <p>Su número de pedido es: <strong>{{ numero }}</strong>.</p>
   </div>

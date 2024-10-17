@@ -34,6 +34,7 @@ export class ParamsListComponent implements OnInit {
   tipoPadre = '';
   idPadre = 0;
   canal = '';
+  tiempo_entrega = '';
   tipoVariable;
   valor;
   padres;
@@ -63,7 +64,8 @@ export class ParamsListComponent implements OnInit {
       descripcion: ['', [Validators.required]],
       tipoVariable: ['', [Validators.required]],
       valor: ['', [Validators.required]],
-      canal: ['']
+      canal: [''],
+      tiempo_entrega: [''],
     });
     this.menu = {
       modulo: 'adm',
@@ -102,7 +104,6 @@ export class ParamsListComponent implements OnInit {
     await this.paramService.obtenerParametro(id).subscribe(async (result) => {
       if (result.tipo === 'METODO PAGO') {
         this.mostrarCanales = true;
-
       } else {
         this.mostrarCanales = false;
       }
@@ -126,6 +127,7 @@ export class ParamsListComponent implements OnInit {
       this.tipoVariable = result.tipoVariable;
       this.valor = result.valor;
       this.canal = result.canal;
+      this.tiempo_entrega = result.tiempo_entrega;
     });
   }
 
@@ -139,6 +141,7 @@ export class ParamsListComponent implements OnInit {
     this.idPadre = 0;
     this.submitted = false;
     this.canal = '';
+    this.tiempo_entrega = '';
     this.funcion = 'insertar';
     this.mostrarCanales = false;
   }
@@ -167,6 +170,7 @@ export class ParamsListComponent implements OnInit {
         this.valor,
         this.idPadre,
         this.canal,
+        this.tiempo_entrega
       ).subscribe((result) => {
           this.obtenerListaParametros();
           this.dismissModal.nativeElement.click();
@@ -194,7 +198,8 @@ export class ParamsListComponent implements OnInit {
         this.tipoVariable,
         this.valor,
         this.idPadre,
-        this.canal).subscribe((result) => {
+        this.canal,
+        this.tiempo_entrega).subscribe((result) => {
           this.obtenerListaParametros();
           this.dismissModal.nativeElement.click();
           this.submitted = false;

@@ -45,9 +45,7 @@
             <thead class="thead-light">
             <tr>
               <th>Fecha Pedido</th>
-              <th>Canal Pedido</th>
-              <th>Código vendedor</th>
-              <th>Nombre vendedor</th>
+              <th>Tienda</th>
               <th>Numero Pedido</th>
               <th>Nombres Facturación</th>
               <th>Apellidos Facturación</th>
@@ -62,9 +60,7 @@
             <tbody>
             <tr *ngFor="let transaccion  of listaContactos; let i = index">
               <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
-              <td [title]="transaccion.canal">{{ transaccion.canal | shorten }}</td>
-              <td>{{ transaccion.facturacion.codigoVendedor }}</td>
-              <td>{{ transaccion.facturacion.nombreVendedor }}</td>
+              <td>{{ transaccion.articulos[0].canal | shorten }}</td>
               <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido  | shorten }}</td>
               <td [title]="transaccion.facturacion.nombres">{{ transaccion.facturacion.nombres | shorten }}</td>
               <td [title]="transaccion.facturacion.apellidos">{{ transaccion.facturacion.apellidos | shorten }}</td>

@@ -684,7 +684,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
       this.notaPedido.get('estado').setValue('Pendiente de retiro');
       this.obtenerCiudad();
       this.obtenerIntegracionCanal();
-      localStorage.removeItem('productoDataPedidoWoocommerce');
+      //localStorage.removeItem('productoDataPedidoWoocommerce');
     }
   }
 
