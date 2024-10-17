@@ -82,9 +82,9 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   mostrarBoton = true;
   mostrarBotonVolverCatalogo = false;
   pedidoMismoOrigen = true;
-  valorComision: number[] = [];
   tiendaProducto;
-
+  cuentaBancaria;
+  formaEntrega;
   constructor(
     private route: ActivatedRoute,
     private _router: Router,
@@ -115,6 +115,10 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.page_size, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
       this.parametroIva = parseFloat(result.info[0].valor);
+    });
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.page_size, 'CUENTA BANCARIA', '').subscribe((result) => {
+      this.cuentaBancaria = result.info[0];
     });
 
   }
@@ -203,7 +207,6 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
         this.listaMetodoPago = result.data.filter(metodo => metodo.nombre !== 'Retiro en local' && metodo.nombre !== 'Previo Pago Transporte Interprovincial');
       });
     }*/
-
 
   }
 
@@ -373,6 +376,11 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
     if (tienda.value.articulos.length === 0) {
       this.detallesPedidos.removeAt(tiendaIndex);
+    }
+
+    if (this.notaPedido.get('pedidos').value.length === 0) {
+      this.toaster.open('Debe haber al menos 1 artículo', {type: 'danger'});
+      this.mostrarBotonVolverCatalogo = true;
     }
 
     this.calcular();
@@ -839,7 +847,6 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
   onSelectChangePago(e: any) {
     const selectedValue = e.target.value;
-
     this.resetValidationAndFlags(); // Resetear validaciones y flags antes de aplicar condiciones específicas
 
     if (selectedValue.includes('Previo Pago')) {
@@ -859,6 +866,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     }
 
     this.updateEnvioList(selectedValue);
+    this.obtenerMetodoPago(selectedValue);
     this.mostrarDatosGmb = true;
   }
 
@@ -915,6 +923,12 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     this.notaPedido.get('facturacion')['controls']['calleSecundaria'].updateValueAndValidity();
     this.notaPedido.get('facturacion')['controls']['referencia'].setValidators([]);
     this.notaPedido.get('facturacion')['controls']['referencia'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['correo'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['correo'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['tipoIdentificacion'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['tipoIdentificacion'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
   }
 
   private handleDefault() {
@@ -937,6 +951,12 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     this.notaPedido.get('facturacion')['controls']['calleSecundaria'].updateValueAndValidity();
     this.notaPedido.get('facturacion')['controls']['referencia'].setValidators([Validators.required]);
     this.notaPedido.get('facturacion')['controls']['referencia'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['correo'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['correo'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['tipoIdentificacion'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['tipoIdentificacion'].updateValueAndValidity();
   }
 
   private updateEnvioList(selectedValue: string) {
@@ -1058,6 +1078,12 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     } else {
       return (porcentaje * precioProducto) / 100;
     }
+  }
+
+  obtenerMetodoPago(nombre){
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.page_size, 'METODO PAGO', nombre).subscribe((result) => {
+      this.formaEntrega = result.data[0];
+    });
   }
 }
 

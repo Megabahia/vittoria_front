@@ -250,7 +250,6 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaContactos = info.info;
-      this.canal = '';
     });
   }
 
@@ -418,9 +417,9 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
 
 
   async actualizar(): Promise<void> {
-    await Promise.all(this.detallesArray.controls.map((producto, index) => {
+    /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
-    }));
+    }));*/
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
