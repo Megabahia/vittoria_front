@@ -1,12 +1,12 @@
 <div class="card d-inline-flex p-2 w-100 text-center" *ngIf="mostrarContenidoPantalla">
-  <h1>Confirmación del pedido para entrega en local {{notaPedido.value.canal}}</h1>
+  <h1 class="text-danger">Confirmación del pedido para entrega en local {{notaPedido.value.canal}}</h1>
 </div>
 <div class="card" *ngIf="mostrarContenidoPantalla">
   <div class="card-body">
     <form [formGroup]="notaPedido">
       <div class="card invoice-preview-card">
-        <div class="card-header text-center bg-light">
-          <p class=" my-0 py-0 px-5">En este apartado usted podrá completar el pedido. La gestión de su pedido se llevará a cabo a
+        <div class="card-header bg-light d-flex justify-content-center">
+          <p class="my-0 py-0 px-5">La gestión de su pedido se llevará a cabo a
             través de nuestra plataforma Vittoria.</p>
         </div>
         <!-- Header starts -->
@@ -313,7 +313,7 @@
                             <img class="img-detalle"
                                  src="{{detalle.controls?.imagen_principal.value ? detalle.controls?.imagen_principal.value : './assets/images/no_existe.png'}}"
                                  *ngIf="detalle.controls?.imagen_principal" width="100px" height="100px" alt="">
-                            <div>
+                            <!--<div>
                               <button (click)="fileInput.click()">Seleccionar imagen</button>
                               <input #fileInput type="file" (change)="cargarImagen(i,$event)"
                                      accept=".jpg,.jpeg,.png"
@@ -325,7 +325,7 @@
                               <div *ngIf="detalle.controls.imagen_principal.errors.required">
                                 Requerido
                               </div>
-                            </div>
+                            </div>-->
                           </div>
                           <div
                             class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
@@ -426,6 +426,7 @@
     </form>
   </div>
   <div class="card-footer text-center">
+    <h6 class="py-2 px-4 text-danger">Recuerde hacerle seguimiento a su cliente a través del WhatsApp o llamada, para que se acerque a retirar el pedido en el local. Su comsión se hará efectiva una vez que el cliente retire el pedido.</h6>
     <button class="btn btn-primary mx-1"
             (click)="guardarVenta(notaPedidoModal)"
             *ngIf="hablilitarBotonGuardar"
@@ -489,20 +490,12 @@
       <div class="card-body invoice-padding pt-0">
         <h4>
           Sr.(a)(ita). {{ notaPedido.value.facturacion.nombres }} {{ notaPedido.value.facturacion.apellidos }}</h4>
-        <span class="my-1">Si desea enviar el cupón al cliente a través del WhatsApp, presione el icono: {{ notaPedido.value.facturacion.telefono }}</span>
-        <a (click)="openWhatsApp($event)"
-           *ngIf="imagenCargada">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png"
-            alt="wsp"
-            width="30" height="30">
-        </a>
         <br>
-        <span>Muchas gracias por confiar en nosotros, su pedido estará listo para que usted pase retirando en nuestro punto de entrega.</span>
+        <span>Muchas gracias por confiar en nosotros, su pedido estará listo para que usted pase retirando en nuestro local.</span>
         <br/>
         <br/>
         <span *ngIf="verDireccion">
-            Encuéntranos en {{ integracionCanalCupon.ciudad || '' }}
+            Se encuentra en {{ integracionCanalCupon.ciudad || '' }}
           : {{ integracionCanalCupon.descripcion_direccion || '' }}.
             <br>
             <br>
@@ -510,6 +503,7 @@
             <a *ngIf="integracionCanalCupon.direccion_mapa" href="{{integracionCanalCupon.direccion_mapa}}"
                target="_blank">{{ integracionCanalCupon.direccion_mapa }}</a>
           </span>
+        <br>
         <br>
         <span>Horario de Atención: {{ integracionCanalCupon.hora_atencion || '' }}</span>
       </div>
@@ -540,7 +534,8 @@
                     <!-- Columna para la imagen -->
                     <div class="col-md-4">
                       <img src="{{ detalle.controls?.imagen_principal.value || './assets/images/no_existe.png' }}"
-                           class="img-fluid" style="height: 100px; width: 100px; object-fit: cover;">
+                           class="img-detalle" width="100px" height="100px" alt="">
+
                     </div>
                     <!-- Columna para información al lado de la imagen -->
                     <div class="col-md-8">
@@ -569,11 +564,21 @@
             </div>
           </div>
         </div>
-
       </div>
     </form>
   </div>
   <div class="modal-footer">
+    <div class="row d-flex justify-content-start">
+      <span
+        class="my-1 text-danger">Si desea enviar el cupón al cliente a través del WhatsApp, presione el icono: {{ notaPedido.value.facturacion.telefono }}</span>
+      <a (click)="openWhatsApp($event)"
+         *ngIf="imagenCargada">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png"
+          alt="wsp"
+          width="30" height="30">
+      </a>
+    </div>
     <button type="button" class="btn btn-primary" *ngIf="imagenCargada" (click)="descargarImagen()">
       Descargar imagen
     </button>
@@ -590,19 +595,21 @@
 
 <div class="container text-center p-5 mt-5 border shadow rounded" *ngIf="!mostrarContenidoPantalla">
   <h2 class="mb-3">¡Gracias por tu compra!</h2>
-  <p class="lead">Tu pedido ha sido procesado con éxito por la tienda {{ notaPedido.value.canal }}.</p>
+  <p class="lead">Tu pedido ha sido procesado con éxito.</p>
   <div class="my-4">
     <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Order Success" class="img-fluid"
          style="width: 100px;">
   </div>
   <p>Valoramos mucho tu preferencia y trabajamos continuamente para ofrecerte lo mejor.</p>
-  <p>Los detalles del pedido se a envido al siguiente correo electrónico: {{ usuarioActual.usuario.email }}.</p>
+  <p>El detalle del pedido realizado se ha enviado al correo electrónico del/la
+    vendedor/a: {{ usuarioActual.usuario.email }}.</p>
   <p>Su número de pedido es: <strong>{{ notaPedido.value.numeroPedido }}</strong>.</p>
   <!--<div class="mt-4">
     <a (click)="cerrarPantallaPedidoWoocommerce()" class="btn btn-primary m-1">Cerrar</a>
     <button (click)="irInicio()" class="btn btn-secondary">Inicio</button>
   </div>-->
   <div class="mt-4">
+    <h6 class="px-4 text-danger">Recuerde hacerle seguimiento a su cliente a través del WhatsApp o llamada, para que se acerque a retirar el pedido en el local. Su comsión se hará efectiva una vez que el cliente retire el pedido.</h6>
     <a href="https://superbarato.megadescuento.com" class="btn btn-primary m-1">Volver a la tienda</a>
   </div>
 </div>

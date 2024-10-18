@@ -242,6 +242,12 @@
                     <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
                   </select>
                 </div>
+                <div class="form-group" *ngIf="mostrarCanales">
+                  <label class="form-label" for="tiempoEntrega">Tiempo de entrega:</label>
+                  <input type="text" id="tiempoEntrega" class="form-control"
+                         name="tiempoEntrega" [(ngModel)]="tiempo_entrega"/>
+
+                </div>
                 <button class="btn btn-primary mr-1" aria-label="Close" (click)="gestionarParametro()">
                   <span *ngIf="cargando" class="spinner-border spinner-border-sm"></span>Guardar
                 </button>

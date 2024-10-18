@@ -407,9 +407,9 @@ export class ContactoComponent implements OnInit, AfterViewInit {
 
 
   async actualizar(): Promise<void> {
-    await Promise.all(this.detallesArray.controls.map((producto, index) => {
+    /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
-    }));
+    }));*/
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
@@ -452,9 +452,9 @@ export class ContactoComponent implements OnInit, AfterViewInit {
 
 
   async actualizarContacto(): Promise<void> {
-    await Promise.all(this.detallesArray.controls.map((producto, index) => {
+    /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
-    }));
+    }));*/
     if (confirm('Esta seguro de guardar los datos') === true) {
       if (this.notaPedido.invalid) {
         this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});

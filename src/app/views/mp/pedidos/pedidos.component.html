@@ -68,7 +68,7 @@
                 <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido  | shorten }}</td>
                 <td [title]="transaccion.facturacion.nombres">{{ transaccion.facturacion.nombres | shorten }}</td>
                 <td [title]="transaccion.facturacion.apellidos">{{ transaccion.facturacion.apellidos | shorten }}</td>
-                <td [title]="transaccion.metodoPago">{{ transaccion.metodoPago | shorten }}</td>
+                <td [style]="{'color': transaccion.metodoPago.includes('Previo Pago') ? 'red' : transaccion.metodoPago.includes('Contra Entrega') ? 'blue' : 'black'}" [title]="transaccion.metodoPago">{{ transaccion.metodoPago | shorten }}</td>
                 <td [title]="transaccion.envio.provincia">{{ transaccion.envio.provincia | shorten }}</td>
                 <td [title]="transaccion.envio.ciudad">{{ transaccion.envio.ciudad | shorten }}</td>
                 <td
@@ -338,7 +338,7 @@
                           </div>
                         </div>
                         <div class="col-md-3 col-12">
-                          <label>GPS</label>
+                          <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a> </label>
                           <input class="form-control" type="text"
                                  formControlName="gps">
                           <div *ngIf="facturacionForm.gps.errors"
@@ -845,7 +845,7 @@
                           </div>
                         </div>
                         <div class="col-md-3 col-12">
-                          <label>GPS</label>
+                          <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a> </label>
                           <input class="form-control" type="text"
                                  formControlName="gps">
                           <div *ngIf="envioForm.gps.errors"
