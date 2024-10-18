@@ -5,6 +5,7 @@ import {CalculadoraComponent} from './calculadora/calculadora.component';
 import {PedidoWoocomerceComponent} from './pedido-woocomerce/pedido-woocomerce.component';
 import {ConsultaProductosComponent} from './consulta-productos/consulta-productos.component';
 import {RegistroAsesoresComponent} from './registro-asesores/registro-asesores.component';
+import {AuthGuard} from "../../guard/auth.guard";
 
 const routes: Routes = [
   {
@@ -25,6 +26,7 @@ const routes: Routes = [
   {
     path: 'consulta/producto',
     component: ConsultaProductosComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'registro/asesores',

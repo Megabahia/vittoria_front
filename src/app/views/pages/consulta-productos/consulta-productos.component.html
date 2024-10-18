@@ -50,11 +50,11 @@
             <div class="image-container">
               <img
                 [src]="producto?.imagen_principal ? producto?.imagen_principal : 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019'"
-                class="img-fluid" alt="Imagen principal"
+                class="img-fluid mx-2" alt="Imagen principal"
                 style="height: 200px; width: 100%; object-fit: cover;">
             </div>
           </div>
-          <!-- Fotos del producto, si están disponibles -->
+          <!-- Fotos del producto, si están disponibles
           <div *ngIf="producto?.imagenes && producto?.imagenes.length > 0" class="row mx-0">
             <div *ngFor="let imagen of producto?.imagenes; let i = index" class="col-md-3 col-sm-3 p-2">
               <div class="image-container">
@@ -62,7 +62,7 @@
                      style="height: 200px; width: 100%; object-fit: cover;">
               </div>
             </div>
-          </div>
+          </div>-->
         </div>
         <div class="card-footer text-muted">
           <small>Vittoria!</small>
