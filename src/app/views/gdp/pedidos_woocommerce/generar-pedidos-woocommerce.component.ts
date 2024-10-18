@@ -168,7 +168,6 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
 
   iniciarNotaPedido(): void {
     this.usuarioActual = JSON.parse(localStorage.getItem('currentUser'));
-    console.log(this.usuarioActual)
     this.notaPedido = this.formBuilder.group({
       id: [''],
       facturacion: this.formBuilder.group({
@@ -262,11 +261,9 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
       correo: this.correo,
       page: this.page - 1,
       page_size: this.pageSize,
-      //inicio: this.inicio,
-      //fin: this.transformarFecha(this.fin),
       numeroPedido: this.dataPedidoWoocommerce.numeroPedido,
       estado: ['Pendiente de retiro'],
-      canal: this.dataPedidoWoocommerce.canal
+      canalProducto: this.dataPedidoWoocommerce.articulos[0].canal
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaContactos = info.info;
@@ -297,9 +294,9 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
       this.hablilitarBotonGuardar = false;
       this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
           this.imagenCanal = info.imagen_canal;
+          this.obtenerContactos();
           this.modalService.dismissAll();
           this.notaPedido.patchValue({...info, id: this.idContacto});
-          this.obtenerContactos();
           this.abrirModalCupon(notaPedidoModal);
           this.myAngularxCode = `Numero de pedido: ${info.numeroPedido}`;
           this.toaster.open('Pedido creado. Creando cupón...', {type: 'info'});
@@ -342,8 +339,13 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
           this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info.producto)]);
           const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
-          this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
-          this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
+          if (this.detallesArray.controls[i].get('precios').value.some(p => parseFloat(p.valor) === precioProducto)) {
+            this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
+            this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
+          } else {
+            this.detallesArray.controls[i].get('valorUnitario').setValue('');
+          }
+
           this.detallesArray.controls[i].get('imagen_principal').setValue(info.producto?.imagen_principal);
           this.detallesArray.controls[i].get('canal').setValue(info.producto.canal);
           this.detallesArray.controls[i].get('woocommerceId').setValue(info.producto.woocommerceId);
@@ -684,15 +686,15 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
       this.notaPedido.get('estado').setValue('Pendiente de retiro');
       this.obtenerCiudad();
       this.obtenerIntegracionCanal();
-      //localStorage.removeItem('productoDataPedidoWoocommerce');
+      localStorage.removeItem('productoDataPedidoWoocommerce');
     }
   }
 
-  valorComision(porcentaje, valor, precio){
-    if (valor){
+  valorComision(porcentaje, valor, precio) {
+    if (valor) {
       return valor.toFixed(2);
-    }else{
-      return porcentaje+'% => ' + ((precio * porcentaje) / 100).toFixed(2);
+    } else {
+      return porcentaje + '% => ' + ((precio * porcentaje) / 100).toFixed(2);
     }
   }
 

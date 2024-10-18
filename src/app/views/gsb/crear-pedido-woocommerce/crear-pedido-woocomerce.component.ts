@@ -65,7 +65,6 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   parametros;
   parametrosIntegracionesCanal;
   integracionProducto;
-  formasPagoCourier: any[] = [];
   parametroIva;
   totalIva;
   currentUser;
@@ -85,6 +84,8 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   tiendaProducto;
   cuentaBancaria;
   formaEntrega;
+
+  mensaje = '';
   constructor(
     private route: ActivatedRoute,
     private _router: Router,
@@ -379,8 +380,9 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     }
 
     if (this.notaPedido.get('pedidos').value.length === 0) {
-      this.toaster.open('Debe haber al menos 1 artículo', {type: 'danger'});
+      //this.toaster.open('Debe haber al menos 1 artículo', {type: 'danger'});
       this.mostrarBotonVolverCatalogo = true;
+      this.mensaje = 'Debe haber al menos 1 artículo para realizar el pedido.';
     }
 
     this.calcular();
@@ -789,12 +791,14 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
         if (this.notaPedido.value.pedidos.length > 1) {
           this.mostrarContenido = false;
           this.mostrarBotonVolverCatalogo = true;
+          this.mensaje = 'Los productos seleccionados pertenecen a diferentes tiendas. Por favor, realice pedidos separados para cada tienda';
         } else {
           this.mostrarBotonVolverCatalogo = false;
         }
       }, error => {
         this.toaster.open(error.error, {type: 'danger'});
         this.mostrarBotonVolverCatalogo = true;
+        this.mensaje = 'Los productos no se encuentran configurados en la plataforma Vittoria';
       });
 
     });

@@ -504,21 +504,12 @@
         <div class="card-body invoice-padding pt-0">
           <h4>
             Sr.(a)(ita). {{ notaPedido.value.facturacion.nombres }} {{ notaPedido.value.facturacion.apellidos }}</h4>
-          <span
-            class="my-1">Si desea enviar el cupón al cliente a través del WhatsApp, presione el icono: {{ notaPedido.value.facturacion.telefono }}</span>
-          <a (click)="openWhatsApp($event)"
-             *ngIf="imagenCargada">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png"
-              alt="wsp"
-              width="30" height="30">
-          </a>
           <br>
-          <span>Muchas gracias por confiar en nosotros, su pedido estará listo para que usted pase retirando en nuestro punto de entrega.</span>
+          <span>Muchas gracias por confiar en nosotros, su pedido estará listo para que usted pase retirando en nuestro local.</span>
           <br/>
           <br/>
           <span *ngIf="verDireccion">
-            Encuéntranos en {{ this.integracionCanalCupon.ciudad }}
+            Se encuentra en {{ this.integracionCanalCupon.ciudad }}
             : {{ this.integracionCanalCupon.descripcion_direccion }}.
             <br>
             <br>
@@ -526,6 +517,7 @@
             <a href="{{ this.integracionCanalCupon.direccion_mapa }}"
                target="_blank">{{ this.integracionCanalCupon.direccion_mapa }}</a>
           </span>
+          <br>
           <br>
           <span>Horario de Atención: {{ this.integracionCanalCupon.hora_atencion }}</span>
         </div>
@@ -590,6 +582,17 @@
       </form>
     </div>
     <div class="modal-footer">
+      <div class="row d-flex justify-content-start">
+      <span
+        class="my-1 text-danger">Si desea enviar el cupón al cliente a través del WhatsApp, presione el icono: {{ notaPedido.value.facturacion.telefono }}</span>
+        <a (click)="openWhatsApp($event)"
+           *ngIf="imagenCargada">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/800px-WhatsApp.svg.png"
+            alt="wsp"
+            width="30" height="30">
+        </a>
+      </div>
       <button type="button" class="btn btn-primary" *ngIf="imagenCargada" (click)="descargarImagen()">
         Descargar imagen
       </button>
