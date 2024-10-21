@@ -3,6 +3,7 @@ import {ProductosService} from '../../../../../services/mdp/productos/productos.
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {environment} from '../../../../../../environments/environment';
 import {ParamService as AdmParamService} from "../../../../../services/admin/param.service";
+import {Toaster} from "ngx-toast-notifications";
 
 @Component({
   selector: 'app-productos-listar',
@@ -23,11 +24,15 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   enviando = false;
   canalOpciones;
   canalSeleccionado = '';
-  disabledSelectCanal=false;
+  disabledSelectCanal = false;
+  canal = '';
+  idProductoCopia;
+
   constructor(
     private productosService: ProductosService,
     private modalService: NgbModal,
     private paramServiceAdm: AdmParamService,
+    private toaster: Toaster,
   ) {
     this.obtenerListaParametros();
     this.obtenerUsuarioActual();
@@ -88,6 +93,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
       this.obtenerListaProductos();
     }, error => window.alert(error));
   }
+
   copiarURL(inputTextValue): void {
     const selectBox = document.createElement('textarea');
     selectBox.style.position = 'fixed';
@@ -141,5 +147,24 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     } else {
       console.log('No hay datos de usuario en localStorage');
     }
+  }
+
+  abrirCopiaProductoModal(modal, id) {
+    this.modalService.open(modal, {size: 'sm', backdrop: 'static'});
+    this.idProductoCopia = id;
+  }
+
+  guardarCopiaProducto() {
+
+    if (this.canal === '') {
+      this.toaster.open('Seleccione un canal', {type: 'danger'});
+      return;
+    }
+
+    this.productosService.copiarProducto({'canal': this.canal }, this.idProductoCopia).subscribe(() => {
+      this.toaster.open('Producto copiado con éxito.', {type: 'success'});
+      this.modalService.dismissAll();
+      this.obtenerListaProductos();
+    }, error => window.alert(error));
   }
 }
