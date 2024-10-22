@@ -11,10 +11,12 @@ import {TOAST_NOTIFICATIONS_CONFIG, ToastNotificationsModule} from 'ngx-toast-no
 import {FlatpickrModule} from "angularx-flatpickr";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {GdeModule} from "./views/gde/gde.module";
+import { RecepcionComponent } from './src/app/views/mdrp/productos/recepcion/recepcion.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    RecepcionComponent,
   ],
     imports: [
         BrowserModule,

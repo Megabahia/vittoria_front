@@ -262,8 +262,6 @@ export class ProductosEditarComponent implements OnInit {
     // });
     this.submittedProductoForm = true;
 
-    console.log(this.productoForm.value.porcentaje_comision, this.productoForm.value.valor_comision)
-
     if (!this.productoForm.value.porcentaje_comision && !this.productoForm.value.valor_comision) {
       this.toaster.open('Debe completar uno de los dos campos de comisión', {type: 'warning'});
       return;

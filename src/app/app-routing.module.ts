@@ -36,6 +36,9 @@ const routes: Routes = [
     path: 'mdp', loadChildren: () => import('./views/mdp/mdp.module').then(m => m.MdpModule)
   },
   {
+    path: 'mdrp', loadChildren: () => import('./views/mdrp/mdrp.module').then(m => m.MdrpModule)
+  },
+  {
     path: 'mdo', loadChildren: () => import('./views/mdo/mdo.module').then(m => m.MdoModule)
   },
   {
