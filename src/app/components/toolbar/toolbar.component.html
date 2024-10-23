@@ -181,20 +181,55 @@
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Parametrización</span></a>
           </li>
-          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
+          <!--<li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
             <a class="d-flex align-items-center" [routerLink]="['gd/inventario/list']" data-toggle="tooltip"
                data-placement="auto" title="Super Barato">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Inventario</span>
             </a>
+          </li>-->
+          <li class="nav-item has-sub ng-star-inserted">
+            <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
+               title="Reportes">
+              <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reportes</span></a>
+            <ul class="menu-content">
+              <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
+                <a class="d-flex align-items-center" [routerLink]="['gd/inventario/reporte']" data-toggle="tooltip"
+                   data-placement="auto" title="Reporte de Inventario Super Barato">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Reporte de Inventario</span>
+                </a>
+              </li>
+              <li class="nav-item {{menuToolbar['mdp']['abastRep']}}" *ngIf="usuario.usuario.idRol !== 59">
+                <a class="d-flex align-items-center" href="#/mdp/reportes/abastecimiento" data-toggle="tooltip"
+                   data-placement="auto" title="Reporte de abastecimiento">
+                  <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reporte de abastecimiento</span></a>
+              </li>
+              <li class="nav-item {{menuToolbar['mdp']['stockRep']}}" *ngIf="usuario.usuario.idRol !== 59">
+                <a class="d-flex align-items-center" href="#/mdp/reportes/stock" data-toggle="tooltip"
+                   data-placement="auto" title="Reporte de stock">
+                  <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                                     data-i18n="List">Reporte de stock</span></a>
+              </li>
+              <li class="nav-item {{menuToolbar['mdp']['caduRep']}}" *ngIf="usuario.usuario.idRol !== 59">
+                <a class="d-flex align-items-center" href="#/mdp/reportes/caducidad" data-toggle="tooltip"
+                   data-placement="auto" title="Reporte de caducidad de productos">
+                  <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reporte de caducidad de productos</span></a>
+              </li>
+              <li class="nav-item {{menuToolbar['mdp']['rotaRep']}}" *ngIf="usuario.usuario.idRol !== 59">
+                <a class="d-flex align-items-center" href="#/mdp/reportes/rotacion" data-toggle="tooltip"
+                   data-placement="auto" title="Reporte de rotación de productos">
+                  <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reporte de rotación de productos</span></a>
+              </li>
+              <li class="nav-item {{menuToolbar['mdp']['refilRep']}}" *ngIf="usuario.usuario.idRol !== 59">
+                <a class="d-flex align-items-center" href="#/mdp/reportes/refil" data-toggle="tooltip"
+                   data-placement="auto" title="Reporte refil">
+                  <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                                     data-i18n="List">Reporte de refil</span></a>
+              </li>
+            </ul>
           </li>
-          <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
-            <a class="d-flex align-items-center" [routerLink]="['gd/inventario/reporte']" data-toggle="tooltip"
-               data-placement="auto" title="Reporte de Inventario Super Barato">
-              <i data-feather="circle"></i>
-              <span class="menu-item text-truncate" data-i18n="List">Reporte de Inventario</span>
-            </a>
-          </li>
+
           <li class="nav-item has-sub ng-star-inserted"
               *ngIf="usuario.usuario.idRol !== 59 && usuario.usuario.idRol !== 60">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
@@ -273,7 +308,7 @@
                    data-placement="auto" title="Listado de productos">
                   <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Listado de productos</span></a>
               </li>
-              <li class="nav-item {{menuToolbar['mdp']['prodBusq']}}" *ngIf="usuario.usuario.idRol !== 59">
+              <!--<li class="nav-item {{menuToolbar['mdp']['prodBusq']}}" *ngIf="usuario.usuario.idRol !== 59">
                 <a class="d-flex align-items-center" href="#/mdp/productos/search" data-toggle="tooltip"
                    data-placement="auto" title="Buscar productos">
                   <i data-feather="circle"></i><span class="menu-item text-truncate"
@@ -311,7 +346,7 @@
                    data-placement="auto" title="Reporte refil">
                   <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                      data-i18n="List">Reporte de refil</span></a>
-              </li>
+              </li>-->
             </ul>
           </li>
           <li class="nav-item has-sub ng-star-inserted"
@@ -337,25 +372,26 @@
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice">MDRP Motor de recepción de productos</span></a>
         <ul class="menu-content ng-star-inserted">
-          <li class="nav-item" >
+          <li class="nav-item">
             <a class="d-flex align-items-center" [routerLink]="['mdrp/productos/recepcion']" data-toggle="tooltip"
                data-placement="auto" title="Recepción de productos">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Recepción de productos</span></a>
           </li>
-          <li class="nav-item" >
-            <a class="d-flex align-items-center" [routerLink]="['mdrp/productos/confirmacion/recepcion']" data-toggle="tooltip"
+          <li class="nav-item">
+            <a class="d-flex align-items-center" [routerLink]="['mdrp/productos/confirmacion/recepcion']"
+               data-toggle="tooltip"
                data-placement="auto" title="Confirmación recepción de productos">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Confirmación recepción de productos</span></a>
           </li>
-          <li class="nav-item" >
+          <li class="nav-item">
             <a class="d-flex align-items-center" [routerLink]="['mdrp/productos/aprobacion']" data-toggle="tooltip"
                data-placement="auto" title="Aprobación recepción de productos">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Aprobación recepción de productos</span></a>
           </li>
-          <li class="nav-item" >
+          <li class="nav-item">
             <a class="d-flex align-items-center" [routerLink]="['mdrp/productos/list']" data-toggle="tooltip"
                data-placement="auto" title="Listado de recepción de productos">
               <i data-feather="circle"></i>
@@ -543,14 +579,16 @@
                                                      data-i18n="List">Woocomerce autogestión</span></a>
                 <ul class="menu-content">
                   <li class="nav-item">
-                    <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/megabahia']" data-toggle="tooltip"
+                    <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/megabahia']"
+                       data-toggle="tooltip"
                        data-placement="auto" title="Pedido Canal Mega Bahia">
                       <i data-feather="circle"></i>
                       <span class="menu-item text-truncate" data-i18n="List">Pedido MegaBahia</span>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/mayorista']" data-toggle="tooltip"
+                    <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/mayorista']"
+                       data-toggle="tooltip"
                        data-placement="auto" title="Pedido Canal Mayorista">
                       <i data-feather="circle"></i>
                       <span class="menu-item text-truncate" data-i18n="List">Pedido Mayorista</span>
@@ -597,7 +635,8 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/vittoria']" data-toggle="tooltip"
+                    <a class="d-flex align-items-center" [routerLink]="['mp/pedido-canal/vittoria']"
+                       data-toggle="tooltip"
                        data-placement="auto" title="Pedido Canal Vittoria">
                       <i data-feather="circle"></i>
                       <span class="menu-item text-truncate" data-i18n="List">Pedido Vittoria</span>
