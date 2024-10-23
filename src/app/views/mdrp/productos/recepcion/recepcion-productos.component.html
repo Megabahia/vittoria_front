@@ -1,0 +1,130 @@
+<div class="app-content content ">
+  <div class="content-wrapper">
+    <div class="content-body">
+      <div class="card d-inline-flex p-2 w-100">
+        <h1>Recepción de productos</h1>
+        <!--<button class="btn btn-primary mx-1"
+                (click)="crearNuevaVenta(notaPedidoModalAdd)"
+        >Nuevo Pedido
+        </button>-->
+        <!-- Address and Contact starts -->
+
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <form [formGroup]="notaRecepcionProducto">
+            <div class="card invoice-preview-card">
+              <!-- Header starts -->
+              <div class="card-body invoice-padding pb-0">
+                <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+                  <div class="d-flex align-items-center mb-1">
+                    <span class="title mr-1">Fecha de venta:</span>
+                    <input type="text"
+                           placeholder={{formatearFecha()}}
+                           class="form-control invoice-edit-input date-picker"
+                           disabled
+                    />
+                  </div>
+
+                </div>
+              </div>
+              <!-- Header ends -->
+              <hr class="invoice-spacing"/>
+              <!-- Address and Contact starts -->
+              <div class="card-body invoice-padding pt-0">
+                <h4 class="invoice-title mb-2">Datos para el producto</h4>
+                <div class="row">
+                  <div class="col-md-4 col-12">
+                    <label>Nombre artículo</label>
+                    <input class="form-control" type="text"
+                           formControlName="nombre">
+                    <div *ngIf="notaRecepcionProductoForm.nombre.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="notaRecepcionProductoForm.nombre.errors.required">
+                        Requerido
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-12">
+                    <label>Códigode barras</label>
+                    <input class="form-control" type="text"
+                           formControlName="codigo_barras">
+                    <div *ngIf="notaRecepcionProductoForm.codigo_barras.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="notaRecepcionProductoForm.codigo_barras.errors.required">
+                        Requerido
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-12">
+                    <label>Lote artículo</label>
+                    <input class="form-control" type="text"
+                           formControlName="lote">
+                    <div *ngIf="notaRecepcionProductoForm.lote.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="notaRecepcionProductoForm.lote.errors.required">
+                        Requerido
+                      </div>
+                      <div *ngIf="notaRecepcionProductoForm.lote.errors.maxlength">
+                        Máximo 10 caracteres
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-12">
+                    <label>Cantidad</label>
+                    <input class="form-control" type="text"
+                           formControlName="stock">
+                    <div *ngIf="notaRecepcionProductoForm.stock.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="notaRecepcionProductoForm.stock.errors.required">
+                        Requerido
+                      </div>
+                      <div *ngIf="notaRecepcionProductoForm.stock.errors.min">
+                        Mínimo 1
+                      </div>
+                      <div *ngIf="notaRecepcionProductoForm.stock.errors.pattern">
+                        Ingrese valores válidos
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-12">
+                    <label>Descripción</label>
+                    <textarea class="form-control" type="text"
+                              formControlName="descripcion" rows="4"></textarea>
+                    <div *ngIf="notaRecepcionProductoForm.descripcion.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="notaRecepcionProductoForm.descripcion.errors.required">
+                        Requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr class="invoice-spacing"/>
+                <div class="row">
+                  <div class="col-md-4 col-12">
+                    <label>Imagen</label>
+                    <input #fileInput type="file" (change)="onFileSelect($event)" accept=".jpg,.jpeg,.png"
+                           style="width: 260px" formControlName="imagen">
+                    <img *ngIf="imageUrlPrincipal" [src]="imageUrlPrincipal" alt="Imagen" class="img-fluid mt-3"
+                         style="max-width: 250px; height: auto;">
+                    <div *ngIf="notaRecepcionProductoForm.imagen.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="notaRecepcionProductoForm.imagen.errors.required">
+                        Requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer text-center">
+          <button class="btn btn-primary mx-1" (click)="crearProducto()"
+          > Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

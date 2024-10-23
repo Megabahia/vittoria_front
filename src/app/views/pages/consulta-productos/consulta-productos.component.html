@@ -24,12 +24,12 @@
   <div class="card" *ngIf="mostrarDatosProducto">
     <!--<div class="card">-->
     <div class="container mt-1">
-      <h4 class="mb-1 p-1 bg-light text-dark">Detalle del Producto</h4>
+      <h4 class="mb-1 p-1 bg-light text-dark text-center">Detalle del Producto</h4>
       <div class="card border-primary">
-        <div class="card-header bg-primary text-white">
-          <h5 class="card-title">
+        <div class="card-header bg-primary d-flex justify-content-center">
+          <h5 class="card-title text-center">
             {{ producto?.nombre }}
-            <h6>SKU: {{ producto?.codigoBarras }}</h6>
+            <h6>SKU: {{ producto?.prefijo }}{{ producto?.codigoBarras }}</h6>
           </h5>
         </div>
         <div class="card-body bg-light">
@@ -50,11 +50,11 @@
             <div class="image-container">
               <img
                 [src]="producto?.imagen_principal ? producto?.imagen_principal : 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019'"
-                class="img-fluid" alt="Imagen principal"
+                class="img-fluid mx-2" alt="Imagen principal"
                 style="height: 200px; width: 100%; object-fit: cover;">
             </div>
           </div>
-          <!-- Fotos del producto, si están disponibles -->
+          <!-- Fotos del producto, si están disponibles
           <div *ngIf="producto?.imagenes && producto?.imagenes.length > 0" class="row mx-0">
             <div *ngFor="let imagen of producto?.imagenes; let i = index" class="col-md-3 col-sm-3 p-2">
               <div class="image-container">
@@ -62,7 +62,7 @@
                      style="height: 200px; width: 100%; object-fit: cover;">
               </div>
             </div>
-          </div>
+          </div>-->
         </div>
         <div class="card-footer text-muted">
           <small>Vittoria!</small>
@@ -99,11 +99,11 @@
     </div>
     <div class="container mt-1">
       <div class="row bg-primary pt-1 mb-1">
-        <div class="col-12">
-          <h4 class="mb-1">Seleccione los datos del destino del producto</h4>
+        <div class="col-12 text-center">
+          <h4 class="mb-1">Detalle de los productos por tienda</h4>
         </div>
       </div>
-      <div class="row">
+      <!--<div class="row">
         <div class="col-md-3 col-12">
           <label>País</label>
           <input class="form-control" type="text" [(ngModel)]="pais" disabled>
@@ -145,8 +145,40 @@
           <h5>Las formas de entrega y el costo de envío se calcularán en base a la ubicación del cliente y la tienda mas
             cercana.</h5>
         </div>
-      </div>
-      <div class="row" *ngIf="mostrarDatosEnvio">
+      </div>-->
+      <div class="row" *ngIf="mostrarDatosProducto">
+        <div class="card-datatable table-responsive pt-0">
+          <table class="table">
+            <thead class="thead-light">
+            <tr>
+              <th>Nombre de la tienda</th>
+              <th>Ciudad</th>
+              <th>Dirección</th>
+              <th>Hora de atención</th>
+              <th>Formas de entrega de producto</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let item  of totalProductosEnOrigen; let i = index">
+              <td>{{ item.canal | shorten }}</td>
+              <td>{{ item.integracion_canal.ciudad }}</td>
+              <td>{{ item.integracion_canal.descripcion_direccion }}</td>
+              <td>{{ item.integracion_canal.hora_atencion }}</td>
+              <td>
+                <ul>
+                  <li *ngFor="let formaPago of item.formas_pago">
+                    {{ formaPago.nombre ? formaPago.nombre : 'No existen formas de entrega para este producto' }} -
+                    <span class="text-info"> Tiempo de entrega: {{ formaPago.tiempo_entrega ? formaPago.tiempo_entrega : 'No especificado' }}</span>
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <!--<ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
+                        [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
         <div class="container mt-1" style="border-color: #007bff !important;">
           <div class="row" *ngFor="let item of integracionEnvio; let i = index">
             <div class="col-md-12">
@@ -156,7 +188,6 @@
                     <strong>{{ item.datos_producto.tienda }}</strong></h3>
                 </div>
                 <div class="card-body">
-                  <!-- Información de Envío -->
                   <div class="row">
                     <div class="card w-100 border-primary mx-2 mb-2">
                       <div class="p-1 bg-primary">
@@ -267,10 +298,6 @@
                         Generar Pedido
                         <i-feather name="package"></i-feather>
                       </button>
-                      <!--<button class="btn btn-info mb-0 pb-0" (click)="generarPedido(item.datos_producto)">
-                        Generar Pedido
-                        <i-feather name="package"></i-feather>
-                      </button>-->
                     </ng-template>
                   </div>
                 </div>
@@ -285,11 +312,11 @@
             <i-feather name="shopping-bag"></i-feather>
             <strong>{{ carrito.length }}</strong>
           </button>
-        </div>
+        </div>-->
       </div>
     </div>
   </div>
-  <ng-template #miCarrito let-modal>
+  <!--<ng-template #miCarrito let-modal>
     <div class="modal-header">
       <h4 class="modal-title">Detalles de mi carrito</h4>
       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
@@ -373,10 +400,11 @@
       >Finalizar pedido
       </button>
     </div>
-  </ng-template>
-  <div class="row">
+  </ng-template>-->
+  <div class="row d-flex justify-content-center">
     <div class="col-md-3">
-      <button class="btn btn-secondary" (click)="cerrarSesion()">Cerrar</button>
+      <a href="https://superbarato.megadescuento.com" class="btn btn-primary m-1" target="_blank">Click aquí para regresar al catálogo para hacer el pedido</a>
+      <!--<button class="btn btn-secondary" (click)="cerrarSesion()">Cerrar</button>-->
     </div>
   </div>
 </div>
