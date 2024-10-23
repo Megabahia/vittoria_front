@@ -34,7 +34,7 @@ export class SignInComponent implements OnInit {
     this.siteKey = environment.setKey;
     this.captcha = false;
 
-    if (localStorage.getItem('productosWoocommerce')) {
+    if (localStorage.getItem('productosWoocommerce') || localStorage.getItem('consultaProducto')) {
       this.mostrarRegistroAsesor = true;
     } else {
       this.mostrarRegistroAsesor = false;
@@ -62,10 +62,10 @@ export class SignInComponent implements OnInit {
           this.mostrarSpinner = false;
           if (localStorage.getItem('productosWoocommerce')) {
             const baseUrl = environment.apiUrlFront;
-
-            //this.router.navigate(['#/gsb/pedido_woocommerce/crear']);
             window.location.href = `${baseUrl}/#/gd/pedido_woocommerce/crear`;
-            //window.location.reload();
+          } else if (localStorage.getItem('consultaProducto')) {
+            const baseUrl = environment.apiUrlFront;
+            window.location.href = `${baseUrl}/#/pages/consulta/producto`;
           } else {
             window.location.href = '';
           }

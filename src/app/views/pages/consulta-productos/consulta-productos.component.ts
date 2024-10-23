@@ -68,7 +68,7 @@ export class ConsultaProductosComponent implements OnInit {
   sectorOpciones;
 
   cantidadProductoCarrito = 1;
-
+  currentUser;
   constructor(
     private paramServiceAdm: ParamServiceAdm,
     private toaster: Toaster,
@@ -96,10 +96,17 @@ export class ConsultaProductosComponent implements OnInit {
       toolbar.style.display = 'none';
     }
 
+    this.currentUser = this.authService.currentUserValue;
+    if (this.currentUser.usuario.idRol !== 1 && this.currentUser.usuario.idRol !== 63){
+      this.toaster.open('No tiene permisos para ingresar a la página', {type: 'info'});
+      this.cerrarSesion();
+    }
+
   }
 
   ngOnInit(): void {
     this.obtenerProvincias();
+    localStorage.removeItem('consultaProducto');
   }
 
   async obtenerProducto(): Promise<void> {
@@ -125,7 +132,11 @@ export class ConsultaProductosComponent implements OnInit {
         //console.log('COURIERS', this.couriers);
         //this.obtenerDatosOrigenProducto();
         this.mostrarDatosProducto = true;
-      }, error => this.toaster.open(error, {type: 'danger'}));
+      }, error => {
+        this.toaster.open(error, {type: 'danger'});
+        this.codigoBarras = '';
+        this.nombreProducto = '';
+      });
     });
   }
 

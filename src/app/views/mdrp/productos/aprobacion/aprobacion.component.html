@@ -1,0 +1,151 @@
+<div class="app-content content ">
+  <div class="content-wrapper">
+    <div class="content-body">
+      <div class="card">
+        <h5 class="card-header">Aprobación de productos</h5>
+        <!--<div class="card-body">
+          <div class="row">
+            <div class="col-md-3 col-12">
+              <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="inicio">
+            </div>
+            <div class="col-md-3 col-12">
+              <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="fin">
+            </div>
+            <div class="col-md-3 col-12">
+              <input class="form-control" type="text" placeholder="Código de barras" [(ngModel)]="codigoBarrasBuscar">
+            </div>
+
+            <div class="col-md-3 col-12">
+              <button class="btn btn-primary" (click)="obtenerProductosRecepcion()">
+                <i-feather name='search' class="edit-user"></i-feather>
+              </button>
+            </div>
+
+          </div>
+        </div>-->
+      </div>
+      <div class="card">
+        <div class="card-datatable table-responsive pt-0">
+          <div class="row m-75">
+            <div class="col-lg-12 col-xl-6">
+              <label>Mostrar</label>
+              <select class="form-control-sm" [(ngModel)]="pageSize"
+                      (change)="obtenerProductosRecepcion()">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+
+            </div>
+          </div>
+          <table class="user-list-table table">
+            <thead class="thead-light">
+            <tr>
+              <th>Fecha creación</th>
+              <th>Nombre de producto</th>
+              <th>Código de barras</th>
+              <th>Descripción de prodcuto</th>
+              <th>Lote</th>
+              <th>Cantidad</th>
+              <th>Imagen</th>
+              <th>Acción</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let transaccion  of listaProductos; let i = index">
+              <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
+              <td>{{ transaccion.nombre }}</td>
+              <td>{{ transaccion.codigo_barras }}</td>
+              <td>{{ transaccion.descripcion }}</td>
+              <td>{{ transaccion.lote }}</td>
+              <td>{{ transaccion.stock }}</td>
+              <td>
+                <img [src]="transaccion.imagen" alt="Imagen" width="100" height="100"/>
+              </td>
+
+              <td>
+                <button class="btn btn-primary" (click)="abrirModalAprobaion(aprobarProducto, transaccion.id)">
+                  Abrir producto
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
+                        [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #aprobarProducto let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Aprobar producto</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-content">
+    <form [formGroup]="productoRecepcionForm">
+      <div class="row p-2">
+        <div class="col-12">
+          <label>Fecha confirmación: </label>
+          <label> {{ productoRecepcionForm.value.fecha_confirmacion | date: 'dd-MM-yyyy' }} </label>
+        </div>
+        <div class="col-12 py-1">
+          <label>Fecha aprobación: </label>
+          <label> {{ productoRecepcionForm.value.fecha_aprobacion | date: 'dd-MM-yyyy' }} </label>
+        </div>
+        <div class="col-12">
+          <label>Proveedor</label>
+          <input type="text"
+                 class="form-control"
+                 formControlName="proveedor"/>
+          <div *ngIf="notaAprobacionProductoForm.proveedor.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaAprobacionProductoForm.proveedor.errors.required">
+              Requerido
+            </div>
+          </div>
+        </div>
+        <div class="col-12 pt-1">
+          <label>Costo de compra</label>
+          <input class="form-control" type="text"
+                 formControlName="costoCompra" placeholder="00.00"/>
+          <div *ngIf="notaAprobacionProductoForm.costoCompra.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaAprobacionProductoForm.costoCompra.errors.required">
+              Requerido
+            </div>
+            <div *ngIf="notaAprobacionProductoForm.costoCompra.errors.pattern">
+              Ingrese un valor válido
+            </div>
+          </div>
+        </div>
+        <div class="col-12 pt-1">
+          <label>Comentario</label>
+          <textarea class="form-control" type="text"
+                 formControlName="comentario" rows="2"> </textarea>
+          <div *ngIf="notaAprobacionProductoForm.comentario.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaAprobacionProductoForm.comentario.errors.required">
+              Requerido
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-secondary"
+            (click)="modal.dismiss('Cross click')">Cerrar
+    </button>
+    <button class="btn btn-primary mx-1" (click)="actualizar()"
+    >Aprobar
+    </button>
+  </div>
+</ng-template>

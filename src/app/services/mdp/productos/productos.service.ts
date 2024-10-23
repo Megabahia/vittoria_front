@@ -250,4 +250,8 @@ export class ProductosService {
     }
     return this.http.get<any>(`${apiUrl}/mdp/productos/exportar`, {params, ...httpOptions});
   }
+
+  copiarProducto(data, id) {
+    return this.http.post<any>(`${apiUrl}/mdp/productos/copy/${id}`, data);
+  }
 }

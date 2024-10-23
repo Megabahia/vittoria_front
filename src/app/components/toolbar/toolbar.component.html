@@ -168,6 +168,7 @@
           </li>
         </ul>
       </li>
+
       <li class="nav-item" *ngIf="acciones.MDP.LEER">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
@@ -329,6 +330,37 @@
             </ul>
           </li>
 
+        </ul>
+      </li>
+      <li class="nav-item" *ngIf="acciones.MDP.LEER">
+        <a class="d-flex align-items-center">
+          <i data-feather="file-text"></i>
+          <span class="menu-title text-truncate" data-i18n="Invoice">MDRP Motor de recepción de productos</span></a>
+        <ul class="menu-content ng-star-inserted">
+          <li class="nav-item" >
+            <a class="d-flex align-items-center" [routerLink]="['mdrp/productos/recepcion']" data-toggle="tooltip"
+               data-placement="auto" title="Recepción de productos">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Recepción de productos</span></a>
+          </li>
+          <li class="nav-item" >
+            <a class="d-flex align-items-center" [routerLink]="['mdrp/productos/confirmacion/recepcion']" data-toggle="tooltip"
+               data-placement="auto" title="Confirmación recepción de productos">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Confirmación recepción de productos</span></a>
+          </li>
+          <li class="nav-item" >
+            <a class="d-flex align-items-center" [routerLink]="['mdrp/productos/aprobacion']" data-toggle="tooltip"
+               data-placement="auto" title="Aprobación recepción de productos">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Aprobación recepción de productos</span></a>
+          </li>
+          <li class="nav-item" >
+            <a class="d-flex align-items-center" [routerLink]="['mdrp/productos/list']" data-toggle="tooltip"
+               data-placement="auto" title="Listado de recepción de productos">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Listado de recepción de productos</span></a>
+          </li>
         </ul>
       </li>
       <li class="ml-2">-------------------------------------</li>

@@ -20,6 +20,10 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
+    if (route.routeConfig.path === 'consulta/producto') {
+      localStorage.setItem('consultaProducto', JSON.stringify('Consultar productos'));
+    }
+
     if (Object.keys(route.queryParams).length > 0) {
       localStorage.setItem('productosWoocommerce', JSON.stringify(route.queryParams));
     }
