@@ -60,13 +60,13 @@ export class ListProductosComponent implements OnInit, AfterViewInit {
       id: [''],
       precioVentaA: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
       precioVentaB: ['', [Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
-      precioVentaC: ['', [Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
-      precioVentaD: ['', [Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
-      precioVentaE: ['', [Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
-      precioVentaF: ['', [Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
-      porcentaje_comision: ['', [Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]*$')]],
-      valor_comision: ['', [Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
-      estado: [''],
+      precioVentaC: [0, [Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
+      precioVentaD: [0, [Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
+      precioVentaE: [0, [Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
+      precioVentaF: [0, [Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
+      porcentaje_comision: [null, [Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]*$')]],
+      valor_comision: [null, [Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
+      estado: ['Enviado'],
     });
   }
 
