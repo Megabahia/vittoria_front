@@ -18,6 +18,7 @@
                     <option value="" selected>- Seleccionar -</option>
                     <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
                   </select>
+
                 </div>
                 <ng-template #SelectEnable>
                   <label for="canal1">Link del catálogo de la tienda: </label>
@@ -26,6 +27,7 @@
                     <option value="" selected>- Seleccionar -</option>
                     <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
                   </select>
+
                 </ng-template>
 
               </div>
@@ -172,8 +174,14 @@
                 <div class="col-md-4 col-12">
                   <div class="form-group">
                     <label>Proveedor <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" formControlName="proveedor"
-                           [(ngModel)]="producto.proveedor">
+                    <select class="form-control select2" id="proveedor" name="proveedor" formControlName="proveedor"
+                            [(ngModel)]="producto.proveedor">
+                      <option value="" selected>- Seleccionar -</option>
+                      <option *ngFor="let proveedor of listaProveedores"
+                              value="{{proveedor.codigo}}">{{ proveedor.nombre }} {{ proveedor.apellido }}
+                      </option>
+                    </select>
+
                     <div *ngIf="submittedProductoForm && fp.proveedor.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="fp.proveedor.errors.required">Proveedor es requerido

@@ -24,6 +24,7 @@ import { CategoriasProductosComponent } from './productos/categorias-productos/c
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import {StockVirtualListarComponent} from "./stock-virtual/listado/stock-virtual-listar/stock-virtual-listar.component";
 import {GdeModule} from "../gde/gde.module";
+import {ProveedoresComponent} from "./proveedores/proveedores.component";
 
 
 @NgModule({
@@ -44,7 +45,9 @@ import {GdeModule} from "../gde/gde.module";
     ProductosListarComponent,
     BuscarProductoComponent,
     SubcategoriasProductosComponent,
-    CategoriasProductosComponent
+    CategoriasProductosComponent,
+
+    ProveedoresComponent
   ],
   imports: [
     CommonModule,

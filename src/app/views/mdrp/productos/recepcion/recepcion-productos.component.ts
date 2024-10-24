@@ -2,11 +2,9 @@ import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {ParamService as ParamServiceAdm} from '../../../../services/admin/param.service';
 
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Toaster} from 'ngx-toast-notifications';
-import {ContactosService} from "../../../../services/gdc/contactos/contactos.service";
 import {MdrpService} from "../../../../services/mdrp/mdrp_productos.service";
-import {ValidacionesPropias} from "../../../../utils/customer.validators";
 
 @Component({
   selector: 'app-recepcion-productos',

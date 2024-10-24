@@ -11,10 +11,10 @@
         <h5>Filtros de búsqueda: <span class="text-danger">*</span></h5>
       </div>
       <div class="col-md-3 col-12 mt-2">
-        <input class="form-control" type="text" [(ngModel)]="codigoBarras" placeholder="Código de producto">
+        <input class="form-control" type="text" [(ngModel)]="codigoBarras" placeholder="Código de producto" (change)="obtenerProducto()">
       </div>
       <div class="col-md-3 col-12 mt-2">
-        <input class="form-control" type="text" [(ngModel)]="nombreProducto" placeholder="Nombre de producto">
+        <input class="form-control" type="text" [(ngModel)]="nombreProducto" placeholder="Nombre de producto" (change)="obtenerProducto()">
       </div>
       <div class="col-md-3 col-12 mt-2 ml-2">
         <button class="btn btn-primary" (click)="obtenerProducto()">Consultar</button>
@@ -63,9 +63,6 @@
               </div>
             </div>
           </div>-->
-        </div>
-        <div class="card-footer text-muted">
-          <small>Vittoria!</small>
         </div>
       </div>
       <!--<div class="container mt-2">
@@ -156,6 +153,8 @@
               <th>Dirección</th>
               <th>Hora de atención</th>
               <th>Formas de entrega de producto</th>
+              <th>Precio</th>
+              <th class="text-danger">Comisión</th>
             </tr>
             </thead>
 
@@ -165,6 +164,7 @@
               <td>{{ item.integracion_canal.ciudad }}</td>
               <td>{{ item.integracion_canal.descripcion_direccion }}</td>
               <td>{{ item.integracion_canal.hora_atencion }}</td>
+
               <td>
                 <ul>
                   <li *ngFor="let formaPago of item.formas_pago">
@@ -173,6 +173,8 @@
                   </li>
                 </ul>
               </td>
+              <td>{{ item.precioVentaA | currency }}</td>
+              <td class="text-danger">Por la venta de 1 producto recibe {{ calcularComision(item.precioVentaA, item.porcentaje_comision, item.valor_comision) | currency}} de comisión</td>
             </tr>
             </tbody>
           </table>

@@ -237,6 +237,13 @@
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración de proveedores</span></a>
             <ul class="menu-content">
               <li class="nav-item {{menuToolbar['mdp']['param']}}">
+                <a class="d-flex align-items-center" [routerLink]="['mdp/proveedores']"
+                   data-toggle="tooltip"
+                   data-placement="auto" title="Gestión proveedores">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Gestión proveedores</span></a>
+              </li>
+              <li class="nav-item {{menuToolbar['mdp']['param']}}">
                 <a class="d-flex align-items-center" href="#/mdp/gestion-proveedores/cargar-productos"
                    data-toggle="tooltip"
                    data-placement="auto" title="Cargar Proveedores">
@@ -250,6 +257,7 @@
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Buscar</span></a>
               </li>
+
             </ul>
           </li>
           <li class="nav-item has-sub ng-star-inserted" *ngIf="usuario.usuario.idRol !== 60">

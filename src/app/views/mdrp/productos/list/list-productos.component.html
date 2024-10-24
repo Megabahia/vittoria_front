@@ -42,12 +42,12 @@
           <table class="user-list-table table">
             <thead class="thead-light">
             <tr>
-              <th>Fecha creación</th>
-              <th>Nombre de producto</th>
-              <th>Código de barras</th>
-              <th>Descripción de prodcuto</th>
+              <th>Fecha de recepción del producto</th>
               <th>Lote</th>
+              <th>Código de barras</th>
+              <th>Nombre de producto</th>
               <th>Cantidad</th>
+              <th>Descripción de prodcuto</th>
               <th>Imagen</th>
               <th>Acción</th>
             </tr>
@@ -56,11 +56,11 @@
             <tbody>
             <tr *ngFor="let transaccion  of listaProductos; let i = index">
               <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
-              <td>{{ transaccion.nombre }}</td>
-              <td>{{ transaccion.codigo_barras }}</td>
-              <td>{{ transaccion.descripcion }}</td>
               <td>{{ transaccion.lote }}</td>
+              <td>{{ transaccion.codigo_barras }}</td>
+              <td>{{ transaccion.nombre }}</td>
               <td>{{ transaccion.stock }}</td>
+              <td>{{ transaccion.descripcion }}</td>
               <td>
                 <img [src]="transaccion.imagen" alt="Imagen" width="100" height="100"/>
               </td>
@@ -163,6 +163,50 @@
           <div *ngIf="notaAprobacionProductoForm.precioVentaF.errors"
                class="invalid-feedback" style="display: block;">
             <div *ngIf="notaAprobacionProductoForm.precioVentaF.errors.pattern">
+              Ingrese un valor válido
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-12">
+          <label>Precio Landing</label>
+          <input class="form-control" type="number"
+                 formControlName="precioLanding" placeholder="00.00"/>
+          <div *ngIf="notaAprobacionProductoForm.precioLanding.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaAprobacionProductoForm.precioLanding.errors.pattern">
+              Ingrese un valor válido
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-12">
+          <label>Precio Landing Oferta</label>
+          <input class="form-control" type="number"
+                 formControlName="precioLandingOferta" placeholder="00.00"/>
+          <div *ngIf="notaAprobacionProductoForm.precioLandingOferta.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaAprobacionProductoForm.precioLandingOferta.errors.pattern">
+              Ingrese un valor válido
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-12">
+          <label>Precio Venta Bultos</label>
+          <input class="form-control" type="number"
+                 formControlName="precioVentaBultos" placeholder="00.00"/>
+          <div *ngIf="notaAprobacionProductoForm.precioVentaBultos.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaAprobacionProductoForm.precioVentaBultos.errors.pattern">
+              Ingrese un valor válido
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-12">
+          <label>Precio Oferta</label>
+          <input class="form-control" type="number"
+                 formControlName="precioOferta" placeholder="00.00"/>
+          <div *ngIf="notaAprobacionProductoForm.precioOferta.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaAprobacionProductoForm.precioOferta.errors.pattern">
               Ingrese un valor válido
             </div>
           </div>
