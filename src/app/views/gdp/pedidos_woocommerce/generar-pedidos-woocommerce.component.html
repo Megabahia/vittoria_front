@@ -1,5 +1,5 @@
 <div class="card d-inline-flex p-2 w-100 text-center" *ngIf="mostrarContenidoPantalla">
-  <h1 class="text-danger">Confirmación del pedido para entrega en local {{notaPedido.value.canal}}</h1>
+  <h1 class="text-danger">Confirmación del pedido para entrega en local {{integracionCanalCupon.nombre}}</h1>
 </div>
 <div class="card" *ngIf="mostrarContenidoPantalla">
   <div class="card-body">
@@ -327,14 +327,14 @@
                               </div>
                             </div>-->
                           </div>
-                          <div
+                          <!--<div
                             class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
                             <i-feather name="x"
                                        class="cursor-pointer font-medium-3"
                                        data-repeater-delete
                                        (click)="removerItem(i)"></i-feather>
 
-                          </div>
+                          </div>-->
                         </div>
 
                       </div>
@@ -426,7 +426,7 @@
     </form>
   </div>
   <div class="card-footer text-center">
-    <h6 class="py-2 px-4 text-danger">Recuerde hacerle seguimiento a su cliente a través del WhatsApp o llamada, para que se acerque a retirar el pedido en el local. Su comsión se hará efectiva una vez que el cliente retire el pedido.</h6>
+    <h6 class="py-2 px-4 text-danger">Recuerde hacerle seguimiento a su cliente a través del WhatsApp o llamada, para que se acerque a retirar el pedido en el local. Su comisión se hará efectiva una vez que el cliente retire el pedido.</h6>
     <button class="btn btn-primary mx-1"
             (click)="guardarVenta(notaPedidoModal)"
             *ngIf="hablilitarBotonGuardar"
@@ -609,7 +609,7 @@
     <button (click)="irInicio()" class="btn btn-secondary">Inicio</button>
   </div>-->
   <div class="mt-4">
-    <h6 class="px-4 text-danger">Recuerde hacerle seguimiento a su cliente a través del WhatsApp o llamada, para que se acerque a retirar el pedido en el local. Su comsión se hará efectiva una vez que el cliente retire el pedido.</h6>
-    <a href="https://superbarato.megadescuento.com" class="btn btn-primary m-1">Volver a la tienda</a>
+    <h6 class="px-4 text-danger">Recuerde hacerle seguimiento a su cliente a través del WhatsApp o llamada, para que se acerque a retirar el pedido en el local. Su comisión se hará efectiva una vez que el cliente retire el pedido.</h6>
+    <a href="{{irCatalo}}" class="btn btn-primary m-1">Volver a la tienda</a>
   </div>
 </div>

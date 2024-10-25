@@ -84,8 +84,9 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   tiendaProducto;
   cuentaBancaria;
   formaEntrega;
-
+  direccionProducto;
   mensaje = '';
+  irCatalo;
   constructor(
     private route: ActivatedRoute,
     private _router: Router,
@@ -197,17 +198,8 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     });
 
     this.notaPedido.updateValueAndValidity();
+    this.irCatalo = `https://${this.paginaWoocommerce}`;
 
-    /*if (this.paginaWoocommerce === 'contraentrega.megadescuento.com') {
-      this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.page_size, 'METODO PAGO', '').subscribe((result) => {
-        const metodoPago = result.data.find(metodo => metodo.nombre === 'Pago Contra Entrega a Nivel Nacional por Servientrega');
-        this.listaMetodoPago = metodoPago ? [metodoPago] : []; // Asegura que el resultado sea siempre un array
-      });
-    } else {
-      this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.page_size, 'METODO PAGO', '').subscribe((result) => {
-        this.listaMetodoPago = result.data.filter(metodo => metodo.nombre !== 'Retiro en local' && metodo.nombre !== 'Previo Pago Transporte Interprovincial');
-      });
-    }*/
 
   }
 
@@ -755,13 +747,13 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   async obtenerProducto(productoWoocomerce, i): Promise<void> {
     return new Promise((resolve, reject) => {
       const data = {
-        prefijo: productoWoocomerce.tienda_producto,
         codigoBarras: productoWoocomerce.sku_del_producto,
         estado: 'Activo',
-        cantidad: productoWoocomerce.cantidad_en_el_carrito
+        state: 1
       };
       this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
-        this.tiendaProducto = info.producto.canal;
+        this.tiendaProducto = info.productos[0].tienda;
+        this.direccionProducto = `${info.productos[0].integracion_canal.pais} - ${info.productos[0].integracion_canal.provincia} - ${info.productos[0].integracion_canal.ciudad}`;
         this.productoBuscar.push({...info.producto});
 
         const prefijo = info.producto.prefijo; // Asumiendo que cada producto tiene un atributo 'prefijo'

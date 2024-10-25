@@ -74,6 +74,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
   totalIva;
   hablilitarBotonGuardar = true;
   mostrarContenidoPantalla = true;
+  tiendaProducto;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
     backgroundColor: '#84D0FF'
@@ -91,7 +92,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
   desabilitarComboPrecios: boolean[] = [];
   integracionCanalCupon;
   imagenCanal;
-
+  irCatalo;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -239,7 +240,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
       precios: [[], []],
       canal: [''],
       woocommerceId: [''],
-      imagen_principal: ['', [Validators.required]],
+      imagen_principal: [''],
       porcentaje_comision: [0],
       valor_comision: [0],
       monto_comision: [0]
@@ -331,6 +332,8 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
         canal: canalProducto,
+        state: 1,
+        estado: 'Activo'
       };
       this.productosService.obtenerProductoPorCodigoCanal(data).subscribe((info) => {
         if (info.producto.codigoBarras) {
@@ -647,10 +650,9 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
   obtenerIntegracionCanal() {
     this.integracionesService.obtenerListaIntegraciones({
       page: this.page,
-      page_size: this.pageSize, valor: this.dataPedidoWoocommerce.canal
+      page_size: this.pageSize, valor: this.dataPedidoWoocommerce.articulos[0].canal
     }).subscribe(async (result) => {
       this.integracionCanalCupon = result.info[0];
-      console.log(this.dataPedidoWoocommerce.canal)
     });
   }
 
@@ -667,8 +669,11 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
     const data = localStorage.getItem('productoDataPedidoWoocommerce');
 
     if (data) {
+
       this.dataPedidoWoocommerce = JSON.parse(data);
       this.notaPedido.patchValue({...this.dataPedidoWoocommerce});
+      this.irCatalo = `https://${this.dataPedidoWoocommerce.canal}`;
+
       this.canalSeleccionado = this.dataPedidoWoocommerce.canal;
       //this.notaPedido.get('canal').setValue(this.canalSeleccionado);
       this.notaPedido.get('metodoPago').setValue(this.dataPedidoWoocommerce.metodoPago);
@@ -676,7 +681,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
         this.agregarItem();
         this.detallesArray.controls[index].get('codigo').setValue(datos.codigo);
         this.detallesArray.controls[index].get('cantidad').setValue(datos.cantidad);
-        this.detallesArray.controls[index].get('valorUnitario').setValue(parseFloat(datos.precio.toFixed(2)));
+        this.detallesArray.controls[index].get('valorUnitario').setValue(parseFloat(datos.valorUnitario));
         this.detallesArray.controls[index].get('porcentaje_comision').setValue(datos.porcentaje_comision);
         this.detallesArray.controls[index].get('valor_comision').setValue(parseFloat(datos.valor_comision));
         this.detallesArray.controls[index].get('monto_comision').setValue(parseFloat(datos.monto_comision));
@@ -686,7 +691,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
       this.notaPedido.get('estado').setValue('Pendiente de retiro');
       this.obtenerCiudad();
       this.obtenerIntegracionCanal();
-      localStorage.removeItem('productoDataPedidoWoocommerce');
+      //localStorage.removeItem('productoDataPedidoWoocommerce');
     }
   }
 

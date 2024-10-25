@@ -6,6 +6,7 @@ import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {Toaster} from 'ngx-toast-notifications';
 import {MdrpService} from '../../../../services/mdrp/mdrp_productos.service';
+import {MdpProveedoresService} from "../../../../services/mdp/reportes/mdp_proveedores.service";
 
 @Component({
   selector: 'app-aprobacion',
@@ -43,7 +44,7 @@ export class AprobacionComponent implements OnInit, AfterViewInit {
   codigoBarrasBuscar;
   fechaActual = new Date();
   mostrarSpinner = false;
-
+  listaProveedores;
   constructor(
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
@@ -51,8 +52,12 @@ export class AprobacionComponent implements OnInit, AfterViewInit {
     private toaster: Toaster,
     private mdrpProductosService: MdrpService,
     private modalService: NgbModal,
+    private proveedoresService: MdpProveedoresService,
+
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
+    this.obtenerListaProveedores();
+
   }
 
   iniciarAprobacionProducto(): void {
@@ -139,5 +144,16 @@ export class AprobacionComponent implements OnInit, AfterViewInit {
     this.modalService.open(modal, {size: 'md', backdrop: 'static'});
     this.obtenerProducto(id);
 
+  }
+
+  obtenerListaProveedores(): void {
+    this.proveedoresService.obtenerListaProveedores({
+      page: this.page - 1,
+      page_size: this.pageSize,
+      //inicio: this.inicio,
+      //fin: this.transformarFecha(this.fin),
+    }).subscribe((info) => {
+      this.listaProveedores = info.data;
+    });
   }
 }

@@ -23,6 +23,13 @@
                   <option *ngFor="let tipo of tipos" value="{{tipo.valor}}">{{ tipo.valor }}</option>
                 </select>
               </div>
+              <div class="col-md-4" *ngIf="mostrarCanalesFiltro">
+                <select class="select2 form-control form-control-sm" [(ngModel)]="buscarCanal"
+                        (change)="obtenerListaParametros()">
+                  <option value="" selected>- Canal -</option>
+                  <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -64,6 +71,7 @@
                 </th>
                 <th>Parámetro</th>
                 <th>Tipo</th>
+                <th>Canal</th>
                 <th>Descripción</th>
                 <th>Valor</th>
                 <th>Tipo de dato</th>
@@ -87,6 +95,7 @@
                   </div>
                 </td>
                 <td> {{ parametro.tipo }}</td>
+                <td> {{ parametro.canal }}</td>
                 <td> {{ parametro.descripcion }}</td>
                 <td> {{ parametro.valor }}</td>
                 <td> {{ parametro.tipoVariable }}</td>

@@ -42,30 +42,36 @@
           <table class="user-list-table table">
             <thead class="thead-light">
             <tr>
-              <th>Fecha creación</th>
-              <th>Nombre de producto</th>
-              <th>Código de barras</th>
-              <th>Descripción de prodcuto</th>
+              <th>Fecha de recepción del producto</th>
               <th>Lote</th>
+              <th>Código de barras</th>
+              <th>Nombre de producto</th>
               <th>Cantidad</th>
+              <th>Descripción de prodcuto</th>
               <th>Imagen</th>
+              <th>Ver</th>
+              <th>Acción</th>
             </tr>
             </thead>
-
             <tbody>
             <tr *ngFor="let transaccion  of listaProductos; let i = index">
               <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
-              <td>{{ transaccion.nombre }}</td>
-              <td>{{ transaccion.codigo_barras }}</td>
-              <td>{{ transaccion.descripcion }}</td>
               <td>{{ transaccion.lote }}</td>
+              <td>{{ transaccion.codigo_barras }}</td>
+              <td>{{ transaccion.nombre }}</td>
               <td>{{ transaccion.stock }}</td>
+              <td>{{ transaccion.descripcion }}</td>
               <td>
                 <img [src]="transaccion.imagen" alt="Imagen" width="100" height="100"/>
               </td>
-
               <td>
-                <button class="btn btn-primary" (click)="actualizar('Confirmado', transaccion.id)">
+                <a (click)="abrirModalAprobaion(detalleProducto, transaccion.id)">
+                  <i-feather name="eye" class="mr-25"></i-feather>
+                </a>
+              </td>
+              <td>
+                <button class="btn btn-primary" (click)="actualizar('Confirmado', transaccion.id)"
+                        *ngIf="transaccion.verificarProducto == 1">
                   Confirmar Producto
                 </button>
               </td>
@@ -81,4 +87,100 @@
     </div>
   </div>
 </div>
+
+<ng-template #detalleProducto let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Detalle producto</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-content">
+    <form [formGroup]="productoRecepcionForm">
+      <div class="row p-2">
+        <div class="col-12 pb-1">
+          <label>Lote del producto</label>
+          <input class="form-control" type="text"
+                    formControlName="lote" />
+          <div *ngIf="notaRecepcionProductoForm.lote.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaRecepcionProductoForm.lote.errors.required">
+              Requerido
+            </div>
+            <div *ngIf="notaRecepcionProductoForm.lote.errors.maxlength">
+              Máximo 10 caracteres
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <label>Código de barras</label>
+          <input class="form-control" type="text"
+                    formControlName="codigo_barras" />
+          <div *ngIf="notaRecepcionProductoForm.codigo_barras.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaRecepcionProductoForm.codigo_barras.errors.required">
+              Requerido
+            </div>
+          </div>
+        </div>
+        <div class="col-12 py-1">
+          <label>Nombre</label>
+          <input class="form-control" type="text"
+                    formControlName="nombre" />
+          <div *ngIf="notaRecepcionProductoForm.nombre.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaRecepcionProductoForm.nombre.errors.required">
+              Requerido
+            </div>
+          </div>
+        </div>
+        <div class="col-12 py-1">
+          <label>Cantidad del producto</label>
+          <input class="form-control" type="text"
+                    formControlName="stock" />
+          <div *ngIf="notaRecepcionProductoForm.stock.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaRecepcionProductoForm.stock.errors.required">
+              Requerido
+            </div>
+            <div *ngIf="notaRecepcionProductoForm.stock.errors.min">
+              Mínimo 1
+            </div>
+            <div *ngIf="notaRecepcionProductoForm.stock.errors.pattern">
+              Ingrese valores válidos
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <label>Descripción</label>
+          <textarea class="form-control" type="text"
+                    formControlName="descripcion" rows="2"> </textarea>
+          <div *ngIf="notaRecepcionProductoForm.descripcion.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaRecepcionProductoForm.descripcion.errors.required">
+              Requerido
+            </div>
+          </div>
+        </div>
+        <div class="col-12 py-1">
+          <label>Cambiar imagen: </label>
+          <input #fileInput type="file" (change)="onFileSelect($event)" accept=".jpg,.jpeg,.png"
+                 style="width: 260px">
+          <img *ngIf="imageUrlPrincipal" [src]="imageUrlPrincipal" alt="Imagen" class="img-fluid mt-3"
+               style="max-width: 150px; height: 150px;">
+
+        </div>
+
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-secondary"
+            (click)="modal.dismiss('Cross click')">Cerrar
+    </button>
+    <button class="btn btn-primary mx-1" (click)="verificarInforProducto()"
+    >Confirmar producto
+    </button>
+  </div>
+</ng-template>
 

@@ -13,6 +13,7 @@ import * as moment from 'moment';
 import {ValidacionesPropias} from '../../../../../utils/customer.validators';
 import {Toaster} from 'ngx-toast-notifications';
 import {IntegracionesService} from "../../../../../services/admin/integraciones.service";
+import {MdpProveedoresService} from "../../../../../services/mdp/reportes/mdp_proveedores.service";
 
 @Component({
   selector: 'app-productos-editar',
@@ -66,7 +67,7 @@ export class ProductosEditarComponent implements OnInit {
   imageUrlPrincipal: string | ArrayBuffer | null = null;
   imagenPrinciplSeleccionada: File | null = null;
   disabledSelectCanal = false;
-
+  listaProveedores;
   parametros;
   page_size = 3;
 
@@ -82,11 +83,14 @@ export class ProductosEditarComponent implements OnInit {
     private toaster: Toaster,
     private http: HttpClient,
     private integracionesService: IntegracionesService,
+    private proveedoresService: MdpProveedoresService,
+
   ) {
     this.producto = this.productosService.inicializarProducto();
     this.fichaTecnica = this.productosService.inicializarFichaTecnica();
     this.obtenerListaParametros();
     this.obtenerUsuarioActual();
+    this.obtenerListaProveedores();
   }
 
   get fp() {
@@ -173,6 +177,11 @@ export class ProductosEditarComponent implements OnInit {
 
       this.productoForm.patchValue(info);
       this.obtenerListaParametrosCanal(info.canal);
+
+      if (!this.producto.canal){
+        this.producto.canal = '';
+      }
+
       if (!this.producto.envioNivelNacional) {
         this.productoForm.get('lugarVentaProvincia').setValue(this.producto.lugarVentaProvincia);
         this.obtenerCiudad();
@@ -549,5 +558,14 @@ export class ProductosEditarComponent implements OnInit {
   }
 
 
-
+  obtenerListaProveedores(): void {
+    this.proveedoresService.obtenerListaProveedores({
+      page: this.page - 1,
+      page_size: this.pageSize,
+      //inicio: this.inicio,
+      //fin: this.transformarFecha(this.fin),
+    }).subscribe((info) => {
+      this.listaProveedores = info.data;
+    });
+  }
 }
