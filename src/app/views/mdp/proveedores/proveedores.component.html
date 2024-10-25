@@ -1,0 +1,191 @@
+<div class="app-content content ">
+  <div class="content-wrapper">
+    <div class="content-body">
+      <div class="card">
+        <div class="card-header">
+          <h3>Gestion de Proveedores</h3>
+          <button class="btn btn-primary" (click)="abrirModalProveedor(proveedor,'','crear')">NUEVO PROVEEDOR</button>
+        </div>
+
+        <!--<div class="card-body">
+          <div class="row">
+            <div class="col-md-3 col-12">
+              <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="inicio">
+            </div>
+            <div class="col-md-3 col-12">
+              <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="fin">
+            </div>
+            <div class="col-md-3 col-12">
+              <input class="form-control" type="text" placeholder="Código de barras" [(ngModel)]="codigoBarrasBuscar">
+            </div>
+
+            <div class="col-md-3 col-12">
+              <button class="btn btn-primary" (click)="obtenerProductosRecepcion()">
+                <i-feather name='search' class="edit-user"></i-feather>
+              </button>
+            </div>
+
+          </div>
+        </div>-->
+      </div>
+      <div class="card">
+        <div class="card-datatable table-responsive pt-0">
+          <div class="row m-75">
+            <div class="col-md-6 col-12">
+              <label>Mostrar</label>
+              <select class="form-control-sm" [(ngModel)]="pageSize"
+                      (change)="obtenerListaProveedores()">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+
+            </div>
+          </div>
+          <table class="user-list-table table">
+            <thead class="thead-light">
+            <tr>
+              <th>Fecha creación</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Código</th>
+              <th>Localización</th>
+              <th>Acción</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let transaccion  of listaProveedores; let i = index">
+              <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
+              <td>{{ transaccion.nombre }}</td>
+              <td>{{ transaccion.apellido }}</td>
+              <td>{{ transaccion.codigo }}</td>
+              <td>{{ transaccion.ciudad }}, {{ transaccion.provincia }}, {{ transaccion.pais }}</td>
+              <td>
+                <a (click)="abrirModalProveedor(proveedor, transaccion.id, 'editar')" data-toggle="modal"
+                   data-target="#verfactura">
+                  <i-feather name="eye" class="mr-25"></i-feather>
+                </a>
+                <a (click)="eliminarProveedor(transaccion.id)" data-repeater-delete>
+                  <i-feather name='trash'></i-feather>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
+                        [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #proveedor let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      {{ accion === 'editar' ? 'Actualizar proveedor' : 'Crear proveedor'}}
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-content">
+    <form [formGroup]="proveedoresForm">
+      <div class="row p-2">
+        <div class="col-12">
+          <label>Nombre</label>
+          <input type="text"
+                 class="form-control"
+                 formControlName="nombre"/>
+          <div *ngIf="notaProveedoresForm.nombre.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaProveedoresForm.nombre.errors.required">
+              Requerido
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <label>Apellido</label>
+          <input type="text"
+                 class="form-control"
+                 formControlName="apellido"/>
+          <div *ngIf="notaProveedoresForm.apellido.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaProveedoresForm.apellido.errors.required">
+              Requerido
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <label>Código</label>
+          <input type="text"
+                 class="form-control"
+                 formControlName="codigo"/>
+          <div *ngIf="notaProveedoresForm.codigo.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaProveedoresForm.codigo.errors.required">
+              Requerido
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <label>Pais</label>
+          <input class="form-control" type="text"
+                 formControlName="pais" disabled>
+          <div *ngIf="notaProveedoresForm.pais.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaProveedoresForm.pais.errors.required">
+              Requerido
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <label for="provinciaFact">Provincia</label>
+          <select class="form-control" name="provinciaFact" formControlName="provincia"
+                  (change)="obtenerCiudad()" id="provinciaFact">
+            <option value="" selected>- Seleccione -</option>
+            <option [ngValue]="provincia.nombre" *ngFor="let provincia of provinciaOpciones">
+              {{ provincia.nombre }}
+            </option>
+          </select>
+          <div *ngIf="notaProveedoresForm.provincia.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaProveedoresForm.provincia.errors.required">
+              Requerido
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <label for="ciudadFact">Ciudad</label>
+          <select class="form-control" name="ciudadFact" formControlName="ciudad" id="ciudadFact">
+            <option value="" selected>- Seleccione -</option>
+            <option [ngValue]="ciudad.nombre" *ngFor="let ciudad of ciudadOpciones">
+              {{ ciudad.nombre }}
+            </option>
+          </select>
+          <div *ngIf="notaProveedoresForm.ciudad.errors"
+               class="invalid-feedback" style="display: block;">
+            <div *ngIf="notaProveedoresForm.ciudad.errors.required">
+              Requerido
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-secondary"
+            (click)="modal.dismiss('Cross click')">Cerrar
+    </button>
+    <button class="btn btn-primary mx-1" (click)="actualizar()" *ngIf="accion === 'editar'"
+    >Actualizar
+    </button>
+    <button class="btn btn-primary mx-1" (click)="crearProveedor()" *ngIf="accion === 'crear'"
+    >Guardar
+    </button>
+  </div>
+</ng-template>

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {ParamService as ParamServiceAdm} from '../../../../services/admin/param.service';
 
@@ -15,6 +15,9 @@ import {MdrpService} from "../../../../services/mdrp/mdrp_productos.service";
 export class ConfirmacionRecepcionComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @Input() paises;
+  public productoRecepcionForm: FormGroup;
+  archivo: FormData = new FormData();
+  @ViewChild('fileInput') fileInput: ElementRef;
 
   menu;
   page = 1;
@@ -40,7 +43,8 @@ export class ConfirmacionRecepcionComponent implements OnInit, AfterViewInit {
   factura;
   listaProductos;
   codigoBarrasBuscar;
-
+  imageUrlPrincipal: string | ArrayBuffer | null = null;
+  imagenPrinciplSeleccionada: File | null = null;
   mostrarSpinner = false;
 
   constructor(
@@ -49,7 +53,7 @@ export class ConfirmacionRecepcionComponent implements OnInit, AfterViewInit {
     private paramServiceAdm: ParamServiceAdm,
     private toaster: Toaster,
     private mdrpProductosService: MdrpService,
-
+    private modalService: NgbModal,
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
   }
@@ -60,6 +64,22 @@ export class ConfirmacionRecepcionComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.iniciarPaginador();
+  }
+
+  iniciarNotaRecepcionProducto(): void {
+    this.productoRecepcionForm = this.formBuilder.group({
+      id: [''],
+      codigo_barras: ['', [Validators.required]],
+      lote: ['', [Validators.required, Validators.maxLength(10)]],
+      nombre: ['', [Validators.required]],
+      stock: ['', [Validators.required, Validators.min(1), Validators.pattern('^[0-9]*$')]],
+      descripcion: ['', [Validators.required]],
+      verificarProducto: [1],
+    });
+  }
+
+  get notaRecepcionProductoForm() {
+    return this.productoRecepcionForm['controls'];
   }
 
   iniciarPaginador(): void {
@@ -82,13 +102,19 @@ export class ConfirmacionRecepcionComponent implements OnInit, AfterViewInit {
     });
   }
 
+  obtenerProducto(id): void {
+    this.mdrpProductosService.obtenerProducto(id).subscribe((info) => {
+      this.productoRecepcionForm.patchValue({...info});
+    });
+  }
+
   actualizar(estadoConfirmacion, id): void {
     if (confirm('¿Esta seguro de confirmar los datos?') === true) {
       this.mdrpProductosService.actualizarProducto({
         estado: estadoConfirmacion,
         fecha_confirmacion: new Date(),
       }, id).subscribe((info) => {
-        this.toaster.open('Producto confirmado', { type: 'success'});
+        this.toaster.open('Producto confirmado', {type: 'success'});
         this.obtenerProductosRecepcion();
       });
     }
@@ -104,5 +130,58 @@ export class ConfirmacionRecepcionComponent implements OnInit, AfterViewInit {
     const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
     const anio = fechaActual.getFullYear().toString();
     return `${dia}-${mes}-${anio}`;
+  }
+
+  abrirModalAprobaion(modal, id): void {
+    this.imageUrlPrincipal = null;
+    this.imagenPrinciplSeleccionada = null;
+    this.iniciarNotaRecepcionProducto();
+    this.obtenerProducto(id);
+    this.modalService.open(modal, {size: 'md', backdrop: 'static'});
+  }
+
+  onFileSelect(event: any): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length) {
+      this.imagenPrinciplSeleccionada = input.files[0]; // Almacena el archivo seleccionado globalmente
+      this.cargarImagenPrincipal(this.imagenPrinciplSeleccionada); // Carga la imagen para su visualización
+
+    }
+  }
+
+  private cargarImagenPrincipal(file: File): void {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.imageUrlPrincipal = e.target.result; // Almacena la URL de la imagen para visualización
+    };
+    reader.readAsDataURL(file);
+  }
+
+  verificarInforProducto() {
+    if (this.productoRecepcionForm.invalid) {
+      this.toaster.open('Llenar campos', {type: 'danger'});
+      return;
+    }
+
+    this.productoRecepcionForm.get('verificarProducto').setValue(1);
+    const llaves: string[] = Object.keys(this.productoRecepcionForm.value);
+    const valores: string[] = Object.values(this.productoRecepcionForm.value);
+    llaves.map((llave, index) => {
+      if (valores[index]) {
+        this.archivo.delete(llave);
+        this.archivo.append(llave, valores[index]);
+      }
+    });
+    this.archivo.delete('imagen');
+    if (this.imagenPrinciplSeleccionada != null) {
+      this.archivo.append('imagen', this.imagenPrinciplSeleccionada);
+    }
+    if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mdrpProductosService.actualizarProducto(this.archivo, this.productoRecepcionForm.value.id).subscribe((info) => {
+        this.modalService.dismissAll();
+        this.toaster.open('Producto verificado', {type: 'success'});
+        this.obtenerProductosRecepcion();
+      });
+    }
   }
 }

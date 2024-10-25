@@ -171,7 +171,7 @@
                             (change)="obtenerCiudad()"
                             id="provinciaOrigen" formControlName="provincia">
                       <option value="" selected>- Seleccione -</option>
-                      <option value="{{provincia.nombre}}" *ngFor="let provincia of provinciaOpciones">
+                      <option [ngValue]="provincia.nombre" *ngFor="let provincia of provinciaOpciones">
                         {{ provincia.nombre }}
                       </option>
                     </select>
@@ -185,7 +185,7 @@
                     <label class="form-label" for="ciudadOrigen">Ciudad de origen de canal:</label>
                     <select class="form-control" formControlName="ciudad" id="ciudadOrigen" (change)="obtenerSector()">
                       <option value="" selected>- Seleccione -</option>
-                      <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
+                      <option [ngValue]="ciudad.nombre" *ngFor="let ciudad of ciudadOpciones">
                         {{ ciudad.nombre }}
                       </option>
                     </select>
@@ -199,7 +199,7 @@
                     <label class="form-label" for="sectorOrigen">Sector origen del canal:</label>
                     <select class="form-control" formControlName="sector" id="sectorOrigen">
                       <option value="" selected>- Seleccione -</option>
-                      <option value="{{sector.nombre}}" *ngFor="let sector of sectorOpciones">
+                      <option [ngValue]="sector.nombre" *ngFor="let sector of sectorOpciones">
                         {{ sector.nombre }}
                       </option>
                     </select>
@@ -242,7 +242,7 @@
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="descuento">Descuento a aplicar:</label>
+                    <label class="form-label" for="descuento">Descuento a aplicar para el cupón:</label>
                     <input type="text" id="descuento" class="form-control" formControlName="descuento"/>
                     <div *ngIf="f.descuento.errors" class="invalid-feedback"
                          style="display: block;">
@@ -256,7 +256,7 @@
                   </div>
                   <div class="form-group">
                     <label class="form-label">
-                      Imagen del canal
+                      Imagen de canal para impresión en cupón
                     </label>
                     <input type="file" (change)="onFileSelect($event)" accept=".jpg,.jpeg,.png"
                            style="width: 260px" formControlName="imagen_principal">

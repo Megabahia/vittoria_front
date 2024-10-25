@@ -40,7 +40,8 @@ export class ParamsListComponent implements OnInit {
   padres;
   mostrarCanales = false;
   canalOpciones;
-
+  mostrarCanalesFiltro = false;
+  buscarCanal = '';
   // @ViewChild('padres') padres;
   constructor(
     private paramService: ParamService,
@@ -89,7 +90,15 @@ export class ParamsListComponent implements OnInit {
   }
 
   async obtenerListaParametros() {
-    await this.paramService.obtenerListaParametros(this.page - 1, this.pageSize, this.tiposOpciones, this.nombreBuscar).subscribe((result) => {
+
+    if (this.tiposOpciones === 'METODO PAGO'){
+      this.mostrarCanalesFiltro = true;
+    } else {
+      this.mostrarCanalesFiltro = false;
+      this.buscarCanal = '';
+    }
+
+    await this.paramService.obtenerListaParametros(this.page - 1, this.pageSize, this.tiposOpciones, this.nombreBuscar, this.buscarCanal).subscribe((result) => {
       this.parametros = result.info;
       this.collectionSize = result.cont;
     });

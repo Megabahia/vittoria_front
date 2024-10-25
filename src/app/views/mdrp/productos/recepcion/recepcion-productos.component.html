@@ -18,7 +18,7 @@
               <div class="card-body invoice-padding pb-0">
                 <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
                   <div class="d-flex align-items-center mb-1">
-                    <span class="title mr-1">Fecha de venta:</span>
+                    <span class="title mr-1">Fecha de recepción del producto:</span>
                     <input type="text"
                            placeholder={{formatearFecha()}}
                            class="form-control invoice-edit-input date-picker"
@@ -35,13 +35,16 @@
                 <h4 class="invoice-title mb-2">Datos para el producto</h4>
                 <div class="row">
                   <div class="col-md-4 col-12">
-                    <label>Nombre artículo</label>
+                    <label>Lote artículo</label>
                     <input class="form-control" type="text"
-                           formControlName="nombre">
-                    <div *ngIf="notaRecepcionProductoForm.nombre.errors"
+                           formControlName="lote">
+                    <div *ngIf="notaRecepcionProductoForm.lote.errors"
                          class="invalid-feedback" style="display: block;">
-                      <div *ngIf="notaRecepcionProductoForm.nombre.errors.required">
+                      <div *ngIf="notaRecepcionProductoForm.lote.errors.required">
                         Requerido
+                      </div>
+                      <div *ngIf="notaRecepcionProductoForm.lote.errors.maxlength">
+                        Máximo 10 caracteres
                       </div>
                     </div>
                   </div>
@@ -57,19 +60,17 @@
                     </div>
                   </div>
                   <div class="col-md-4 col-12">
-                    <label>Lote artículo</label>
+                    <label>Nombre artículo</label>
                     <input class="form-control" type="text"
-                           formControlName="lote">
-                    <div *ngIf="notaRecepcionProductoForm.lote.errors"
+                           formControlName="nombre">
+                    <div *ngIf="notaRecepcionProductoForm.nombre.errors"
                          class="invalid-feedback" style="display: block;">
-                      <div *ngIf="notaRecepcionProductoForm.lote.errors.required">
+                      <div *ngIf="notaRecepcionProductoForm.nombre.errors.required">
                         Requerido
-                      </div>
-                      <div *ngIf="notaRecepcionProductoForm.lote.errors.maxlength">
-                        Máximo 10 caracteres
                       </div>
                     </div>
                   </div>
+
                   <div class="col-md-4 col-12">
                     <label>Cantidad</label>
                     <input class="form-control" type="text"

@@ -136,6 +136,7 @@ export class ConsultaProductosComponent implements OnInit {
         this.toaster.open(error, {type: 'danger'});
         this.codigoBarras = '';
         this.nombreProducto = '';
+        this.mostrarDatosProducto = false;
       });
     });
   }
@@ -284,6 +285,14 @@ export class ConsultaProductosComponent implements OnInit {
   generarPedido(data: any): void {
     localStorage.setItem('productoData', JSON.stringify(data));
     window.open('#/gdp/pedidos', '_blank');
+  }
+
+  calcularComision (precioProducto, porcentajeComision, valorComision) {
+    if (valorComision) {
+      return parseFloat(valorComision);
+    } else {
+      return (parseFloat(porcentajeComision) * parseFloat(precioProducto)) / 100;
+    }
   }
 
 }
