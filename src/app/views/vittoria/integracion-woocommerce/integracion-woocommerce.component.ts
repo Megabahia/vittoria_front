@@ -155,7 +155,7 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
     this.funcion = 'editar';
     await this.integracionesService.obtenerIntegracion(id).subscribe(async (result) => {
       this.paramForm.patchValue({...result});
-      this.obtenerCiudad();
+      await this.obtenerCiudad();
       this.obtenerSector();
     });
   }
