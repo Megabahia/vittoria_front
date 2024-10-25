@@ -7,7 +7,7 @@
 </div>-->
 
 <div class="card" *ngIf="mostrarContenidoPantalla">
-  <h5 class="py-1 px-2 font-weight-bold text-center">PEDIDO DESDE {{ paginaWoocommerce | uppercase }}</h5>
+  <!--<h5 class="py-1 px-2 font-weight-bold text-center">PEDIDO DESDE {{ paginaWoocommerce | uppercase }}</h5>-->
   <h2 class="py-1 px-2 font-weight-bold bg-primary mb-0 text-center">Bienvenido/a {{ currentUser.full_name }}</h2>
 </div>
 <div *ngIf="mostrarContenidoPantalla">
@@ -17,7 +17,7 @@
         <h4 class="bg-danger text-white m-5 p-2">{{ mensaje }}</h4>
       </div>
       <div class="col-12 text-center">
-        <a class="btn btn-primary m-2" href="https://superbarato.megadescuento.com">Volver
+        <a class="btn btn-primary m-2" href="{{ irCatalo }}">Volver
           a catálogo</a>
       </div>
     </div>
@@ -40,8 +40,10 @@
                 <h3 class="m-2">Tienda: {{ tienda.controls.prefijo.value }}</h3>
               </div>-->
               <div class="py-1" formArrayName="articulos">
-                <label style="font-size: small"
-                       class="text-info px-2">Pedido para la tienda: {{ tiendaProducto }}</label>
+                <label style="font-size: small; color: darkblue"
+                       class="px-2">Pedido para la tienda: {{ tiendaProducto }}</label> <br/>
+                <label style="font-size: small; color: darkblue"
+                       class="px-2">Dirección de tienda: {{ direccionProducto }}</label>
                 <div *ngFor="let articulo of tienda.get('articulos').controls; let i = index">
                   <ng-container [formGroup]="articulo">
 
@@ -615,7 +617,7 @@
   </div>
   <div class="mt-4">
     <h6 class="px-4 text-danger">Recuerde hacerle seguimiento a su cliente a través del WhatsApp o llamada, para que se acerque a retirar el pedido en el local. Su comsión se hará efectiva una vez que el cliente retire el pedido.</h6>
-    <a href="https://superbarato.megadescuento.com" class="btn btn-primary m-1">Volver a la tienda</a>
+    <a href='{{irCatalo}}' class="btn btn-primary m-1" target="_blank">Volver a la tienda</a>
     <!--<button (click)="irInicio()" class="btn btn-secondary">Inicio</button>-->
   </div>
 </div>
