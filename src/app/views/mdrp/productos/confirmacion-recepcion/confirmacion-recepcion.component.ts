@@ -157,12 +157,13 @@ export class ConfirmacionRecepcionComponent implements OnInit, AfterViewInit {
     reader.readAsDataURL(file);
   }
 
-  verificarProducto() {
+  verificarInforProducto() {
     if (this.productoRecepcionForm.invalid) {
       this.toaster.open('Llenar campos', {type: 'danger'});
       return;
     }
 
+    this.productoRecepcionForm.get('verificarProducto').setValue(1);
     const llaves: string[] = Object.keys(this.productoRecepcionForm.value);
     const valores: string[] = Object.values(this.productoRecepcionForm.value);
     llaves.map((llave, index) => {
@@ -172,7 +173,6 @@ export class ConfirmacionRecepcionComponent implements OnInit, AfterViewInit {
       }
     });
     this.archivo.delete('imagen');
-
     if (this.imagenPrinciplSeleccionada != null) {
       this.archivo.append('imagen', this.imagenPrinciplSeleccionada);
     }

@@ -149,6 +149,7 @@
             <thead class="thead-light">
             <tr>
               <th>Nombre de la tienda</th>
+              <th>Enlace de la tienda</th>
               <th>Ciudad</th>
               <th>Dirección</th>
               <th>Hora de atención</th>
@@ -160,6 +161,7 @@
 
             <tbody>
             <tr *ngFor="let item  of totalProductosEnOrigen; let i = index">
+              <td>{{ item.integracion_canal.nombre }}</td>
               <td>{{ item.canal | shorten }}</td>
               <td>{{ item.integracion_canal.ciudad }}</td>
               <td>{{ item.integracion_canal.descripcion_direccion }}</td>
@@ -405,7 +407,7 @@
   </ng-template>-->
   <div class="row d-flex justify-content-center">
     <div class="col-md-3">
-      <a href="https://superbarato.megadescuento.com" class="btn btn-primary m-1" target="_blank">Click aquí para regresar al catálogo para hacer el pedido</a>
+      <a href="https://contraentrega.megadescuento.com" class="btn btn-primary m-1" target="_blank">Click aquí para regresar al catálogo para hacer el pedido</a>
       <!--<button class="btn btn-secondary" (click)="cerrarSesion()">Cerrar</button>-->
     </div>
   </div>
