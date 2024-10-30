@@ -20,16 +20,21 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-
     if (route.routeConfig.path === 'consulta/producto') {
+      localStorage.removeItem('pedidosWoocommerceUsuario');
       localStorage.setItem('consultaProducto', JSON.stringify('Consultar productos'));
+    } else if (route.routeConfig.path === 'pedidos/woocommerce') {
+      localStorage.removeItem('consultaProducto');
+      localStorage.setItem('pedidosWoocommerceUsuario', JSON.stringify('Consulta de pedidos por usuario'));
     } else {
+      localStorage.removeItem('pedidosWoocommerceUsuario');
       localStorage.removeItem('consultaProducto');
       localStorage.setItem('paginaExterna', JSON.stringify('Desde página externa'));
     }
 
     if (Object.keys(route.queryParams).length > 0) {
       localStorage.removeItem('consultaProducto');
+      localStorage.removeItem('pedidosWoocommerceUsuario');
       localStorage.removeItem('paginaExterna');
       localStorage.setItem('productosWoocommerce', JSON.stringify(route.queryParams));
     }

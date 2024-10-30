@@ -92,6 +92,9 @@ export class PedidosWoocommerceComponent implements OnInit, AfterViewInit {
       navbar.style.display = 'none';
       toolbar.style.display = 'none';
     }
+
+    localStorage.removeItem('pedidosWoocommerceUsuario');
+
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
     this.currentUser = this.authService.currentUserValue;

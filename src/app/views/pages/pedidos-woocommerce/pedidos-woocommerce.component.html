@@ -2,7 +2,9 @@
   <div class="card-header p-0 bg-primary d-flex justify-content-center">
     <h2 class="p-1">Pedidos desde Woocommerce</h2>
   </div>
-  <h6 class="text-center pt-1 px-5">Bienvenid@ {{ currentUser.full_name }}, los pedidos que usted ha realizado se muestran en la tabla junto con su comisión. Recuerde que su comisión se hará efectiva luego de que el cliente haya retirado su pedido</h6>
+  <h6 class="text-center pt-1 px-5">Bienvenid@ {{ currentUser.full_name }}, los pedidos que usted ha realizado se
+    muestran en la tabla junto con su comisión. Recuerde que su comisión se hará efectiva luego de que el cliente haya
+    retirado su pedido</h6>
 </div>
 <div class="card">
   <div class="card-datatable table-responsive pt-0 px-2">
@@ -62,7 +64,9 @@
   </div>
   <ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
                   [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true " class="px-2"></ngb-pagination>
-
+  <div class="d-flex justify-content-center mt-2">
+    <button class="btn btn-secondary" (click)="cerrarSesion()">Cerrar</button>
+  </div>
   <ng-template #notaPedidoModal let-modal>
     <div class="modal-header">
       <h4 class="modal-title">Pedido</h4>
