@@ -214,7 +214,7 @@ export class PedidoTodomegacentroComponent implements OnInit, AfterViewInit {
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
       estado: ['Pendiente'],
-      canal: 'todomegacentro.megadescuento.com',
+      canal: ['todomegacentro.megadescuento.com'],
       gestion_pedido: 'local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;

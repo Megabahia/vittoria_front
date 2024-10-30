@@ -159,6 +159,7 @@
                     <div *ngIf="f.prefijo.errors" class="invalid-feedback"
                          style="display: block;">
                       <div *ngIf="f.prefijo.errors.required">Prefijo es requerido</div>
+                      <div *ngIf="f.prefijo.errors.maxlength">Máximo 4 caractéres</div>
                     </div>
                   </div>
                   <div class="form-group">

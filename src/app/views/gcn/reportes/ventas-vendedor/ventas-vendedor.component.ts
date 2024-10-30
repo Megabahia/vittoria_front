@@ -251,7 +251,7 @@ export class VentasVendedorComponent implements OnInit, AfterViewInit {
       fin: this.transformarFecha(this.fin),
       codigoVendedor: this.usuario.usuario.username,
       rol: this.usuario.usuario.idRol,
-      canal: 'Contacto Local'
+      canal: ['Contacto Local']
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info.map((item) => {

@@ -161,7 +161,6 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   }
 
   async gestionarParametro(): Promise<void> {
-
     if (this.paramForm.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
@@ -182,6 +181,9 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
       }
     });
 
+    this.archivo.delete('bodega_central');
+    this.archivo.delete('despachos_omniglobal');
+
     if (this.imagenPrinciplSeleccionada != null) {
       this.archivo.delete('imagen_principal');
       this.archivo.append('imagen_principal', this.imagenPrinciplSeleccionada);
@@ -189,7 +191,6 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
 
     this.cargando = true;
     if (this.funcion === 'insertar') {
-
       await this.integracionesService.insertarIntegracion(this.archivo).subscribe((result) => {
           this.obtenerListaParametros();
           this.dismissModal.nativeElement.click();

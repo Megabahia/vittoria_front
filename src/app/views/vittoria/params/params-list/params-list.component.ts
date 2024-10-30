@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {NgbPagination, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ParamService as AdmParamService, ParamService} from 'src/app/services/admin/param.service';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {IntegracionesService} from "../../../../services/admin/integraciones.service";
 
 @Component({
   selector: 'app-params-list',
@@ -42,16 +43,25 @@ export class ParamsListComponent implements OnInit {
   canalOpciones;
   mostrarCanalesFiltro = false;
   buscarCanal = '';
+
   // @ViewChild('padres') padres;
   constructor(
     private paramService: ParamService,
     private modalService: NgbModal,
     private _formBuilder: FormBuilder,
     private paramServiceAdm: AdmParamService,
+    private integracionesService: IntegracionesService
   ) {
-    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar).subscribe((result) => {
+    this.integracionesService.obtenerListaIntegraciones({
+      page: this.page,
+      page_size: this.pageSize
+    }).subscribe((result) => {
       this.canalOpciones = result.data;
     });
+
+    /*this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar).subscribe((result) => {
+      this.canalOpciones = result.data;
+    });*/
   }
 
   get f() {
@@ -91,7 +101,7 @@ export class ParamsListComponent implements OnInit {
 
   async obtenerListaParametros() {
 
-    if (this.tiposOpciones === 'METODO PAGO'){
+    if (this.tiposOpciones === 'METODO PAGO') {
       this.mostrarCanalesFiltro = true;
     } else {
       this.mostrarCanalesFiltro = false;

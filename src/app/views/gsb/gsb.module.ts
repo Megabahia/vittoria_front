@@ -36,6 +36,7 @@ import {GdRegistroAsesoresComponent} from './gd_asesores_comerciales/registro_as
 import {
   GdCargarSaldoBilleteraDigitalComponent
 } from "./gd_asesores_comerciales/billetera_digital/cargar-saldo/gd_cargar_saldo_billetera_digital.component";
+import {GdPedidosWoocommerceComponent} from "./gd_pedidos_woocommerce/gd-pedidos-woocommerce.component";
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import {
     GdAsesoresConfirmadosComponent,
     GdBilleteraDigitalAsesoresComponent,
     GdRegistroAsesoresComponent,
-    GdCargarSaldoBilleteraDigitalComponent
+    GdCargarSaldoBilleteraDigitalComponent,
+    GdPedidosWoocommerceComponent
   ],
   exports: [
     GsbProductosListarComponent

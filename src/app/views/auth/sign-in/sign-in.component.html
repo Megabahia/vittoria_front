@@ -56,8 +56,8 @@
 
                 </div>
                 <div class="py-1" *ngIf="mostrarRegistroAsesor">
-                  <label>Si usted no es vendedor/a o asesor/a, porfavor regístrese <a
-                    href="#/pages/registro/asesores" target="_blank">Aquí</a></label>
+                  <label style="background-color: #090D22" class="text-white p-1 rounded-sm">Si usted no es vendedor/a o asesor/a, porfavor regístrese <a
+                    href="#/pages/registro/asesores" target="_blank" class="text-warning"> Aquí</a></label>
                 </div>
                 <div class="form-group">
                   <div class="d-flex justify-content-center">
@@ -95,16 +95,16 @@
   </div>
 </div>
 <ng-template #errorAuth let-modal>
-  <div class="modal-header ">
-    <h4 class="modal-title ">Error</h4>
-    <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-      <span aria-hidden="true ">&times;</span>
+  <div class="modal-header">
+    <h4 class="modal-title">Error</h4>
+    <button type="button" class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
+      <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body ">
     <p>No puede iniciar sesión con las credenciales proporcionadas.</p>
   </div>
   <div class="modal-footer ">
-    <button type="button " class="btn btn-light " (click)="cerrarModal()">Cerrar</button>
+    <button type="button" class="btn btn-light " (click)="cerrarModal()">Cerrar</button>
   </div>
 </ng-template>

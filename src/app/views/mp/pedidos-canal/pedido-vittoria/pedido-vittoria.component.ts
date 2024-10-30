@@ -214,7 +214,7 @@ export class PedidoVittoriaComponent implements OnInit, AfterViewInit {
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
       estado: ['Pendiente'],
-      canal: 'vittoria-test.netlify.app',
+      canal: ['vittoria-test.netlify.app'],
       gestion_pedido: 'local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;

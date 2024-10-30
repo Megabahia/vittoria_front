@@ -159,7 +159,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       verificarPedido: [true, [Validators.required]],
       canal: ['', []],
       comprobanteVendedorGmb: [''],
-      nombreEnvio: ['']
+      nombreEnvio: [''],
+      comision: [''],
     });
   }
 
@@ -209,7 +210,10 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       canal: [''],
       woocommerceId: [''],
       observaciones: ['', [Validators.maxLength(40)]],
-      imagen_principal: ['', [Validators.required]]
+      imagen_principal: ['', [Validators.required]],
+      porcentaje_comision: [0],
+      valor_comision: [0],
+      monto_comision: [0]
     });
   }
 
@@ -317,6 +321,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
                 this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
                 this.detallesArray.controls[i].get('imagen_principal').setValue(info?.imagen_principal);
                 this.detallesArray.controls[i].get('bodega').setValue(param[0].nombre);
+                this.detallesArray.controls[i].get('valor_comision').setValue(info.valor_comision);
+                this.detallesArray.controls[i].get('porcentaje_comision').setValue(info.porcentaje_comision);
                 if (info.canal !== '') {
                   this.detallesArray.controls[i].get('canal').setValue(info.canal)
                 } else {
@@ -361,6 +367,9 @@ export class PedidosComponent implements OnInit, AfterViewInit {
             this.detallesArray.controls[i].get('cantidad').setValidators([
               Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
             ]);
+            this.detallesArray.controls[i].get('valor_comision').setValue(info.valor_comision);
+            this.detallesArray.controls[i].get('porcentaje_comision').setValue(info.porcentaje_comision);
+
             this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
             this.calcular();
             resolve();
@@ -383,6 +392,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   calcular(): void {
     const detalles = this.detallesArray.controls;
     let total = 0;
+    let comisionTotal = 0;
+    let comision = 0;
     let subtotalPedido = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
@@ -395,13 +406,24 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       } else {
         detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       }
+
+      //COMISION
+      if (!detalles[index].get('valor_comision').value) {
+        comision = (detalles[index].get('porcentaje_comision').value * detalles[index].get('precio').value) / 100;
+      } else {
+        comision = detalles[index].get('valor_comision').value * cantidad;
+      }
+      detalles[index].get('monto_comision').setValue((comision).toFixed(2));
+      comisionTotal += parseFloat(detalles[index].get('monto_comision').value);
+
       total += parseFloat(detalles[index].get('precio').value);
     });
-    total += parseFloat(this.notaPedido.get('envioTotal').value);
+    total += this.notaPedido.get('envioTotal').value;
     subtotalPedido = total / this.parametroIva;
     this.totalIva = (total - subtotalPedido).toFixed(2);
     this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
     this.notaPedido.get('total').setValue(total.toFixed(2));
+    this.notaPedido.get('comision').setValue(comisionTotal.toFixed(2));
   }
 
   async actualizar(): Promise<void> {

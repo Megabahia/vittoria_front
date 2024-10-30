@@ -30,6 +30,7 @@ import {GdAsesoresConfirmadosComponent} from './gd_asesores_comerciales/confirma
 import {
   GdCargarSaldoBilleteraDigitalComponent
 } from "./gd_asesores_comerciales/billetera_digital/cargar-saldo/gd_cargar_saldo_billetera_digital.component";
+import {GdPedidosWoocommerceComponent} from "./gd_pedidos_woocommerce/gd-pedidos-woocommerce.component";
 
 const routes: Routes = [{
   path: '', component: GsbComponent, children: [
@@ -38,6 +39,9 @@ const routes: Routes = [{
     },
     {
       path: 'gd_consulta_productos', component: GdConsultaProductosComponent, canActivate: [AuthGuard],
+    },
+    {
+      path: 'reporte/pedidos/woocommerce', component: GdPedidosWoocommerceComponent, canActivate: [AuthGuard],
     },
     {
       path: 'pedido_woocommerce/crear', component: CrearPedidoWoocomerceComponent, canActivate: [AuthGuard],
