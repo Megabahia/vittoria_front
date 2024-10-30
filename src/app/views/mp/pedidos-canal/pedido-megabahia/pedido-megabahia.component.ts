@@ -214,7 +214,7 @@ export class PedidoMegabahiaComponent implements OnInit, AfterViewInit {
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
       estado: ['Pendiente'],
-      canal: 'megabahia.megadescuento.com',
+      canal: ['megabahia.megadescuento.com'],
       gestion_pedido: 'local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;

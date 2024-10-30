@@ -28,6 +28,8 @@ export class ManagementComponent implements OnInit, OnDestroy {
       modulo: 'adm',
       seccion: 'index'
     };
+
+    localStorage.removeItem('paginaExterna');
   }
 
   ngOnDestroy(): void {

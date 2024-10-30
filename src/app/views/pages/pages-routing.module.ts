@@ -6,6 +6,7 @@ import {PedidoWoocomerceComponent} from './pedido-woocomerce/pedido-woocomerce.c
 import {ConsultaProductosComponent} from './consulta-productos/consulta-productos.component';
 import {RegistroAsesoresComponent} from './registro-asesores/registro-asesores.component';
 import {AuthGuard} from "../../guard/auth.guard";
+import {PedidosWoocommerceComponent} from "./pedidos-woocommerce/pedidos-woocommerce.component";
 
 const routes: Routes = [
   {
@@ -26,6 +27,11 @@ const routes: Routes = [
   {
     path: 'consulta/producto',
     component: ConsultaProductosComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'pedidos/woocommerce',
+    component: PedidosWoocommerceComponent,
     canActivate: [AuthGuard],
   },
   {

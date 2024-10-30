@@ -206,7 +206,7 @@ export class BodegaComponent implements OnInit, AfterViewInit {
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
       bodega: this.bodegaSeleccionada,
-      estado: 'Autorizado'
+      estado: ['Autorizado']
     }).subscribe((info) => {
       this.listaTransacciones = info;
     });

@@ -2,24 +2,27 @@ import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core'
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {Color, Label} from 'ng2-charts';
 import {DatePipe} from '@angular/common';
-import {PedidosService} from '../../../../../services/mp/pedidos/pedidos.service';
-import {ParamService} from '../../../../../services/mp/param/param.service';
-import {ParamService as ParamServiceAdm} from '../../../../../services/admin/param.service';
+import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
+import {ParamService} from '../../../services/mp/param/param.service';
+import {ParamService as ParamServiceAdm} from '../../../services/admin/param.service';
 
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
-import {ProductosService} from '../../../../../services/mdp/productos/productos.service';
+import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
-import {ContactosService} from '../../../../../services/gdc/contactos/contactos.service';
-import {ValidacionesPropias} from "../../../../../utils/customer.validators";
+import {v4 as uuidv4} from 'uuid';
+
+import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
+import {ValidacionesPropias} from "../../../utils/customer.validators";
+import {AuthService} from "../../../services/admin/auth.service";
+import {IntegracionesService} from "../../../services/admin/integraciones.service";
 
 @Component({
-  selector: 'app-contacto',
-  templateUrl: './pedidos-entrega-local.component.html',
-  styleUrls: ['pedidos-entrega-local.component.css'],
+  selector: 'app-gd-pedidos-woocommerce',
+  templateUrl: './pedidos-woocommerce.component.html',
   providers: [DatePipe]
 })
-export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
+export class PedidosWoocommerceComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @Input() paises;
   public notaPedido: FormGroup;
@@ -43,14 +46,10 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
   provinciaOpciones;
   verificarContacto = false;
   whatsapp = '';
-  nombre = '';
-  apellido = ''
-  numPedido = ''
+  correo = ''
   mostrarInputComprobante = false;
   mostrarCargarArchivo = false;
   mostrarInputTransaccion = false;
-  mostrarCargarArchivoCredito = false;
-  mostrarInputTransaccionCredito = false;
   mostrarInputCobro = false;
   fileToUpload: File | null = null;
   totalPagar;
@@ -59,14 +58,8 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
   cliente;
   cedula;
   factura;
-  totalIva;
   parametroIva;
-  canalSeleccionado = '';
-  listaCanalesProducto;
-  selectFormaPago;
-  formasPago = [];
-  totalFormaPago = 0;
-  canal = '';
+  totalIva;
   canalOpciones;
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -78,41 +71,49 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
   archivo: FormData = new FormData();
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
-  canalPrincipal = '';
+  currentUser;
 
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
+    private datePipe: DatePipe,
+    private pedidosService: PedidosService,
     private contactosService: ContactosService,
     private paramService: ParamService,
     private paramServiceAdm: ParamServiceAdm,
     private productosService: ProductosService,
+    private authService: AuthService,
     private toaster: Toaster,
+    private integracionesService: IntegracionesService,
   ) {
+    const navbar = document.getElementById('navbar');
+    const toolbar = document.getElementById('toolbar');
+    if (navbar && toolbar) {
+      navbar.style.display = 'none';
+      toolbar.style.display = 'none';
+    }
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
-    this.facturarForm = this.formBuilder.group({
-      id: ['', [Validators.required]],
-      metodoConfirmacion: ['', [Validators.required]],
-      codigoConfirmacion: ['', [Validators.required]],
-      fechaHoraConfirmacion: ['', [Validators.required]],
-      tipoFacturacion: ['', [Validators.required]],
-    });
-    this.rechazoForm = this.formBuilder.group({
-      id: ['', [Validators.required]],
-      motivo: ['', [Validators.required]],
-      estado: ['Rechazado', [Validators.required]],
-      fechaPedido: ['', [Validators.required]],
-    });
-
+    this.currentUser = this.authService.currentUserValue;
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
       this.parametroIva = parseFloat(result.info[0].valor);
     });
 
-    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', '').subscribe((result) => {
+    this.integracionesService.obtenerListaIntegraciones({
+      page: this.page,
+      page_size: this.pageSize
+    }).subscribe((result) => {
       this.canalOpciones = result.data;
     });
 
+    if (this.currentUser.usuario.idRol !== 1 && this.currentUser.usuario.idRol !== 63){
+      this.cerrarSesion();
+      this.toaster.open('No tiene permisos para ingresar a la página', {type: 'info'});
+    }
+  }
+
+  cerrarSesion(): void {
+    this.authService.signOut();
   }
 
   ngOnInit(): void {
@@ -122,13 +123,13 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
     };
     this.barChartData = [this.datosTransferencias];
     this.obtenerOpciones();
-    //this.obtenerProvincias();
-    //this.obtenerCiudad();
+    this.obtenerProvincias();
+    this.obtenerCiudad();
   }
 
   ngAfterViewInit(): void {
     this.iniciarPaginador();
-    this.obtenerContactos();
+    this.obtenerListaPedidos();
 
   }
 
@@ -145,11 +146,11 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
         pais: [this.pais, [Validators.required]],
         provincia: ['', [Validators.required]],
         ciudad: ['', [Validators.required]],
-        //callePrincipal: ['', [Validators.required]],
-        //numero: ['', [Validators.required]],
-        //calleSecundaria: ['', [Validators.required]],
-        //referencia: ['', [Validators.required]],
-        //gps: ['', []],
+        callePrincipal: [''],
+        numero: [''],
+        calleSecundaria: [''],
+        referencia: [''],
+        gps: ['', []],
         codigoVendedor: ['', []],
         nombreVendedor: ['', []],
         comprobantePago: ['', []],
@@ -181,7 +182,7 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
 
   iniciarPaginador(): void {
     this.paginator.pageChange.subscribe(() => {
-      this.obtenerContactos();
+      this.obtenerListaPedidos();
     });
   }
 
@@ -239,27 +240,44 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
     this.calcular();
   }
 
-  obtenerContactos(): void {
-    this.contactosService.obtenerListaContactos({
+  obtenerListaPedidos(): void {
+    this.pedidosService.obtenerListaPedidos({
       page: this.page - 1,
       page_size: this.pageSize,
-      //inicio: this.inicio,
-      //fin: this.transformarFecha(this.fin),
-      estado: ['Pendiente de retiro'],
-      canal: this.canal,
+      usuarioVendedor: this.currentUser.usuario.idRol === 1 ? '' : this.currentUser.usuario.username,
+      canal: ['superbarato.megadescuento.com', 'contraentrega.megadescuento.com']
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaContactos = info.info;
     });
   }
 
-  obtenerContacto(modal, id): void {
-    this.totalFormaPago = 0;
-    this.obtenerProvincias();
-    this.obtenerListaProductos();
+  obtenerPedido(modal, id): void {
+
     this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
+    this.pedidosService.obtenerPedido(id).subscribe((info) => {
+
+      this.totalPagar = info.total;
+      this.iniciarNotaPedido();
+
+      info.articulos.map((item): void => {
+        this.agregarItem();
+      });
+      this.notaPedido.patchValue({...info, verificarPedido: true});
+      this.obtenerCiudad();
+      this.calcular();
+    });
+  }
+
+
+  transformarFecha(fecha): string {
+    return this.datePipe.transform(fecha, 'yyyy-MM-dd');
+  }
+
+  obtenerContacto(modal, id): void {
+    this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
     this.contactosService.obtenerContacto(id).subscribe((info) => {
-      /*if (info.tipoPago === 'rimpePopular') {
+      if (info.tipoPago === 'rimpePopular') {
         this.mostrarInputComprobante = true;
       } else if (info.tipoPago === 'facturaElectronica') {
         this.mostrarInputComprobante = false;
@@ -275,37 +293,20 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
         this.mostrarInputTransaccion = false;
         this.mostrarCargarArchivo = false;
         this.mostrarInputCobro = true;
-      } else {*/
-      this.mostrarInputComprobante = false;
-      this.mostrarInputTransaccion = false;
-      this.mostrarCargarArchivo = false;
-      this.mostrarInputCobro = false;
-      this.mostrarCargarArchivoCredito = false;
-      this.mostrarInputTransaccionCredito = false;
-      this.formasPago = [];
-      //}
-
-      this.provincia = info.facturacion.provincia;
-      this.obtenerCiudad();
-
+      } else {
+        this.mostrarInputTransaccion = false;
+        this.mostrarCargarArchivo = false;
+        this.mostrarInputCobro = false;
+      }
       this.totalPagar = info.total;
       this.iniciarNotaPedido();
       this.horaPedido = this.extraerHora(info.created_at);
-
-      this.canalPrincipal = info.articulos[0].canal;
-      this.canalSeleccionado = this.canalPrincipal;
 
       info.articulos.map((item): void => {
         this.agregarItem();
       });
       this.notaPedido.patchValue({...info, verificarPedido: true});
-      if (modal._declarationTContainer.localNames[0] === 'facturacionModal') {
-        this.notaPedido.get('formaPago').setValidators([Validators.required]);
-        this.notaPedido.get('formaPago').updateValueAndValidity();
-        this.notaPedido.get('tipoPago').setValidators([Validators.required]);
-        this.notaPedido.get('tipoPago').updateValueAndValidity();
-      }
-      this.calcular();
+
     });
   }
 
@@ -321,24 +322,27 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
     });
   }
 
-  obtenerListaProductos(): void {
-    this.productosService.obtenerListaProductos(
-      {
-        page: this.page - 1,
-        page_size: this.pageSize,
-        nombre: '',
-        codigoBarras: '',
-      }
-    ).subscribe((info) => {
-      this.listaCanalesProducto = info.canal
-    });
+  async guardarPorContacto(): Promise<void> {
+    await Promise.all(this.detallesArray.controls.map((producto, index) => {
+      return this.obtenerProducto(index);
+    }));
+    if (confirm('Esta seguro de guardar los datos') === true) {
+      this.contactosService.crearNuevoContacto(this.notaPedido.value).subscribe((info) => {
+          this.modalService.dismissAll();
+          this.obtenerListaPedidos();
+          this.mostrarInputTransaccion = false;
+          this.mostrarCargarArchivo = false;
+          this.mostrarInputCobro = false;
+          this.mostrarInputComprobante = false;
+        }, error => this.toaster.open(error, {type: 'danger'})
+      );
+    }
   }
 
   async obtenerProducto(i): Promise<void> {
     return new Promise((resolve, reject) => {
-      const data = {
+      let data = {
         codigoBarras: this.detallesArray.value[i].codigo,
-        canalProducto: this.canalSeleccionado,
         canal: this.notaPedido.value.canal,
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
@@ -349,18 +353,13 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
           this.detallesArray.controls[i].get('id').setValue(info.id);
           this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
-          this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
-          const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
+          const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value) || info.precioVentaA;
           this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
           this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
           this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
-          this.detallesArray.controls[i].get('imagen_principal').setValue(info?.imagen_principal);
-          this.detallesArray.controls[i].get('canal').setValue(info.canal)
-          this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
           this.detallesArray.controls[i].get('cantidad').setValidators([
             Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
           ]);
-
           this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
           this.calcular();
           resolve();
@@ -373,7 +372,7 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
           this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
           window.alert('Existen inconsistencias con los precios de los productos.');
         }*/
-      }, error => this.toaster.open(error, {type: 'danger'}));
+      });
     });
   }
 
@@ -415,11 +414,10 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
 
   }
 
-
   async actualizar(): Promise<void> {
-    /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
+    await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
-    }));*/
+    }));
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
@@ -428,27 +426,27 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
       const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
       facturaFisicaLlaves.map((llaves, index) => {
-        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago' && llaves !== 'facturacion' && llaves !== 'articulos' && llaves !== 'envio') {
+        if (facturaFisicaValores[index] && llaves !== 'archivoMetodoPago' && llaves !== 'facturacion' && llaves !== 'articulos') {
           this.archivo.delete(llaves);
           this.archivo.append(llaves, facturaFisicaValores[index]);
         }
       });
       this.archivo.append('estado', 'Entregado');
-      this.archivo.append('formaPago', JSON.stringify(this.formasPago));
-      if (this.mostrarInputCobro || this.mostrarInputTransaccion || this.mostrarInputTransaccionCredito) {
-        if (Number(this.totalPagar) !== Number(this.totalFormaPago)) {
+
+      if (this.mostrarInputCobro) {
+        if (Number(this.totalPagar) !== Number(this.notaPedido.value.totalCobroEfectivo)) {
           this.toaster.open('El precio total ingresado no coincide', {type: 'danger'})
         } else {
           this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
             this.modalService.dismissAll();
-            this.obtenerContactos();
+            this.obtenerListaPedidos();
             this.verificarContacto = true;
-          }, error => this.toaster.open(error, {type: 'danger'}));
+          }, error => this.toaster.open(error, {type: 'danger'}))
         }
       } else {
         this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
           this.modalService.dismissAll();
-          this.obtenerContactos();
+          this.obtenerListaPedidos();
           this.verificarContacto = true;
         }, error => this.toaster.open(error, {type: 'danger'}))
       }
@@ -456,20 +454,11 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
     }
   }
 
-  calcularTotalFormaPago() {
-    this.totalFormaPago = parseFloat(this.notaPedido.value.totalCobroEfectivo || 0) + parseFloat(this.notaPedido.value.montoCredito || 0) + parseFloat(this.notaPedido.value.montoTransferencia || 0);
-  }
-
 
   async actualizarContacto(): Promise<void> {
-    //await Promise.all(this.detallesArray.controls.map((producto, index) => {
-   //   return this.obtenerProducto(index);
-    //}));
-    console.log(this.notaPedido)
-    if (this.notaPedido.invalid) {
-      this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
-      return;
-    }
+    await Promise.all(this.detallesArray.controls.map((producto, index) => {
+      return this.obtenerProducto(index);
+    }));
     if (confirm('Esta seguro de guardar los datos') === true) {
       if (this.notaPedido.invalid) {
         this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
@@ -478,7 +467,7 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
 
       this.contactosService.actualizarContacto(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
-        this.obtenerContactos();
+        this.obtenerListaPedidos();
         this.verificarContacto = true;
       }, error => this.toaster.open(error, {type: 'danger'}))
     }
@@ -530,7 +519,7 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
   }
 
   obtenerCiudad(): void {
-    this.paramServiceAdm.obtenerListaHijos(this.provincia, 'PROVINCIA').subscribe((info) => {
+    this.paramServiceAdm.obtenerListaHijos(this.notaPedido.value.facturacion.provincia, 'PROVINCIA').subscribe((info) => {
       this.ciudadOpciones = info;
     });
   }
@@ -542,93 +531,35 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
 
   onSelectChange(event: any) {
     const selectedValue = event.target.value;
-    if (selectedValue === 'rimpePopular' || selectedValue === 'facturaElectronicaMegaBahia') {
+    if (selectedValue === 'rimpePopular') {
       this.mostrarInputComprobante = true;
     } else {
       this.mostrarInputComprobante = false;
     }
   }
 
-  onSelectChangeIdentificacion(event: any) {
-    const selectedValue = event.target.value;
-    if (selectedValue === 'cedula') {
-      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
-        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.cedulaValido]
-      );
-      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
-    } else if (selectedValue === 'ruc') {
-      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
-        [Validators.required, Validators.pattern('^[0-9]*$'), ValidacionesPropias.rucValido]
-      )
-      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
-    } else {
-      this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators(
-        [Validators.required, Validators.minLength(5)]
-      )
-      this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
-    }
-  }
-
-  agregarFormaPago(): void {
-
-    if (!this.formasPago.includes(this.selectFormaPago)) {
-      this.formasPago.push(this.selectFormaPago);
-    }
-
-    switch (this.selectFormaPago) {
-      case 'transferencia':
-        this.mostrarInputTransaccion = true;
-        this.mostrarCargarArchivo = true;
-        //this.notaPedido.get('archivoFormaPago').setValidators([Validators.required]);
-        //this.notaPedido.get('archivoFormaPago').updateValueAndValidity();
-        this.notaPedido.get('numTransaccionTransferencia').setValidators([Validators.required]);
-        this.notaPedido.get('numTransaccionTransferencia').updateValueAndValidity();
-        this.notaPedido.get('montoTransferencia').setValidators([Validators.required, Validators.pattern('^\\d+(\\.\\d+)?$')]);
-        this.notaPedido.get('montoTransferencia').updateValueAndValidity();
-        //this.mostrarInputCobro = false;
-        break;
-      case 'efectivo':
-        //this.mostrarInputTransaccion = false;
-        //this.mostrarCargarArchivo = false;
-        this.mostrarInputCobro = true;
-        this.notaPedido.get('totalCobroEfectivo').setValidators([Validators.required, Validators.pattern('^\\d+(\\.\\d+)?$')]);
-        this.notaPedido.get('totalCobroEfectivo').updateValueAndValidity();
-
-        break;
-      case 'tarjeta_credito':
-        this.mostrarInputTransaccionCredito = true;
-        this.mostrarCargarArchivoCredito = true;
-        //this.notaPedido.get('archivoFormaPagoCredito').setValidators([Validators.required]);
-        //this.notaPedido.get('archivoFormaPagoCredito').updateValueAndValidity();
-        this.notaPedido.get('numTransaccionCredito').setValidators([Validators.required]);
-        this.notaPedido.get('numTransaccionCredito').updateValueAndValidity();
-        this.notaPedido.get('montoCredito').setValidators([Validators.required, Validators.pattern('^\\d+(\\.\\d+)?$')]);
-        this.notaPedido.get('montoCredito').updateValueAndValidity();
-        //this.mostrarInputCobro = false;
-        break;
-      default:
-        console.log('Seleccione una forma de pago válida');
-    }
-  }
-
   onSelectChangeFormaPago(event: any) {
-    this.selectFormaPago = event.target.value;
+    const selectedValue = event.target.value;
+    if (selectedValue === 'transferencia') {
+      this.mostrarInputTransaccion = true;
+      this.mostrarCargarArchivo = true;
+      this.mostrarInputCobro = false;
+
+    } else if (selectedValue === 'efectivo') {
+      this.mostrarInputTransaccion = false;
+      this.mostrarCargarArchivo = false;
+      this.mostrarInputCobro = true;
+    } else {
+      this.mostrarInputTransaccion = false;
+      this.mostrarCargarArchivo = false;
+      this.mostrarInputCobro = false;
+    }
   }
 
   onFileSelected(event: any): void {
-    if (this.mostrarCargarArchivo) {
-      this.archivo.append('archivoFormaPago', event.target.files.item(0), event.target.files.item(0).name);
-    } else {
-      this.archivo.delete('archivoFormaPago');
-    }
-  }
-
-  onFileSelectedTarjeta(event: any): void {
-    if (this.mostrarCargarArchivoCredito) {
-      this.archivo.append('archivoFormaPagoCredito', event.target.files.item(0), event.target.files.item(0).name);
-    } else {
-      this.archivo.delete('archivoFormaPagoCredito');
-    }
+    this.archivo.delete('archivoFormaPago');
+    this.archivo.append('archivoFormaPago', event.target.files.item(0), event.target.files.item(0).name);
+    // this.fileToUpload = event.target.files.item(0);
   }
 
   guardarComprobanteTransferencia(): void {
@@ -636,6 +567,22 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
       const formData = new FormData();
       formData.append('archivoFormaPago', this.fileToUpload, this.fileToUpload.name);
     }
+  }
+
+  guardarArchivoTransaccion() {
+    if (this.archivo) {
+      const formData = new FormData();
+      formData.append('archivoFormaPago', 'asjfasijfnaskfjasfiasn');
+      formData.append('id', '555555');
+      //this.contactosService.actualizarVentaFormData(formData)
+      //  .subscribe(() => {
+      //    this.modalService.dismissAll();
+      //  });
+
+    } else {
+      console.error('No se ha seleccionado ningún archivo.');
+    }
+
   }
 
   cargarImagen(i, event: any): void {
@@ -647,18 +594,17 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         const nuevaImagen = e.target.result;
-        this.detallesArray.controls[i].get('imagen_principal').setValue(nuevaImagen);
-        this.datosProducto.append('imagen_principal', archivo)
-        //this.datosProducto.append('imagenes[' + 0 + ']id', '0');
-        //this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
+        this.detallesArray.controls[i].get('imagen').setValue(nuevaImagen);
+        this.datosProducto.append('imagenes[' + 0 + ']id', '0');
+        this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
         this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
-        this.datosProducto.append('canal', this.detallesArray.controls[i].get('canal').value);
+
         try {
           this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
-            this.toaster.open('Imagen actualizada con éxito', {type: 'info'});
-          }, error => this.toaster.open('Error al actualizar la imagen.', {type: 'danger'}));
+            this.toaster.open('Imagen actualizada con éxito', {type: "info"});
+          }, error => this.toaster.open('Error al actualizar la imagen.', {type: "danger"}));
         } catch (error) {
-          this.toaster.open('Error al actualizar la imagen.', {type: 'danger'});
+          this.toaster.open('Error al actualizar la imagen.', {type: "danger"});
         }
       };
       reader.readAsDataURL(archivo);
@@ -669,69 +615,6 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
   extraerHora(dateTimeString: string): string {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(' ')[0];
-  }
-
-  extraerPrecios(info: any) {
-    const precios = [];
-    Object.keys(info).forEach(clave => {
-      if (clave.startsWith('precioVenta')) {
-        precios.push({clave: clave, valor: info[clave]});
-      }
-    });
-    return precios;
-  }
-
-  quitarPagoTransferencia() {
-    this.eliminarDatoArregloFormaPago('transferencia');
-    this.archivo.delete('archivoFormaPago');
-    this.notaPedido.get('numTransaccionTransferencia').setValue('');
-    this.notaPedido.get('montoTransferencia').setValue(0);
-    this.notaPedido.get('numTransaccionTransferencia').setValidators([]);
-    this.notaPedido.get('numTransaccionTransferencia').updateValueAndValidity();
-    this.notaPedido.get('montoTransferencia').setValidators([]);
-    this.notaPedido.get('montoTransferencia').setValue(0);
-    this.notaPedido.get('montoTransferencia').updateValueAndValidity();
-    this.calcularTotalFormaPago();
-    this.mostrarCargarArchivo = false;
-    this.mostrarInputTransaccion = false;
-  }
-
-  quitarPagoCredito() {
-    this.eliminarDatoArregloFormaPago('tarjeta_credito');
-    this.mostrarCargarArchivoCredito = false;
-    this.archivo.delete('archivoFormaPagoCredito');
-    this.notaPedido.get('montoCredito').setValue(0);
-    this.notaPedido.get('numTransaccionCredito').setValue('');
-    this.calcularTotalFormaPago();
-    this.notaPedido.get('numTransaccionCredito').setValidators([]);
-    this.notaPedido.get('numTransaccionCredito').updateValueAndValidity();
-    this.notaPedido.get('montoCredito').setValidators([]);
-    this.notaPedido.get('montoCredito').updateValueAndValidity();
-    this.mostrarInputTransaccionCredito = false;
-  }
-
-  quitarPagoEfectivo() {
-    this.eliminarDatoArregloFormaPago('efectivo');
-    this.notaPedido.get('totalCobroEfectivo').setValue(0);
-    this.calcularTotalFormaPago();
-    this.notaPedido.get('totalCobroEfectivo').setValidators([]);
-    this.notaPedido.get('totalCobroEfectivo').updateValueAndValidity();
-    this.mostrarInputCobro = false;
-  }
-
-  eliminarDatoArregloFormaPago(valor) {
-    let indice = this.formasPago.indexOf(valor);
-    if (indice !== -1) {
-      this.formasPago.splice(indice, 1);
-    }
-  }
-
-  valorComision(porcentaje, valor, precio){
-    if (valor){
-      return valor.toFixed(2);
-    }else{
-      return porcentaje+'% => ' + ((precio * porcentaje) / 100).toFixed(2);
-    }
   }
 
   obtenerTiendaComercial(canal){

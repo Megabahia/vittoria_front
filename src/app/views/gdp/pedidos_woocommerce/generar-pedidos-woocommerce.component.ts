@@ -93,6 +93,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
   integracionCanalCupon;
   imagenCanal;
   irCatalo;
+
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -292,6 +293,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
     }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
       this.hablilitarBotonGuardar = false;
       this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
           this.imagenCanal = info.imagen_canal;
@@ -304,7 +306,11 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
           this.captureScreen();
           this.mostrarFiltroCliente = true;
           this.mostrarInputNumPedido = false;
-        }, error => this.toaster.open(error, {type: 'danger'})
+          this.mostrarSpinner = false;
+        }, error => {
+          this.mostrarSpinner = false;
+          this.toaster.open(error, {type: 'danger'})
+        }
       );
       this.hablilitarBotonGuardar = true;
     } else {
@@ -345,8 +351,10 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
           if (this.detallesArray.controls[i].get('precios').value.some(p => parseFloat(p.valor) === precioProducto)) {
             this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
             this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
+            this.desabilitarComboPrecios[i] = true;
           } else {
             this.detallesArray.controls[i].get('valorUnitario').setValue('');
+            this.desabilitarComboPrecios[i] = false;
           }
 
           this.detallesArray.controls[i].get('imagen_principal').setValue(info.producto?.imagen_principal);
@@ -400,6 +408,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
       total += parseFloat(detalles[index].get('precio').value);
 
     });
+
     total += this.notaPedido.get('envioTotal').value;
     subtotalPedido = total / this.parametroIva;
     this.totalIva = (total - subtotalPedido).toFixed(2);
@@ -691,7 +700,7 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
       this.notaPedido.get('estado').setValue('Pendiente de retiro');
       this.obtenerCiudad();
       this.obtenerIntegracionCanal();
-      //localStorage.removeItem('productoDataPedidoWoocommerce');
+      localStorage.removeItem('productoDataPedidoWoocommerce');
     }
   }
 

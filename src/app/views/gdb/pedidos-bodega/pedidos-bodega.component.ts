@@ -202,7 +202,7 @@ export class PedidosBodegaComponent implements OnInit, AfterViewInit {
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
       bodega: this.bodegaSeleccionada,
-      estado: 'Pedido'
+      estado: ['Pedido']
     }).subscribe((info) => {
       this.listaTransacciones = info;
     });

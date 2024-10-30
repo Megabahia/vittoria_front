@@ -214,7 +214,7 @@ export class PedidoMaxidescuentoComponent implements OnInit, AfterViewInit {
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
       estado: ['Pendiente'],
-      canal: 'maxidescuento.megadescuento.com',
+      canal: ['maxidescuento.megadescuento.com'],
       gestion_pedido: 'local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;

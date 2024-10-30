@@ -30,7 +30,7 @@
             Toda la gestión de su pedido se llevará a cabo a través de nuestra plataforma Vittoria.</p>
         </div>
         <div class="card-body px-0">
-          <div class="px-2 py-1 bg-primary">
+          <div class="px-2 py-1 bg-primary text-center">
             <h3>Productos para el pedido</h3>
           </div>
           <div *ngFor="let tienda of notaPedido.get('pedidos')['controls']; let j = index;">
@@ -48,7 +48,7 @@
                   <ng-container [formGroup]="articulo">
 
                     <div class="repeater-wrapper" data-repeater-item>
-                      <div class="row px-2 mt-1">
+                      <div class="row mx-0 px-2 mt-1">
                         <div class="col-md-2 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
                           <p class="card-text col-title mb-md-50 mb-0 font-weight-bold bg-light-secondary">
                             Código producto
@@ -222,7 +222,7 @@
             <div class="invoice-total-wrapper">
               <div class="invoice-total-item">
                 <p class="invoice-total-title font-weight-bold" *ngIf="formaEntrega">
-                  Tiempo de entrega: {{ formaEntrega.tiempo_entrega}}
+                  Tiempo de entrega: {{ formaEntrega.tiempo_entrega }}
                 </p>
               </div>
               <div class="invoice-total-item row mb-1">
@@ -263,7 +263,7 @@
     </div>
   </form>
   <div class="card" *ngIf="!mostrarBotonVolverCatalogo">
-    <div class="card-header">
+    <div class="card-header d-flex justify-content-center">
       <h3>Datos del cliente para la entrega del producto</h3>
     </div>
     <div class="card-body px-2">
@@ -328,7 +328,7 @@
   <form [formGroup]="notaPedido" *ngIf="!mostrarBotonVolverCatalogo">
     <div class="card" *ngIf="mostrarContenido">
       <div formGroupName="facturacion">
-        <h3 class="py-1 px-2 font-weight-bold bg-primary">Datos de facturación y entrega </h3>
+        <h3 class="py-1 px-2 font-weight-bold bg-primary text-center">Datos de facturación y entrega </h3>
         <div class="card-body m-0 p-0">
 
           <h5 class="pl-3">DATO PERSONALES <label class="text-muted">(Datos
@@ -591,9 +591,14 @@
       </div>
     </div>
     <div class="d-flex justify-content-center">
-      <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="guardarVenta()" *ngIf="mostrarBoton">
+      <button type="button" class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="guardarVenta()"
+              *ngIf="mostrarBoton"
+              [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+            <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                  aria-hidden="true"></span>
         Enviar Pedido
       </button>
+
       <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="generarPedido()"
               *ngIf="mostrarBotonEnviarGDP">Enviar a generar pedido
       </button>
@@ -616,7 +621,9 @@
     <p>Su número de pedido es: <strong>{{ numero }}</strong>.</p>
   </div>
   <div class="mt-4">
-    <h6 class="px-4 text-danger">Recuerde hacerle seguimiento a su cliente a través del WhatsApp o llamada, para que se acerque a retirar el pedido en el local. Su comisión se hará efectiva una vez que el cliente retire el pedido.</h6>
+    <h6 class="px-4 text-danger">Recuerde hacerle seguimiento a su cliente a través del WhatsApp o llamada, para que se
+      acerque a retirar el pedido en el local. Su comisión se hará efectiva una vez que el cliente retire el
+      pedido.</h6>
     <a href='{{irCatalo}}' class="btn btn-primary m-1" target="_blank">Volver a la tienda</a>
     <!--<button (click)="irInicio()" class="btn btn-secondary">Inicio</button>-->
   </div>

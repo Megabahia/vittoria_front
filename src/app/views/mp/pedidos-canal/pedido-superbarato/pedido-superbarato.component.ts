@@ -214,7 +214,7 @@ export class PedidoSuperbaratoComponent implements OnInit, AfterViewInit {
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
       estado: ['Pendiente'],
-      canal: 'superbarato.megadescuento.com',
+      canal: ['superbarato.megadescuento.com'],
       gestion_pedido: 'local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;

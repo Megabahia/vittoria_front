@@ -42,7 +42,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   enviarCorreo = false;
   correoCliente;
   codigoCorreo;
-
+  mostrarSpinner = false;
   numeroPedido: any [] = [];
   productoBuscar: any [] = [];
   numeroPedidos: any = {};
@@ -87,6 +87,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   direccionProducto;
   mensaje = '';
   irCatalo;
+
   constructor(
     private route: ActivatedRoute,
     private _router: Router,
@@ -191,7 +192,6 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
 
     this.obtenerProvincias();
     this.obtenerCiudad();
-
 
     this.datos.map((data, index) => {
       this.obtenerProducto(this.datos[index], index);
@@ -312,7 +312,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
       prefijo: [datosBaseDatos.prefijo, []],
       porcentaje_comision: [datosBaseDatos.porcentaje_comision, [Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]*$')]],
       valor_comision: [datosBaseDatos.valor_comision],
-      monto_comision: [this.calculoComision(datosBaseDatos.porcentaje_comision, datosBaseDatos.valor_comision, datos.precio_del_producto, datos.cantidad_en_el_carrito)]
+      monto_comision: [this.calculoComision(datosBaseDatos.porcentaje_comision, datosBaseDatos.valor_comision, datos.total_del_articulo, datos.cantidad_en_el_carrito)]
     });
   }
 
@@ -440,13 +440,13 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   }
 
   obtenerSector(): void {
-    if (this.notaPedido.value.facturacion.ciudad !== 'Quito') {
-      this.sectorOpciones = [{nombre: this.notaPedido.value.facturacion.ciudad}];
-    } else {
-      this.paramServiceAdm.obtenerListaHijos(this.notaPedido.value.facturacion.ciudad, 'CIUDAD').subscribe((info) => {
-        this.sectorOpciones = info;
-      });
-    }
+    //if (this.notaPedido.value.facturacion.ciudad !== 'Quito') {
+    //  this.sectorOpciones = [{nombre: this.notaPedido.value.facturacion.ciudad}];
+    //} else {
+    this.paramServiceAdm.obtenerListaHijos(this.notaPedido.value.facturacion.ciudad, 'CIUDAD').subscribe((info) => {
+      this.sectorOpciones = info;
+    });
+    //}
   }
 
   generarID(): string {
@@ -491,7 +491,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
-
+      this.mostrarSpinner = true;
       this.notaPedido.value.pedidos.map((data) => {
 
         this.notaPedido.patchValue({
@@ -531,7 +531,11 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
           this.numeroPedido.push(result.numeroPedido);
           this.toaster.open('Pedido enviado', {type: 'success'});
           this.mostrarContenidoPantalla = false;
-        }, error => this.toaster.open('Error al guardar pedido', {type: 'danger'}));
+          this.mostrarSpinner = false;
+        }, error => {
+          this.toaster.open('Error al guardar pedido', {type: 'danger'})
+          this.mostrarSpinner = false;
+        });
       });
 
     }
@@ -1068,15 +1072,14 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   }
 
   calculoComision(porcentaje, valor, precioProducto, cantidad) {
-
     if (valor) {
-      return valor * cantidad;
+      return (parseFloat(valor) * parseFloat(cantidad)).toFixed(2);
     } else {
-      return (porcentaje * precioProducto) / 100;
+      return ((parseFloat(porcentaje) * parseFloat(precioProducto)) / 100).toFixed(2);
     }
   }
 
-  obtenerMetodoPago(nombre){
+  obtenerMetodoPago(nombre) {
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.page_size, 'METODO PAGO', nombre).subscribe((result) => {
       this.formaEntrega = result.data[0];
     });

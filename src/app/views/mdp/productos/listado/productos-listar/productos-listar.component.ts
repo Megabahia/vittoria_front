@@ -4,6 +4,7 @@ import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {environment} from '../../../../../../environments/environment';
 import {ParamService as AdmParamService} from "../../../../../services/admin/param.service";
 import {Toaster} from "ngx-toast-notifications";
+import {IntegracionesService} from "../../../../../services/admin/integraciones.service";
 
 @Component({
   selector: 'app-productos-listar',
@@ -33,8 +34,9 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private paramServiceAdm: AdmParamService,
     private toaster: Toaster,
+    private integracionesService: IntegracionesService
   ) {
-    this.obtenerListaParametros();
+    this.obtenerListaParametrosCanal();
     this.obtenerUsuarioActual();
   }
 
@@ -124,11 +126,21 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async obtenerListaParametros(): Promise<void> {
-    await this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar)
+  obtenerListaParametros() {
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', '')
       .subscribe((result) => {
-        this.canalOpciones = result.data
+        this.canalOpciones = result.data;
       });
+  }
+
+  obtenerListaParametrosCanal() {
+    const datos = {
+      page: this.page,
+      page_size: this.pageSize
+    };
+    this.integracionesService.obtenerListaIntegraciones(datos).subscribe((result) => {
+      this.canalOpciones = result.data;
+    });
   }
 
   onSelectChange(e: any): void {

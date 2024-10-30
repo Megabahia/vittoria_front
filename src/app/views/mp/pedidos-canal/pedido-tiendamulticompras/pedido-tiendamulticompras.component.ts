@@ -214,7 +214,7 @@ export class PedidoTiendamulticomprasComponent implements OnInit, AfterViewInit 
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
       estado: ['Pendiente'],
-      canal: 'tiendamulticompras.megadescuento.com',
+      canal: ['tiendamulticompras.megadescuento.com'],
       gestion_pedido: 'local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;

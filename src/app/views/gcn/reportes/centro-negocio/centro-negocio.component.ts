@@ -275,7 +275,7 @@ export class CentroNegocioComponent implements OnInit, AfterViewInit {
       rol: this.usuario.usuario.idRol,
       estado: this.estadoSeleccionado === '' ? '' : [this.estadoSeleccionado],
       usuarioVendedor: this.usuarioSeleccionado,
-      canal: 'Contacto Local'
+      canal: ['Contacto Local']
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaTransacciones = info.info.map((item) => {

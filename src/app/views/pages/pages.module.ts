@@ -13,6 +13,7 @@ import { PedidoWoocomerceComponent } from './pedido-woocomerce/pedido-woocomerce
 import {GdeModule} from '../gde/gde.module';
 import {ConsultaProductosComponent} from './consulta-productos/consulta-productos.component';
 import { RegistroAsesoresComponent } from './registro-asesores/registro-asesores.component';
+import {PedidosWoocommerceComponent} from "./pedidos-woocommerce/pedidos-woocommerce.component";
 
 
 
@@ -22,7 +23,8 @@ import { RegistroAsesoresComponent } from './registro-asesores/registro-asesores
     CalculadoraComponent,
     PedidoWoocomerceComponent,
     ConsultaProductosComponent,
-    RegistroAsesoresComponent
+    RegistroAsesoresComponent,
+    PedidosWoocommerceComponent
   ],
     imports: [
         CommonModule,

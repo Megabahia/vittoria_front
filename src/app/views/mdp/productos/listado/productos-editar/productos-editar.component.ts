@@ -200,11 +200,21 @@ export class ProductosEditarComponent implements OnInit {
     });
   }
 
-  async obtenerListaParametros(): Promise<void> {
-    await this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar).subscribe((result) => {
+  obtenerListaParametros() {
+    const datos = {
+      page: this.page,
+      page_size: this.pageSize
+    };
+    this.integracionesService.obtenerListaIntegraciones(datos).subscribe((result) => {
       this.canalOpciones = result.data;
     });
   }
+
+  /*async obtenerListaParametros(): Promise<void> {
+    await this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar).subscribe((result) => {
+      this.canalOpciones = result.data;
+    });
+  }*/
 
   async obtenerProvinciasOpciones() {
     await this.MDMparamService.obtenerListaHijos('Ecuador', 'PAIS').subscribe((info) => {

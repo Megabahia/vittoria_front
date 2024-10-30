@@ -24,6 +24,7 @@ export class SignInComponent implements OnInit {
   submitted = false;
   mostrarSpinner = false;
   mostrarRegistroAsesor = false;
+
   constructor(
     private modalService: NgbModal,
     private authService: AuthService,
@@ -34,7 +35,7 @@ export class SignInComponent implements OnInit {
     this.siteKey = environment.setKey;
     this.captcha = false;
 
-    if (localStorage.getItem('productosWoocommerce') || localStorage.getItem('consultaProducto')) {
+    if (localStorage.getItem('productosWoocommerce') || localStorage.getItem('consultaProducto') || localStorage.getItem('paginaExterna')) {
       this.mostrarRegistroAsesor = true;
     } else {
       this.mostrarRegistroAsesor = false;

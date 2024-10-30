@@ -214,7 +214,7 @@ export class PedidoContraentregaComponent implements OnInit, AfterViewInit {
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
       estado: ['Pendiente'],
-      canal: 'contraentrega.megadescuento.com',
+      canal: ['contraentrega.megadescuento.com'],
       gestion_pedido: 'local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
