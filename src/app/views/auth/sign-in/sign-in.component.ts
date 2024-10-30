@@ -67,6 +67,9 @@ export class SignInComponent implements OnInit {
           } else if (localStorage.getItem('consultaProducto')) {
             const baseUrl = environment.apiUrlFront;
             window.location.href = `${baseUrl}/#/pages/consulta/producto`;
+          } else if (localStorage.getItem('pedidosWoocommerceUsuario')) {
+            const baseUrl = environment.apiUrlFront;
+            window.location.href = `${baseUrl}/#/pages/pedidos/woocommerce`;
           } else {
             window.location.href = '';
           }
