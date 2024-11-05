@@ -32,6 +32,12 @@ export class AuthGuard implements CanActivate {
       localStorage.setItem('paginaExterna', JSON.stringify('Desde página externa'));
     }
 
+    if (route.routeConfig.path === 'management') {
+      localStorage.removeItem('pedidosWoocommerceUsuario');
+      localStorage.removeItem('consultaProducto');
+      localStorage.removeItem('paginaExterna');
+    }
+
     if (Object.keys(route.queryParams).length > 0) {
       localStorage.removeItem('consultaProducto');
       localStorage.removeItem('pedidosWoocommerceUsuario');
