@@ -20,6 +20,8 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
+    console.log('RUTAAAA', route.routeConfig.path);
+
     if (route.routeConfig.path === 'consulta/producto') {
       localStorage.removeItem('pedidosWoocommerceUsuario');
       localStorage.setItem('consultaProducto', JSON.stringify('Consultar productos'));
@@ -30,6 +32,12 @@ export class AuthGuard implements CanActivate {
       localStorage.removeItem('pedidosWoocommerceUsuario');
       localStorage.removeItem('consultaProducto');
       localStorage.setItem('paginaExterna', JSON.stringify('Desde página externa'));
+    }
+
+    if (route.routeConfig.path === 'management') {
+      localStorage.removeItem('pedidosWoocommerceUsuario');
+      localStorage.removeItem('consultaProducto');
+      localStorage.removeItem('paginaExterna');
     }
 
     if (Object.keys(route.queryParams).length > 0) {

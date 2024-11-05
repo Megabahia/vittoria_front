@@ -35,7 +35,7 @@ export class SignInComponent implements OnInit {
     this.siteKey = environment.setKey;
     this.captcha = false;
 
-    if (localStorage.getItem('productosWoocommerce') || localStorage.getItem('consultaProducto') || localStorage.getItem('paginaExterna')) {
+    if (localStorage.getItem('productosWoocommerce') || localStorage.getItem('consultaProducto') || localStorage.getItem('paginaExterna') || localStorage.getItem('pedidosWoocommerceUsuario')) {
       this.mostrarRegistroAsesor = true;
     } else {
       this.mostrarRegistroAsesor = false;
