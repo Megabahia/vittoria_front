@@ -20,8 +20,6 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    console.log('RUTAAAA', route.routeConfig.path);
-
     if (route.routeConfig.path === 'consulta/producto') {
       localStorage.removeItem('pedidosWoocommerceUsuario');
       localStorage.setItem('consultaProducto', JSON.stringify('Consultar productos'));
