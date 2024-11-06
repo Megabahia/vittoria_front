@@ -39,6 +39,8 @@
             <tr>
               <th>Fecha de ingreso de contacto</th>
               <th style="color: red">Hora de ingreso de contacto</th>
+              <th style="color: blue">Fecha venta concretada</th>
+              <th style="color: blue">Hora venta concretada</th>
               <th>Canal que ingreso contacto</th>
               <th>Usuario que ingreso contacto</th>
               <th>Nombres</th>
@@ -55,6 +57,8 @@
             <tr *ngFor="let contacto  of listaContacto; let i = index">
               <td>{{ contacto.created_at | date: 'dd-MM-yyyy' }}</td>
               <td style="color: red">{{ contacto.created_at | date: 'HH:mm:ss' }}</td>
+              <td style="color: blue">{{ contacto.fecha_venta_concretada | date: 'dd-MM-yyyy' }}</td>
+              <td style="color: blue">{{ contacto.fecha_venta_concretada | date: 'HH:mm:ss' }}</td>
               <td>{{ contacto.canal | shorten }}</td>
               <td>{{ contacto.usuario }}</td>
               <td>{{ contacto.nombres }}</td>

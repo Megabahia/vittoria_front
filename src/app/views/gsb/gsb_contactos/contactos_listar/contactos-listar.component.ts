@@ -5,7 +5,7 @@ import {DatePipe} from '@angular/common';
 import {ParamService} from '../../../../services/mp/param/param.service';
 import {ParamService as ParamServiceAdm} from '../../../../services/admin/param.service';
 import {formatDate} from '@angular/common';
-import {Router} from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
@@ -55,7 +55,6 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   factura;
   totalIva;
   horaContactoVenta;
-  canalSeleccionado = '';
   listaCanalesProducto;
   idSuperBarato;
   parametroIva;
@@ -251,7 +250,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       //fin: this.transformarFecha(this.fin),
     }).subscribe((info) => {
       this.collectionSize = info.cont;
-      this.listaContacto = info.info;
+      this.listaContacto = info.info.filter(datos => datos.estado !== 'CONCRETADO');
     });
   }
 
@@ -282,7 +281,6 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       this.idContacto = info.id;
       this.horaPedido = this.extraerHora(info.created_at);
       this.canalPrincipal = info.canal;
-      this.canalSeleccionado = this.canalPrincipal;
 
       info.articulos.map((item): void => {
         this.agregarItemExtra();
@@ -343,15 +341,15 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   }
 
   async obtenerProducto(i): Promise<void> {
-    if (this.canalSeleccionado === '') {
+    if (this.canalPrincipal === '') {
       this.toaster.open('Seleccione un canal y vuelva a buscar', {type: 'danger'});
       return;
     }
     return new Promise((resolve, reject) => {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
-        canalProducto: this.canalSeleccionado,
-        canal: this.canalSeleccionado,
+        canalProducto: this.canalPrincipal,
+        canal: this.canalPrincipal,
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
@@ -471,7 +469,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     event.preventDefault();
     const modifiedNumber = (numero.startsWith('0') ? numero.substring(1) : numero);
     const internationalNumber = '593' + modifiedNumber;
-    const message = encodeURIComponent(`Hola Sr.(a)(ita). ${nombre} ${apellido}\n\nLe saludamos desde nuestra organización Vittoria.\n\nMuchas gracias por confiar en nosotros.\n\n¡Bievenido!`);
+    const message = encodeURIComponent(`Hola Sr.(a)(ita). ${nombre} ${apellido}\n\nLe saludamos desde MEGA BAHIA, nos comunicamos con usted por su interés en el producto: *XXXXXXXX* que se encuentra con *precio OFERTA $XX.XX*.🚨🚨\n\n*Por su SEGURIDAD usted paga al momento de recibir su producto.*\n\n¿En qué dirección desea que le hagamos la entrega?🤗📍`);
     const whatsappUrl = `https://web.whatsapp.com/send/?phone=${internationalNumber}&text=${message}`;
     window.open(whatsappUrl, '_blank');  // Abrir WhatsApp en una nueva pestaña
   }
@@ -544,13 +542,51 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   }
 
   guardarEstadoGestion(contacto) {
-    this.contactoService.actualizarEstadoGestionContacto(contacto.id, contacto.estadoGestion).subscribe((data) => {
+    const fechaActual = new Date();
+    this.contactoService.actualizarEstadoGestionContacto(contacto.id, contacto.estadoGestion, 'CONCRETADO', fechaActual).subscribe((data) => {
       this.columnaAcciones = true;
       this.toaster.open('Estado del contacto actualizado.', {type: 'success'});
       this.obtenerContactos();
     }, error => {
       this.toaster.open(error, {type: 'danger'});
     });
+  }
+
+  cargarImagen(i, event: any): void {
+    this.datosProducto = new FormData();
+
+    const id = this.detallesArray.controls[i].get('id').value;
+    const archivo = event.target.files[0];
+    if (archivo) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const nuevaImagen = e.target.result;
+        this.detallesArray.controls[i].get('imagen_principal').setValue(nuevaImagen);
+        this.datosProducto.append('imagen_principal', archivo)
+        //this.datosProducto.append('imagenes[' + 0 + ']id', '0');
+        //this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
+        this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
+        this.datosProducto.append('canal', this.detallesArray.controls[i].get('canal').value);
+        try {
+          this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
+            this.toaster.open('Imagen actualizada con éxito', {type: "info"});
+          }, error => this.toaster.open('Error al actualizar la imagen.', {type: "danger"}));
+        } catch (error) {
+          this.toaster.open('Error al actualizar la imagen.', {type: "danger"});
+        }
+      };
+      reader.readAsDataURL(archivo);
+
+    }
+  }
+
+  consultarProductos(canal) {
+    const navigationExtras: NavigationExtras = {
+      queryParams: { canalContacto: canal }
+    };
+
+    // Navegar al componente de destino con datos
+    this.router.navigate(['/gd/gd_consulta_productos'], navigationExtras);
   }
 
 }
