@@ -468,7 +468,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
         detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       }
       total += parseFloat(detalles[index].get('precio').value);
-      const montoComision = this.calculoComision(detalles[index].get('porcentaje_comision').value, detalles[index].get('valor_comision').value, total, cantidad);
+      const montoComision = this.calculoComision(detalles[index].get('porcentaje_comision').value, detalles[index].get('valor_comision').value, detalles[index].get('precio').value, cantidad);
       detalles[index].get('monto_comision').setValue(montoComision);
       comisionTotal += parseFloat(detalles[index].get('monto_comision').value);
 
