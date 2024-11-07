@@ -114,7 +114,7 @@
               </td>
               <td>
                 <button *ngIf="contacto.estado === 'EN PROCESO DE VENTA' || contacto.estado === 'CONTACTO FALSO'"
-                        class="btn btn-primary" (click)="obtenerDatosContacto(notaPedidoModal, contacto.id)">Generar
+                        class="btn btn-primary" (click)="obtenerDatosContacto(notaPedidoModal, contacto.id, contacto.canal)">Generar
                   Pedido
                 </button>
               </td>
@@ -334,14 +334,51 @@
                     <h6 class="text-info"> Canal: {{ canalPrincipal }}</h6>
                   </div>
                 </div>
-                <div class="col-md-3 col-12">
-                  <label>Metodo Pago</label>
-                  <input class="form-control" type="text"
-                         formControlName="metodoPago" disabled>
-                  <div *ngIf="notaPedidoForm.metodoPago.errors"
-                       class="invalid-feedback" style="display: block;">
-                    <div *ngIf="notaPedidoForm.metodoPago.errors.required">
-                      Requerido
+                <div class="row px-2">
+                  <div class="col-md-3 col-12">
+                    <label>Forma de entrega del producto</label>
+                    <select class="form-control"
+                            formControlName="metodoPago" (change)="onSelectChangePago($event)">
+                      <option value="" selected>- Seleccione metodo de envío-</option>
+                      <option value="{{pago.nombre}}" *ngFor="let pago of listaMetodoPago">
+                        {{ pago.nombre }}
+                      </option>
+                    </select>
+                    <div *ngIf="notaPedidoForm.metodoPago.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="notaPedidoForm.metodoPago.errors.required">
+                        Requerido
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-12 mt-2 mt-md-0" *ngIf="mostrarInputArchivoComprobante">
+                    <h6 class="text-uppercase">{{ cuentaBancaria.nombre }}<br>NRO. CUENTA:
+                      {{ cuentaBancaria.valor }}
+                      <br>Nombre: {{ cuentaBancaria.descripcion }}
+                      <br>
+                    </h6>
+                  </div>
+                  <div class="col-md-3 col-12 mt-2 mt-md-0" *ngIf="mostrarInputArchivoComprobante">
+                    <label>Cargar comrpobante de pago</label>
+                    <input class="form-control-file" type="file" (change)="onFileSelected($event)">
+                    <div *ngIf="notaPedidoForm.archivoMetodoPago.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="notaPedidoForm.archivoMetodoPago.errors.required">
+                        Requerido
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-12 mt-2 mt-md-0" *ngIf="mostrarInputArchivoComprobante">
+                    <label>Monto</label>
+                    <input class="form-control" type="text" formControlName="montoPrevioPago" placeholder="00.00">
+                    <div *ngIf="notaPedidoForm.montoPrevioPago.errors"
+                         class="invalid-feedback" style="display: block;">
+                      <div *ngIf="notaPedidoForm.montoPrevioPago.errors.required">
+                        Requerido
+                      </div>
+                      <div *ngIf="notaPedidoForm.montoPrevioPago.errors.pattern">
+                        Ingrese valores válidos, en formato 00.00 y unicamente dos decimales
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -418,13 +455,14 @@
                                       </div>
                                     </div>
                                   </div>
-                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+
+                                  <!--<div class="col-lg-2 col-12 my-lg-0 my-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
                                       Características
                                     </p>
                                     <label [innerHTML]="detalle.controls.caracteristicas.value"></label>
 
-                                  </div>
+                                  </div>-->
                                   <div class="col-lg-2 col-12 my-lg-0 my-2">
                                     <p class="card-text col-title mb-md-50 mb-0">
                                       Precio
@@ -487,6 +525,13 @@
                                         Requerido
                                       </div>
                                     </div>
+                                  </div>
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="card-text col-title mb-md-50 mb-0 text-danger">
+                                      Monto comisión
+                                    </p>
+                                    <label
+                                      class="d-block text-wrap text-danger">{{ detalle.controls.monto_comision.value }}</label>
                                   </div>
                                   <div class="col-md-2 border-left mt-2">
                                     <img class="img-detalle"
@@ -640,6 +685,9 @@
                     </div>
                   </div>
                 </div>
+                <div class="card-footer bg-light-warning text-center">
+                  <h4 class="text-warning">Total de comisión de este pedido: {{ notaPedido.value.comision | currency }}</h4>
+                </div>
                 <!-- Product Details ends -->
                 <hr class="invoice-spacing"/>
                 <!-- Invoice Total starts -->
@@ -678,8 +726,28 @@
                       <div class="invoice-total-wrapper">
                         <hr class="my-50"/>
                         <div class="invoice-total-item">
+                          <p class="invoice-total-title font-weight-bold" *ngIf="formaEntrega">
+                            Tiempo de entrega: {{ formaEntrega.tiempo_entrega }}
+                          </p>
+                        </div>
+                        <div class="invoice-total-item row mb-1">
+                          <div class="col-md-6 d-flex justify-content-end align-items-center">
+                            <p class="invoice-total-title text-primary font-weight-bold">
+                              Método Envio:
+                            </p>
+                          </div>
+                          <div class="col-md-6">
+                            <select class="form-control" (change)="nombreEnvioSeleccionado($event)">
+                              <option value="" selected>- Seleccione costo de envío-</option>
+                              <option *ngFor="let envio of listaCostoEnvio" [ngValue]="envio">
+                                {{ envio.nombre }} - {{ envio.valor }}
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="invoice-total-item">
                           <p class="invoice-total-title text-primary font-weight-bold">
-                            Total Envio: ${{ notaPedido.controls.envioTotal.value }}</p>
+                            Costo envío: ${{ notaPedido.controls.envioTotal.value }}</p>
                         </div>
                         <div class="invoice-total-item">
                           <p class="invoice-total-title text-primary font-weight-bold">

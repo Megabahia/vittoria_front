@@ -5,7 +5,7 @@ import {DatePipe} from '@angular/common';
 import {ParamService} from '../../../../services/mp/param/param.service';
 import {ParamService as ParamServiceAdm} from '../../../../services/admin/param.service';
 import {formatDate} from '@angular/common';
-import { Router, NavigationExtras } from '@angular/router';
+import {Router, NavigationExtras} from '@angular/router';
 
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
@@ -76,6 +76,11 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   parametroTiempo;
   listaEstadoContacto;
   columnaAcciones = false;
+  listaCostoEnvio;
+  listaMetodoPago;
+  mostrarInputArchivoComprobante = false;
+  formaEntrega;
+  cuentaBancaria;
 
   constructor(
     private modalService: NgbModal,
@@ -115,6 +120,8 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'ESTADO CONTACTO', '').subscribe((result) => {
       this.listaEstadoContacto = result.data;
     });
+
+
   }
 
   ngOnInit(): void {
@@ -158,19 +165,15 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       envioTotal: [0, []],
       numeroPedido: ['', [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
-      metodoPago: ['Contra-Entrega', [Validators.required]],
+      metodoPago: ['', [Validators.required]],
       verificarPedido: [true, []],
-      canal: ['Super Barato'],
+      canal: [''],
       estado: ['Pendiente de entrega'],
       envio: ['', []],
-      envios: ['', []],
-      json: ['', []],
-      numeroComprobante: [''],
-      tipoPago: [''],
-      formaPago: [''],
-      numTransaccionTransferencia: [''],
-      numTransaccionCredito: [''],
-      totalCobroEfectivo: ['']
+      archivoMetodoPago: [''],
+      montoPrevioPago: [''],
+      nombreEnvio: [''],
+      comision: [0]
     });
   }
 
@@ -210,7 +213,10 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       precios: [[], []],
       canal: [''],
       woocommerceId: [''],
-      imagen_principal: ['', [Validators.required]]
+      imagen_principal: ['', [Validators.required]],
+      porcentaje_comision: [0],
+      valor_comision: [0],
+      monto_comision: [0]
     });
   }
 
@@ -263,7 +269,6 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       //inicio: this.inicio,
       //fin: this.transformarFecha(this.fin),
       //estado: ['Pendiente'],
-      canal: 'Super Barato'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.idSuperBarato = info.info[0].id;
@@ -271,7 +276,16 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   }
 
 
-  obtenerDatosContacto(modal, id): void {
+  obtenerDatosContacto(modal, id, canal): void {
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'METODO PAGO', '', canal).subscribe((result) => {
+      this.listaMetodoPago = result.data; // Asegura que el resultado sea siempre un array
+    });
+
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'CUENTA BANCARIA', '').subscribe((result) => {
+      this.cuentaBancaria = result.info[0];
+    });
+
     this.notaPedido.reset();
     this.detallesArrayProductoExtra.clear();
 
@@ -297,9 +311,9 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       this.notaPedido.get('facturacion').get('telefono').setValue(info.whatsapp);
       this.notaPedido.get('productoExtra').setValue(info.articulos);
 
-      this.notaPedido.get('metodoPago').setValue('Contra-Entrega');
+      this.notaPedido.get('metodoPago').setValue('');
       this.notaPedido.get('verificarPedido').setValue(true);
-      this.notaPedido.get('canal').setValue('Super Barato');
+      this.notaPedido.get('canal').setValue(info.canal);
       this.notaPedido.get('estado').setValue('Pendiente de entrega');
       this.notaPedido.get('envioTotal').setValue(0);
 
@@ -309,9 +323,9 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   }
 
   async generarPedidoContacto(): Promise<void> {
-    await Promise.all(this.detallesArray.controls.map((producto, index) => {
+    /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
-    }));
+    }));*/
     if (this.notaPedido.value.valorUnitario === 0) {
       this.toaster.open('Seleccione un precio que sea mayor a 0.', {type: 'danger'});
       return;
@@ -320,10 +334,39 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
     }
+
+    if (this.notaPedido.value.total > 100) {
+      this.toaster.open('El pedido no debe exceder el total de 100 dólares.', {type: 'warning'});
+      return;
+    }
+
     if (confirm('Esta seguro de guardar los datos') === true) {
-      this.superBaratoService.crearNuevoSuperBarato(this.notaPedido.value).subscribe((info) => {
+      const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
+      const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
+
+      facturaFisicaLlaves.map((llaves, index) => {
+        if (llaves !== 'archivoMetodoPago') {
+          if (llaves === 'articulos' || llaves === 'facturacion' || llaves === 'envio' || llaves === 'productoExtra') {
+            this.archivo.delete(llaves);
+            this.archivo.append(llaves, JSON.stringify(facturaFisicaValores[index]));
+          } else {
+            this.archivo.delete(llaves);
+            this.archivo.append(llaves, facturaFisicaValores[index]);
+          }
+        }
+      });
+
+      this.archivo.delete('id');
+      this.archivo.delete('envio');
+
+      if (!this.notaPedido.value.montoPrevioPago) {
+        this.archivo.delete('montoPrevioPago');
+
+      }
+
+      this.superBaratoService.crearNuevoSuperBarato(this.archivo).subscribe((info) => {
           this.modalService.dismissAll();
-          this.notaPedido.reset();
+          /*this.notaPedido.reset();
 
           this.notaPedido.patchValue({...info, id: this.idSuperBarato});
 
@@ -331,9 +374,9 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
             this.obtenerContactos();
           }, error => {
             this.toaster.open(error, {type: 'danger'});
-          });
+          });*/
 
-          //this.obtenerDatosSuperBarato();
+          this.obtenerDatosSuperBarato();
 
         }, error => this.toaster.open(error, {type: 'danger'})
       );
@@ -369,8 +412,11 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
             Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
           ]);
           this.detallesArray.controls[i].get('cantidad').updateValueAndValidity();
-          this.detallesArray.controls[i].get('canal').setValue(info.canal)
-          this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
+          this.detallesArray.controls[i].get('porcentaje_comision').setValue(info?.porcentaje_comision);
+          this.detallesArray.controls[i].get('valor_comision').setValue(info?.valor_comision);
+          this.detallesArray.controls[i].get('canal').setValue(info.canal);
+          this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId);
+          this.detallesArray.controls[i].get('monto_comision').setValue(0);
           this.calcular();
           resolve();
         } else {
@@ -408,6 +454,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     const detallesProductoExtra = this.detallesArrayProductoExtra.controls;
     let totalProdExtra = 0;
     let total = 0;
+    let comisionTotal = 0;
     let subtotalPedido = 0;
     detalles.forEach((item, index) => {
       const valorUnitario = parseFloat(detalles[index].get('valorUnitario').value);
@@ -421,6 +468,10 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
         detalles[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       }
       total += parseFloat(detalles[index].get('precio').value);
+      const montoComision = this.calculoComision(detalles[index].get('porcentaje_comision').value, detalles[index].get('valor_comision').value, total, cantidad);
+      detalles[index].get('monto_comision').setValue(montoComision);
+      comisionTotal += parseFloat(detalles[index].get('monto_comision').value);
+
     });
     detallesProductoExtra.forEach((item, index) => {
       const valorUnitario = parseFloat(detallesProductoExtra[index].get('valorUnitario').value || 0);
@@ -428,11 +479,22 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       detallesProductoExtra[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       totalProdExtra += parseFloat(detallesProductoExtra[index].get('precio').value);
     });
+
     total = total + totalProdExtra + this.notaPedido.get('envioTotal').value;
     subtotalPedido = total / this.parametroIva;
     this.totalIva = (total - subtotalPedido).toFixed(2);
     this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
     this.notaPedido.get('total').setValue((total).toFixed(2));
+    this.notaPedido.get('comision').setValue(comisionTotal.toFixed(2));
+
+  }
+
+  calculoComision(porcentaje, valor, precioProducto, cantidad) {
+    if (valor) {
+      return (parseFloat(valor) * parseFloat(cantidad)).toFixed(2);
+    } else {
+      return ((parseFloat(porcentaje) * parseFloat(precioProducto)) / 100).toFixed(2);
+    }
   }
 
 
@@ -582,11 +644,72 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
 
   consultarProductos(canal) {
     const navigationExtras: NavigationExtras = {
-      queryParams: { canalContacto: canal }
+      queryParams: {canalContacto: canal}
     };
 
     // Navegar al componente de destino con datos
     this.router.navigate(['/gd/gd_consulta_productos'], navigationExtras);
+  }
+
+  obtenerMetodoPago(nombre) {
+    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'METODO PAGO', nombre).subscribe((result) => {
+      this.formaEntrega = result.data[0];
+    });
+  }
+
+  onSelectChangePago(e: any) {
+    const selectedValue = e.target.value;
+    this.resetValidationAndFlags(); // Resetear validaciones y flags antes de aplicar condiciones específicas
+
+    if (selectedValue.includes('Previo Pago')) {
+      this.handlePrevioPago();
+    }
+    ;
+
+    this.updateEnvioList(selectedValue);
+    this.obtenerMetodoPago(selectedValue);
+  }
+
+  private resetValidationAndFlags() {
+    this.notaPedido.get('archivoMetodoPago').setValidators([]);
+    this.notaPedido.get('montoPrevioPago').setValidators([]);
+    this.notaPedido.get('archivoMetodoPago').updateValueAndValidity();
+    this.notaPedido.get('montoPrevioPago').updateValueAndValidity();
+    this.archivo.delete('archivoMetodoPago');
+    this.mostrarInputArchivoComprobante = false;
+  }
+
+  private handlePrevioPago() {
+    this.mostrarInputArchivoComprobante = true;
+    this.notaPedido.get('archivoMetodoPago').setValidators([Validators.required]);
+    this.notaPedido.get('montoPrevioPago').setValidators([Validators.required, Validators.pattern('^\\d+(\\.\\d{1,2})?$')]);
+    this.notaPedido.get('archivoMetodoPago').updateValueAndValidity();
+    this.notaPedido.get('montoPrevioPago').updateValueAndValidity();
+  }
+
+  private updateEnvioList(selectedValue: string) {
+    const pattern = /Retiro|Pago Contra Entrega a Nivel Nacional por Servientrega/i;
+
+    this.paramServiceAdm.obtenerListaHijosEnvio(this.notaPedido.value.metodoPago).subscribe((result) => {
+      this.listaCostoEnvio = pattern.test(selectedValue)
+        ? result
+        : result.filter(envio => envio.nombre !== "Gratis");
+    });
+  }
+
+  onFileSelected(event: any): void {
+    this.archivo.append('archivoMetodoPago', event.target.files.item(0), event.target.files.item(0).name);
+    this.notaPedido.get('archivoMetodoPago').setValue(event.target.files.item(0).name);
+  }
+
+  nombreEnvioSeleccionado(envio: any) {
+    const selectedValue = envio.target.value;
+    let [nombre, valor] = selectedValue.split('-').map(part => part.trim());
+    valor = parseFloat(valor);
+    this.notaPedido.get('envioTotal').setValue(valor ? valor : 0);
+    this.notaPedido.get('nombreEnvio').setValue(nombre);
+    this.calcular();
+
   }
 
 }
