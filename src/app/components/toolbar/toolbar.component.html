@@ -409,7 +409,7 @@
       </li>
       <li class="ml-2">-------------------------------------</li>
       <li class="nav-item"
-          *ngIf="usuario.usuario.idRol === 62 || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 61 || usuario.usuario.idRol === 58 || usuario.usuario.idRol === 54">
+          *ngIf="usuario.usuario.idRol === 62 || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 61 || usuario.usuario.idRol === 58 || usuario.usuario.idRol === 54 || usuario.usuario.idRol === 64 || usuario.usuario.idRol === 65">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice" title="GD Gestión de Drop Shipping">GD Gestión de Drop Shipping</span></a>
@@ -428,21 +428,21 @@
               <span class="menu-item text-truncate" data-i18n="List">Pedidos desde Woocommerce</span>
             </a>
           </li>
-          <li class="nav-item has-sub ng-star-inserted">
+          <li class="nav-item has-sub ng-star-inserted" *ngIf="usuario.usuario.idRol === 1 || usuario.usuario.idRol === 64">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
-               title="Pedidos por Canal">
+               title="Registro de contactos">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
                                                  data-i18n="List">Registro de contactos</span></a>
             <ul class="menu-content">
               <li class="nav-item"
-                  *ngIf="usuario.usuario.idRol === 58 || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 54">
+                  *ngIf="usuario.usuario.idRol === 58 || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 54 || usuario.usuario.idRol === 64">
                 <a class="d-flex align-items-center" [routerLink]="['gd/contacto/create']" data-toggle="tooltip"
                    data-placement="auto" title="Ingreso de contactos">
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Ingresar Contactos</span>
                 </a>
               </li>
-              <li class="nav-item" *ngIf="acciones.GCN.LEER">
+              <li class="nav-item" *ngIf="acciones.GCN.LEER || usuario.usuario.idRol === 64">
                 <a class="d-flex align-items-center" [routerLink]="['gd/contacto/list/reporte']" data-toggle="tooltip"
                    data-placement="auto" title="Reporte de lista de contactos">
                   <i data-feather="circle"></i>
@@ -452,7 +452,7 @@
             </ul>
           </li>
           <li class="nav-item has-sub ng-star-inserted"
-              *ngIf="usuario.usuario.idRol === 1 || usuario.usuario.idRol === 61">
+              *ngIf="usuario.usuario.idRol === 1 || usuario.usuario.idRol === 61 || usuario.usuario.idRol === 65">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Concretar ventas">
               <i data-feather="circle"></i><span class="menu-item text-truncate"
@@ -465,10 +465,10 @@
                   <span class="menu-item text-truncate" data-i18n="List">Listar Contactos</span>
                 </a>
               </li>
-              <li class="nav-item" *ngIf="acciones.GCN.LEER">
+              <li class="nav-item">
                 <a class="d-flex align-items-center" [routerLink]="['gd/contacto/list/reporte/venta']"
                    data-toggle="tooltip"
-                   data-placement="auto" title="Reporte de lista de ventas">
+                   data-placement="auto" title="Reporte de contactos por ventas">
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Reporte de contactos por ventas</span>
                 </a>

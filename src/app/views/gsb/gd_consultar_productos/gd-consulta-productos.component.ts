@@ -48,7 +48,7 @@ export class GdConsultaProductosComponent implements OnInit {
   producto;
   integracionProducto;
   totalProductosEnOrigen;
-
+  currentUser;
   mostrarDatosEnvio = false;
 
   couriers: any[] = [];
@@ -60,6 +60,7 @@ export class GdConsultaProductosComponent implements OnInit {
   sectorOpciones;
 
   cantidadProductoCarrito = 1;
+  canalContacto: string | null = null;
 
   constructor(
     private paramServiceAdm: ParamServiceAdm,
@@ -69,11 +70,22 @@ export class GdConsultaProductosComponent implements OnInit {
     private productosService: ProductosService,
     private authService: AuthService,
     private modalService: NgbModal,
+    private route: ActivatedRoute
   ) {
+    //this.currentUser = this.authService.currentUserValue;
+
   }
 
   ngOnInit(): void {
     this.obtenerProvincias();
+
+    this.route.queryParams.subscribe(params => {
+      if (params['canalContacto']) {
+        this.canalContacto = params['canalContacto'];
+      } else {
+        this.canalContacto   = '';
+      }
+    });
   }
 
   async obtenerProducto(): Promise<void> {
@@ -87,6 +99,7 @@ export class GdConsultaProductosComponent implements OnInit {
       const data = {
         codigoBarras: this.codigoBarras,
         nombre: this.nombreProducto,
+        canal: this.canalContacto,
         state: 1,
         estado: 'Activo',
       };
@@ -99,7 +112,12 @@ export class GdConsultaProductosComponent implements OnInit {
         //console.log('COURIERS', this.couriers);
         //this.obtenerDatosOrigenProducto();
         this.mostrarDatosProducto = true;
-      }, error => this.toaster.open(error, {type: 'danger'}));
+      }, error => {
+        this.toaster.open(error, {type: 'danger'})
+        this.codigoBarras = '';
+        this.nombreProducto = '';
+        this.mostrarDatosProducto = false;
+      });
     });
   }
 
@@ -244,11 +262,13 @@ export class GdConsultaProductosComponent implements OnInit {
     }
   }
 
-  generarPedido(data: any): void {
-    localStorage.setItem('productoData', JSON.stringify(data));
-    window.open('#/gdp/pedidos', '_blank');
+  calcularComision (precioProducto, porcentajeComision, valorComision) {
+    if (valorComision) {
+      return parseFloat(valorComision);
+    } else {
+      return (parseFloat(porcentajeComision) * parseFloat(precioProducto)) / 100;
+    }
   }
-
 }
 
 

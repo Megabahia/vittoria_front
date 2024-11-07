@@ -28,7 +28,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   disabledSelectCanal = false;
   canal = '';
   idProductoCopia;
-
+  filtroImagen;
   constructor(
     private productosService: ProductosService,
     private modalService: NgbModal,
@@ -66,7 +66,8 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
         page_size: this.pageSize,
         nombre: this.nombreBuscar,
         codigoBarras: this.codigoBarras,
-        canalProducto: this.canalSeleccionado
+        canalProducto: this.canalSeleccionado,
+        imagen_principal: this.filtroImagen
       }
     ).subscribe((info) => {
       this.listaProductos = info.info;
