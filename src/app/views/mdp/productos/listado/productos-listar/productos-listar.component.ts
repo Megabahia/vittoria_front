@@ -29,6 +29,8 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   canal = '';
   idProductoCopia;
   filtroImagen;
+  filtroCanal;
+  estadoProducto = '';
   constructor(
     private productosService: ProductosService,
     private modalService: NgbModal,
@@ -67,7 +69,9 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
         nombre: this.nombreBuscar,
         codigoBarras: this.codigoBarras,
         canalProducto: this.canalSeleccionado,
-        imagen_principal: this.filtroImagen
+        imagen_principal: this.filtroImagen,
+        sinCanal: this.filtroCanal,
+        estado: this.estadoProducto
       }
     ).subscribe((info) => {
       this.listaProductos = info.info;

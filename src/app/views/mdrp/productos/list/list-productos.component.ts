@@ -44,6 +44,7 @@ export class ListProductosComponent implements OnInit, AfterViewInit {
   fechaActual = new Date();
   mostrarSpinner = false;
   idProductoEnviar;
+  costoCompra;
   constructor(
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
@@ -143,10 +144,11 @@ export class ListProductosComponent implements OnInit, AfterViewInit {
     return `${dia}-${mes}-${anio}`;
   }
 
-  abrirModalPrecios(modal, id): void {
+  abrirModalPrecios(modal, producto): void {
     this.iniciarAprobacionProducto();
     this.modalService.open(modal, {size: 'md', backdrop: 'static'});
-    this.idProductoEnviar = id;
+    this.idProductoEnviar = producto.id;
+    this.costoCompra = producto.costoCompra;
 
   }
 }
