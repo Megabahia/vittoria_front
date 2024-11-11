@@ -251,7 +251,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     this.contactoService.obtenerLista({
       page: this.page - 1,
       page_size: this.pageSize,
-      estadoGestion: true
+      //estadoGestion: true
       //inicio: this.inicio,
       //fin: this.transformarFecha(this.fin),
     }).subscribe((info) => {
@@ -326,6 +326,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));*/
+    console.log('ID CONTACTO', this.idContacto);
     if (this.notaPedido.value.valorUnitario === 0) {
       this.toaster.open('Seleccione un precio que sea mayor a 0.', {type: 'danger'});
       return;
@@ -365,7 +366,15 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       }
 
       this.superBaratoService.crearNuevoSuperBarato(this.archivo).subscribe((info) => {
+          //ACTUALIZAR ESTADO DE CONTACTO
+          this.contactoService.actualizarEstadoContacto(this.idContacto, 'CONCRETADO').subscribe((data) => {
+            this.columnaAcciones = true;
+            this.toaster.open('Estado del contacto actualizado.', {type: 'success'});
+          }, error => {
+            this.toaster.open(error, {type: 'danger'});
+          });
           this.modalService.dismissAll();
+          this.obtenerContactos();
           /*this.notaPedido.reset();
 
           this.notaPedido.patchValue({...info, id: this.idSuperBarato});
@@ -376,7 +385,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
             this.toaster.open(error, {type: 'danger'});
           });*/
 
-          this.obtenerDatosSuperBarato();
+          // this.obtenerDatosSuperBarato();
 
         }, error => this.toaster.open(error, {type: 'danger'})
       );
@@ -451,8 +460,8 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
 
   calcular(): void {
     const detalles = this.detallesArray.controls;
-    const detallesProductoExtra = this.detallesArrayProductoExtra.controls;
-    let totalProdExtra = 0;
+    //const detallesProductoExtra = this.detallesArrayProductoExtra.controls;
+    //let totalProdExtra = 0;
     let total = 0;
     let comisionTotal = 0;
     let subtotalPedido = 0;
@@ -473,14 +482,14 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       comisionTotal += parseFloat(detalles[index].get('monto_comision').value);
 
     });
-    detallesProductoExtra.forEach((item, index) => {
+    /*detallesProductoExtra.forEach((item, index) => {
       const valorUnitario = parseFloat(detallesProductoExtra[index].get('valorUnitario').value || 0);
       const cantidad = parseFloat(detallesProductoExtra[index].get('cantidad').value || 0);
       detallesProductoExtra[index].get('precio').setValue((cantidad * valorUnitario).toFixed(2));
       totalProdExtra += parseFloat(detallesProductoExtra[index].get('precio').value);
-    });
+    });*/
 
-    total = total + totalProdExtra + this.notaPedido.get('envioTotal').value;
+    total = total + this.notaPedido.get('envioTotal').value;
     subtotalPedido = total / this.parametroIva;
     this.totalIva = (total - subtotalPedido).toFixed(2);
     this.notaPedido.get('subtotal').setValue((subtotalPedido).toFixed(2));
@@ -605,7 +614,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
 
   guardarEstadoGestion(contacto) {
     const fechaActual = new Date();
-    this.contactoService.actualizarEstadoGestionContacto(contacto.id, contacto.estadoGestion, 'CONCRETADO', fechaActual).subscribe((data) => {
+    this.contactoService.actualizarEstadoGestionContacto(contacto.id, contacto.estadoGestion, fechaActual).subscribe((data) => {
       this.columnaAcciones = true;
       this.toaster.open('Estado del contacto actualizado.', {type: 'success'});
       this.obtenerContactos();

@@ -114,7 +114,8 @@
               </td>
               <td>
                 <button *ngIf="contacto.estado === 'EN PROCESO DE VENTA' || contacto.estado === 'CONTACTO FALSO'"
-                        class="btn btn-primary" (click)="obtenerDatosContacto(notaPedidoModal, contacto.id, contacto.canal)">Generar
+                        class="btn btn-primary"
+                        (click)="obtenerDatosContacto(notaPedidoModal, contacto.id, contacto.canal)">Generar
                   Pedido
                 </button>
               </td>
@@ -131,7 +132,7 @@
                 <button class="btn btn-primary" (click)="guardarEstadoGestion(contacto)"
                         [disabled]="!contacto.estadoGestion || contacto.estadoGestion === 'null'"
                         *ngIf="contacto.estado === 'EN PROCESO DE VENTA'">
-                  Guardar
+                  Guardar estado
                 </button>
               </td>
             </tr>
@@ -385,6 +386,103 @@
                 <!-- Address and Contact ends -->
                 <hr class="invoice-spacing"/>
                 <!-- Product Details starts -->
+                <div class="card-body invoice-padding bg-light-info">
+                  <h6>Detalle de productos de muestra</h6>
+                  <div formArrayName="productoExtra">
+                    <form class="source-item">
+                      <div data-repeater-list="group-a"
+                           *ngFor="let detalle of notaPedido.get('productoExtra')['controls']; let i = index;">
+                        <ng-container class="row bg-light-secondary" [formGroup]="detalle">
+                          <div class="repeater-wrapper" data-repeater-item>
+                            <div class="row">
+                              <div class="col-12 d-flex product-details-border position-relative pr-0">
+                                <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                  <div class="col-lg-5 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                    <p class=" col-title mb-md-50 mb-0">
+                                      Enlace del producto
+                                    </p>
+                                    <label>{{ detalle.controls.urlProducto.value }}</label>
+                                  </div>
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class=" col-title mb-md-50 mb-0 red">
+                                      Cantidad
+                                    </p>
+                                    <label>{{ detalle.controls.cantidad.value }}</label>
+
+                                    <!--<input type="text" class="form-control"
+                                           formControlName="cantidad"
+                                           (change)="calcular()"
+                                    />
+                                    <div *ngIf="detalle.controls.cantidad.errors"
+                                         class="invalid-feedback"
+                                         style="display: block;">
+                                      <div *ngIf="detalle.controls.cantidad.errors.required">
+                                        Requerido
+                                      </div>
+                                      <div *ngIf="detalle.controls.cantidad.errors.min">
+                                        Ingrese minimo 1
+                                      </div>
+                                      <div *ngIf="detalle.controls.cantidad.errors.pattern">
+                                        Ingrese número enteros
+                                      </div>
+                                    </div>-->
+
+                                  </div>
+
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class=" col-title mb-md-50 mb-0">
+                                      Precio
+                                    </p>
+                                    <label>{{ detalle.controls.precio.value }}</label>
+
+                                    <!--<input type="text" class="form-control"
+                                           formControlName="valorUnitario"
+                                           (change)="calcular()"
+                                           placeholder="00.00"
+                                    />
+                                    <div *ngIf="detalle.controls.valorUnitario.errors"
+                                         class="invalid-feedback"
+                                         style="display: block;">
+                                      <div *ngIf="detalle.controls.valorUnitario.errors.required">
+                                        Requerido
+                                      </div>
+                                      <div *ngIf="detalle.controls.valorUnitario.errors.pattern">
+                                        Ingrese número válidos
+                                      </div>
+                                    </div>-->
+                                  </div>
+                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                    <p class="col-title mb-md-50 mb-0">
+                                      Total
+                                    </p>
+                                    <label>{{ detalle.controls.precio.value }}</label>
+                                  </div>
+                                  <!--<div
+                                    class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
+                                    <i-feather name="trash"
+                                               class="cursor-pointer font-medium-3 text-danger"
+                                               data-repeater-delete
+                                               (click)="removerItemExtra(i)"></i-feather>
+
+                                  </div>-->
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </form>
+                  </div>
+                  <!--<div class="row mt-1">
+                    <div class="col-12 px-0">
+                      <button type="button" class="btn btn-primary btn-sm btn-add-new"
+                              data-repeater-create>
+                        <i-feather name="plus" class="mr-25 edit-user"></i-feather>
+                        <span class="align-middle" (click)="agregarItemExtra()">Añadir producto extra</span>
+                      </button>
+                    </div>
+                  </div>-->
+                </div>
                 <div class="card-body invoice-padding bg-light-secondary">
 
                   <div formArrayName="articulos">
@@ -585,108 +683,10 @@
                 <!-- Address and Contact ends -->
                 <hr class="invoice-spacing"/>
                 <!-- Product Details starts -->
-                <div class="card-body invoice-padding">
-                  <div formArrayName="productoExtra">
-                    <form class="source-item">
-                      <div data-repeater-list="group-a"
-                           *ngFor="let detalle of notaPedido.get('productoExtra')['controls']; let i = index;">
-                        <ng-container class="row" [formGroup]="detalle">
-                          <div class="repeater-wrapper" data-repeater-item>
-                            <div class="row">
-                              <div class="col-12 d-flex product-details-border position-relative pr-0">
-                                <div class="row w-100 pr-lg-0 pr-1 py-2">
-                                  <div class="col-lg-5 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
-                                    <p class="card-text col-title mb-md-50 mb-0">
-                                      Enlace del producto
-                                    </p>
-                                    <input class="form-control" type="text"
-                                           formControlName="urlProducto">
-                                    <div *ngIf="detalle.controls.urlProducto.errors"
-                                         class="invalid-feedback"
-                                         style="display: block;">
-                                      <div *ngIf="detalle.controls.urlProducto.errors.required">
-                                        Requerido
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                    <p class="card-text col-title mb-md-50 mb-0 red text-danger">
-                                      Cantidad
-                                    </p>
-                                    <input type="text" class="form-control"
-                                           formControlName="cantidad"
-                                           (change)="calcular()"
-                                    />
-                                    <div *ngIf="detalle.controls.cantidad.errors"
-                                         class="invalid-feedback"
-                                         style="display: block;">
-                                      <div *ngIf="detalle.controls.cantidad.errors.required">
-                                        Requerido
-                                      </div>
-                                      <div *ngIf="detalle.controls.cantidad.errors.min">
-                                        Ingrese minimo 1
-                                      </div>
-                                      <div *ngIf="detalle.controls.cantidad.errors.pattern">
-                                        Ingrese número enteros
-                                      </div>
-                                    </div>
 
-                                  </div>
-
-                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                    <p class="card-text col-title mb-md-50 mb-0">
-                                      Precio
-                                    </p>
-                                    <input type="text" class="form-control"
-                                           formControlName="valorUnitario"
-                                           (change)="calcular()"
-                                           placeholder="00.00"
-                                    />
-                                    <div *ngIf="detalle.controls.valorUnitario.errors"
-                                         class="invalid-feedback"
-                                         style="display: block;">
-                                      <div *ngIf="detalle.controls.valorUnitario.errors.required">
-                                        Requerido
-                                      </div>
-                                      <div *ngIf="detalle.controls.valorUnitario.errors.pattern">
-                                        Ingrese número válidos
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="col-lg-2 col-12 my-lg-0 my-2">
-                                    <p class="card-text col-title mb-md-50 mb-0">
-                                      Total
-                                    </p>
-                                    <label>{{ detalle.controls.precio.value }}</label>
-                                  </div>
-                                  <div
-                                    class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
-                                    <i-feather name="trash"
-                                               class="cursor-pointer font-medium-3 text-danger"
-                                               data-repeater-delete
-                                               (click)="removerItemExtra(i)"></i-feather>
-
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </ng-container>
-                      </div>
-                    </form>
-                  </div>
-                  <div class="row mt-1">
-                    <div class="col-12 px-0">
-                      <button type="button" class="btn btn-primary btn-sm btn-add-new"
-                              data-repeater-create>
-                        <i-feather name="plus" class="mr-25 edit-user"></i-feather>
-                        <span class="align-middle" (click)="agregarItemExtra()">Añadir producto extra</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
                 <div class="card-footer bg-light-warning text-center">
-                  <h4 class="text-warning">Total de comisión de este pedido: {{ notaPedido.value.comision | currency }}</h4>
+                  <h4 class="text-warning">Total de comisión de este
+                    pedido: {{ notaPedido.value.comision | currency }}</h4>
                 </div>
                 <!-- Product Details ends -->
                 <hr class="invoice-spacing"/>

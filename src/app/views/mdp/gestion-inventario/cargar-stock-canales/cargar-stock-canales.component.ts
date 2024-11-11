@@ -64,6 +64,7 @@ export class CargarStockCanalesComponent implements OnInit {
         const extension = file.name.split('.').pop().toLowerCase();
         if (extension !== 'xls') {
           this.toaster.open('Por favor, seleccione un archivo con la extensión .xls', {type: 'danger'});
+          fileInput.value = '';
           return null;
         }
 
@@ -129,10 +130,10 @@ export class CargarStockCanalesComponent implements OnInit {
 
       this.mostrarSpinner2 = false;
       this.archivo.delete('archivo');
-
     }, (error) => {
       this.toaster.open('No es valido el archivo', {type: 'danger'});
       this.mostrarSpinner2 = false;
+      this.archivo.delete('archivo');
     });
   }
 
