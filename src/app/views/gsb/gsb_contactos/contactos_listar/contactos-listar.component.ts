@@ -16,6 +16,7 @@ import {ProductosService} from '../../../../services/mdp/productos/productos.ser
 import {ValidacionesPropias} from '../../../../utils/customer.validators';
 import {GdParamService} from '../../../../services/gsb/param/param.service';
 import {AuthService} from '../../../../services/admin/auth.service';
+import {PedidosService} from "../../../../services/mp/pedidos/pedidos.service";
 
 @Component({
   selector: 'app-gsb-contactos-listar',
@@ -41,6 +42,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   opciones;
   pais = 'Ecuador';
   ciudad = '';
+  sector = '';
   provincia = '';
   ciudadOpciones;
   provinciaOpciones;
@@ -81,7 +83,9 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   mostrarInputArchivoComprobante = false;
   formaEntrega;
   cuentaBancaria;
-
+  mostrarBotonEnviarGDP = false;
+  mostrarBoton = true;
+  sectorOpciones;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -94,6 +98,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     private paramServiceMdm: GdParamService,
     private router: Router,
     private authService: AuthService,
+    private pedidosService: PedidosService,
     @Inject(LOCALE_ID) public locale: string
   ) {
     this.currentUserValue = this.authService.currentUserValue;
@@ -148,28 +153,51 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
         nombres: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         apellidos: ['', [Validators.required, Validators.minLength(1), Validators.pattern('[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+')]],
         correo: ['', [Validators.required, Validators.email]],
-        tipoIdentificacion: [this.tipoIdentificacion, []],
+        tipoIdentificacion: [this.tipoIdentificacion, [Validators.required]],
         identificacion: ['', []],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: [this.pais, [Validators.required]],
         provincia: ['', [Validators.required]],
         ciudad: ['', [Validators.required]],
+        sector: ['', [Validators.required]],
+        callePrincipal: ['', [Validators.required]],
+        numero: ['', [Validators.required]],
+        calleSecundaria: ['', [Validators.required]],
+        referencia: ['', [Validators.required]],
+        gps: [''],
         codigoVendedor: ['', []],
         nombreVendedor: ['', []],
-        comprobantePago: ['', []],
       }),
       articulos: this.formBuilder.array([], Validators.required),
-      productoExtra: this.formBuilder.array([], Validators.required),
+      productoExtra: this.formBuilder.array([]),
       total: ['', [Validators.required]],
       subtotal: [0],
       envioTotal: [0, []],
       numeroPedido: ['', [Validators.required]],
       created_at: [this.obtenerFechaActual(), [Validators.required]],
       metodoPago: ['', [Validators.required]],
-      verificarPedido: [true, []],
+      verificarPedido: [false, []],
       canal: [''],
-      estado: ['Pendiente de entrega'],
-      envio: ['', []],
+      estado: ['Pendiente'],
+      envio: this.formBuilder.group({
+        nombres: [''],
+        apellidos: [''],
+        correo: [''],
+        tipoIdentificacion: [''],
+        identificacion: [''],
+        telefono: [''],
+        pais: [this.pais],
+        provincia: [''],
+        ciudad: [''],
+        sector: [''],
+        callePrincipal: [''],
+        numero: [''],
+        calleSecundaria: [''],
+        referencia: [''],
+        gps: [''],
+        codigoVendedor: ['', []],
+        nombreVendedor: ['', []],
+      }),
       archivoMetodoPago: [''],
       montoPrevioPago: [''],
       nombreEnvio: [''],
@@ -212,8 +240,8 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       caracteristicas: ['', []],
       precios: [[], []],
       canal: [''],
-      woocommerceId: [''],
       imagen_principal: ['', [Validators.required]],
+      prefijo: ['', []],
       porcentaje_comision: [0],
       valor_comision: [0],
       monto_comision: [0]
@@ -251,12 +279,12 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     this.contactoService.obtenerLista({
       page: this.page - 1,
       page_size: this.pageSize,
-      //estadoGestion: true
+      estado: ['NUEVO', 'CONTACTO FALSO', 'EN PROCESO DE VENTA']
       //inicio: this.inicio,
       //fin: this.transformarFecha(this.fin),
     }).subscribe((info) => {
       this.collectionSize = info.cont;
-      this.listaContacto = info.info.filter(datos => datos.estado !== 'CONCRETADO');
+      this.listaContacto = info.info;
     });
   }
 
@@ -287,7 +315,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     });
 
     this.notaPedido.reset();
-    this.detallesArrayProductoExtra.clear();
+    //this.detallesArrayProductoExtra.clear();
 
     this.modalService.open(modal, {size: 'xl', backdrop: 'static'});
 
@@ -312,9 +340,9 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       this.notaPedido.get('productoExtra').setValue(info.articulos);
 
       this.notaPedido.get('metodoPago').setValue('');
-      this.notaPedido.get('verificarPedido').setValue(true);
+      this.notaPedido.get('verificarPedido').setValue(false);
       this.notaPedido.get('canal').setValue(info.canal);
-      this.notaPedido.get('estado').setValue('Pendiente de entrega');
+      this.notaPedido.get('estado').setValue('Pendiente');
       this.notaPedido.get('envioTotal').setValue(0);
 
       this.calcular();
@@ -326,7 +354,6 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));*/
-    console.log('ID CONTACTO', this.idContacto);
     if (this.notaPedido.value.valorUnitario === 0) {
       this.toaster.open('Seleccione un precio que sea mayor a 0.', {type: 'danger'});
       return;
@@ -342,6 +369,9 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
+
+      this.notaPedido.get('envio').patchValue({...this.notaPedido.value.facturacion});
+
       const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
 
@@ -358,14 +388,13 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       });
 
       this.archivo.delete('id');
-      this.archivo.delete('envio');
+      this.archivo.delete('productoExtra');
 
       if (!this.notaPedido.value.montoPrevioPago) {
         this.archivo.delete('montoPrevioPago');
-
       }
 
-      this.superBaratoService.crearNuevoSuperBarato(this.archivo).subscribe((info) => {
+      /*this.superBaratoService.crearNuevoSuperBarato(this.archivo).subscribe((info) => {
           //ACTUALIZAR ESTADO DE CONTACTO
           this.contactoService.actualizarEstadoContacto(this.idContacto, 'CONCRETADO').subscribe((data) => {
             this.columnaAcciones = true;
@@ -383,12 +412,27 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
             this.obtenerContactos();
           }, error => {
             this.toaster.open(error, {type: 'danger'});
-          });*/
+          });
 
           // this.obtenerDatosSuperBarato();
 
         }, error => this.toaster.open(error, {type: 'danger'})
-      );
+      );*/
+      this.pedidosService.crearPedidoSuperBarato(this.archivo).subscribe(result => {
+        //ACTUALIZAR ESTADO DE CONTACTO
+        this.contactoService.actualizarEstadoContacto(this.idContacto, 'CONCRETADO').subscribe((data) => {
+          this.columnaAcciones = true;
+          this.toaster.open('Estado del contacto actualizado.', {type: 'success'});
+        }, error => {
+          this.toaster.open(error, {type: 'danger'});
+        });
+        this.modalService.dismissAll();
+        this.obtenerContactos();
+        this.toaster.open('Pedido enviado', {type: 'success'});
+
+      }, error => {
+        this.toaster.open('Error al guardar pedido', {type: 'danger'})
+      });
     }
   }
 
@@ -413,7 +457,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
           this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
           const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
-          this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
+          this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto);
           this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
           this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
           this.detallesArray.controls[i].get('imagen_principal').setValue(info?.imagen_principal);
@@ -672,11 +716,69 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
 
     if (selectedValue.includes('Previo Pago')) {
       this.handlePrevioPago();
+      this.handleDefault();
+    } else if (selectedValue.includes('Retiro')) {
+      this.handleRetiroEnLocal();
+      alert("Nota: La forma de entrega del pedido es Retiro en Local, al completar el pedido se enviará al local para que el cliente se acerque a retirar.");
+    } else {
+      this.handleDefault();
     }
-    ;
 
     this.updateEnvioList(selectedValue);
     this.obtenerMetodoPago(selectedValue);
+  }
+
+  private handleDefault() {
+    this.mostrarBoton = true;
+    this.mostrarBotonEnviarGDP = false;
+    this.notaPedido.get('facturacion')['controls']['pais'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['pais'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['provincia'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['provincia'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['ciudad'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['ciudad'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['sector'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['sector'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['tipoIdentificacion'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['tipoIdentificacion'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['callePrincipal'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['callePrincipal'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['numero'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['numero'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['calleSecundaria'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['calleSecundaria'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['referencia'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['referencia'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['correo'].setValidators([Validators.required]);
+    this.notaPedido.get('facturacion')['controls']['correo'].updateValueAndValidity();
+
+  }
+
+  private handleRetiroEnLocal() {
+    this.mostrarBotonEnviarGDP = true;
+    this.mostrarBoton = false;
+    this.notaPedido.get('facturacion')['controls']['pais'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['pais'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['provincia'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['provincia'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['ciudad'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['ciudad'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['sector'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['sector'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['correo'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['correo'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['tipoIdentificacion'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['tipoIdentificacion'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['identificacion'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['identificacion'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['callePrincipal'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['callePrincipal'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['numero'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['numero'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['calleSecundaria'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['calleSecundaria'].updateValueAndValidity();
+    this.notaPedido.get('facturacion')['controls']['referencia'].setValidators([]);
+    this.notaPedido.get('facturacion')['controls']['referencia'].updateValueAndValidity();
   }
 
   private resetValidationAndFlags() {
@@ -719,6 +821,38 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     this.notaPedido.get('nombreEnvio').setValue(nombre);
     this.calcular();
 
+  }
+
+  generarPedido(): void {
+    if (this.notaPedido.invalid) {
+      this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
+      return;
+    }
+
+    // Acceder a los valores actuales del formulario
+    const formData = this.notaPedido.value;
+
+    // Extraer los artículos del primer objeto de 'pedidos' y asignarlos a 'articulos'
+
+    const articulos = this.notaPedido.value.articulos;
+    formData.articulos.push(...articulos); // Aquí expandimos el array de artículos directamente
+
+
+    localStorage.setItem('pedidoConcretarVenta', JSON.stringify(formData));
+
+    //window.open('#/gdp/pedidos/woocommerce');
+    window.location.href = '#/gdp/pedidos';
+
+  }
+
+  obtenerSector(): void {
+    //if (this.notaPedido.value.facturacion.ciudad !== 'Quito') {
+    //  this.sectorOpciones = [{nombre: this.notaPedido.value.facturacion.ciudad}];
+    //} else {
+    this.paramServiceAdm.obtenerListaHijos(this.notaPedido.value.facturacion.ciudad, 'CIUDAD').subscribe((info) => {
+      this.sectorOpciones = info;
+    });
+    //}
   }
 
 }

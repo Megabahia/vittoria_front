@@ -316,7 +316,7 @@
                       <div class="col-md-3 col-12">
                         <label for="ciudadFact">Ciudad</label>
                         <select class="form-control" name="ciudadFact" formControlName="ciudad"
-                                [(ngModel)]="ciudad" id="ciudadFact">
+                                [(ngModel)]="ciudad" id="ciudadFact" (change)="obtenerSector()">
                           <option value="" selected>- Seleccione -</option>
                           <option value="{{ciudad.nombre}}" *ngFor="let ciudad of ciudadOpciones">
                             {{ ciudad.nombre }}
@@ -328,6 +328,76 @@
                             Requerido
                           </div>
                         </div>
+                      </div>
+                      <div class="col-md-3 col-12">
+                        <label class="form-label" for="sectorOrigen">Sector</label>
+                        <select class="form-control" id="sectorOrigen" formControlName="sector" [(ngModel)]="sector">
+                          <option value="" selected>- Seleccione -</option>
+                          <option value="{{sector.nombre}}" *ngFor="let sector of sectorOpciones">
+                            {{ sector.nombre }}
+                          </option>
+                        </select>
+                        <div *ngIf="facturacionForm.sector.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="facturacionForm.sector.errors.required">
+                            Requerido
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 col-12">
+                        <label>Calle principal</label>
+                        <input class="form-control" type="text"
+                               formControlName="callePrincipal"
+                        >
+                        <div *ngIf="facturacionForm.callePrincipal.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="facturacionForm.callePrincipal.errors.required">
+                            Requerido
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 col-12">
+                        <label>Número de casa</label>
+                        <input class="form-control" type="text"
+                               formControlName="numero"
+                        >
+                        <div *ngIf="facturacionForm.numero.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="facturacionForm.numero.errors.required">
+                            Requerido
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 col-12">
+                        <label>Calle secundaria</label>
+                        <input class="form-control" type="text"
+                               formControlName="calleSecundaria"
+                        >
+                        <div *ngIf="facturacionForm.calleSecundaria.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="facturacionForm.calleSecundaria.errors.required">
+                            Requerido
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 col-12">
+                        <label>Referencia</label>
+                        <input class="form-control" type="text"
+                               formControlName="referencia"
+                        >
+                        <div *ngIf="facturacionForm.referencia.errors"
+                             class="invalid-feedback" style="display: block;">
+                          <div *ngIf="facturacionForm.referencia.errors.required">
+                            Requerido
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 col-12">
+                        <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a> </label>
+                        <input class="form-control" type="text"
+                               formControlName="gps"
+                        >
+
                       </div>
                     </div>
                   </div>
@@ -774,7 +844,11 @@
             </button>
             <button class="btn btn-primary mx-1"
                     (click)="generarPedidoContacto()"
-            >Guardar
+                    *ngIf="mostrarBoton"
+            >Enviar Pedido
+            </button>
+            <button class="btn btn-primary my-2 mx-2 col-md-3 col-12" (click)="generarPedido()"
+                    *ngIf="mostrarBotonEnviarGDP">Enviar a generar pedido
             </button>
           </div>
         </ng-template>

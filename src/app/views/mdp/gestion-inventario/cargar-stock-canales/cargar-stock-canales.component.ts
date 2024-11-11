@@ -22,6 +22,7 @@ export class CargarStockCanalesComponent implements OnInit {
   canalOpciones;
   page = 1;
   pageSize = 3;
+  listaProductosResumen;
   constructor(
     private toaster: Toaster,
     private gestionInventarioService: GestionInventarioService,
@@ -126,12 +127,14 @@ export class CargarStockCanalesComponent implements OnInit {
         mensajeError += mensaje.error + '<br>';
       });
       this.resumen = 'Correctos: ' + info.correctos + '<br> Incorrectos ' + info.incorrectos + '<br></br>' + 'Errores: <br>' + mensajeError;
+      this.listaProductosResumen = info.data;
       this.toaster.open('Se cargo correctamente', {type: 'success'});
 
       this.mostrarSpinner2 = false;
       this.archivo.delete('archivo');
     }, (error) => {
       this.toaster.open('No es valido el archivo', {type: 'danger'});
+      this.listaProductosResumen = [];
       this.mostrarSpinner2 = false;
       this.archivo.delete('archivo');
     });

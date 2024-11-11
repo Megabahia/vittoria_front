@@ -224,7 +224,7 @@ export class ReporteContactosVentasComponent implements OnInit, AfterViewInit {
     this.contactoService.obtenerLista({
       page: this.page - 1,
       page_size: this.pageSize,
-      estado: 'CONCRETADO'
+      estado: ['CONCRETADO']
       //inicio: this.inicio,
       //fin: this.transformarFecha(this.fin),
     }).subscribe((info) => {
