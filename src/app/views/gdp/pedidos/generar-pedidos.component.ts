@@ -641,6 +641,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       this.productoDesdeConsulta = JSON.parse(data);
       this.notaPedido.patchValue({...this.productoDesdeConsulta});
       this.obtenerCiudad();
+      this.notaPedido.get('estado').setValue('Pendiente de retiro');
       this.productoDesdeConsulta.articulos.map((datos, index) => {
         this.agregarItem();
         this.detallesArray.controls[index].get('codigo').setValue(datos.codigo);
