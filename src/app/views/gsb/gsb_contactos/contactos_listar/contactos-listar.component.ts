@@ -86,6 +86,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   mostrarBotonEnviarGDP = false;
   mostrarBoton = true;
   sectorOpciones;
+  desabilitarDescuento = false;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -229,7 +230,6 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
 
   crearDetalleGrupo(): any {
     return this.formBuilder.group({
-      id: [''],
       codigo: ['', [Validators.required]],
       articulo: ['', [Validators.required]],
       valorUnitario: [0, [Validators.required, Validators.min(0.01)]],
@@ -305,7 +305,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
 
 
   obtenerDatosContacto(modal, id, canal): void {
-
+    this.iniciarNotaPedido();
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'METODO PAGO', '', canal).subscribe((result) => {
       this.listaMetodoPago = result.data; // Asegura que el resultado sea siempre un array
     });
@@ -452,7 +452,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
         //if(info.mensaje==''){
         if (info.codigoBarras) {
           //this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
-          this.detallesArray.controls[i].get('id').setValue(info.id);
+          //this.detallesArray.controls[i].get('id').setValue(info.id);
           this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
           this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
@@ -468,7 +468,6 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
           this.detallesArray.controls[i].get('porcentaje_comision').setValue(info?.porcentaje_comision);
           this.detallesArray.controls[i].get('valor_comision').setValue(info?.valor_comision);
           this.detallesArray.controls[i].get('canal').setValue(info.canal);
-          this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId);
           this.detallesArray.controls[i].get('monto_comision').setValue(0);
           this.calcular();
           resolve();
@@ -731,6 +730,8 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   private handleDefault() {
     this.mostrarBoton = true;
     this.mostrarBotonEnviarGDP = false;
+    this.desabilitarDescuento = false;
+
     this.notaPedido.get('facturacion')['controls']['pais'].setValidators([Validators.required]);
     this.notaPedido.get('facturacion')['controls']['pais'].updateValueAndValidity();
     this.notaPedido.get('facturacion')['controls']['provincia'].setValidators([Validators.required]);
@@ -757,6 +758,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   private handleRetiroEnLocal() {
     this.mostrarBotonEnviarGDP = true;
     this.mostrarBoton = false;
+    this.desabilitarDescuento = true;
     this.notaPedido.get('facturacion')['controls']['pais'].setValidators([]);
     this.notaPedido.get('facturacion')['controls']['pais'].updateValueAndValidity();
     this.notaPedido.get('facturacion')['controls']['provincia'].setValidators([]);
@@ -829,17 +831,19 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    this.notaPedido.removeControl('productoExtra');
+
     // Acceder a los valores actuales del formulario
     const formData = this.notaPedido.value;
 
     // Extraer los artículos del primer objeto de 'pedidos' y asignarlos a 'articulos'
 
-    const articulos = this.notaPedido.value.articulos;
-    formData.articulos.push(...articulos); // Aquí expandimos el array de artículos directamente
+    //const articulos = this.notaPedido.value.articulos;
+    //formData.articulos.push(...articulos); // Aquí expandimos el array de artículos directamente
 
 
     localStorage.setItem('pedidoConcretarVenta', JSON.stringify(formData));
-
+    this.modalService.dismissAll();
     //window.open('#/gdp/pedidos/woocommerce');
     window.location.href = '#/gdp/pedidos';
 
