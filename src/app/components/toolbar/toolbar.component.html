@@ -168,7 +168,6 @@
           </li>
         </ul>
       </li>
-
       <li class="nav-item" *ngIf="acciones.MDP.LEER">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
@@ -843,7 +842,7 @@
               <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas por método de envío</span>
             </a>
           </li>
-          <li *ngIf="usuario.usuario.idRol !== 58 && usuario.usuario.idRol !== 52 || usuario.usuario.idRol === 54"
+          <li
               class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}">
             <a class="d-flex align-items-center" href="#/gcn/reporte-ventas-centro-negocio/list" data-toggle="tooltip"
                data-placement="auto" title="Reporte de ventas del centro de negocio por contacto local">
@@ -851,7 +850,7 @@
               <span class="menu-item text-truncate" data-i18n="List">Reporte de ventas del centro de negocio por contacto local</span>
             </a>
           </li>
-          <li *ngIf="usuario.usuario.idRol !== 58 && usuario.usuario.idRol !== 52 || usuario.usuario.idRol === 54"
+          <li
               class="nav-item {{menuToolbar['gcn']['reporteVentasVendedor']}}">
             <a class="d-flex align-items-center" href="#/gcn/reporte-ventas-centro-negocio-metodo-envio/list"
                data-toggle="tooltip"

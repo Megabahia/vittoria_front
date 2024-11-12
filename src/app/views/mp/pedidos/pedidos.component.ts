@@ -259,12 +259,13 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
       this.horaPedido = this.extraerHora(info.created_at);
 
-      this.validarCiudadEnProvincia(info.facturacion.provincia, info.facturacion.ciudad, info.envio.provincia, info.envio.ciudad);
+      //this.validarCiudadEnProvincia(info.facturacion.provincia, info.facturacion.ciudad, info.envio.provincia, info.envio.ciudad);
       /*info.articulos.forEach((item, index) => {
         this.obtenerProducto(index);
       });*/
 
       info.articulos.map((item): void => {
+
         this.agregarItem();
       });
 
@@ -357,7 +358,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
             this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
             const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
-            this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
+            this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto);
             this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
             this.detallesArray.controls[i].get('imagen').setValue(info.imagen);
             this.detallesArray.controls[i].get('imagen_principal').setValue(info.imagen_principal);

@@ -3,6 +3,7 @@ import {Toaster} from 'ngx-toast-notifications';
 import {GestionInventarioService} from '../../../../services/mdp/gestion-inventario/gestion-inventario.service';
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {ParamService as ParamServiceAdm} from "../../../../services/admin/param.service";
+import {IntegracionesService} from "../../../../services/admin/integraciones.service";
 
 @Component({
   selector: 'app-cargar-stock-canales',
@@ -21,16 +22,19 @@ export class CargarStockCanalesComponent implements OnInit {
   canalOpciones;
   page = 1;
   pageSize = 3;
+  listaProductosResumen;
   constructor(
     private toaster: Toaster,
     private gestionInventarioService: GestionInventarioService,
     private productosService: ProductosService,
     private paramServiceAdm: ParamServiceAdm,
-  ) {
+    private integracionesService: IntegracionesService
 
-    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', '').subscribe((result) => {
+  ) {
+    this.obtenerListaParametrosCanal();
+    /*this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', '').subscribe((result) => {
       this.canalOpciones = result.data;
-    });
+    });*/
   }
 
   ngOnInit(): void {
@@ -38,6 +42,16 @@ export class CargarStockCanalesComponent implements OnInit {
       modulo: 'mdp',
       seccion: 'stockAct'
     };
+  }
+
+  obtenerListaParametrosCanal() {
+    const datos = {
+      page: this.page,
+      page_size: this.pageSize
+    };
+    this.integracionesService.obtenerListaIntegraciones(datos).subscribe((result) => {
+      this.canalOpciones = result.data;
+    });
   }
 
   cargarArchivoMegabahia(event): void {
@@ -51,6 +65,7 @@ export class CargarStockCanalesComponent implements OnInit {
         const extension = file.name.split('.').pop().toLowerCase();
         if (extension !== 'xls') {
           this.toaster.open('Por favor, seleccione un archivo con la extensión .xls', {type: 'danger'});
+          fileInput.value = '';
           return null;
         }
 
@@ -112,14 +127,16 @@ export class CargarStockCanalesComponent implements OnInit {
         mensajeError += mensaje.error + '<br>';
       });
       this.resumen = 'Correctos: ' + info.correctos + '<br> Incorrectos ' + info.incorrectos + '<br></br>' + 'Errores: <br>' + mensajeError;
+      this.listaProductosResumen = info.data;
       this.toaster.open('Se cargo correctamente', {type: 'success'});
 
       this.mostrarSpinner2 = false;
       this.archivo.delete('archivo');
-
     }, (error) => {
       this.toaster.open('No es valido el archivo', {type: 'danger'});
+      this.listaProductosResumen = [];
       this.mostrarSpinner2 = false;
+      this.archivo.delete('archivo');
     });
   }
 

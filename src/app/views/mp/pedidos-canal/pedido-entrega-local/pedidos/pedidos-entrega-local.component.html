@@ -70,18 +70,18 @@
               <td [title]="transaccion.metodoPago">{{ transaccion.metodoPago | shorten }}</td>
               <td>{{ transaccion.facturacion.telefono }}</td>
               <td>{{ transaccion.estado }}</td>
-
+              <td>
+                <a (click)="obtenerContacto(notaPedidoModal, transaccion.id)">
+                  <i-feather name="eye" class="mr-25"></i-feather>
+                </a>
+              </td>
               <td>
                 <a href="{{transaccion.fotoCupon}}" *ngIf="transaccion.fotoCupon"
                    target="_blank">
                   <i-feather name="file-text" class="mr-25"></i-feather>
                 </a>
               </td>
-              <td>
-                <a (click)="obtenerContacto(notaPedidoModal, transaccion.id)">
-                  <i-feather name="eye" class="mr-25"></i-feather>
-                </a>
-              </td>
+
               <td>
                 <button *ngIf="transaccion.verificarPedido && transaccion.estado !== 'Facturado'"
                         class="btn btn-primary"
@@ -551,7 +551,7 @@
             </button>
             <button class="btn btn-primary mx-1"
                     (click)="actualizarContacto()"
-            >Actualizar
+            >Confirmar
             </button>
           </div>
         </ng-template>

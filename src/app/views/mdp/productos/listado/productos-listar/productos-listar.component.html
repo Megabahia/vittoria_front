@@ -6,8 +6,9 @@
     </div>
     <div class="content-body">
       <div class="card">
-        <h5 class="card-header">Administrar productos</h5>
+        <h3 class="card-header d-flex justify-content-center">Administrar productos</h3>
         <div class="card-body">
+          <h6 class="py-1">Filtros de búsqueda</h6>
           <div class="row">
 
             <div class="col-md-4">
@@ -17,6 +18,18 @@
             <div class="col-md-4">
               <input class="form-control form-control-sm" type="text" placeholder="Nombre producto"
                      [(ngModel)]="nombreBuscar">
+            </div>
+            <div class="col-md-2">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="customCheckImagen" [(ngModel)]="filtroImagen" [checked]="filtroImagen"/>
+                <label class="custom-control-label" for="customCheckImagen">Sin imagen</label>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="customCheckCanal" [(ngModel)]="filtroCanal" [checked]="filtroCanal"/>
+                <label class="custom-control-label" for="customCheckCanal">Sin canal</label>
+              </div>
             </div>
           </div>
           <div class="row mt-2">
@@ -29,12 +42,15 @@
               </select>
             </div>
             <div class="col-md-4">
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="customCheck" [(ngModel)]="filtroImagen" [checked]="filtroImagen"/>
-                <label class="custom-control-label" for="customCheck">Con imagen</label>
-              </div>
+              <select class="form-control select2" name="estado"
+                      [(ngModel)]="estadoProducto">
+                <option value="" selected>- Seleccione estado a buscar-</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
 
+              </select>
             </div>
+
             <div class="col-md-4">
               <button class="btn btn-primary" (click)="obtenerListaProductos()">
                 <i-feather name='search' class="edit-user"></i-feather>

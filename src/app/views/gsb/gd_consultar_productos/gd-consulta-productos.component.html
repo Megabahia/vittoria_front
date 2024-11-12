@@ -10,16 +10,18 @@
       <div class="container">
         <div class="card">
           <div class="row p-2 d-flex align-items-center">
-            <div class="col-md-2 col-12 mt-2 ">
+            <div class="col-md-3 col-12 mt-2 ">
               <h5>Filtros de búsqueda: <span class="text-danger">*</span></h5>
             </div>
             <div class="col-md-3 col-12 mt-2">
-              <input class="form-control" type="text" [(ngModel)]="codigoBarras" placeholder="Código de producto" (change)="obtenerProducto()">
+              <input class="form-control" type="text" [(ngModel)]="codigoBarras" placeholder="Código de producto"
+                     (change)="obtenerProducto()">
             </div>
             <div class="col-md-3 col-12 mt-2">
-              <input class="form-control" type="text" [(ngModel)]="nombreProducto" placeholder="Nombre de producto" (change)="obtenerProducto()">
+              <input class="form-control" type="text" [(ngModel)]="nombreProducto" placeholder="Nombre de producto"
+                     (change)="obtenerProducto()">
             </div>
-            <div class="col-md-3 col-12 mt-2 ml-2">
+            <div class="col-md-3 col-12 mt-2">
               <button class="btn btn-primary" (click)="obtenerProducto()">Consultar</button>
             </div>
           </div>
@@ -32,7 +34,8 @@
               <div class="card-header bg-primary d-flex justify-content-center">
                 <h5 class="card-title text-center">
                   {{ producto?.nombre }}
-                  <h6>SKU: {{ producto?.prefijo }}{{ producto?.codigoBarras }}</h6>
+                  <h6>Prefijo: <strong>{{ producto?.prefijo }}</strong></h6>
+                  <h6>Código del producto: <strong>{{ producto?.codigoBarras }}</strong></h6>
                 </h5>
               </div>
               <div class="card-body bg-light">
@@ -43,9 +46,11 @@
                   <li><strong>Precio Oferta:</strong> <span
                     class="text-danger"> {{ producto?.precioOferta | currency }}</span>
                   </li>
-                  <li><strong>Cantidad en Stock real:</strong> {{ producto?.stock }}</li>
+
                   <li><strong>Ubicación del producto (Origen):</strong> {{ producto?.canal }}</li>
-                  <li><strong>Tienda:</strong> {{ integracionProducto?.nombre }}</li>-->
+                  <li><strong>Tienda:</strong> {{ integracionProducto?.nombre }}</li>
+                  -->
+                  <li><strong>Cantidad disponible:</strong> {{ producto?.stock }} unidades</li>
                 </ul>
                 <!-- Fotos principal -->
                 <div class="row mx-0">
@@ -173,13 +178,18 @@
                     <td>
                       <ul>
                         <li *ngFor="let formaPago of item.formas_pago">
-                          {{ formaPago.nombre ? formaPago.nombre : 'No existen formas de entrega para este producto' }} -
-                          <span class="text-info"> Tiempo de entrega: {{ formaPago.tiempo_entrega ? formaPago.tiempo_entrega : 'No especificado' }}</span>
+                          {{ formaPago.nombre ? formaPago.nombre : 'No existen formas de entrega para este producto' }}
+                          -
+                          <span
+                            class="text-info"> Tiempo de entrega: {{ formaPago.tiempo_entrega ? formaPago.tiempo_entrega : 'No especificado' }}</span>
                         </li>
                       </ul>
                     </td>
                     <td>{{ item.precioVentaA | currency }}</td>
-                    <td class="text-danger">Por la venta de 1 producto recibe {{ calcularComision(item.precioVentaA, item.porcentaje_comision, item.valor_comision) | currency}} de comisión</td>
+                    <td class="text-danger">Por la venta de 1 producto
+                      recibe {{ calcularComision(item.precioVentaA, item.porcentaje_comision, item.valor_comision) | currency }}
+                      de comisión
+                    </td>
                   </tr>
                   </tbody>
                 </table>
@@ -322,6 +332,9 @@
               </div>-->
             </div>
           </div>
+        </div>
+        <div class="card-footer d-flex justify-content-center">
+          <a class="btn btn-secondary" href="/#/gd/contacto/list">Regresar a concretar venta</a>
         </div>
         <!--<ng-template #miCarrito let-modal>
           <div class="modal-header">
