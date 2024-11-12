@@ -68,8 +68,8 @@ export class ContactosService {
     const payload = { estado: nuevoEstado };
     return this.http.post<any>(`${apiUrl}/mdm/contactos/update/${id}`, payload);
   }
-  actualizarEstadoGestionContacto(id, nuevoEstado, estadoContacto, fechaVentaConcretada) {
-    const payload = { estadoGestion: nuevoEstado, estado: estadoContacto,fecha_venta_concretada: fechaVentaConcretada};
+  actualizarEstadoGestionContacto(id, nuevoEstado, fechaVentaConcretada) {
+    const payload = { estadoGestion: nuevoEstado, fecha_venta_concretada: fechaVentaConcretada};
     return this.http.post<any>(`${apiUrl}/mdm/contactos/update/${id}`, payload);
   }
 

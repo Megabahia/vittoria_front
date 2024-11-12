@@ -13,6 +13,7 @@ import { CargarStockComponent } from './cargar-stock/cargar-stock.component';
 import { ProductosComponent } from './productos/productos.component';
 import {CargarStockMegabahiaComponent} from "./cargar-stock-megabahia/cargar-stock-megabahia.component";
 import {CargarStockCanalesComponent} from "./cargar-stock-canales/cargar-stock-canales.component";
+import {GdeModule} from "../../gde/gde.module";
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import {CargarStockCanalesComponent} from "./cargar-stock-canales/cargar-stock-c
     ChartsModule,
     ReactiveFormsModule,
     FlatpickrModule.forRoot(),
-    NgxDropzoneModule
+    NgxDropzoneModule,
+    GdeModule
   ]
 })
 export class GestionInventarioModule {

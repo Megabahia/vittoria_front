@@ -66,7 +66,7 @@
               </td>
 
               <td>
-                <button class="btn btn-primary" (click)="abrirModalPrecios(aprobarProducto, transaccion.id)">
+                <button class="btn btn-primary" (click)="abrirModalPrecios(aprobarProducto, transaccion)">
                   Cargar precios
                 </button>
               </td>
@@ -90,6 +90,9 @@
     </button>
   </div>
   <div class="modal-content">
+    <div class="py-1 text-center">
+      <h6 class="text-info"><strong>COSTO DE COMPRA: {{ costoCompra | currency}}</strong></h6>
+    </div>
     <form [formGroup]="productoRecepcionForm">
       <h5 class="text-warning px-2 mt-1">Precios de venta</h5>
       <div class="row p-2">

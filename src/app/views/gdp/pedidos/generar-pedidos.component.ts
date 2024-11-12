@@ -152,8 +152,9 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     this.obtenerProvincias();
     this.obtenerCiudad();
 
-    if (localStorage.getItem('productoData')) {
+    if (localStorage.getItem('pedidoConcretarVenta')) {
       this.obtenerProductoDesdeConsulta();
+      this.mostrarFiltroCliente = false;
     }
     /*else if (localStorage.getItem('productoDataPedidoWoocommerce')) {
       this.mostrarFiltroCliente = false;
@@ -384,7 +385,7 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     const precios = [];
     Object.keys(info).forEach(clave => {
       if (clave.startsWith('precioVenta')) {
-        precios.push({clave: clave, valor: info[clave] ? info[clave] : 0});
+        precios.push({clave: clave, valor: info[clave] ? parseFloat(info[clave]).toFixed(2) : 0});
       }
     });
     return precios;
@@ -635,13 +636,20 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
   }
 
   obtenerProductoDesdeConsulta() {
-    const data = localStorage.getItem('productoData');
+    const data = localStorage.getItem('pedidoConcretarVenta');
     if (data) {
       this.productoDesdeConsulta = JSON.parse(data);
-      this.agregarItem();
-      this.detallesArray.controls[0].get('codigo').setValue(this.productoDesdeConsulta.codigoBarras);
-      this.obtenerProducto(0);
-      localStorage.removeItem('productoData');
+      this.notaPedido.patchValue({...this.productoDesdeConsulta});
+      this.obtenerCiudad();
+      this.productoDesdeConsulta.articulos.map((datos, index) => {
+        this.agregarItem();
+        this.detallesArray.controls[index].get('codigo').setValue(datos.codigo);
+        this.detallesArray.controls[index].get('valorUnitario').setValue(parseFloat(datos.valorUnitario));
+        this.detallesArray.controls[index].get('cantidad').setValue(parseInt(datos.cantidad));
+        this.detallesArray.controls[index].get('precio').setValue(parseFloat(datos.precio));
+        this.obtenerProducto(index);
+      });
+      localStorage.removeItem('pedidoConcretarVenta');
     }
   }
 
