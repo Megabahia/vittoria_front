@@ -262,7 +262,6 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
       //inicio: this.inicio,
       //fin: this.transformarFecha(this.fin),
       //estado: ['Pendiente'],
-      canal: 'Contacto Local'
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaContactos = info.info;
