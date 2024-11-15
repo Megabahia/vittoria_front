@@ -285,6 +285,7 @@
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Cargar inventario por canal</span></a>
               </li>
+
               <!--<li class="nav-item {{menuToolbar['mdp']['param']}}" *ngIf="usuario.usuario.idRol !== 59">
                 <a class="d-flex align-items-center" href="#/mdp/gestion-proveedores/productos" data-toggle="tooltip"
                    data-placement="auto" title="Listar Productos">
@@ -314,6 +315,13 @@
                 <a class="d-flex align-items-center" href="#/mdp/productos" data-toggle="tooltip"
                    data-placement="auto" title="Listado de productos">
                   <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Listado de productos</span></a>
+              </li>
+              <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
+                <a class="d-flex align-items-center" href="#/mdp/gestion-proveedores/actualizar-inventario"
+                   data-toggle="tooltip"
+                   data-placement="auto" title="Actualizar inventario y precios">
+                  <i data-feather="circle"></i>
+                  <span class="menu-item text-truncate" data-i18n="List">Actualizar inventario y precios</span></a>
               </li>
               <!--<li class="nav-item {{menuToolbar['mdp']['prodBusq']}}" *ngIf="usuario.usuario.idRol !== 59">
                 <a class="d-flex align-items-center" href="#/mdp/productos/search" data-toggle="tooltip"
@@ -371,7 +379,13 @@
 
             </ul>
           </li>
-
+          <li class="nav-item {{menuToolbar['mdp']['param']}}" *ngIf="usuario.usuario.idRol === 1">
+            <a class="d-flex align-items-center" href="#/mdp/gestion-proveedores/cargar-inventario-catalogo"
+               data-toggle="tooltip"
+               data-placement="auto" title="Cargar Inventario Catálogo">
+              <i data-feather="circle"></i>
+              <span class="menu-item text-truncate" data-i18n="List">Cargar Inventario Catálogo</span></a>
+          </li>
         </ul>
       </li>
       <li class="nav-item" *ngIf="acciones.MDP.LEER">

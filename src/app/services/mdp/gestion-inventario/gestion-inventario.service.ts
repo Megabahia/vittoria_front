@@ -35,6 +35,13 @@ export class GestionInventarioService {
   cargarStockCanal(datos): Observable<any> {
     return this.http.post<any>(`${apiUrl}/mdp/gestion-inventario/cargar/stock/canales`, datos);
   }
+  actualizarInvetarioPrecios(datos): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/mdp/gestion-inventario/actualizar/inventario`, datos);
+  }
+
+  cargarInventarioCatalogo(datos): Observable<any> {
+    return this.http.post<any>(`${apiUrl}/mdp/gestion-inventario/exportar/inventario/catalogo/`, datos);
+  }
 
   exportar(): Observable<any> {
     const httpOptions = {
