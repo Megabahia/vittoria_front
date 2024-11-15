@@ -88,6 +88,7 @@ export class CargarInventarioCatalogoComponent implements OnInit {
   }
 
   cargarStock(): void {
+
     if (this.archivo.get('archivo') === null) {
       this.toaster.open('Agrege un archivo', {type: 'warning'});
       return;
