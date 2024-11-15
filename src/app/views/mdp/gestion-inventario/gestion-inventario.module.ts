@@ -14,6 +14,8 @@ import { ProductosComponent } from './productos/productos.component';
 import {CargarStockMegabahiaComponent} from "./cargar-stock-megabahia/cargar-stock-megabahia.component";
 import {CargarStockCanalesComponent} from "./cargar-stock-canales/cargar-stock-canales.component";
 import {GdeModule} from "../../gde/gde.module";
+import {CargarInventarioCatalogoComponent} from "./cargar-inventario-catalogo/cargar-inventario-catalogo.component";
+import {ActualizarInventarioComponent} from "./actualizacion-inventario/actualizar-inventario.component";
 
 
 @NgModule({
@@ -23,7 +25,9 @@ import {GdeModule} from "../../gde/gde.module";
     CargarStockComponent,
     ProductosComponent,
     CargarStockMegabahiaComponent,
-    CargarStockCanalesComponent
+    CargarStockCanalesComponent,
+    CargarInventarioCatalogoComponent,
+    ActualizarInventarioComponent
   ],
   imports: [
     GestionInventarioRoutingModule,
