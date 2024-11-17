@@ -1,0 +1,107 @@
+<div class="app-content content ">
+  <div class="content-overlay"></div>
+  <div class="header-navbar-shadow"></div>
+  <div class="content-wrapper">
+    <div class="content-header row">
+    </div>
+    <div class="content-body">
+      <!-- users list start -->
+      <section class="app-user-list">
+        <div class="card">
+
+          <h5 class="card-header justify-content-center">
+            Cargar inventario de catálogo con el canal {{ canal || '...' }} desde un archivo XLSX
+            <a href="../../../../../assets/files/Plantilla_Inventario_Catalogo.xlsx" target="_blank">Plantilla</a>
+          </h5>
+          <div class="row d-flex justify-content-center">
+            <div class="col-md-4 col-12">
+              <label>Canal</label>
+              <select class="form-control" name="canal" id="canal"
+                      [(ngModel)]="canal">
+                <option value="" selected>- Seleccionar -</option>
+                <option *ngFor="let canalOp of canalOpciones" [value]="canalOp.valor">{{ canalOp.valor }}</option>
+              </select>
+            </div>
+          </div>
+          <!--<h5 class="card-header justify-content-center">
+              Canal: {{ canal }}
+          </h5>-->
+          <div class="card-body">
+            <div class="row justify-content-center">
+              <div class="col-md-6">
+                <div class="input-group d-flex align-items-center justify-content-center">
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="inputGroupFile"
+                           accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                           (change)="cargarArchivoMegabahia($event)">
+                    <label class="custom-file-label" for="inputGroupFile">Seleccionar archivo XLSX</label>
+                  </div>
+                  <div class="input-group-append">
+                    <button (click)="cargarInventarioCatalogo()"
+                            class="input-group-text btn-primary"
+                            [ngClass]="{'loading': mostrarSpinner2}" [disabled]="mostrarSpinner2">
+                                            <span *ngIf="mostrarSpinner2" class="spinner-border spinner-border-sm"
+                                                  role="status"
+                                                  aria-hidden="true"></span>
+                      Cargar
+                    </button>
+                  </div>
+                  <!--<div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck" [(ngModel)]="resetearStock2"
+                           [checked]="resetearStock2"/>
+                    <label class="custom-control-label" for="customCheck">Resetear stock</label>
+                  </div>-->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h5 class="card-header justify-content-center">
+            Resumen
+          </h5>
+          <div class="card-body">
+            <div class="row justify-content-center">
+              <div class="col-md-12">
+                <div [innerHTML]="resumen"></div>
+              </div>
+            </div>
+            <br/>
+            <!--<label>Detalles de productos:</label>
+            <div class="table-responsive">
+              <table class="table">
+                <thead class="thead-light">
+                <tr>
+                  <th>Prefijo</th>
+                  <th>Código de barras</th>
+                  <th>Canal</th>
+                  <th>Nombre</th>
+                  <th>Stock anterior</th>
+                  <th>Nuevo stock</th>
+                  <th>Imagen</th>
+
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr *ngFor="let producto  of listaProductosResumen; let i = index">
+                  <td>{{ producto.prefijo }}</td>
+                  <td>{{ producto.codigoBarras }}</td>
+                  <td>{{ producto.canal }}</td>
+                  <td>{{ producto.nombre }}</td>
+                  <td>{{ producto.stockInicial }}</td>
+                  <td>{{ producto.stock }}</td>
+                  <td>
+                    <img [src]="producto.imagen_principal" alt="Imagen" width="100" height="100"/>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>-->
+          </div>
+        </div>
+      </section>
+      <!-- users list ends -->
+    </div>
+  </div>
+</div>

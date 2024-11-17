@@ -7,6 +7,8 @@ import {CargarStockComponent} from './cargar-stock/cargar-stock.component';
 import {ProductosComponent} from './productos/productos.component';
 import {CargarStockMegabahiaComponent} from "./cargar-stock-megabahia/cargar-stock-megabahia.component";
 import {CargarStockCanalesComponent} from "./cargar-stock-canales/cargar-stock-canales.component";
+import {CargarInventarioCatalogoComponent} from "./cargar-inventario-catalogo/cargar-inventario-catalogo.component";
+import {ActualizarInventarioComponent} from "./actualizacion-inventario/actualizar-inventario.component";
 
 const routes: Routes = [
   {path: '', redirectTo: 'cargar-productos', pathMatch: 'full'},
@@ -24,6 +26,12 @@ const routes: Routes = [
   },
   {
     path: 'cargar-stock-canales', component: CargarStockCanalesComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'actualizar-inventario', component: ActualizarInventarioComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'cargar-inventario-catalogo', component: CargarInventarioCatalogoComponent, canActivate: [AuthGuard]
   },
   {
     path: 'productos', component: ProductosComponent, canActivate: [AuthGuard]
