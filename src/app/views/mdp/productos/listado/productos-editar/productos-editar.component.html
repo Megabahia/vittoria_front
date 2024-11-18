@@ -82,7 +82,7 @@
                         <span class="input-group-text" id="basic-addon1">{{ this.parametros?.prefijo }}</span>
                       </div>
                       <input type="text" class="form-control" name="codigoBarras" formControlName="codigoBarras"
-                             [(ngModel)]="producto.codigoBarras">
+                             [(ngModel)]="producto.codigoBarras" (change)="obtenerProductoCodigo()">
                       <div *ngIf="submittedProductoForm && fp.codigoBarras.errors" class="invalid-feedback"
                            style="display: block;">
                         <div *ngIf="fp.codigoBarras.errors.required">Código de barras es requeridos
@@ -605,6 +605,12 @@
                            src="/assets/images/borrar_imagen.png">
                     </a>
                     <hr>
+                  </div>
+                  <div class="mt-1" *ngIf="productoEncontrado">
+                    <div *ngFor="let imagen of imagenesEncontradas" class="imagen-item">
+                      <img [src]="imagen.imagen" alt="Imagen" width="200" height="200"/>
+                      <br />
+                    </div>
                   </div>
                 </div>
                 <div class="col-md-4 col-12">
