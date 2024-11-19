@@ -237,6 +237,10 @@ export class ProductosService {
     return this.http.get<any>(`${apiUrl}/mdp/productos/listOne/codigoProducto/${codigo}`);
   }
 
+  obtenerReporteHtmlProductos(filtros) {
+    return this.http.post<any>(`${apiUrl}/mdp/productos/exportar/html/`, filtros);
+  }
+
   exportar(filtros): Observable<any> {
     const httpOptions = {
       responseType: 'blob' as 'json',
@@ -253,5 +257,10 @@ export class ProductosService {
 
   copiarProducto(data, id) {
     return this.http.post<any>(`${apiUrl}/mdp/productos/copy/${id}`, data);
+  }
+
+  //CREAR TOKEN PARA CONTROLAR EL TIEMPO AL EXPORTAR HTML
+  generarTokenReporteProductos(datos){
+    return this.http.post<any>(`${apiUrl}/mdp/token-reporte-productos/create`, datos);
   }
 }

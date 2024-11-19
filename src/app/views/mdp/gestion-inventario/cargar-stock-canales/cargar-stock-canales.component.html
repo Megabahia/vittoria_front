@@ -17,7 +17,8 @@
             <div class="col-md-4 col-12">
               <label>Canal</label>
               <select class="form-control" name="canal" id="canal"
-                      [(ngModel)]="canal">
+                      [(ngModel)]="canal"
+                      [disabled]="disabledSelectCanal">
                 <option value="" selected>- Seleccionar -</option>
                 <option *ngFor="let canalOp of canalOpciones" [value]="canalOp.valor">{{ canalOp.valor }}</option>
               </select>

@@ -4,6 +4,7 @@ import {GestionInventarioService} from '../../../../services/mdp/gestion-inventa
 import {ProductosService} from '../../../../services/mdp/productos/productos.service';
 import {ParamService as ParamServiceAdm} from "../../../../services/admin/param.service";
 import {IntegracionesService} from "../../../../services/admin/integraciones.service";
+import {AuthService} from "../../../../services/admin/auth.service";
 
 @Component({
   selector: 'app-cargar-stock-canales',
@@ -23,15 +24,20 @@ export class CargarStockCanalesComponent implements OnInit {
   page = 1;
   pageSize = 3;
   listaProductosResumen;
+  currentUser;
+  disabledSelectCanal = false;
   constructor(
     private toaster: Toaster,
     private gestionInventarioService: GestionInventarioService,
     private productosService: ProductosService,
     private paramServiceAdm: ParamServiceAdm,
-    private integracionesService: IntegracionesService
+    private integracionesService: IntegracionesService,
+    private authService: AuthService,
 
   ) {
+    this.currentUser = this.authService.currentUserValue;
     this.obtenerListaParametrosCanal();
+    this.obtenerUsuarioActual();
     /*this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', '').subscribe((result) => {
       this.canalOpciones = result.data;
     });*/
@@ -42,6 +48,13 @@ export class CargarStockCanalesComponent implements OnInit {
       modulo: 'mdp',
       seccion: 'stockAct'
     };
+  }
+
+  obtenerUsuarioActual(): void {
+    if (this.currentUser.usuario.idRol !== 1){
+      this.canal = this.currentUser.usuario.canal;
+      this.disabledSelectCanal = true;
+    }
   }
 
   obtenerListaParametrosCanal() {
