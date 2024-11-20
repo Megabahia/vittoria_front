@@ -70,7 +70,8 @@ export class ProductosEditarComponent implements OnInit {
   listaProveedores;
   parametros;
   page_size = 3;
-
+  productoEncontrado = false;
+  imagenesEncontradas;
   constructor(
     private categoriasService: CategoriasService,
     private subcategoriasService: SubcategoriasService,
@@ -84,7 +85,6 @@ export class ProductosEditarComponent implements OnInit {
     private http: HttpClient,
     private integracionesService: IntegracionesService,
     private proveedoresService: MdpProveedoresService,
-
   ) {
     this.producto = this.productosService.inicializarProducto();
     this.fichaTecnica = this.productosService.inicializarFichaTecnica();
@@ -178,7 +178,7 @@ export class ProductosEditarComponent implements OnInit {
       this.productoForm.patchValue(info);
       this.obtenerListaParametrosCanal(info.canal);
 
-      if (!this.producto.canal){
+      if (!this.producto.canal) {
         this.producto.canal = '';
       }
 
@@ -295,7 +295,7 @@ export class ProductosEditarComponent implements OnInit {
       return;
     }
 
-    if (typeof this.producto.stockVirtual === 'object'){
+    if (typeof this.producto.stockVirtual === 'object') {
       this.producto.stockVirtual = JSON.stringify(this.producto.stockVirtual.map(item => {
         if (item.canal === this.producto.canal) {
           return {...item, estado: true};
@@ -323,6 +323,10 @@ export class ProductosEditarComponent implements OnInit {
     this.datosProducto.delete('video');
     if (this.video.nativeElement.files[0]) {
       this.datosProducto.append('video', this.video.nativeElement.files[0]);
+    }
+    //PRODUCTO ENCONTRADO
+    if (this.productoEncontrado) {
+      this.datosProducto.append('producto_encontrado',  'true');
     }
     this.archivos.map((valor, pos) => {
       this.datosProducto.append('imagenes[' + pos + ']id', pos.toString());
@@ -577,5 +581,25 @@ export class ProductosEditarComponent implements OnInit {
     }).subscribe((info) => {
       this.listaProveedores = info.data;
     });
+  }
+
+  obtenerProductoCodigo() {
+    if (this.idProducto === 0) {
+      this.productosService.obtenerProductoCodigo(this.producto.codigoBarras).subscribe((info) => {
+        this.productoEncontrado = true;
+        this.productoForm.get('imagen_principal').setValidators([]);
+        this.productoForm.get('imagen_principal').updateValueAndValidity();
+        this.toaster.open('Producto encontrado', {type: 'info'});
+        this.productoForm.get('nombre').setValue(info.nombre);
+        this.productoForm.get('categoria').setValue(info.categoria);
+        this.productoForm.get('subCategoria').setValue(info.subCategoria);
+        this.obtenerListaSubcategorias();
+        this.productoForm.get('descripcion').setValue(info.nombre);
+        this.productoForm.get('caracteristicas').setValue(info.nombre);
+        this.productoForm.get('estadoLanding').setValue(false);
+        this.imageUrlPrincipal = info.imagen_principal;
+        this.imagenesEncontradas = info.imagenes;
+      }, error => this.toaster.open('Producto con ese código no existe', {type: 'danger'}));
+    }
   }
 }

@@ -14,6 +14,7 @@ import {GdeModule} from '../gde/gde.module';
 import {ConsultaProductosComponent} from './consulta-productos/consulta-productos.component';
 import { RegistroAsesoresComponent } from './registro-asesores/registro-asesores.component';
 import {PedidosWoocommerceComponent} from "./pedidos-woocommerce/pedidos-woocommerce.component";
+import {ReporteProductosComponent} from "./reporte-productos/reporte_productos.component";
 
 
 
@@ -24,7 +25,8 @@ import {PedidosWoocommerceComponent} from "./pedidos-woocommerce/pedidos-woocomm
     PedidoWoocomerceComponent,
     ConsultaProductosComponent,
     RegistroAsesoresComponent,
-    PedidosWoocommerceComponent
+    PedidosWoocommerceComponent,
+    ReporteProductosComponent
   ],
     imports: [
         CommonModule,
