@@ -5,6 +5,8 @@ import {environment} from '../../../../../../environments/environment';
 import {ParamService as AdmParamService} from "../../../../../services/admin/param.service";
 import {Toaster} from "ngx-toast-notifications";
 import {IntegracionesService} from "../../../../../services/admin/integraciones.service";
+import {AuthService} from "../../../../../services/admin/auth.service";
+import {NavigationExtras, Router} from "@angular/router";
 
 @Component({
   selector: 'app-productos-listar',
@@ -31,13 +33,18 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   filtroImagen;
   filtroCanal;
   estadoProducto = '';
+  currentUser;
+
   constructor(
     private productosService: ProductosService,
     private modalService: NgbModal,
     private paramServiceAdm: AdmParamService,
     private toaster: Toaster,
-    private integracionesService: IntegracionesService
+    private integracionesService: IntegracionesService,
+    private authService: AuthService,
+    private router: Router
   ) {
+    this.currentUser = this.authService.currentUserValue;
     this.obtenerListaParametrosCanal();
     this.obtenerUsuarioActual();
   }
@@ -119,7 +126,14 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
 
   reporteProductosStock(): void {
     this.enviando = true;
-    this.productosService.exportar({}).subscribe((data) => {
+    this.productosService.exportar({
+      nombre: this.nombreBuscar,
+      codigoBarras: this.codigoBarras,
+      canalProducto: this.canalSeleccionado,
+      imagen_principal: this.filtroImagen,
+      sinCanal: this.filtroCanal,
+      estado: this.estadoProducto
+    }).subscribe((data) => {
       this.enviando = false;
       const downloadURL = window.URL.createObjectURL(data);
       const link = document.createElement('a');
@@ -151,10 +165,15 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   onSelectChange(e: any): void {
     const selectValue = e.target.value;
     this.canalSeleccionado = selectValue;
+
   }
 
   obtenerUsuarioActual(): void {
-    const usuarioJSON = localStorage.getItem('currentUser');
+    if (this.currentUser.usuario.idRol !== 1) {
+      this.canalSeleccionado = this.currentUser.usuario.canal;
+      this.disabledSelectCanal = true;
+    }
+    /*const usuarioJSON = localStorage.getItem('currentUser');
     if (usuarioJSON) {
       const usuarioObjeto = JSON.parse(usuarioJSON);
       if (usuarioObjeto.usuario.idRol === 60) {
@@ -163,7 +182,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
       }
     } else {
       console.log('No hay datos de usuario en localStorage');
-    }
+    }*/
   }
 
   abrirCopiaProductoModal(modal, id) {
@@ -178,10 +197,44 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.productosService.copiarProducto({'canal': this.canal }, this.idProductoCopia).subscribe(() => {
+    this.productosService.copiarProducto({'canal': this.canal}, this.idProductoCopia).subscribe(() => {
       this.toaster.open('Producto copiado con éxito.', {type: 'success'});
       this.modalService.dismissAll();
       this.obtenerListaProductos();
     }, error => window.alert(error));
+  }
+
+  reporteProductosHtml() {
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        nombre: this.nombreBuscar,
+        codigoBarras: this.codigoBarras,
+        canalProducto: this.canalSeleccionado !== '' ? this.canalSeleccionado : null,
+        imagen_principal: this.filtroImagen,
+        sinCanal: this.filtroCanal,
+        estado: this.estadoProducto !== '' ? this.estadoProducto : null
+      }
+    };
+
+    // Navegar al componente de destino con datos
+    //this.router.navigate(['/pages/reporte/productos'], navigationExtras);
+
+    this.productosService.generarTokenReporteProductos(
+      {
+        enlace: this.router.serializeUrl(this.router.createUrlTree(['/pages/reporte/productos'], navigationExtras)),
+        usuario: this.currentUser.full_name,
+        codigo_usuario: this.currentUser.usuario.username,
+      }
+    ).subscribe((info) => {
+      navigationExtras.queryParams['token'] = info.token;
+
+      const urlTree = this.router.createUrlTree(['/pages/reporte/productos'], navigationExtras);
+      const fullUrl = this.router.serializeUrl(urlTree);
+      const completeUrl = `${window.location.origin}/#${fullUrl}`;
+      window.open(completeUrl, '_blank');
+      //this.router.navigateByUrl(urlTree, '_blank');
+    }, error => this.toaster.open('error', {type: 'danger'}));
+
   }
 }

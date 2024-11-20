@@ -79,8 +79,15 @@
                                   aria-hidden="true"></span>
               Exportar a Excel
             </button>
+            <button class="btn btn-info waves-effect waves-float waves-light mx-1"
+                    type="button" (click)="reporteProductosHtml()"
+                    [ngClass]="{'loading': enviando}" [disabled]="enviando">
+                            <span *ngIf="enviando" class="spinner-border spinner-border-sm" role="status"
+                                  aria-hidden="true"></span>
+              Exportar a HTML
+            </button>
             <a (click)="crearProducto()" class="btn btn-icon btn-primary">
-              <i data-feather="plus" class="mr-25"></i>
+              <!--<i data-feather="plus" class="mr-25"></i>-->
               <span>Añadir</span>
             </a>
 

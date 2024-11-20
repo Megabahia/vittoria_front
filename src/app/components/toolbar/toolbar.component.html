@@ -168,13 +168,13 @@
           </li>
         </ul>
       </li>
-      <li class="nav-item" *ngIf="acciones.MDP.LEER">
+      <li class="nav-item" *ngIf="acciones.MDP.LEER && usuario.usuario.idRol !== 66">
         <a class="d-flex align-items-center">
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice">MDP Master Data Products</span></a>
         <ul class="menu-content ng-star-inserted">
           <li class="nav-item {{menuToolbar['mdp']['param']}}"
-              *ngIf="usuario.usuario.idRol !== 60 && usuario.usuario.idRol !== 59">
+              *ngIf="usuario.usuario.idRol !== 60 && usuario.usuario.idRol !== 59 && usuario.usuario.idRol !== 67">
             <a class="d-flex align-items-center" href="#/mdp/parametrizaciones" data-toggle="tooltip"
                data-placement="auto" title="Parametrizaciones Administracion">
               <i data-feather="circle"></i>
@@ -187,7 +187,7 @@
               <span class="menu-item text-truncate" data-i18n="List">Inventario</span>
             </a>
           </li>-->
-          <li class="nav-item has-sub ng-star-inserted">
+          <li class="nav-item has-sub ng-star-inserted" *ngIf="usuario.usuario.idRol !== 67">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Reportes">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Reportes</span></a>
@@ -230,7 +230,7 @@
           </li>
 
           <li class="nav-item has-sub ng-star-inserted"
-              *ngIf="usuario.usuario.idRol !== 59 && usuario.usuario.idRol !== 60">
+              *ngIf="usuario.usuario.idRol !== 59 && usuario.usuario.idRol !== 60 && usuario.usuario.idRol !== 67">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Administración de proveedores">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración de proveedores</span></a>
@@ -264,14 +264,14 @@
                title="Administración de inventario">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración de inventario</span></a>
             <ul class="menu-content">
-              <li class="nav-item {{menuToolbar['mdp']['param']}}" *ngIf="usuario.usuario.idRol !== 59">
+              <li class="nav-item {{menuToolbar['mdp']['param']}}" *ngIf="usuario.usuario.idRol !== 59 && usuario.usuario.idRol !== 67">
                 <a class="d-flex align-items-center" href="#/mdp/gestion-proveedores/cargar-stock-productos"
                    data-toggle="tooltip"
                    data-placement="auto" title="Cargar Stock Productos">
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Cargar Megadescuento</span></a>
               </li>
-              <li class="nav-item {{menuToolbar['mdp']['param']}}">
+              <li class="nav-item {{menuToolbar['mdp']['param']}}" *ngIf="usuario.usuario.idRol !== 67">
                 <a class="d-flex align-items-center" href="#/mdp/gestion-proveedores/cargar-stock-megabahia"
                    data-toggle="tooltip"
                    data-placement="auto" title="Cargar Stock Productos">
@@ -300,13 +300,13 @@
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración productos</span></a>
             <ul class="menu-content">
 
-              <li class="nav-item {{menuToolbar['mdp']['cat']}}" *ngIf="usuario.usuario.idRol !== 59">
+              <li class="nav-item {{menuToolbar['mdp']['cat']}}" *ngIf="usuario.usuario.idRol !== 59 && usuario.usuario.idRol !== 67">
                 <a class="d-flex align-items-center" href="#/mdp/categorias" data-toggle="tooltip"
                    data-placement="auto" title="Administrar categorias">
                   <i data-feather="circle"></i>
                   <span class="menu-item text-truncate" data-i18n="List">Administración de categorias</span></a>
               </li>
-              <li class="nav-item {{menuToolbar['mdp']['subCat']}}" *ngIf="usuario.usuario.idRol !== 59">
+              <li class="nav-item {{menuToolbar['mdp']['subCat']}}" *ngIf="usuario.usuario.idRol !== 59 && usuario.usuario.idRol !== 67">
                 <a class="d-flex align-items-center" href="#/mdp/subcategorias" data-toggle="tooltip"
                    data-placement="auto" title="Administrar subcategorías">
                   <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración subcategorías</span></a>
@@ -316,7 +316,7 @@
                    data-placement="auto" title="Listado de productos">
                   <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Listado de productos</span></a>
               </li>
-              <li class="nav-item" *ngIf="usuario.usuario.idRol === 1">
+              <li class="nav-item" *ngIf="usuario.usuario.idRol === 1 || usuario.usuario.idRol === 67">
                 <a class="d-flex align-items-center" href="#/mdp/gestion-proveedores/actualizar-inventario"
                    data-toggle="tooltip"
                    data-placement="auto" title="Actualizar inventario y precios">
@@ -365,7 +365,7 @@
             </ul>
           </li>
           <li class="nav-item has-sub ng-star-inserted"
-              *ngIf="usuario.usuario.idRol !== 60 && usuario.usuario.idRol !== 59">
+              *ngIf="usuario.usuario.idRol !== 60 && usuario.usuario.idRol !== 59 && usuario.usuario.idRol !== 67">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Administración de stock virtual">
               <i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="List">Administración de stock virtual</span></a>
@@ -393,7 +393,7 @@
           <i data-feather="file-text"></i>
           <span class="menu-title text-truncate" data-i18n="Invoice">MDRP Motor de recepción de productos</span></a>
         <ul class="menu-content ng-star-inserted">
-          <li class="nav-item">
+          <li class="nav-item" >
             <a class="d-flex align-items-center" [routerLink]="['mdrp/productos/recepcion']" data-toggle="tooltip"
                data-placement="auto" title="Recepción de productos">
               <i data-feather="circle"></i>
@@ -406,13 +406,13 @@
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Confirmación recepción de productos</span></a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="usuario.usuario.idRol !== 66">
             <a class="d-flex align-items-center" [routerLink]="['mdrp/productos/aprobacion']" data-toggle="tooltip"
                data-placement="auto" title="Aprobación recepción de productos">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Aprobación recepción de productos</span></a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="usuario.usuario.idRol !== 66">
             <a class="d-flex align-items-center" [routerLink]="['mdrp/productos/list']" data-toggle="tooltip"
                data-placement="auto" title="Listado de recepción de productos">
               <i data-feather="circle"></i>

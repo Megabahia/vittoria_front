@@ -7,6 +7,7 @@ import {ConsultaProductosComponent} from './consulta-productos/consulta-producto
 import {RegistroAsesoresComponent} from './registro-asesores/registro-asesores.component';
 import {AuthGuard} from "../../guard/auth.guard";
 import {PedidosWoocommerceComponent} from "./pedidos-woocommerce/pedidos-woocommerce.component";
+import {ReporteProductosComponent} from "./reporte-productos/reporte_productos.component";
 
 const routes: Routes = [
   {
@@ -33,6 +34,10 @@ const routes: Routes = [
     path: 'pedidos/woocommerce',
     component: PedidosWoocommerceComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'reporte/productos',
+    component: ReporteProductosComponent,
   },
   {
     path: 'registro/asesores',
