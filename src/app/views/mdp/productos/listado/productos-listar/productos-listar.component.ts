@@ -220,17 +220,20 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     // Navegar al componente de destino con datos
     //this.router.navigate(['/pages/reporte/productos'], navigationExtras);
 
-    const urlTree = this.router.createUrlTree(['/pages/reporte/productos'], navigationExtras);
-    const fullUrl = this.router.serializeUrl(urlTree);
-
     this.productosService.generarTokenReporteProductos(
       {
-        enlace: fullUrl,
+        enlace: this.router.serializeUrl(this.router.createUrlTree(['/pages/reporte/productos'], navigationExtras)),
         usuario: this.currentUser.full_name,
         codigo_usuario: this.currentUser.usuario.username,
       }
-    ).subscribe(() => {
-      this.router.navigateByUrl(urlTree);
+    ).subscribe((info) => {
+      navigationExtras.queryParams['token'] = info.token;
+
+      const urlTree = this.router.createUrlTree(['/pages/reporte/productos'], navigationExtras);
+      const fullUrl = this.router.serializeUrl(urlTree);
+      const completeUrl = `${window.location.origin}/#${fullUrl}`;
+      window.open(completeUrl, '_blank');
+      //this.router.navigateByUrl(urlTree, '_blank');
     }, error => this.toaster.open('error', {type: 'danger'}));
 
   }

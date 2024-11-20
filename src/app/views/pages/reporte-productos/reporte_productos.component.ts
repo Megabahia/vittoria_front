@@ -1,29 +1,20 @@
 import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
-import {Color, Label} from 'ng2-charts';
-import {DatePipe} from '@angular/common';
-import {PedidosService} from '../../../services/mp/pedidos/pedidos.service';
-import {ParamService} from '../../../services/mp/param/param.service';
-import {ParamService as ParamServiceAdm} from '../../../services/admin/param.service';
 
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
+import {DatePipe} from '@angular/common';
+
+import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
-import {v4 as uuidv4} from 'uuid';
 
-import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
-import {ValidacionesPropias} from "../../../utils/customer.validators";
 import {AuthService} from "../../../services/admin/auth.service";
-import {IntegracionesService} from "../../../services/admin/integraciones.service";
 import {ActivatedRoute} from "@angular/router";
 
 @Component({
-  selector: 'app-reporte_producto',
+  selector: 'app-reporte-producto',
   templateUrl: './reporte_productos.component.html',
   providers: [DatePipe]
 })
-export class ReporteProductosComponent implements OnInit, AfterViewInit {
+export class ReporteProductosComponent implements OnInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @Input() paises;
 
@@ -67,6 +58,8 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
   sinCanal;
   estado;
   listaProductos;
+  token;
+
   constructor(
     private productosService: ProductosService,
     private authService: AuthService,
@@ -87,25 +80,26 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      if (Object.keys(params).length === 0) {
-        this.verificarParametros = false;
-      } else {
-        this.verificarParametros = true;
-        this.nombre = params['nombre'];
-        this.codigoBarras = params['codigoBarras'];
-        this.canalProducto = params['canalProducto'];
-        this.imagenPrincipal = params['imagen_principal'];
-        this.sinCanal = params['sinCanal'];
-        this.estado = params['estado'];
-      }
+      //if (Object.keys(params).length === 0) {
+      //  this.verificarParametros = false;
+      //} else {
+      this.verificarParametros = true;
+      this.nombre = params['nombre'];
+      this.codigoBarras = params['codigoBarras'];
+      this.canalProducto = params['canalProducto'];
+      this.imagenPrincipal = params['imagen_principal'];
+      this.sinCanal = params['sinCanal'];
+      this.estado = params['estado'];
+      this.token = params['token'];
+      //}
     });
     this.obtenerListaProductos();
   }
 
-  ngAfterViewInit(): void {
+  /*ngAfterViewInit(): void {
     this.iniciarPaginador();
     this.obtenerListaProductos();
-  }
+  }*/
 
   iniciarPaginador(): void {
     this.paginator.pageChange.subscribe(() => {
@@ -123,10 +117,11 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
       canalProducto: this.canalProducto,
       imagen_principal: this.imagenPrincipal,
       sinCanal: this.sinCanal,
-      estado: this.estado
+      estado: this.estado,
+      token: this.token
     }).subscribe((info) => {
       this.listaProductos = info;
-    });
+    }, error => this.verificarParametros = false);
   }
 
 }
