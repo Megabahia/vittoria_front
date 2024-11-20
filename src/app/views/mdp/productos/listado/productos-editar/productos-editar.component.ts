@@ -599,7 +599,7 @@ export class ProductosEditarComponent implements OnInit {
         this.productoForm.get('estadoLanding').setValue(false);
         this.imageUrlPrincipal = info.imagen_principal;
         this.imagenesEncontradas = info.imagenes;
-      }, error => this.toaster.open('Producto con ese código no existe', {type: 'danger'}));
+      });
     }
   }
 }
