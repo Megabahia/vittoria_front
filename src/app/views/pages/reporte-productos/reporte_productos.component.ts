@@ -62,6 +62,28 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
   inicioActualizacion;
   finActualizacion;
   codigoBarrasBuscar;
+  sortColumn: string = '';
+  sortDirection: string = '';
+
+  headers = [
+    { name: 'Tienda', value: 'canal' },
+    { name: 'Fecha de creación', value: 'created_at' },
+    { name: 'Fecha de actualización', value: 'updated_at' },
+    { name: 'Código de barras', value: 'codigoBarras' },
+    { name: 'Nombre', value: 'nombre' },
+    { name: 'Precio Venta A', value: 'precioVentaA' },
+    { name: 'Precio Venta B', value: 'precioVentaB' },
+    { name: 'Precio Venta C', value: 'precioVentaC' },
+    { name: 'Precio Venta D', value: 'precioVentaD' },
+    { name: 'Precio Venta E', value: 'precioVentaE' },
+    { name: 'Categoría', value: 'categoria' },
+    { name: 'Subcategoría', value: 'subCategoria' },
+    { name: 'Stock', value: 'stock' },
+    { name: 'Estado', value: 'estado' },
+    { name: 'Foto principal', value: 'imagen_principal' },
+    { name: 'Fotos secundarias', value: 'imagenes' },
+  ];
+
   constructor(
     private productosService: ProductosService,
     private authService: AuthService,
@@ -139,6 +161,43 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
 
   transformarFecha(fecha): string {
     return this.datePipe.transform(fecha, 'yyyy-MM-dd');
+  }
+
+  ordenar(columna: string) {
+    if (this.sortColumn === columna) {
+      // Alternar la dirección del orden actual
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      // Cambiar a una nueva columna
+      this.sortColumn = columna;
+      this.sortDirection = 'asc'; // Por defecto, se ordena ascendente
+    }
+
+    // Ordenar la lista según la columna seleccionada
+    this.listaProductos = [...this.listaProductos].sort((a, b) => {
+      const valA = a[columna];
+      const valB = b[columna];
+
+      if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
+      if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }
+
+  isSortable(column: string): boolean {
+    // Define las columnas que se pueden ordenar
+    const sortableColumns = [
+      'created_at',
+      'updated_at',
+      'precioVentaA',
+      'precioVentaB',
+      'precioVentaC',
+      'precioVentaD',
+      'precioVentaE',
+      'stock',
+      'estado'
+    ];
+    return sortableColumns.includes(column);
   }
 
 }

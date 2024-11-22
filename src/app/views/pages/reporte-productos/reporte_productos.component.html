@@ -22,22 +22,25 @@
       <table class="user-list-table table">
         <thead class="thead-light">
         <tr>
-          <th>Tienda</th>
-          <th>Fecha de creación</th>
-          <th>Fecha de actualización</th>
-          <th>Código de barras</th>
-          <th>Nombre</th>
-          <th>Precio Venta A</th>
-          <th>Precio Venta B</th>
-          <th>Precio Venta C</th>
-          <th>Precio Venta D</th>
-          <th>Precio Venta E</th>
-          <th>Categoría</th>
-          <th>Subcategoría</th>
-          <th>Stock</th>
-          <th>Estado</th>
-          <th>Foto principal</th>
-          <th>Fotos secundarias</th>
+          <th *ngFor="let header of headers" [class.clickable]="isSortable(header.value)">
+            <div
+              class="d-flex width-150"
+              *ngIf="isSortable(header.value)"
+              (click)="ordenar(header.value)"
+              style="cursor: pointer;"
+            >
+              {{ header.name }}
+              <span class="d-flex" *ngIf="sortColumn !== header.value">
+                <i-feather class="ml-1" name="arrow-up"></i-feather>
+                <i-feather name="arrow-down"></i-feather>
+              </span>
+              <i-feather name="arrow-up" *ngIf="sortColumn === header.value && sortDirection === 'asc'"
+                         class="ml-1"></i-feather>
+              <i-feather name="arrow-down" *ngIf="sortColumn === header.value && sortDirection === 'desc'"
+                         class="ml-1"></i-feather>
+            </div>
+            <span *ngIf="!isSortable(header.value)">{{ header.name }}</span>
+          </th>
         </tr>
         </thead>
 
