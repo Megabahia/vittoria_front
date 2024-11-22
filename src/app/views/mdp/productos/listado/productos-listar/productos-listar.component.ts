@@ -149,9 +149,9 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
       imagen_principal: this.filtroImagen,
       sinCanal: this.filtroCanal,
       estado: this.estadoProducto,
-      inicio: this.inicio,
+      inicio: this.transformarFecha(this.inicio),
       fin: this.transformarFecha(this.fin),
-      inicio_actualizacion: this.inicioActualizacion,
+      inicio_actualizacion: this.transformarFecha(this.inicioActualizacion),
       fin_actualizacion: this.transformarFecha(this.finActualizacion),
     }).subscribe((data) => {
       this.enviando = false;
