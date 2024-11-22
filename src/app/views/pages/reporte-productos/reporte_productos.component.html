@@ -4,45 +4,51 @@
   </div>
   <h6 class="text-center pt-1 px-5">Bienvenid@, a cotinuación se muestra un reporte de los productos. (Información para
     las personas que tengan el enlace)</h6>
+
+  <div class="p-1 d-flex justify-content-center">
+    <div class="col-md-4 col-12 d-flex">
+      <input class="form-control" type="text" placeholder="Buscar por codigo producto"
+             [(ngModel)]="codigoBarrasBuscar"/>
+      <button class="btn btn-primary" (click)="obtenerListaProductos()">
+        <i-feather name='search' class="edit-user"></i-feather>
+      </button>
+    </div>
+  </div>
+
 </div>
 <div class="card" *ngIf="verificarParametros">
   <div class="card-datatable table-responsive pt-0">
-    <!--<div class="row m-75">
-      <div class="col-lg-12 col-xl-6">
-        <label>Mostrar</label>
-        <select class="form-control-sm" [(ngModel)]="pageSize" (change)="obtenerListaProductos()">
-          <option value="10">10</option>
-          <option value="25">25</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-        </select>
-      </div>
-    </div>-->
     <div class="table-responsive">
-
       <table class="user-list-table table">
         <thead class="thead-light">
         <tr>
-          <th>Tienda</th>
-          <th>Código de barras</th>
-          <th>Nombre</th>
-          <th>Precio Venta A</th>
-          <th>Precio Venta B</th>
-          <th>Precio Venta C</th>
-          <th>Precio Venta D</th>
-          <th>Precio Venta E</th>
-          <th>Categoría</th>
-          <th>Subcategoría</th>
-          <th>Stock</th>
-          <th>Estado</th>
-          <th>Foto principal</th>
-          <th>Fotos secundarias</th>
+          <th *ngFor="let header of headers" [class.clickable]="isSortable(header.value)">
+            <div
+              class="d-flex width-150"
+              *ngIf="isSortable(header.value)"
+              (click)="ordenar(header.value)"
+              style="cursor: pointer;"
+            >
+              {{ header.name }}
+              <span class="d-flex" *ngIf="sortColumn !== header.value">
+                <i-feather class="ml-1" name="arrow-up"></i-feather>
+                <i-feather name="arrow-down"></i-feather>
+              </span>
+              <i-feather name="arrow-up" *ngIf="sortColumn === header.value && sortDirection === 'asc'"
+                         class="ml-1"></i-feather>
+              <i-feather name="arrow-down" *ngIf="sortColumn === header.value && sortDirection === 'desc'"
+                         class="ml-1"></i-feather>
+            </div>
+            <span *ngIf="!isSortable(header.value)">{{ header.name }}</span>
+          </th>
         </tr>
         </thead>
 
         <tbody>
         <tr *ngFor="let transaccion  of listaProductos; let i = index">
-          <td>{{ transaccion.canal | shorten}}</td>
+          <td>{{ transaccion.canal | shorten }}</td>
+          <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
+          <td>{{ transaccion.updated_at | date: 'dd-MM-yyyy' }}</td>
           <td>{{ transaccion.codigoBarras }}</td>
           <td>{{ transaccion.nombre }}</td>
           <td>{{ transaccion.precioVentaA | currency }}</td>
@@ -72,9 +78,9 @@
       </table>
     </div>
 
+    <ngb-pagination #paginator [collectionSize]="collectionSize " [(page)]="page " [(pageSize)]="pageSize "
+                    [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true "></ngb-pagination>
   </div>
-  <!--<ngb-pagination #paginator [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
-                  [maxSize]="5 " [ellipses]="false " [boundaryLinks]="true " class="px-2"></ngb-pagination>-->
 
   <hr/>
 </div>

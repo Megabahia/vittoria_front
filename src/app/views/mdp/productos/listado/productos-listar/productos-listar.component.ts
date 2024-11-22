@@ -7,10 +7,12 @@ import {Toaster} from "ngx-toast-notifications";
 import {IntegracionesService} from "../../../../../services/admin/integraciones.service";
 import {AuthService} from "../../../../../services/admin/auth.service";
 import {NavigationExtras, Router} from "@angular/router";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-productos-listar',
-  templateUrl: './productos-listar.component.html'
+  templateUrl: './productos-listar.component.html',
+  providers: [DatePipe]
 })
 export class ProductosListarComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
@@ -34,7 +36,10 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   filtroCanal;
   estadoProducto = '';
   currentUser;
-
+  inicio = new Date();
+  fin = new Date();
+  inicioActualizacion = new Date();
+  finActualizacion = new Date();
   constructor(
     private productosService: ProductosService,
     private modalService: NgbModal,
@@ -42,8 +47,11 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     private toaster: Toaster,
     private integracionesService: IntegracionesService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private datePipe: DatePipe,
   ) {
+    this.inicio.setMonth(this.inicio.getMonth() - 3);
+    this.inicioActualizacion.setMonth(this.inicio.getMonth() - 3);
     this.currentUser = this.authService.currentUserValue;
     this.obtenerListaParametrosCanal();
     this.obtenerUsuarioActual();
@@ -78,12 +86,20 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
         canalProducto: this.canalSeleccionado,
         imagen_principal: this.filtroImagen,
         sinCanal: this.filtroCanal,
-        estado: this.estadoProducto
+        estado: this.estadoProducto,
+        inicio: this.inicio,
+        fin: this.transformarFecha(this.fin),
+        inicio_actualizacion: this.inicioActualizacion,
+        fin_actualizacion: this.transformarFecha(this.finActualizacion),
       }
     ).subscribe((info) => {
       this.listaProductos = info.info;
       this.collectionSize = info.cont;
     });
+  }
+
+  transformarFecha(fecha): string {
+    return this.datePipe.transform(fecha, 'yyyy-MM-dd');
   }
 
   crearProducto(): void {
@@ -132,7 +148,11 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
       canalProducto: this.canalSeleccionado,
       imagen_principal: this.filtroImagen,
       sinCanal: this.filtroCanal,
-      estado: this.estadoProducto
+      estado: this.estadoProducto,
+      inicio: this.inicio,
+      fin: this.transformarFecha(this.fin),
+      inicio_actualizacion: this.inicioActualizacion,
+      fin_actualizacion: this.transformarFecha(this.finActualizacion),
     }).subscribe((data) => {
       this.enviando = false;
       const downloadURL = window.URL.createObjectURL(data);
@@ -213,7 +233,11 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
         canalProducto: this.canalSeleccionado !== '' ? this.canalSeleccionado : null,
         imagen_principal: this.filtroImagen,
         sinCanal: this.filtroCanal,
-        estado: this.estadoProducto !== '' ? this.estadoProducto : null
+        estado: this.estadoProducto !== '' ? this.estadoProducto : null,
+        inicio: this.transformarFecha(this.inicio),
+        fin: this.transformarFecha(this.fin),
+        inicio_actualizacion: this.transformarFecha(this.inicioActualizacion),
+        fin_actualizacion: this.transformarFecha(this.finActualizacion),
       }
     };
 
