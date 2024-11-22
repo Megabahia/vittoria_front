@@ -14,17 +14,15 @@ import {ActivatedRoute} from "@angular/router";
   templateUrl: './reporte_productos.component.html',
   providers: [DatePipe]
 })
-export class ReporteProductosComponent implements OnInit {
+export class ReporteProductosComponent implements OnInit, AfterViewInit {
   @ViewChild(NgbPagination) paginator: NgbPagination;
   @Input() paises;
 
   menu;
   page = 1;
-  pageSize = 3;
+  pageSize: any = 20;
   collectionSize;
   listaContactos;
-  inicio = new Date();
-  fin = new Date();
   transaccion: any;
   opciones;
   pais = 'Ecuador';
@@ -49,7 +47,7 @@ export class ReporteProductosComponent implements OnInit {
   parametroIva;
   totalIva;
   canalOpciones;
-  verificarParametros = false;
+  verificarParametros = true;
 
   nombre;
   codigoBarras;
@@ -59,12 +57,39 @@ export class ReporteProductosComponent implements OnInit {
   estado;
   listaProductos;
   token;
+  inicio;
+  fin;
+  inicioActualizacion;
+  finActualizacion;
+  codigoBarrasBuscar;
+  sortColumn: string = '';
+  sortDirection: string = '';
+
+  headers = [
+    { name: 'Tienda', value: 'canal' },
+    { name: 'Fecha de creación', value: 'created_at' },
+    { name: 'Fecha de actualización', value: 'updated_at' },
+    { name: 'Código de barras', value: 'codigoBarras' },
+    { name: 'Nombre', value: 'nombre' },
+    { name: 'Precio Venta A', value: 'precioVentaA' },
+    { name: 'Precio Venta B', value: 'precioVentaB' },
+    { name: 'Precio Venta C', value: 'precioVentaC' },
+    { name: 'Precio Venta D', value: 'precioVentaD' },
+    { name: 'Precio Venta E', value: 'precioVentaE' },
+    { name: 'Categoría', value: 'categoria' },
+    { name: 'Subcategoría', value: 'subCategoria' },
+    { name: 'Stock', value: 'stock' },
+    { name: 'Estado', value: 'estado' },
+    { name: 'Foto principal', value: 'imagen_principal' },
+    { name: 'Fotos secundarias', value: 'imagenes' },
+  ];
 
   constructor(
     private productosService: ProductosService,
     private authService: AuthService,
     private toaster: Toaster,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private datePipe: DatePipe,
   ) {
     const navbar = document.getElementById('navbar');
     const toolbar = document.getElementById('toolbar');
@@ -91,15 +116,19 @@ export class ReporteProductosComponent implements OnInit {
       this.sinCanal = params['sinCanal'];
       this.estado = params['estado'];
       this.token = params['token'];
+      this.inicio = new Date(params['inicio']);
+      this.fin = params['fin'];
+      this.inicioActualizacion = new Date(params['inicio_actualizacion']);
+      this.finActualizacion = params['fin_actualizacion'];
       //}
     });
-    this.obtenerListaProductos();
+    //this.obtenerListaProductos();
   }
 
-  /*ngAfterViewInit(): void {
+  ngAfterViewInit(): void {
     this.iniciarPaginador();
     this.obtenerListaProductos();
-  }*/
+  }
 
   iniciarPaginador(): void {
     this.paginator.pageChange.subscribe(() => {
@@ -110,18 +139,65 @@ export class ReporteProductosComponent implements OnInit {
 
   obtenerListaProductos(): void {
     this.productosService.obtenerReporteHtmlProductos({
-      //page: this.page - 1,
-      //page_size: this.pageSize,
+      page: this.page - 1,
+      page_size: this.pageSize,
       nombre: this.nombre,
-      codigoBarras: this.codigoBarras,
+      codigoBarras: this.codigoBarrasBuscar ? this.codigoBarrasBuscar : this.codigoBarras,
       canalProducto: this.canalProducto,
       imagen_principal: this.imagenPrincipal,
       sinCanal: this.sinCanal,
       estado: this.estado,
-      token: this.token
+      token: this.token,
+      inicio: this.inicio,
+      fin: this.transformarFecha(this.fin),
+      inicio_actualizacion: this.inicioActualizacion,
+      fin_actualizacion: this.transformarFecha(this.finActualizacion),
     }).subscribe((info) => {
-      this.listaProductos = info;
-    }, error => this.verificarParametros = false);
+        this.listaProductos = info.info;
+        this.collectionSize = info.cont;
+      }
+    );
+  }
+
+  transformarFecha(fecha): string {
+    return this.datePipe.transform(fecha, 'yyyy-MM-dd');
+  }
+
+  ordenar(columna: string) {
+    if (this.sortColumn === columna) {
+      // Alternar la dirección del orden actual
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      // Cambiar a una nueva columna
+      this.sortColumn = columna;
+      this.sortDirection = 'asc'; // Por defecto, se ordena ascendente
+    }
+
+    // Ordenar la lista según la columna seleccionada
+    this.listaProductos = [...this.listaProductos].sort((a, b) => {
+      const valA = a[columna];
+      const valB = b[columna];
+
+      if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
+      if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }
+
+  isSortable(column: string): boolean {
+    // Define las columnas que se pueden ordenar
+    const sortableColumns = [
+      'created_at',
+      'updated_at',
+      'precioVentaA',
+      'precioVentaB',
+      'precioVentaC',
+      'precioVentaD',
+      'precioVentaE',
+      'stock',
+      'estado'
+    ];
+    return sortableColumns.includes(column);
   }
 
 }
