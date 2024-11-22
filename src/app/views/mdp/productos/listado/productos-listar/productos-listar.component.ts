@@ -38,8 +38,9 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   currentUser;
   inicio = new Date();
   fin = new Date();
-  inicioActualizacion = new Date();
-  finActualizacion = new Date();
+  inicioActualizacion;
+  finActualizacion
+
   constructor(
     private productosService: ProductosService,
     private modalService: NgbModal,
@@ -51,7 +52,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     private datePipe: DatePipe,
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
-    this.inicioActualizacion.setMonth(this.inicioActualizacion.getMonth() - 3);
+    //this.inicioActualizacion.setMonth(this.inicioActualizacion.getMonth() - 3);
     this.currentUser = this.authService.currentUserValue;
     this.obtenerListaParametrosCanal();
     this.obtenerUsuarioActual();
@@ -77,22 +78,32 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   }
 
   obtenerListaProductos(): void {
-    this.productosService.obtenerListaProductos(
-      {
-        page: this.page - 1,
-        page_size: this.pageSize,
-        nombre: this.nombreBuscar,
-        codigoBarras: this.codigoBarras,
-        canalProducto: this.canalSeleccionado,
-        imagen_principal: this.filtroImagen,
-        sinCanal: this.filtroCanal,
-        estado: this.estadoProducto,
-        inicio: this.inicio,
-        fin: this.transformarFecha(this.fin),
-        inicio_actualizacion: this.inicioActualizacion,
-        fin_actualizacion: this.transformarFecha(this.finActualizacion),
-      }
-    ).subscribe((info) => {
+
+    const filtros: any = {
+      page: this.page - 1,
+      page_size: this.pageSize,
+      nombre: this.nombreBuscar,
+      codigoBarras: this.codigoBarras,
+      canalProducto: this.canalSeleccionado,
+      imagen_principal: this.filtroImagen,
+      sinCanal: this.filtroCanal,
+      estado: this.estadoProducto,
+    };
+
+    // Solo añadir fechas si han sido seleccionadas
+    if (this.inicio) {
+      filtros['inicio'] = this.transformarFecha(this.inicio);
+    }
+    if (this.fin) {
+      filtros['fin'] = this.transformarFecha(this.fin);
+    }
+    if (this.inicioActualizacion) {
+      filtros['inicio_actualizacion'] = this.transformarFecha(this.inicioActualizacion);
+    }
+    if (this.finActualizacion) {
+      filtros['fin_actualizacion'] = this.transformarFecha(this.finActualizacion);
+    }
+    this.productosService.obtenerListaProductos(filtros).subscribe((info) => {
       this.listaProductos = info.info;
       this.collectionSize = info.cont;
     });
@@ -142,18 +153,33 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
 
   reporteProductosStock(): void {
     this.enviando = true;
-    this.productosService.exportar({
+
+    const filtros: any = {
+      page: this.page - 1,
+      page_size: this.pageSize,
       nombre: this.nombreBuscar,
       codigoBarras: this.codigoBarras,
       canalProducto: this.canalSeleccionado,
       imagen_principal: this.filtroImagen,
-      sinCanal: this.filtroCanal,
-      estado: this.estadoProducto,
-      inicio: this.transformarFecha(this.inicio),
-      fin: this.transformarFecha(this.fin),
-      inicio_actualizacion: this.transformarFecha(this.inicioActualizacion),
-      fin_actualizacion: this.transformarFecha(this.finActualizacion),
-    }).subscribe((data) => {
+      //sinCanal: this.filtroCanal,
+      //estado: this.estadoProducto,
+    };
+
+    // Solo añadir fechas si han sido seleccionadas
+    if (this.inicio) {
+      filtros['inicio'] = this.transformarFecha(this.inicio);
+    }
+    if (this.fin) {
+      filtros['fin'] = this.transformarFecha(this.fin);
+    }
+    /*if (this.inicioActualizacion) {
+      filtros['inicio_actualizacion'] = this.transformarFecha(this.inicioActualizacion);
+    }
+    if (this.finActualizacion) {
+      filtros['fin_actualizacion'] = this.transformarFecha(this.finActualizacion);
+    }*/
+
+    this.productosService.exportar(filtros).subscribe((data) => {
       this.enviando = false;
       const downloadURL = window.URL.createObjectURL(data);
       const link = document.createElement('a');
@@ -226,20 +252,30 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
 
   reporteProductosHtml() {
 
-    const navigationExtras: NavigationExtras = {
-      queryParams: {
-        nombre: this.nombreBuscar,
-        codigoBarras: this.codigoBarras,
-        canalProducto: this.canalSeleccionado !== '' ? this.canalSeleccionado : null,
-        imagen_principal: this.filtroImagen,
-        sinCanal: this.filtroCanal,
-        estado: this.estadoProducto !== '' ? this.estadoProducto : null,
-        inicio: this.transformarFecha(this.inicio),
-        fin: this.transformarFecha(this.fin),
-        inicio_actualizacion: this.transformarFecha(this.inicioActualizacion),
-        fin_actualizacion: this.transformarFecha(this.finActualizacion),
-      }
+    const queryParams: any = {
+      nombre: this.nombreBuscar,
+      codigoBarras: this.codigoBarras,
+      canalProducto: this.canalSeleccionado !== '' ? this.canalSeleccionado : null,
+      imagen_principal: this.filtroImagen,
+      sinCanal: this.filtroCanal,
+      estado: 'Activo',
     };
+
+    // Agregar solo las fechas definidas
+    if (this.inicio) {
+      queryParams['inicio'] = this.transformarFecha(this.inicio);
+    }
+    if (this.fin) {
+      queryParams['fin'] = this.transformarFecha(this.fin);
+    }
+    if (this.inicioActualizacion) {
+      queryParams['inicio_actualizacion'] = this.transformarFecha(this.inicioActualizacion);
+    }
+    if (this.finActualizacion) {
+      queryParams['fin_actualizacion'] = this.transformarFecha(this.finActualizacion);
+    }
+
+    const navigationExtras: NavigationExtras = { queryParams };
 
     // Navegar al componente de destino con datos
     //this.router.navigate(['/pages/reporte/productos'], navigationExtras);

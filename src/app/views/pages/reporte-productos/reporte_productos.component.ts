@@ -118,7 +118,7 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
       this.token = params['token'];
       this.inicio = new Date(params['inicio']);
       this.fin = params['fin'];
-      this.inicioActualizacion = new Date(params['inicio_actualizacion']);
+      this.inicioActualizacion = params['inicio_actualizacion'];
       this.finActualizacion = params['fin_actualizacion'];
       //}
     });
@@ -138,7 +138,8 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
 
 
   obtenerListaProductos(): void {
-    this.productosService.obtenerReporteHtmlProductos({
+
+    const filtros: any = {
       page: this.page - 1,
       page_size: this.pageSize,
       nombre: this.nombre,
@@ -147,12 +148,24 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
       imagen_principal: this.imagenPrincipal,
       sinCanal: this.sinCanal,
       estado: this.estado,
-      token: this.token,
-      inicio: this.inicio,
-      fin: this.transformarFecha(this.fin),
-      inicio_actualizacion: this.inicioActualizacion,
-      fin_actualizacion: this.transformarFecha(this.finActualizacion),
-    }).subscribe((info) => {
+      token: this.token
+    };
+
+    // Solo añadir fechas si han sido seleccionadas
+    if (this.inicio) {
+      filtros['inicio'] = this.transformarFecha(this.inicio);
+    }
+    if (this.fin) {
+      filtros['fin'] = this.transformarFecha(this.fin);
+    }
+    if (this.inicioActualizacion) {
+      filtros['inicio_actualizacion'] = this.transformarFecha(this.inicioActualizacion);
+    }
+    if (this.finActualizacion) {
+      filtros['fin_actualizacion'] = this.transformarFecha(this.finActualizacion);
+    }
+
+    this.productosService.obtenerReporteHtmlProductos(filtros).subscribe((info) => {
         this.listaProductos = info.info;
         this.collectionSize = info.cont;
       }
@@ -195,7 +208,6 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
       'precioVentaD',
       'precioVentaE',
       'stock',
-      'estado'
     ];
     return sortableColumns.includes(column);
   }
