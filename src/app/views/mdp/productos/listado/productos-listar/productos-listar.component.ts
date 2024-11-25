@@ -40,7 +40,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   fin;
   inicioActualizacion;
   finActualizacion;
-
+  filtros = false;
   constructor(
     private productosService: ProductosService,
     private modalService: NgbModal,
@@ -275,7 +275,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
       queryParams['fin_actualizacion'] = this.transformarFecha(this.finActualizacion);
     }
 
-    const navigationExtras: NavigationExtras = { queryParams };
+    const navigationExtras: NavigationExtras = {queryParams};
 
     // Navegar al componente de destino con datos
     //this.router.navigate(['/pages/reporte/productos'], navigationExtras);
@@ -296,5 +296,10 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
       //this.router.navigateByUrl(urlTree, '_blank');
     }, error => this.toaster.open('error', {type: 'danger'}));
 
+  }
+
+
+  activarFiltros(){
+    this.filtros = !this.filtros;
   }
 }
