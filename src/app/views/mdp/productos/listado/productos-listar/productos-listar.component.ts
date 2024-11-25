@@ -36,10 +36,10 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   filtroCanal;
   estadoProducto = '';
   currentUser;
-  inicio = new Date();
-  fin = new Date();
+  inicio;
+  fin;
   inicioActualizacion;
-  finActualizacion
+  finActualizacion;
 
   constructor(
     private productosService: ProductosService,
@@ -51,7 +51,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     private router: Router,
     private datePipe: DatePipe,
   ) {
-    this.inicio.setMonth(this.inicio.getMonth() - 3);
+    //this.inicio.setMonth(this.inicio.getMonth() - 3);
     //this.inicioActualizacion.setMonth(this.inicioActualizacion.getMonth() - 3);
     this.currentUser = this.authService.currentUserValue;
     this.obtenerListaParametrosCanal();

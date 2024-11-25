@@ -116,7 +116,7 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
       this.sinCanal = params['sinCanal'];
       this.estado = params['estado'];
       this.token = params['token'];
-      this.inicio = new Date(params['inicio']);
+      this.inicio = params['inicio'];
       this.fin = params['fin'];
       this.inicioActualizacion = params['inicio_actualizacion'];
       this.finActualizacion = params['fin_actualizacion'];
