@@ -20,7 +20,7 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
 
   menu;
   page = 1;
-  pageSize: any = 20;
+  pageSize: any = 10;
   collectionSize;
   listaContactos;
   transaccion: any;
@@ -64,7 +64,7 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
   codigoBarrasBuscar;
   sortColumn: string = '';
   sortDirection: string = '';
-
+  imagenSeleccionada: string = '';
   headers = [
     { name: 'Tienda', value: 'canal' },
     { name: 'Fecha de creación', value: 'created_at' },
@@ -210,6 +210,15 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
       'stock',
     ];
     return sortableColumns.includes(column);
+  }
+
+  abrirModalImagen(imagen: string): void {
+    this.imagenSeleccionada = imagen;
+    const modal = document.getElementById('modalZoom');
+    if (modal) {
+      const bootstrapModal = new (window as any).bootstrap.Modal(modal);
+      bootstrapModal.show();
+    }
   }
 
 }

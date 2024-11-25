@@ -161,8 +161,8 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
       codigoBarras: this.codigoBarras,
       canalProducto: this.canalSeleccionado,
       imagen_principal: this.filtroImagen,
-      //sinCanal: this.filtroCanal,
-      //estado: this.estadoProducto,
+      sinCanal: this.filtroCanal,
+      estado: this.estadoProducto,
     };
 
     // Solo añadir fechas si han sido seleccionadas
@@ -172,12 +172,12 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     if (this.fin) {
       filtros['fin'] = this.transformarFecha(this.fin);
     }
-    /*if (this.inicioActualizacion) {
+    if (this.inicioActualizacion) {
       filtros['inicio_actualizacion'] = this.transformarFecha(this.inicioActualizacion);
     }
     if (this.finActualizacion) {
       filtros['fin_actualizacion'] = this.transformarFecha(this.finActualizacion);
-    }*/
+    }
 
     this.productosService.exportar(filtros).subscribe((data) => {
       this.enviando = false;
