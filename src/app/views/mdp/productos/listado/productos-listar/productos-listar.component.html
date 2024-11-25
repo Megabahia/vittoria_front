@@ -6,36 +6,37 @@
     </div>
     <div class="content-body">
       <div class="card">
-        <h3 class="card-header d-flex justify-content-center">Administrar productos</h3>
-        <div class="card-body">
-          <h6 class="py-1">Filtros de búsqueda</h6>
+        <h2 class="card-header d-flex justify-content-center">Administrar productos</h2>
+        <div class="text-center">
+          <a class="btn btn-flat-info text-info" (click)="activarFiltros()">
+            Filtros
+            <i-feather name='arrow-up' *ngIf="!filtros"></i-feather>
+            <i-feather name='arrow-down' *ngIf="filtros"></i-feather>
+          </a>
+        </div>
+        <hr/>
+        <div class="card-body" *ngIf="filtros">
+          <h5 class="mt-0 py-1 text-center">Filtros de búsqueda</h5>
           <div class="row">
-
-            <div class="col-md-4">
-              <input class="form-control form-control-sm" type="text" placeholder="Codigo producto"
+            <div class="col-md-4 col-12">
+              <input class="form-control" type="text" placeholder="Codigo producto"
                      [(ngModel)]="codigoBarras">
             </div>
-            <div class="col-md-4">
-              <input class="form-control form-control-sm" type="text" placeholder="Nombre producto"
+            <div class="col-md-4 col-12">
+              <input class="form-control" type="text" placeholder="Nombre producto"
                      [(ngModel)]="nombreBuscar">
             </div>
-            <div class="col-md-2">
+            <div class="col-md-4 col-12 mt-1">
               <div class="custom-control custom-checkbox">
                 <input type="checkbox" class="custom-control-input" id="customCheckImagen" [(ngModel)]="filtroImagen"
                        [checked]="filtroImagen"/>
                 <label class="custom-control-label" for="customCheckImagen">Sin imagen</label>
               </div>
             </div>
-            <div class="col-md-2">
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="customCheckCanal" [(ngModel)]="filtroCanal"
-                       [checked]="filtroCanal"/>
-                <label class="custom-control-label" for="customCheckCanal">Sin canal</label>
-              </div>
-            </div>
-          </div>
-          <div class="row mt-2">
-            <div class="col-md-4">
+
+            <!--</div>
+            <div class="row mt-2">-->
+            <div class="col-md-4 col-12 mt-1">
               <select class="form-control select2" name="canal" (change)="onSelectChange($event)"
                       [(ngModel)]="canalSeleccionado" [disabled]="disabledSelectCanal">
                 <option value="" selected>- Seleccione canal a buscar-</option>
@@ -43,7 +44,7 @@
 
               </select>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 col-12 mt-1">
               <select class="form-control select2" name="estado"
                       [(ngModel)]="estadoProducto">
                 <option value="" selected>- Seleccione estado a buscar-</option>
@@ -52,33 +53,50 @@
 
               </select>
             </div>
-
-            <div class="col-md-4">
+            <div class="col-md-4 col-12 mt-1">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="customCheckCanal" [(ngModel)]="filtroCanal"
+                       [checked]="filtroCanal"/>
+                <label class="custom-control-label" for="customCheckCanal">Sin canal</label>
+              </div>
+            </div>
+            <!--<div class="col-md-4">
               <button class="btn btn-primary" (click)="obtenerListaProductos()">
                 <i-feather name='search' class="edit-user"></i-feather>
               </button>
+            </div>-->
+          </div>
+          <hr/>
+          <div class="row">
+            <div class="col-md-6 col-12 mt-1">
+              <h6>Filtros de búsqueda por fecha de creación</h6>
+            </div>
+            <div class="col-md-3 col-12">
+              <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="inicio" placeholder="Desde que fecha">
+            </div>
+            <div class="col-md-3 col-12">
+              <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="fin" placeholder="Hasta que fecha">
             </div>
           </div>
           <hr/>
-          <h6 class="py-1">Filtros de búsqueda por fecha de creación</h6>
           <div class="row">
-            <div class="col-md-4">
-              <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="inicio">
+            <div class="col-md-6 col-12 mt-1">
+              <h6>Filtros de búsqueda por fecha de actualización</h6>
             </div>
-            <div class="col-md-4">
-              <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="fin">
+            <div class="col-md-3 col-12">
+              <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="inicioActualizacion"
+                     placeholder="Desde que fecha">
             </div>
-          </div>
-          <h6 class="py-1">Filtros de búsqueda por fecha de actualización</h6>
-          <div class="row">
-            <div class="col-md-4">
-              <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="inicioActualizacion">
-            </div>
-            <div class="col-md-4">
+            <div class="col-md-3 col-12">
               <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="finActualizacion"
+                     placeholder="Hasta que fecha"
               >
             </div>
+          </div>
+          <hr/>
+          <div class="mt-1 text-center">
             <button class="btn btn-primary" (click)="obtenerListaProductos()">
+              BUSCAR
               <i-feather name='search' class="edit-user"></i-feather>
             </button>
           </div>
@@ -87,7 +105,7 @@
     </div>
     <div class="card">
       <div class="row m-75">
-        <div class="col-lg-12 col-xl-6">
+        <div class="col-lg-12 col-xl-6 mt-1">
           <label>Mostrar</label>
           <select class="form-control-sm" [(ngModel)]="pageSize" (change)="obtenerListaProductos()">
             <option value="10">10</option>
