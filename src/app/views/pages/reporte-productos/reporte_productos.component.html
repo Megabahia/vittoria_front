@@ -17,10 +17,10 @@
 
 </div>
 <div class="card" *ngIf="verificarParametros">
-  <div class="card-datatable table-responsive pt-0">
-    <div class="table-responsive">
-      <table class="user-list-table table">
-        <thead class="thead-light">
+  <div class="card-datatable pt-0">
+    <div class="table-responsive" style="max-height: 400px; overflow: auto;cursor: default;">
+      <table class="table table-striped table-hover">
+        <thead class="thead-light sticky-top bg-white">
         <tr>
           <th *ngFor="let header of headers" [class.clickable]="isSortable(header.value)">
             <div
@@ -43,9 +43,8 @@
           </th>
         </tr>
         </thead>
-
-        <tbody>
-        <tr *ngFor="let transaccion  of listaProductos; let i = index">
+        <tbody >
+        <tr *ngFor="let transaccion  of listaProductos; let i = index" style="cursor: default">
           <td>{{ transaccion.canal | shorten }}</td>
           <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
           <td>{{ transaccion.updated_at | date: 'dd-MM-yyyy' }}</td>
@@ -66,11 +65,13 @@
             </span>
           </td>
           <td>
-            <img [src]="transaccion.imagen_principal" alt="Imagen principal" width="75" height="75">
+            <img [src]="transaccion.imagen_principal" alt="Imagen principal" width="75" height="75" style="cursor: pointer;"
+                 (click)="abrirModalImagen(transaccion.imagen_principal)">
           </td>
           <td class="d-flex">
             <div *ngFor="let imagen  of transaccion.imagenes; let i = index">
-              <img [src]="imagen.imagen" alt="Imagen - {{i}}" width="75" height="75">
+              <img [src]="imagen.imagen" alt="Imagen - {{i}}" width="75" height="75" style="cursor: pointer;"
+                   (click)="abrirModalImagen(imagen.imagen)">
             </div>
           </td>
         </tr>
@@ -83,6 +84,38 @@
   </div>
 
   <hr/>
+</div>
+
+<div
+  class="modal fade"
+  id="modalZoom"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalZoomTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-transparent border-0">
+      <div class="modal-body text-center">
+        <img
+          [src]="imagenSeleccionada"
+          alt="Imagen ampliada"
+          class="img-fluid"
+          style="max-height: 80vh;"
+        />
+      </div>
+      <!--<div class="modal-footer border-0 justify-content-center">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          Cerrar
+        </button>
+      </div>-->
+    </div>
+  </div>
 </div>
 
 <div class="container vh-100 d-flex justify-content-center align-items-center" *ngIf="!verificarParametros">
