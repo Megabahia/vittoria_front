@@ -191,10 +191,9 @@
                       <select class="select2 form-control form-control-lg" name="canal" formControlName="canal"
                               [(ngModel)]="nuevoUsuario.canal">
                         <option value="" selected>- Seleccione canal -</option>
-                        <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">
-                          {{ canalOp.valor }}
-                        </option>
+                        <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>
                       </select>
+
                       <div *ngIf="submitted && f.canal.errors" class="invalid-feedback" style="display: block;">
                         <div *ngIf="f.canal.errors.required">Canal requerido</div>
                       </div>

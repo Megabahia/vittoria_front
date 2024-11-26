@@ -728,7 +728,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     let cantidad = +articulo.get('cantidad').value;
     let comision = 0;
 
-    cantidad = operacion === 'sumar' ? Math.min(cantidad + 1, 3) : Math.max(cantidad - 1, 1);
+    cantidad = operacion === 'sumar' ? Math.min(cantidad + 1, 100) : Math.max(cantidad - 1, 1);
 
     cantidadControl.get('cantidad').setValue(cantidad);
 

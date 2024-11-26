@@ -46,15 +46,12 @@
               <tr>
                 <th>Fecha Pedido</th>
                 <th>Fecha Autorización</th>
-                <th>Canal Pedido</th>
+                <th>Tienda</th>
                 <th>Tipo Facturación</th>
                 <th>Numero Pedido</th>
                 <th>Nombres Facturación</th>
                 <th>Apellidos Facturación</th>
                 <th>Telefono</th>
-                <th>Url Comprobante Pago</th>
-                <th>Comprobante Pago</th>
-                <th>Comprobante Pago cargado por vendedor</th>
                 <th style="color: blue">Metodo Envío</th>
                 <th>Estado</th>
                 <th>Ver Pedido</th>
@@ -67,13 +64,13 @@
               <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
                 <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
                 <td>{{ transaccion.fechaHoraConfirmacion | date: 'dd-MM-yyyy' }}</td>
-                <td [title]="transaccion.canal">{{ transaccion.canal | shorten }}</td>
+                <td [title]="transaccion.canal">{{ transaccion.articulos[0].canal | shorten }}</td>
                 <td [title]="transaccion.tipoFacturacion">{{ transaccion.tipoFacturacion | shorten }}</td>
                 <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido | shorten }}</td>
                 <td [title]="transaccion.facturacion.nombres">{{ transaccion.facturacion.nombres | shorten }}</td>
                 <td [title]="transaccion.facturacion.apellidos">{{ transaccion.facturacion.apellidos | shorten }}</td>
-                <td>{{ transaccion.facturacion.telefono }}</td>
-                <td [title]="transaccion.urlMetodoPago">
+                <td>{{ enmarcarNumeroTelefono(transaccion.facturacion.telefono) }}</td>
+                <!--<td [title]="transaccion.urlMetodoPago">
                   <a *ngIf="transaccion.urlMetodoPago" [href]="transaccion.urlMetodoPago" target="_blank">Ver</a>
                 </td>
                 <td>
@@ -87,7 +84,7 @@
                      target="_blank">
                     <i-feather name="file-text" class="mr-25"></i-feather>
                   </a>
-                </td>
+                </td>-->
                 <td [title]="transaccion.metodoPago" style="color: blue">{{ transaccion.metodoPago | shorten }}</td>
                 <td>{{ transaccion.estado }}</td>
                 <td>
@@ -120,7 +117,7 @@
                     Empacar
                   </button>
                   <button class="btn btn-secondary"
-                          (click)="procesarDevolucion(transaccion.id)">
+                          (click)="modalMotivoDevolucion(motivoDevolucion, transaccion.id)">
                     Devolver
                   </button>
                 </td>
@@ -1243,4 +1240,46 @@
 
     </div>
   </form>
+</ng-template>
+
+
+<ng-template #motivoDevolucion let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Motivo de devolución del pedido</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-content">
+    <div class="card-body invoice-padding">
+      <div class="col-12">
+        <p class="bg-danger text-center">Por favor, ingrese el motivo por el cual usted esta devolviendo el pedido.</p>
+      </div>
+    </div>
+    <form [formGroup]="motivoDevolucionPedidoForm">
+      <div class="card-body invoice-padding">
+        <div class="row">
+          <div class="col-12">
+            <label>Ingrese el motivo</label>
+            <textarea class="form-control" formControlName="motivo_devolucion" rows="3"></textarea>
+            <div *ngIf="devolucionForm.motivoNegacionPedido.errors"
+                 class="invalid-feedback" style="display: block;">
+              <div *ngIf="devolucionForm.motivoNegacionPedido.errors.required">
+                Requerido
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-secondary"
+            (click)="modal.dismiss('Cross click')">Cerrar
+    </button>
+    <button class="btn btn-primary mx-1"
+            (click)="procesarDevolucion()"
+    >Devolver Pedido
+    </button>
+  </div>
 </ng-template>

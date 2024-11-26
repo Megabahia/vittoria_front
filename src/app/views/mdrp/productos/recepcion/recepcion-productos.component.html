@@ -89,7 +89,7 @@
                     </div>
                   </div>
                   <div class="col-md-4 col-12">
-                    <label>Descripción</label>
+                    <label>Descripción del producto</label>
                     <textarea class="form-control" type="text"
                               formControlName="descripcion" rows="4"></textarea>
                     <div *ngIf="notaRecepcionProductoForm.descripcion.errors"
@@ -123,6 +123,9 @@
         <div class="card-footer text-center">
           <button class="btn btn-primary mx-1" (click)="crearProducto()"
           > Guardar
+          </button>
+          <button class="btn btn-secondary mx-1" (click)="limpiar()"
+          > Cancelar
           </button>
         </div>
       </div>

@@ -8,6 +8,8 @@ import {
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
+import {AuthService} from "../../../../services/admin/auth.service";
+import {IntegracionesService} from "../../../../services/admin/integraciones.service";
 
 @Component({
   selector: 'app-users-edit',
@@ -28,8 +30,8 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
   mensaje;
   imagen;
   imagenTemp;
-  nombreBuscar
-  canalOpciones
+  nombreBuscar;
+  canalOpciones;
   usuario: Usuario = {
     id: 0,
     nombres: '',
@@ -58,6 +60,8 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
   mostrarSpinner = false;
   mostrarTipoEnvio = false;
   listaMetodoPago;
+  currentUser;
+  mostrarPass: boolean = false;
   constructor(
     private usersService: UsersService,
     private globalParam: ParamServiceADM,
@@ -66,9 +70,11 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
     private router: Router,
     private paramService: ParamService,
     private paramServiceAdm: AdmParamService,
+    private authService: AuthService,
+    private integracionesService: IntegracionesService,
   ) {
-    this.obtenerListaParametros();
-
+    this.obtenerListaParametrosCanal();
+    this.currentUser = this.authService.currentUserValue;
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'METODO PAGO', '').subscribe((result) => {
       this.listaMetodoPago = result.data;
     });
@@ -89,6 +95,7 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
       username: ['', [Validators.required]],
       canal: ['', [Validators.required]],
       email: ['', [Validators.required]],
+      password: [''],
       compania: ['', [Validators.required]],
       pais: ['', [Validators.required]],
       provincia: ['', [Validators.required]],
@@ -211,8 +218,18 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async obtenerListaParametros(): Promise<void> {
+  /*async obtenerListaParametros(): Promise<void> {
     await this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar).subscribe((result) => {
+      this.canalOpciones = result.data;
+    });
+  }*/
+
+  obtenerListaParametrosCanal() {
+    const datos = {
+      page: this.page,
+      page_size: this.pageSize
+    };
+    this.integracionesService.obtenerListaIntegraciones(datos).subscribe((result) => {
       this.canalOpciones = result.data;
     });
   }
@@ -227,5 +244,9 @@ export class UsersEditComponent implements OnInit, AfterViewInit {
       this.usuarioForm.get('tipoEnvio').updateValueAndValidity();
       this.mostrarTipoEnvio = false;
     }
+  }
+
+  mostrarContrasenia(): void {
+    this.mostrarPass = !this.mostrarPass;
   }
 }

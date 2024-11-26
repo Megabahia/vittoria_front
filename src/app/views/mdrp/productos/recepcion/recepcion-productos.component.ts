@@ -124,5 +124,15 @@ export class RecepcionProductosComponent implements OnInit {
     };
     reader.readAsDataURL(file);
   }
+
+  limpiar() {
+    this.imageUrlPrincipal = null;
+    this.imagenPrinciplSeleccionada = null;
+    this.archivo.delete('imagen_principal');
+    if (this.fileInput.nativeElement) {
+      this.fileInput.nativeElement.value = '';
+    }
+    this.iniciarNotaRecepcionProducto();
+  }
 }
 
