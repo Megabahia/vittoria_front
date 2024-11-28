@@ -46,7 +46,7 @@
           <table class="user-list-table table">
             <thead class="thead-light">
             <tr>
-              <th>Canal Pedido</th>
+              <th>Tienda</th>
               <th>Código vendedor</th>
               <th>Nombre vendedor</th>
               <th>Numero Pedido</th>
@@ -73,7 +73,7 @@
 
             <tbody>
             <tr *ngFor="let transaccion  of listaContactos; let i = index">
-              <td [title]="transaccion.canal">{{ transaccion.canal | shorten }}</td>
+              <td [title]="transaccion.articulos[0].canal">{{ transaccion.articulos[0].canal | shorten }}</td>
               <td>{{ transaccion.facturacion.codigoVendedor }}</td>
               <td>{{ transaccion.facturacion.nombreVendedor }}</td>
               <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido  | shorten }}</td>
@@ -625,7 +625,11 @@
             </button>
             <button class="btn btn-primary mx-1"
                     (click)="actualizarContactoAprobado()"
-            >Confirmar el subtotal de venta de la factura por queja
+                    [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+            >
+              <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                    aria-hidden="true"></span>
+              Confirmar el subtotal de venta de la factura por queja
             </button>
           </div>
         </ng-template>
@@ -640,7 +644,7 @@
           <div class="modal-content">
             <div class="card-body invoice-padding">
               <div class="col-12">
-                <p class="bg-danger text-center">Por favor, ingrese el motivo por el cual usted esta negando o
+                <p class="bg-light-danger text-center">Por favor, ingrese el motivo por el cual usted esta negando o
                   rechazando el pedido.</p>
               </div>
             </div>
@@ -667,7 +671,11 @@
             </button>
             <button class="btn btn-primary mx-1"
                     (click)="actualizarNegarContacto()"
-            >Negar Pedido
+                    [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+            >
+              <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                    aria-hidden="true"></span>
+              Negar Pedido
             </button>
           </div>
         </ng-template>

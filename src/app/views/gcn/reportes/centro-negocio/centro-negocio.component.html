@@ -93,7 +93,7 @@
               <thead class="thead-light">
               <tr>
                 <th>Fecha Pedido</th>
-                <th>Canal Pedido</th>
+                <th>Tienda</th>
                 <th>Numero Pedido</th>
                 <th>Nombres Facturación</th>
                 <th>Apellidos Facturación</th>
@@ -122,7 +122,7 @@
               <tbody>
               <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
                 <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
-                <td>{{ transaccion.canal | shorten }}</td>
+                <td>{{ transaccion.articulos[0].canal | shorten }}</td>
                 <td>{{ transaccion.numeroPedido }}</td>
                 <td>{{ transaccion.facturacion.nombres }}</td>
                 <td>{{ transaccion.facturacion.apellidos }}</td>
@@ -369,8 +369,15 @@
                           </div>
                           <div class="col-md-4 col-12">
                             <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a> </label>
-                            <input class="form-control" type="text"
-                                   formControlName="gps" disabled>
+                            <div class="input-group mb-3">
+                              <input class="form-control" type="text" formControlName="gps" aria-describedby="basic-addon2" disabled>
+                              <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon2">
+                                <a href="{{notaPedido.value.facturacion.gps}}" target="_blank" *ngIf="notaPedido.value.facturacion?.gps!='' && notaPedido.value.facturacion?.gps.startsWith('https://'); else noGpsF">Ir</a>
+                                <ng-template #noGpsF>Inválido</ng-template>
+                              </span>
+                              </div>
+                            </div>
                             <div *ngIf="facturacionForm.gps.errors"
                                  class="invalid-feedback" style="display: block;">
                               <div *ngIf="facturacionForm.gps.errors.required">
@@ -733,8 +740,15 @@
                           </div>
                           <div class="col-md-4 col-12">
                             <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a> </label>
-                            <input class="form-control" type="text"
-                                   formControlName="gps" disabled>
+                            <div class="input-group mb-3">
+                              <input class="form-control" type="text" formControlName="gps" aria-describedby="basic-addon3" disabled>
+                              <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon3">
+                                <a href="{{notaPedido.value.envio.gps}}" target="_blank" *ngIf="notaPedido.value.envio.gps!='' && notaPedido.value.envio.gps.startsWith('https://'); else noGpsE">Ir</a>
+                                <ng-template #noGpsE>Inválido</ng-template>
+                              </span>
+                              </div>
+                            </div>
                             <div *ngIf="envioForm.gps.errors"
                                  class="invalid-feedback" style="display: block;">
                               <div *ngIf="envioForm.gps.errors.required">
@@ -877,7 +891,11 @@
           </button>
           <button class="btn btn-primary mx-1"
                   (click)="actualizar()"
-          >Cargar evidencias
+                  [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+          >
+            <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                  aria-hidden="true"></span>
+            Cargar evidencias
           </button>
         </div>
       </ng-template>
@@ -999,7 +1017,11 @@
           </button>
           <button class="btn btn-primary mx-1"
                   (click)="actualizarQueja()"
-          >Cargar evidencias
+                  [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+          >
+            <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                  aria-hidden="true"></span>
+            Cargar reclamo
           </button>
         </div>
       </ng-template>

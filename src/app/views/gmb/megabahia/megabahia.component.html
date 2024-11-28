@@ -540,9 +540,15 @@
                 </div>
                 <div class="col-md-4 col-12">
                   <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a> </label>
-                  <input class="form-control" type="text"
-                         formControlName="gps"
-                  >
+                  <div class="input-group mb-3">
+                    <input class="form-control" type="text" formControlName="gps" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon2">
+                                <a href="{{notaPedido.value.facturacion.gps}}" target="_blank" *ngIf="notaPedido.value.facturacion?.gps!='' && notaPedido.value.facturacion?.gps.startsWith('https://'); else noGps">Ir</a>
+                                <ng-template #noGps>Inválido</ng-template>
+                              </span>
+                    </div>
+                  </div>
 
                 </div>
               </div>
@@ -650,7 +656,11 @@
       </button>
       <button class="btn btn-primary mx-1"
               (click)="guardarDespachoMegabahia()"
-      >Guardar
+              [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+      >
+        <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+              aria-hidden="true"></span>
+        Guardar
       </button>
     </div>
   </ng-template>

@@ -111,10 +111,15 @@ export class AprobacionComponent implements OnInit, AfterViewInit {
     }
 
     if (confirm('¿Esta seguro de confirmar los datos?') === true) {
+      this.mostrarSpinner = true;
       this.mdrpProductosService.actualizarProducto(this.productoRecepcionForm.value, this.productoRecepcionForm.value.id).subscribe((info) => {
         this.toaster.open('Producto aprobado', {type: 'success'});
         this.obtenerProductosRecepcion();
         this.modalService.dismissAll();
+        this.mostrarSpinner = false;
+      }, error => {
+        this.toaster.open('Error al aprobar producto', {type: 'danger'});
+        this.mostrarSpinner = false;
       });
     }
   }

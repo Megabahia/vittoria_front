@@ -67,6 +67,7 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
   parametroIva;
   listaMetodoPago;
   imagenCanal;
+
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -278,6 +279,8 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
   }
 
   generarGuia(modal, id): void {
+    this.mostrarSpinner = true;
+
     this.pedidosService.obtenerPedido(id).subscribe((info) => {
       this.iniciarNotaPedido();
       info.articulos.map((item): void => {
@@ -297,6 +300,10 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       //this.obtenerGuias();
       this.imagenCanal = info.imagen_canal;
       this.modalService.open(modal, {size: 'xl'});
+      this.mostrarSpinner = false;
+
+    }, error => {
+      this.mostrarSpinner = false;
     });
   }
 
@@ -434,8 +441,16 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
 
 
     if (confirm('Esta seguro de enviar') === true) {
+      this.mostrarSpinner = true;
+
       this.pedidosService.actualizarPedido(this.motivoDevolucionPedidoForm.value).subscribe((info) => {
+
+        this.modalService.dismissAll();
         this.obtenerTransacciones();
+        this.mostrarSpinner = false;
+
+      }, error => {
+        this.mostrarSpinner = false;
       });
     }
   }
@@ -471,6 +486,8 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     if (this.notaPedido.invalid) {
       return alert('Seleccione un metodo');
     }
+    this.mostrarSpinner = true;
+
     this.pedidosService.actualizarPedido({
       id: this.notaPedido.value.id, verificarGeneracionGuia: true,
       numeroGuia: this.notaPedido.value.numeroGuia,
@@ -479,6 +496,10 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       this.createPDF();
       this.modalService.dismissAll();
       this.obtenerTransacciones();
+      this.mostrarSpinner = false;
+
+    }, error => {
+      this.mostrarSpinner = false;
     });
   }
 
@@ -773,11 +794,18 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       formData.append('id', this.notaPedido.value.id);
       formData.append('metodoPago', this.notaPedido.value.metodoPago);
       formData.append('verificarGeneracionGuia', '1');
+      this.mostrarSpinner = true;
+
       this.pedidosService.actualizarPedidoFormData(formData)
         .subscribe(() => {
           window.alert('Archivo guardado.');
           this.obtenerTransacciones();
           this.modalService.dismissAll();
+          this.mostrarSpinner = false;
+
+        }, error => {
+          this.mostrarSpinner = false;
+
         });
 
     } else {
@@ -802,7 +830,8 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
       {text: articulo.codigo, fontSize: 10},
       {text: articulo.cantidad, fontSize: 10},
       {text: articulo.articulo, fontSize: 10},
-      { image: articulo.imagen_base_64,
+      {
+        image: articulo.imagen_base_64,
         width: 70,
         height: 70,
         alignment: 'start'
@@ -925,8 +954,8 @@ export class GestionEntregaNuevosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  enmarcarNumeroTelefono(numero: any): string{
-    if (numero.length <= 4){
+  enmarcarNumeroTelefono(numero: any): string {
+    if (numero.length <= 4) {
       return numero;
     }
     const ultimosDigitos = numero.slice(-4);

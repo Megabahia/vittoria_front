@@ -33,6 +33,7 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
   opciones;
   archivo: FormData = new FormData();
   horaPedido;
+  mostrarSpinner = false;
 
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -351,11 +352,18 @@ export class GestionEntregaDevolucionComponent implements OnInit, AfterViewInit 
 
   procesarEnvio(): void {
     if (confirm('Esta seguro de actualizar los datos') === true) {
+      this.mostrarSpinner = true;
+
       this.transaccionDevolucion.articulos.map(articulo => this.agregarItem());
       this.notaPedido.patchValue({...this.transaccionDevolucion, estado: 'Paquete Ingresado Stock'});
       this.pedidosService.devolucion(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
+        this.mostrarSpinner = false;
+
+      }, error => {
+        this.mostrarSpinner = false;
+
       });
     }
   }

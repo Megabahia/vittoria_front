@@ -124,10 +124,15 @@ export class ListProductosComponent implements OnInit, AfterViewInit {
     }
 
     if (confirm('¿Esta seguro de guardar los datos?') === true) {
+      this.mostrarSpinner = true;
       this.mdrpProductosService.actualizarProducto(this.productoRecepcionForm.value, this.idProductoEnviar).subscribe((info) => {
         this.toaster.open('Producto enviado', {type: 'success'});
         this.obtenerProductosRecepcion();
         this.modalService.dismissAll();
+        this.mostrarSpinner = false;
+      }, error => {
+        this.toaster.open('Error al enviar producto', {type: 'success'});
+        this.mostrarSpinner = false;
       });
     }
   }

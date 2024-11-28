@@ -66,6 +66,7 @@ export class ConsultaProductosComponent implements OnInit {
   mostrarDatosProducto = false;
 
   sectorOpciones;
+  mostrarSpinner = false;
 
   cantidadProductoCarrito = 1;
   currentUser;
@@ -115,6 +116,7 @@ export class ConsultaProductosComponent implements OnInit {
       this.toaster.open('Ingrese un dato para buscar producto', {type: 'danger'});
       return;
     }
+    this.mostrarSpinner = true;
 
     return new Promise((resolve, reject) => {
       const data = {
@@ -132,11 +134,15 @@ export class ConsultaProductosComponent implements OnInit {
         //console.log('COURIERS', this.couriers);
         //this.obtenerDatosOrigenProducto();
         this.mostrarDatosProducto = true;
+        this.mostrarSpinner = false;
+
       }, error => {
         this.toaster.open(error, {type: 'danger'});
         this.codigoBarras = '';
         this.nombreProducto = '';
         this.mostrarDatosProducto = false;
+        this.mostrarSpinner = false;
+
       });
     });
   }

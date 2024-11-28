@@ -47,7 +47,7 @@
                 <th>Fecha Pedido</th>
                 <th>Fecha Autorización</th>
                 <th>Fecha Envío</th>
-                <th>Canal Pedido</th>
+                <th>Tienda</th>
                 <th>Courier Envio</th>
                 <th>Numero Pedido</th>
                 <th>Numero Guía</th>
@@ -67,7 +67,7 @@
                 <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
                 <td>{{ transaccion.fechaHoraConfirmacion | date: 'dd-MM-yyyy' }}</td>
                 <td>{{ transaccion.fechaEntrega }}</td>
-                <td [title]="transaccion.canal">{{ transaccion.canal | shorten }}</td>
+                <td [title]="transaccion.articulos[0].canal">{{ transaccion.articulos[0].canal | shorten }}</td>
                 <td [title]="transaccion.canalEnvio">{{ transaccion.canalEnvio | shorten }}</td>
                 <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido }}</td>
                 <td [title]="transaccion.numeroGuia">{{ transaccion.numeroGuia}}</td>
@@ -717,7 +717,11 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
-    <button (click)="procesarEnvio()" class="btn btn-primary">
+    <button (click)="procesarEnvio()" class="btn btn-primary"
+            [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+    >
+      <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
       Confirmar
     </button>
   </div>

@@ -45,7 +45,7 @@
               <thead class="thead-light">
               <tr>
                 <th>Fecha Pedido</th>
-                <th>Canal Pedido</th>
+                <th>Tienda</th>
                 <th>Numero Pedido</th>
                 <th>Nombres Facturación</th>
                 <th>Apellidos Facturación</th>
@@ -73,7 +73,7 @@
               <tbody>
               <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
                 <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
-                <td>{{ transaccion.canal | shorten }}</td>
+                <td>{{ transaccion.articulos[0].canal | shorten }}</td>
                 <td>{{ transaccion.numeroPedido }}</td>
                 <td>{{ transaccion.facturacion.nombres }}</td>
                 <td>{{ transaccion.facturacion.apellidos }}</td>

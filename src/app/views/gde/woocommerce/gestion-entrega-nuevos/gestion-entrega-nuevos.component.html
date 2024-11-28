@@ -64,7 +64,7 @@
               <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
                 <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
                 <td>{{ transaccion.fechaHoraConfirmacion | date: 'dd-MM-yyyy' }}</td>
-                <td [title]="transaccion.canal">{{ transaccion.articulos[0].canal | shorten }}</td>
+                <td [title]="transaccion.articulos[0].canal">{{ transaccion.articulos[0].canal | shorten }}</td>
                 <td [title]="transaccion.tipoFacturacion">{{ transaccion.tipoFacturacion | shorten }}</td>
                 <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido | shorten }}</td>
                 <td [title]="transaccion.facturacion.nombres">{{ transaccion.facturacion.nombres | shorten }}</td>
@@ -306,9 +306,19 @@
                             </div>
                           </div>
                           <div class="col-md-3 col-12">
-                            <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a> </label>
-                            <input class="form-control" type="text"
-                                   formControlName="gps" disabled>
+                            <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a>
+                            </label>
+                            <div class="input-group mb-3">
+                              <input class="form-control" type="text" formControlName="gps"
+                                     aria-describedby="basic-addon2" disabled>
+                              <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon2">
+                                <a href="{{notaPedido.value.facturacion.gps}}" target="_blank"
+                                   *ngIf="notaPedido.value.facturacion?.gps!='' && notaPedido.value.facturacion?.gps.startsWith('https://'); else noGpsF">Ir</a>
+                                <ng-template #noGpsF>Inválido</ng-template>
+                              </span>
+                              </div>
+                            </div>
                             <div *ngIf="facturacionForm.gps.errors"
                                  class="invalid-feedback" style="display: block;">
                               <div *ngIf="facturacionForm.gps.errors.required">
@@ -666,9 +676,17 @@
                             </div>
                           </div>
                           <div class="col-md-3 col-12">
-                            <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a> </label>
-                            <input class="form-control" type="text"
-                                   formControlName="gps" disabled>
+                            <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a>
+                            </label>
+                            <div class="input-group mb-3">
+                              <input class="form-control" type="text" formControlName="gps" aria-describedby="basic-addon3" disabled>
+                              <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon3">
+                                <a href="{{notaPedido.value.envio.gps}}" target="_blank" *ngIf="notaPedido.value.envio.gps!='' && notaPedido.value.envio.gps.startsWith('https://'); else noGpsE">Ir</a>
+                                <ng-template #noGpsE>Inválido</ng-template>
+                              </span>
+                              </div>
+                            </div>
                             <div *ngIf="envioForm.gps.errors"
                                  class="invalid-feedback" style="display: block;">
                               <div *ngIf="envioForm.gps.errors.required">
@@ -853,10 +871,19 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-light" (click)="modal.dismiss('Cross click')">Cerrar</button>
-    <button (click)="seleccionarGuia()" class="btn btn-primary" type="button" *ngIf="mostrarImprimirGuia">Imprimir
+    <button (click)="seleccionarGuia()" class="btn btn-primary" type="button" *ngIf="mostrarImprimirGuia"
+            [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+    >
+      <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
+      Imprimir
       guia
     </button>
-    <button (click)="guardarGuiaServiEntrega()" class="btn btn-primary" type="button" *ngIf="mostrarDiv">Guardar guía
+    <button (click)="guardarGuiaServiEntrega()" class="btn btn-primary" type="button" *ngIf="mostrarDiv"
+            [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+      <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
+      Guardar guía
     </button>
   </div>
 </ng-template>
@@ -1207,8 +1234,15 @@
             </div>
             <div class="col-4">
               <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a> </label>
-              <input class="form-control" type="text"
-                     formControlName="gps" disabled>
+              <div class="input-group mb-3">
+                <input class="form-control" type="text" formControlName="gps" aria-describedby="basic-addon4" disabled>
+                <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon4">
+                                <a href="{{notaPedido.value.envio.gps}}" target="_blank" *ngIf="notaPedido.value.envio.gps!='' && notaPedido.value.envio.gps.startsWith('https://'); else noGps">Ir</a>
+                                <ng-template #noGps>Inválido</ng-template>
+                              </span>
+                </div>
+              </div>
               <div *ngIf="envioForm.gps.errors"
                    class="invalid-feedback" style="display: block;">
                 <div *ngIf="envioForm.gps.errors.required">
@@ -1253,7 +1287,8 @@
   <div class="modal-content">
     <div class="card-body invoice-padding">
       <div class="col-12">
-        <p class="bg-danger text-center">Por favor, ingrese el motivo por el cual usted esta devolviendo el pedido.</p>
+        <p class="bg-light-danger text-center">Por favor, ingrese el motivo por el cual usted esta devolviendo el
+          pedido.</p>
       </div>
     </div>
     <form [formGroup]="motivoDevolucionPedidoForm">
@@ -1262,9 +1297,9 @@
           <div class="col-12">
             <label>Ingrese el motivo</label>
             <textarea class="form-control" formControlName="motivo_devolucion" rows="3"></textarea>
-            <div *ngIf="devolucionForm.motivoNegacionPedido.errors"
+            <div *ngIf="devolucionForm.motivo_devolucion.errors"
                  class="invalid-feedback" style="display: block;">
-              <div *ngIf="devolucionForm.motivoNegacionPedido.errors.required">
+              <div *ngIf="devolucionForm.motivo_devolucion.errors.required">
                 Requerido
               </div>
             </div>
@@ -1279,7 +1314,11 @@
     </button>
     <button class="btn btn-primary mx-1"
             (click)="procesarDevolucion()"
-    >Devolver Pedido
+            [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+    >
+      <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
+      Devolver Pedido
     </button>
   </div>
 </ng-template>

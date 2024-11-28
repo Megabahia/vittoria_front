@@ -128,12 +128,16 @@ export class GdRegistrosAsesoresComponent implements OnInit, AfterViewInit {
 
   async confirmarAsesor(): Promise<void> {
     if (confirm('Esta seguro de guardar los datos') === true) {
-
+      this.mostrarSpinner = true;
       this.asesorForm.get('id').setValue(this.idAsesor);
       this.asesorService.confirmarAsesor(this.asesorForm.value).subscribe(value => {
         this.toaster.open('Asesor confirmado.', {type: 'success'});
         this.obtenerAsesoresRegistrados();
+
+        this.mostrarSpinner = false;
+        this.modalService.dismissAll();
       }, error => {
+        this.mostrarSpinner = false;
         this.toaster.open(error, {type: 'danger'});
       });
     }

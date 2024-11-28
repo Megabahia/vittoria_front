@@ -63,6 +63,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   mostrarBotonAutorizar = false;
   detallePedido;
   listaEstadoContacto;
+
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -263,9 +264,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       /*info.articulos.forEach((item, index) => {
         this.obtenerProducto(index);
       });*/
-
       info.articulos.map((item): void => {
-
         this.agregarItem();
       });
 
@@ -384,7 +383,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     const precios = [];
     Object.keys(info).forEach(clave => {
       if (clave.startsWith('precioVenta')) {
-        precios.push({clave: clave, valor: info[clave]});
+        precios.push({clave: clave, valor: parseFloat(info[clave])});
       }
     });
     return precios;
@@ -443,10 +442,14 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     delete this.notaPedido.value.comprobanteVendedorGmb;
 
     if (confirm('Esta seguro de actualizar los datos') === true) {
+      this.mostrarSpinner = true;
       this.pedidosService.actualizarPedido(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
         this.mostrarBotonAutorizar = true;
+        this.mostrarSpinner = false;
+      }, error => {
+        this.mostrarSpinner = false;
       });
     }
   }

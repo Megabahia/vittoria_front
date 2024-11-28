@@ -17,7 +17,12 @@
         <input class="form-control" type="text" [(ngModel)]="nombreProducto" placeholder="Nombre de producto" (change)="obtenerProducto()">
       </div>
       <div class="col-md-3 col-12 mt-2 ml-2">
-        <button class="btn btn-primary" (click)="obtenerProducto()">Consultar</button>
+        <button class="btn btn-primary" (click)="obtenerProducto()"
+                [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+        >
+          <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                aria-hidden="true"></span>
+          Consultar</button>
       </div>
     </div>
   </div>

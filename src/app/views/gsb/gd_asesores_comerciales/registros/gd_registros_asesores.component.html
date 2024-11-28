@@ -102,7 +102,11 @@
                 (click)="modal.dismiss('Cross click')">Cerrar
         </button>
         <button class="btn btn-primary mx-1" (click)="confirmarAsesor()"
-        >Confirmar
+                [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+        >
+          <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                aria-hidden="true"></span>
+          Confirmar
         </button>
       </div>
     </ng-template>

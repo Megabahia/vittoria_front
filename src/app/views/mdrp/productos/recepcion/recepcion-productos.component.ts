@@ -27,7 +27,7 @@ export class RecepcionProductosComponent implements OnInit {
   archivo: FormData = new FormData();
   imagenPrinciplSeleccionada: File | null = null;
   imageUrlPrincipal: string | ArrayBuffer | null = null;
-
+  mostrarSpinner = false;
   constructor(
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
@@ -83,6 +83,7 @@ export class RecepcionProductosComponent implements OnInit {
       this.archivo.append('imagen', this.imagenPrinciplSeleccionada);
     }
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
       this.mdrpProductosService.crearProducto(this.archivo).subscribe((info) => {
         this.imageUrlPrincipal = null;
         this.imagenPrinciplSeleccionada = null;
@@ -93,6 +94,10 @@ export class RecepcionProductosComponent implements OnInit {
         this.toaster.open("Producto guardado", {type: 'success'});
 
         this.iniciarNotaRecepcionProducto();
+        this.mostrarSpinner = false;
+      }, error => {
+        this.toaster.open("Error al guardar", {type: 'danger'});
+        this.mostrarSpinner = false;
       });
     }
   }
@@ -113,6 +118,15 @@ export class RecepcionProductosComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       this.imagenPrinciplSeleccionada = input.files[0]; // Almacena el archivo seleccionado globalmente
+
+      // Verificar tamaño del archivo (2MB = 2 * 1024 * 1024 bytes)
+      const maxSize = 5 * 1024 * 1024;
+      if (this.imagenPrinciplSeleccionada.size > maxSize) {
+        this.toaster.open('El archivo supera el tamaño máximo permitido de 2MB', {type: 'danger'});
+        this.fileInput.nativeElement.value = ''; // Resetea el input
+        return;
+      }
+
       this.cargarImagenPrincipal(this.imagenPrinciplSeleccionada); // Carga la imagen para su visualización
     }
   }

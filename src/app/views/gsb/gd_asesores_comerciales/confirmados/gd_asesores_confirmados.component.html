@@ -223,7 +223,11 @@
                 (click)="modal.dismiss('Cross click')">Cerrar
         </button>
         <button class="btn btn-primary mx-1" (click)="actualizar()"
-        >Guardar datos
+                [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+        >
+          <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                aria-hidden="true"></span>
+          Guardar datos
         </button>
       </div>
     </ng-template>

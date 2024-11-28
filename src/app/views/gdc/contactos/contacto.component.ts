@@ -415,6 +415,8 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       return;
     }
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
+
       const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
       facturaFisicaLlaves.map((llaves, index) => {
@@ -427,20 +429,34 @@ export class ContactoComponent implements OnInit, AfterViewInit {
       this.archivo.append('formaPago', JSON.stringify(this.formasPago));
       if (this.mostrarInputCobro || this.mostrarInputTransaccion || this.mostrarInputTransaccionCredito) {
         if (Number(this.totalPagar) !== Number(this.totalFormaPago)) {
-          this.toaster.open('El precio total ingresado no coincide', {type: 'danger'})
+          this.toaster.open('El precio total ingresado no coincide', {type: 'danger'});
+          this.mostrarSpinner = false;
+
         } else {
           this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
             this.modalService.dismissAll();
             this.obtenerContactos();
             this.verificarContacto = true;
-          }, error => this.toaster.open(error, {type: 'danger'}));
+            this.mostrarSpinner = false;
+
+          }, error => {
+            this.mostrarSpinner = false;
+
+            this.toaster.open(error, {type: 'danger'})
+          });
         }
       } else {
         this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
           this.modalService.dismissAll();
           this.obtenerContactos();
           this.verificarContacto = true;
-        }, error => this.toaster.open(error, {type: 'danger'}))
+          this.mostrarSpinner = false;
+
+        }, error => {
+          this.toaster.open(error, {type: 'danger'})
+          this.mostrarSpinner = false;
+
+        })
       }
 
     }
@@ -460,12 +476,19 @@ export class ContactoComponent implements OnInit, AfterViewInit {
         this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
         return;
       }
+      this.mostrarSpinner = true;
 
       this.contactosService.actualizarContacto(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerContactos();
         this.verificarContacto = true;
-      }, error => this.toaster.open(error, {type: 'danger'}))
+        this.mostrarSpinner = false;
+
+      }, error => {
+        this.mostrarSpinner = false;
+
+        this.toaster.open(error, {type: 'danger'});
+      })
     }
   }
 

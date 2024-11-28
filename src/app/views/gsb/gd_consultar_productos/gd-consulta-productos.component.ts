@@ -58,7 +58,7 @@ export class GdConsultaProductosComponent implements OnInit {
   mostrarDatosProducto = false;
 
   sectorOpciones;
-
+  mostrarSpinner = false;
   cantidadProductoCarrito = 1;
   canalContacto: string | null = null;
 
@@ -96,6 +96,7 @@ export class GdConsultaProductosComponent implements OnInit {
     }
 
     return new Promise((resolve, reject) => {
+      this.mostrarSpinner = true;
       const data = {
         codigoBarras: this.codigoBarras,
         nombre: this.nombreProducto,
@@ -112,11 +113,13 @@ export class GdConsultaProductosComponent implements OnInit {
         //console.log('COURIERS', this.couriers);
         //this.obtenerDatosOrigenProducto();
         this.mostrarDatosProducto = true;
+        this.mostrarSpinner = false;
       }, error => {
         this.toaster.open(error, {type: 'danger'})
         this.codigoBarras = '';
         this.nombreProducto = '';
         this.mostrarDatosProducto = false;
+        this.mostrarSpinner = false;
       });
     });
   }

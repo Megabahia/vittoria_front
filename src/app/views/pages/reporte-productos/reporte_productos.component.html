@@ -9,7 +9,8 @@
     <div class="col-md-4 col-12 d-flex">
       <input class="form-control" type="text" placeholder="Buscar por codigo producto"
              [(ngModel)]="codigoBarrasBuscar"/>
-      <button class="btn btn-primary" (click)="obtenerListaProductos()">
+      <button class="btn btn-primary" (click)="obtenerListaProductos()" [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+
         <i-feather name='search' class="edit-user"></i-feather>
       </button>
     </div>

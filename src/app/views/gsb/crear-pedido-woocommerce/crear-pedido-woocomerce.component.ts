@@ -804,7 +804,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     const precios = [];
     Object.keys(info).forEach(clave => {
       if (clave.startsWith('precioVenta')) {
-        precios.push({clave: clave, valor: info[clave]});
+        precios.push({clave: clave, valor: parseFloat(info[clave])});
       }
     });
     return precios;

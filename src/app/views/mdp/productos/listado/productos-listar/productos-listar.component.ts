@@ -41,6 +41,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   inicioActualizacion;
   finActualizacion;
   filtros = false;
+  mostrarSpinner = false;
   constructor(
     private productosService: ProductosService,
     private modalService: NgbModal,
@@ -242,12 +243,16 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
       this.toaster.open('Seleccione un canal', {type: 'danger'});
       return;
     }
-
+    this.mostrarSpinner = true;
     this.productosService.copiarProducto({'canal': this.canal}, this.idProductoCopia).subscribe(() => {
       this.toaster.open('Producto copiado con éxito.', {type: 'success'});
       this.modalService.dismissAll();
       this.obtenerListaProductos();
-    }, error => window.alert(error));
+      this.mostrarSpinner = false;
+    }, error => {
+      this.mostrarSpinner = false;
+      window.alert(error);
+    });
   }
 
   reporteProductosHtml() {
@@ -274,6 +279,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     if (this.finActualizacion) {
       queryParams['fin_actualizacion'] = this.transformarFecha(this.finActualizacion);
     }
+    this.mostrarSpinner = true;
 
     const navigationExtras: NavigationExtras = {queryParams};
 
@@ -293,8 +299,13 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
       const fullUrl = this.router.serializeUrl(urlTree);
       const completeUrl = `${window.location.origin}/#${fullUrl}`;
       window.open(completeUrl, '_blank');
+      this.mostrarSpinner = false;
+
       //this.router.navigateByUrl(urlTree, '_blank');
-    }, error => this.toaster.open('error', {type: 'danger'}));
+    }, error => {
+      this.mostrarSpinner = false;
+      this.toaster.open('error', {type: 'danger'});
+    });
 
   }
 

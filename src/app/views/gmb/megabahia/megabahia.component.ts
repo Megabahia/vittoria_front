@@ -259,9 +259,12 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
       return;
     }
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
 
       if (this.notaPedido.value.montoPrevioPago && parseFloat(this.notaPedido.value.montoPrevioPago) !== parseFloat(this.notaPedido.value.total)) {
         this.toaster.open('El monto ingresado no coincide con el total del pedido', {type: 'danger'});
+        this.mostrarSpinner = false;
+
         return;
       } else {
         const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
@@ -284,7 +287,12 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
         this.megabahiaService.crearNuevoMegabahiaDespacho(this.archivo).subscribe((info) => {
             this.modalService.dismissAll();
             this.notaPedido.patchValue({...info});
-          }, error => this.toaster.open(error, {type: 'danger'})
+            this.mostrarSpinner = false;
+
+          }, error => {
+            this.mostrarSpinner = false;
+            this.toaster.open(error, {type: 'danger'});
+          }
         );
       }
     }
@@ -314,7 +322,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
           this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
           const precioProducto = parseFloat(this.detallesArray.controls[i].get('valorUnitario').value);
-          this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto.toFixed(2));
+          this.detallesArray.controls[i].get('valorUnitario').setValue(precioProducto);
           this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
           this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
           this.detallesArray.controls[i].get('imagen_principal').setValue(info?.imagen_principal);
@@ -469,7 +477,7 @@ export class MegabahiaComponent implements OnInit, AfterViewInit {
     const precios = [];
     Object.keys(info).forEach(clave => {
       if (clave.startsWith('precioVenta')) {
-        precios.push({clave: clave, valor: info[clave]});
+        precios.push({clave: clave, valor: parseFloat(info[clave])});
       }
     });
     return precios;

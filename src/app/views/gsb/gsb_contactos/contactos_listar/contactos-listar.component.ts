@@ -369,7 +369,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
-
+      this.mostrarSpinner = true;
       this.notaPedido.get('envio').patchValue({...this.notaPedido.value.facturacion});
 
       const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
@@ -429,8 +429,9 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
         this.modalService.dismissAll();
         this.obtenerContactos();
         this.toaster.open('Pedido enviado', {type: 'success'});
-
+        this.mostrarSpinner = false;
       }, error => {
+        this.mostrarSpinner = false;
         this.toaster.open('Error al guardar pedido', {type: 'danger'})
       });
     }
@@ -488,7 +489,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
     const precios = [];
     Object.keys(info).forEach(clave => {
       if (clave.startsWith('precioVenta')) {
-        precios.push({clave: clave, valor: info[clave]});
+        precios.push({clave: clave, valor: parseFloat(info[clave])});
       }
     });
     return precios;

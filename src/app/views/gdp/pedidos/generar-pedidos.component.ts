@@ -288,7 +288,6 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
     /*await Promise.all(this.detallesArray.controls.map((producto, index) => {
       return this.obtenerProducto(index);
     }));*/
-    console.log(this.notaPedido.value)
 
     if (this.notaPedido.value.valorUnitario === 0) {
       this.toaster.open('Seleccione un precio que sea mayor a 0.', {type: 'danger'});
@@ -301,6 +300,8 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
 
     if (confirm('Esta seguro de guardar los datos') === true) {
       this.hablilitarBotonGuardar = false;
+      this.mostrarSpinner = true;
+
       this.contactosService.crearNuevaVenta(this.notaPedido.value).subscribe((info) => {
           this.imagenCanal = info.imagen_canal;
           this.obtenerContactos();
@@ -312,7 +313,13 @@ export class GenerarPedidosComponent implements OnInit, AfterViewInit {
           this.captureScreen();
           this.mostrarFiltroCliente = true;
           this.mostrarInputNumPedido = false;
-        }, error => this.toaster.open(error, {type: 'danger'})
+          this.mostrarSpinner = false;
+
+        }, error => {
+        this.mostrarSpinner = false;
+
+        this.toaster.open(error, {type: 'danger'})
+        }
       );
       this.hablilitarBotonGuardar = true;
     } else {

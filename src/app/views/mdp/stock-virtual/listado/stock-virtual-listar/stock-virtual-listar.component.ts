@@ -31,8 +31,8 @@ export class StockVirtualListarComponent implements OnInit, AfterViewInit {
   canalOpcionesModal;
   canalSeleccionado = '';
   seleccionados = [];
-  seleccionadoDefault
-
+  seleccionadoDefault;
+  mostrarSpinner = false;
   constructor(
     private productosService: ProductosService,
     private modalService: NgbModal,
@@ -219,15 +219,17 @@ export class StockVirtualListarComponent implements OnInit, AfterViewInit {
       stockVirtual: this.canalStockVirtual.value.canales,
       codigoBarras: this.codigoBarrasProducto,
       canal: this.canalProducto
-    }
-
+    };
+    this.mostrarSpinner = true;
     this.productosService.actualizarProducto(datos, this.idProducto).subscribe(
       info => {
         this.toaster.open('Producto actualizado', {type: 'info'});
         this.obtenerListaProductos();
         this.modalService.dismissAll();
+        this.mostrarSpinner = false;
       },
       error => {
+        this.mostrarSpinner = false;
         this.toaster.open(error, {type: 'danger'});
       }
     );

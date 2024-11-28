@@ -110,12 +110,17 @@ export class ConfirmacionRecepcionComponent implements OnInit, AfterViewInit {
 
   actualizar(estadoConfirmacion, id): void {
     if (confirm('¿Esta seguro de confirmar los datos?') === true) {
+      this.mostrarSpinner = true;
       this.mdrpProductosService.actualizarProducto({
         estado: estadoConfirmacion,
         fecha_confirmacion: new Date(),
       }, id).subscribe((info) => {
         this.toaster.open('Producto confirmado', {type: 'success'});
         this.obtenerProductosRecepcion();
+        this.mostrarSpinner = false;
+      }, error => {
+        this.toaster.open('Error al confirmar producto', {type: 'danger'});
+        this.mostrarSpinner = false;
       });
     }
   }
@@ -177,10 +182,15 @@ export class ConfirmacionRecepcionComponent implements OnInit, AfterViewInit {
       this.archivo.append('imagen', this.imagenPrinciplSeleccionada);
     }
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
       this.mdrpProductosService.actualizarProducto(this.archivo, this.productoRecepcionForm.value.id).subscribe((info) => {
         this.modalService.dismissAll();
         this.toaster.open('Producto verificado', {type: 'success'});
         this.obtenerProductosRecepcion();
+        this.mostrarSpinner = false;
+      }, error => {
+        this.toaster.open('Error al verificar producto', {type: 'danger'});
+        this.mostrarSpinner = false;
       });
     }
   }

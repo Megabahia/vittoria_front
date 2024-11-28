@@ -71,7 +71,9 @@
               </td>
               <td>
                 <button class="btn btn-primary" (click)="actualizar('Confirmado', transaccion.id)"
-                        *ngIf="transaccion.verificarProducto == 1">
+                        *ngIf="transaccion.verificarProducto == 1" [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+                  <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                        aria-hidden="true"></span>
                   Confirmar Producto
                 </button>
               </td>
@@ -179,7 +181,11 @@
             (click)="modal.dismiss('Cross click')">Cerrar
     </button>
     <button class="btn btn-primary mx-1" (click)="verificarInforProducto()"
-    >Confirmar producto
+            [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+    >
+      <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
+      Confirmar producto
     </button>
   </div>
 </ng-template>
