@@ -149,8 +149,18 @@ export class ConfirmacionRecepcionComponent implements OnInit, AfterViewInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       this.imagenPrinciplSeleccionada = input.files[0]; // Almacena el archivo seleccionado globalmente
-      this.cargarImagenPrincipal(this.imagenPrinciplSeleccionada); // Carga la imagen para su visualización
 
+      // Verificar tamaño del archivo (2MB = 2 * 1024 * 1024 bytes)
+      const maxSize = 5 * 1024 * 1024;
+      if (this.imagenPrinciplSeleccionada.size > maxSize) {
+        this.imagenPrinciplSeleccionada = null;
+        this.imageUrlPrincipal = null;
+        this.toaster.open('El archivo supera el tamaño máximo permitido de 5MB', {type: 'danger'});
+        this.fileInput.nativeElement.value = ''; // Resetea el input
+
+        return;
+      }
+      this.cargarImagenPrincipal(this.imagenPrinciplSeleccionada); // Carga la imagen para su visualización
     }
   }
 

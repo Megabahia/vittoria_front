@@ -87,6 +87,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
   mostrarBoton = true;
   sectorOpciones;
   desabilitarDescuento = false;
+
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -230,6 +231,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
 
   crearDetalleGrupo(): any {
     return this.formBuilder.group({
+      id: [''],
       codigo: ['', [Validators.required]],
       articulo: ['', [Validators.required]],
       valorUnitario: [0, [Validators.required, Validators.min(0.01)]],
@@ -453,7 +455,7 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
         //if(info.mensaje==''){
         if (info.codigoBarras) {
           //this.productosService.enviarGmailInconsistencias(this.notaPedido.value.id).subscribe();
-          //this.detallesArray.controls[i].get('id').setValue(info.id);
+          this.detallesArray.controls[i].get('id').setValue(info.id);
           this.detallesArray.controls[i].get('articulo').setValue(info.nombre);
           this.detallesArray.controls[i].get('cantidad').setValue(this.detallesArray.controls[i].get('cantidad').value ?? 1);
           this.detallesArray.controls[i].get('precios').setValue([...this.extraerPrecios(info)]);
@@ -669,28 +671,36 @@ export class ContactosListarComponent implements OnInit, AfterViewInit {
 
   cargarImagen(i, event: any): void {
     this.datosProducto = new FormData();
-
     const id = this.detallesArray.controls[i].get('id').value;
     const archivo = event.target.files[0];
     if (archivo) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const nuevaImagen = e.target.result;
-        this.detallesArray.controls[i].get('imagen_principal').setValue(nuevaImagen);
-        this.datosProducto.append('imagen_principal', archivo)
-        //this.datosProducto.append('imagenes[' + 0 + ']id', '0');
-        //this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
-        this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
-        this.datosProducto.append('canal', this.detallesArray.controls[i].get('canal').value);
-        try {
-          this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
-            this.toaster.open('Imagen actualizada con éxito', {type: "info"});
-          }, error => this.toaster.open('Error al actualizar la imagen.', {type: "danger"}));
-        } catch (error) {
-          this.toaster.open('Error al actualizar la imagen.', {type: "danger"});
-        }
-      };
-      reader.readAsDataURL(archivo);
+      // Verificar el tamaño del archivo (5MB = 5 * 1024 * 1024 bytes)
+      const MAX_SIZE = 5 * 1024 * 1024;
+
+      if (archivo.size > MAX_SIZE) {
+        this.toaster.open('La imagen no puede ser mayor a 5MB.', {type: "danger"});
+        return;  // Detener el proceso si el archivo es demasiado grande
+      } else {
+
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          const nuevaImagen = e.target.result;
+          this.detallesArray.controls[i].get('imagen_principal').setValue(nuevaImagen);
+          this.datosProducto.append('imagen_principal', archivo)
+          //this.datosProducto.append('imagenes[' + 0 + ']id', '0');
+          //this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
+          this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
+          this.datosProducto.append('canal', this.detallesArray.controls[i].get('canal').value);
+          try {
+            this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
+              this.toaster.open('Imagen actualizada con éxito', {type: "info"});
+            }, error => this.toaster.open('Error al actualizar la imagen.', {type: "danger"}));
+          } catch (error) {
+            this.toaster.open('Error al actualizar la imagen.', {type: "danger"});
+          }
+        };
+        reader.readAsDataURL(archivo);
+      }
 
     }
   }

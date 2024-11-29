@@ -570,7 +570,7 @@
                   <input #fileInput type="file" (change)="onFileSelect($event)" accept=".jpg,.jpeg,.png"
                          style="width: 260px" formControlName="imagen_principal">
                   <img *ngIf="imageUrlPrincipal" [src]="imageUrlPrincipal" alt="Imagen principal" class="img-fluid mt-3"
-                       style="max-width: 250px; height: auto;">
+                       style="max-width: 225px; height: 225px;">
                   <!--<button *ngIf="imageUrlPrincipal" class="btn btn-danger mt-2" (click)="eliminarImagenPrincipal()">X</button>-->
                   <div *ngIf="submittedProductoForm && fp.imagen_principal.errors" class="invalid-feedback"
                        style="display: block;">

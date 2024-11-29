@@ -103,16 +103,62 @@
                 <hr class="invoice-spacing"/>
                 <div class="row">
                   <div class="col-md-4 col-12">
-                    <label>Imagen</label>
-                    <input #fileInput type="file" (change)="onFileSelect($event)" accept=".jpg,.jpeg,.png"
-                           style="width: 260px" formControlName="imagen">
+                    <label>Imagen principal</label>
+                    <input #fileInput type="file" (change)="onFileSelect($event)" accept=".jpg,.jpeg,.png" formControlName="imagen" style="width: 260px">
                     <img *ngIf="imageUrlPrincipal" [src]="imageUrlPrincipal" alt="Imagen" class="img-fluid mt-3"
-                         style="max-width: 250px; height: auto;">
+                         style="max-width: 225px; height: 225px;">
                     <div *ngIf="notaRecepcionProductoForm.imagen.errors"
                          class="invalid-feedback" style="display: block;">
                       <div *ngIf="notaRecepcionProductoForm.imagen.errors.required">
                         Requerido
                       </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-12">
+                    <p class="card-text">
+                      Imágenes alternas del producto
+                    </p>
+                    <div class="dropzone" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
+                      <ngx-dropzone-label>
+                        <div class="dz-message">
+                          <h2>Cargar imágenes</h2>
+                        </div>
+                      </ngx-dropzone-label>
+                      <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of archivos"
+                                                  [file]="f"
+                                                  [removable]="true" (removed)="onRemove(f)">
+                        <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+                      </ngx-dropzone-image-preview>
+                    </div>
+                    <button id="clear-dropzone" class="btn btn-secondary btn-sm mt-1" (click)="removeAll()">
+                      <i-feather name="trash" class="edit-user"></i-feather>
+                      <span class="align-middle">Limpiar imágenes</span>
+                    </button>
+                    <div *ngFor="let img of imagenes" class="div-imagenes-productos">
+                      <a (click)="eliminarImagenModal(img.id)">
+                        <img class="eliminar-imagen" width="100%" height="200px" [src]="img.imagen">
+                        <img class="fondo-eliminar-imagen" width="100%" height="200px"
+                             src="/assets/images/borrar_imagen.png">
+                      </a>
+                      <hr>
+                    </div>
+                    <div class="mt-1" *ngIf="productoEncontrado">
+                      <div *ngFor="let imagen of imagenesEncontradas" class="imagen-item">
+                        <img [src]="imagen.imagen" alt="Imagen" width="200" height="200"/>
+                        <br />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-12">
+                    <div class="form-group">
+                      <label>Video</label>
+                      <input type="file" accept="video/mp4,video/x-m4v,video/*" class="form-control"
+                             (change)="verificarPesoArchivo($event)"
+                             #video
+                      >
+                      <video [src]="notaRecepcionProducto.value?.video" width="300" height="300" controls>
+                        <p>Su navegador no soporta vídeos HTML5.</p>
+                      </video>
                     </div>
                   </div>
                 </div>
