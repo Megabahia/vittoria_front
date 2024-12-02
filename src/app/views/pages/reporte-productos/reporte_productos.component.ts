@@ -82,6 +82,7 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
     {name: 'Estado', value: 'estado'},
     {name: 'Foto principal', value: 'imagen_principal'},
     {name: 'Fotos secundarias', value: 'imagenes'},
+    {name: 'Video', value: 'video'},
   ];
   mostrarSpinner = false;
 

@@ -72,7 +72,9 @@ export class ProductosEditarComponent implements OnInit {
   page_size = 3;
   productoEncontrado = false;
   imagenesEncontradas;
-
+  mostrarMultimedia = false;
+  mostrarMultimediaMDRP = false;
+  datosMultimediaMdrp = {};
   constructor(
     private categoriasService: CategoriasService,
     private subcategoriasService: SubcategoriasService,
@@ -161,7 +163,8 @@ export class ProductosEditarComponent implements OnInit {
       this.obtenerProducto();
       this.obtenerFichasTecnicas();
     } else {
-      this.obtenerUsuarioActual()
+      this.isObjectEmpty(this.datosMultimediaMdrp);
+      this.obtenerUsuarioActual();
     }
     this.obtenerCourierOpciones();
     this.obtenerProvinciasOpciones();
@@ -192,6 +195,7 @@ export class ProductosEditarComponent implements OnInit {
         this.obtenerListaParametros();
       }
       this.obtenerListaSubcategorias();
+      this.datosMultimediaMdrp = info.datos_mdrp;
     });
   }
 
@@ -612,5 +616,17 @@ export class ProductosEditarComponent implements OnInit {
         this.imagenesEncontradas = info.imagenes;
       });
     }
+  }
+
+  activarMultimedia(accion) {
+    if (accion === 'mdp') {
+      this.mostrarMultimedia = !this.mostrarMultimedia;
+    } else {
+      this.mostrarMultimediaMDRP = !this.mostrarMultimediaMDRP;
+    }
+  }
+
+  isObjectEmpty(obj: any): boolean {
+    return obj && Object.keys(obj).length === 0;
   }
 }

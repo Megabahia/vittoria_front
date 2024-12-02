@@ -42,6 +42,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   finActualizacion;
   filtros = false;
   mostrarSpinner = false;
+  mostrarSpinnerCopia = false;
   constructor(
     private productosService: ProductosService,
     private modalService: NgbModal,
@@ -243,14 +244,14 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
       this.toaster.open('Seleccione un canal', {type: 'danger'});
       return;
     }
-    this.mostrarSpinner = true;
+    this.mostrarSpinnerCopia = true;
     this.productosService.copiarProducto({'canal': this.canal}, this.idProductoCopia).subscribe(() => {
       this.toaster.open('Producto copiado con éxito.', {type: 'success'});
       this.modalService.dismissAll();
       this.obtenerListaProductos();
-      this.mostrarSpinner = false;
+      this.mostrarSpinnerCopia = false;
     }, error => {
-      this.mostrarSpinner = false;
+      this.mostrarSpinnerCopia = false;
       window.alert(error);
     });
   }
@@ -279,13 +280,13 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     if (this.finActualizacion) {
       queryParams['fin_actualizacion'] = this.transformarFecha(this.finActualizacion);
     }
-    this.mostrarSpinner = true;
 
     const navigationExtras: NavigationExtras = {queryParams};
 
     // Navegar al componente de destino con datos
     //this.router.navigate(['/pages/reporte/productos'], navigationExtras);
 
+    this.mostrarSpinner = true;
     this.productosService.generarTokenReporteProductos(
       {
         enlace: this.router.serializeUrl(this.router.createUrlTree(['/pages/reporte/productos'], navigationExtras)),

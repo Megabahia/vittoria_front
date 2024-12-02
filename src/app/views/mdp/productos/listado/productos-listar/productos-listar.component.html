@@ -280,9 +280,9 @@
             (click)="modal.dismiss('Cross click')">Cerrar
     </button>
     <button class="btn btn-primary mx-1" (click)="guardarCopiaProducto()"
-            [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+            [ngClass]="{'loading': mostrarSpinnerCopia}" [disabled]="mostrarSpinnerCopia"
     >
-      <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+      <span *ngIf="mostrarSpinnerCopia" class="spinner-border spinner-border-sm" role="status"
             aria-hidden="true"></span>
       Copiar producto
     </button>
