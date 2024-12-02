@@ -15,7 +15,7 @@
           </h5>
           <span></span>
           <div class="row d-flex justify-content-center">
-            <div class="col-md-4 col-12">
+            <div class="col-md-4 col-12 m-1">
               <label>Canal</label>
               <select class="form-control" name="canal" id="canal"
                       [(ngModel)]="canal" [disabled]="disabledSelectCanal">
@@ -28,9 +28,9 @@
               Canal: {{ canal }}
           </h5>-->
           <div class="card-body">
-            <div class="row justify-content-center">
-              <div class="col-md-6">
-                <div class="input-group d-flex align-items-center justify-content-center">
+            <div class="row d-flex justify-content-center align-items-center">
+              <div class="col-md-4 col-12">
+                <div class="input-group">
                   <div class="custom-file">
                     <input type="file" class="custom-file-input" id="inputGroupFile"
                            accept="application/vnd.ms-excel" (change)="cargarArchivoMegabahia($event)">
@@ -46,11 +46,23 @@
                       Cargar
                     </button>
                   </div>
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="customCheck" [(ngModel)]="resetearStock2"
-                           [checked]="resetearStock2"/>
-                    <label class="custom-control-label" for="customCheck">Resetear stock</label>
-                  </div>
+                </div>
+              </div>
+              <div class="col-md-2 col-12">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="customCheck" [(ngModel)]="resetearStock2"
+                         [checked]="resetearStock2"/>
+                  <label class="custom-control-label" for="customCheck">Resetear stock</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="customCheck2" [(ngModel)]="sumarStock"
+                         [checked]="sumarStock"/>
+                  <label class="custom-control-label" for="customCheck2">Sumar stock</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="customCheck3" [(ngModel)]="restarStock"
+                         [checked]="restarStock"/>
+                  <label class="custom-control-label" for="customCheck3">Restar stock</label>
                 </div>
               </div>
             </div>
@@ -102,12 +114,12 @@
                   </td>
                   <td>
                     <ul style="width: 250px">
-                      <li>Precio Venta A: {{ producto.precioVentaA | currency}}</li>
-                      <li>Precio Venta B: {{ producto.precioVentaB | currency}}</li>
-                      <li>Precio Venta C: {{ producto.precioVentaC | currency}}</li>
-                      <li>Precio Venta D: {{ producto.precioVentaD | currency}}</li>
-                      <li>Precio Venta E: {{ producto.precioVentaE | currency}}</li>
-                      <li>Precio Venta F: {{ producto.precioVentaF | currency}}</li>
+                      <li>Precio Venta A: {{ producto.precioVentaA | currency }}</li>
+                      <li>Precio Venta B: {{ producto.precioVentaB | currency }}</li>
+                      <li>Precio Venta C: {{ producto.precioVentaC | currency }}</li>
+                      <li>Precio Venta D: {{ producto.precioVentaD | currency }}</li>
+                      <li>Precio Venta E: {{ producto.precioVentaE | currency }}</li>
+                      <li>Precio Venta F: {{ producto.precioVentaF | currency }}</li>
                     </ul>
                   </td>
                   <td>
