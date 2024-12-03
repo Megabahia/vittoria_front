@@ -728,7 +728,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     let cantidad = +articulo.get('cantidad').value;
     let comision = 0;
 
-    cantidad = operacion === 'sumar' ? Math.min(cantidad + 1, 3) : Math.max(cantidad - 1, 1);
+    cantidad = operacion === 'sumar' ? Math.min(cantidad + 1, 100) : Math.max(cantidad - 1, 1);
 
     cantidadControl.get('cantidad').setValue(cantidad);
 
@@ -804,7 +804,7 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
     const precios = [];
     Object.keys(info).forEach(clave => {
       if (clave.startsWith('precioVenta')) {
-        precios.push({clave: clave, valor: info[clave]});
+        precios.push({clave: clave, valor: parseFloat(info[clave])});
       }
     });
     return precios;

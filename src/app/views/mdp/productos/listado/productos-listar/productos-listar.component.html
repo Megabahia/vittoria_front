@@ -124,7 +124,10 @@
             Exportar a Excel
           </button>
           <button class="btn btn-info waves-effect waves-float waves-light mx-1 mt-1"
-                  type="button" (click)="reporteProductosHtml()">
+                  type="button" (click)="reporteProductosHtml()"
+                  [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+            <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                  aria-hidden="true"></span>
             Exportar a HTML
           </button>
           <a (click)="crearProducto()" class="btn btn-icon btn-primary  mt-1 mr-1">
@@ -277,7 +280,11 @@
             (click)="modal.dismiss('Cross click')">Cerrar
     </button>
     <button class="btn btn-primary mx-1" (click)="guardarCopiaProducto()"
-    >Copiar producto
+            [ngClass]="{'loading': mostrarSpinnerCopia}" [disabled]="mostrarSpinnerCopia"
+    >
+      <span *ngIf="mostrarSpinnerCopia" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
+      Copiar producto
     </button>
   </div>
 </ng-template>

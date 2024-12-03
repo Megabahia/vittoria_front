@@ -182,14 +182,19 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
     }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
       this.contactoService.crearContactos(this.notaContacto.value).subscribe((info) => {
           this.modalService.dismissAll();
           this.titulo = 'Nuevo contacto';
           this.tituloBoton = 'Guardar contacto';
           this.mostrarInformacionRepetida = false;
-          this.toaster.open('Contacto registrado', {type: 'warning'});
+          this.toaster.open('Contacto registrado', {type: 'success'});
           this.iniciarNotaContacto();
-        }, error => this.toaster.open(error, {type: 'danger'})
+          this.mostrarSpinner = false;
+        }, error => {
+          this.toaster.open(error, {type: 'danger'});
+          this.mostrarSpinner = false;
+        }
       );
     }
   }
@@ -290,7 +295,7 @@ export class GsbGenerarContactoComponent implements OnInit, AfterViewInit {
   }
 
   validarDatos(): void {
-    if (!this.validarNumeroCelular(this.notaContacto.value.whatsapp)){
+    if (!this.validarNumeroCelular(this.notaContacto.value.whatsapp)) {
       this.toaster.open('Número de celular inválido.', {type: 'danger'});
       return;
     }

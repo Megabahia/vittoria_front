@@ -31,7 +31,6 @@ export class ProveedoresComponent implements OnInit, AfterViewInit {
   ciudadOpciones;
   provinciaOpciones;
   verificarContacto = false;
-
   fileToUpload: File | null = null;
   totalPagar;
   horaPedido;
@@ -107,10 +106,14 @@ export class ProveedoresComponent implements OnInit, AfterViewInit {
       this.archivo.append('imagen', this.imagenPrinciplSeleccionada);
     }*/
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
       this.proveedoresService.crearProveedor(this.proveedoresForm.value).subscribe((info) => {
         this.toaster.open('Proveedor guardado', {type: 'success'});
         this.modalService.dismissAll();
         this.obtenerListaProveedores();
+        this.mostrarSpinner = false;
+      }, error => {
+        this.mostrarSpinner = false;
       });
     }
   }

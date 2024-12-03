@@ -40,8 +40,8 @@ export class CargarStockMegabahiaComponent implements OnInit {
       reader.onload = () => {
         // Aquí se podría validar el contenido si es necesario
         const extension = file.name.split('.').pop().toLowerCase();
-        if (extension !== 'xls') {
-          this.toaster.open('Por favor, seleccione un archivo con la extensión .xls', {type: 'danger'});
+        if (extension !== 'xlsx') {
+          this.toaster.open('Por favor, seleccione un archivo con la extensión .xlsx', {type: 'danger'});
           return null;
         }
 

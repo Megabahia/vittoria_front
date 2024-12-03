@@ -59,6 +59,7 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
   datosTransferencias = {
     data: [], label: 'Series A', fill: false, borderColor: 'rgb(75, 192, 192)'
   };
+  mostrarSpinner = false;
 
   constructor(
     private toaster: Toaster,
@@ -435,6 +436,8 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
 
   procesarAutorizacion(): void {
     if (confirm('Esta seguro de cambiar de estado') === true) {
+      this.mostrarSpinner = true;
+
       if (this.autorizarForm.value.metodoConfirmacion === '') {
         this.toaster.open('Seleccione el método de confirmación.', {type: 'warning'});
         return;
@@ -442,15 +445,23 @@ export class PedidosDevueltosComponent implements OnInit, AfterViewInit {
       this.pedidosService.actualizarPedido(this.autorizarForm.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
+        this.mostrarSpinner = false;
+      }, error => {
+        this.mostrarSpinner = false;
       });
     }
   }
 
   procesarRechazar(): void {
     if (confirm('Esta seguro de cambiar de estado') === true) {
+      this.mostrarSpinner = true;
+
       this.pedidosService.actualizarPedido(this.rechazoForm.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
+        this.mostrarSpinner = false;
+      }, error => {
+        this.mostrarSpinner = false;
       });
     }
   }

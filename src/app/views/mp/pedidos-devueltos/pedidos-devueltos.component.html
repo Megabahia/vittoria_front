@@ -46,7 +46,7 @@
               <thead class="thead-light">
               <tr>
                 <th>Fecha Pedido</th>
-                <th>Canal Pedido</th>
+                <th>Tienda</th>
                 <th>Numero Pedido</th>
                 <th>Nombres Facturación</th>
                 <th>Apellidos Facturación</th>
@@ -64,7 +64,7 @@
               <tbody>
               <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
                 <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
-                <td>{{ transaccion.canal }}</td>
+                <td>{{ transaccion.articulos[0].canal }}</td>
                 <td>{{ transaccion.numeroPedido }}</td>
                 <td>{{ transaccion.facturacion.nombres }}</td>
                 <td>{{ transaccion.facturacion.apellidos }}</td>
@@ -940,7 +940,12 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
-    <button type="button" class="btn btn-primary" (click)="procesarAutorizacion()">Guardar</button>
+    <button type="button" class="btn btn-primary" (click)="procesarAutorizacion()"
+            [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+    >
+      <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
+      Guardar</button>
   </div>
 </ng-template>
 
@@ -972,6 +977,9 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
-    <button type="button" class="btn btn-primary" (click)="procesarRechazar()">Guardar</button>
+    <button type="button" class="btn btn-primary" (click)="procesarRechazar()" [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+      <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
+      Guardar</button>
   </div>
 </ng-template>

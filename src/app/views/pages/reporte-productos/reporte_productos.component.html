@@ -9,7 +9,9 @@
     <div class="col-md-4 col-12 d-flex">
       <input class="form-control" type="text" placeholder="Buscar por codigo producto"
              [(ngModel)]="codigoBarrasBuscar"/>
-      <button class="btn btn-primary" (click)="obtenerListaProductos()">
+      <button class="btn btn-primary" (click)="obtenerListaProductos()" [ngClass]="{'loading': mostrarSpinner}"
+              [disabled]="mostrarSpinner">
+
         <i-feather name='search' class="edit-user"></i-feather>
       </button>
     </div>
@@ -43,7 +45,7 @@
           </th>
         </tr>
         </thead>
-        <tbody >
+        <tbody>
         <tr *ngFor="let transaccion  of listaProductos; let i = index" style="cursor: default">
           <td>{{ transaccion.canal | shorten }}</td>
           <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
@@ -65,14 +67,61 @@
             </span>
           </td>
           <td>
-            <img [src]="transaccion.imagen_principal" alt="Imagen principal" width="75" height="75" style="cursor: pointer;"
-                 (click)="abrirModalImagen(transaccion.imagen_principal)">
+            <img [src]="transaccion.imagen_principal" alt="Imagen principal" width="100" height="100"
+                 style="cursor: pointer;"
+                 (click)="abrirModalImagen(transaccion.imagen_principal)"
+                 *ngIf="transaccion.imagen_principal; else imagenMdrp">
+            <ng-template #imagenMdrp>
+              <img [src]="transaccion.datos_mdrp.imagen" alt="Imagen principal" width="100" height="100"
+                   style="cursor: pointer;"
+                   (click)="abrirModalImagen(transaccion.datos_mdrp.imagen)">
+            </ng-template>
           </td>
-          <td class="d-flex">
-            <div *ngFor="let imagen  of transaccion.imagenes; let i = index">
-              <img [src]="imagen.imagen" alt="Imagen - {{i}}" width="75" height="75" style="cursor: pointer;"
-                   (click)="abrirModalImagen(imagen.imagen)">
+          <td>
+            <!-- Caso cuando transaccion.imagenes tiene datos -->
+            <div *ngIf="transaccion.imagenes.length > 0; else imagenesMdrp">
+              <div class="d-flex">
+                <div *ngFor="let imagen of transaccion.imagenes; let i = index">
+                  <img
+                    [src]="imagen.imagen"
+                    alt="Imagen - {{i}}"
+                    width="100"
+                    height="100"
+                    style="cursor: pointer;"
+                    (click)="abrirModalImagen(imagen.imagen)">
+                </div>
+              </div>
             </div>
+            <!-- Caso cuando no hay imágenes en transaccion.imagenes -->
+            <ng-template #imagenesMdrp>
+              <div class="d-flex">
+                <div *ngFor="let imagen of transaccion.datos_mdrp.imagenes; let i = index">
+                  <img
+                    [src]="imagen.imagen"
+                    alt="Imagen - {{i}}"
+                    width="100"
+                    height="100"
+                    style="cursor: pointer;"
+                    (click)="abrirModalImagen(imagen.imagen)">
+                </div>
+              </div>
+            </ng-template>
+          </td>
+          <td>
+            <video width="200" height="150" controls autoplay muted *ngIf="transaccion.video; else videoMdrp">
+              <source [src]="transaccion.video" type="video/mp4">
+              Tu navegador no soporta el elemento de video.
+            </video>
+            <ng-template #videoMdrp>
+              <video width="200" height="150" controls autoplay muted
+                     *ngIf="transaccion.datos_mdrp.video; else noVideo">
+                <source [src]="transaccion.datos_mdrp.video" type="video/mp4">
+                Tu navegador no soporta el elemento de video.
+              </video>
+              <ng-template #noVideo>
+                <span>No existe ningun video</span>
+              </ng-template>
+            </ng-template>
           </td>
         </tr>
         </tbody>

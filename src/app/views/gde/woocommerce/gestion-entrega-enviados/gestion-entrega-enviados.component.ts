@@ -53,6 +53,7 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
   public couriers = [];
   courierPedido
   usuario;
+  mostrarSpinner = false;
 
   constructor(
     private toaster: Toaster,
@@ -395,9 +396,17 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
         this.toaster.open('Complete los campos requeridos.', {type: 'warning'})
         return;
       }
+      this.mostrarSpinner = true;
+
       this.pedidosService.actualizarPedidoFormData(this.archivo).subscribe((info) => {
+
         this.modalService.dismissAll();
         this.obtenerTransacciones();
+        this.mostrarSpinner = false;
+
+      }, error => {
+        this.mostrarSpinner = false;
+
       });
 
     }
@@ -487,13 +496,21 @@ export class GestionEntregaEnviadosComponent implements OnInit, AfterViewInit {
 
   procesarMotivoNoEntrega() {
     if (confirm('Esta seguro de despachar') === true) {
+
       if (this.evidenciasNoEntrega.value.motivo === '') {
         this.toaster.open('Complete los campos requeridos.', {type: 'danger'});
         return;
       }
+      this.mostrarSpinner = true;
+
       this.pedidosService.actualizarPedido(this.evidenciasNoEntrega.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerTransacciones();
+        this.mostrarSpinner = false;
+
+      }, error => {
+        this.mostrarSpinner = false;
+
       });
 
     }

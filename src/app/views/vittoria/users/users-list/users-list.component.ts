@@ -3,6 +3,7 @@ import {NgbPagination, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NuevoUsuario, UsersService} from 'src/app/services/admin/users.service';
 import {FormGroup, Validators, FormBuilder} from '@angular/forms';
 import {ParamService as AdmParamService, ParamService} from '../../../../services/admin/param.service';
+import {IntegracionesService} from "../../../../services/admin/integraciones.service";
 
 @Component({
   selector: 'app-users-list',
@@ -64,8 +65,9 @@ export class UsersListComponent implements OnInit, AfterViewInit {
     private _formBuilder: FormBuilder,
     private paramService: ParamService,
     private paramServiceAdm: AdmParamService,
+    private integracionesService: IntegracionesService,
   ) {
-    this.obtenerListaParametros();
+    this.obtenerListaParametrosCanal();
 
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'METODO PAGO', '').subscribe((result) => {
       this.listaMetodoPago = result.data;
@@ -173,8 +175,18 @@ export class UsersListComponent implements OnInit, AfterViewInit {
 
   }
 
-  async obtenerListaParametros(): Promise<void> {
+  /*async obtenerListaParametros(): Promise<void> {
     await this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', this.nombreBuscar).subscribe((result) => {
+      this.canalOpciones = result.data;
+    });
+  }*/
+
+  obtenerListaParametrosCanal() {
+    const datos = {
+      page: this.page,
+      page_size: this.pageSize
+    };
+    this.integracionesService.obtenerListaIntegraciones(datos).subscribe((result) => {
       this.canalOpciones = result.data;
     });
   }

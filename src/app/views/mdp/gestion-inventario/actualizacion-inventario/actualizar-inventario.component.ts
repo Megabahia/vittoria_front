@@ -17,7 +17,9 @@ export class ActualizarInventarioComponent implements OnInit {
   mostrarSpinner = false;
   mostrarSpinner2 = false;
   resetearStock = false;
-  resetearStock2 = true;
+  resetearStock2 = false;
+  sumarStock = false;
+  restarStock = false;
   resumen = '';
   canal = '';
   canalOpciones;
@@ -26,6 +28,7 @@ export class ActualizarInventarioComponent implements OnInit {
   listaProductosResumen;
   currentUser;
   disabledSelectCanal = false;
+
   constructor(
     private toaster: Toaster,
     private gestionInventarioService: GestionInventarioService,
@@ -60,7 +63,7 @@ export class ActualizarInventarioComponent implements OnInit {
   }
 
   obtenerUsuarioActual(): void {
-    if (this.currentUser.usuario.idRol !== 1){
+    if (this.currentUser.usuario.idRol !== 1) {
       this.canal = this.currentUser.usuario.canal;
       this.disabledSelectCanal = true;
     }
@@ -126,13 +129,29 @@ export class ActualizarInventarioComponent implements OnInit {
       return;
     }
 
+    if ((this.resetearStock2 && this.sumarStock && this.restarStock) || (this.resetearStock2 && this.restarStock) || (this.resetearStock2 && this.sumarStock) || (this.sumarStock && this.restarStock)) {
+      this.toaster.open('Solo una opción es válida para modificar el stock', {type: 'warning'});
+      return;
+    }
+
+    if ((!this.resetearStock2 && !this.sumarStock && !this.restarStock) ) {
+      this.toaster.open('Debe seleccionar al menos una opción para modificar el stock', {type: 'warning'});
+      return;
+    }
+
     if (this.archivo.get('archivo') === null) {
       this.toaster.open('Agrege un archivo', {type: 'warning'});
       return;
     }
+
+
     this.mostrarSpinner2 = true;
     this.archivo.delete('resetearStock');
+    this.archivo.delete('sumarStock');
+    this.archivo.delete('restarStock');
     this.archivo.append('resetearStock', this.resetearStock2 === true ? 'true' : 'false');
+    this.archivo.append('sumarStock', this.sumarStock === true ? 'true' : 'false');
+    this.archivo.append('restarStock', this.restarStock === true ? 'true' : 'false');
     this.archivo.append('canal', this.canal);
     this.gestionInventarioService.actualizarInvetarioPrecios(this.archivo).subscribe((info) => {
       info.errores.map((mensaje) => {
@@ -145,10 +164,11 @@ export class ActualizarInventarioComponent implements OnInit {
       this.mostrarSpinner2 = false;
       this.archivo.delete('archivo');
     }, (error) => {
-      this.toaster.open('No es valido el archivo', {type: 'danger'});
-      this.listaProductosResumen = [];
       this.mostrarSpinner2 = false;
+      //this.toaster.open('Error al cargar archivo', {type: 'danger'});
+      this.listaProductosResumen = [];
       this.archivo.delete('archivo');
+      alert('Error al cargar archivo. Revise Sque los productos existan y pertenezcan al mismo canal para poder actualizar.');
     });
   }
 

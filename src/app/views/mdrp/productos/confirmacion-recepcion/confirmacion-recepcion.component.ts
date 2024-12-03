@@ -110,12 +110,17 @@ export class ConfirmacionRecepcionComponent implements OnInit, AfterViewInit {
 
   actualizar(estadoConfirmacion, id): void {
     if (confirm('¿Esta seguro de confirmar los datos?') === true) {
+      this.mostrarSpinner = true;
       this.mdrpProductosService.actualizarProducto({
         estado: estadoConfirmacion,
         fecha_confirmacion: new Date(),
       }, id).subscribe((info) => {
         this.toaster.open('Producto confirmado', {type: 'success'});
         this.obtenerProductosRecepcion();
+        this.mostrarSpinner = false;
+      }, error => {
+        this.toaster.open('Error al confirmar producto', {type: 'danger'});
+        this.mostrarSpinner = false;
       });
     }
   }
@@ -144,8 +149,18 @@ export class ConfirmacionRecepcionComponent implements OnInit, AfterViewInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       this.imagenPrinciplSeleccionada = input.files[0]; // Almacena el archivo seleccionado globalmente
-      this.cargarImagenPrincipal(this.imagenPrinciplSeleccionada); // Carga la imagen para su visualización
 
+      // Verificar tamaño del archivo (2MB = 2 * 1024 * 1024 bytes)
+      const maxSize = 5 * 1024 * 1024;
+      if (this.imagenPrinciplSeleccionada.size > maxSize) {
+        this.imagenPrinciplSeleccionada = null;
+        this.imageUrlPrincipal = null;
+        this.toaster.open('El archivo supera el tamaño máximo permitido de 5MB', {type: 'danger'});
+        this.fileInput.nativeElement.value = ''; // Resetea el input
+
+        return;
+      }
+      this.cargarImagenPrincipal(this.imagenPrinciplSeleccionada); // Carga la imagen para su visualización
     }
   }
 
@@ -177,10 +192,15 @@ export class ConfirmacionRecepcionComponent implements OnInit, AfterViewInit {
       this.archivo.append('imagen', this.imagenPrinciplSeleccionada);
     }
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
       this.mdrpProductosService.actualizarProducto(this.archivo, this.productoRecepcionForm.value.id).subscribe((info) => {
         this.modalService.dismissAll();
         this.toaster.open('Producto verificado', {type: 'success'});
         this.obtenerProductosRecepcion();
+        this.mostrarSpinner = false;
+      }, error => {
+        this.toaster.open('Error al verificar producto', {type: 'danger'});
+        this.mostrarSpinner = false;
       });
     }
   }

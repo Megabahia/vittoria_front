@@ -58,6 +58,7 @@ export class CentroNegocioMetodoEnvioComponent implements OnInit, AfterViewInit 
   totalFormaPago
   fechaMinima;
   fechaMaxima = new Date().toISOString().slice(0, 10);
+  mostrarSpinner = false;
 
   public barChartData: ChartDataSets[] = [];
   public barChartColors: Color[] = [{
@@ -419,6 +420,7 @@ export class CentroNegocioMetodoEnvioComponent implements OnInit, AfterViewInit 
 
   cargarFactura(modal, id): void {
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
+    this.archivo = new FormData();
     this.idPedido = id;
     this.iniciarFormaPagoForm();
     this.formaPagoForm.get('archivoFactura').setValue('');
@@ -450,8 +452,12 @@ export class CentroNegocioMetodoEnvioComponent implements OnInit, AfterViewInit 
     }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
+
       if (Number(this.totalPagar) < Number(this.formaPagoForm.value.montoSubtotalCliente)) {
         this.toaster.open('El monto ingresado no debe ser mayor al monto a pagar del pedido.', {type: 'danger'})
+        this.mostrarSpinner = false;
+
         return;
       } else {
         const fechaTransformada = new Date(this.formaPagoForm.get('fechaEmisionFactura').value).toISOString();
@@ -472,7 +478,13 @@ export class CentroNegocioMetodoEnvioComponent implements OnInit, AfterViewInit 
         this.pedidosService.actualizarPedidoFormaPagoFormData(this.archivo).subscribe((info) => {
           this.modalService.dismissAll();
           this.obtenerTransacciones();
-        }, error => this.toaster.open(error, {type: 'danger'}));
+          this.mostrarSpinner = false;
+
+        }, error => {
+          this.mostrarSpinner = false;
+
+          this.toaster.open(error, {type: 'danger'})
+        });
       }
 
     }
@@ -490,8 +502,12 @@ export class CentroNegocioMetodoEnvioComponent implements OnInit, AfterViewInit 
     }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
+
       if (Number(this.totalPagarQueja) < Number(this.exclamoQuejaForm.value.montoSubtotalQueja)) {
         this.toaster.open('El monto ingresado no debe ser mayor al monto a pagar del pedido.', {type: 'danger'});
+        this.mostrarSpinner = false;
+
         return;
       } else {
 
@@ -513,7 +529,12 @@ export class CentroNegocioMetodoEnvioComponent implements OnInit, AfterViewInit 
         this.pedidosService.actualizarPedidoQuejaFormData(this.archivo).subscribe((info) => {
           this.modalService.dismissAll();
           this.obtenerTransacciones();
-        }, error => this.toaster.open(error, {type: 'danger'}));
+          this.mostrarSpinner = false;
+
+        }, error => {
+          this.mostrarSpinner = false;
+          this.toaster.open(error, {type: 'danger'});
+        });
       }
 
     }
@@ -557,7 +578,7 @@ export class CentroNegocioMetodoEnvioComponent implements OnInit, AfterViewInit 
 
   exclamarReclamo(modal, id): void {
     this.modalService.open(modal, {size: 'lg', backdrop: 'static'});
-
+    this.archivo = new FormData();
     this.totalFormaPago = 0;
     this.idPedido = id;
     this.iniciarFormaPagoQuejaForm();

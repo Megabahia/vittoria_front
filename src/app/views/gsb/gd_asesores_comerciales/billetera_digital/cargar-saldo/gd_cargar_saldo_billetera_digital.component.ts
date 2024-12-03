@@ -152,6 +152,8 @@ export class GdCargarSaldoBilleteraDigitalComponent implements OnInit, AfterView
     }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
+
       const asesorFisicaValores: string[] = Object.values(this.movimientoAsesorForm.value);
       const asesorFisicaLlaves: string[] = Object.keys(this.movimientoAsesorForm.value);
       asesorFisicaLlaves.map((llaves, index) => {
@@ -165,7 +167,13 @@ export class GdCargarSaldoBilleteraDigitalComponent implements OnInit, AfterView
         this.toaster.open('Datos guardados correctamente', {type: 'success'});
         this.modalService.dismissAll();
         this.obtenerAsesoresRegistrados();
-      }, error => this.toaster.open(error, {type: 'danger'}));
+        this.mostrarSpinner = false;
+
+      }, error => {
+        this.mostrarSpinner = false;
+
+        this.toaster.open(error, {type: 'danger'})
+      });
     }
   }
 }

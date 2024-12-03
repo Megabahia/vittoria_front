@@ -72,6 +72,9 @@ export class ProductosEditarComponent implements OnInit {
   page_size = 3;
   productoEncontrado = false;
   imagenesEncontradas;
+  mostrarMultimedia = false;
+  mostrarMultimediaMDRP = false;
+  datosMultimediaMdrp = {};
   constructor(
     private categoriasService: CategoriasService,
     private subcategoriasService: SubcategoriasService,
@@ -160,7 +163,8 @@ export class ProductosEditarComponent implements OnInit {
       this.obtenerProducto();
       this.obtenerFichasTecnicas();
     } else {
-      this.obtenerUsuarioActual()
+      this.isObjectEmpty(this.datosMultimediaMdrp);
+      this.obtenerUsuarioActual();
     }
     this.obtenerCourierOpciones();
     this.obtenerProvinciasOpciones();
@@ -191,6 +195,7 @@ export class ProductosEditarComponent implements OnInit {
         this.obtenerListaParametros();
       }
       this.obtenerListaSubcategorias();
+      this.datosMultimediaMdrp = info.datos_mdrp;
     });
   }
 
@@ -326,7 +331,7 @@ export class ProductosEditarComponent implements OnInit {
     }
     //PRODUCTO ENCONTRADO
     if (this.productoEncontrado) {
-      this.datosProducto.append('producto_encontrado',  'true');
+      this.datosProducto.append('producto_encontrado', 'true');
     }
     this.archivos.map((valor, pos) => {
       this.datosProducto.append('imagenes[' + pos + ']id', pos.toString());
@@ -519,8 +524,18 @@ export class ProductosEditarComponent implements OnInit {
   onFileSelect(event: any): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
-      this.imagenPrinciplSeleccionada = input.files[0]; // Almacena el archivo seleccionado globalmente
-      this.cargarImagenPrincipal(this.imagenPrinciplSeleccionada); // Carga la imagen para su visualización
+      const file = input.files[0];
+      // Verificar tamaño del archivo (2MB = 2 * 1024 * 1024 bytes)
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        this.toaster.open('El archivo supera el tamaño máximo permitido de 5MB', {type: 'danger'});
+        this.fileInput.nativeElement.value = ''; // Resetea el input
+
+        return;
+      } else {
+        this.imagenPrinciplSeleccionada = file;
+        this.cargarImagenPrincipal(this.imagenPrinciplSeleccionada);
+      }
 
     }
   }
@@ -601,5 +616,17 @@ export class ProductosEditarComponent implements OnInit {
         this.imagenesEncontradas = info.imagenes;
       });
     }
+  }
+
+  activarMultimedia(accion) {
+    if (accion === 'mdp') {
+      this.mostrarMultimedia = !this.mostrarMultimedia;
+    } else {
+      this.mostrarMultimediaMDRP = !this.mostrarMultimediaMDRP;
+    }
+  }
+
+  isObjectEmpty(obj: any): boolean {
+    return obj && Object.keys(obj).length === 0;
   }
 }

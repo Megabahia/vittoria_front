@@ -52,7 +52,7 @@
             <thead class="thead-light">
             <tr>
               <th>Fecha Pedido</th>
-              <th>Canal Pedido</th>
+              <th>Tienda</th>
               <th>Código vendedor</th>
               <th>Nombre vendedor</th>
               <th>Numero Pedido</th>
@@ -69,7 +69,7 @@
             <tbody>
             <tr *ngFor="let transaccion  of listaContactos; let i = index">
               <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
-              <td [title]="transaccion.canal">{{ transaccion.canal | shorten }}</td>
+              <td [title]="transaccion.articulos[0].canal">{{ transaccion.articulos[0].canal | shorten }}</td>
               <td>{{ transaccion.facturacion.codigoVendedor }}</td>
               <td>{{ transaccion.facturacion.nombreVendedor }}</td>
               <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido  | shorten }}</td>
@@ -547,7 +547,11 @@
             </button>
             <button class="btn btn-primary mx-1"
                     (click)="actualizarContacto()"
-            >Actualizar
+                    [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+            >
+              <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                    aria-hidden="true"></span>
+              Actualizar
             </button>
           </div>
         </ng-template>
@@ -729,7 +733,11 @@
             </button>
             <button class="btn btn-primary mx-1"
                     (click)="actualizar()"
-            >Guardar
+                    [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+            >
+              <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                    aria-hidden="true"></span>
+              Guardar
             </button>
           </div>
         </ng-template>

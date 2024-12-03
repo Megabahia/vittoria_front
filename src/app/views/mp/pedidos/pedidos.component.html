@@ -45,7 +45,7 @@
               <thead class="thead-light">
               <tr>
                 <th>Fecha Pedido</th>
-                <th>Canal Pedido</th>
+                <th>Tienda</th>
                 <th>Numero Pedido</th>
                 <th>Nombres Facturación</th>
                 <th>Apellidos Facturación</th>
@@ -64,11 +64,14 @@
               <tbody>
               <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
                 <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
-                <td [title]="transaccion.canal">{{ transaccion.canal | shorten }}</td>
+                <td [title]="transaccion.articulos[0].canal">{{ transaccion.articulos[0].canal | shorten }}</td>
                 <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido  | shorten }}</td>
                 <td [title]="transaccion.facturacion.nombres">{{ transaccion.facturacion.nombres | shorten }}</td>
                 <td [title]="transaccion.facturacion.apellidos">{{ transaccion.facturacion.apellidos | shorten }}</td>
-                <td [style]="{'color': transaccion.metodoPago.includes('Previo Pago') ? 'red' : transaccion.metodoPago.includes('Contra Entrega') ? 'blue' : 'black'}" [title]="transaccion.metodoPago">{{ transaccion.metodoPago | shorten }}</td>
+                <td
+                  [style]="{'color': transaccion.metodoPago.includes('Previo Pago') ? 'red' : transaccion.metodoPago.includes('Contra Entrega') ? 'blue' : 'black'}"
+                  [title]="transaccion.metodoPago">{{ transaccion.metodoPago | shorten }}
+                </td>
                 <td [title]="transaccion.envio.provincia">{{ transaccion.envio.provincia | shorten }}</td>
                 <td [title]="transaccion.envio.ciudad">{{ transaccion.envio.ciudad | shorten }}</td>
                 <td
@@ -338,9 +341,18 @@
                           </div>
                         </div>
                         <div class="col-md-3 col-12">
-                          <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a> </label>
-                          <input class="form-control" type="text"
-                                 formControlName="gps">
+                          <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a>
+                          </label>
+                          <div class="input-group mb-3">
+                            <input class="form-control" type="text" formControlName="gps" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon2">
+                                <a href="{{notaPedido.value.facturacion.gps}}" target="_blank" *ngIf="notaPedido.value.facturacion?.gps!='' && notaPedido.value.facturacion?.gps.startsWith('https://'); else noGpsF">Ir</a>
+                                <ng-template #noGpsF>Inválido</ng-template>
+                              </span>
+                            </div>
+                          </div>
+
                           <div *ngIf="facturacionForm.gps.errors"
                                class="invalid-feedback" style="display: block;">
                             <div *ngIf="facturacionForm.gps.errors.required">
@@ -845,9 +857,17 @@
                           </div>
                         </div>
                         <div class="col-md-3 col-12">
-                          <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a> </label>
-                          <input class="form-control" type="text"
-                                 formControlName="gps">
+                          <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a>
+                          </label>
+                          <div class="input-group mb-3">
+                            <input class="form-control" type="text" formControlName="gps" aria-describedby="basic-addon3">
+                            <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon3">
+                                <a href="{{notaPedido.value.envio.gps}}" target="_blank" *ngIf="notaPedido.value.envio.gps!='' && notaPedido.value.envio.gps.startsWith('https://'); else noGpsE">Ir</a>
+                                <ng-template #noGpsE>Inválido</ng-template>
+                              </span>
+                            </div>
+                          </div>
                           <div *ngIf="envioForm.gps.errors"
                                class="invalid-feedback" style="display: block;">
                             <div *ngIf="envioForm.gps.errors.required">
@@ -867,7 +887,11 @@
               </button>
               <button class="btn btn-primary mx-1"
                       (click)="actualizar()"
-              >Confirmar Pedido
+                      [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+              >
+                <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                      aria-hidden="true"></span>
+                Confirmar Pedido
               </button>
             </div>
           </ng-template>

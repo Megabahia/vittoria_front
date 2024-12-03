@@ -9,7 +9,7 @@
       <section class="app-user-list">
         <div class="card">
           <h5 class="card-header justify-content-center">
-            Cargar productos desde Megabahía desde un archivo XLS
+            Cargar productos desde Megabahía desde un archivo XLSX
             <a href="../../../../../assets/files/Plantilla_Productos_Megabahia.xlsx" target="_blank">Plantilla</a>
           </h5>
             <h5 class="card-header justify-content-center">
@@ -21,7 +21,7 @@
                 <div class="input-group">
                   <div class="custom-file">
                     <input type="file" class="custom-file-input" id="inputGroupFile"
-                           accept="application/vnd.ms-excel" (change)="cargarArchivoMegabahia($event)">
+                           accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" (change)="cargarArchivoMegabahia($event)">
                     <label class="custom-file-label" for="inputGroupFile">Seleccionar archivo XLS</label>
                   </div>
                   <div class="input-group-append">

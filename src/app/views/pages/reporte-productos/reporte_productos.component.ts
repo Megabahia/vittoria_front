@@ -66,23 +66,25 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
   sortDirection: string = '';
   imagenSeleccionada: string = '';
   headers = [
-    { name: 'Tienda', value: 'canal' },
-    { name: 'Fecha de creación', value: 'created_at' },
-    { name: 'Fecha de actualización', value: 'updated_at' },
-    { name: 'Código de barras', value: 'codigoBarras' },
-    { name: 'Nombre', value: 'nombre' },
-    { name: 'Precio Venta A', value: 'precioVentaA' },
-    { name: 'Precio Venta B', value: 'precioVentaB' },
-    { name: 'Precio Venta C', value: 'precioVentaC' },
-    { name: 'Precio Venta D', value: 'precioVentaD' },
-    { name: 'Precio Venta E', value: 'precioVentaE' },
-    { name: 'Categoría', value: 'categoria' },
-    { name: 'Subcategoría', value: 'subCategoria' },
-    { name: 'Stock', value: 'stock' },
-    { name: 'Estado', value: 'estado' },
-    { name: 'Foto principal', value: 'imagen_principal' },
-    { name: 'Fotos secundarias', value: 'imagenes' },
+    {name: 'Tienda', value: 'canal'},
+    {name: 'Fecha de creación', value: 'created_at'},
+    {name: 'Fecha de actualización', value: 'updated_at'},
+    {name: 'Código de barras', value: 'codigoBarras'},
+    {name: 'Nombre', value: 'nombre'},
+    {name: 'Precio Venta A', value: 'precioVentaA'},
+    {name: 'Precio Venta B', value: 'precioVentaB'},
+    {name: 'Precio Venta C', value: 'precioVentaC'},
+    {name: 'Precio Venta D', value: 'precioVentaD'},
+    {name: 'Precio Venta E', value: 'precioVentaE'},
+    {name: 'Categoría', value: 'categoria'},
+    {name: 'Subcategoría', value: 'subCategoria'},
+    {name: 'Stock', value: 'stock'},
+    {name: 'Estado', value: 'estado'},
+    {name: 'Foto principal', value: 'imagen_principal'},
+    {name: 'Fotos secundarias', value: 'imagenes'},
+    {name: 'Video', value: 'video'},
   ];
+  mostrarSpinner = false;
 
   constructor(
     private productosService: ProductosService,
@@ -164,10 +166,15 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
     if (this.finActualizacion) {
       filtros['fin_actualizacion'] = this.transformarFecha(this.finActualizacion);
     }
+    this.mostrarSpinner = true;
 
     this.productosService.obtenerReporteHtmlProductos(filtros).subscribe((info) => {
         this.listaProductos = info.info;
         this.collectionSize = info.cont;
+        this.mostrarSpinner = false;
+      }, error => {
+        this.mostrarSpinner = false;
+
       }
     );
   }

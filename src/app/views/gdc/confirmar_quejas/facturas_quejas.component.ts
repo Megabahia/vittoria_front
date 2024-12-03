@@ -351,12 +351,18 @@ export class FacturasQuejasComponent implements OnInit, AfterViewInit {
     }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
+
       this.contactosService.actualizarAprobarcionContactoQueja(this.formaPagoForm.value.id, 'Entregado', Number(this.formaPagoForm.value.montoSubtotalAprobadoQueja))
         .subscribe((info) => {
           this.toaster.open('Despacho aprobado', {type: 'success'});
           this.obtenerContactos();
           this.modalService.dismissAll();
-        }, error => this.toaster.open(error, {type: 'danger'}));
+          this.mostrarSpinner = false;
+        }, error => {
+          this.mostrarSpinner = false;
+          this.toaster.open(error, {type: 'danger'})
+        });
       /*if (Number(this.formaPagoForm.value.montoSubtotalAprobadoQueja) > Number(this.listaPedido.subtotal)) {
         this.toaster.open('El valor no debe exceder el monto subtotal del pedido', {type: 'danger'});
         return;
@@ -379,14 +385,20 @@ export class FacturasQuejasComponent implements OnInit, AfterViewInit {
     }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
+
       this.contactosService
         .actualizarNegacionContacto(this.negarPedidoForm.value.id, 'Pedido Negado', this.negarPedidoForm.value.motivoNegacionPedido)
         .subscribe((info) => {
           this.toaster.open('Despacho negado', {type: 'info'});
           this.obtenerContactos();
           this.modalService.dismissAll();
+          this.mostrarSpinner = false;
 
-        }, error => this.toaster.open(error, {type: 'info'}));
+        }, error => {
+          this.mostrarSpinner = false;
+          this.toaster.open(error, {type: 'info'})
+        });
     }
   }
 

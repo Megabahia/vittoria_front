@@ -14,6 +14,7 @@ import {Toaster} from "ngx-toast-notifications";
 export class RegistroAsesoresComponent implements OnInit {
 
   public asesorForm: FormGroup;
+  mostrarSpinner = false;
 
   pais = 'Ecuador';
   provincia = '';
@@ -90,11 +91,17 @@ export class RegistroAsesoresComponent implements OnInit {
         return;
       }
       this.asesorForm.get('fecha_nacimiento').setValue(this.transforarFechaNacimiento(this.asesorForm.value.fecha_nacimiento));
+      this.mostrarSpinner = true;
 
       this.asesorService.insertarAsesor(this.asesorForm.value).subscribe((info) => {
         this.toaster.open('Asesor/a registrado/a', {type: 'success'});
         this.mostrarContenidoPantalla = false;
-      }, error => this.toaster.open('El correo ya existe', {type: 'danger'}));
+        this.mostrarSpinner = false;
+
+      }, error => {
+        this.mostrarSpinner = false;
+        this.toaster.open('El correo ya existe', {type: 'danger'});
+      });
     }
   }
 

@@ -561,16 +561,22 @@
                 </div>
               </div>
               <div class="row mx-2 mt-2">
-                <h4 class="col-md-12 my-1 text-warning font-weight-bold">Multimedia</h4>
-
+                <h4 class="col-md-12 my-1 text-warning font-weight-bold">
+                  Multimedia
+                  <!--<a (click)="activarMultimedia('mdp')">
+                    <i-feather name='arrow-up' *ngIf="!mostrarMultimedia"></i-feather>
+                    <i-feather name='arrow-down' *ngIf="mostrarMultimedia"></i-feather>
+                  </a>-->
+                </h4>
                 <div class="col-md-4 col-12">
                   <p class="card-text">
                     Imagen principal del producto <span class="text-danger">*</span>
                   </p>
                   <input #fileInput type="file" (change)="onFileSelect($event)" accept=".jpg,.jpeg,.png"
                          style="width: 260px" formControlName="imagen_principal">
-                  <img *ngIf="imageUrlPrincipal" [src]="imageUrlPrincipal" alt="Imagen principal" class="img-fluid mt-3"
-                       style="max-width: 250px; height: auto;">
+                  <img *ngIf="imageUrlPrincipal" [src]="imageUrlPrincipal" alt="Imagen principal"
+                       class="img-fluid mt-3"
+                       style="max-width: 225px; height: 225px;">
                   <!--<button *ngIf="imageUrlPrincipal" class="btn btn-danger mt-2" (click)="eliminarImagenPrincipal()">X</button>-->
                   <div *ngIf="submittedProductoForm && fp.imagen_principal.errors" class="invalid-feedback"
                        style="display: block;">
@@ -609,7 +615,7 @@
                   <div class="mt-1" *ngIf="productoEncontrado">
                     <div *ngFor="let imagen of imagenesEncontradas" class="imagen-item">
                       <img [src]="imagen.imagen" alt="Imagen" width="200" height="200"/>
-                      <br />
+                      <br/>
                     </div>
                   </div>
                 </div>
@@ -626,6 +632,42 @@
                   </div>
                 </div>
               </div>
+              <div class="row mx-2 mt-2" *ngIf="!isObjectEmpty(datosMultimediaMdrp)">
+                <h4 class="col-md-12 my-1 text-warning font-weight-bold">
+                  Multimedia MDRP
+                </h4>
+                <div class="col-md-4 col-12">
+                  <p class="card-text">
+                    Imagen principal del producto MDRP
+                  </p>
+                  <img *ngIf="datosMultimediaMdrp?.imagen" [src]="datosMultimediaMdrp?.imagen" alt="Imagen principal MDRP"
+                       class="img-fluid mt-3"
+                       style="max-width: 225px; height: 225px;">
+                </div>
+                <div class="col-md-4 col-12">
+                  <p class="card-text">
+                    Imágenes alternas del producto MDRP
+                  </p>
+
+                  <div class="mt-1">
+                    <div *ngFor="let imagen of datosMultimediaMdrp?.imagenes" class="imagen-item">
+                      <img [src]="imagen.imagen" alt="Imagen MDRP" width="200" height="200"/>
+                      <br/>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 col-12">
+                  <div class="form-group">
+                    <p class="card-text">
+                      Video
+                    </p>
+                    <video [src]="datosMultimediaMdrp?.video" width="300" height="300" controls>
+                      <p>Su navegador no soporta vídeos HTML5.</p>
+                    </video>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </form>
         </div>

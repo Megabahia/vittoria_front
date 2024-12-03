@@ -47,6 +47,7 @@
                 <th class="text-danger">Fecha de envío</th>
                 <th class="text-danger">Hora de envío</th>
                 <th>Usuario Courier</th>
+                <th>Nombre de Usuario Courier</th>
                 <th>Numero Pedido</th>
                 <th>Numero Guía</th>
                 <th>Nombres Cliente</th>
@@ -65,7 +66,8 @@
               <tr *ngFor="let transaccion  of listaTransacciones; let i = index">
                 <td class="text-danger">{{ transaccion.fechaEntrega }}</td>
                 <td class="text-danger">{{ transaccion.horaEntrega }}</td>
-                <td [title]="transaccion.codigoCourier">{{ transaccion.codigoCourier | shorten }}</td>
+                <td [title]="transaccion.codigoCourier">{{ transaccion.codigoCourier }}</td>
+                <td [title]="transaccion.nombreCourier">{{ transaccion.nombreCourier }}</td>
                 <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido }}</td>
                 <td [title]="transaccion.numeroGuia">{{ transaccion.numeroGuia }}</td>
                 <td [title]="transaccion.facturacion.nombres">{{ transaccion.facturacion.nombres | shorten }}</td>
@@ -842,7 +844,11 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
-    <button type="button" class="btn btn-primary" (click)="procesarAutorizacionEnvio()">Guardar</button>
+    <button type="button" class="btn btn-primary" (click)="procesarAutorizacionEnvio()"
+            [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner">
+      <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
+      Guardar</button>
   </div>
 </ng-template>
 
@@ -873,6 +879,11 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-light" (click)="modal.dismiss( 'Cross click')">Cerrar</button>
-    <button type="button" class="btn btn-primary" (click)="procesarMotivoNoEntrega()">Guardar</button>
+    <button type="button" class="btn btn-primary" (click)="procesarMotivoNoEntrega()"
+            [ngClass]="{'loading': mostrarSpinner}" [disabled]="mostrarSpinner"
+    >
+      <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
+      Guardar</button>
   </div>
 </ng-template>

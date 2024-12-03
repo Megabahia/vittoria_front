@@ -332,7 +332,7 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
 
   obtenerPedido(id): void {
     this.contactosService.obtenerContacto(id).subscribe((info) => {
-      if (info.tipoPago === 'rimpePopular'){
+      if (info.tipoPago === 'rimpePopular') {
         this.infoTipoPago = 'Rimpe popular';
       } else {
         this.infoTipoPago = 'Factura electrónica';
@@ -351,13 +351,20 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
     }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
+
       this.contactosService
         .actualizarAprobarcionContacto(this.formaPagoForm.value.id, 'Entregado', Number(this.formaPagoForm.value.montoSubtotalAprobado))
         .subscribe((info) => {
           this.toaster.open('Despacho aprobado', {type: 'success'});
           this.obtenerContactos();
           this.modalService.dismissAll();
-        }, error => this.toaster.open(error, {type: 'danger'}));
+          this.mostrarSpinner = false;
+
+        }, error => {
+          this.mostrarSpinner = false;
+          this.toaster.open(error, {type: 'danger'});
+        });
       /*if (Number(this.formaPagoForm.value.montoSubtotalAprobado) > Number(this.listaPedido.subtotal)){
         this.toaster.open('El valor no debe exceder el monto subtotal del pedido', {type: 'danger'});
         return;
@@ -380,14 +387,20 @@ export class FacturasCargadasComponent implements OnInit, AfterViewInit {
     }
 
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
+
       this.contactosService
         .actualizarNegacionContacto(this.negarPedidoForm.value.id, 'Pedido Negado', this.negarPedidoForm.value.motivoNegacionPedido)
         .subscribe((info) => {
-        this.toaster.open('Despacho negado', {type: 'info'});
-        this.obtenerContactos();
-        this.modalService.dismissAll();
+          this.toaster.open('Despacho negado', {type: 'info'});
+          this.obtenerContactos();
+          this.modalService.dismissAll();
+          this.mostrarSpinner = false;
 
-      }, error => this.toaster.open(error, {type: 'info'}));
+        }, error => {
+          this.mostrarSpinner = false;
+          this.toaster.open(error, {type: 'info'});
+        });
     }
   }
 

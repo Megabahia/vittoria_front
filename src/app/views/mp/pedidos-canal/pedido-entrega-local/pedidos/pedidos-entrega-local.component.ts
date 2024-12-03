@@ -425,6 +425,8 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
       return;
     }
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
+
       const facturaFisicaValores: string[] = Object.values(this.notaPedido.value);
       const facturaFisicaLlaves: string[] = Object.keys(this.notaPedido.value);
       facturaFisicaLlaves.map((llaves, index) => {
@@ -437,20 +439,34 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
       this.archivo.append('formaPago', JSON.stringify(this.formasPago));
       if (this.mostrarInputCobro || this.mostrarInputTransaccion || this.mostrarInputTransaccionCredito) {
         if (Number(this.totalPagar) !== Number(this.totalFormaPago)) {
-          this.toaster.open('El precio total ingresado no coincide', {type: 'danger'})
+
+          this.toaster.open('El precio total ingresado no coincide', {type: 'danger'});
+          this.mostrarSpinner = false;
+
         } else {
           this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
             this.modalService.dismissAll();
             this.obtenerContactos();
             this.verificarContacto = true;
-          }, error => this.toaster.open(error, {type: 'danger'}));
+            this.mostrarSpinner = false;
+
+          }, error => {
+            this.mostrarSpinner = false;
+            this.toaster.open(error, {type: 'danger'})
+          });
         }
       } else {
         this.contactosService.actualizarVentaFormData(this.archivo).subscribe((info) => {
           this.modalService.dismissAll();
           this.obtenerContactos();
           this.verificarContacto = true;
-        }, error => this.toaster.open(error, {type: 'danger'}))
+          this.mostrarSpinner = false;
+
+        }, error => {
+          this.mostrarSpinner = false;
+
+          this.toaster.open(error, {type: 'danger'})
+        })
       }
 
     }
@@ -463,24 +479,25 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
 
   async actualizarContacto(): Promise<void> {
     //await Promise.all(this.detallesArray.controls.map((producto, index) => {
-   //   return this.obtenerProducto(index);
+    //   return this.obtenerProducto(index);
     //}));
-    console.log(this.notaPedido)
     if (this.notaPedido.invalid) {
       this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
       return;
     }
     if (confirm('Esta seguro de guardar los datos') === true) {
-      if (this.notaPedido.invalid) {
-        this.toaster.open('Revise que los campos estén correctos', {type: 'danger'});
-        return;
-      }
+      this.mostrarSpinner = true;
 
       this.contactosService.actualizarContacto(this.notaPedido.value).subscribe((info) => {
         this.modalService.dismissAll();
         this.obtenerContactos();
         this.verificarContacto = true;
-      }, error => this.toaster.open(error, {type: 'danger'}))
+        this.mostrarSpinner = false;
+
+      }, error => {
+        this.mostrarSpinner = false;
+        this.toaster.open(error, {type: 'danger'})
+      });
     }
   }
 
@@ -644,25 +661,32 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
     const id = this.detallesArray.controls[i].get('id').value;
     const archivo = event.target.files[0];
     if (archivo) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const nuevaImagen = e.target.result;
-        this.detallesArray.controls[i].get('imagen_principal').setValue(nuevaImagen);
-        this.datosProducto.append('imagen_principal', archivo)
-        //this.datosProducto.append('imagenes[' + 0 + ']id', '0');
-        //this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
-        this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
-        this.datosProducto.append('canal', this.detallesArray.controls[i].get('canal').value);
-        try {
-          this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
-            this.toaster.open('Imagen actualizada con éxito', {type: 'info'});
-          }, error => this.toaster.open('Error al actualizar la imagen.', {type: 'danger'}));
-        } catch (error) {
-          this.toaster.open('Error al actualizar la imagen.', {type: 'danger'});
-        }
-      };
-      reader.readAsDataURL(archivo);
+      // Verificar el tamaño del archivo (5MB = 5 * 1024 * 1024 bytes)
+      const MAX_SIZE = 5 * 1024 * 1024;
 
+      if (archivo.size > MAX_SIZE) {
+        this.toaster.open('La imagen no puede ser mayor a 5MB.', {type: "danger"});
+        return;  // Detener el proceso si el archivo es demasiado grande
+      } else {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          const nuevaImagen = e.target.result;
+          this.detallesArray.controls[i].get('imagen_principal').setValue(nuevaImagen);
+          this.datosProducto.append('imagen_principal', archivo)
+          //this.datosProducto.append('imagenes[' + 0 + ']id', '0');
+          //this.datosProducto.append('imagenes[' + 0 + ']imagen', archivo);
+          this.datosProducto.append('codigoBarras', this.detallesArray.controls[i].get('codigo').value);
+          this.datosProducto.append('canal', this.detallesArray.controls[i].get('canal').value);
+          try {
+            this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
+              this.toaster.open('Imagen actualizada con éxito', {type: 'info'});
+            }, error => this.toaster.open('Error al actualizar la imagen.', {type: 'danger'}));
+          } catch (error) {
+            this.toaster.open('Error al actualizar la imagen.', {type: 'danger'});
+          }
+        };
+        reader.readAsDataURL(archivo);
+      }
     }
   }
 
@@ -726,15 +750,15 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
     }
   }
 
-  valorComision(porcentaje, valor, precio){
-    if (valor){
+  valorComision(porcentaje, valor, precio) {
+    if (valor) {
       return valor.toFixed(2);
-    }else{
-      return porcentaje+'% => ' + ((precio * porcentaje) / 100).toFixed(2);
+    } else {
+      return porcentaje + '% => ' + ((precio * porcentaje) / 100).toFixed(2);
     }
   }
 
-  obtenerTiendaComercial(canal){
+  obtenerTiendaComercial(canal) {
     const tienda = this.canalOpciones.filter(item => item.valor === canal);
     return tienda[0].nombre;
   }

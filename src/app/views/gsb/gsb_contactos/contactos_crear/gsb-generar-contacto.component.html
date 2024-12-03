@@ -238,10 +238,13 @@
         </form>
         <div class="mx-2">
           <button
-            [ngClass]="{'btn-danger': tituloBoton === 'Guardar contacto existente', 'btn-primary': tituloBoton === 'Guardar contacto'}"
+            [ngClass]="{'btn-danger': tituloBoton === 'Guardar contacto existente', 'btn-primary': tituloBoton === 'Guardar contacto', 'loading': mostrarSpinner}"
             class="btn mx-1 mb-1"
-            (click)="guardarContacto()"
-          >{{ tituloBoton }}
+            (click)="guardarContacto()" [disabled]="mostrarSpinner"
+          >
+            <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm" role="status"
+                  aria-hidden="true"></span>
+            {{ tituloBoton }}
           </button>
         </div>
       </div>

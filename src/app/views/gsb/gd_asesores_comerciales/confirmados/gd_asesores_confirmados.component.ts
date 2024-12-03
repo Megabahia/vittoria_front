@@ -171,6 +171,7 @@ export class GdAsesoresConfirmadosComponent implements OnInit, AfterViewInit {
       return;
     }
     if (confirm('Esta seguro de guardar los datos') === true) {
+      this.mostrarSpinner = true;
       const asesorFisicaValores: string[] = Object.values(this.asesorBancoForm.value);
       const asesorFisicaLlaves: string[] = Object.keys(this.asesorBancoForm.value);
       asesorFisicaLlaves.map((llaves, index) => {
@@ -184,9 +185,13 @@ export class GdAsesoresConfirmadosComponent implements OnInit, AfterViewInit {
 
       await this.asesorService.actualizarAsesorFormData(this.archivo).subscribe((info) => {
         this.toaster.open('Datos guardados correctamente', {type: 'success'});
+        this.mostrarSpinner = false;
         this.modalService.dismissAll();
         this.obtenerAsesoresRegistrados();
-      }, error => this.toaster.open(error, {type: 'danger'}));
+      }, error => {
+        this.mostrarSpinner = false;
+        this.toaster.open(error, {type: 'danger'})
+      });
 
     }
   }
