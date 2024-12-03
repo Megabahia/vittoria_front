@@ -164,10 +164,11 @@ export class ActualizarInventarioComponent implements OnInit {
       this.mostrarSpinner2 = false;
       this.archivo.delete('archivo');
     }, (error) => {
-      this.toaster.open('No es valido el archivo', {type: 'danger'});
-      this.listaProductosResumen = [];
       this.mostrarSpinner2 = false;
+      //this.toaster.open('Error al cargar archivo', {type: 'danger'});
+      this.listaProductosResumen = [];
       this.archivo.delete('archivo');
+      alert('Error al cargar archivo. Revise Sque los productos existan y pertenezcan al mismo canal para poder actualizar.');
     });
   }
 

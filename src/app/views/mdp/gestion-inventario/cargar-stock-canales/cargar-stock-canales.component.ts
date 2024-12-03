@@ -146,10 +146,12 @@ export class CargarStockCanalesComponent implements OnInit {
       this.mostrarSpinner2 = false;
       this.archivo.delete('archivo');
     }, (error) => {
-      this.toaster.open('No es valido el archivo', {type: 'danger'});
+      //this.toaster.open('No es valido el archivo', {type: 'danger'});
       this.listaProductosResumen = [];
       this.mostrarSpinner2 = false;
       this.archivo.delete('archivo');
+      alert('Error al cargar archivo. Revise que los productos existan y pertenezcan al mismo canal para poder cargar.');
+
     });
   }
 
