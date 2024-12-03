@@ -131,7 +131,7 @@ export class ListProductosComponent implements OnInit, AfterViewInit {
         this.modalService.dismissAll();
         this.mostrarSpinner = false;
       }, error => {
-        this.toaster.open('Error al enviar producto', {type: 'success'});
+        this.toaster.open('Error al enviar producto', {type: 'danger'});
         this.mostrarSpinner = false;
       });
     }
