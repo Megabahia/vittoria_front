@@ -326,7 +326,7 @@
                               <input class="form-control" type="text" formControlName="gps" aria-describedby="basic-addon2" disabled>
                               <div class="input-group-append">
                               <span class="input-group-text" id="basic-addon2">
-                                <a href="{{notaPedido.value.facturacion.gps}}" target="_blank" *ngIf="notaPedido.value.facturacion?.gps!='' && notaPedido.value.facturacion?.gps.startsWith('https://'); else noGpsF">Ir</a>
+                                <a href="{{notaPedido.value.facturacion?.gps}}" target="_blank" *ngIf="notaPedido.value.facturacion?.gps && notaPedido.value.facturacion?.gps.startsWith('https://'); else noGpsF">Ir</a>
                                 <ng-template #noGpsF>Inválido</ng-template>
                               </span>
                               </div>
@@ -693,7 +693,7 @@
                               <input class="form-control" type="text" formControlName="gps" aria-describedby="basic-addon3" disabled>
                               <div class="input-group-append">
                               <span class="input-group-text" id="basic-addon3">
-                                <a href="{{notaPedido.value.envio.gps}}" target="_blank" *ngIf="notaPedido.value.envio.gps!='' && notaPedido.value.envio.gps.startsWith('https://'); else noGpsE">Ir</a>
+                                <a href="{{notaPedido.value.envio?.gps}}" target="_blank" *ngIf="notaPedido.value.envio?.gps && notaPedido.value.envio?.gps.startsWith('https://'); else noGpsE">Ir</a>
                                 <ng-template #noGpsE>Inválido</ng-template>
                               </span>
                               </div>
