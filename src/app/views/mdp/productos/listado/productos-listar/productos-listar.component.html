@@ -6,7 +6,8 @@
     </div>
     <div class="content-body">
       <div class="card">
-        <h2 class="card-header d-flex justify-content-center">Administrar productos</h2>
+        <h2 class="card-header d-flex justify-content-center pb-0">Administrar productos</h2>
+        <label class="card-header d-flex justify-content-center pt-0 pb-1">(Para obtener los productos debe seleccionar un canal en los filtros)</label>
         <div class="text-center">
           <a class="btn btn-flat-info text-info" (click)="activarFiltros()">
             Filtros
@@ -37,7 +38,7 @@
             <!--</div>
             <div class="row mt-2">-->
             <div class="col-md-4 col-12 mt-1">
-              <select class="form-control select2" name="canal" (change)="onSelectChange($event)"
+              <select class="form-control select2 text-danger" name="canal" (change)="onSelectChange($event)"
                       [(ngModel)]="canalSeleccionado" [disabled]="disabledSelectCanal">
                 <option value="" selected>- Seleccione canal a buscar-</option>
                 <option *ngFor="let canalOp of canalOpciones" value="{{canalOp.valor}}">{{ canalOp.valor }}</option>

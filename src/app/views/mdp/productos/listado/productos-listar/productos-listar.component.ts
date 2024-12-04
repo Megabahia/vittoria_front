@@ -43,6 +43,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   filtros = false;
   mostrarSpinner = false;
   mostrarSpinnerCopia = false;
+
   constructor(
     private productosService: ProductosService,
     private modalService: NgbModal,
@@ -70,7 +71,9 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.iniciarPaginador();
-    this.obtenerListaProductos();
+    if (this.canalSeleccionado !== '') {
+      this.obtenerListaProductos();
+    }
   }
 
   iniciarPaginador(): void {
@@ -105,10 +108,16 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     if (this.finActualizacion) {
       filtros['fin_actualizacion'] = this.transformarFecha(this.finActualizacion);
     }
-    this.productosService.obtenerListaProductos(filtros).subscribe((info) => {
-      this.listaProductos = info.info;
-      this.collectionSize = info.cont;
-    });
+
+    if (this.canalSeleccionado === '') {
+      this.listaProductos = [];
+    } else {
+      this.productosService.obtenerListaProductos(filtros).subscribe((info) => {
+        this.listaProductos = info.info;
+        this.collectionSize = info.cont;
+      });
+    }
+
   }
 
   transformarFecha(fecha): string {
@@ -154,7 +163,6 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   }
 
   reporteProductosStock(): void {
-    this.enviando = true;
 
     const filtros: any = {
       page: this.page - 1,
@@ -181,16 +189,24 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
       filtros['fin_actualizacion'] = this.transformarFecha(this.finActualizacion);
     }
 
-    this.productosService.exportar(filtros).subscribe((data) => {
-      this.enviando = false;
-      const downloadURL = window.URL.createObjectURL(data);
-      const link = document.createElement('a');
-      link.href = downloadURL;
-      link.download = 'productosStock.xlsx';
-      link.click();
-    }, (error) => {
-      this.enviando = false;
-    });
+    if (this.canalSeleccionado === '') {
+      this.toaster.open('Debe seleccionar un canal.', {type: 'info'})
+    } else {
+      this.enviando = true;
+
+      this.productosService.exportar(filtros).subscribe((data) => {
+        this.enviando = false;
+        const downloadURL = window.URL.createObjectURL(data);
+        const link = document.createElement('a');
+        link.href = downloadURL;
+        link.download = 'productosStock.xlsx';
+        link.click();
+      }, (error) => {
+        this.enviando = false;
+      });
+    }
+
+
   }
 
   obtenerListaParametros() {
@@ -281,37 +297,41 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
       queryParams['fin_actualizacion'] = this.transformarFecha(this.finActualizacion);
     }
 
-    const navigationExtras: NavigationExtras = {queryParams};
+    if (this.canalSeleccionado === '') {
+      this.toaster.open('Debe seleccionar un canal.', {type: 'info'})
+    } else {
 
-    // Navegar al componente de destino con datos
-    //this.router.navigate(['/pages/reporte/productos'], navigationExtras);
+      const navigationExtras: NavigationExtras = {queryParams};
 
-    this.mostrarSpinner = true;
-    this.productosService.generarTokenReporteProductos(
-      {
-        enlace: this.router.serializeUrl(this.router.createUrlTree(['/pages/reporte/productos'], navigationExtras)),
-        usuario: this.currentUser.full_name,
-        codigo_usuario: this.currentUser.usuario.username,
-      }
-    ).subscribe((info) => {
-      navigationExtras.queryParams['token'] = info.token;
+      // Navegar al componente de destino con datos
+      //this.router.navigate(['/pages/reporte/productos'], navigationExtras);
 
-      const urlTree = this.router.createUrlTree(['/pages/reporte/productos'], navigationExtras);
-      const fullUrl = this.router.serializeUrl(urlTree);
-      const completeUrl = `${window.location.origin}/#${fullUrl}`;
-      window.open(completeUrl, '_blank');
-      this.mostrarSpinner = false;
+      this.mostrarSpinner = true;
+      this.productosService.generarTokenReporteProductos(
+        {
+          enlace: this.router.serializeUrl(this.router.createUrlTree(['/pages/reporte/productos'], navigationExtras)),
+          usuario: this.currentUser.full_name,
+          codigo_usuario: this.currentUser.usuario.username,
+        }
+      ).subscribe((info) => {
+        navigationExtras.queryParams['token'] = info.token;
 
-      //this.router.navigateByUrl(urlTree, '_blank');
-    }, error => {
-      this.mostrarSpinner = false;
-      this.toaster.open('error', {type: 'danger'});
-    });
+        const urlTree = this.router.createUrlTree(['/pages/reporte/productos'], navigationExtras);
+        const fullUrl = this.router.serializeUrl(urlTree);
+        const completeUrl = `${window.location.origin}/#${fullUrl}`;
+        window.open(completeUrl, '_blank');
+        this.mostrarSpinner = false;
 
+        //this.router.navigateByUrl(urlTree, '_blank');
+      }, error => {
+        this.mostrarSpinner = false;
+        this.toaster.open('error', {type: 'danger'});
+      });
+    }
   }
 
 
-  activarFiltros(){
+  activarFiltros() {
     this.filtros = !this.filtros;
   }
 }

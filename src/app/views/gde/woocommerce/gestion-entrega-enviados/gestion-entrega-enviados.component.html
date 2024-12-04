@@ -326,9 +326,19 @@
                             </div>
                           </div>
                           <div class="col-md-3 col-12">
-                            <label>GPS</label>
-                            <input class="form-control" type="text"
-                                   formControlName="gps" disabled>
+                            <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a>
+                            </label>
+                            <div class="input-group mb-3">
+                              <input class="form-control" type="text" formControlName="gps"
+                                     aria-describedby="basic-addon2" disabled>
+                              <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon2">
+                                <a href="{{notaPedido.value.facturacion?.gps}}" target="_blank"
+                                   *ngIf="notaPedido.value.facturacion?.gps && notaPedido.value.facturacion?.gps.startsWith('https://'); else noGpsF">Ir</a>
+                                <ng-template #noGpsF>Inválido</ng-template>
+                              </span>
+                              </div>
+                            </div>
                             <div *ngIf="facturacionForm.gps.errors"
                                  class="invalid-feedback" style="display: block;">
                               <div *ngIf="facturacionForm.gps.errors.required">
@@ -680,9 +690,19 @@
                             </div>
                           </div>
                           <div class="col-md-3 col-12">
-                            <label>GPS</label>
-                            <input class="form-control" type="text"
-                                   formControlName="gps" disabled>
+                            <label>Ubicación de GPS <a href="https://www.google.com/maps/" target="_blank">Ver mapa</a>
+                            </label>
+                            <div class="input-group mb-3">
+                              <input class="form-control" type="text" formControlName="gps"
+                                     aria-describedby="basic-addon" disabled>
+                              <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon">
+                                <a href="{{notaPedido.value.envio?.gps}}" target="_blank"
+                                   *ngIf="notaPedido.value.envio?.gps && notaPedido.value.envio?.gps.startsWith('https://'); else noGpsE">Ir</a>
+                                <ng-template #noGpsE>Inválido</ng-template>
+                              </span>
+                              </div>
+                            </div>
                             <div *ngIf="envioForm.gps.errors"
                                  class="invalid-feedback" style="display: block;">
                               <div *ngIf="envioForm.gps.errors.required">
