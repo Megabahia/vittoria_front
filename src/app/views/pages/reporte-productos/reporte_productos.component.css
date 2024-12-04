@@ -1,0 +1,28 @@
+.table-scroll-container {
+  max-height: 400px; /* Altura máxima del contenedor */
+  overflow-y: auto; /* Habilitar desplazamiento vertical */
+}
+
+.table-scroll-container::-webkit-scrollbar {
+  width: 8px; /* Ancho del scrollbar */
+  height: 10px;
+}
+
+.table-scroll-container::-webkit-scrollbar-track {
+  background: #fff275; /* Color del fondo del track del scrollbar */
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb {
+  background: #888; /* Color del scrollbar */
+  border-radius: 6px; /* Bordes redondeados */
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color del scrollbar cuando el mouse está sobre él */
+}
+
+
+.selected-row {
+  background-color: #fff275 !important;
+  color: blue;
+}
