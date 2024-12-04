@@ -2,7 +2,7 @@ import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core'
 
 import {DatePipe} from '@angular/common';
 
-import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
 
@@ -12,6 +12,7 @@ import {ActivatedRoute} from "@angular/router";
 @Component({
   selector: 'app-reporte-producto',
   templateUrl: './reporte_productos.component.html',
+  styleUrls: ['./reporte_productos.component.css'],
   providers: [DatePipe]
 })
 export class ReporteProductosComponent implements OnInit, AfterViewInit {
@@ -48,7 +49,7 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
   totalIva;
   canalOpciones;
   verificarParametros = true;
-
+  datosProducto;
   nombre;
   codigoBarras;
   canalProducto;
@@ -66,11 +67,13 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
   sortDirection: string = '';
   imagenSeleccionada: string = '';
   headers = [
-    {name: 'Tienda', value: 'canal'},
     {name: 'Fecha de creación', value: 'created_at'},
     {name: 'Fecha de actualización', value: 'updated_at'},
     {name: 'Código de barras', value: 'codigoBarras'},
-    {name: 'Nombre', value: 'nombre'},
+    {name: 'Nombre del Producto', value: 'nombre'},
+    {name: 'Descripción del Producto', value: 'descripcion'},
+    {name: 'Características del Producto', value: 'caracteristicas'},
+    {name: 'Títulos', value: 'titulos'},
     {name: 'Precio Venta A', value: 'precioVentaA'},
     {name: 'Precio Venta B', value: 'precioVentaB'},
     {name: 'Precio Venta C', value: 'precioVentaC'},
@@ -86,12 +89,17 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
   ];
   mostrarSpinner = false;
 
+
+  selectedRow: number | null = null;
+  tienda;
+  formasPago;
   constructor(
     private productosService: ProductosService,
     private authService: AuthService,
     private toaster: Toaster,
     private route: ActivatedRoute,
     private datePipe: DatePipe,
+    private modalService: NgbModal,
   ) {
     const navbar = document.getElementById('navbar');
     const toolbar = document.getElementById('toolbar');
@@ -170,6 +178,8 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
 
     this.productosService.obtenerReporteHtmlProductos(filtros).subscribe((info) => {
         this.listaProductos = info.info;
+        this.tienda = info.info[0].tienda;
+        this.formasPago = info.info[0].formas_pago;
         this.collectionSize = info.cont;
         this.mostrarSpinner = false;
       }, error => {
@@ -226,6 +236,15 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
       const bootstrapModal = new (window as any).bootstrap.Modal(modal);
       bootstrapModal.show();
     }
+  }
+
+  onRowClick(index: number): void {
+    this.selectedRow = this.selectedRow === index ? null : index;
+  }
+
+  abrirModalTitulos(modal, producto) {
+    this.modalService.open(modal, {size: 'md'});
+    this.datosProducto = producto;
   }
 
 }

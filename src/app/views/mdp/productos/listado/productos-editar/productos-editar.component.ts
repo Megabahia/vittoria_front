@@ -149,6 +149,11 @@ export class ProductosEditarComponent implements OnInit {
       prefijo: ['', []],
       link_catalogo: [''],
       link_tienda: [''],
+      titulo_uno: [''],
+      titulo_dos: [''],
+      titulo_tres: [''],
+      titulo_cuatro: [''],
+      titulo_cinco: [''],
       porcentaje_comision: ['', [Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]*$')]],
       valor_comision: ['', [Validators.pattern('^\\d+(\\.\\d{1,2})?$')]],
     });

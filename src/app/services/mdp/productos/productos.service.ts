@@ -48,6 +48,11 @@ export interface Producto {
   link_tienda;
   porcentaje_comision;
   valor_comision;
+  titulo_uno;
+  titulo_dos;
+  titulo_tres;
+  titulo_cuatro;
+  titulo_cinco;
 }
 
 export interface FichaTecnicaProducto {
@@ -129,6 +134,11 @@ export class ProductosService {
       link_tienda: '',
       porcentaje_comision: 0,
       valor_comision: 0,
+      titulo_uno: '',
+      titulo_dos: '',
+      titulo_tres: '',
+      titulo_cuatro: '',
+      titulo_cinco: '',
     };
   }
 
