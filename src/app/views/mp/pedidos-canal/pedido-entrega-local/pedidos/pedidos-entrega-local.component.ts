@@ -12,6 +12,7 @@ import {ProductosService} from '../../../../../services/mdp/productos/productos.
 import {Toaster} from 'ngx-toast-notifications';
 import {ContactosService} from '../../../../../services/gdc/contactos/contactos.service';
 import {ValidacionesPropias} from "../../../../../utils/customer.validators";
+import {IntegracionesService} from "../../../../../services/admin/integraciones.service";
 
 @Component({
   selector: 'app-contacto',
@@ -88,6 +89,8 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
     private paramServiceAdm: ParamServiceAdm,
     private productosService: ProductosService,
     private toaster: Toaster,
+    private integracionesService: IntegracionesService,
+
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
@@ -108,10 +111,10 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
       this.parametroIva = parseFloat(result.info[0].valor);
     });
-
-    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', '').subscribe((result) => {
+    this.obtenerListaParametrosCanal();
+    /*this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', '').subscribe((result) => {
       this.canalOpciones = result.data;
-    });
+    });*/
 
   }
 
@@ -239,6 +242,16 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
     this.calcular();
   }
 
+  obtenerListaParametrosCanal() {
+    const datos = {
+      page: this.page,
+      page_size: this.pageSize
+    };
+    this.integracionesService.obtenerListaIntegraciones(datos).subscribe((result) => {
+      this.canalOpciones = result.data;
+    });
+  }
+
   obtenerContactos(): void {
     this.contactosService.obtenerListaContactos({
       page: this.page - 1,
@@ -246,7 +259,7 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
       //inicio: this.inicio,
       //fin: this.transformarFecha(this.fin),
       estado: ['Pendiente de retiro'],
-      canal: this.canal,
+      canalProducto: this.canal,
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaContactos = info.info;

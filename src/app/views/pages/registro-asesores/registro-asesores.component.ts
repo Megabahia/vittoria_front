@@ -105,11 +105,11 @@ export class RegistroAsesoresComponent implements OnInit {
     }
   }
 
-  irInicio() {
-    //window.open('#/pages/registro/asesores');
-    this.mostrarContenidoPantalla = true;
-    this.iniciarAsesor();
-  }
+  //irInicio() {
+   // window.open('https://contraentrega.megadescuento.com');
+    //this.mostrarContenidoPantalla = true;
+    //this.iniciarAsesor();
+  //}
 
   obtenerProvincias(): void {
     this.paramServiceAdm.obtenerListaHijos(this.pais, 'PAIS').subscribe((info) => {
