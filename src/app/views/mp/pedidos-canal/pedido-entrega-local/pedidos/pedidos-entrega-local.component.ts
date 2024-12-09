@@ -352,7 +352,7 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
         canalProducto: this.canalSeleccionado,
-        canal: this.notaPedido.value.canal,
+        canal: this.canalSeleccionado,
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
@@ -368,8 +368,10 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
           this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
           this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
           this.detallesArray.controls[i].get('imagen_principal').setValue(info?.imagen_principal);
-          this.detallesArray.controls[i].get('canal').setValue(info.canal)
-          this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
+          this.detallesArray.controls[i].get('canal').setValue(info.canal);
+          this.detallesArray.controls[i].get('porcentaje_comision').setValue(info?.porcentaje_comision);
+          this.detallesArray.controls[i].get('valor_comision').setValue(info?.valor_comision);
+          this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId);
           this.detallesArray.controls[i].get('cantidad').setValidators([
             Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
           ]);
