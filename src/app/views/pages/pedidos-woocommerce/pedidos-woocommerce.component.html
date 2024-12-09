@@ -126,7 +126,8 @@
                 <div class="col-md-3 col-12">
                   <label>Correo</label>
                   <input class="form-control" type="text"
-                         formControlName="correo" disabled>
+                         [value]="enmascararTexto(notaPedido.value?.facturacion?.correo, 6)"
+                         disabled>
 
                 </div>
                 <div class="col-md-3 col-12">
@@ -145,7 +146,7 @@
                 <div class="col-md-3 col-12">
                   <label>Numero Identificación</label>
                   <input class="form-control" type="text"
-                         formControlName="identificacion"
+                         [value]="enmascararTexto(notaPedido.value?.facturacion?.identificacion, 5)"
                          disabled
                   >
 
@@ -180,37 +181,43 @@
                 <div class="col-md-3 col-12">
                   <label>Calle Principal</label>
                   <input class="form-control" type="text"
-                         formControlName="callePrincipal" disabled>
+                         [value]="enmascararTexto(notaPedido.value?.facturacion?.callePrincipal, 6)"
+                         disabled>
 
                 </div>
                 <div class="col-3">
                   <label>Número</label>
                   <input class="form-control" type="text"
-                         formControlName="numero" disabled>
+                         [value]="enmascararTexto(notaPedido.value?.facturacion?.numero, 2)"
+                         disabled>
 
                 </div>
                 <div class="col-md-3 col-12">
                   <label>Calle Secundaria</label>
                   <input class="form-control" type="text"
-                         formControlName="calleSecundaria" disabled>
+                         [value]="enmascararTexto(notaPedido.value?.facturacion?.calleSecundaria, 6)"
+                         disabled>
 
                 </div>
                 <div class="col-md-3 col-12">
                   <label>Referencia</label>
                   <input class="form-control" type="text"
-                         formControlName="referencia" disabled>
+                         [value]="enmascararTexto(notaPedido.value?.facturacion?.referencia, 6)"
+                         disabled>
 
                 </div>
                 <div class="col-md-3 col-12">
                   <label>Ubicación de GPS </label>
                   <div class="input-group mb-3">
-                    <input class="form-control" type="text" formControlName="gps" aria-describedby="basic-addon2" disabled>
-                    <div class="input-group-append">
+                    <input class="form-control" type="text"
+                           [value]="enmascararTexto(notaPedido.value?.facturacion?.gps, 15)"
+                           aria-describedby="basic-addon2" disabled>
+                    <!--<div class="input-group-append">
                               <span class="input-group-text" id="basic-addon2">
                                 <a href="{{notaPedido.value.facturacion?.gps}}" target="_blank" *ngIf="notaPedido.value.facturacion?.gps && notaPedido.value.facturacion?.gps.startsWith('https://'); else noGps">Ir</a>
                                 <ng-template #noGps>Inválido</ng-template>
                               </span>
-                    </div>
+                    </div>-->
                   </div>
 
                 </div>

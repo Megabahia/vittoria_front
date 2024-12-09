@@ -383,7 +383,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     const precios = [];
     Object.keys(info).forEach(clave => {
       if (clave.startsWith('precioVenta')) {
-        precios.push({clave: clave, valor: parseFloat(info[clave])});
+        precios.push({clave: clave, valor: info[clave] ? parseFloat(info[clave]) : parseFloat('0')});
       }
     });
     return precios;

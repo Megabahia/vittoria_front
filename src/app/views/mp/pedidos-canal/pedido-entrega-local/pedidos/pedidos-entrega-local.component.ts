@@ -12,6 +12,7 @@ import {ProductosService} from '../../../../../services/mdp/productos/productos.
 import {Toaster} from 'ngx-toast-notifications';
 import {ContactosService} from '../../../../../services/gdc/contactos/contactos.service';
 import {ValidacionesPropias} from "../../../../../utils/customer.validators";
+import {IntegracionesService} from "../../../../../services/admin/integraciones.service";
 
 @Component({
   selector: 'app-contacto',
@@ -88,6 +89,8 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
     private paramServiceAdm: ParamServiceAdm,
     private productosService: ProductosService,
     private toaster: Toaster,
+    private integracionesService: IntegracionesService,
+
   ) {
     this.inicio.setMonth(this.inicio.getMonth() - 3);
     this.iniciarNotaPedido();
@@ -108,10 +111,10 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
       this.parametroIva = parseFloat(result.info[0].valor);
     });
-
-    this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', '').subscribe((result) => {
+    this.obtenerListaParametrosCanal();
+    /*this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'INTEGRACION_WOOCOMMERCE', '').subscribe((result) => {
       this.canalOpciones = result.data;
-    });
+    });*/
 
   }
 
@@ -239,6 +242,16 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
     this.calcular();
   }
 
+  obtenerListaParametrosCanal() {
+    const datos = {
+      page: this.page,
+      page_size: this.pageSize
+    };
+    this.integracionesService.obtenerListaIntegraciones(datos).subscribe((result) => {
+      this.canalOpciones = result.data;
+    });
+  }
+
   obtenerContactos(): void {
     this.contactosService.obtenerListaContactos({
       page: this.page - 1,
@@ -246,7 +259,7 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
       //inicio: this.inicio,
       //fin: this.transformarFecha(this.fin),
       estado: ['Pendiente de retiro'],
-      canal: this.canal,
+      canalProducto: this.canal,
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaContactos = info.info;
@@ -339,7 +352,7 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
       const data = {
         codigoBarras: this.detallesArray.value[i].codigo,
         canalProducto: this.canalSeleccionado,
-        canal: this.notaPedido.value.canal,
+        canal: this.canalSeleccionado,
         valorUnitario: this.detallesArray.controls[i].value.valorUnitario
       };
       this.productosService.obtenerProductoPorCodigo(data).subscribe((info) => {
@@ -355,8 +368,10 @@ export class PedidosEntregaLocalComponent implements OnInit, AfterViewInit {
           this.detallesArray.controls[i].get('precio').setValue(precioProducto * 1);
           this.detallesArray.controls[i].get('imagen').setValue(info?.imagen);
           this.detallesArray.controls[i].get('imagen_principal').setValue(info?.imagen_principal);
-          this.detallesArray.controls[i].get('canal').setValue(info.canal)
-          this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId)
+          this.detallesArray.controls[i].get('canal').setValue(info.canal);
+          this.detallesArray.controls[i].get('porcentaje_comision').setValue(info?.porcentaje_comision);
+          this.detallesArray.controls[i].get('valor_comision').setValue(info?.valor_comision);
+          this.detallesArray.controls[i].get('woocommerceId').setValue(info.woocommerceId);
           this.detallesArray.controls[i].get('cantidad').setValidators([
             Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(info?.stock)
           ]);

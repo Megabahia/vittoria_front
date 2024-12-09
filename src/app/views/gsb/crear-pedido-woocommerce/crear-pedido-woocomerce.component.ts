@@ -1074,8 +1074,10 @@ export class CrearPedidoWoocomerceComponent implements OnInit {
   calculoComision(porcentaje, valor, precioProducto, cantidad) {
     if (valor) {
       return (parseFloat(valor) * parseFloat(cantidad)).toFixed(2);
-    } else {
+    } else if (porcentaje){
       return ((parseFloat(porcentaje) * parseFloat(precioProducto)) / 100).toFixed(2);
+    } else {
+      return parseFloat('0').toFixed(2);
     }
   }
 

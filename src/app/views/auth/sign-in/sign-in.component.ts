@@ -24,6 +24,7 @@ export class SignInComponent implements OnInit {
   submitted = false;
   mostrarSpinner = false;
   mostrarRegistroAsesor = false;
+  mostrarPass: boolean = false;
 
   constructor(
     private modalService: NgbModal,
@@ -92,5 +93,8 @@ export class SignInComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
+  mostrarContrasenia(): void {
+    this.mostrarPass = !this.mostrarPass;
+  }
 
 }

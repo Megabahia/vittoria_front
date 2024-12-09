@@ -2,36 +2,33 @@
   <div class="content-wrapper">
     <div class="content-body">
       <div class="card">
-        <h5 class="card-header">Pedidos desde Woocommerce</h5>
-        <!--<div class="card-body">
+        <h4 class="card-header">Pedidos desde Woocommerce</h4>
+        <div class="card-body">
           <div class="row">
-            <div class="col-md-3">
-              <input type="text" class="form-control form-control-sm" placeholder="Correo"
-                     [(ngModel)]="correo">
-
+            <div class="col-md-4">
+              <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="inicio">
             </div>
-            <div class="col-md-3">
-              <input type="text" class="form-control form-control-sm" placeholder="Número de WhatsApp"
-                     [(ngModel)]="whatsapp">
+            <div class="col-md-4">
+              <input class="form-control" mwlFlatpickr type="text" [(ngModel)]="fin">
             </div>
 
-            <div class="col-md-2">
-              <button class="btn btn-primary" (click)="obtenerContactos()">
+            <div class="col-md-4">
+              <button class="btn btn-primary" (click)="obtenerListaPedidos()">
                 <i-feather name='search' class="edit-user"></i-feather>
               </button>
             </div>
-            <div class="col-md-1">
+            <!--<div class="col-md-1">
               <button class="btn btn-primary" (click)="obtenerContactos()">
                 <i-feather name='refresh-cw' class="edit-user"></i-feather>
               </button>
-            </div>
+            </div>-->
           </div>
-        </div>-->
+        </div>
       </div>
       <div class="card">
         <div class="card-datatable table-responsive pt-0">
           <div class="row m-75">
-            <div class="col-lg-12 col-xl-6">
+            <div class="col-md-6 col-12">
               <label>Mostrar</label>
               <select class="form-control-sm" [(ngModel)]="pageSize"
                       (change)="obtenerListaPedidos()">
@@ -40,7 +37,9 @@
                 <option value="50">50</option>
                 <option value="100">100</option>
               </select>
-
+            </div>
+            <div class="col-md-6 col-12">
+              <h5 class="text-danger text-right"><strong>Comisión total:</strong> {{ comisionTotal | currency }}</h5>
             </div>
           </div>
           <table class="user-list-table table">
@@ -67,18 +66,22 @@
               <td>{{ obtenerTiendaComercial(transaccion.articulos[0].canal) }}</td>
               <td [title]="transaccion.numeroPedido">{{ transaccion.numeroPedido  | shorten }}</td>
               <td>
-                <a href="{{transaccion.comprobanteVendedorGmb}}" *ngIf="transaccion.comprobanteVendedorGmb" target="_blank">
+                <a href="{{transaccion.comprobanteVendedorGmb}}" *ngIf="transaccion.comprobanteVendedorGmb"
+                   target="_blank">
                   <i-feather name="file-text" class="mr-25"></i-feather>
                 </a>
               </td>
               <td>{{ transaccion.metodoPago }}</td>
-              <td>{{ transaccion.estado }}</td>
+              <td>
+                <span
+                  class="text-capitalize badge {{transaccion.estado=='Entregado' ? 'badge-light-success': 'badge-danger' }} badge-pill">{{ transaccion.estado }}</span>
+              </td>
               <td>
                 <a (click)="obtenerPedido(notaPedidoModal, transaccion.id)">
                   <i-feather name="eye" class="mr-25"></i-feather>
                 </a>
               </td>
-              <td>{{ transaccion.comision | currency}}</td>
+              <td>{{ transaccion.comision | currency }}</td>
             </tr>
             </tbody>
           </table>
@@ -145,8 +148,11 @@
                       </div>
                       <div class="col-md-3 col-12">
                         <label>Correo</label>
-                        <input class="form-control" type="text"
-                               formControlName="correo" disabled>
+                        <input
+                          class="form-control"
+                          type="text"
+                          [value]="enmascararTexto(notaPedido.value?.facturacion?.correo, 6)"
+                          disabled>
 
                       </div>
                       <div class="col-md-3 col-12">
@@ -165,12 +171,10 @@
                       <div class="col-md-3 col-12">
                         <label>Numero Identificación</label>
                         <input class="form-control" type="text"
-                               formControlName="identificacion"
+                               [value]="enmascararTexto(notaPedido.value?.facturacion?.identificacion, 5)"
                                disabled
                         >
-
                       </div>
-
                       <div class="col-md-3 col-12">
                         <label>Pais</label>
                         <input class="form-control" type="text"
@@ -190,7 +194,8 @@
                       </div>
                       <div class="col-md-3 col-12">
                         <label for="ciudadFact">Ciudad</label>
-                        <select class="form-control" name="ciudadFact" formControlName="ciudad" id="ciudadFact" disabled>
+                        <select class="form-control" name="ciudadFact" formControlName="ciudad" id="ciudadFact"
+                                disabled>
                           <option value="" selected>- Seleccione -</option>
                           <option [ngValue]="ciudad.nombre" *ngFor="let ciudad of ciudadOpciones">
                             {{ ciudad.nombre }}
@@ -200,37 +205,44 @@
                       <div class="col-md-3 col-12">
                         <label>Calle Principal</label>
                         <input class="form-control" type="text"
-                               formControlName="callePrincipal" disabled>
+                               [value]="enmascararTexto(notaPedido.value?.facturacion?.callePrincipal, 6)"
+                               disabled>
 
                       </div>
                       <div class="col-3">
                         <label>Número</label>
                         <input class="form-control" type="text"
-                               formControlName="numero" disabled>
+                               [value]="enmascararTexto(notaPedido.value?.facturacion?.numero, 2)"
+                               disabled>
 
                       </div>
                       <div class="col-md-3 col-12">
                         <label>Calle Secundaria</label>
                         <input class="form-control" type="text"
-                               formControlName="calleSecundaria" disabled>
+                               [value]="enmascararTexto(notaPedido.value?.facturacion?.calleSecundaria, 6)"
+                               disabled>
 
                       </div>
                       <div class="col-md-3 col-12">
                         <label>Referencia</label>
                         <input class="form-control" type="text"
-                               formControlName="referencia" disabled>
+                               [value]="enmascararTexto(notaPedido.value?.facturacion?.referencia, 6)"
+                               disabled>
 
                       </div>
                       <div class="col-md-3 col-12">
                         <label>Ubicación de GPS </label>
                         <div class="input-group mb-3">
-                          <input class="form-control" type="text" formControlName="gps" aria-describedby="basic-addon2">
-                          <div class="input-group-append">
+                          <input class="form-control" type="text"
+                                 [value]="enmascararTexto(notaPedido.value?.facturacion?.gps, 15)"
+                                 aria-describedby="basic-addon2"
+                                 disabled>
+                          <!--<div class="input-group-append">
                               <span class="input-group-text" id="basic-addon2">
                                 <a href="{{notaPedido.value.facturacion?.gps}}" target="_blank" *ngIf="notaPedido.value.facturacion?.gps && notaPedido.value.facturacion?.gps.startsWith('https://'); else noGps">Ir</a>
                                 <ng-template #noGps>Inválido</ng-template>
                               </span>
-                          </div>
+                          </div>-->
                         </div>
 
                       </div>
@@ -265,7 +277,8 @@
                                     <p class="card-text col-title mb-md-50 mb-0">
                                       Producto
                                     </p>
-                                    <label class="d-block text-wrap">{{ detalle.controls.codigo.value }} - {{ detalle.controls.articulo.value }}</label>
+                                    <label class="d-block text-wrap">{{ detalle.controls.codigo.value }}
+                                      - {{ detalle.controls.articulo.value }}</label>
 
                                   </div>
                                   <div class="col-lg-1 col-12 my-lg-0 my-2">

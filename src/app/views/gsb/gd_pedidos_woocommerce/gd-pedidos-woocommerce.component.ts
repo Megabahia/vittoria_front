@@ -72,7 +72,7 @@ export class GdPedidosWoocommerceComponent implements OnInit, AfterViewInit {
   invalidoTamanoVideo = false;
   mostrarSpinner = false;
   currentUser;
-
+  comisionTotal;
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
@@ -86,7 +86,7 @@ export class GdPedidosWoocommerceComponent implements OnInit, AfterViewInit {
     private toaster: Toaster,
     private integracionesService: IntegracionesService,
   ) {
-    this.inicio.setMonth(this.inicio.getMonth() - 3);
+    this.inicio.setMonth(this.inicio.getMonth() - 5);
     this.iniciarNotaPedido();
     this.currentUser = this.authService.currentUserValue;
     this.paramServiceAdm.obtenerListaParametros(this.page - 1, this.pageSize, 'IVA', 'Impuesto de Valor Agregado').subscribe((result) => {
@@ -229,11 +229,14 @@ export class GdPedidosWoocommerceComponent implements OnInit, AfterViewInit {
     this.pedidosService.obtenerListaPedidos({
       page: this.page - 1,
       page_size: this.pageSize,
+      inicio: this.inicio,
+      fin: this.transformarFecha(this.fin),
       usuarioVendedor: this.currentUser.usuario.idRol === 1 ? '' : this.currentUser.usuario.username,
       canal: ['superbarato.megadescuento.com', 'contraentrega.megadescuento.com']
     }).subscribe((info) => {
       this.collectionSize = info.cont;
       this.listaContactos = info.info;
+      this.comisionTotal = info.comision_total.comision__sum;
     });
   }
 
@@ -605,6 +608,19 @@ export class GdPedidosWoocommerceComponent implements OnInit, AfterViewInit {
   obtenerTiendaComercial(canal){
     const tienda = this.canalOpciones.filter(item => item.valor === canal);
     return tienda[0].nombre;
+  }
+
+  enmascararTexto(value: string | null | undefined, visibles: number = 4): string {
+    if (!value) {
+      // Si el valor es nulo o indefinido, devuelve una cadena vacía o un texto predeterminado
+      return '';
+    }
+
+    // Asegurarse de que no se repita un valor negativo de '*'
+    const visiblesParte = value.slice(0, Math.min(visibles, value.length));
+    const ocultosParte = '*'.repeat(Math.max(value.length - visibles, 0));
+
+    return visiblesParte + ocultosParte;
   }
 
 }

@@ -31,6 +31,7 @@ import {
   GdCargarSaldoBilleteraDigitalComponent
 } from "./gd_asesores_comerciales/billetera_digital/cargar-saldo/gd_cargar_saldo_billetera_digital.component";
 import {GdPedidosWoocommerceComponent} from "./gd_pedidos_woocommerce/gd-pedidos-woocommerce.component";
+import {GdReporteAsesoresComponent} from "./gd_asesores_comerciales/reporte_asesores/gd_reporte_asesores.component";
 
 const routes: Routes = [{
   path: '', component: GsbComponent, children: [
@@ -85,6 +86,9 @@ const routes: Routes = [{
         },
         {
           path: 'list/confirmados', component: GdAsesoresConfirmadosComponent, canActivate: [AuthGuard],
+        },
+        {
+          path: 'reporte/asesor', component: GdReporteAsesoresComponent, canActivate: [AuthGuard],
         },
         {
           path: 'list/billetera/digital/movimientos', component: GdBilleteraDigitalAsesoresComponent, canActivate: [AuthGuard],

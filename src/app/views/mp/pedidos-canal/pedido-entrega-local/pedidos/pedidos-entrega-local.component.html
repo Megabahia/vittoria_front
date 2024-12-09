@@ -167,7 +167,7 @@
                       <div class="col-md-3 col-12">
                         <label>Correo</label>
                         <input class="form-control" type="text"
-                               formControlName="correo" (change)="validarDatos()">
+                               formControlName="correo">
                         <div *ngIf="facturacionForm.correo.errors"
                              class="invalid-feedback" style="display: block;">
                           <div *ngIf="facturacionForm.correo.errors.required">
@@ -200,7 +200,6 @@
                         <label>Numero Identificación</label>
                         <input class="form-control" type="text"
                                formControlName="identificacion"
-                               (change)="validarDatos()"
                         >
                         <div *ngIf="facturacionForm.identificacion.errors"
                              class="invalid-feedback" style="display: block;">
@@ -547,7 +546,7 @@
           </div>
           <div class="modal-footer">
             <button type="reset" class="btn btn-secondary"
-                    (click)="modal.dismiss( 'Cross click')">Cerrar
+                    (click)="modal.dismiss('Cross click')">Cerrar
             </button>
             <button class="btn btn-primary mx-1"
                     (click)="actualizarContacto()"

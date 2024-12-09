@@ -37,6 +37,7 @@ import {
   GdCargarSaldoBilleteraDigitalComponent
 } from "./gd_asesores_comerciales/billetera_digital/cargar-saldo/gd_cargar_saldo_billetera_digital.component";
 import {GdPedidosWoocommerceComponent} from "./gd_pedidos_woocommerce/gd-pedidos-woocommerce.component";
+import {GdReporteAsesoresComponent} from "./gd_asesores_comerciales/reporte_asesores/gd_reporte_asesores.component";
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import {GdPedidosWoocommerceComponent} from "./gd_pedidos_woocommerce/gd-pedidos
     GdBilleteraDigitalAsesoresComponent,
     GdRegistroAsesoresComponent,
     GdCargarSaldoBilleteraDigitalComponent,
-    GdPedidosWoocommerceComponent
+    GdPedidosWoocommerceComponent,
+    GdReporteAsesoresComponent
   ],
   exports: [
     GsbProductosListarComponent

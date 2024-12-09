@@ -625,4 +625,17 @@ export class PedidosWoocommerceComponent implements OnInit, AfterViewInit {
     return tienda[0].nombre;
   }
 
+  enmascararTexto(value: string | null | undefined, visibles: number = 4): string {
+    if (!value) {
+      // Si el valor es nulo o indefinido, devuelve una cadena vacía o un texto predeterminado
+      return '';
+    }
+
+    // Asegurarse de que no se repita un valor negativo de '*'
+    const visiblesParte = value.slice(0, Math.min(visibles, value.length));
+    const ocultosParte = '*'.repeat(Math.max(value.length - visibles, 0));
+
+    return visiblesParte + ocultosParte;
+  }
+
 }

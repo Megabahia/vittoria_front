@@ -11,15 +11,15 @@ import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ProductosService} from '../../../services/mdp/productos/productos.service';
 import {Toaster} from 'ngx-toast-notifications';
 import {v4 as uuidv4} from 'uuid';
-import {ClientesService} from "../../../services/mdm/personas/clientes/clientes.service";
-import {ContactosService} from "../../../services/gdc/contactos/contactos.service";
-import {ValidacionesPropias} from "../../../utils/customer.validators";
-import {environment} from "../../../../environments/environment";
+import {ClientesService} from '../../../services/mdm/personas/clientes/clientes.service';
+import {ContactosService} from '../../../services/gdc/contactos/contactos.service';
+import {ValidacionesPropias} from '../../../utils/customer.validators';
+import {environment} from '../../../../environments/environment';
 import html2canvas from 'html2canvas';
-import {element} from "protractor";
-import {Download} from "angular-feather/icons";
-import {IntegracionesService} from "../../../services/admin/integraciones.service";
-import {AuthService} from "../../../services/admin/auth.service";
+import {element} from 'protractor';
+import {Download} from 'angular-feather/icons';
+import {IntegracionesService} from '../../../services/admin/integraciones.service';
+import {AuthService} from '../../../services/admin/auth.service';
 
 @Component({
   selector: 'app-generar-pedido-woocommerce',
@@ -180,8 +180,8 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
         tipoIdentificacion: [this.tipoIdentificacion, []],
         telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
         pais: [this.pais, [Validators.required]],
-        provincia: ['', [Validators.required]],
-        ciudad: ['', [Validators.required]],
+        provincia: [''],
+        ciudad: [''],
         codigoVendedor: [this.usuarioActual.usuario.username, []],
         nombreVendedor: [this.usuarioActual.full_name, []],
         comprobantePago: ['', []],
@@ -536,10 +536,10 @@ export class GenerarPedidosWoocommerceComponent implements OnInit, AfterViewInit
           this.productosService.actualizarProducto(this.datosProducto, id).subscribe((producto) => {
             this.detallesArray.controls[i].get('imagen_principal').setValue(producto.imagen_principal);
 
-            this.toaster.open('Imagen actualizada con éxito', {type: "info"});
-          }, error => this.toaster.open('No se pudo actualizar la imagen.', {type: "danger"}));
+            this.toaster.open('Imagen actualizada con éxito', {type: 'info'});
+          }, error => this.toaster.open('No se pudo actualizar la imagen.', {type: 'danger'}));
         } catch (error) {
-          this.toaster.open('Error al actualizar la imagen.', {type: "danger"});
+          this.toaster.open('Error al actualizar la imagen.', {type: 'danger'});
         }
       };
       reader.readAsDataURL(archivo);
