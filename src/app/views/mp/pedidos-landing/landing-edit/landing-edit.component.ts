@@ -326,7 +326,6 @@ export class LandingEditComponent implements OnInit {
   }
 
   obtenerTipoIdentificacion(): void {
-
     if (this.prospectoForm.value.tipoIdentificacion === 'Ruc') {
       this.prospectoForm.get('identificacion').setValidators(
         [Validators.required, ValidacionesPropias.rucValido]
