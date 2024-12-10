@@ -96,7 +96,11 @@
           </div>
           <hr/>
           <div class="mt-1 text-center">
-            <button class="btn btn-primary" (click)="obtenerListaProductos()">
+            <button class="btn btn-primary" (click)="obtenerListaProductos()"
+                    [ngClass]="{'loading': mostrarSpinnerCargaProductos}"
+                    [disabled]="mostrarSpinnerCargaProductos">
+              <span *ngIf="mostrarSpinnerCargaProductos" class="spinner-border spinner-border-sm mr-1" role="status"
+                    aria-hidden="true"></span>
               BUSCAR
               <i-feather name='search' class="edit-user"></i-feather>
             </button>

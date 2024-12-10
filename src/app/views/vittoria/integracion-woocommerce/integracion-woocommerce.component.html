@@ -260,11 +260,31 @@
                       Imagen de canal para impresión en cupón
                     </label>
                     <input type="file" (change)="onFileSelect($event)" accept=".jpg,.jpeg,.png"
-                           style="width: 260px" formControlName="imagen_principal">
+                           style="width: 260px">
                     <img *ngIf="imageUrlPrincipal" [src]="imageUrlPrincipal" alt="Imagen principal" class="img-fluid mt-3"
                          style="max-width: 250px; height: auto;">
                   </div>
-
+                  <div class="form-group">
+                    <label class="form-label">Teléfono celular del local:</label>
+                    <input type="text" class="form-control"
+                           name="whatsapp" formControlName="whatsapp"/>
+                    <div *ngIf="f.whatsapp.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.whatsapp.errors.required">Número de teléfono es requerido</div>
+                      <div *ngIf="f.whatsapp.errors.pattern">Ingrese solo números</div>
+                      <div *ngIf="f.whatsapp.errors.maxlength">Máximo 10 caracteres</div>
+                      <div *ngIf="f.whatsapp.errors.minlength">Mínimo 10 caracteres</div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">
+                      Foto del local
+                    </label>
+                    <input type="file" (change)="onFileSelectFotoLocal($event)" accept=".jpg,.jpeg,.png"
+                           style="width: 260px">
+                    <img *ngIf="fotoLocal" [src]="fotoLocal" alt="Foto del Local" class="img-fluid mt-3"
+                         style="max-width: 250px; height: auto;">
+                  </div>
                   <label class="form-label font-weight-bold mb-2" for="basic-icon-default-email">Pedidos gestionados
                     por:</label>
                   <div formGroupName="pedidos_local">

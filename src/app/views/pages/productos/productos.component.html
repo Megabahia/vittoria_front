@@ -1,552 +1,563 @@
 <div class="app-content " *ngIf="producto">
 
-    <div class="content-body">
-        <section class="app-ecommerce-details">
-            <div class="d-flex justify-content-center">
-                <a href="javascript:void(0);" class="brand-logo">
-                    <img src="../../../../assets/images/super_barato.jpeg" width="75">
-                    <img src="../../../../assets/images/logo.svg" width="100">
-                </a>
+  <div class="content-body">
+    <section class="app-ecommerce-details">
+      <div class="d-flex justify-content-center">
+        <a href="javascript:void(0);" class="brand-logo">
+          <img src="../../../../assets/images/super_barato.jpeg" width="75">
+          <img src="../../../../assets/images/logo.svg" width="100">
+        </a>
+      </div>
+      <div class="card">
+        <div class="d-flex justify-content-center text-center">
+          <h1>{{ producto.nombre }}</h1>
+        </div>
+        <div class="d-flex justify-content-center">
+          <h2 style="color: red">{{ tituloPaginaProductos?.valor }}</h2>
+        </div>
+        <div class="d-flex justify-content-center">
+          <h2 style="color: #2d2c55">{{ subTituloPaginaProductos?.valor }}</h2>
+        </div>
+        <div class="d-flex justify-content-center">
+          <span
+            style="color: red"><small>Este pedido aplica a nivel {{ producto.envioNivelNacional ? 'Nacional' : producto.lugarVentaCiudad }}</small></span>
+        </div>
+        <div class="d-flex justify-content-center" *ngIf="imagenServientrega">
+          <img [src]="imagenServientrega?.archivo" [alt]="imagenServientrega?.valor" width="100">
+        </div>
+        <div class="d-flex justify-content-center my-1" *ngIf="producto.video">
+          <video [src]="producto.video" width="75%"
+                 height="50%" controls>
+            <p>Su navegador no soporta vídeos HTML5.</p>
+          </video>
+        </div>
+        <div class="d-flex justify-content-center">
+          <h4>{{ producto.categoria }}</h4>
+        </div>
+        <div class="d-flex justify-content-center">
+          <div class="ecommerce-details-price d-flex flex-wrap mt-1">
+            <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
+              Precio Normal: $ {{ producto.precioLanding }}</h5>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center">
+          <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h2 class="item-price mr-1 text-danger">
+            Precio Oferta: $ {{ producto.precioLandingOferta }}</h2>
+          </div>
+        </div>
+        <div class="col-12 d-flex justify-content-center my-1">
+          <div class="d-flex flex-column flex-sm-row pt-1"><!---->
+            <button
+              (click)="modalOpenSM(modalSM)"
+              rippleeffect=""
+              class="btn btn-primary btn-cart mr-0 mr-sm-1 mb-1 mb-sm-0 waves-effect waves-float waves-light ng-star-inserted"
+              href="/vuexy-angular-admin-template/demo-1/apps/e-commerce/checkout">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                   stroke-linejoin="round" class="feather feather-shopping-cart mr-25">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+              </svg>
+              <span class="add-to-cart">Pedir ahora</span></button><!---->
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row my-2">
+            <div class="col-12 d-flex flex-column align-items-center justify-content-center mb-2 mb-md-0">
+              <div class="d-flex align-items-center justify-content-center">
+                <div class="swiper-responsive-breakpoints swiper-container px-4 py-2"
+                >
+                  <div class="swiper-wrapper mb-2">
+                    <!-- ngb-carousel component -->
+                    <ngb-carousel [interval]="2000" [pauseOnHover]="false"
+                                  *ngIf="producto.imagenes">
+                      <ng-template ngbSlide *ngFor="let producto of producto.imagenes">
+                        <div class="carousel-img-wrapper">
+                          <img [src]="producto.imagen" alt="Random first slide"
+                               width="300" height="300"
+                          />
+                        </div>
+                        <div class="carousel-caption"></div>
+                      </ng-template>
+                    </ngb-carousel>
+                    <!-- ngb-carousel component -->
+                  </div>
+                  <!-- Add Arrows -->
+                  <div class="swiper-button-next"></div>
+                  <div class="swiper-button-prev"></div>
+                </div>
+              </div>
+              <h6>Código de barras</h6>
+              <div>{{ producto.codigoBarras }}</div>
+              <hr>
             </div>
-            <div class="card">
-                <div class="d-flex justify-content-center text-center">
-                    <h1>{{producto.nombre}}</h1>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <h2 style="color: red">{{tituloPaginaProductos?.valor}}</h2>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <h2 style="color: #2d2c55">{{subTituloPaginaProductos?.valor}}</h2>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <span style="color: red"><small>Este pedido aplica a nivel {{producto.envioNivelNacional ? 'Nacional' : producto.lugarVentaCiudad}}</small></span>
-                </div>
-                <div class="d-flex justify-content-center" *ngIf="imagenServientrega">
-                    <img [src]="imagenServientrega?.archivo" [alt]="imagenServientrega?.valor" width="100">
-                </div>
-                <div class="d-flex justify-content-center my-1" *ngIf="producto.video">
-                    <video [src]="producto.video" width="75%"
-                           height="50%" controls>
-                        <p>Su navegador no soporta vídeos HTML5.</p>
-                    </video>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <h4>{{producto.categoria}}</h4>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <div class="ecommerce-details-price d-flex flex-wrap mt-1">
-                        <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
-                            Precio Normal: $ {{producto.precioLanding}}</h5>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h2 class="item-price mr-1 text-danger">
-                        Precio Oferta: $ {{producto.precioLandingOferta}}</h2>
-                    </div>
-                </div>
-                <div class="col-12 d-flex justify-content-center my-1">
-                    <div class="d-flex flex-column flex-sm-row pt-1"><!---->
-                        <button
-                                (click)="modalOpenSM(modalSM)"
-                                rippleeffect=""
-                                class="btn btn-primary btn-cart mr-0 mr-sm-1 mb-1 mb-sm-0 waves-effect waves-float waves-light ng-star-inserted"
-                                href="/vuexy-angular-admin-template/demo-1/apps/e-commerce/checkout">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="feather feather-shopping-cart mr-25">
-                                <circle cx="9" cy="21" r="1"></circle>
-                                <circle cx="20" cy="21" r="1"></circle>
-                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                            </svg>
-                            <span class="add-to-cart">Pedir ahora</span></button><!---->
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row my-2">
-                        <div class="col-12 col-md-5 d-flex flex-column align-items-center justify-content-center mb-2 mb-md-0">
-                            <div class="d-flex align-items-center justify-content-center">
-                                <div class="swiper-responsive-breakpoints swiper-container px-4 py-2"
-                                >
-                                    <div class="swiper-wrapper mb-2">
-
-
-                                        <!-- ngb-carousel component -->
-                                        <ngb-carousel [interval]="2000" [pauseOnHover]="false"
-                                                      *ngIf="producto.imagenes">
-                                            <ng-template ngbSlide *ngFor="let producto of producto.imagenes">
-                                                <div class="carousel-img-wrapper">
-                                                    <img [src]="producto.imagen" alt="Random first slide"
-                                                         width="300" height="300"
-                                                    />
-                                                </div>
-                                                <div class="carousel-caption"></div>
-                                            </ng-template>
-                                        </ngb-carousel>
-                                        <!-- ngb-carousel component -->
-                                    </div>
-                                    <!-- Add Arrows -->
-                                    <div class="swiper-button-next"></div>
-                                    <div class="swiper-button-prev"></div>
-                                </div>
-                            </div>
-                            <div>{{producto.codigoBarras}}</div>
-                        </div>
-                        <div class="col-12 col-md-7">
-                            <p class="card-text">
-                                {{producto.descripcion}}
-                            </p>
-                            <hr>
-                            <div class="product-color-options"><h6>Caracteristicas</h6>
-                                <p class="card-text">
-                                    {{producto.caracteristicas}}
-                                </p>
-                            </div>
-                            <hr>
-                        </div>
-
-                    </div>
-
-                    <div class="d-flex justify-content-center">
-                        <div class="ecommerce-details-price d-flex flex-wrap mt-1">
-                            <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
-                                Precio Normal: $ {{producto.precioLanding}}</h5>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h2 class="item-price mr-1 text-danger">
-                            Precio Oferta: $ {{producto.precioLandingOferta}}</h2>
-                        </div>
-                    </div>
-
-                    <div class="row my-2">
-                        <div class="col-12 d-flex justify-content-center">
-                            <h2 style="color: red">{{tituloPaginaProductos?.valor}}</h2>
-                        </div>
-                        <div class="col-12 d-flex justify-content-center">
-                            <h2 style="color: #2d2c55">{{subTituloPaginaProductos?.valor}}</h2>
-                        </div>
-                        <div class="col-12 d-flex justify-content-center">
-                            <span style="color: red"><small>Este pedido aplica a nivel {{producto.envioNivelNacional ? 'Nacional' : producto.lugarVentaCiudad}}</small></span>
-                        </div>
-                        <div class="col-12 d-flex justify-content-center" *ngIf="imagenServientrega">
-                            <img [src]="imagenServientrega?.archivo" [alt]="imagenServientrega?.valor" width="100">
-                        </div>
-                        <div class="col-12 d-flex justify-content-center my-1">
-                            <div class="d-flex flex-column flex-sm-row pt-1"><!---->
-                                <button
-                                        (click)="modalOpenSM(modalSM)"
-                                        rippleeffect=""
-                                        class="btn btn-primary btn-cart mr-0 mr-sm-1 mb-1 mb-sm-0 waves-effect waves-float waves-light ng-star-inserted"
-                                        href="/vuexy-angular-admin-template/demo-1/apps/e-commerce/checkout">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                         stroke-linejoin="round" class="feather feather-shopping-cart mr-25">
-                                        <circle cx="9" cy="21" r="1"></circle>
-                                        <circle cx="20" cy="21" r="1"></circle>
-                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                                    </svg>
-                                    <span class="add-to-cart">Pedir ahora</span></button><!---->
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+            <div class="col-12 text-center">
+              <h6>Descripción</h6>
+              <p class="card-text">
+                {{ producto.descripcion }}
+              </p>
+              <div class="product-color-options">
+                <h6>Caracteristicas</h6>
+                <p class="card-text">
+                  {{ producto.caracteristicas }}
+                </p>
+              </div>
+              <hr>
             </div>
-        </section>
-    </div>
+
+          </div>
+
+          <div class="d-flex justify-content-center">
+            <div class="ecommerce-details-price d-flex flex-wrap mt-1">
+              <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
+                Precio Normal: $ {{ producto.precioLanding }}</h5>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center">
+            <div class="ecommerce-details-price d-flex flex-wrap mt-1"><h2 class="item-price mr-1 text-danger">
+              Precio Oferta: $ {{ producto.precioLandingOferta }}</h2>
+            </div>
+          </div>
+
+          <div class="row my-2">
+            <div class="col-12 d-flex justify-content-center">
+              <h2 style="color: red">{{ tituloPaginaProductos?.valor }}</h2>
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+              <h2 style="color: #2d2c55">{{ subTituloPaginaProductos?.valor }}</h2>
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+              <span
+                style="color: red"><small>Este pedido aplica a nivel {{ producto.envioNivelNacional ? 'Nacional' : producto.lugarVentaCiudad }}</small></span>
+            </div>
+            <div class="col-12 d-flex justify-content-center" *ngIf="imagenServientrega">
+              <img [src]="imagenServientrega?.archivo" [alt]="imagenServientrega?.valor" width="100">
+            </div>
+            <div class="col-12 d-flex justify-content-center my-1">
+              <div class="d-flex flex-column flex-sm-row pt-1"><!---->
+                <button
+                  (click)="modalOpenSM(modalSM)"
+                  rippleeffect=""
+                  class="btn btn-primary btn-cart mr-0 mr-sm-1 mb-1 mb-sm-0 waves-effect waves-float waves-light ng-star-inserted"
+                  href="/vuexy-angular-admin-template/demo-1/apps/e-commerce/checkout">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                       stroke-linejoin="round" class="feather feather-shopping-cart mr-25">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                  </svg>
+                  <span class="add-to-cart">Pedir ahora</span></button><!---->
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </div>
 </div>
 
 <div class="app-content" *ngIf="productoInactivo">
-    <div class="content-body">
-        <section class="app-ecommerce-details">
-            <div class="d-flex justify-content-center">
-                <h1 style="color: red!important;">
-                    El producto no esta disponible
-                </h1>
-            </div>
-        </section>
-    </div>
+  <div class="content-body">
+    <section class="app-ecommerce-details">
+      <div class="d-flex justify-content-center">
+        <h1 style="color: red!important;">
+          El producto no esta disponible
+        </h1>
+      </div>
+    </section>
+  </div>
 </div>
 
 <ng-template #mensajeModal let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title">Mensaje</h4>
-        <a href="https://www.facebook.com/Local.Super.Barato?mibextid=LQQJ4d">
-            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </a>
-    </div>
-    <div class="modal-body">
-        <div [innerHTML]="mensaje"></div>
-    </div>
-    <div class="modal-footer">
-        <a type="button" class="btn btn-light" href="https://www.facebook.com/Local.Super.Barato?mibextid=LQQJ4d"
-           (click)="modal.dismiss( 'Cross click')">Aceptar</a>
-    </div>
+  <div class="modal-header">
+    <h4 class="modal-title">Mensaje</h4>
+    <a href="https://www.facebook.com/Local.Super.Barato?mibextid=LQQJ4d">
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </a>
+  </div>
+  <div class="modal-body">
+    <div [innerHTML]="mensaje"></div>
+  </div>
+  <div class="modal-footer">
+    <a type="button" class="btn btn-light" href="https://www.facebook.com/Local.Super.Barato?mibextid=LQQJ4d"
+       (click)="modal.dismiss( 'Cross click')">Aceptar</a>
+  </div>
 </ng-template>
 
 <!-- Modal -->
 <ng-template #modalSM let-modal>
-    <div class="modal-header">
-        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body" tabindex="0" ngbAutofocus>
-        <form class="auth-login-form mt-2" [formGroup]="pospectoForm">
-            <div class="d-flex justify-content-center">
-                <video [src]="producto.video" width="75%"
-                       height="50%" controls>
-                    <p>Su navegador no soporta vídeos HTML5.</p>
-                </video>
+  <div class="modal-header">
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <form class="auth-login-form mt-2" [formGroup]="pospectoForm">
+      <div class="d-flex justify-content-center">
+        <video [src]="producto.video" width="75%"
+               height="50%" controls>
+          <p>Su navegador no soporta vídeos HTML5.</p>
+        </video>
+      </div>
+      <div class="d-flex justify-content-center text-center">
+        <label class="form-label">{{ producto.nombre }}</label>
+      </div>
+      <div class="d-flex justify-content-center">
+        <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
+          Precio Normal: $ {{ producto.precioLanding }}</h5>
+      </div>
+      <div class="d-flex justify-content-center">
+        <h2 class="item-price mr-1 text-danger">
+          Precio Oferta: $ {{ producto.precioLandingOferta }}</h2>
+      </div>
+      <ng-container formArrayName="detalles">
+        <ng-container *ngFor="let cuenta of pospectoForm.get('detalles')['controls']; let i = index">
+          <ng-container class="row" [formGroup]="cuenta">
+            <div class="d-flex justify-content-center text-center">
+              <div class="form-group">
+                <div class="row">
+                  <div class="item-quantity"><span class="quantity-title">Cantidad:</span>
+                    <div class="quantity-counter-wrapper">
+                      <core-touchspin>
+                        <div class="btn-group touchspin-wrapper">
+                          <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-down"
+                                  (click)="escogerCantidad('restar')"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                 viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-minus">
+                              <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg><!----><!----></button>
+                          <input type="number" pattern="\d*" maxlength="4"
+                                 class="form-control ng-untouched ng-pristine ng-valid"
+                                 step="1" min="1"
+                                 max="10"
+                                 disabled
+                                 formControlName="cantidad"
+                          >
+                          <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-up"
+                                  (click)="escogerCantidad('sumar')"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                 viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-plus">
+                              <line x1="12" y1="5" x2="12" y2="19"></line>
+                              <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg><!----><!----></button>
+                        </div>
+                      </core-touchspin>
+                    </div>
+                    <div *ngIf="submitted && f.cantidad.errors" class="invalid-feedback"
+                         style="display: block;">
+                      <div *ngIf="f.cantidad.errors.required">Cantidad requeridos
+                      </div>
+                      <div *ngIf="f.cantidad.errors.min">Cantidad minima 1
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="d-flex justify-content-center text-center">
-                <label class="form-label">{{producto.nombre}}</label>
+              <div class="d-flex justify-content-center text-center">
+                <label class="form-label" for="total">Precio Total:</label>
+                <input type="text" class="form-control form-control-sm"
+                       id="total" name="total"
+                       formControlName="total" disabled/>
+                <!--                        <div class="input-group">-->
+                <!--                            <div class="input-group-prepend">-->
+                <!--                                <span class="input-group-text" id="basic-addon1">$</span>-->
+                <!--                            </div>-->
+                <!--                            <input type="text" class="form-control" formControlName="precio" disabled/>-->
+                <!--                        </div>-->
+              </div>
             </div>
-            <div class="d-flex justify-content-center">
-                <h5 class="item-price mr-1 text-black" style="text-decoration: line-through">
-                    Precio Normal: $ {{producto.precioLanding}}</h5>
-            </div>
-            <div class="d-flex justify-content-center">
-                <h2 class="item-price mr-1 text-danger">
-                    Precio Oferta: $ {{producto.precioLandingOferta}}</h2>
-            </div>
-            <ng-container formArrayName="detalles">
-                <ng-container *ngFor="let cuenta of pospectoForm.get('detalles')['controls']; let i = index">
-                    <ng-container class="row" [formGroup]="cuenta">
-                        <div class="d-flex justify-content-center text-center">
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="item-quantity"><span class="quantity-title">Cantidad:</span>
-                                        <div class="quantity-counter-wrapper">
-                                            <core-touchspin>
-                                                <div class="btn-group touchspin-wrapper">
-                                                    <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-down"
-                                                            (click)="escogerCantidad('restar')"
-                                                    >
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                             viewBox="0 0 24 24"
-                                                             fill="none" stroke="currentColor" stroke-width="2"
-                                                             stroke-linecap="round"
-                                                             stroke-linejoin="round" class="feather feather-minus">
-                                                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                                                        </svg><!----><!----></button>
-                                                    <input type="number" pattern="\d*" maxlength="4"
-                                                           class="form-control ng-untouched ng-pristine ng-valid"
-                                                           step="1" min="1"
-                                                           max="10"
-                                                           disabled
-                                                           formControlName="cantidad"
-                                                    >
-                                                    <button class="btn btn-sm btn-primary btn-touchspin btn-touchspin-up"
-                                                            (click)="escogerCantidad('sumar')"
-                                                    >
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                             viewBox="0 0 24 24"
-                                                             fill="none" stroke="currentColor" stroke-width="2"
-                                                             stroke-linecap="round"
-                                                             stroke-linejoin="round" class="feather feather-plus">
-                                                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                                                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                                                        </svg><!----><!----></button>
-                                                </div>
-                                            </core-touchspin>
-                                        </div>
-                                        <div *ngIf="submitted && f.cantidad.errors" class="invalid-feedback"
-                                             style="display: block;">
-                                            <div *ngIf="f.cantidad.errors.required">Cantidad requeridos
-                                            </div>
-                                            <div *ngIf="f.cantidad.errors.min">Cantidad minima 1
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-center text-center">
-                            <div class="d-flex justify-content-center text-center">
-                                <label class="form-label" for="total">Precio Total:</label>
-                                <input type="text" class="form-control form-control-sm"
-                                       id="total" name="total"
-                                       formControlName="total" disabled/>
-                                <!--                        <div class="input-group">-->
-                                <!--                            <div class="input-group-prepend">-->
-                                <!--                                <span class="input-group-text" id="basic-addon1">$</span>-->
-                                <!--                            </div>-->
-                                <!--                            <input type="text" class="form-control" formControlName="precio" disabled/>-->
-                                <!--                        </div>-->
-                            </div>
-                        </div>
-                    </ng-container>
-                </ng-container>
-            </ng-container>
+          </ng-container>
+        </ng-container>
+      </ng-container>
 
-            <div class="d-flex justify-content-center">
-                <h2 style="color: red">{{tituloPaginaProductos?.valor}}</h2>
-            </div>
-            <div class="d-flex justify-content-center">
-                <h2 style="color: #2d2c55">{{subTituloPaginaProductos?.valor}}</h2>
-            </div>
-            <div class="d-flex justify-content-center">
-                <span style="color: red"><small>Este pedido aplica a nivel {{producto.envioNivelNacional ? 'Nacional' : producto.lugarVentaCiudad}}</small></span>
-            </div>
-            <!--<div class="d-flex justify-content-center">
-                <img [src]="imagenServientrega?.archivo" [alt]="imagenServientrega?.valor" width="100">
-            </div>-->
-            <hr>
-            <h2 style="color: #2d2c55">Datos del pedido</h2>
-            <div class="form-group">
-                <label class="form-label" for="basic-icon-default-fullname">Nombres:</label>
-                <input type="text" class="form-control dt-full-name"
-                       id="basic-icon-default-fullname" name="nombres"
-                       formControlName="nombres"/>
-                <div *ngIf="submitted && f.nombres.errors" class="invalid-feedback"
-                     style="display: block;">
-                    <div *ngIf="f.nombres.errors.required">Nombres requeridos
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="basic-icon-default-uname">Apellidos:</label>
-                <input type="text" id="basic-icon-default-uname"
-                       class="form-control dt-uname" name="apellidos"
-                       formControlName="apellidos"/>
-                <div *ngIf="submitted && f.apellidos.errors" class="invalid-feedback"
-                     style="display: block;">
-                    <div *ngIf="f.apellidos.errors.required">Apellidos requeridos
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="tipoIdentificacion">Tipo de identificación</label>
-                <select formControlName="tipoIdentificacion" class="form-control"
-                        id="tipoIdentificacion"
-                        (change)="obtenerTipoIdentificacion()"
-                >
-                    <option>- Seleccionar -</option>
-                    <option *ngFor="let value of tipoIdentificacion">
-                        {{value.nombre}}
-                    </option>
-                </select>
-                <div *ngIf="submitted && f.tipoIdentificacion.errors" class="invalid-feedback">
-                    <div *ngIf="f.tipoIdentificacion.errors.required">Tipo de identificación es
-                        requerido
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label"
-                       for="identificacion">Numero de Identificación:</label>
-                <input type="text" id="identificacion"
-                       class="form-control dt-uname" name="identificacion"
-                       formControlName="identificacion"/>
-                <div *ngIf="submitted && f.identificacion.errors" class="invalid-feedback"
-                     style="display: block;">
-                    <div *ngIf="f.identificacion.errors.required">Numero de Identificación requerida
-                    </div>
-                    <div *ngIf="f.identificacion.errors.pattern">Solo se aceptan números
-                    </div>
-                    <div *ngIf="f.identificacion.errors.minlength || f.identificacion.errors.maxlength">
-                        Solo se aceptan 10 digitos
-                    </div>
-                    <div *ngIf="f.identificacion.errors.identificacionInvalid || f.identificacion.errors.rucInvalid">
-                        Numero de Identificación no válida
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="basic-icon-default-email">Número de
-                    WhatsApp:</label>
-                <input type="text" id="basic-icon-default-email"
-                       class="form-control dt-email" name="whatsapp"
-                       formControlName="whatsapp"/>
-                <div *ngIf="submitted && f.whatsapp.errors" class="invalid-feedback"
-                     style="display: block;">
-                    <div *ngIf="f.whatsapp.errors.required">Teléfono requerido
-                    </div>
-                    <div *ngIf="f.whatsapp.errors.pattern">Solo se aceptan números
-                    </div>
-                    <div *ngIf="f.whatsapp.errors.minlength || f.whatsapp.errors.maxlength">
-                        Solo se aceptan 10 digitos
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="basic-icon-default-email">Correo
-                    electrónico:</label>
-                <input type="text" id="basic-icon-default-email"
-                       class="form-control dt-email" name="correo1"
-                       formControlName="correo1"/>
-                <div *ngIf="submitted && f.correo1.errors" class="invalid-feedback"
-                     style="display: block;">
-                    <div *ngIf="f.correo1.errors.required">Correo electrónico requerido
-                    </div>
-                    <div *ngIf="f.correo1.errors.email">Correo electrónico no cumple el
-                        formato
-                    </div>
-                </div>
-            </div>
-            <hr>
-            <h2 style="color: #2d2c55">Lugar de entrega</h2>
-            <h5 style="color: red">Este pedido aplica a nivel {{producto.envioNivelNacional ? 'Nacional' : producto.lugarVentaCiudad}}</h5>
-            <div class="form-group">
-                <label for="pais">País</label>
-                <input type="text" id="pais"
-                       class="form-control" name="pais"
-                       formControlName="pais"
-                       disabled
-                />
-                <div *ngIf="submitted && f.pais.errors" class="invalid-feedback"
-                     style="display: block;">
-                    <div *ngIf="f.pais.errors.required">Pais es requerido</div>
-                </div>
-            </div>
-            <div *ngIf="producto?.envioNivelNacional; else lugarEnvioCiudad">
-                <div class="form-group">
-                    <label for="provincia1">Provincia</label>
-                    <select class="form-control select2" id="provincia1"
-                            formControlName="provincia"
-                            (change)="obtenerCiudad()">
-                        <option value="" selected>- Seleccionar -</option>
-                        <option value="{{provinciasOP.valor}}"
-                                *ngFor="let provinciasOP of provinciaOpciones">
-                            {{provinciasOP.nombre}}
-                        </option>
-                    </select>
-                    <div *ngIf="submitted && f.provincia.errors" class="invalid-feedback"
-                         style="display: block;">
-                        <div *ngIf="f.provincia.errors.required">Provincia es requerida</div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="ciudad1">Ciudad</label>
-                    <select class="form-control select2" id="ciudad1" formControlName="ciudad">
-                        <option value="" selected>- Seleccionar -</option>
-                        <option value="{{ciudadesOp.valor}}"
-                                *ngFor="let ciudadesOp of ciudadOpciones">
-                            {{ciudadesOp.nombre}}
-                        </option>
-                    </select>
-                    <div *ngIf="submitted && f.ciudad.errors" class="invalid-feedback"
-                         style="display: block;">
-                        <div *ngIf="f.ciudad.errors.required">Ciudad es requerida</div>
-                    </div>
-                </div>
-            </div>
-            <ng-template #lugarEnvioCiudad>
-                <div class="form-group">
-                    <label for="provincia2">Provincia</label>
-                    <select class="form-control select2" id="provincia2"
-                            formControlName="provincia"
-                            disabled
-                            (change)="obtenerCiudad()">
-                        <option value="" selected>- Seleccionar -</option>
-                        <option value="{{provinciasOP.valor}}"
-                                *ngFor="let provinciasOP of provinciaOpciones">
-                            {{provinciasOP.nombre}}
-                        </option>
-                    </select>
-                    <div *ngIf="submitted && f.provincia.errors" class="invalid-feedback"
-                         style="display: block;">
-                        <div *ngIf="f.provincia.errors.required">Provincia es requerida</div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="ciudad2">Ciudad</label>
-                    <select class="form-control select2"
-                            disabled
-                            id="ciudad2" formControlName="ciudad">
-                        <option value="" selected>- Seleccionar -</option>
-                        <option value="{{ciudadesOp.valor}}"
-                                *ngFor="let ciudadesOp of ciudadOpciones">
-                            {{ciudadesOp.nombre}}
-                        </option>
-                    </select>
-                    <div *ngIf="submitted && f.ciudad.errors" class="invalid-feedback"
-                         style="display: block;">
-                        <div *ngIf="f.ciudad.errors.required">Ciudad es requerida</div>
-                    </div>
-                </div>
-            </ng-template>
-            <div class="form-group">
-                <label class="form-label" for="callePrincipal">Calle principal:</label>
-                <input type="text" id="callePrincipal"
-                       class="form-control" name="callePrincipal"
-                       formControlName="callePrincipal"/>
-                <div *ngIf="submitted && f.callePrincipal.errors" class="invalid-feedback"
-                     style="display: block;">
-                    <div *ngIf="f.callePrincipal.errors.required">Calle principal requerido
-                    </div>
-                    <div *ngIf="f.callePrincipal.errors.maxlength">Ingrese maximo 150 caracteres
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="numeroCasa">Numero casa:</label>
-                <input type="text" id="numeroCasa"
-                       class="form-control" name="numeroCasa"
-                       formControlName="numeroCasa"/>
-                <div *ngIf="submitted && f.numeroCasa.errors" class="invalid-feedback"
-                     style="display: block;">
-                    <div *ngIf="f.numeroCasa.errors.required">Numero Casa requerido
-                    </div>
-                    <div *ngIf="f.numeroCasa.errors.maxlength">Ingrese maximo 20 caracteres
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="calleSecundaria">Calle secundaria:</label>
-                <input type="text" id="calleSecundaria"
-                       class="form-control" name="calleSecundaria"
-                       formControlName="calleSecundaria"/>
-                <div *ngIf="submitted && f.calleSecundaria.errors" class="invalid-feedback"
-                     style="display: block;">
-                    <div *ngIf="f.calleSecundaria.errors.required">Calle secundaria
-                        requerido
-                    </div>
-                    <div *ngIf="f.calleSecundaria.errors.maxlength">Ingrese maximo 150 caracteres
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="referencia">Refencia:</label>
-                <input type="text" id="referencia"
-                       class="form-control" name="referencia"
-                       formControlName="referencia"/>
-                <div *ngIf="submitted && f.referencia.errors" class="invalid-feedback"
-                     style="display: block;">
-                    <div *ngIf="f.referencia.errors.required">Refencia requerido
-                    </div>
-                    <div *ngIf="f.referencia.errors.maxlength">Ingrese maximo 255 caracteres
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="comentarios">Comentarios:</label>
-                <input type="text" id="comentarios"
-                       class="form-control" name="comentarios"
-                       formControlName="comentarios"/>
-                <div *ngIf="submitted && f.comentarios.errors" class="invalid-feedback"
-                     style="display: block;">
-                    <div *ngIf="f.comentarios.errors.required">Refencia requerido
-                    </div>
-                    <div *ngIf="f.comentarios.errors.maxlength">Ingrese maximo 255 caracteres
-                    </div>
-                </div>
-            </div>
+      <div class="d-flex justify-content-center">
+        <h2 style="color: red">{{ tituloPaginaProductos?.valor }}</h2>
+      </div>
+      <div class="d-flex justify-content-center">
+        <h2 style="color: #2d2c55">{{ subTituloPaginaProductos?.valor }}</h2>
+      </div>
+      <div class="d-flex justify-content-center">
+        <span
+          style="color: red"><small>Este pedido aplica a nivel {{ producto.envioNivelNacional ? 'Nacional' : producto.lugarVentaCiudad }}</small></span>
+      </div>
+      <!--<div class="d-flex justify-content-center">
+          <img [src]="imagenServientrega?.archivo" [alt]="imagenServientrega?.valor" width="100">
+      </div>-->
+      <hr>
+      <h2 style="color: #2d2c55">Datos del pedido</h2>
+      <div class="form-group">
+        <label class="form-label" for="basic-icon-default-fullname">Nombres:</label>
+        <input type="text" class="form-control dt-full-name"
+               id="basic-icon-default-fullname" name="nombres"
+               formControlName="nombres"/>
+        <div *ngIf="submitted && f.nombres.errors" class="invalid-feedback"
+             style="display: block;">
+          <div *ngIf="f.nombres.errors.required">Nombres requeridos
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="basic-icon-default-uname">Apellidos:</label>
+        <input type="text" id="basic-icon-default-uname"
+               class="form-control dt-uname" name="apellidos"
+               formControlName="apellidos"/>
+        <div *ngIf="submitted && f.apellidos.errors" class="invalid-feedback"
+             style="display: block;">
+          <div *ngIf="f.apellidos.errors.required">Apellidos requeridos
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="tipoIdentificacion">Tipo de identificación</label>
+        <select id="tipoIdentificacion" class="form-control" formControlName="tipoIdentificacion"
+                disabled>
+          <option value="" disabled>- Seleccione -</option>
+          <option value="cedula" selected>Cédula</option>
+          <option value="ruc">RUC</option>
+        </select>
+        <!--<select formControlName="tipoIdentificacion" class="form-control"
+                id="tipoIdentificacion"
+                (change)="obtenerTipoIdentificacion()"
+        >
+          <option>- Seleccionar -</option>
+          <option *ngFor="let value of tipoIdentificacion">
+            {{ value.nombre }}
+          </option>
+        </select>-->
+        <div *ngIf="submitted && f.tipoIdentificacion.errors" class="invalid-feedback">
+          <div *ngIf="f.tipoIdentificacion.errors.required">Tipo de identificación es
+            requerido
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label"
+               for="identificacion">Numero de Identificación:</label>
+        <input type="text" id="identificacion"
+               class="form-control dt-uname" name="identificacion"
+               formControlName="identificacion"/>
+        <div *ngIf="submitted && f.identificacion.errors" class="invalid-feedback"
+             style="display: block;">
+          <div *ngIf="f.identificacion.errors.required">Numero de Identificación requerida
+          </div>
+          <div *ngIf="f.identificacion.errors.pattern">Solo se aceptan números
+          </div>
+          <div *ngIf="f.identificacion.errors.minlength || f.identificacion.errors.maxlength">
+            Solo se aceptan 10 digitos
+          </div>
+          <div *ngIf="f.identificacion.errors.identificacionInvalid || f.identificacion.errors.rucInvalid">
+            Numero de Identificación no válida
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="basic-icon-default-email">Número de
+          WhatsApp:</label>
+        <input type="text" id="basic-icon-default-email"
+               class="form-control dt-email" name="whatsapp"
+               formControlName="whatsapp"/>
+        <div *ngIf="submitted && f.whatsapp.errors" class="invalid-feedback"
+             style="display: block;">
+          <div *ngIf="f.whatsapp.errors.required">Teléfono requerido
+          </div>
+          <div *ngIf="f.whatsapp.errors.pattern">Solo se aceptan números
+          </div>
+          <div *ngIf="f.whatsapp.errors.minlength || f.whatsapp.errors.maxlength">
+            Solo se aceptan 10 digitos
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="basic-icon-default-email">Correo
+          electrónico:</label>
+        <input type="text" id="basic-icon-default-email"
+               class="form-control dt-email" name="correo1"
+               formControlName="correo1"/>
+        <div *ngIf="submitted && f.correo1.errors" class="invalid-feedback"
+             style="display: block;">
+          <div *ngIf="f.correo1.errors.required">Correo electrónico requerido
+          </div>
+          <div *ngIf="f.correo1.errors.email">Correo electrónico no cumple el
+            formato
+          </div>
+        </div>
+      </div>
+      <hr>
+      <h2 style="color: #2d2c55">Lugar de entrega</h2>
+      <h5 style="color: red">Este pedido aplica a
+        nivel {{ producto.envioNivelNacional ? 'Nacional' : producto.lugarVentaCiudad }}</h5>
+      <div class="form-group">
+        <label for="pais">País</label>
+        <input type="text" id="pais"
+               class="form-control" name="pais"
+               formControlName="pais"
+               disabled
+        />
+        <div *ngIf="submitted && f.pais.errors" class="invalid-feedback"
+             style="display: block;">
+          <div *ngIf="f.pais.errors.required">Pais es requerido</div>
+        </div>
+      </div>
+      <div *ngIf="producto?.envioNivelNacional; else lugarEnvioCiudad">
+        <div class="form-group">
+          <label for="provincia1">Provincia</label>
+          <select class="form-control select2" id="provincia1"
+                  formControlName="provincia"
+                  (change)="obtenerCiudad()">
+            <option value="" selected>- Seleccionar -</option>
+            <option value="{{provinciasOP.valor}}"
+                    *ngFor="let provinciasOP of provinciaOpciones">
+              {{ provinciasOP.nombre }}
+            </option>
+          </select>
+          <div *ngIf="submitted && f.provincia.errors" class="invalid-feedback"
+               style="display: block;">
+            <div *ngIf="f.provincia.errors.required">Provincia es requerida</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="ciudad1">Ciudad</label>
+          <select class="form-control select2" id="ciudad1" formControlName="ciudad">
+            <option value="" selected>- Seleccionar -</option>
+            <option value="{{ciudadesOp.valor}}"
+                    *ngFor="let ciudadesOp of ciudadOpciones">
+              {{ ciudadesOp.nombre }}
+            </option>
+          </select>
+          <div *ngIf="submitted && f.ciudad.errors" class="invalid-feedback"
+               style="display: block;">
+            <div *ngIf="f.ciudad.errors.required">Ciudad es requerida</div>
+          </div>
+        </div>
+      </div>
+      <ng-template #lugarEnvioCiudad>
+        <div class="form-group">
+          <label for="provincia2">Provincia</label>
+          <select class="form-control select2" id="provincia2"
+                  formControlName="provincia"
+                  disabled
+                  (change)="obtenerCiudad()">
+            <option value="" selected>- Seleccionar -</option>
+            <option value="{{provinciasOP.valor}}"
+                    *ngFor="let provinciasOP of provinciaOpciones">
+              {{ provinciasOP.nombre }}
+            </option>
+          </select>
+          <div *ngIf="submitted && f.provincia.errors" class="invalid-feedback"
+               style="display: block;">
+            <div *ngIf="f.provincia.errors.required">Provincia es requerida</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="ciudad2">Ciudad</label>
+          <select class="form-control select2"
+                  disabled
+                  id="ciudad2" formControlName="ciudad">
+            <option value="" selected>- Seleccionar -</option>
+            <option value="{{ciudadesOp.valor}}"
+                    *ngFor="let ciudadesOp of ciudadOpciones">
+              {{ ciudadesOp.nombre }}
+            </option>
+          </select>
+          <div *ngIf="submitted && f.ciudad.errors" class="invalid-feedback"
+               style="display: block;">
+            <div *ngIf="f.ciudad.errors.required">Ciudad es requerida</div>
+          </div>
+        </div>
+      </ng-template>
+      <div class="form-group">
+        <label class="form-label" for="callePrincipal">Calle principal:</label>
+        <input type="text" id="callePrincipal"
+               class="form-control" name="callePrincipal"
+               formControlName="callePrincipal"/>
+        <div *ngIf="submitted && f.callePrincipal.errors" class="invalid-feedback"
+             style="display: block;">
+          <div *ngIf="f.callePrincipal.errors.required">Calle principal requerido
+          </div>
+          <div *ngIf="f.callePrincipal.errors.maxlength">Ingrese maximo 150 caracteres
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="numeroCasa">Numero casa:</label>
+        <input type="text" id="numeroCasa"
+               class="form-control" name="numeroCasa"
+               formControlName="numeroCasa"/>
+        <div *ngIf="submitted && f.numeroCasa.errors" class="invalid-feedback"
+             style="display: block;">
+          <div *ngIf="f.numeroCasa.errors.required">Numero Casa requerido
+          </div>
+          <div *ngIf="f.numeroCasa.errors.maxlength">Ingrese maximo 20 caracteres
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="calleSecundaria">Calle secundaria:</label>
+        <input type="text" id="calleSecundaria"
+               class="form-control" name="calleSecundaria"
+               formControlName="calleSecundaria"/>
+        <div *ngIf="submitted && f.calleSecundaria.errors" class="invalid-feedback"
+             style="display: block;">
+          <div *ngIf="f.calleSecundaria.errors.required">Calle secundaria
+            requerido
+          </div>
+          <div *ngIf="f.calleSecundaria.errors.maxlength">Ingrese maximo 150 caracteres
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="referencia">Refencia:</label>
+        <input type="text" id="referencia"
+               class="form-control" name="referencia"
+               formControlName="referencia"/>
+        <div *ngIf="submitted && f.referencia.errors" class="invalid-feedback"
+             style="display: block;">
+          <div *ngIf="f.referencia.errors.required">Refencia requerido
+          </div>
+          <div *ngIf="f.referencia.errors.maxlength">Ingrese maximo 255 caracteres
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="comentarios">Comentarios:</label>
+        <input type="text" id="comentarios"
+               class="form-control" name="comentarios"
+               formControlName="comentarios"/>
+        <div *ngIf="submitted && f.comentarios.errors" class="invalid-feedback"
+             style="display: block;">
+          <div *ngIf="f.comentarios.errors.required">Refencia requerido
+          </div>
+          <div *ngIf="f.comentarios.errors.maxlength">Ingrese maximo 255 caracteres
+          </div>
+        </div>
+      </div>
 
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-primary mr-1" data-toggle="modal" aria-label="Close"
-                (click)="crearProspecto()">
-            <span *ngIf="cargando" class="spinner-border spinner-border-sm"></span>Realizar
-            pedido
-        </button>
-        <button type="button" class="btn btn-secondary"
-                (click)="modal.close('Accept click')">Cancelar
-        </button>
-    </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary mr-1" data-toggle="modal" aria-label="Close"
+            (click)="crearProspecto()">
+      <span *ngIf="cargando" class="spinner-border spinner-border-sm"></span>Realizar
+      pedido
+    </button>
+    <button type="button" class="btn btn-secondary"
+            (click)="modal.close('Accept click')">Cancelar
+    </button>
+  </div>
 </ng-template>
 <!-- / Modal -->

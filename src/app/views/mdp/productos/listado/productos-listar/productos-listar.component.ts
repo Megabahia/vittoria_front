@@ -43,6 +43,7 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
   filtros = false;
   mostrarSpinner = false;
   mostrarSpinnerCopia = false;
+  mostrarSpinnerCargaProductos = false;
 
   constructor(
     private productosService: ProductosService,
@@ -112,10 +113,12 @@ export class ProductosListarComponent implements OnInit, AfterViewInit {
     if (this.canalSeleccionado === '') {
       this.listaProductos = [];
     } else {
+      this.mostrarSpinnerCargaProductos = true;
       this.productosService.obtenerListaProductos(filtros).subscribe((info) => {
         this.listaProductos = info.info;
         this.collectionSize = info.cont;
-      });
+        this.mostrarSpinnerCargaProductos = false
+      }, error => this.mostrarSpinnerCargaProductos = false);
     }
 
   }

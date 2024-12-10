@@ -91,7 +91,7 @@ export class LandingEditComponent implements OnInit {
       this.prospectoForm.patchValue({...info, nombreVendedor: `${this.usuario.usuario.nombres} ${this.usuario.usuario.apellidos}`});
       info.detalles.forEach((detalle, index) => {
         this.fDetalles.controls[index].get('codigo').setValue(detalle.codigo);
-        this.obtenerProducto(index);
+        //this.obtenerProducto(index);
       });
       // this.productosServicer.obtenerProductoCodigo(this.prospecto.codigoProducto).subscribe((producto) => {
       //   this.producto = producto;
@@ -165,6 +165,7 @@ export class LandingEditComponent implements OnInit {
         codigo: [0, [Validators.required]],
         informacionAdicional: ['compra desde la url', []],
         descuento: [0, []],
+        imagen_principal: [0, []],
         impuesto: [0, []],
         total: [0, [Validators.required, Validators.min(1)]],
         prospectoClienteEncabezado: [this.prospectoForm.get('id').value, []],
@@ -234,7 +235,6 @@ export class LandingEditComponent implements OnInit {
       this.prospectoForm.get('iva').patchValue(0);
       this.prospectoForm.get('total').patchValue(0);
     }
-    console.log('detallaes despues', detalles);
   }
 
   redondeoValor(valor) {
@@ -291,7 +291,7 @@ export class LandingEditComponent implements OnInit {
     this.submitted = true;
     if (this.prospectoForm.invalid) {
       this.toaster.open('Llenar campos', {type: 'warning'});
-      console.log(this.prospectoForm);
+
       return;
     }
     this.mostrarSpinner = true;
@@ -326,7 +326,7 @@ export class LandingEditComponent implements OnInit {
   }
 
   obtenerTipoIdentificacion(): void {
-    console.log('entro a buscar', this.prospectoForm);
+
     if (this.prospectoForm.value.tipoIdentificacion === 'Ruc') {
       this.prospectoForm.get('identificacion').setValidators(
         [Validators.required, ValidacionesPropias.rucValido]

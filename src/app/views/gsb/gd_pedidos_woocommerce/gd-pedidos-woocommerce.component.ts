@@ -231,6 +231,7 @@ export class GdPedidosWoocommerceComponent implements OnInit, AfterViewInit {
       page_size: this.pageSize,
       inicio: this.inicio,
       fin: this.transformarFecha(this.fin),
+      estado: ['Pendiente de retiro', 'Entregado'],
       usuarioVendedor: this.currentUser.usuario.idRol === 1 ? '' : this.currentUser.usuario.username,
       canal: ['superbarato.megadescuento.com', 'contraentrega.megadescuento.com']
     }).subscribe((info) => {

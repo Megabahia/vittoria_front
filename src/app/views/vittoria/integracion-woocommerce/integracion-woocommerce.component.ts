@@ -52,7 +52,9 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
   provinciaOpciones;
   provincia = '';
   imageUrlPrincipal: string | ArrayBuffer | null = null;
+  fotoLocal: string | ArrayBuffer | null = null;
   imagenPrinciplSeleccionada: File | null = null;
+  fotoLocalSeleccionada: File | null = null;
   // @ViewChild('padres') padres;
   constructor(
     private integracionesService: IntegracionesService,
@@ -72,6 +74,8 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
     this.funcion = 'insertar';
     this.paramForm.reset();
     this.paramForm.get('pais').setValue(this.pais);
+    this.imageUrlPrincipal = null;
+    this.fotoLocal = null;
     this.obtenerProvincias();
 
   }
@@ -110,6 +114,8 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
       hora_atencion: ['', [Validators.required]],
       descuento: [0, [Validators.required, Validators.max(100), Validators.pattern('^[0-9]+$')]],
       imagen_principal: [''],
+      foto_local: [''],
+      whatsapp: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern('^[0-9]*$')]],
     });
     this.menu = {
       modulo: 'adm',
@@ -151,9 +157,13 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
 
   async editarParametro(id): Promise<void> {
     this.paramForm.reset();
+    this.imageUrlPrincipal = null;
+    this.fotoLocal = null;
     this.idParametro = id;
     this.funcion = 'editar';
     await this.integracionesService.obtenerIntegracion(id).subscribe((result) => {
+      this.imageUrlPrincipal = result.imagen_principal;
+      this.fotoLocal = result.foto_local;
       this.paramForm.patchValue({...result});
       this.obtenerCiudad();
       this.obtenerSector();
@@ -170,7 +180,7 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
     const canalValores: string[] = Object.values(this.paramForm.value);
 
     canalLlaves.map((llave, index) => {
-      if (llave !== 'imagen_principal') {
+      if (llave !== 'imagen_principal' && llave !== 'foto_local') {
         if (llave === 'pedidos_local' || llave === 'despachos_local') {
           this.archivo.delete(llave);
           this.archivo.append(llave, JSON.stringify(canalValores[index]));
@@ -187,6 +197,10 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
     if (this.imagenPrinciplSeleccionada != null) {
       this.archivo.delete('imagen_principal');
       this.archivo.append('imagen_principal', this.imagenPrinciplSeleccionada);
+    }
+    if (this.fotoLocalSeleccionada != null) {
+      this.archivo.delete('foto_local');
+      this.archivo.append('foto_local', this.fotoLocalSeleccionada);
     }
 
     this.cargando = true;
@@ -340,11 +354,27 @@ export class IntegracionWoocommerceComponent implements OnInit, AfterViewInit {
 
     }
   }
+  onFileSelectFotoLocal(event: any): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length) {
+      this.fotoLocalSeleccionada = input.files[0]; // Almacena el archivo seleccionado globalmente
+      this.cargarFotoLocal(this.fotoLocalSeleccionada); // Carga la imagen para su visualización
+
+    }
+  }
 
   private cargarImagenPrincipal(file: File): void {
     const reader = new FileReader();
     reader.onload = (e: any) => {
       this.imageUrlPrincipal = e.target.result; // Almacena la URL de la imagen para visualización
+    };
+    reader.readAsDataURL(file);
+  }
+
+  private cargarFotoLocal(file: File): void {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.fotoLocal = e.target.result; // Almacena la URL de la imagen para visualización
     };
     reader.readAsDataURL(file);
   }
