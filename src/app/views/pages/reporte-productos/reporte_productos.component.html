@@ -6,16 +6,58 @@
     las personas que tengan el enlace)</h6>
   <hr/>
   <div class="card-body">
-    <div class="row d-flex justify-content-center">
-      <div class="col-md-6 col-12 px-4">
-        <h4 class="text-warning">Tienda</h4>
-        <p><strong>Nombre comercial:</strong> {{ tienda?.nombre }} ({{ tienda?.valor }})</p>
+    <div class="container">
+      <!-- Sección de la imagen principal -->
+      <div class="text-center mb-1">
+        <img
+          [src]="tienda?.imagen_principal"
+          alt="Logo de la tienda"
+          height="100"
+        >
       </div>
-      <div class="col-md-6 col-12 px-4">
-        <h4 class="text-warning">Fromas de pago disponibles</h4>
-        <ul *ngFor="let pago of formasPago">
-          <li>{{ pago?.nombre }} (Tiempo entrega: {{ pago?.tiempo_entrega }})</li>
-        </ul>
+
+      <!-- Información de la tienda -->
+      <div class="row">
+        <div class="col-md-6 col-12">
+          <h4 class="text-warning">Tienda</h4>
+          <p><strong>Nombre comercial:</strong> {{ tienda?.nombre || 'No disponible' }} ({{ tienda?.valor }})</p>
+          <p><strong>Hora de atención:</strong> {{ tienda?.hora_atencion || 'No disponible' }}</p>
+          <p><strong>Número de teléfono/celular:</strong> {{ tienda?.whatsapp || 'No disponible' }}</p>
+          <p><strong>Dirección:</strong> {{ tienda?.descripcion_direccion || 'No disponible' }}</p>
+          <p>
+            <strong>GPS:</strong>
+            <a
+              *ngIf="tienda?.direccion_mapa"
+              [href]="tienda?.direccion_mapa"
+              target="_blank"
+            >
+              {{ tienda?.direccion_mapa | shorten }}
+            </a>
+          </p>
+          <div class="text-center mt-1">
+            <img
+              *ngIf="tienda?.foto_local; else sinFotoLocal"
+              [src]="tienda?.foto_local"
+              alt="Imagen del local"
+              height="100"
+              (click)="abrirModalImagen(tienda?.foto_local)"
+            >
+            <ng-template #sinFotoLocal>
+              <p class="text-muted">Sin foto del local disponible</p>
+            </ng-template>
+          </div>
+        </div>
+
+        <!-- Formas de entrega disponibles -->
+        <div class="col-md-6 col-12">
+          <h4 class="text-warning">Formas de entrega disponibles</h4>
+          <ul>
+            <li *ngFor="let pago of formasPago">
+              {{ pago?.nombre || 'Sin información' }}
+              (Tiempo entrega: {{ pago?.tiempo_entrega || 'No especificado' }})
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <hr/>
@@ -23,9 +65,11 @@
       <div class="col-md-4 col-12 d-flex">
         <input class="form-control" type="text" placeholder="Buscar por codigo producto"
                [(ngModel)]="codigoBarrasBuscar"/>
-        <button class="btn btn-primary" (click)="obtenerListaProductos()" [ngClass]="{'loading': mostrarSpinner}"
+        <button class="btn btn-primary d-flex" (click)="obtenerListaProductos()" [ngClass]="{'loading': mostrarSpinner}"
                 [disabled]="mostrarSpinner">
-
+          <span *ngIf="mostrarSpinner" class="spinner-border spinner-border-sm mr-1" role="status"
+            aria-hidden="true"></span>
+          BUSCAR
           <i-feather name='search' class="edit-user"></i-feather>
         </button>
       </div>
@@ -70,7 +114,7 @@
         >
           <td>{{ transaccion.created_at | date: 'dd-MM-yyyy' }}</td>
           <td>{{ transaccion.updated_at | date: 'dd-MM-yyyy' }}</td>
-          <td>{{ transaccion.codigoBarras }}</td>
+          <td>{{ transaccion.prefijo }}{{ transaccion.codigoBarras }}</td>
           <td>{{ transaccion.nombre }}</td>
           <td>{{ transaccion.descripcion }}</td>
           <td>{{ transaccion.caracteristicas }}</td>
@@ -164,26 +208,26 @@
 
 <ng-template #modalTitulos let-modal>
   <div class="modal-header">
-    <h4 class="modal-title">Títulos del prodcuto {{datosProducto.codigoBarras}}</h4>
+    <h4 class="modal-title">Títulos del prodcuto {{ datosProducto.codigoBarras }}</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss( 'Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-content">
     <h5 class="text-warning ml-2 mt-1">Título Uno</h5>
-    <p class="px-3">{{datosProducto.titulo_uno ? datosProducto.titulo_uno : 'No hay título registrado' }}</p>
+    <p class="px-3">{{ datosProducto.titulo_uno ? datosProducto.titulo_uno : 'No hay título registrado' }}</p>
     <hr/>
     <h5 class="text-warning ml-2">Título Dos</h5>
-    <p class="px-3">{{datosProducto.titulo_dos ? datosProducto.titulo_dos : 'No hay título registrado'}}</p>
+    <p class="px-3">{{ datosProducto.titulo_dos ? datosProducto.titulo_dos : 'No hay título registrado' }}</p>
     <hr/>
     <h5 class="text-warning ml-2">Título Tres</h5>
-    <p class="px-3">{{datosProducto.titulo_tres ? datosProducto.titulo_tres : 'No hay título registrado'}}</p>
+    <p class="px-3">{{ datosProducto.titulo_tres ? datosProducto.titulo_tres : 'No hay título registrado' }}</p>
     <hr/>
     <h5 class="text-warning ml-2">Título Cuatro</h5>
-    <p class="px-3">{{datosProducto.titulo_cuatro ? datosProducto.titulo_cuatro : 'No hay título registrado'}}</p>
+    <p class="px-3">{{ datosProducto.titulo_cuatro ? datosProducto.titulo_cuatro : 'No hay título registrado' }}</p>
     <hr/>
     <h5 class="text-warning ml-2">Título Cinco</h5>
-    <p class="pb-1 px-3">{{datosProducto.titulo_cinco ? datosProducto.titulo_cinco : 'No hay título registrado'}}</p>
+    <p class="pb-1 px-3">{{ datosProducto.titulo_cinco ? datosProducto.titulo_cinco : 'No hay título registrado' }}</p>
   </div>
   <div class="modal-footer">
     <button type="reset" class="btn btn-secondary"

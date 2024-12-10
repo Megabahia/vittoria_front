@@ -89,7 +89,6 @@ export class ReporteProductosComponent implements OnInit, AfterViewInit {
   ];
   mostrarSpinner = false;
 
-
   selectedRow: number | null = null;
   tienda;
   formasPago;

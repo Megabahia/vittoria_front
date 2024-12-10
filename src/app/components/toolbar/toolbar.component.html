@@ -489,14 +489,14 @@
               <span class="menu-item text-truncate" data-i18n="List">Consulta de productos</span>
             </a>
           </li>
-          <li class="nav-item"
+          <!--<li class="nav-item"
               *ngIf="(usuario.usuario.idRol === 62 && usuario.usuario.canal === 'superbarato.megadescuento.com') || (usuario.usuario.idRol === 62 && usuario.usuario.canal === 'contraentrega.megadescuento.com') || usuario.usuario.idRol === 1 || usuario.usuario.idRol === 63">
             <a class="d-flex align-items-center" [routerLink]="['gd/pedido_woocommerce/crear']" data-toggle="tooltip"
                data-placement="auto" title="Generar Pedido Woocommerce">
               <i data-feather="circle"></i>
               <span class="menu-item text-truncate" data-i18n="List">Generar pedido woocommerce</span>
             </a>
-          </li>
+          </li>-->
           <li class="nav-item has-sub ng-star-inserted" *ngIf="usuario.usuario.idRol === 1">
             <a class="d-flex align-items-center" data-toggle="tooltip" data-placement="auto"
                title="Asesor/a comercial">
